@@ -14,11 +14,6 @@ spec:
       build:
         from: feature/*
   components:
-    - name: web
-      src: ./web
-      ports:
-        - name: http
-          port: 80
     - name: api
       src: ./api
       ports:

@@ -19,18 +19,6 @@ services:
     ports:
       - "5000:5000"
 
-  web:
-    build:
-      target: dev
-    image: web-dev
-    volumes:
-      - ./web/src:/code/src
-      - ./web/libs:/code/src/libs
-    environment:
-      - NODE_ENV=development
-    ports:
-      - "9229:9229"
-
   db:
     volumes:
       - ./data/db:/data/db
