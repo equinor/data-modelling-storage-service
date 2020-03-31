@@ -44,9 +44,6 @@ elif [ "$1" = "unit_tests" ]; then
 elif [ "$1" = "bdd_tests" ]; then
    docker-compose -f docker-compose.yml  -f docker-compose.ci.yml run api behave
 
-elif [ "$1" = "web_tests" ]; then
-   docker-compose -f docker-compose.yml  -f docker-compose.ci.yml run web yarn test
-
 elif [ "$1" = "build-api-dev-image" ]; then
   docker_login
   pull $API_IMAGE

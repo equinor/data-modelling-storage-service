@@ -4,7 +4,6 @@ services:
   nginx:
     depends_on:
       - api
-      - web
     build:
       context: ./nginx
     image: mariner.azurecr.io/dmt/nginx
@@ -23,11 +22,6 @@ services:
       MONGO_INITDB_ROOT_USERNAME: maf
       MONGO_INITDB_ROOT_PASSWORD: maf
       APPLICATION_HOME: /code/home
-
-  web:
-    build: ./web
-    image: mariner.azurecr.io/dmt/web
-    restart: unless-stopped
 
   db:
     image: mongo:3.4

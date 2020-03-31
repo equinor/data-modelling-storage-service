@@ -14,13 +14,6 @@ services:
       ENVIRONMENT: local
       MONGO_INITDB_ROOT_PASSWORD: maf
 
-  web:
-    environment:
-      CI: "true"
-    volumes:
-      - ./web/src:/code/src
-      - ./web/libs:/code/src/libs
-
   db:
     environment:
       MONGO_INITDB_ROOT_PASSWORD: maf

@@ -14,14 +14,6 @@ services:
     ports:
       - "5000:5000"
 
-  web:
-    build:
-      target: dev
-    environment:
-      - NODE_ENV=development
-    ports:
-      - "9229:9229"
-
   db:
     ports:
       - "27017:27017"
