@@ -1,12 +1,12 @@
 from behave import given
 
-from classes.blueprint_attribute import BlueprintAttribute
-from core.enums import DMT, SIMOS
-from core.service.document_service import DocumentService
-from core.use_case.utils.create_entity import CreateEntity
-from core.utility import BlueprintProvider
-from classes.tree_node import Node, ListNode
-from core.repository.repository_factory import get_repository
+from api.classes.blueprint_attribute import BlueprintAttribute
+from api.core.enums import DMT, SIMOS
+from api.core.service.document_service import DocumentService
+from api.core.use_case.utils.create_entity import CreateEntity
+from api.core.utility import BlueprintProvider
+from api.classes.tree_node import Node, ListNode
+from api.core.repository.repository_factory import get_repository
 
 blueprint_provider = BlueprintProvider()
 

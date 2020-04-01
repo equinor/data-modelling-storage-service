@@ -1,6 +1,6 @@
 from unittest import skip
 
-from classes.blueprint import Blueprint
+from api.classes.blueprint import Blueprint
 
 
 @skip("not working")

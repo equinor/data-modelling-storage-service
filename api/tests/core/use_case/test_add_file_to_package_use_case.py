@@ -1,8 +1,8 @@
 from unittest import mock, skip
 from uuid import uuid4
 
-from core.use_case.add_file_use_case import AddFileRequestObject, AddFileUseCase
-from core.repository import Repository
+from api.core.use_case.add_file_use_case import AddFileRequestObject, AddFileUseCase
+from api.core.repository import Repository
 
 
 @skip("not working")

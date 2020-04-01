@@ -14,9 +14,9 @@ from typing import Any, Callable, Dict, List, Optional, TypeVar, Union, Set
 import stringcase
 from jinja2 import Template
 
-from classes.dto import DTO
-from config import Config
-from core.repository import Repository
+from api.classes.dto import DTO
+from api.config import Config
+from api.core.repository import Repository
 
 T = TypeVar("T")
 
@@ -490,7 +490,7 @@ from typing import List, Optional, Union, Any, Set, Tuple
 import stringcase
 import json
 import base64
-from classes.dto import DTO
+from api.classes.dto import DTO
 {%- endblock %}
 {%- block definition %}
 
@@ -650,7 +650,7 @@ class {{ schema.name }}(metaclass={{ get_name_of_metaclass(schema) }}):
             raise ValueError("'{{ get_name(attr) }}' is required, and cannot be set to None")
         {% endif -%}
         {% if attr.cast -%}
-        from classes.dto import DTO
+        from api.classes.dto import DTO
         {%- if attr.is_list %}
         # FIXME: Deal with multi-dimensional data
         if isinstance(value, list) and all(isinstance(element, dict) for element in value):
@@ -739,7 +739,7 @@ class {{ schema.name }}(metaclass={{ get_name_of_metaclass(schema) }}):
 {% endif %}
     @classmethod
     def _get_representation(cls, item, key: str = None, include_defaults: bool = True):
-        from classes.dto import DTO
+        from api.classes.dto import DTO
 
         if key:
             value = getattr(item, key)
@@ -768,7 +768,7 @@ class {{ schema.name }}(metaclass={{ get_name_of_metaclass(schema) }}):
 
     @classmethod
     def from_dict(cls, adict):
-        from classes.dto import DTO
+        from api.classes.dto import DTO
         id_keys = ["_id", "id", "uid"]
         # FIXME: adict may not be a dict...
         if not isinstance(adict, dict):
@@ -917,7 +917,7 @@ class {{ schema.name }}(metaclass={{ get_name_of_metaclass(schema) }}):
             definition += decompress(cls.__code_generation)
         if remove_dto_imports:
             for import_ in [
-                "from classes.dto import DTO",
+                "from api.classes.dto import DTO",
             ]:
                 definition = definition.replace(import_, "")
         if format_code:
@@ -997,7 +997,7 @@ from typing import List, Optional, Union, Any, Set, Tuple
 import stringcase
 import json
 base64
-from classes.dto import DTO
+from api.classes.dto import DTO
 """
                 )
         return self.create(template_type, _create_instance=False)

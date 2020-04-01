@@ -1,4 +1,4 @@
-from utils.data_structure.dot_notation import find, to_dot_notation
+from api.utils.data_structure.dot_notation import find, to_dot_notation
 
 
 def traverse(obj, path=None, callback=None):

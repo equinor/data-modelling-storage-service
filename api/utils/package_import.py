@@ -2,16 +2,16 @@ import json
 import os
 from typing import Dict, List, Union
 
-from classes.dto import DTO
-from classes.schema import Factory
-from config import Config
-from core.enums import DMT
-from core.repository.file import TemplateRepositoryFromFile
-from core.repository.repository_exceptions import InvalidDocumentNameException
-from core.utility import url_safe_name
-from services.database import dmt_database as dmt_db
-from utils.helper_functions import schemas_location
-from utils.logging import logger
+from api.classes.dto import DTO
+from api.classes.schema import Factory
+from api.config import Config
+from api.core.enums import DMT
+from api.core.repository.file import TemplateRepositoryFromFile
+from api.core.repository.repository_exceptions import InvalidDocumentNameException
+from api.core.utility import url_safe_name
+from api.services.database import dmt_database as dmt_db
+from api.utils.helper_functions import schemas_location
+from api.utils.logging import logger
 
 
 def get_template_type(directory: str, file: str) -> str:

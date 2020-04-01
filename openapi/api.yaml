@@ -1,0 +1,255 @@
+openapi: 3.0.1
+info:
+  title: Data Modelling Storage Service API
+  description: Data storage service for DMT
+  version: 0.1.0
+
+servers:
+  - url: 'http://0.0.0.0:8000/api/v1'
+
+tags:
+  - name: document
+    description: Documents
+  - name: explorer
+    description: Virtual file system
+  - name: datasource
+    description: Data sources
+paths:
+  /documents/{dataSourceId}/{documentId}:
+    get:
+      operationId: get_by_id
+      x-openapi-router-controller: controllers.document_controller
+      tags:
+        - document
+      summary: Get document by ID
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+        - name: documentId
+          in: path
+          description: 'The document ID'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+    put:
+      operationId: update
+      x-openapi-router-controller: controllers.document_controller
+      tags:
+        - document
+      summary: Update document
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+        - name: documentId
+          in: path
+          description: 'The document ID'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/DocumentBody'
+      responses:
+        '200':
+          description: Updated document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+  /documents-by-path/{dataSourceId}:
+    get:
+      operationId: get_by_path
+      x-openapi-router-controller: controllers.document_controller
+      tags:
+        - document
+      summary: Get document by path
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: query
+          description: 'The document path'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+  /explorer/{dataSourceId}/add-to-parent:
+    post:
+      operationId: add_to_parent
+      x-openapi-router-controller: controllers.explorer_controller
+      tags:
+        - explorer
+      summary: Add document to parent
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/DocumentBody'
+      responses:
+        '200':
+          description: Added document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+  /explorer/{dataSourceId}/add-to-path:
+    post:
+      operationId: add_to_path
+      x-openapi-router-controller: controllers.explorer_controller
+      tags:
+        - explorer
+      summary: Add document to path
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/DocumentBody'
+      responses:
+        '200':
+          description: Added document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+  /explorer/{dataSourceId}/remove:
+    post:
+      operationId: remove
+      x-openapi-router-controller: controllers.explorer_controller
+      tags:
+        - explorer
+      summary: Remove document
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/DocumentBody'
+      responses:
+        '200':
+          description: Added document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+  /explorer/{dataSourceId}/move:
+    put:
+      operationId: move
+      x-openapi-router-controller: controllers.explorer_controller
+      tags:
+        - explorer
+      summary: Move document
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/DocumentBody'
+      responses:
+        '200':
+          description: Added document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+  /explorer/{dataSourceId}/rename:
+    put:
+      operationId: rename
+      x-openapi-router-controller: controllers.explorer_controller
+      tags:
+        - explorer
+      summary: Rename document
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/DocumentBody'
+      responses:
+        '200':
+          description: Added document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+  /explorer/{dataSourceId}/add-package:
+    post:
+      operationId: add_package
+      x-openapi-router-controller: controllers.explorer_controller
+      tags:
+        - explorer
+      summary: Add package
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/DocumentBody'
+      responses:
+        '200':
+          description: Added document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+
+components:
+  requestBodies:
+    DocumentBody:
+      required: true
+      description: Object containing all info for a document
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DocumentBody'
+  schemas:
+    DocumentResponse:
+      type: object
+      properties:
+        document:
+          type: string
+    DocumentBody:
+      type: object

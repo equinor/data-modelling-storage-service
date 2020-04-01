@@ -1,9 +1,9 @@
 from enum import Enum
 from typing import List, Dict
 
-from core.enums import PRIMITIVES
+from api.core.enums import PRIMITIVES
 
-from classes.blueprint_attribute import BlueprintAttribute
+from api.classes.blueprint_attribute import BlueprintAttribute
 
 
 class RecipePlugin(Enum):

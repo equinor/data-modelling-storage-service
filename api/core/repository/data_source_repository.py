@@ -1,8 +1,8 @@
 from typing import List, Dict
 
-from config import Config
-from services.database import dmt_database
-from core.enums import DataSourceDocumentType, DataSourceType
+from api.config import Config
+from api.services.database import dmt_database
+from api.core.enums import DataSourceDocumentType, DataSourceType
 
 
 class DataSourceRepository:

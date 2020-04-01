@@ -204,7 +204,7 @@ Feature: Document 2
 
 
   Scenario: Get document by id
-    Given I access the resource url "/api/v2/documents/data-source-name/1"
+    Given I access the resource url "/api/v1/documents/data-source-name/1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -233,7 +233,7 @@ Feature: Document 2
     """
 
   Scenario: Get document by path
-    Given I access the resource url "/api/v2/documents_by_path/data-source-name/package_1/sub_package_1/document_1"
+    Given I access the resource url "/api/v1/documents-by-path/data-source-name?path=package_1/sub_package_1/document_1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -255,7 +255,7 @@ Feature: Document 2
     """
 
   Scenario: Get attribute
-    Given I access the resource url "/api/v2/documents/test-source-name/1?attribute=content.0"
+    Given I access the resource url "/api/v1/documents/test-source-name/1?attribute=content.0"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -273,7 +273,7 @@ Feature: Document 2
     """
 
   Scenario: Update document (only contained)
-    Given i access the resource url "/api/v2/documents/data-source-name/1"
+    Given i access the resource url "/api/v1/documents/data-source-name/1"
     When i make a "PUT" request
     """
     {
@@ -295,7 +295,7 @@ Feature: Document 2
     """
 
   Scenario: Update document (both contained and not contained)
-    Given i access the resource url "/api/v2/documents/data-source-name/6"
+    Given i access the resource url "/api/v1/documents/data-source-name/6"
     When i make a "PUT" request
     """
     {
@@ -393,7 +393,7 @@ Feature: Document 2
     """
 
   Scenario: Update document (attribute and not contained)
-    Given i access the resource url "/api/v2/documents/data-source-name/6?attribute=itemNotContained"
+    Given i access the resource url "/api/v1/documents/data-source-name/6?attribute=itemNotContained"
     And data modelling tool templates are imported
     When i make a "PUT" request
     """

@@ -1,10 +1,10 @@
 from typing import Optional
 
-from classes.blueprint import Blueprint
-from classes.recipe import Recipe
-from core.utility import get_blueprint_cached
+from api.classes.blueprint import Blueprint
+from api.classes.recipe import Recipe
+from api.core.utility import get_blueprint_cached
 
-from core.enums import PRIMITIVES
+from api.core.enums import PRIMITIVES
 
 
 def process_attributes(blueprint: Blueprint, parent_blueprint: Optional[Blueprint], ui_recipe_name):

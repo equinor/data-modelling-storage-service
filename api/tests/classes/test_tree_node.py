@@ -1,11 +1,11 @@
 import unittest
 
-from classes.blueprint import Blueprint
-from classes.blueprint_attribute import BlueprintAttribute
-from classes.dto import DTO
-from classes.tree_node import DictExporter, DictImporter, ListNode, Node
-from tests.util_tests import flatten_dict
-from utils.data_structure.compare import pretty_eq
+from api.classes.blueprint import Blueprint
+from api.classes.blueprint_attribute import BlueprintAttribute
+from api.classes.dto import DTO
+from api.classes.tree_node import DictExporter, DictImporter, ListNode, Node
+from api.tests.util_tests import flatten_dict
+from api.utils.data_structure.compare import pretty_eq
 
 blueprint_1 = {
     "type": "system/SIMOS/Blueprint",

@@ -1,7 +1,7 @@
 import json
 
-from core.repository.repository_factory import get_repository
-from core.use_case.generate_index_use_case import GenerateIndexUseCase as GenerateIndexUseCase
+from api.core.repository.repository_factory import get_repository
+from api.core.use_case.generate_index_use_case import GenerateIndexUseCase as GenerateIndexUseCase
 from flask import Blueprint, Response
 
 blueprint = Blueprint("index", __name__)

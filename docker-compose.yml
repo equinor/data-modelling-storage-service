@@ -1,31 +1,43 @@
 version: "3.4"
 
 services:
-  nginx:
-    depends_on:
-      - api
+  mainapi:
     build:
-      context: ./nginx
-    image: mariner.azurecr.io/dmt/nginx
-    ports:
-      - "80:80"
-
-  api:
-    build:
-      context: ./api
-    image: mariner.azurecr.io/dmt/api
-    restart: unless-stopped
-    depends_on:
-      - db
+      context: .
+      target: development
+    image: main-api
+    volumes:
+      - ./:/usr/src/app
     environment:
-      ENVIRONMENT: azure
+      FLASK_DEBUG: 1
+      ENVIRONMENT: local
       MONGO_INITDB_ROOT_USERNAME: maf
       MONGO_INITDB_ROOT_PASSWORD: maf
-      APPLICATION_HOME: /code/home
+      APPLICATION_HOME: /usr/src/app/api/home
+    ports:
+      - "0.0.0.0:8000:5000"
+    links:
+      - maindb:db
 
-  db:
+  maindb:
     image: mongo:3.4
     command: --quiet
     environment:
       MONGO_INITDB_ROOT_USERNAME: maf
       MONGO_INITDB_ROOT_PASSWORD: maf
+
+  db-ui:
+    depends_on:
+      - maindb
+    image: mongo-express:0.49
+    ports:
+      - "8082:8081"
+    logging:
+      driver: "none"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: db
+      ME_CONFIG_MONGODB_ADMINUSERNAME: maf
+      ME_CONFIG_MONGODB_ADMINPASSWORD: maf
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+    links:
+      - maindb:db

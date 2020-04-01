@@ -1,9 +1,9 @@
-from core.repository.repository_exceptions import (
+from api.core.repository.repository_exceptions import (
     FileNotFoundException,
     EntityNotFoundException,
     InvalidDocumentNameException,
 )
-from core.shared import response_object as res
+from api.core.shared import response_object as res
 import traceback
 
 

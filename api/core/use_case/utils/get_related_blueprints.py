@@ -1,7 +1,7 @@
 from typing import Dict
 
-from classes.blueprint import Blueprint
-from core.utility import BlueprintProvider
+from api.classes.blueprint import Blueprint
+from api.core.utility import BlueprintProvider
 
 
 def get_related_blueprints(blueprint: str) -> Dict:

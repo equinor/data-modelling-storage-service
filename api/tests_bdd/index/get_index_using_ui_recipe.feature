@@ -1,3 +1,4 @@
+@skip
 Feature: UI Recipe
 
   Background: There are data sources in the system

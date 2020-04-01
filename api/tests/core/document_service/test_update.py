@@ -1,13 +1,13 @@
 import unittest
 from unittest import mock
 
-from classes.dto import DTO
-from classes.tree_node import Node
-from core.repository import Repository
-from core.repository.repository_exceptions import DuplicateFileNameInPackageException
-from core.service.document_service import DocumentService
-from tests.core.document_service.common import blueprint_provider
-from utils.data_structure.compare import pretty_eq
+from api.classes.dto import DTO
+from api.classes.tree_node import Node
+from api.core.repository import Repository
+from api.core.repository.repository_exceptions import DuplicateFileNameInPackageException
+from api.core.service.document_service import DocumentService
+from api.tests.core.document_service.common import blueprint_provider
+from api.utils.data_structure.compare import pretty_eq
 
 
 class DocumentServiceTestCase(unittest.TestCase):

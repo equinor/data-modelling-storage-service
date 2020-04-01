@@ -2,11 +2,11 @@ from copy import deepcopy
 from typing import Dict, List, Optional, Union
 from uuid import uuid4
 
-from classes.blueprint import Blueprint
-from classes.blueprint_attribute import BlueprintAttribute
-from config import Config
-from core.enums import DMT
-from utils.logging import logger
+from api.classes.blueprint import Blueprint
+from api.classes.blueprint_attribute import BlueprintAttribute
+from api.config import Config
+from api.core.enums import DMT
+from api.utils.logging import logger
 
 
 class DictExporter:

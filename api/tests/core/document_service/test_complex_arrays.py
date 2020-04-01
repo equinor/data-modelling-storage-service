@@ -1,13 +1,13 @@
 import unittest
 from unittest import mock
 
-from classes.blueprint import Blueprint
-from classes.dto import DTO
-from core.repository import Repository
-from core.repository.file import TemplateRepositoryFromFile
-from core.service.document_service import DocumentService
-from utils.data_structure.compare import pretty_eq
-from utils.helper_functions import schemas_location
+from api.classes.blueprint import Blueprint
+from api.classes.dto import DTO
+from api.core.repository import Repository
+from api.core.repository.file import TemplateRepositoryFromFile
+from api.core.service.document_service import DocumentService
+from api.utils.data_structure.compare import pretty_eq
+from api.utils.helper_functions import schemas_location
 
 package_blueprint = {
     "type": "system/SIMOS/Blueprint",

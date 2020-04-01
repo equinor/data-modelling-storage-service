@@ -1,6 +1,6 @@
 import unittest
 
-from utils.data_structure.traverse import traverse_compare
+from api.utils.data_structure.traverse import traverse_compare
 
 
 class TraverseTestCase(unittest.TestCase):

@@ -2,14 +2,14 @@
 set -euo pipefail
 
 echo "ENVIRONMENT: $ENVIRONMENT"
-export FLASK_APP="/code/app.py"
+export FLASK_APP="/usr/src/app/api/app_commands.py"
 
 flask nuke-db
 
 if [ "$ENVIRONMENT" = 'local' ]; then
     flask drop-data-sources
     echo "Importing DataSources"
-    for dataSource in /code/home/data_sources/"local"*.json ; do
+    for dataSource in /usr/src/app/api/home/data_sources/"local"*.json ; do
       flask import-data-source "$dataSource"
     done
 fi

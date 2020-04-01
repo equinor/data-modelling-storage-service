@@ -1,8 +1,8 @@
 import json
 
-from config import Config
-from core.shared import response_object as res
-from core.shared import use_case as uc
+from api.config import Config
+from api.core.shared import response_object as res
+from api.core.shared import use_case as uc
 from flask import request
 
 

@@ -1,3 +1,4 @@
+@skip
 Feature: Document - Generate JSON Schema
 
   Background: There are data sources in the system
@@ -9,7 +10,7 @@ Feature: Document - Generate JSON Schema
       | db   | 27017 | maf      | maf      | false | system           | local      | system         | blueprints   | mongo-db |
 
   Scenario: Generate Blueprint
-    Given i access the resource url "/api/v2/json-schema/system/SIMOS/Blueprint"
+    Given i access the resource url "/api/v1/json-schema/system/SIMOS/Blueprint"
     And data modelling tool templates are imported
     When i make a "GET" request
     Then the response status should be "OK"
@@ -22,7 +23,7 @@ Feature: Document - Generate JSON Schema
     """
 
   Scenario: Generate Application
-    Given i access the resource url "/api/v2/json-schema/system/SIMOS/Application"
+    Given i access the resource url "/api/v1/json-schema/system/SIMOS/Application"
     And data modelling tool templates are imported
     When i make a "GET" request
     Then the response status should be "OK"

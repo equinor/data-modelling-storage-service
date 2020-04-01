@@ -1,15 +1,14 @@
 import json
 
-from core.serializers.dto_json_serializer import DTOSerializer
-from core.shared import response_object as res
-from core.use_case.generate_json_schema_use_case import GenerateJsonSchemaUseCase, GenerateJsonSchemaRequestObject
-from core.use_case.get_document_by_path_use_case import GetDocumentByPathUseCase, GetDocumentByPathRequestObject
-from core.use_case.get_document_use_case import GetDocumentUseCase, GetDocumentRequestObject
-from core.use_case.update_document_use_case import UpdateDocumentUseCase, UpdateDocumentRequestObject
+from api.core.serializers.dto_json_serializer import DTOSerializer
+from api.core.shared import response_object as res
+from api.core.use_case.generate_json_schema_use_case import GenerateJsonSchemaUseCase, GenerateJsonSchemaRequestObject
+from api.core.use_case.get_document_by_path_use_case import GetDocumentByPathUseCase, GetDocumentByPathRequestObject
+from api.core.use_case.get_document_use_case import GetDocumentUseCase, GetDocumentRequestObject
+from api.core.use_case.update_document_use_case import UpdateDocumentUseCase, UpdateDocumentRequestObject
 from flask import Blueprint, Response, request
-
-from core.utility import get_document_by_ref
-from utils.logging import logger
+from api.utils.logging import logger
+import dmss_api
 
 blueprint = Blueprint("document", __name__)
 
@@ -33,6 +32,7 @@ def get_json_schema(type: str):
 
 @blueprint.route("/api/v2/documents/<string:data_source_id>/<path:document_id>", methods=["GET"])
 def get_by_id(data_source_id: str, document_id: str):
+    print(dmss_api.__doc__)
     logger.info(f"Getting document '{document_id}' from data source '{data_source_id}'")
     ui_recipe = request.args.get("ui_recipe")
     attribute = request.args.get("attribute")

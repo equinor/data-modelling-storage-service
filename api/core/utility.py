@@ -3,20 +3,20 @@ from functools import lru_cache
 from typing import List, Union
 from urllib import parse
 
-from classes.tree_node import Node
-from core.repository.repository_exceptions import (
+from api.classes.tree_node import Node
+from api.core.repository.repository_exceptions import (
     EntityNotFoundException,
     FileNotFoundException,
     RootPackageNotFoundException,
 )
-from core.repository.repository_factory import get_repository
-from utils.helper_functions import get_data_source_and_path, get_package_and_path
-from utils.logging import logger
+from api.core.repository.repository_factory import get_repository
+from api.utils.helper_functions import get_data_source_and_path, get_package_and_path
+from api.utils.logging import logger
 
-from classes.blueprint import Blueprint
-from classes.dto import DTO
-from config import Config
-from services.database import dmt_database
+from api.classes.blueprint import Blueprint
+from api.classes.dto import DTO
+from api.config import Config
+from api.services.database import dmt_database
 
 
 def _find_document_in_package_by_path(package: DTO, path_elements: List[str], repository) -> Union[str, dict, None]:

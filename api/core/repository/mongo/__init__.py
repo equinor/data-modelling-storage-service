@@ -1,8 +1,8 @@
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 
-from core.repository.db_client_interface import DBClientInterface
-from core.repository.repository_exceptions import EntityAlreadyExistsException
+from api.core.repository.db_client_interface import DBClientInterface
+from api.core.repository.repository_exceptions import EntityAlreadyExistsException
 from typing import Dict, List, Optional
 
 

@@ -1,8 +1,8 @@
 from typing import Union
 
-from classes.tree_node import Node
-from core.enums import DMT, SIMOS
-from core.use_case.utils.generate_index_menu_actions import (
+from api.classes.tree_node import Node
+from api.core.enums import DMT, SIMOS
+from api.core.use_case.utils.generate_index_menu_actions import (
     get_delete_menu_item,
     get_download_menu_action,
     get_dynamic_create_menu_item,
@@ -14,10 +14,9 @@ from core.use_case.utils.generate_index_menu_actions import (
     get_create_reference_menu_item,
     get_export_python_code_menu_item,
 )
-from core.utility import BlueprintProvider
-from utils.group_by import group_by
+from api.utils.group_by import group_by
 
-from core.use_case.utils.sort_menu_items import sort_menu_items
+from api.core.use_case.utils.sort_menu_items import sort_menu_items
 
 
 def create_context_menu(node: Node, data_source_id: str, app_settings: dict):

@@ -1,15 +1,14 @@
 import json
 
-from core.use_case.generate_python_code import GeneratePythonCodeUseCase, GeneratePythonCodeRequestObject
+from api.core.use_case.generate_python_code import GeneratePythonCodeUseCase, GeneratePythonCodeRequestObject
 from flask import Blueprint, Response, send_file
 
-from classes.data_source import DataSource
-from core.repository.repository_factory import get_repository
-from core.shared import request_object as req
-from core.shared import response_object as res
-from core.use_case.create_application_use_case import CreateApplicationRequestObject, CreateApplicationUseCase
-from core.use_case.get_application_settings_use_case import GetApplicationSettingsUseCase
-from utils.logging import logger
+from api.core.repository.repository_factory import get_repository
+from api.core.shared import request_object as req
+from api.core.shared import response_object as res
+from api.core.use_case.create_application_use_case import CreateApplicationRequestObject, CreateApplicationUseCase
+from api.core.use_case.get_application_settings_use_case import GetApplicationSettingsUseCase
+from api.utils.logging import logger
 
 blueprint = Blueprint("system", __name__)
 

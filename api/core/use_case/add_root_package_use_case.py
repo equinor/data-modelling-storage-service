@@ -1,10 +1,10 @@
-from classes.dto import DTO
-from core.enums import DMT
-from core.repository import Repository
-from core.shared import request_object as req
-from core.shared import response_object as res
-from core.shared import use_case as uc
-from utils.logging import logger
+from api.classes.dto import DTO
+from api.core.enums import DMT
+from api.core.repository import Repository
+from api.core.shared import request_object as req
+from api.core.shared import response_object as res
+from api.core.shared import use_case as uc
+from api.utils.logging import logger
 
 
 class AddRootPackageRequestObject(req.ValidRequestObject):

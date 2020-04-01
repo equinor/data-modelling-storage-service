@@ -1,5 +1,5 @@
 from behave import given
-from services.database import dmt_database
+from api.services.database import dmt_database
 
 
 @given("there are mongodb data sources")

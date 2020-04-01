@@ -1,6 +1,6 @@
 import unittest
 
-from utils.data_structure.dictionary import merge_dicts
+from api.utils.data_structure.dictionary import merge_dicts
 
 
 class MyTestCase(unittest.TestCase):

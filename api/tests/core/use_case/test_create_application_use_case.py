@@ -1,9 +1,9 @@
 # flake8: noqa: F401
 
 from unittest import mock
-from classes.dto import DTO
-from core.repository import Repository
-from core.use_case.create_application_use_case import (
+from api.classes.dto import DTO
+from api.core.repository import Repository
+from api.core.use_case.create_application_use_case import (
     CreateApplicationUseCase,
     CreateApplicationRequestObject,
     generate_runnable_file,

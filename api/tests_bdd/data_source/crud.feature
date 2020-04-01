@@ -1,3 +1,4 @@
+@skip
 Feature: Data Source
 
   Background: There are data sources in the system
@@ -9,7 +10,7 @@ Feature: Data Source
       | db   | 27017 | maf      | maf      | false | system         | local      | system         | system       | mongo-db |
 
   Scenario: Get data source blueprints
-    Given I access the resource url "/api/v2/data-sources?documentType=blueprints"
+    Given I access the resource url "/api/v1/data-sources?documentType=blueprints"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -27,7 +28,7 @@ Feature: Data Source
     """
 
   Scenario Outline: Create new data source
-    Given i access the resource url "/api/v2/data-sources/myTest-DataSource"
+    Given i access the resource url "/api/v1/data-sources/myTest-DataSource"
     And data modelling tool templates are imported
     When i make a "POST" request
       """

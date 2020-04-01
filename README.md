@@ -1,66 +1,31 @@
-# data-modelling-tool
+# Data Modelling Storage Service
 
-[![Build Status](https://travis-ci.com/equinor/data-modelling-tool.svg?token=yR5pmi3sbtpmzTWwTfNG&branch=master)](https://travis-ci.com/equinor/data-modelling-tool)
+## Prerequisites
 
-A tool for modelling and presenting blueprints.  
-Architecture [diagrams](docs/architecture.md)  
-Read more about the core concepts here: [DMT](docs/README_DMT.md) and [plugins](docs/README_Plugin.md)
+In order to run the commands described below, you need:
+- [Docker](https://www.docker.com/) 
+- [Docker Compose](https://docs.docker.com/compose/)
+- make (`sudo apt-get install make` on Ubuntu)
 
-## Getting started
+## Running
 
-We use docker-compose to run the project locally;
-
-For Linux;
-
-``` bash
+```bash
+./generate-api.sh # You need to generate the API before starting the service
+docker-compose build
 docker-compose up
 ```
 
-For Windows;
+API documentation will be available at [localhost:8000/api/v1/ui/](http://localhost:8000/api/v1/ui/).
 
-``` bash
-docker-compose.exe -f docker-compose.yml  -f docker-compose.windows.yml up
-
+To refresh database after running 
+```
+docker-compose exec mainapi ./api/reset-database.sh
 ```
 
-## Exported Application
+## Testing
 
-1. Unzip the downloaded file(e.g `unzip application.zip` )
-2. Run `docker-compose up`
-3. Visit [http://localhost:9000] in your web browser (Internet Explorer is not supported)
-
-
-
-## Components README
-
-[API](api/README.md)  
-[WEB](web/README.md)
-
-## Pre-commit
-The project provides a `.pre-commit-config.yaml`-file that is used to setup git _pre-commit hooks_.
+BDD tests:
 
 ```
-pip install pre-commit
-pre-commit install
+docker-compose run --rm mainapi behave
 ```
-
-Alternative pre-commit installations can be found [here](https://pre-commit.com/#install).
-
-
-## Database
-
-To populate the database for first-time-use;
-
-1. Start the project with `docker-compose up`
-2. Run the provided script within the running API container;  
-   `docker-compose exec api ./reset-database.sh`
-
-## Development environment
-This repository includes configuration for the IntelliJ platform (including PyCharm and WebStorm).
-The most useful configuration included, is likely the run / debug configurations / targets.
-See below for more.
-
-Since this repository uses multiple technologies that PyCharm / WebStorm does not support out-of-the-box, some plugins have been included.
-When opening this repository in an IntelliJ IDE, you should be asked to install some plugins. 
-
-

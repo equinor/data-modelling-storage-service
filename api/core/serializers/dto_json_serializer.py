@@ -1,6 +1,6 @@
 import json
 
-from classes.dto import DTO
+from api.classes.dto import DTO
 
 
 class DTOSerializer(json.JSONEncoder):

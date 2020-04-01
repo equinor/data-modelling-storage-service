@@ -16,7 +16,7 @@ Feature: Explorer - Add file
 
   # TODO: this only works from withing same data source
   Scenario: Move file (renaming)
-    Given i access the resource url "/api/v2/explorer/move-file"
+    Given i access the resource url "/api/v1/explorer/move-file"
     And data modelling tool templates are imported
     When i make a "PUT" request
     """

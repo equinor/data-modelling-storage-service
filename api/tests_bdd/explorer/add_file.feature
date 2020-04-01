@@ -16,7 +16,7 @@ Feature: Explorer - Add file
       | 1   |            | root_package |             | system/DMT/Package |
 
   Scenario: Add file - not contained
-    Given i access the resource url "/api/v2/explorer/data-source-name/add-file"
+    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
     When i make a "POST" request
     """
     {
@@ -27,7 +27,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-    Given I access the resource url "/api/v2/documents/data-source-name/1"
+    Given I access the resource url "/api/v1/documents/data-source-name/1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -52,7 +52,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with missing parameter name should fail
-    Given i access the resource url "/api/v2/explorer/data-source-name/add-root-package"
+    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
     When i make a "POST" request
     """
     {
@@ -63,14 +63,11 @@ Feature: Explorer - Add file
     Then the response status should be "Bad Request"
     And the response should equal
     """
-    {
-      "type": "PARAMETERS_ERROR",
-      "message": "name: is missing"
-    }
+    {"type": "PARAMETERS_ERROR", "message": "name: is missing\nattribute: is missing"}
     """
 
   Scenario: Add file with missing parameters should fail
-    Given i access the resource url "/api/v2/explorer/data-source-name/add-file"
+    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
     When i make a "POST" request
     """
     {}
@@ -85,7 +82,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file to parent that does not exists
-    Given i access the resource url "/api/v2/explorer/data-source-name/add-file"
+    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
     When i make a "POST" request
     """
     {
