@@ -1,0 +1,49 @@
+openapi: 3.0.1
+info:
+  title: Data Modelling Storage Service API
+  description: Data storage service for DMT
+  version: 0.1.0
+
+servers:
+  - url: '/api/v1'
+
+tags:
+  - name: document
+    description: Document actions
+paths:
+  /documents/{dataSourceId}/{documentId}:
+    get:
+      operationId: get_document
+      x-openapi-router-controller: controllers.document_controller
+      tags:
+        - document
+      summary: Get document
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+        - name: documentId
+          in: path
+          description: 'The document ID'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+
+components:
+  schemas:
+    DocumentResponse:
+      type: object
+      properties:
+        document:
+          type: string
+
