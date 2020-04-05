@@ -25,7 +25,7 @@ jobs:
       # Log into container registry
       - name: "Docker Login"
         if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
-        run: echo ${{ secrets.DOCKER_PASSWORD }} | $(which docker) login --password-stdin --username ${{ secrets.DOCKER_USERNAME }}
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | $(which docker) login mariner.azurecr.io --password-stdin --username ${{ secrets.DOCKER_USERNAME }}
       # Push the container image to the container repository
       - name: "Push Docker image (latest)"
         if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
