@@ -8,17 +8,17 @@ import zipfile
 
 from jinja2 import Template
 
-from classes.dto import DTO
-from classes.storage_recipe import StorageRecipe
-from config import Config
-from core.enums import DMT
-from core.repository import Repository
-from core.repository.repository_exceptions import EntityNotFoundException
-from core.shared import request_object as req
-from core.shared import response_object as res
-from core.shared import use_case as uc
-from core.utility import BlueprintProvider
-from utils.logging import logger
+from api.classes.dto import DTO
+from api.classes.storage_recipe import StorageRecipe
+from api.config import Config
+from api.core.enums import DMT
+from api.core.repository import Repository
+from api.core.repository.repository_exceptions import EntityNotFoundException
+from api.core.shared import request_object as req
+from api.core.shared import response_object as res
+from api.core.shared import use_case as uc
+from api.core.utility import BlueprintProvider
+from api.utils.logging import logger
 
 API_DOCKERFILE = f"""\
 FROM mariner.azurecr.io/dmt/api:stable

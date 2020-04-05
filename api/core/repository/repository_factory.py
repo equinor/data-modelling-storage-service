@@ -1,7 +1,7 @@
-from classes.data_source import DataSource
-from core.enums import DataSourceType
-from core.repository import Repository
-from core.repository.mongo import MongoDBClient
+from api.classes.data_source import DataSource
+from api.core.enums import DataSourceType
+from api.core.repository import Repository
+from api.core.repository.mongo import MongoDBClient
 
 
 def get_repository(data_source_id: str):

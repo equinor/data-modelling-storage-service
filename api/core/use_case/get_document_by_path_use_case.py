@@ -1,15 +1,14 @@
-from core.enums import PRIMITIVES
-from core.repository.repository_factory import get_repository
-from core.service.document_service import DocumentService
-from core.shared import request_object as req
-from core.shared import response_object as res
-from core.shared import use_case as uc
-from core.utility import get_document_by_ref
+from api.core.enums import PRIMITIVES
+from api.core.repository.repository_factory import get_repository
+from api.core.service.document_service import DocumentService
+from api.core.shared import request_object as req
+from api.core.shared import response_object as res
+from api.core.shared import use_case as uc
+from api.core.utility import get_document_by_ref
 
-from classes.blueprint_attribute import BlueprintAttribute
-from classes.dto import DTO
-from utils.logging import logger
-from utils.uuid import is_valid_uuid
+from api.classes.blueprint_attribute import BlueprintAttribute
+from api.classes.dto import DTO
+from api.utils.logging import logger
 
 
 class GetDocumentByPathRequestObject(req.ValidRequestObject):

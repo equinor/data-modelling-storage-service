@@ -1,14 +1,14 @@
 from pathlib import Path
 
-from classes.data_source import DataSource
-from classes.dto import DTO
-from core.repository import Repository
-from core.repository.repository_exceptions import EntityAlreadyExistsException, EntityNotFoundException
-from core.shared import request_object as req
-from core.shared import response_object as res
-from core.shared import use_case as uc
-from core.utility import get_document_by_ref
-from utils.logging import logger
+from api.classes.data_source import DataSource
+from api.classes.dto import DTO
+from api.core.repository import Repository
+from api.core.repository.repository_exceptions import EntityAlreadyExistsException, EntityNotFoundException
+from api.core.shared import request_object as req
+from api.core.shared import response_object as res
+from api.core.shared import use_case as uc
+from api.core.utility import get_document_by_ref
+from api.utils.logging import logger
 
 
 class MoveFileRequestObject(req.ValidRequestObject):

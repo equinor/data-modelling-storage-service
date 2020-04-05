@@ -3,22 +3,22 @@ import zipfile
 from typing import Dict, Union
 from uuid import uuid4
 
-from classes.blueprint import Blueprint
-from classes.dto import DTO
-from classes.storage_recipe import StorageRecipe
-from classes.tree_node import ListNode, Node
-from core.enums import SIMOS, DMT
-from core.repository import Repository
-from core.repository.repository_exceptions import (
+from api.classes.blueprint import Blueprint
+from api.classes.dto import DTO
+from api.classes.storage_recipe import StorageRecipe
+from api.classes.tree_node import ListNode, Node
+from api.core.enums import SIMOS, DMT
+from api.core.repository import Repository
+from api.core.repository.repository_exceptions import (
     EntityNotFoundException,
     FileNotFoundException,
     DuplicateFileNameInPackageException,
     InvalidDocumentNameException,
 )
-from core.repository.zip_file import ZipFileClient
-from core.use_case.utils.create_entity import CreateEntity
-from core.utility import BlueprintProvider, duplicate_filename, url_safe_name
-from utils.logging import logger
+from api.core.repository.zip_file import ZipFileClient
+from api.core.use_case.utils.create_entity import CreateEntity
+from api.core.utility import BlueprintProvider, duplicate_filename, url_safe_name
+from api.utils.logging import logger
 
 
 def get_required_attributes(type: str):

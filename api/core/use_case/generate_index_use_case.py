@@ -1,17 +1,17 @@
 from typing import Dict, Union
 
-from classes.blueprint_attribute import BlueprintAttribute
-from core.enums import DMT
-from core.repository.repository_exceptions import EntityNotFoundException
-from core.repository.repository_factory import get_repository
-from core.service.document_service import DocumentService
-from core.use_case.utils.generate_index_menu_actions import get_node_on_select
-from core.use_case.utils.set_index_context_menu import create_context_menu
-from utils.logging import logger
+from api.classes.blueprint_attribute import BlueprintAttribute
+from api.core.enums import DMT
+from api.core.repository.repository_exceptions import EntityNotFoundException
+from api.core.repository.repository_factory import get_repository
+from api.core.service.document_service import DocumentService
+from api.core.use_case.utils.generate_index_menu_actions import get_node_on_select
+from api.core.use_case.utils.set_index_context_menu import create_context_menu
+from api.utils.logging import logger
 
-from classes.recipe import RecipePlugin
-from classes.tree_node import Node, ListNode
-from config import Config
+from api.classes.recipe import RecipePlugin
+from api.classes.tree_node import Node, ListNode
+from api.config import Config
 
 
 def get_parent_id(data_source_id: str, node: Union[Node, ListNode]):

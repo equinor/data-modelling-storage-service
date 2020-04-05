@@ -1,9 +1,9 @@
 #!/bin/sh
 set -euo pipefail
 
-if [ ! -e /code/home/first-run-false ] && [ "$ENVIRONMENT" = 'local' ]; then
+if [ ! -e /usr/src/app/api/home/first-run-false ] && [ "$ENVIRONMENT" = 'local' ]; then
   echo "Importing data"
-  /code/reset-database.sh
-  touch /code/home/first-run-false
+  /usr/src/app/api/reset-database.sh
+  touch /usr/src/app/api/home/first-run-false
 fi
 flask run --host=0.0.0.0

@@ -3,8 +3,8 @@ import json
 from deepdiff import DeepDiff
 import pprint
 
-from utils.data_structure.compare import pretty_eq
-from utils.data_structure.find import find
+from api.utils.data_structure.compare import pretty_eq
+from api.utils.data_structure.find import find
 
 STATUS_CODES = {
     "OK": 200,

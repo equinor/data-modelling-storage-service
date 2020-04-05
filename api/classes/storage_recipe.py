@@ -1,7 +1,7 @@
 from typing import Dict, List
 
-from classes.blueprint_attribute import BlueprintAttribute
-from core.enums import PRIMITIVES
+from api.classes.blueprint_attribute import BlueprintAttribute
+from api.core.enums import PRIMITIVES
 
 DEFAULT_PRIMITIVE_CONTAINED = True
 DEFAULT_COMPLEX_CONTAINED = True

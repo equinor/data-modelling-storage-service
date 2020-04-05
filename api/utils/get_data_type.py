@@ -1,4 +1,4 @@
-from core.enums import PrimitiveDataTypes
+from api.core.enums import PrimitiveDataTypes
 
 
 # Convert dmt attribute_types to python types. If complex, return type as string.

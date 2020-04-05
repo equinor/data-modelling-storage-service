@@ -1,10 +1,10 @@
 import json
 from json import JSONDecodeError
 
-from classes.blueprint import Blueprint
-from classes.blueprint_attribute import BlueprintAttribute
-from core.enums import SIMOS
-from utils.form_to_schema import PRIMITIVES
+from api.classes.blueprint import Blueprint
+from api.classes.blueprint_attribute import BlueprintAttribute
+from api.core.enums import SIMOS
+from api.utils.form_to_schema import PRIMITIVES
 
 
 class CreateEntityException(Exception):

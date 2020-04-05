@@ -2,10 +2,10 @@ import json
 from enum import Enum
 from flask import Blueprint, Response, request
 
-from classes.dto import DTO
+from api.classes.dto import DTO
 
-from classes.data_source import DataSource
-from core.repository.repository_factory import get_repository
+from api.classes.data_source import DataSource
+from api.core.repository.repository_factory import get_repository
 
 
 class ApiActions(Enum):

@@ -2,17 +2,17 @@ import json
 
 from behave import given, when, then
 
-from classes.schema import Factory
-from core.repository import Repository
-from core.repository.file import TemplateRepositoryFromFile
-from core.repository.repository_factory import get_repository
-from utils.data_structure.compare import pretty_eq
-from utils.helper_functions import schemas_location
-from utils.logging import logger
-from utils.package_import import import_package
+from api.classes.schema import Factory
+from api.core.repository import Repository
+from api.core.repository.file import TemplateRepositoryFromFile
+from api.core.repository.repository_factory import get_repository
+from api.utils.data_structure.compare import pretty_eq
+from api.utils.helper_functions import schemas_location
+from api.utils.logging import logger
+from api.utils.package_import import import_package
 
-from classes.dto import DTO
-from config import Config
+from api.classes.dto import DTO
+from api.config import Config
 
 
 @given("data modelling tool templates are imported")

@@ -1,9 +1,9 @@
 from typing import List
 
-from core.utility import get_blueprint_cached
-from utils.data_structure.find import get
+from api.core.utility import get_blueprint_cached
+from api.utils.data_structure.find import get
 
-from core.enums import PRIMITIVES
+from api.core.enums import PRIMITIVES
 
 
 def find_attribute(name: str, attributes: List):

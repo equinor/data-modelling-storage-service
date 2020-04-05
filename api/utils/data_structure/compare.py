@@ -1,4 +1,4 @@
-from utils.data_structure.traverse import traverse_compare
+from api.utils.data_structure.traverse import traverse_compare
 from pygments import highlight
 from pygments.lexers import JsonLexer
 from pygments.formatters import TerminalFormatter

@@ -1,6 +1,6 @@
 from flask import abort
 
-from services.database import dmt_database as db
+from api.services.database import dmt_database as db
 
 
 class DataSource:

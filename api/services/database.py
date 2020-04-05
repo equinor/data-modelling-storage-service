@@ -1,6 +1,6 @@
 from pymongo import MongoClient
-from utils.logging import logger
-from config import Config
+from api.utils.logging import logger
+from api.config import Config
 
 logger.info(f"Using Database for {Config.ENVIRONMENT}.")
 

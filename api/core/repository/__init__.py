@@ -1,9 +1,9 @@
 from typing import List, Union
 
-from classes.dto import DTO
-from core.repository.db_client_interface import DBClientInterface
-from core.repository.repository_exceptions import EntityNotFoundException
-from utils.logging import logger
+from api.classes.dto import DTO
+from api.core.repository.db_client_interface import DBClientInterface
+from api.core.repository.repository_exceptions import EntityNotFoundException
+from api.utils.logging import logger
 
 
 class Repository:

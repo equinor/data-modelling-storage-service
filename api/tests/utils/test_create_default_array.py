@@ -1,11 +1,11 @@
 import unittest
 
-from classes.blueprint import Blueprint
-from classes.dimension import Dimension
-from classes.dto import DTO
-from core.repository.file import TemplateRepositoryFromFile
-from core.use_case.utils.create_entity import CreateEntity
-from utils.helper_functions import schemas_location
+from api.classes.blueprint import Blueprint
+from api.classes.dimension import Dimension
+from api.classes.dto import DTO
+from api.core.repository.file import TemplateRepositoryFromFile
+from api.core.use_case.utils.create_entity import CreateEntity
+from api.utils.helper_functions import schemas_location
 
 package_blueprint = {
     "type": "system/SIMOS/Blueprint",

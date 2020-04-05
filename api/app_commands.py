@@ -1,30 +1,11 @@
 import json
-import os
-
 import click
-from flask import Flask
-
-from config import Config
-from core.rest import DataSource, Document as DocumentBlueprint, Explorer, Index, System, Actions, Blueprints
-from core.utility import wipe_db
-from services.database import dmt_database
-from utils.logging import logger
-from utils.package_import import import_package
-
-
-def create_app(config):
-    app = Flask(__name__)
-    app.config.from_object(config)
-    app.register_blueprint(DocumentBlueprint.blueprint)
-    app.register_blueprint(Explorer.blueprint)
-    app.register_blueprint(DataSource.blueprint)
-    app.register_blueprint(Index.blueprint)
-    app.register_blueprint(System.blueprint)
-    app.register_blueprint(Actions.blueprint)
-    app.register_blueprint(Blueprints.blueprint)
-    app.secret_key = os.urandom(64)
-    return app
-
+from app import create_app
+from api.config import Config
+from api.core.utility import wipe_db
+from api.services.database import dmt_database
+from api.utils.logging import logger
+from api.utils.package_import import import_package
 
 app = create_app(Config)
 

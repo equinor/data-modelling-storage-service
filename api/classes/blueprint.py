@@ -1,10 +1,10 @@
 from typing import Dict, List
 
-from classes.blueprint_attribute import BlueprintAttribute
-from classes.dto import DTO
-from classes.recipe import DefaultRecipe, Recipe, RecipeAttribute
-from classes.storage_recipe import DefaultStorageRecipe, StorageRecipe
-from core.enums import PRIMITIVES
+from api.classes.blueprint_attribute import BlueprintAttribute
+from api.classes.dto import DTO
+from api.classes.recipe import DefaultRecipe, Recipe, RecipeAttribute
+from api.classes.storage_recipe import DefaultStorageRecipe, StorageRecipe
+from api.core.enums import PRIMITIVES
 
 
 def get_storage_recipes(recipes: List[Dict], attributes: List[BlueprintAttribute]):

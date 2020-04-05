@@ -1,6 +1,6 @@
 import unittest
 
-from utils.group_by import group_by
+from api.utils.group_by import group_by
 
 
 class GroupByTestCase(unittest.TestCase):

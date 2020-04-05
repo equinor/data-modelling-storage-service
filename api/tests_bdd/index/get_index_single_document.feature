@@ -1,3 +1,4 @@
+@skip
 Feature: Index
 
   Background: There are data sources in the system
@@ -67,8 +68,8 @@ Feature: Index
                   "label":"Blueprint",
                   "action":"CREATE",
                   "data":{
-                  "url":"/api/v2/explorer/data-source-name/add-file",
-                  "schemaUrl":"/api/v2/json-schema/system/SIMOS/Blueprint?ui_recipe=DEFAULT_CREATE",
+                  "url":"/api/v1/explorer/data-source-name/add-file",
+                  "schemaUrl":"/api/v1/json-schema/system/SIMOS/Blueprint?ui_recipe=DEFAULT_CREATE",
                   "nodeUrl":"/api/v4/index/data-source-name/2",
                   "request":{
                     "type":"system/SIMOS/Blueprint",
@@ -128,8 +129,8 @@ Feature: Index
                   "label":"Entity",
                   "action":"CREATE",
                   "data":{
-                  "url":"/api/v2/explorer/entities-DS/add-file",
-                  "schemaUrl":"/api/v2/json-schema/system/DMT/Entity?ui_recipe=DEFAULT_CREATE",
+                  "url":"/api/v1/explorer/entities-DS/add-file",
+                  "schemaUrl":"/api/v1/json-schema/system/DMT/Entity?ui_recipe=DEFAULT_CREATE",
                   "nodeUrl":"/api/v4/index/entities-DS/1",
                   "request":{
                     "type":"system/DMT/Entity",

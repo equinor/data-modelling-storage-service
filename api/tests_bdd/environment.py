@@ -1,8 +1,8 @@
 from app import create_app
-from config import Config
-from core.utility import wipe_db
-from services.database import dmt_database
-from tests_bdd.results import print_overview_errors, print_overview_features
+from api.config import Config
+from api.core.utility import wipe_db
+from api.services.database import dmt_database
+from api.tests_bdd.results import print_overview_errors, print_overview_features
 
 app = create_app(Config)
 app.config["TESTING"] = True

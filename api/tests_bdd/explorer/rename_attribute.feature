@@ -237,7 +237,7 @@ Feature: Explorer - Remove file
     """
 
   Scenario: Rename attribute - the index ui recipe
-    Given i access the resource url "/api/v2/explorer/data-source-name/rename"
+    Given i access the resource url "/api/v1/explorer/data-source-name/rename"
     And data modelling tool templates are imported
     When i make a "PUT" request
   """
@@ -248,7 +248,7 @@ Feature: Explorer - Remove file
   }
   """
     Then the response status should be "OK"
-    Given I access the resource url "/api/v2/documents/data-source-name/2"
+    Given I access the resource url "/api/v1/documents/data-source-name/2"
     When I make a "GET" request
     Then the response should contain
   """
@@ -278,7 +278,7 @@ Feature: Explorer - Remove file
   """
 
   Scenario: Rename attribute - the item
-    Given i access the resource url "/api/v2/explorer/data-source-name/rename"
+    Given i access the resource url "/api/v1/explorer/data-source-name/rename"
     And data modelling tool templates are imported
     When i make a "PUT" request
   """
@@ -289,7 +289,7 @@ Feature: Explorer - Remove file
   }
   """
     Then the response status should be "OK"
-    Given I access the resource url "/api/v2/documents/data-source-name/6"
+    Given I access the resource url "/api/v1/documents/data-source-name/6"
     When I make a "GET" request
     Then the response should contain
   """

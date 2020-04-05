@@ -2,12 +2,12 @@ import json
 
 from flask import Blueprint, request, Response
 
-from core.repository.data_source_repository import DataSourceRepository
-from core.rest.Explorer import STATUS_CODES
-from core.serializers.create_data_source_serializer import CreateDataSourceSerializer
-from core.serializers.get_data_sources_serializer import GetDataSourcesSerializer
-from core.use_case.create_data_source_use_case import CreateDataSourceUseCase, CreateDataSourceRequestObject
-from core.use_case.get_data_sources_use_case import GetDataSourcesUseCase, GetDataSourcesUseCaseRequestObject
+from api.core.repository.data_source_repository import DataSourceRepository
+from api.core.rest.Explorer import STATUS_CODES
+from api.core.serializers.create_data_source_serializer import CreateDataSourceSerializer
+from api.core.serializers.get_data_sources_serializer import GetDataSourcesSerializer
+from api.core.use_case.create_data_source_use_case import CreateDataSourceUseCase, CreateDataSourceRequestObject
+from api.core.use_case.get_data_sources_use_case import GetDataSourcesUseCase, GetDataSourcesUseCaseRequestObject
 
 blueprint = Blueprint("datasource", __name__)
 

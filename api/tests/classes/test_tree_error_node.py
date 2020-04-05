@@ -1,8 +1,8 @@
 import unittest
 from unittest import skip
 
-from classes.dto import DTO
-from classes.tree_node import Node
+from api.classes.dto import DTO
+from api.classes.tree_node import Node
 
 
 blueprint_1 = {

@@ -1,12 +1,12 @@
 import unittest
 from enum import Enum
 
-from classes.blueprint import Blueprint
-from classes.blueprint_attribute import BlueprintAttribute
-from classes.dto import DTO
-from core.repository.file import TemplateRepositoryFromFile
-from core.use_case.utils.create_entity import CreateEntity
-from utils.helper_functions import schemas_location
+from api.classes.blueprint import Blueprint
+from api.classes.blueprint_attribute import BlueprintAttribute
+from api.classes.dto import DTO
+from api.core.repository.file import TemplateRepositoryFromFile
+from api.core.use_case.utils.create_entity import CreateEntity
+from api.utils.helper_functions import schemas_location
 
 
 class Types(Enum):

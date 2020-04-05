@@ -1,10 +1,10 @@
 import json
 from zipfile import ZipFile
 
-from classes.dto import DTO
-from core.enums import DMT
-from core.repository.db_client_interface import DBClientInterface
-from utils.logging import logger
+from api.classes.dto import DTO
+from api.core.enums import DMT
+from api.core.repository.db_client_interface import DBClientInterface
+from api.utils.logging import logger
 
 
 class ZipFileClient(DBClientInterface):

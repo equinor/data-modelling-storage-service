@@ -3,7 +3,7 @@
 
 def create_system_blueprints():
     from classes.schema import Factory
-    from core.repository.file import TemplateRepositoryFromFile
+    from api.core.repository.file import TemplateRepositoryFromFile
     from utils.helper_functions import schemas_location
 
     template_repository = TemplateRepositoryFromFile(schemas_location())

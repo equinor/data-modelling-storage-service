@@ -2,9 +2,9 @@ import json
 
 from flask import Blueprint, request, Response
 
-from core.shared import response_object as res
-from core.use_case.get_blueprints_use_case import GetBlueprintsRequestObject, GetBlueprintsUseCase
-from utils.logging import logger
+from api.core.shared import response_object as res
+from api.core.use_case.get_blueprints_use_case import GetBlueprintsRequestObject, GetBlueprintsUseCase
+from api.utils.logging import logger
 
 blueprint = Blueprint("blueprints", __name__)
 

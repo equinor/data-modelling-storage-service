@@ -2,9 +2,9 @@ import json
 from pathlib import Path
 from typing import Union
 
-from classes.dto import DTO
-from core.repository import Repository
-from core.repository.repository_exceptions import TemplateNotFound
+from api.classes.dto import DTO
+from api.core.repository import Repository
+from api.core.repository.repository_exceptions import TemplateNotFound
 
 
 class TemplateRepositoryFromFile(Repository):

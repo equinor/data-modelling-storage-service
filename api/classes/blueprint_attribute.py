@@ -1,8 +1,8 @@
 from typing import Optional
 
-from classes.dimension import Dimension
-from core.enums import SIMOS
-from core.enums import PRIMITIVES
+from api.classes.dimension import Dimension
+from api.core.enums import SIMOS
+from api.core.enums import PRIMITIVES
 
 
 class BlueprintAttribute:

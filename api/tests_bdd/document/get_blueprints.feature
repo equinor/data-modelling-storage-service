@@ -1,3 +1,4 @@
+@skip
 Feature: Document - Generate JSON Schema
 
   Background: There are data sources in the system

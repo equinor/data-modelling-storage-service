@@ -1,5 +1,5 @@
-from core.shared import request_object, response_object, use_case
-from core.enums import DataSourceDocumentType
+from api.core.shared import request_object, response_object, use_case
+from api.core.enums import DataSourceDocumentType
 
 
 class GetDataSourcesUseCaseRequestObject(request_object.ValidRequestObject):

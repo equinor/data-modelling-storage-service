@@ -1,7 +1,7 @@
 from typing import Union
 
-from classes.tree_node import Node
-from core.enums import DMT
+from api.classes.tree_node import Node
+from api.core.enums import DMT
 
 
 def get_rename_menu_action(data_source_id: str, dotted_document_id: str, type: str, parent_uid: str = None):

@@ -2,17 +2,17 @@ import json
 
 from flask import Blueprint, request, Response, send_file
 
-from core.repository.repository_factory import get_repository
-from core.serializers.dto_json_serializer import DTOSerializer
-from core.shared import response_object as res
-from core.use_case.add_file_use_case import AddFileRequestObject, AddFileUseCase
-from core.use_case.add_root_package_use_case import AddRootPackageRequestObject, AddRootPackageUseCase
-from core.use_case.export_use_case import ExportRequestObject, ExportUseCase
-from core.use_case.move_file_use_case import MoveFileRequestObject, MoveFileUseCase
-from core.use_case.remove_use_case import RemoveFileRequestObject, RemoveUseCase
-from core.use_case.rename_file_use_case import RenameRequestObject, RenameUseCase
+from api.core.repository.repository_factory import get_repository
+from api.core.serializers.dto_json_serializer import DTOSerializer
+from api.core.shared import response_object as res
+from api.core.use_case.add_file_use_case import AddFileRequestObject, AddFileUseCase
+from api.core.use_case.add_root_package_use_case import AddRootPackageRequestObject, AddRootPackageUseCase
+from api.core.use_case.export_use_case import ExportRequestObject, ExportUseCase
+from api.core.use_case.move_file_use_case import MoveFileRequestObject, MoveFileUseCase
+from api.core.use_case.remove_use_case import RemoveFileRequestObject, RemoveUseCase
+from api.core.use_case.rename_file_use_case import RenameRequestObject, RenameUseCase
 
-from core.use_case.add_document_use_case import AddDocumentUseCase, AddDocumentRequestObject
+from api.core.use_case.add_document_use_case import AddDocumentUseCase, AddDocumentRequestObject
 
 blueprint = Blueprint("explorer", __name__)
 
