@@ -1,9 +1,6 @@
 name: Publish DMSS API to PyPI
 
-on:
-  push:
-    tags:
-      - refs/tags/v*
+on: [push]
 
 jobs:
   build-n-publish:
