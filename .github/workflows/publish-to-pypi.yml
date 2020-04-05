@@ -29,12 +29,12 @@ jobs:
         working-directory: '.'
         env:
           API_VERSION: ${{ steps.get_version.outputs.VERSION }}
-        run: ./generate-api.sh
+        run: ./generate-python-client.sh
       - name: Build a binary wheel and a source tarball
-        working-directory: './gen/api'
+        working-directory: './gen/python'
         run: python3 setup.py sdist bdist_wheel
       - name: Publish gpa-api to PyPI
-        working-directory: './gen/api'
+        working-directory: './gen/python'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.pypi_password }}
