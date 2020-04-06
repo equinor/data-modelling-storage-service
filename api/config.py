@@ -25,7 +25,7 @@ class Config:
     ENTITY_SETTINGS_FILE = f"{APPLICATION_HOME}/settings.json"
     SYSTEM_FOLDERS = ["SIMOS", "DMT"]
     VERIFY_IMPORTS = os.getenv("DMT_VERIFY_IMPORTS", True)
-    PY_PROJECT_FILE = f"{Path(__file__).parent.absolute()}/pyproject.toml"
+    PY_PROJECT_FILE = "pyproject.toml"
     with open(PY_PROJECT_FILE) as toml_file:
         PY_PROJECT = toml.load(toml_file)
     with open(DMT_SETTINGS_FILE) as json_file:
