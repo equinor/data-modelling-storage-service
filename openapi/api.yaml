@@ -37,7 +37,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DocumentResponse'
+                type: array
+                items:
+                  $ref: '#/components/schemas/DocumentResponse'
   /documents/{dataSourceId}/{documentId}:
     get:
       operationId: get_by_id
