@@ -159,11 +159,14 @@ paths:
                 - attribute
       responses:
         '200':
-          description: Added document
+          description: The UID of the added document
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DocumentResponse'
+                type: object
+                properties:
+                  uid:
+                    type: string
   /explorer/{dataSourceId}/add-to-path:
     post:
       operationId: add_to_path
