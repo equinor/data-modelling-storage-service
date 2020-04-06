@@ -1,5 +1,7 @@
 # Data Modelling Storage Service
 
+![](https://github.com/equinor/data-modelling-storage-service/workflows/Testing/badge.svg)
+
 ## Prerequisites
 
 In order to run the commands described below, you need:
