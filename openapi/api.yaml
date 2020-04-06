@@ -39,7 +39,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/DocumentResponse'
+                  type: object
   /documents/{dataSourceId}/{documentId}:
     get:
       operationId: get_by_id
