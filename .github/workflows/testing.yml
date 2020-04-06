@@ -1,0 +1,22 @@
+name: Testing
+
+on: [push]
+
+jobs:
+  testing:
+    name: Run tests
+    runs-on: ubuntu-18.04
+
+    env:
+      DOCKER_IMAGE: dmss-api-test
+
+    steps:
+      - uses: actions/checkout@master
+      - name: "Build Docker image"
+        run: |
+          ./generate-api.sh
+          $(which docker) build --tag ${DOCKER_IMAGE}:latest .
+      - name: "BDD Tests"
+        run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml run mainapi behave
+      - name: "Unit Tests"
+        run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml run mainapi pytest api
