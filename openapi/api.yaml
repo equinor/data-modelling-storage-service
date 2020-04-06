@@ -8,6 +8,8 @@ servers:
   - url: 'http://0.0.0.0:8000/api/v1'
 
 tags:
+  - name: package
+    description: Packages
   - name: document
     description: Documents
   - name: explorer
@@ -15,6 +17,27 @@ tags:
   - name: datasource
     description: Data sources
 paths:
+  /packages/{dataSourceId}:
+    get:
+      operationId: get
+      x-openapi-router-controller: controllers.package_controller
+      tags:
+        - package
+      summary: Get packages
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
   /documents/{dataSourceId}/{documentId}:
     get:
       operationId: get_by_id

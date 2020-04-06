@@ -32,7 +32,6 @@ def get_json_schema(type: str):
 
 @blueprint.route("/api/v2/documents/<string:data_source_id>/<path:document_id>", methods=["GET"])
 def get_by_id(data_source_id: str, document_id: str):
-    print(dmss_api.__doc__)
     logger.info(f"Getting document '{document_id}' from data source '{data_source_id}'")
     ui_recipe = request.args.get("ui_recipe")
     attribute = request.args.get("attribute")
