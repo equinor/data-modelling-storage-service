@@ -275,6 +275,8 @@ components:
       type: object
       properties:
         document:
-          type: string
+          type: object
     DocumentBody:
       type: object
+      additionalProperties:
+        type: object
