@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
-      - name: "Build Docker image"
-        run: |
-          ./generate-api.sh
-          $(which docker) build --tag ${DOCKER_IMAGE}:latest .
+      - name: "Generate API"
+        run: ./generate-api.sh
+      - name: "Build Docker Images"
+        run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml build
       - name: "BDD Tests"
         run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml run mainapi behave
       - name: "Unit Tests"
