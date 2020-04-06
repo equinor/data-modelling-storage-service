@@ -84,3 +84,4 @@ class AddFileUseCase(uc.UseCase):
         )
         document_service.invalidate_cache()
         return res.ResponseSuccess(document)
+

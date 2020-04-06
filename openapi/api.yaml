@@ -137,7 +137,26 @@ paths:
           schema:
             type: string
       requestBody:
-        $ref: '#/components/requestBodies/DocumentBody'
+        description: A JSON object containing document information
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                parentId:
+                  type: string
+                type:
+                  type: string
+                attribute:
+                  type: string
+              required:
+                - name
+                - parentId
+                - type
+                - attribute
       responses:
         '200':
           description: Added document
