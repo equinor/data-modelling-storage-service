@@ -17,17 +17,24 @@ docker-compose build
 docker-compose up
 ```
 
-API documentation will be available at [localhost:8000/api/v1/ui/](http://localhost:8000/api/v1/ui/).
+API documentation can be found at [http://localhost:8000/api/v1/ui](http://localhost:8000/api/v1/ui).
 
-To refresh database after running 
+### Refresh database 
+
 ```
 docker-compose exec mainapi ./api/reset-database.sh
 ```
 
 ## Testing
 
-BDD tests:
+Run BDD tests:
 
 ```
 docker-compose run --rm mainapi behave
+```
+
+Run unit tests:
+
+```
+docker-compose run --rm mainapi pytest api
 ```
