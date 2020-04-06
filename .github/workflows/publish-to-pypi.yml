@@ -2,8 +2,10 @@ name: Publish DMSS API to PyPI
 
 on:
   push:
+    branches:
+      - master
     tags:
-      - "*"
+      - "**"
 
 jobs:
   build-n-publish:
