@@ -39,7 +39,7 @@ def get_document(document_uid: str, document_repository: Repository):
 
 
 def get_resolved_document(
-    document: DTO, document_repository: Repository, blueprint_provider: BlueprintProvider
+        document: DTO, document_repository: Repository, blueprint_provider: BlueprintProvider
 ) -> Dict:
     blueprint: Blueprint = blueprint_provider.get_blueprint(document.type)
 
@@ -95,7 +95,7 @@ def get_resolved_document(
 
 
 def get_complete_document(
-    document_uid: str, document_repository: Repository, blueprint_provider: BlueprintProvider
+        document_uid: str, document_repository: Repository, blueprint_provider: BlueprintProvider
 ) -> Dict:
     document = get_document(document_uid=document_uid, document_repository=document_repository)
 
@@ -274,10 +274,10 @@ class DocumentService:
 
         logger.info(f"Updated document '{target_node.node_id}''")
 
-        return target_node.to_dict()
+        return {"data": target_node.to_dict()}
 
     def add_document(
-        self, data_source_id: str, parent_id: str, type: str, name: str, description: str, attribute_path: str
+            self, data_source_id: str, parent_id: str, type: str, name: str, description: str, attribute_path: str
     ):
         if not url_safe_name(name):
             raise InvalidDocumentNameException(name)
