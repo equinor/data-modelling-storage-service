@@ -247,10 +247,10 @@ paths:
               properties:
                 parentId:
                   type: string
+                  nullable: true
                 documentId:
                   type: string
               required:
-                - parentId
                 - documentId
       responses:
         '200':
@@ -307,15 +307,14 @@ paths:
                 name:
                   type: string
                 parentId:
-                  type: string
+                   type: string
+                   nullable: true
                 description:
                   type: string
                 documentId:
                   type: string
               required:
                 - name
-                - parentId
-                - description
                 - documentId
       responses:
         '200':
@@ -364,5 +363,5 @@ components:
         type: object
     DocumentBody:
       type: object
-      additionalProperties:
-        type: object
+      additionalProperties: true
+

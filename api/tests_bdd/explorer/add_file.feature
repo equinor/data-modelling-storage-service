@@ -50,13 +50,13 @@ Feature: Explorer - Add file
        }
     }
     """
-
+  @skip
   Scenario: Add file with missing parameter name should fail
     Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
     When i make a "POST" request
     """
     {
-      "parentId": 1,
+      "parentId": "1",
       "type": "system/SIMOS/Blueprint"
     }
     """
@@ -66,6 +66,7 @@ Feature: Explorer - Add file
     {"type": "PARAMETERS_ERROR", "message": "name: is missing\nattribute: is missing"}
     """
 
+  @skip
   Scenario: Add file with missing parameters should fail
     Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
     When i make a "POST" request
