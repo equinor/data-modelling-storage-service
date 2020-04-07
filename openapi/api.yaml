@@ -17,6 +17,33 @@ tags:
   - name: datasource
     description: Data sources
 paths:
+  /packages/{dataSourceId}/findByName/{name}:
+    get:
+      operationId: find_by_name
+      x-openapi-router-controller: controllers.package_controller
+      tags:
+        - package
+      summary: Query packages
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+        - name: name
+          in: path
+          description: 'The name of the package to find'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Package
+          content:
+            application/json:
+              schema:
+                type: object
   /packages/{dataSourceId}:
     get:
       operationId: get
@@ -94,7 +121,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DocumentResponse'
+                type: object
+                properties:
+                  document:
+                    type: object
   /documents-by-path/{dataSourceId}:
     get:
       operationId: get_by_path
@@ -121,7 +151,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DocumentResponse'
+                type: object
+                properties:
+                  document:
+                    type: object
   /explorer/{dataSourceId}/add-to-parent:
     post:
       operationId: add_to_parent
@@ -205,14 +238,27 @@ paths:
           schema:
             type: string
       requestBody:
-        $ref: '#/components/requestBodies/DocumentBody'
+        description: A JSON object containing document information
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                parentId:
+                  type: string
+                documentId:
+                  type: string
+              required:
+                - parentId
+                - documentId
       responses:
         '200':
-          description: Added document
+          description: Remove status
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DocumentResponse'
+                type: object
   /explorer/{dataSourceId}/move:
     put:
       operationId: move
@@ -251,7 +297,26 @@ paths:
           schema:
             type: string
       requestBody:
-        $ref: '#/components/requestBodies/DocumentBody'
+        description: A JSON object containing rename information
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                parentId:
+                  type: string
+                description:
+                  type: string
+                documentId:
+                  type: string
+              required:
+                - name
+                - parentId
+                - description
+                - documentId
       responses:
         '200':
           description: Added document
@@ -295,9 +360,8 @@ components:
   schemas:
     DocumentResponse:
       type: object
-      properties:
-        document:
-          type: object
+      additionalProperties:
+        type: object
     DocumentBody:
       type: object
       additionalProperties:
