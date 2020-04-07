@@ -286,11 +286,9 @@ Feature: Document 2
     And the response should contain
     """
     {
-      "data": {
-        "name": "package_1",
-        "type": "system/DMT/Package",
-        "description": "new description"
-      }
+      "name": "package_1",
+      "type": "system/DMT/Package",
+      "description": "new description"
     }
     """
 
@@ -346,49 +344,47 @@ Feature: Document 2
     And the response should contain
     """
     {
-      "data": {
-        "name": "new_name",
-        "type": "test-source-name/TestData/TestContainer",
-        "description": "some description",
-        "itemContained": {
-          "name": "item_contained",
+      "name": "new_name",
+      "type": "test-source-name/TestData/TestContainer",
+      "description": "some description",
+      "itemContained": {
+        "name": "item_contained",
+        "type": "test-source-name/TestData/ItemType",
+         "extra": "extra_1"
+      },
+      "itemsContained": [
+      {
+          "name": "item_1_contained",
           "type": "test-source-name/TestData/ItemType",
-           "extra": "extra_1"
-        },
-        "itemsContained": [
-        {
-            "name": "item_1_contained",
-            "type": "test-source-name/TestData/ItemType",
-            "list": ["a", "b", "c"],
-            "complexList": [
-                {
-                  "name": "item_1_contained",
-                  "type": "test-source-name/TestData/ItemTypeTwo",
-                  "extra": "extra_1"
-                }
-              ]
-          }
-        ],
-        "itemNotContained": {
-            "name": "item_single",
-            "type": "test-source-name/TestData/ItemType",
-            "extra": "extra_1"
-        },
-        "itemsNotContained": [
-          {
-            "name": "item_1",
-            "type": "test-source-name/TestData/ItemType",
-            "list": ["a", "b"],
-            "complexList": [
+          "list": ["a", "b", "c"],
+          "complexList": [
               {
-                "name": "item_1",
+                "name": "item_1_contained",
                 "type": "test-source-name/TestData/ItemTypeTwo",
                 "extra": "extra_1"
               }
             ]
-          }
-        ]
-      }
+        }
+      ],
+      "itemNotContained": {
+          "name": "item_single",
+          "type": "test-source-name/TestData/ItemType",
+          "extra": "extra_1"
+      },
+      "itemsNotContained": [
+        {
+          "name": "item_1",
+          "type": "test-source-name/TestData/ItemType",
+          "list": ["a", "b"],
+          "complexList": [
+            {
+              "name": "item_1",
+              "type": "test-source-name/TestData/ItemTypeTwo",
+              "extra": "extra_1"
+            }
+          ]
+        }
+      ]
     }
     """
 
@@ -406,9 +402,7 @@ Feature: Document 2
     And the response should contain
     """
     {
-      "data": {
-        "name": "item_single",
-        "type": "test-source-name/TestData/ItemType"
-      }
+      "name": "item_single",
+      "type": "test-source-name/TestData/ItemType"
     }
     """

@@ -122,9 +122,7 @@ paths:
             application/json:
               schema:
                 type: object
-                properties:
-                  document:
-                    type: object
+                additionalProperties: true
   /documents-by-path/{dataSourceId}:
     get:
       operationId: get_by_path

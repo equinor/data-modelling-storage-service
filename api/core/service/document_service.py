@@ -274,7 +274,7 @@ class DocumentService:
 
         logger.info(f"Updated document '{target_node.node_id}''")
 
-        return {"data": target_node.to_dict()}
+        return target_node.to_dict()
 
     def add_document(
         self, data_source_id: str, parent_id: str, type: str, name: str, description: str, attribute_path: str
