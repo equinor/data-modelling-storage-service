@@ -2,8 +2,6 @@ name: Publish DMSS API to docker registry
 
 on:
   push:
-    branches:
-      - master
     tags:
       - "v**"
 

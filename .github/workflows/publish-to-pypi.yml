@@ -2,8 +2,6 @@ name: Publish DMSS API to PyPI
 
 on:
   push:
-    branches:
-      - master
     tags:
       - "v**"
 
