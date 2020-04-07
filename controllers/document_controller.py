@@ -1,4 +1,3 @@
-# from dmss_api.models import DocumentResponse
 from api.core.serializers.dto_json_serializer import DTOSerializer
 
 from api.core.use_case.update_document_use_case import UpdateDocumentRequestObject, UpdateDocumentUseCase
@@ -19,7 +18,6 @@ def get_by_id(data_source_id, document_id):
     )
     response = use_case.execute(request_object)
     return Response(json.dumps(response.value), mimetype="application/json", status=STATUS_CODES[response.type])
-    # return DocumentResponse(document=response.value).to_dict()
 
 
 def get_by_path(data_source_id):

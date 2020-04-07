@@ -14,7 +14,6 @@ from api.core.serializers.dto_json_serializer import DTOSerializer
 
 from api.core.use_case.add_file_use_case import AddFileUseCase, AddFileRequestObject
 
-from dmss_api.models.document_response import DocumentResponse  # noqa: E501
 from dmss_api import util
 from flask import Response, request
 from controllers.status_codes import STATUS_CODES
