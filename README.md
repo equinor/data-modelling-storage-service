@@ -31,6 +31,7 @@ Run BDD tests:
 
 ```
 docker-compose run --rm mainapi behave
+docker-compose run --rm mainapi behave -n "Scenario name" # Rn single test  
 ```
 
 Run unit tests:
