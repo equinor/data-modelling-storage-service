@@ -10,9 +10,14 @@ from api.classes.storage_recipe import StorageRecipe
 from api.classes.tree_node import ListNode, Node
 from api.core.enums import DMT, SIMOS
 from api.core.repository import Repository
-from api.core.repository.repository_exceptions import (DuplicateFileNameInPackageException, EntityNotFoundException,
-                                                       FileNotFoundException, InvalidAttributeException,
-                                                       InvalidDocumentNameException, RepositoryException)
+from api.core.repository.repository_exceptions import (
+    DuplicateFileNameInPackageException,
+    EntityNotFoundException,
+    FileNotFoundException,
+    InvalidAttributeException,
+    InvalidDocumentNameException,
+    RepositoryException,
+)
 from api.core.repository.zip_file import ZipFileClient
 from api.core.use_case.utils.create_entity import CreateEntity
 from api.core.utility import BlueprintProvider, duplicate_filename, url_safe_name
@@ -37,7 +42,7 @@ def get_document(document_uid: str, document_repository: Repository):
 
 
 def get_resolved_document(
-        document: DTO, document_repository: Repository, blueprint_provider: BlueprintProvider
+    document: DTO, document_repository: Repository, blueprint_provider: BlueprintProvider
 ) -> Dict:
     blueprint: Blueprint = blueprint_provider.get_blueprint(document.type)
 
@@ -93,7 +98,7 @@ def get_resolved_document(
 
 
 def get_complete_document(
-        document_uid: str, document_repository: Repository, blueprint_provider: BlueprintProvider
+    document_uid: str, document_repository: Repository, blueprint_provider: BlueprintProvider
 ) -> Dict:
     document = get_document(document_uid=document_uid, document_repository=document_repository)
 
@@ -275,7 +280,7 @@ class DocumentService:
         return {"data": target_node.to_dict()}
 
     def add_document(
-            self, data_source_id: str, parent_id: str, type: str, name: str, description: str, attribute_path: str
+        self, data_source_id: str, parent_id: str, type: str, name: str, description: str, attribute_path: str
     ):
         if not url_safe_name(name):
             raise InvalidDocumentNameException(name)
@@ -358,13 +363,13 @@ class DocumentService:
 
         # Raise error if posted attribute not in blueprint
         if invalid_type := next(
-                (key for key in search_data.keys() if key not in blueprint.get_attribute_names()), None
+            (key for key in search_data.keys() if key not in blueprint.get_attribute_names()), None
         ):
             raise InvalidAttributeException(invalid_type, type)
 
         # Raise error if posted attribute value is not a string
         if not_string := next(
-                ({key: value} for key, value in search_data.items() if not isinstance(value, str)), None
+            ({key: value} for key, value in search_data.items() if not isinstance(value, str)), None
         ):
             raise RepositoryException(f"Search parameters must be strings. {not_string}")
 
