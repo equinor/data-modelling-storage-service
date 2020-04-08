@@ -142,3 +142,4 @@ api/core/domain/dynamic_models/__init__.py
 
 venv
 gen
+/api.egg-info/

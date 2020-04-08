@@ -347,6 +347,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DocumentResponse'
+  /search/{dataSourceId}:
+    post:
+      operationId: search_entities
+      x-openapi-router-controller: controllers.search_controller
+      tags:
+        - search
+      summary: Search for entities
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: A JSON object containing search parameters
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  minLength: 5
+              required:
+                - type
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
 
 components:
   requestBodies:
@@ -363,6 +397,9 @@ components:
       additionalProperties:
         type: object
     DocumentBody:
+      type: object
+      additionalProperties: true
+    SearchResponse:
       type: object
       additionalProperties: true
 
