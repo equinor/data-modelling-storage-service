@@ -1,5 +1,7 @@
 import connexion
 import six
+
+from api.core.use_case.add_raw import AddRawUseCase, AddRawRequestObject
 from api.core.use_case.add_root_package_use_case import AddRootPackageUseCase, AddRootPackageRequestObject
 
 from api.core.use_case.rename_file_use_case import RenameUseCase, RenameRequestObject
@@ -50,6 +52,28 @@ def add_package(data_source_id, body):
     request_object = AddRootPackageRequestObject.from_dict(request_data)
     response = use_case.execute(request_object)
 
+    return Response(
+        json.dumps(response.value, cls=DTOSerializer), mimetype="application/json", status=STATUS_CODES[response.type]
+    )
+
+
+def add_document(data_source_id, body):
+    request_data = request.get_json()
+    request_data["data_source_id"] = data_source_id
+    use_case = AddDocumentUseCase()
+    request_object = AddDocumentRequestObject.from_dict(request_data)
+    response = use_case.execute(request_object)
+    return Response(
+        json.dumps(response.value, cls=DTOSerializer), mimetype="application/json", status=STATUS_CODES[response.type]
+    )
+
+
+def add_raw(data_source_id, body):
+    request_data = request.get_json()
+    request_data["data_source_id"] = data_source_id
+    use_case = AddRawUseCase()
+    request_object = AddRawRequestObject.from_dict(request_data)
+    response = use_case.execute(request_object)
     return Response(
         json.dumps(response.value, cls=DTOSerializer), mimetype="application/json", status=STATUS_CODES[response.type]
     )

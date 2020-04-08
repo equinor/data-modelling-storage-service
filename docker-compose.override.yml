@@ -14,7 +14,7 @@ services:
     ports:
       - "8000:5000"
 
-  maindb:
+  db:
     image: mongo:3.4
     command: --quiet
     environment:
@@ -27,7 +27,7 @@ services:
 
   db-ui:
     depends_on:
-      - maindb
+      - db
     image: mongo-express:0.49
     ports:
       - "8082:8081"
@@ -39,4 +39,4 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: maf
       ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
     links:
-      - maindb:db
+      - db

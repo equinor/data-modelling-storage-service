@@ -8,36 +8,6 @@ Feature: Document 2
       | db   | 27017 | maf      | maf      | false | test-source-name | local    | test       | blueprints   | mongo-db |
       | db   | 27017 | maf      | maf      | false | system           | local    | system     | system       | mongo-db |
 
-    Given there exist document with id "1" in data source "test-source-name"
-    """
-    {
-        "name": "TestData",
-        "description": "",
-        "type": "system/DMT/Package",
-        "content": [
-            {
-                "_id": "3",
-                "name": "TestContainer",
-                "type": "test-source-name/TestData/TestContainer"
-            },
-            {
-                "_id": "2",
-                "name": "ItemType",
-                "type": "test-source-name/TestData/ItemType"
-            },
-            {
-                "_id": "4",
-                "name": "ItemTypeTwo",
-                "type": "test-source-name/TestData/ItemTypeTwo"
-            }
-
-        ],
-        "isRoot": true,
-        "storageRecipes":[],
-        "uiRecipes":[]
-    }
-    """
-
     Given there exist document with id "2" in data source "test-source-name"
     """
     {
@@ -188,6 +158,36 @@ Feature: Document 2
         }
       ],
       "uiRecipes":[]
+    }
+    """
+
+    Given there exist document with id "1" in data source "test-source-name"
+    """
+    {
+        "name": "TestData",
+        "description": "",
+        "type": "system/DMT/Package",
+        "content": [
+            {
+                "_id": "3",
+                "name": "TestContainer",
+                "type": "test-source-name/TestData/TestContainer"
+            },
+            {
+                "_id": "2",
+                "name": "ItemType",
+                "type": "test-source-name/TestData/ItemType"
+            },
+            {
+                "_id": "4",
+                "name": "ItemTypeTwo",
+                "type": "test-source-name/TestData/ItemTypeTwo"
+            }
+
+        ],
+        "isRoot": true,
+        "storageRecipes":[],
+        "uiRecipes":[]
     }
     """
 

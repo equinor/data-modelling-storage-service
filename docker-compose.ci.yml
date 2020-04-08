@@ -14,9 +14,9 @@ services:
       ENVIRONMENT: local
       MONGO_INITDB_ROOT_PASSWORD: maf
     links:
-      - maindb:db
+      - db
 
-  maindb:
+  db:
     environment:
       MONGO_INITDB_ROOT_PASSWORD: maf
 

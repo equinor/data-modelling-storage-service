@@ -12,11 +12,11 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: maf
       APPLICATION_HOME: /usr/src/app/api/home
     depends_on:
-      - maindb
+      - db
     links:
-      - maindb:db
+      - db
 
-  maindb:
+  db:
     image: mongo:3.4
     command: --quiet
     environment:

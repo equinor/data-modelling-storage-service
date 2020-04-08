@@ -128,7 +128,7 @@ class DictImporter:
                         list_child_attribute = child_attribute
 
                         # If the node is of type DMT/Package, we need to overwrite the attribute_type "Entity", and get it from the child.
-                        if node.type == DMT.PACKAGE.value:
+                        if node.type == DMT.PACKAGE.value and "type" in child:
                             content_attribute: BlueprintAttribute = deepcopy(child_attribute)
                             content_attribute.attribute_type = child["type"]
                             list_child_attribute = content_attribute
