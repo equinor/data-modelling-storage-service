@@ -30,7 +30,7 @@ FROM base as prod
 # Install API
 COPY requirements.txt requirements.txt
 COPY gen gen
+RUN poetry install --no-dev
 RUN pip3 install --no-cache-dir -r requirements.txt
-# RUN poetry install --no-dev
 COPY . /usr/src/app
 
