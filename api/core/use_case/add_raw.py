@@ -1,6 +1,10 @@
 from typing import Dict
 from uuid import uuid4
 
+from cachy import Repository
+
+from api.classes.dto import DTO
+
 from api.core.utility import BlueprintProvider
 
 from api.classes.tree_node import Node
@@ -11,7 +15,7 @@ from api.core.shared import response_object as res
 from api.core.shared import use_case as uc
 
 
-class AddDocumentRequestObject(req.ValidRequestObject):
+class AddRawRequestObject(req.ValidRequestObject):
     def __init__(self, uid=None, data=None, data_source_id=None):
         self.uid = uid
         self.data = data
@@ -34,17 +38,17 @@ class AddDocumentRequestObject(req.ValidRequestObject):
         )
 
 
-class AddDocumentUseCase(uc.UseCase):
+class AddRawUseCase(uc.UseCase):
     def __init__(self, blueprint_provider=BlueprintProvider()):
         self.blueprint_provider = blueprint_provider
 
     def process_request(self, request_object):
         data: Dict = request_object.data
         data_source_id: str = request_object.data_source_id
-
-        new_node_id = str(uuid4()) if "_id" not in data else data["_id"]
-        new_node = Node.from_dict(data, new_node_id, self.blueprint_provider)
-        document_service = DocumentService(repository_provider=get_repository)
-        document_service.save(node=new_node, data_source_id=data_source_id)
+        uid: str = request_object.uid
+        new_node_id = str(uuid4()) if not uid else uid
+        document: DTO = DTO(uid=new_node_id, data=data)
+        document_repository: Repository = get_repository(data_source_id)
+        document_repository.add(document)
 
         return res.ResponseSuccess(new_node_id)

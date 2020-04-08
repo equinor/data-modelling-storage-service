@@ -38,7 +38,7 @@ def generate_tree_from_rows(node: Node, rows):
             entity = CreateEntity(
                 blueprint_provider=blueprint_provider,
                 type=child_data["type"],
-                description=child_data["description"],
+                description=child_data.get("description", ""),
                 name=child_data["name"],
             ).entity
             child_node = Node(
@@ -60,7 +60,6 @@ def generate_tree_from_rows(node: Node, rows):
 
 
 def generate_tree(data_source_id: str, table):
-    root_data = {"name": data_source_id, "description": "", "type": ""}
     root = Node(key=data_source_id, attribute=BlueprintAttribute(data_source_id, ""), uid=data_source_id)
     root_package = list(filter(lambda row: row["parent_uid"] == "", table.rows))[0]
     if not root_package:
