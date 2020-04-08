@@ -2,6 +2,10 @@
 
 ![](https://github.com/equinor/data-modelling-storage-service/workflows/Testing/badge.svg)
 
+![Publish Docker Registry](https://github.com/equinor/data-modelling-storage-service/workflows/Publish%20DMSS%20API%20to%20docker%20registry/badge.svg?branch=master)
+
+![Publish PyPI](https://github.com/equinor/data-modelling-storage-service/workflows/Publish%20DMSS%20API%20to%20PyPI/badge.svg)
+
 ## Prerequisites
 
 In order to run the commands described below, you need:
