@@ -28,8 +28,7 @@ def add_to_parent(data_source_id, body):
     request_object = AddFileRequestObject.from_dict(request_data)
     response = use_case.execute(request_object)
     return Response(
-        json.dumps(response.value, cls=DTOSerializer), mimetype="application/json",
-        status=STATUS_CODES[response.type]
+        json.dumps(response.value, cls=DTOSerializer), mimetype="application/json", status=STATUS_CODES[response.type]
     )
 
 
@@ -40,8 +39,7 @@ def add_to_path(data_source_id, body):
     request_object = AddDocumentRequestObject.from_dict(request_data)
     response = use_case.execute(request_object)
     return Response(
-        json.dumps(response.value, cls=DTOSerializer), mimetype="application/json",
-        status=STATUS_CODES[response.type]
+        json.dumps(response.value, cls=DTOSerializer), mimetype="application/json", status=STATUS_CODES[response.type]
     )
 
 

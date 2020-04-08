@@ -1,0 +1,25 @@
+name: Checks
+
+on: [push]
+
+jobs:
+  cheking:
+    name: Run checks
+    runs-on: ubuntu-18.04
+
+    env:
+      DOCKER_IMAGE: dmss-api-test
+
+    steps:
+      - uses: actions/checkout@master
+      - name: "Generate API"
+        run: ./generate-api.sh
+      - name: "Dev image"
+        run: docker build -t devimage --target development .
+        # Bandit has some issues with exclude...
+#      - name: "Bandit"
+#        run: docker run devimage bandit -l --recursive -x tests
+      - name: "Safety"
+        run: docker run devimage safety check
+      - name: "Black"
+        run: docker run devimage black --check --diff .

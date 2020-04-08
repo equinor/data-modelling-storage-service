@@ -29,6 +29,11 @@ class TemplateNotFound(RepositoryException):
         super().__init__(message=f"The template with ID, {template_id}, was not found")
 
 
+class InvalidAttributeException(RepositoryException):
+    def __init__(self, attribute_name, type):
+        super().__init__(message=f"'{attribute_name}' is not a valid attribute in the '{type}'")
+
+
 class RootPackageNotFoundException(Exception):
     def __init__(self, data_source_id=None, file=None):
         self.data_source_id = data_source_id if data_source_id else None

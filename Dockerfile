@@ -1,19 +1,12 @@
-FROM python:3-alpine as development
+FROM python:3-alpine as base
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
+CMD /usr/src/app/api/init.sh
+EXPOSE 8000
 
-# Install API
-COPY requirements.txt requirements.txt
-COPY gen gen
-RUN pip3 install --no-cache-dir -r requirements.txt
-
-# Install dependencies
 ENV PYTHONUNBUFFERED=1
 ENV FLASK_APP=/usr/src/app/app.py
 ENV PYTHONPATH=/usr/src/app
-
-COPY pyproject.toml pyproject.toml
-COPY poetry.lock poetry.lock
 
 RUN apk update && \
     # Needed to compile a poetry dependecy(cryptography)
@@ -22,15 +15,23 @@ RUN apk update && \
     pip install poetry && \
     poetry config virtualenvs.create false
 
+COPY pyproject.toml pyproject.toml
+COPY poetry.lock poetry.lock
+
+FROM base as development
+RUN poetry install
+# Install API
+COPY requirements.txt requirements.txt
+COPY gen gen
+RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . /usr/src/app
-RUN cd api && poetry install
 
-CMD /usr/src/app/api/init.sh
-EXPOSE 8000
-
-
-FROM development as prod
+FROM base as prod
+# Install API
+COPY requirements.txt requirements.txt
+COPY gen gen
+RUN pip3 install --no-cache-dir -r requirements.txt
 RUN poetry install --no-dev
-# ENTRYPOINT ["python3"]
-# CMD ["-m", "dmss_api"]
+COPY . /usr/src/app
+
 
