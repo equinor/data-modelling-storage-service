@@ -1,18 +1,13 @@
 from typing import Dict
 from uuid import uuid4
 
-from cachy import Repository
-
 from api.classes.dto import DTO
-
-from api.core.utility import BlueprintProvider
-
-from api.classes.tree_node import Node
+from api.core.repository import Repository
 from api.core.repository.repository_factory import get_repository
-from api.core.service.document_service import DocumentService
 from api.core.shared import request_object as req
 from api.core.shared import response_object as res
 from api.core.shared import use_case as uc
+from api.core.utility import BlueprintProvider
 
 
 class AddRawRequestObject(req.ValidRequestObject):
@@ -31,11 +26,7 @@ class AddRawRequestObject(req.ValidRequestObject):
         if invalid_req.has_errors():
             return invalid_req
 
-        return cls(
-            uid=adict.get("uid", None),
-            data=adict.get("data"),
-            data_source_id=adict.get("data_source_id")
-        )
+        return cls(uid=adict.get("uid", None), data=adict.get("data"), data_source_id=adict.get("data_source_id"))
 
 
 class AddRawUseCase(uc.UseCase):
