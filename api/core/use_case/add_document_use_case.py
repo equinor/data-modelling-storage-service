@@ -27,11 +27,7 @@ class AddDocumentRequestObject(req.ValidRequestObject):
         if invalid_req.has_errors():
             return invalid_req
 
-        return cls(
-            uid=adict.get("uid", None),
-            data=adict.get("data"),
-            data_source_id=adict.get("data_source_id")
-        )
+        return cls(uid=adict.get("uid", None), data=adict.get("data"), data_source_id=adict.get("data_source_id"))
 
 
 class AddDocumentUseCase(uc.UseCase):
