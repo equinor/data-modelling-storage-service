@@ -23,6 +23,7 @@ class PrimitiveDataTypes(Enum):
 
 class DataSourceType(Enum):
     MONGO = "mongo-db"
+    AZURE_BLOB_STORAGE = "AZURE_BLOB_STORAGE"
     LOCAL = "localStorage"
 
     @staticmethod

@@ -4,6 +4,10 @@ set -euo pipefail
 echo "ENVIRONMENT: $ENVIRONMENT"
 export FLASK_APP="/usr/src/app/api/app_commands.py"
 
+which flask
+
+flask --help
+
 flask nuke-db
 
 if [ "$ENVIRONMENT" = 'local' ]; then

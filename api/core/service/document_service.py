@@ -121,6 +121,7 @@ class DocumentService:
         # If not passed a custom repository to save into, use the DocumentService's repository
         if not repository:
             repository = self.repository_provider(data_source_id)
+            
         # Update none-contained attributes
         for child in node.children:
             # A list node is always contained on parent. Need to check the blueprint
@@ -198,9 +199,13 @@ class DocumentService:
             return node
 
     def get_root_packages(self, data_source_id: str):
-        return self.repository_provider(data_source_id).find(
+        result = self.repository_provider(data_source_id).find(
             {"type": "system/DMT/Package", "isRoot": True}, single=False
         )
+        if not result:
+            return []
+
+        return result
 
     def remove_document(self, data_source_id: str, document_id: str, parent_id: str = None):
         if parent_id:

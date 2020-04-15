@@ -1,0 +1,12 @@
+{
+  "type": "AZURE_BLOB_STORAGE",
+  "host": "",
+  "port": null,
+  "username": "dmssfilestorage",
+  "password": "REPLACE_ME",
+  "tls": false,
+  "name": "azure",
+  "database": "local",
+  "collection": "dmss",
+  "documentType": "blueprints"
+}
