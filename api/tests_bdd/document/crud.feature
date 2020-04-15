@@ -239,10 +239,6 @@ Feature: Document 2
     And the response should contain
     """
     {
-       "blueprint":{
-          "name":"Package",
-          "type":"system/SIMOS/Blueprint"
-       },
        "document":{
           "_id": "4",
           "name": "document_1",

@@ -52,6 +52,8 @@ def get_document_uid_by_path(path: str, repository) -> Union[str, None]:
     if not path_elements:
         return root_package.uid
     uid = _find_document_in_package_by_path(root_package, path_elements, repository)
+    if not uid:
+        raise EntityNotFoundException(path)
     return uid
 
 
@@ -102,9 +104,9 @@ class BlueprintProvider:
 
     def get_blueprint(self, type: str) -> Blueprint:
         try:
-            print("fetching: ", type)
-            document: DTO = self.get_blueprint(type)
-            return Blueprint(document)
+            logger.debug(f"Fetching Blueprint {type}")
+            document = self.get_blueprint(type)
+            return document
         except Exception as error:
             logger.exception(error)
             raise EntityNotFoundException(uid=type)

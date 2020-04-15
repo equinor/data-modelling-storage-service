@@ -62,9 +62,9 @@ def get_resolved_document(
                         else:
                             try:
                                 temp.append(get_resolved_document(DTO(item), document_repository, blueprint_provider))
-                            except:
-                                error = f"The entity {item} is invalid! Type: {complex_attribute.attribute_type}"
-                                logger.error(error)
+                            except Exception as error:
+                                # error = f"The entity {item} is invalid! Type: {complex_attribute.attribute_type}"
+                                logger.exception(error)
                                 raise Exception(error)
 
                     document.data[attribute_name] = temp
