@@ -1,3 +1,6 @@
+from functools import lru_cache
+
+from api.config import Config
 from api.core.enums import PRIMITIVES
 from api.core.repository.repository_factory import get_repository
 from api.core.service.document_service import DocumentService
@@ -55,15 +58,7 @@ class GetDocumentByPathUseCase(uc.UseCase):
         if attribute:
             document = document.get_by_path(attribute.split("."))
 
-        blueprint = document.blueprint
-
-        children = []
-        dtos = []
-        self.add_children_types(children, dtos, blueprint)
-
-        return res.ResponseSuccess(
-            {"blueprint": blueprint.to_dict_raw(), "document": document.to_dict(), "children": children, "dtos": dtos}
-        )
+        return res.ResponseSuccess({"document": document.to_dict()})
 
     # TODO: Should this be handled be Node functions?
     # todo control recursive iterations iterations, decided by plugin?

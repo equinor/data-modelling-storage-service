@@ -32,10 +32,7 @@ def get_by_path(data_source_id):
     return Response(json.dumps(response.value), mimetype="application/json", status=STATUS_CODES[response.type])
 
 
-def update(data_source_id, document_id, body):
-    # if connexion.request.is_json:
-    #    calculation_body = CalculationBody.from_dict(connexion.request.get_json())
-
+def update(data_source_id, document_id):
     data = request.get_json()
     attribute = request.args.get("attribute")
     request_object = UpdateDocumentRequestObject.from_dict(

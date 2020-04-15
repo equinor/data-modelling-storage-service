@@ -160,6 +160,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: attribute
+          in: query
+          description: 'Path to contained document'
+          required: false
+          schema:
+            type: string
       requestBody:
         $ref: '#/components/requestBodies/DocumentBody'
       responses:
@@ -199,10 +205,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  document:
-                    type: object
+                $ref: '#/components/schemas/DocumentResponse'
   /explorer/{dataSourceId}/add-to-parent:
     post:
       operationId: add_to_parent
@@ -496,4 +499,3 @@ components:
     SearchResponse:
       type: object
       additionalProperties: true
-

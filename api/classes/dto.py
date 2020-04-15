@@ -8,8 +8,11 @@ from uuid import uuid4
 class DTO:
     def __init__(self, data: Dict, uid: Optional[str] = None):
         self._uid = uid if uid is not None else data.get("_id", str(uuid4()))
-        self._name = data["name"]
-        self._type = data["type"]
+        try:
+            self._name = data["name"]
+            self._type = data["type"]
+        except KeyError:
+            raise KeyError(f"The dict {data} is invalid as a DTO. Missing ether 'type' and/or 'name'")
         self._attribute_type = data.get("attribute_type", "")
         self.data = data
 
