@@ -160,6 +160,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: attribute
+          in: query
+          description: 'Path to contained document'
+          required: false
+          schema:
+            type: string
       requestBody:
         $ref: '#/components/requestBodies/DocumentBody'
       responses:
