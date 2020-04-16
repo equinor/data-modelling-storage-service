@@ -33,8 +33,8 @@ class DataSource:
 
         if data_source_type == DataSourceType.AZURE_BLOB_STORAGE.value:
             return AzureBlobStorageClient(
-                account_name=data_source["username"],
-                account_key=data_source["password"],
+                account_name=data_source["account_name"],
+                account_key=data_source["account_key"],
                 collection=data_source["collection"],
             )
 
