@@ -48,11 +48,7 @@ paths:
           schema:
             type: string
       requestBody:
-        description: Login details for user
-        content:
-          application/json:
-            schema:
-              type: object
+        $ref: '#/components/requestBodies/DocumentBody'
       responses:
         '200':
           description: Updated document

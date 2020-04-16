@@ -14,7 +14,7 @@ from api.core.use_case.get_data_sources_use_case import GetDataSourcesUseCase, G
 from api.core.repository.data_source_repository import DataSourceRepository
 
 
-def save(data_source_id, body=None):
+def save(data_source_id):
     data_source_repository = DataSourceRepository()
     use_case = CreateDataSourceUseCase(data_source_repository=data_source_repository)
     request_object = CreateDataSourceRequestObject.from_dict(
