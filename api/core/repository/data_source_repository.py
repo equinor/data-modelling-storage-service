@@ -40,3 +40,6 @@ class DataSourceRepository:
         document["_id"] = id
         result = self.collection.insert_one(document)
         return str(result.inserted_id)
+
+    def get(self, id: str):
+        return self.collection.find_one(filter={"_id": id})
