@@ -34,6 +34,30 @@ paths:
                 items:
                   type: object
   /data-sources/{dataSourceId}:
+    get:
+      operationId: get_data_source
+      x-openapi-router-controller: controllers.datasource_controller
+      tags:
+        - datasource
+      summary: Get data source
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Data source
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    additionalProperties: true
     post:
       operationId: save
       x-openapi-router-controller: controllers.datasource_controller

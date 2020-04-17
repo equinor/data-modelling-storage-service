@@ -1,8 +1,10 @@
 import json
 
 from api.core.serializers.create_data_source_serializer import CreateDataSourceSerializer
+from api.core.serializers.get_data_source_serializer import GetDataSourceSerializer
 
 from api.core.use_case.create_data_source_use_case import CreateDataSourceUseCase, CreateDataSourceRequestObject
+from api.core.use_case.get_data_source_use_case import GetDataSourceUseCase, GetDataSourceUseCaseRequestObject
 
 from controllers.status_codes import STATUS_CODES
 
@@ -12,6 +14,18 @@ from flask import request, Response
 from api.core.use_case.get_data_sources_use_case import GetDataSourcesUseCase, GetDataSourcesUseCaseRequestObject
 
 from api.core.repository.data_source_repository import DataSourceRepository
+
+
+def get_data_source(data_source_id):
+    data_source_repository = DataSourceRepository()
+    use_case = GetDataSourceUseCase(data_source_repository)
+    request_object = GetDataSourceUseCaseRequestObject.from_dict({"data_source_id": data_source_id})
+    response = use_case.execute(request_object)
+    return Response(
+        json.dumps(response, cls=GetDataSourceSerializer),
+        mimetype="application/json",
+        status=STATUS_CODES[response.type],
+    )
 
 
 def save(data_source_id):
