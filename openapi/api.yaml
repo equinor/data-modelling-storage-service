@@ -49,20 +49,12 @@ paths:
             type: string
       responses:
         '200':
-          description: Data source
+          description: A document
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  name:
-                    type: string
-                  type:
-                    type: string
-                  documentType:
-                    type: string
+                $ref: '#/components/schemas/DataSourceResponse'
+
     post:
       operationId: save
       x-openapi-router-controller: controllers.datasource_controller
@@ -514,6 +506,9 @@ components:
           schema:
             $ref: '#/components/schemas/DocumentBody'
   schemas:
+    DataSourceResponse:
+      type: object
+      additionalProperties: true
     DocumentResponse:
       type: object
       additionalProperties:
