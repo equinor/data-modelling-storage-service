@@ -21,11 +21,7 @@ def get_data_source(data_source_id):
     use_case = GetDataSourceUseCase(data_source_repository)
     request_object = GetDataSourceUseCaseRequestObject.from_dict({"data_source_id": data_source_id})
     response = use_case.execute(request_object)
-    return Response(
-        json.dumps(response, cls=GetDataSourceSerializer),
-        mimetype="application/json",
-        status=STATUS_CODES[response.type],
-    )
+    return Response(json.dumps(response.value), mimetype="application/json", status=STATUS_CODES[response.type],)
 
 
 def save(data_source_id):
