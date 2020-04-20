@@ -33,7 +33,7 @@ paths:
                 type: array
                 items:
                   type: object
-  /data-source/{dataSourceId}:
+  /data-sources/{dataSourceId}:
     get:
       operationId: get_data_source
       x-openapi-router-controller: controllers.datasource_controller
@@ -54,6 +54,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
     post:
       operationId: save
       x-openapi-router-controller: controllers.datasource_controller
