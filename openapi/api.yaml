@@ -54,10 +54,7 @@ paths:
             application/json:
               schema:
                 type: object
-                properties:
-                  data:
-                    type: object
-                    additionalProperties: true
+                additionalProperties: true
     post:
       operationId: save
       x-openapi-router-controller: controllers.datasource_controller
