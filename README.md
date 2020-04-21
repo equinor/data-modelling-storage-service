@@ -1,10 +1,10 @@
 # Data Modelling Storage Service
 
-![](https://github.com/equinor/data-modelling-storage-service/workflows/Testing/badge.svg)
+![Checks](https://github.com/equinor/data-modelling-storage-service/workflows/Testing/badge.svg)
 
-![Publish Docker Registry](https://github.com/equinor/data-modelling-storage-service/workflows/Publish%20DMSS%20API%20to%20docker%20registry/badge.svg?branch=master)
+![Docker Registry](https://github.com/equinor/data-modelling-storage-service/workflows/Publish%20DMSS%20API%20to%20docker%20registry/badge.svg?branch=master)
 
-![Publish PyPI](https://github.com/equinor/data-modelling-storage-service/workflows/Publish%20DMSS%20API%20to%20PyPI/badge.svg)
+![PyPI](https://github.com/equinor/data-modelling-storage-service/workflows/Publish%20DMSS%20API%20to%20PyPI/badge.svg)
 
 ## Prerequisites
 
@@ -23,29 +23,46 @@ docker-compose up
 
 API documentation can be found at [http://localhost:8000/api/v1/ui](http://localhost:8000/api/v1/ui).
 
-### Refresh database 
+### Database
+
+To refresh the database after first-time:
 
 ```
 docker-compose exec mainapi ./api/reset-database.sh
 ```
-## Available APIs
+
+## Available client APIs
+
+To talk with the DMSS service, these clients are available:
 
 * Python https://pypi.org/project/dmss-api/
 
 ## Development 
 
-### Install pre-commit
+### Pre-commit
+
+The project provides a `.pre-commit-config.yaml`-file that is used to setup git _pre-commit hooks_.
+
+Alternative pre-commit installations can be found [here](https://pre-commit.com/#install).
+
+#### 1) Install pre-commit
 
 Optionally create a virtualenv (recommended)
 
 ```shell script
 pip install pre-commit
-# or
-pip install -r main-api/requirements.txt
-# then
 pre-commit install
 ```
 
+### 2) Install virtual environment 
+
+Virtual environment is used for running unit tests with pre-commit. 
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+poetry install
+```
 
 ### Testing
 
@@ -53,6 +70,11 @@ Run BDD tests:
 
 ```
 docker-compose run --rm mainapi behave
+```
+
+Run BDD tests by regexp:
+
+```
 docker-compose run --rm mainapi behave -n "Scenario name" # Run single test  
 ```
 
