@@ -54,39 +54,4 @@ class GetDocumentUseCase(uc.UseCase):
         if attribute:
             document = document.get_by_path(attribute.split("."))
 
-        blueprint = document.blueprint
-
-        children = []
-        dtos = []
-        self.add_children_types(children, dtos, blueprint)
-
-        return res.ResponseSuccess(
-            {"blueprint": blueprint.to_dict_raw(), "document": document.to_dict(), "children": children, "dtos": dtos}
-        )
-
-    # todo control recursive iterations iterations, decided by plugin?
-    def add_children_types(self, children, dtos, blueprint):
-        for attribute in blueprint.attributes:
-            attribute_type = attribute.attribute_type
-            self.add_dtos(dtos, attribute)
-            if attribute_type not in PRIMITIVES:
-                # prevent infinite recursion.
-                child_blueprint_name = attribute_type.split("/")[-1]
-                type_in_children = next((x for x in children if x["name"] == child_blueprint_name), None)
-                if not type_in_children:
-                    child_blueprint = self.document_service.blueprint_provider.get_blueprint(attribute_type)
-                    if not isinstance(child_blueprint, (dict, type(None))):
-                        children.append(child_blueprint.to_dict())
-                        self.add_children_types(children, dtos, child_blueprint)
-
-    def add_dtos(self, dtos, attribute: BlueprintAttribute):
-        if attribute.enum_type and len(attribute.enum_type) > 0:
-            try:
-                enum_blueprint: DTO = get_document_by_ref(attribute.enum_type)
-                dtos.append(enum_blueprint.to_dict())
-            except AttributeError as error:
-                logger.exception(error)
-                print(f"failed to append enumType {attribute}")
-            except Exception as error:
-                logger.exception(error)
-                print(f"failed to append enumType {attribute}")
+        return res.ResponseSuccess({"blueprint": document.blueprint.to_dict_raw(), "document": document.to_dict()})
