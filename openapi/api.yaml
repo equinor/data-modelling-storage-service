@@ -187,15 +187,11 @@ paths:
         $ref: '#/components/requestBodies/DocumentBody'
       responses:
         '200':
-          description: Updated document
+          description: The updated document
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    additionalProperties: true
+                $ref: '#/components/schemas/DocumentResponse'
   /documents-by-path/{dataSourceId}:
     get:
       operationId: get_by_path
