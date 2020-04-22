@@ -4,7 +4,7 @@ from unittest import mock
 from api.classes.dto import DTO
 from api.classes.tree_node import Node
 from api.core.repository import Repository
-from api.core.repository.repository_exceptions import DuplicateFileNameInPackageException
+from api.core.repository.repository_exceptions import DuplicateFileNameException
 from api.core.service.document_service import DocumentService
 from api.tests.core.document_service.common import blueprint_provider
 from api.utils.data_structure.compare import pretty_eq
@@ -181,5 +181,5 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=repository_provider
         )
 
-        with self.assertRaises(DuplicateFileNameInPackageException):
+        with self.assertRaises(DuplicateFileNameException):
             document_service.add_document("testing", "1", "blueprint_2", "duplicate", "This is my new entity", "")

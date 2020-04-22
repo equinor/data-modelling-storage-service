@@ -449,30 +449,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResponse'
-
-  /explorer/{dataSourceId}/add-document:
-    post:
-      operationId: add_document
-      x-openapi-router-controller: controllers.explorer_controller
-      tags:
-        - explorer
-      summary: Add document
-      parameters:
-        - name: dataSourceId
-          in: path
-          description: 'The data source ID'
-          required: true
-          schema:
-            type: string
-      requestBody:
-        $ref: '#/components/requestBodies/DocumentBody'
-      responses:
-        '200':
-          description: Added document UID
-          content:
-            application/json:
-              schema:
-                type: string
   /explorer/{dataSourceId}/add-raw:
     post:
       operationId: add_raw
