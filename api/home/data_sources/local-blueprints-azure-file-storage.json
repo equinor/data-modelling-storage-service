@@ -1,8 +1,0 @@
-{
-  "type": "AZURE_BLOB_STORAGE",
-  "account_name": "REPLACE_ME",
-  "account_key": "REPLACE_ME",
-  "name": "azure",
-  "collection": "dmss",
-  "documentType": "blueprints"
-}

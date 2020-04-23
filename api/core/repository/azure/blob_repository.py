@@ -29,8 +29,19 @@ class AzureBlobStorageClient(DBClientInterface):
 
     def find(self, filters: Dict) -> Optional[List[Dict]]:
         # TODO: implement efficient filter functionality by using the python azure api
-        result = {}
         blobs = self.blob_service_client.list_blobs(self.collection)
+        result = self._filter(blobs, filters)
+        return result
+
+    def find_one(self, filters: Dict) -> Optional[Dict]:
+        blobs = self.blob_service_client.list_blobs(self.collection)
+        result = self._filter(blobs, filters)
+        if len(result) > 0:
+            return result[0]
+        return None
+
+    def _filter(self, blobs, filters) -> List[Dict]:
+        result = {}
         for blob in blobs:
             document = self.get(str(blob.name))
             for key, value in filters.items():
@@ -39,6 +50,3 @@ class AzureBlobStorageClient(DBClientInterface):
                 else:
                     result[document["_id"]] = document
         return result.values()
-
-    def find_one(self, filters: Dict) -> Optional[Dict]:
-        pass

@@ -18,9 +18,7 @@ def get(data_source_id):
 
 
 def find_by_name(data_source_id, name):
-    package: DTO = get_repository(data_source_id).find(
-        {"type": "system/DMT/Package", "isRoot": True, "name": name}, single=True
-    )
+    package: DTO = get_repository(data_source_id).first({"type": "system/DMT/Package", "isRoot": True, "name": name})
     if not package:
         raise FileNotFoundException(data_source_id, name, is_root=True)
     return package.to_dict()["data"]

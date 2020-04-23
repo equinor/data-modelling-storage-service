@@ -20,17 +20,12 @@ class Repository:
             logger.exception(error)
             raise EntityNotFoundException(f"the document with uid: {uid} was not found")
 
-    def find(self, filter: dict, single: bool = True) -> Union[DTO, List[DTO]]:
+    def find(self, filter: dict) -> Union[DTO, List[DTO]]:
         result = self.client.find(filter)
-        if single:
-            if result.count() == 1:
-                return DTO(result[0])
-            elif result.count() == 0:
-                return None
-            else:
-                raise ValueError("More than one was found, and a single was requested")
-        else:
-            return [DTO(item) for item in result]
+        return [DTO(item) for item in result]
+
+    def first(self, filter: dict):
+        return self.client.find_one(filter)
 
     def update(self, document: DTO) -> None:
         if (
