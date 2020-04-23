@@ -59,7 +59,7 @@ class FileNotFoundException(Exception):
             return f"FileNotFoundException has been raised"
 
 
-class DuplicateFileNameInPackageException(Exception):
+class DuplicateFileNameException(Exception):
     def __init__(self, data_source_id=None, path=None):
         self.data_source_id = data_source_id if data_source_id else None
         self.path = path if path else None

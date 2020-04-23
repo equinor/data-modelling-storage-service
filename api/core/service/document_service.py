@@ -11,7 +11,7 @@ from api.classes.tree_node import ListNode, Node
 from api.core.enums import DMT, SIMOS
 from api.core.repository import Repository
 from api.core.repository.repository_exceptions import (
-    DuplicateFileNameInPackageException,
+    DuplicateFileNameException,
     EntityNotFoundException,
     FileNotFoundException,
     InvalidAttributeException,
@@ -297,7 +297,7 @@ class DocumentService:
 
         # Check if a file/attributre with the same name already exists on the target
         if duplicate_filename(parent, name):
-            raise DuplicateFileNameInPackageException(data_source_id, f"{parent.name}/{name}")
+            raise DuplicateFileNameException(data_source_id, f"{parent.name}/{name}")
 
         entity: Dict = CreateEntity(self.blueprint_provider, name=name, type=type, description=description).entity
 
@@ -344,7 +344,7 @@ class DocumentService:
 
         # Check if a file with the same name already exists in the target package
         if duplicate_filename(parent, name):
-            raise DuplicateFileNameInPackageException(data_source_id, directory)
+            raise DuplicateFileNameException(data_source_id, directory)
 
         new_node_id = str(uuid4()) if not parent.attribute_is_contained() else ""
 
