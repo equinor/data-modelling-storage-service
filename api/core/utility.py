@@ -38,14 +38,14 @@ def _find_document_in_package_by_path(package: DTO, path_elements: List[str], re
         if not next_package:
             logger.error(f"The package {path_elements[0]} could not be found in the package {package.name}")
             return
-        next_package: DTO = repository.find({"_id": next_package["_id"]})
+        next_package: DTO = repository.first({"_id": next_package["_id"]})
         del path_elements[0]
         return _find_document_in_package_by_path(next_package, path_elements, repository)
 
 
 def get_document_uid_by_path(path: str, repository) -> Union[str, None]:
     root_package_name, path_elements = get_package_and_path(path)
-    root_package: DTO = repository.find({"name": root_package_name, "isRoot": True})
+    root_package: DTO = repository.first({"name": root_package_name, "isRoot": True})
     if not root_package:
         raise RootPackageNotFoundException(repository.name, root_package_name)
     # Check if it's a root-package

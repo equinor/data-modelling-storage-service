@@ -179,8 +179,8 @@ class DocumentService:
         ref_elements = directory.split("/", 1)
         package_name = ref_elements[0]
 
-        package: DTO = self.repository_provider(data_source_id).find(
-            {"type": "system/DMT/Package", "isRoot": True, "name": package_name}, single=True
+        package: DTO = self.repository_provider(data_source_id).first(
+            {"type": "system/DMT/Package", "isRoot": True, "name": package_name}
         )
         if not package:
             raise FileNotFoundException(data_source_id, package_name, is_root=True)
@@ -199,9 +199,7 @@ class DocumentService:
             return node
 
     def get_root_packages(self, data_source_id: str):
-        result = self.repository_provider(data_source_id).find(
-            {"type": "system/DMT/Package", "isRoot": True}, single=False
-        )
+        result = self.repository_provider(data_source_id).find({"type": "system/DMT/Package", "isRoot": True})
         if not result:
             return []
 
@@ -406,7 +404,7 @@ class DocumentService:
                     continue
                 process_search_data[key] = float(search_value)
 
-        result: List[DTO] = repository.find(process_search_data, single=False)
+        result: List[DTO] = repository.find(process_search_data)
         result_list = {}
         for doc in result:
             result_list[doc.name] = doc.data
