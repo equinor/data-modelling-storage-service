@@ -141,6 +141,5 @@ api/core/domain/dynamic_models/__init__.py
 .generated/
 
 venv
-gen
 /api.egg-info/
 .vscode
