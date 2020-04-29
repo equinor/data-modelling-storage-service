@@ -12,7 +12,7 @@ spec:
         from: master
   components:
     - name: api
-      src: ./api
+      src: .
       ports:
         - name: flask
           port: 80
