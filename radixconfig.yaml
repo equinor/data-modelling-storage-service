@@ -1,7 +1,7 @@
 apiVersion: radix.equinor.com/v1
 kind: RadixApplication
 metadata:
-  name: data-modelling-storage-service
+  name: dmss
 spec:
   environments:
     - name: prod
