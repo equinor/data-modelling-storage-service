@@ -1,0 +1,23 @@
+apiVersion: radix.equinor.com/v1
+kind: RadixApplication
+metadata:
+  name: data-modelling-storage-service
+spec:
+  environments:
+    - name: prod
+      build:
+        from: release
+    - name: dev
+      build:
+        from: master
+  components:
+    - name: api
+      src: ./api
+      ports:
+        - name: flask
+          port: 80
+      publicPort: flask
+      secrets:
+        - MONGO_AZURE_URI
+  dnsAppAlias:
+    environment: prod
