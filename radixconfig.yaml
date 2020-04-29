@@ -21,3 +21,4 @@ spec:
         - MONGO_AZURE_URI
   dnsAppAlias:
     environment: prod
+    component: api
