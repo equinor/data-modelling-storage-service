@@ -19,6 +19,13 @@ spec:
       publicPort: flask
       secrets:
         - MONGO_AZURE_URI
+      environmentConfig:
+        - environment: dev
+          variables:
+            ENVIRONMENT: "production"
+        - environment: prod
+          variables:
+            ENVIRONMENT: "production"
   dnsAppAlias:
     environment: prod
     component: api
