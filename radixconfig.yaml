@@ -23,9 +23,11 @@ spec:
         - environment: dev
           variables:
             ENVIRONMENT: "production"
+            FLASK_RUN_PORT: 80
         - environment: prod
           variables:
             ENVIRONMENT: "production"
+            FLASK_RUN_PORT: 80
   dnsAppAlias:
     environment: prod
     component: api
