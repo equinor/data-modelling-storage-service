@@ -1,5 +1,6 @@
 import json
 import os
+import pathlib
 from pathlib import Path
 
 import toml
@@ -25,7 +26,7 @@ class Config:
     ENTITY_SETTINGS_FILE = f"{APPLICATION_HOME}/settings.json"
     SYSTEM_FOLDERS = ["SIMOS", "DMT"]
     VERIFY_IMPORTS = os.getenv("DMT_VERIFY_IMPORTS", True)
-    PY_PROJECT_FILE = "pyproject.toml"
+    PY_PROJECT_FILE = f"{pathlib.Path(__file__).parent}/../pyproject.toml"
     with open(PY_PROJECT_FILE) as toml_file:
         PY_PROJECT = toml.load(toml_file)
     with open(DMT_SETTINGS_FILE) as json_file:
