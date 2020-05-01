@@ -1,13 +1,8 @@
 import unittest
 
 from api.classes.blueprint import Blueprint
-from api.classes.dimension import Dimension
 from api.classes.dto import DTO
-from api.core.repository.file import TemplateRepositoryFromFile
 from api.core.use_case.utils.build_complex_search import build_mongo_query
-from api.core.use_case.utils.create_entity import CreateEntity
-from api.utils.helper_functions import schemas_location
-
 
 basic_blueprint = {
     "type": "system/SIMOS/Blueprint",
@@ -33,6 +28,24 @@ nested_blueprint = {
     ],
 }
 
+nested_blueprint_w_list = {
+    "type": "system/SIMOS/Blueprint",
+    "name": "NestedList",
+    "description": "Third blueprint",
+    "attributes": [
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
+        {"attributeType": "integer", "type": "system/SIMOS/BlueprintAttribute", "name": "length", "dimensions": "3"},
+        {
+            "attributeType": "NestedList",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "nestedList",
+            "dimensions": "3",
+        },
+    ],
+}
+
 
 class BlueprintProvider:
     def get_blueprint(self, template_type: str):
@@ -40,12 +53,14 @@ class BlueprintProvider:
             return Blueprint(DTO(basic_blueprint))
         elif template_type == "test/Nested":
             return Blueprint(DTO(nested_blueprint))
+        elif template_type == "NestedList":
+            return Blueprint(DTO(nested_blueprint_w_list))
 
 
 blueprint_provider = BlueprintProvider()
 
 
-class DefaultArrayTestCase(unittest.TestCase):
+class CreateSearchQueryTestCase(unittest.TestCase):
     def test_simple_search_query(self):
         search_data = {"type": "basic_blueprint", "name": "whatever"}
         query = build_mongo_query(blueprint_provider.get_blueprint, search_data)
@@ -67,6 +82,24 @@ class DefaultArrayTestCase(unittest.TestCase):
             "nested.nested.type": "test/Nested",
             "nested.nested.name": {"$regex": ".*whatever.*", "$options": "i"},
             "nested.nested.an_int": {"$lt": 100.0},
+        }
+
+    def test_nested_list_search_query(self):
+        search_data = {
+            "type": "NestedList",
+            "name": "first_level",
+            "nestedList": [{"name": "second_level", "nestedList": [{"name": "third_level", "length": ["<100"]},]},],
+        }
+        query = build_mongo_query(blueprint_provider.get_blueprint, search_data)
+
+        assert query == {
+            "type": "NestedList",
+            "name": {"$regex": ".*first_level.*", "$options": "i"},
+            "nestedList.type": "NestedList",
+            "nestedList.name": {"$regex": ".*second_level.*", "$options": "i"},
+            "nestedList.nestedList.type": "NestedList",
+            "nestedList.nestedList.name": {"$regex": ".*third_level.*", "$options": "i"},
+            "nestedList.nestedList.length": {"$lt": 100.0},
         }
 
 
