@@ -22,4 +22,4 @@ jobs:
       - name: "Safety"
         run: docker run devimage safety check
       - name: "Black"
-        run: docker run devimage black --check --diff .
+        run: docker run devimage black --check --diff api controllers app.py
