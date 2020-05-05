@@ -24,8 +24,10 @@ class Repository:
         result = self.client.find(filter)
         return [DTO(item) for item in result]
 
-    def first(self, filter: dict) -> DTO:
-        return DTO(self.client.find_one(filter))
+    def first(self, filter: dict) -> Union[DTO, None]:
+        result = self.client.find_one(filter)
+        if result:
+            return DTO(result)
 
     def update(self, document: DTO) -> None:
         if (
