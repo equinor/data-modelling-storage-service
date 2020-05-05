@@ -22,7 +22,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: maf
       MONGO_INITDB_ROOT_PASSWORD: maf
     volumes:
-      - ./data/db:/data/db
+      - mongodata:/data/db
     logging:
       driver: "none"
 
@@ -41,3 +41,5 @@ services:
       ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
     links:
       - db
+volumes:
+  mongodata:
