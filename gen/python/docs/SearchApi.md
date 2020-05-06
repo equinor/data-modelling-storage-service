@@ -20,6 +20,12 @@ import time
 import dmss_api
 from dmss_api.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://0.0.0.0:8000/api/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = dmss_api.Configuration(
+    host = "http://0.0.0.0:8000/api/v1"
+)
+
 
 # Enter a context with an instance of the API client
 with dmss_api.ApiClient() as api_client:

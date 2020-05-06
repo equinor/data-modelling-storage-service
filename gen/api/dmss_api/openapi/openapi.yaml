@@ -181,6 +181,31 @@ paths:
       tags:
       - document
       x-openapi-router-controller: controllers.document_controller
+  /explorer/{dataSourceId}/add-document:
+    post:
+      operationId: add_document
+      parameters:
+      - description: The data source ID
+        explode: false
+        in: path
+        name: dataSourceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/DocumentBody'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Added document UID
+      summary: Add document
+      tags:
+      - explorer
+      x-openapi-router-controller: controllers.explorer_controller
   /explorer/{dataSourceId}/add-package:
     post:
       operationId: add_package

@@ -8,6 +8,21 @@ from dmss_api.models.inline_response2001 import InlineResponse2001  # noqa: E501
 from dmss_api import util
 
 
+def add_document(data_source_id, request_body):  # noqa: E501
+    """Add document
+
+     # noqa: E501
+
+    :param data_source_id: The data source ID
+    :type data_source_id: str
+    :param request_body: Object containing all info for a document
+    :type request_body: dict | bytes
+
+    :rtype: str
+    """
+    return 'do some magic!'
+
+
 def add_package(data_source_id, request_body):  # noqa: E501
     """Add package
 

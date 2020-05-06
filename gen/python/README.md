@@ -46,14 +46,20 @@ Please follow the [installation procedure](#installation--usage) and then run th
 
 ```python
 from __future__ import print_function
+
 import time
 import dmss_api
 from dmss_api.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to http://0.0.0.0:8000/api/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = dmss_api.Configuration(
+    host = "http://0.0.0.0:8000/api/v1"
+)
 
-# Defining host is optional and default to http://0.0.0.0:8000/api/v1
-configuration.host = "http://0.0.0.0:8000/api/v1"
+
+
 # Enter a context with an instance of the API client
 with dmss_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
