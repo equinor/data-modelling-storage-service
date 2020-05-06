@@ -3,7 +3,6 @@ import os
 from typing import Dict, List, Union
 
 from api.classes.dto import DTO
-from api.classes.schema import Factory
 from api.config import Config
 from api.core.enums import DMT
 from api.core.repository.file import TemplateRepositoryFromFile
@@ -32,46 +31,15 @@ def replace_prefix(path, prefix, where):
     return f"{prefix}/{path[index + len(f'/{where}/'):]}"
 
 
-def _get_dependencies(schema):
-    template_repository = TemplateRepositoryFromFile(schemas_location())
-    factory = Factory(template_repository, read_from_file=True)
-    dependencies = factory._get_dependencies(schema)
-    return [f"{dependency.__name__}.json" for dependency in dependencies if dependency]
-
-
-def _ensure_sensible_import_order(path: str, documents: List[str]) -> List[str]:
-    _order = []
-    for document in documents:
-        with open(f"{path}/{document}") as f:
-            schema = json.load(f)
-        _order.extend(_get_dependencies(schema))
-    order = []
-    for element in _order:
-        if element not in order and element in documents:
-            order.append(element)
-    return order + [document for document in documents if document not in order]
-
-
 def _add_documents(path, documents, collection, is_entity=False) -> List[Dict]:
     docs = []
-    if Config.VERIFY_IMPORTS and collection == Config.SYSTEM_COLLECTION:
-        documents = _ensure_sensible_import_order(path, documents)
     for file in documents:
         logger.info(f"Working on {file}...")
         with open(f"{path}/{file}") as json_file:
             data = json.load(json_file)
-        if Config.VERIFY_IMPORTS:
-            template_repository = TemplateRepositoryFromFile(schemas_location())
-            factory = Factory(template_repository, read_from_file=True)
-            if is_entity:
-                Blueprint = factory.create(data["type"])
-                instance = Blueprint.from_dict(data)
-            else:
-                Blueprint = factory.create(get_template_type(path, file))
-
-            document = DTO(data)
-            if not url_safe_name(document.name):
-                raise InvalidDocumentNameException(document.name)
+        document = DTO(data)
+        if not url_safe_name(document.name):
+            raise InvalidDocumentNameException(document.name)
         dmt_db[collection].replace_one({"_id": document.uid}, document.data, upsert=True)
         docs.append({"_id": document.uid, "name": document.name, "type": document.type})
     return docs
