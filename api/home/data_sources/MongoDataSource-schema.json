@@ -3,11 +3,6 @@
   "schema": {
     "type": "object",
     "properties": {
-      "documentType": {
-        "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute",
-        "title": "documentType",
-        "default": ""
-      },
       "name": {
         "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute",
         "title": "Name",
@@ -50,7 +45,6 @@
       "database",
       "collection",
       "host",
-      "documentType",
       "port",
       "tls"
     ]
@@ -62,9 +56,6 @@
     },
     "name": {
       "ui:help": "Must be globaly unique. May only contain [a-z,A-Z,0-9,-,_]'"
-    },
-    "documentType": {
-      "ui:widget": "hidden"
     }
   }
 }

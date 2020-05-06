@@ -3,10 +3,10 @@ Feature: Data Sources
   Background: There are data sources in the system
 
     Given there are mongodb data sources
-      | host | port  | username | password | tls   | name           | database | collection     | documentType | type     |
-      | db   | 27017 | maf      | maf      | false | entities       | local    | documents      | entities     | mongo-db |
-      | db   | 27017 | maf      | maf      | false | SSR-DataSource | local    | SSR-DataSource | blueprints   | mongo-db |
-      | db   | 27017 | maf      | maf      | false | system         | local    | system         | system       | mongo-db |
+      | host | port  | username | password | tls   | name           | database | collection     | type     |
+      | db   | 27017 | maf      | maf      | false | entities       | local    | documents      | mongo-db |
+      | db   | 27017 | maf      | maf      | false | SSR-DataSource | local    | SSR-DataSource | mongo-db |
+      | db   | 27017 | maf      | maf      | false | system         | local    | system         | mongo-db |
 
   Scenario: Get single data source
     Given I access the resource url "/api/v1/data-sources/system"
@@ -20,8 +20,8 @@ Feature: Data Sources
     }
     """
 
-  Scenario: Get data sources of type blueprints
-    Given I access the resource url "/api/v1/data-sources?documentType=blueprints"
+  Scenario: Get all data sources
+    Given I access the resource url "/api/v1/data-sources"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -30,6 +30,10 @@ Feature: Data Sources
       {
         "host": "client",
         "name": "Local workspace"
+      },
+      {
+        "host": "db",
+        "name": "entities"
       },
       {
         "host": "db",
@@ -52,8 +56,7 @@ Feature: Data Sources
       "tls": false,
       "name": "myTest-DataSource",
       "database": "mariner",
-      "collection": "blueprints",
-      "documentType": "blueprints"
+      "collection": "blueprints"
       }
     """
     Then the response status should be "OK"

@@ -7,6 +7,5 @@
   "tls": false,
   "name": "system",
   "database": "local",
-  "collection": "system",
-  "documentType": "system"
+  "collection": "system"
 }

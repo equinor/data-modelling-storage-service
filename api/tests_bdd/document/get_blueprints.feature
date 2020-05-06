@@ -4,8 +4,8 @@ Feature: Document - Generate JSON Schema
   Background: There are data sources in the system
     Given data modelling tool templates are imported
     Given there are mongodb data sources
-      | host | port  | username | password | tls   | name             | database | collection | documentType | type     |
-      | db   | 27017 | maf      | maf      | false | blueprints| local    | documents  | blueprints   | mongo-db |
+      | host | port  | username | password | tls   | name             | database | collection | type     |
+      | db   | 27017 | maf      | maf      | false | blueprints| local    | documents  | mongo-db |
 
     Given there exist document with id "1" in data source "blueprints"
     """

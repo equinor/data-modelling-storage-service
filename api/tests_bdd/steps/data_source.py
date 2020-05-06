@@ -16,7 +16,6 @@ def step_impl(context):
             "name": row["name"].strip(),
             "database": row["database"],
             "collection": row["collection"],
-            "documentType": row["documentType"],
             "type": row["type"],
         }
         dmt_database["data_sources"].insert_one(document)

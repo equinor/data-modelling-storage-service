@@ -2,19 +2,17 @@ from typing import List, Dict
 
 from api.config import Config
 from api.services.database import dmt_database
-from api.core.enums import DataSourceDocumentType, DataSourceType
+from api.core.enums import DataSourceType
 
 
 class DataSourceRepository:
     collection = dmt_database[f"{Config.DATA_SOURCES_COLLECTION}"]
 
-    def list(self, document_type: DataSourceDocumentType) -> List[Dict]:
+    def list(self) -> List[Dict]:
         all_sources = [
             {"id": "local", "host": "client", "name": "Local workspace", "type": DataSourceType.LOCAL.value}
         ]
-        for data_source in self.collection.find(
-            filter={"documentType": {"$regex": document_type.value}}, projection=["name", "host", "type"]
-        ):
+        for data_source in self.collection.find(projection=["name", "host", "type"]):
             data_source["id"] = data_source.pop("_id")
 
             data_source_type = DataSourceType(data_source["type"])

@@ -8,6 +8,5 @@
   "name": "system",
   "database": "REPLACE_ME",
   "collection": "system",
-  "documentType": "system",
   "_id": "system"
 }

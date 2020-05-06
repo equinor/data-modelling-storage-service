@@ -6,10 +6,12 @@ from api.core.repository.repository_exceptions import (
 from api.core.shared import response_object as res
 import traceback
 
+from api.core.shared.request_object import InvalidRequestObject
+
 
 class UseCase(object):
-    def execute(self, request_object):
-        if not request_object:
+    def execute(self, request_object=None):
+        if isinstance(request_object, InvalidRequestObject):
             return res.ResponseFailure.build_from_invalid_request_object(request_object)
         try:
             return self.process_request(request_object)

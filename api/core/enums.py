@@ -32,17 +32,6 @@ class DataSourceType(Enum):
         return value in values
 
 
-class DataSourceDocumentType(Enum):
-    BLUEPRINT = "blueprints"
-    ENTITIES = "entities"
-    ALL = "^(blueprints|entities)$"
-
-    @staticmethod
-    def has_value(value):
-        values = [item.value for item in DataSourceDocumentType]
-        return value in values
-
-
 class RepositoryType(Enum):
     DocumentRepository = auto()
     PackageRepository = auto()
