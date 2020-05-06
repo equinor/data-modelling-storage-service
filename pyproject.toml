@@ -36,6 +36,13 @@ black = "^19.10b0"
 [tool.black]
 line-length = 119
 target-version = ['py38']
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | \gen
+)/
+'''
 
 [build-system]
 requires = ["poetry>=0.12"]

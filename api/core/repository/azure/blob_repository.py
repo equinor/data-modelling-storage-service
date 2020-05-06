@@ -29,9 +29,11 @@ class AzureBlobStorageClient(DBClientInterface):
 
     def find(self, filters: Dict) -> Optional[List[Dict]]:
         # TODO: implement efficient filter functionality by using the python azure api
-        blobs = self.blob_service_client.list_blobs(self.collection)
-        result = self._filter(blobs, filters)
-        return result
+        if self.blob_service_client.exists(self.collection):
+            # self.blob_service_client.create_container(self.collection)
+            blobs = self.blob_service_client.list_blobs(self.collection)
+            result = self._filter(blobs, filters)
+            return result
 
     def find_one(self, filters: Dict) -> Optional[Dict]:
         blobs = self.blob_service_client.list_blobs(self.collection)
