@@ -180,7 +180,7 @@ class DocumentService:
         package_name = ref_elements[0]
 
         package: DTO = self.repository_provider(data_source_id).first(
-            {"type": "system/DMT/Package", "isRoot": True, "name": package_name}
+            {"type": "system/SIMOS/Package", "isRoot": True, "name": package_name}
         )
         if not package:
             raise FileNotFoundException(data_source_id, package_name, is_root=True)
@@ -199,7 +199,7 @@ class DocumentService:
             return node
 
     def get_root_packages(self, data_source_id: str):
-        result = self.repository_provider(data_source_id).find({"type": "system/DMT/Package", "isRoot": True})
+        result = self.repository_provider(data_source_id).find({"type": "system/SIMOS/Package", "isRoot": True})
         if not result:
             return []
 
