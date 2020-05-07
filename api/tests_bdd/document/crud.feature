@@ -166,7 +166,7 @@ Feature: Document 2
     {
         "name": "TestData",
         "description": "",
-        "type": "system/DMT/Package",
+        "type": "system/SIMOS/Package",
         "content": [
             {
                 "_id": "3",
@@ -195,10 +195,10 @@ Feature: Document 2
 
     Given there are documents for the data source "data-source-name" in collection "documents"
       | uid | parent_uid | name          | description | type                                    |
-      | 1   |            | package_1     |             | system/DMT/Package                      |
-      | 2   | 1          | sub_package_1 |             | system/DMT/Package                      |
-      | 3   | 1          | sub_package_2 |             | system/DMT/Package                      |
-      | 4   | 2          | document_1    |             | system/DMT/Package                      |
+      | 1   |            | package_1     |             | system/SIMOS/Package                      |
+      | 2   | 1          | sub_package_1 |             | system/SIMOS/Package                      |
+      | 3   | 1          | sub_package_2 |             | system/SIMOS/Package                      |
+      | 4   | 2          | document_1    |             | system/SIMOS/Package                      |
       | 5   | 2          | document_2    |             | system/SIMOS/Blueprint                  |
       | 6   | 3          | container_1   |             | test-source-name/TestData/TestContainer |
 
@@ -216,7 +216,7 @@ Feature: Document 2
        },
        "document":{
           "name":"package_1",
-          "type":"system/DMT/Package",
+          "type":"system/SIMOS/Package",
           "content":[
              {
                 "name":"sub_package_1"
@@ -243,7 +243,7 @@ Feature: Document 2
           "_id": "4",
           "name": "document_1",
           "description": "",
-          "type": "system/DMT/Package",
+          "type": "system/SIMOS/Package",
           "isRoot": false,
           "content": []
       }
@@ -274,7 +274,7 @@ Feature: Document 2
     """
     {
       "name": "package_1",
-      "type": "system/DMT/Package",
+      "type": "system/SIMOS/Package",
       "description": "new description"
     }
     """
@@ -284,7 +284,7 @@ Feature: Document 2
     {
       "data": {
         "name": "package_1",
-        "type": "system/DMT/Package",
+        "type": "system/SIMOS/Package",
         "description": "new description"
       }
     }
