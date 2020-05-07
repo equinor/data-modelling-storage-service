@@ -1,0 +1,14 @@
+{
+  "type": "system/SIMOS/Blueprint",
+  "name": "AddAction",
+  "description": "This describes a add document",
+  "attributes": [
+    {
+      "attributeType": "string",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "name"
+    }
+  ],
+  "storageRecipes": [],
+  "uiRecipes": []
+}
