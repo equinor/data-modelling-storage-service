@@ -342,7 +342,7 @@ class DocumentService:
 
         # Check if a file with the same name already exists in the target package
         if duplicate_filename(parent, name):
-            raise DuplicateFileNameException(data_source_id, directory)
+            raise DuplicateFileNameException(data_source_id, f"{directory}/{name}")
 
         new_node_id = str(uuid4()) if not parent.attribute_is_contained() else ""
 
