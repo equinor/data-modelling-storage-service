@@ -1,0 +1,16 @@
+version: "3.4"
+
+services:
+  mainapi:
+    build:
+      target: development
+    image: main-api-dev
+    volumes:
+      - ./:/usr/src/app
+    environment:
+      FLASK_DEBUG: 1
+      ENVIRONMENT: production
+      MONGO_AZURE_URI: ${MONGO_AZURE_URI}
+      FLASK_RUN_PORT: 5000
+    ports:
+      - "8000:5000"
