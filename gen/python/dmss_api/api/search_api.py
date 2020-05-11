@@ -36,17 +36,17 @@ class SearchApi(object):
             api_client = ApiClient()
         self.api_client = api_client
 
-    def search_entities(self, data_source_id, inline_object3, **kwargs):  # noqa: E501
+    def search_entities(self, data_source_id, inline_object4, **kwargs):  # noqa: E501
         """Search for entities  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.search_entities(data_source_id, inline_object3, async_req=True)
+        >>> thread = api.search_entities(data_source_id, inline_object4, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str data_source_id: The data source ID (required)
-        :param InlineObject3 inline_object3: (required)
+        :param InlineObject4 inline_object4: (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -59,19 +59,19 @@ class SearchApi(object):
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
-        return self.search_entities_with_http_info(data_source_id, inline_object3, **kwargs)  # noqa: E501
+        return self.search_entities_with_http_info(data_source_id, inline_object4, **kwargs)  # noqa: E501
 
-    def search_entities_with_http_info(self, data_source_id, inline_object3, **kwargs):  # noqa: E501
+    def search_entities_with_http_info(self, data_source_id, inline_object4, **kwargs):  # noqa: E501
         """Search for entities  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.search_entities_with_http_info(data_source_id, inline_object3, async_req=True)
+        >>> thread = api.search_entities_with_http_info(data_source_id, inline_object4, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str data_source_id: The data source ID (required)
-        :param InlineObject3 inline_object3: (required)
+        :param InlineObject4 inline_object4: (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -90,7 +90,7 @@ class SearchApi(object):
 
         all_params = [
             'data_source_id',
-            'inline_object3'
+            'inline_object4'
         ]
         all_params.extend(
             [
@@ -113,10 +113,10 @@ class SearchApi(object):
         if self.api_client.client_side_validation and ('data_source_id' not in local_var_params or  # noqa: E501
                                                         local_var_params['data_source_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `data_source_id` when calling `search_entities`")  # noqa: E501
-        # verify the required parameter 'inline_object3' is set
-        if self.api_client.client_side_validation and ('inline_object3' not in local_var_params or  # noqa: E501
-                                                        local_var_params['inline_object3'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `inline_object3` when calling `search_entities`")  # noqa: E501
+        # verify the required parameter 'inline_object4' is set
+        if self.api_client.client_side_validation and ('inline_object4' not in local_var_params or  # noqa: E501
+                                                        local_var_params['inline_object4'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `inline_object4` when calling `search_entities`")  # noqa: E501
 
         collection_formats = {}
 
@@ -132,8 +132,8 @@ class SearchApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'inline_object3' in local_var_params:
-            body_params = local_var_params['inline_object3']
+        if 'inline_object4' in local_var_params:
+            body_params = local_var_params['inline_object4']
         # HTTP header `Accept`
         header_params['Accept'] = self.api_client.select_header_accept(
             ['application/json'])  # noqa: E501

@@ -390,6 +390,42 @@ paths:
       tags:
       - explorer
       x-openapi-router-controller: controllers.explorer_controller
+  /explorer/{dataSourceId}/remove-by-path:
+    post:
+      operationId: remove_by_path
+      parameters:
+      - description: The data source ID
+        explode: false
+        in: path
+        name: dataSourceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_2'
+        content:
+          application/json:
+            schema:
+              properties:
+                directory:
+                  type: string
+              required:
+              - directory
+              type: object
+        description: A JSON object containing document information
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Remove status
+      summary: Remove document by path
+      tags:
+      - explorer
+      x-openapi-router-controller: controllers.explorer_controller
   /explorer/{dataSourceId}/rename:
     put:
       operationId: rename
@@ -403,7 +439,7 @@ paths:
           type: string
         style: simple
       requestBody:
-        $ref: '#/components/requestBodies/inline_object_2'
+        $ref: '#/components/requestBodies/inline_object_3'
         content:
           application/json:
             schema:
@@ -504,7 +540,7 @@ paths:
           type: string
         style: simple
       requestBody:
-        $ref: '#/components/requestBodies/inline_object_3'
+        $ref: '#/components/requestBodies/inline_object_4'
         content:
           application/json:
             schema:
@@ -561,6 +597,12 @@ components:
           schema:
             $ref: '#/components/schemas/inline_object_3'
       required: true
+    inline_object_4:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_4'
+      required: true
   schemas:
     DocumentResponse:
       additionalProperties:
@@ -614,6 +656,13 @@ components:
       type: object
     inline_object_2:
       properties:
+        directory:
+          type: string
+      required:
+      - directory
+      type: object
+    inline_object_3:
+      properties:
         name:
           type: string
         parentId:
@@ -628,7 +677,7 @@ components:
       - documentId
       - name
       type: object
-    inline_object_3:
+    inline_object_4:
       properties:
         type:
           minLength: 5

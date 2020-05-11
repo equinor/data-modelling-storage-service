@@ -10,6 +10,7 @@ from api.core.use_case.add_file_use_case import AddFileRequestObject, AddFileUse
 from api.core.use_case.add_raw import AddRawRequestObject, AddRawUseCase
 from api.core.use_case.add_root_package_use_case import AddRootPackageRequestObject, AddRootPackageUseCase
 from api.core.use_case.move_file_use_case import MoveFileRequestObject, MoveFileUseCase
+from api.core.use_case.remove_by_path_use_case import RemoveByPathUseCase, RemoveByPathRequestObject
 from api.core.use_case.remove_use_case import RemoveFileRequestObject, RemoveUseCase
 from api.core.use_case.rename_file_use_case import RenameRequestObject, RenameUseCase
 from controllers.status_codes import STATUS_CODES
@@ -86,6 +87,17 @@ def remove(data_source_id, body):  # noqa: E501
     request_data["data_source_id"] = data_source_id
     use_case = RemoveUseCase()
     request_object = RemoveFileRequestObject.from_dict(request_data)
+    response = use_case.execute(request_object)
+    return Response(
+        json.dumps(response.value, cls=DTOSerializer), mimetype="application/json", status=STATUS_CODES[response.type]
+    )
+
+
+def remove_by_path(data_source_id, body):  # noqa: E501
+    request_data = request.get_json()
+    request_data["data_source_id"] = data_source_id
+    use_case = RemoveByPathUseCase()
+    request_object = RemoveByPathRequestObject.from_dict(request_data)
     response = use_case.execute(request_object)
     return Response(
         json.dumps(response.value, cls=DTOSerializer), mimetype="application/json", status=STATUS_CODES[response.type]

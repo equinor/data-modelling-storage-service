@@ -37,7 +37,7 @@ def save(data_source_id, request_body):  # noqa: E501
     :param data_source_id: The data source ID
     :type data_source_id: str
     :param request_body: Object containing all info for a document
-    :type request_body: dict | bytes
+    :type request_body: Dict[str, ]
 
     :rtype: InlineResponse200
     """
