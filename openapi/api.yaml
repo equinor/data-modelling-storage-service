@@ -346,6 +346,39 @@ paths:
             application/json:
               schema:
                 type: object
+  /explorer/{dataSourceId}/remove-by-path:
+    post:
+      operationId: remove_by_path
+      x-openapi-router-controller: controllers.explorer_controller
+      tags:
+        - explorer
+      summary: Remove document by path
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: A JSON object containing document information
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                directory:
+                  type: string
+              required:
+                - directory
+      responses:
+        '200':
+          description: Remove status
+          content:
+            application/json:
+              schema:
+                type: object
   /explorer/{dataSourceId}/move:
     put:
       operationId: move

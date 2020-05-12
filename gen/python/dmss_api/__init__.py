@@ -30,12 +30,14 @@ from dmss_api.exceptions import OpenApiException
 from dmss_api.exceptions import ApiTypeError
 from dmss_api.exceptions import ApiValueError
 from dmss_api.exceptions import ApiKeyError
+from dmss_api.exceptions import ApiAttributeError
 from dmss_api.exceptions import ApiException
 # import models into sdk package
 from dmss_api.models.inline_object import InlineObject
 from dmss_api.models.inline_object1 import InlineObject1
 from dmss_api.models.inline_object2 import InlineObject2
 from dmss_api.models.inline_object3 import InlineObject3
+from dmss_api.models.inline_object4 import InlineObject4
 from dmss_api.models.inline_response200 import InlineResponse200
 from dmss_api.models.inline_response2001 import InlineResponse2001
 

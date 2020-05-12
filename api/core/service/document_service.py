@@ -318,6 +318,15 @@ class DocumentService:
 
         return {"uid": new_node.node_id}
 
+    def remove_by_path(self, data_source_id: str, directory: str):
+        # Convert filesystem path to NodeTree path
+        tree_path = "/content/".join(directory.split("/"))
+        root: Node = self.get_by_path(data_source_id, tree_path)
+        if not root:
+            raise EntityNotFoundException(uid=directory)
+
+        return self._remove_document(data_source_id, root.uid)
+
     # Add file by parent directory
     def add(self, data_source_id: str, directory: str, document: dict):
         # Convert filesystem path to NodeTree path

@@ -24,7 +24,7 @@ class Config:
     APPLICATION_HOME = os.getenv("APPLICATION_HOME", f"{Path(__file__).parent.absolute()}/home")
     DMT_SETTINGS_FILE = f"{APPLICATION_HOME}/dmt_settings.json"
     ENTITY_SETTINGS_FILE = f"{APPLICATION_HOME}/settings.json"
-    SYSTEM_FOLDERS = ["SIMOS", "DMT"]
+    SYSTEM_FOLDERS = ["SIMOS"]
     VERIFY_IMPORTS = os.getenv("DMT_VERIFY_IMPORTS", True)
     PY_PROJECT_FILE = f"{pathlib.Path(__file__).parent}/../pyproject.toml"
     with open(PY_PROJECT_FILE) as toml_file:

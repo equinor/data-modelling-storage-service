@@ -11,6 +11,7 @@ Method | HTTP request | Description
 [**add_to_path**](ExplorerApi.md#add_to_path) | **POST** /explorer/{dataSourceId}/add-to-path | Add document to path
 [**move**](ExplorerApi.md#move) | **PUT** /explorer/{dataSourceId}/move | Move document
 [**remove**](ExplorerApi.md#remove) | **POST** /explorer/{dataSourceId}/remove | Remove document
+[**remove_by_path**](ExplorerApi.md#remove_by_path) | **POST** /explorer/{dataSourceId}/remove-by-path | Remove document by path
 [**rename**](ExplorerApi.md#rename) | **PUT** /explorer/{dataSourceId}/rename | Rename document
 
 
@@ -448,10 +449,10 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **rename**
-> dict(str, object) rename(data_source_id, inline_object2)
+# **remove_by_path**
+> object remove_by_path(data_source_id, inline_object2)
 
-Rename document
+Remove document by path
 
 ### Example
 
@@ -476,8 +477,70 @@ with dmss_api.ApiClient() as api_client:
 inline_object2 = dmss_api.InlineObject2() # InlineObject2 | 
 
     try:
+        # Remove document by path
+        api_response = api_instance.remove_by_path(data_source_id, inline_object2)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ExplorerApi->remove_by_path: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data_source_id** | **str**| The data source ID | 
+ **inline_object2** | [**InlineObject2**](InlineObject2.md)|  | 
+
+### Return type
+
+**object**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Remove status |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **rename**
+> dict(str, object) rename(data_source_id, inline_object3)
+
+Rename document
+
+### Example
+
+```python
+from __future__ import print_function
+import time
+import dmss_api
+from dmss_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://0.0.0.0:8000/api/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = dmss_api.Configuration(
+    host = "http://0.0.0.0:8000/api/v1"
+)
+
+
+# Enter a context with an instance of the API client
+with dmss_api.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = dmss_api.ExplorerApi(api_client)
+    data_source_id = 'data_source_id_example' # str | The data source ID
+inline_object3 = dmss_api.InlineObject3() # InlineObject3 | 
+
+    try:
         # Rename document
-        api_response = api_instance.rename(data_source_id, inline_object2)
+        api_response = api_instance.rename(data_source_id, inline_object3)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ExplorerApi->rename: %s\n" % e)
@@ -488,7 +551,7 @@ inline_object2 = dmss_api.InlineObject2() # InlineObject2 |
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **data_source_id** | **str**| The data source ID | 
- **inline_object2** | [**InlineObject2**](InlineObject2.md)|  | 
+ **inline_object3** | [**InlineObject3**](InlineObject3.md)|  | 
 
 ### Return type
 

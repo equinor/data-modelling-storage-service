@@ -911,12 +911,12 @@ class ExplorerApi(object):
             _request_timeout=local_var_params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def rename(self, data_source_id, inline_object2, **kwargs):  # noqa: E501
-        """Rename document  # noqa: E501
+    def remove_by_path(self, data_source_id, inline_object2, **kwargs):  # noqa: E501
+        """Remove document by path  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.rename(data_source_id, inline_object2, async_req=True)
+        >>> thread = api.remove_by_path(data_source_id, inline_object2, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -929,19 +929,19 @@ class ExplorerApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: dict(str, object)
+        :return: object
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
-        return self.rename_with_http_info(data_source_id, inline_object2, **kwargs)  # noqa: E501
+        return self.remove_by_path_with_http_info(data_source_id, inline_object2, **kwargs)  # noqa: E501
 
-    def rename_with_http_info(self, data_source_id, inline_object2, **kwargs):  # noqa: E501
-        """Rename document  # noqa: E501
+    def remove_by_path_with_http_info(self, data_source_id, inline_object2, **kwargs):  # noqa: E501
+        """Remove document by path  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.rename_with_http_info(data_source_id, inline_object2, async_req=True)
+        >>> thread = api.remove_by_path_with_http_info(data_source_id, inline_object2, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -956,7 +956,7 @@ class ExplorerApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(dict(str, object), status_code(int), headers(HTTPHeaderDict))
+        :return: tuple(object, status_code(int), headers(HTTPHeaderDict))
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -980,18 +980,18 @@ class ExplorerApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method rename" % key
+                    " to method remove_by_path" % key
                 )
             local_var_params[key] = val
         del local_var_params['kwargs']
         # verify the required parameter 'data_source_id' is set
         if self.api_client.client_side_validation and ('data_source_id' not in local_var_params or  # noqa: E501
                                                         local_var_params['data_source_id'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `data_source_id` when calling `rename`")  # noqa: E501
+            raise ApiValueError("Missing the required parameter `data_source_id` when calling `remove_by_path`")  # noqa: E501
         # verify the required parameter 'inline_object2' is set
         if self.api_client.client_side_validation and ('inline_object2' not in local_var_params or  # noqa: E501
                                                         local_var_params['inline_object2'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `inline_object2` when calling `rename`")  # noqa: E501
+            raise ApiValueError("Missing the required parameter `inline_object2` when calling `remove_by_path`")  # noqa: E501
 
         collection_formats = {}
 
@@ -1009,6 +1009,131 @@ class ExplorerApi(object):
         body_params = None
         if 'inline_object2' in local_var_params:
             body_params = local_var_params['inline_object2']
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = []  # noqa: E501
+
+        return self.api_client.call_api(
+            '/explorer/{dataSourceId}/remove-by-path', 'POST',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='object',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def rename(self, data_source_id, inline_object3, **kwargs):  # noqa: E501
+        """Rename document  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.rename(data_source_id, inline_object3, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str data_source_id: The data source ID (required)
+        :param InlineObject3 inline_object3: (required)
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: dict(str, object)
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        return self.rename_with_http_info(data_source_id, inline_object3, **kwargs)  # noqa: E501
+
+    def rename_with_http_info(self, data_source_id, inline_object3, **kwargs):  # noqa: E501
+        """Rename document  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.rename_with_http_info(data_source_id, inline_object3, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str data_source_id: The data source ID (required)
+        :param InlineObject3 inline_object3: (required)
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: tuple(dict(str, object), status_code(int), headers(HTTPHeaderDict))
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = [
+            'data_source_id',
+            'inline_object3'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params['kwargs']):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method rename" % key
+                )
+            local_var_params[key] = val
+        del local_var_params['kwargs']
+        # verify the required parameter 'data_source_id' is set
+        if self.api_client.client_side_validation and ('data_source_id' not in local_var_params or  # noqa: E501
+                                                        local_var_params['data_source_id'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `data_source_id` when calling `rename`")  # noqa: E501
+        # verify the required parameter 'inline_object3' is set
+        if self.api_client.client_side_validation and ('inline_object3' not in local_var_params or  # noqa: E501
+                                                        local_var_params['inline_object3'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `inline_object3` when calling `rename`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'data_source_id' in local_var_params:
+            path_params['dataSourceId'] = local_var_params['data_source_id']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if 'inline_object3' in local_var_params:
+            body_params = local_var_params['inline_object3']
         # HTTP header `Accept`
         header_params['Accept'] = self.api_client.select_header_accept(
             ['application/json'])  # noqa: E501

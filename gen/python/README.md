@@ -93,6 +93,7 @@ Class | Method | HTTP request | Description
 *ExplorerApi* | [**add_to_path**](docs/ExplorerApi.md#add_to_path) | **POST** /explorer/{dataSourceId}/add-to-path | Add document to path
 *ExplorerApi* | [**move**](docs/ExplorerApi.md#move) | **PUT** /explorer/{dataSourceId}/move | Move document
 *ExplorerApi* | [**remove**](docs/ExplorerApi.md#remove) | **POST** /explorer/{dataSourceId}/remove | Remove document
+*ExplorerApi* | [**remove_by_path**](docs/ExplorerApi.md#remove_by_path) | **POST** /explorer/{dataSourceId}/remove-by-path | Remove document by path
 *ExplorerApi* | [**rename**](docs/ExplorerApi.md#rename) | **PUT** /explorer/{dataSourceId}/rename | Rename document
 *PackageApi* | [**find_by_name**](docs/PackageApi.md#find_by_name) | **GET** /packages/{dataSourceId}/findByName/{name} | Query packages
 *PackageApi* | [**get**](docs/PackageApi.md#get) | **GET** /packages/{dataSourceId} | Get packages
@@ -105,6 +106,7 @@ Class | Method | HTTP request | Description
  - [InlineObject1](docs/InlineObject1.md)
  - [InlineObject2](docs/InlineObject2.md)
  - [InlineObject3](docs/InlineObject3.md)
+ - [InlineObject4](docs/InlineObject4.md)
  - [InlineResponse200](docs/InlineResponse200.md)
  - [InlineResponse2001](docs/InlineResponse2001.md)
 

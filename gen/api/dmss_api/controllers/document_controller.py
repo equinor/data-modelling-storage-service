@@ -44,7 +44,7 @@ def update(data_source_id, document_id, request_body, attribute=None):  # noqa: 
     :param document_id: The document ID
     :type document_id: str
     :param request_body: Object containing all info for a document
-    :type request_body: dict | bytes
+    :type request_body: Dict[str, ]
     :param attribute: Path to contained document
     :type attribute: str
 
