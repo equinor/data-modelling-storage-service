@@ -8,6 +8,5 @@
   "name": "entities",
   "database": "REPLACE_ME",
   "collection": "entities",
-  "documentType": "entities",
   "_id": "entities"
 }

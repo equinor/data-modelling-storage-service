@@ -15,6 +15,9 @@ class InvalidRequestObject(object):
 
 
 class ValidRequestObject(object):
+    def __init__(self):
+        pass
+
     @classmethod
     def from_dict(cls, adict):
         raise NotImplementedError

@@ -12,7 +12,6 @@ from api.services.database import dmt_database as db
 class DataSource:
     def __init__(self, data_source: Dict):
         self.name = data_source["name"]
-        self.document_type = data_source["documentType"]
         self.data_source = data_source
 
     def get_client(self):

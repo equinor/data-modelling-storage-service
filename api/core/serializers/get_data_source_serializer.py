@@ -10,7 +10,6 @@ class GetDataSourceSerializer(json.JSONEncoder):
                 "name": data_source["name"],
                 "host": data_source.get("host", ""),
                 "type": data_source["type"],
-                "documentType": data_source["documentType"],
             }
             return to_serialize
         except AttributeError:

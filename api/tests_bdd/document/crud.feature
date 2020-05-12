@@ -3,10 +3,10 @@ Feature: Document 2
   Background: There are data sources in the system
 
     Given there are mongodb data sources
-      | host | port  | username | password | tls   | name             | database | collection | documentType | type     |
-      | db   | 27017 | maf      | maf      | false | data-source-name | local    | documents  | blueprints   | mongo-db |
-      | db   | 27017 | maf      | maf      | false | test-source-name | local    | test       | blueprints   | mongo-db |
-      | db   | 27017 | maf      | maf      | false | system           | local    | system     | system       | mongo-db |
+      | host | port  | username | password | tls   | name             | database | collection | type     |
+      | db   | 27017 | maf      | maf      | false | data-source-name | local    | documents  | mongo-db |
+      | db   | 27017 | maf      | maf      | false | test-source-name | local    | test       | mongo-db |
+      | db   | 27017 | maf      | maf      | false | system           | local    | system     | mongo-db |
 
     Given there exist document with id "2" in data source "test-source-name"
     """

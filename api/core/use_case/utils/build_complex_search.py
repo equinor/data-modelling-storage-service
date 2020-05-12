@@ -7,7 +7,7 @@ from api.core.repository.repository_exceptions import InvalidAttributeException,
 
 def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: Dict, key: str, get_blueprint: Callable):
     # Lists
-    # TODO: Can now only
+    # TODO: Can only do a "at least one" from the first element in query
     if isinstance(search_value, List):
         if attribute.is_primitive():
             return attribute_to_mongo_query(attribute, search_value[0], key, get_blueprint)

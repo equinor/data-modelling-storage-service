@@ -7,10 +7,9 @@ from api.utils.logging import logger
 
 
 class Repository:
-    def __init__(self, name: str, db: DBClientInterface, document_type: str):
+    def __init__(self, name: str, db: DBClientInterface):
         self.name = name
         self.client = db
-        self.document_type = document_type
 
     def get(self, uid: str) -> DTO:
         try:
