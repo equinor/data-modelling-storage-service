@@ -13,20 +13,17 @@ app = create_app(Config)
 @app.cli.command()
 def init_application():
     for folder in Config.SYSTEM_FOLDERS:
-        import_package(f"{Config.APPLICATION_HOME}/core/{folder}", collection=Config.SYSTEM_COLLECTION, is_root=True)
+        import_package(f"{Config.APPLICATION_HOME}/core/{folder}", data_source=Config.SYSTEM_COLLECTION, is_root=True)
 
     for folder in Config.ENTITY_APPLICATION_SETTINGS["packages"]:
         import_package(
-            f"{Config.APPLICATION_HOME}/blueprints/{folder}", collection=Config.BLUEPRINT_COLLECTION, is_root=True
+            f"{Config.APPLICATION_HOME}/blueprints/{folder}", data_source=Config.BLUEPRINT_COLLECTION, is_root=True
         )
 
     logger.info(f"Importing entity package(s) {Config.ENTITY_APPLICATION_SETTINGS['entities']}")
     for folder in Config.ENTITY_APPLICATION_SETTINGS["entities"]:
         import_package(
-            f"{Config.APPLICATION_HOME}/entities/{folder}",
-            collection=Config.ENTITY_COLLECTION,
-            is_root=True,
-            is_entity=True,
+            f"{Config.APPLICATION_HOME}/entities/{folder}", data_source=Config.ENTITY_COLLECTION, is_root=True
         )
 
 
@@ -36,7 +33,7 @@ def reset_core_packages():
     dmt_database.drop_collection(f"{Config.SYSTEM_COLLECTION}")
     logger.warning(f"Importing core packages...")
     for folder in Config.SYSTEM_FOLDERS:
-        import_package(f"{Config.APPLICATION_HOME}/core/{folder}", collection=Config.SYSTEM_COLLECTION, is_root=True)
+        import_package(f"{Config.APPLICATION_HOME}/core/{folder}", data_source=Config.SYSTEM_COLLECTION, is_root=True)
 
 
 @app.cli.command()
@@ -62,3 +59,7 @@ def import_data_source(file):
 @app.cli.command()
 def nuke_db():
     wipe_db()
+
+
+# if __name__ == "__main__":
+#     init_application()

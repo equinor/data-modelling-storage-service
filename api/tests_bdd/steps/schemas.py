@@ -1,9 +1,9 @@
 import json
 
-from behave import given, when, then
+from behave import given
 
-from api.core.repository import Repository
-from api.core.repository.repository_factory import get_repository
+from api.core.storage import data_source
+from api.core.storage.internal.data_source_factory import get_data_source
 from api.utils.logging import logger
 from api.utils.package_import import import_package
 
@@ -22,5 +22,5 @@ def step_impl(context):
 @given('there exist document with id "{uid}" in data source "{data_source_id}"')
 def step_impl_2(context, uid: str, data_source_id: str):
     document: DTO = DTO(uid=uid, data=json.loads(context.text))
-    document_repository: Repository = get_repository(data_source_id)
+    document_repository: data_source = get_data_source(data_source_id)
     document_repository.add(document)

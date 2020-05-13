@@ -1,9 +1,8 @@
 from pathlib import Path
 
-from api.classes.data_source import DataSource
 from api.classes.dto import DTO
-from api.core.repository import Repository
-from api.core.repository.repository_exceptions import EntityAlreadyExistsException, EntityNotFoundException
+from api.core.storage.data_source import DataSource
+from api.core.storage.repository_exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from api.core.shared import request_object as req
 from api.core.shared import response_object as res
 from api.core.shared import use_case as uc
@@ -54,7 +53,7 @@ class MoveFileUseCase(uc.UseCase):
 
         # Remove source document
         source_data_source = DataSource(uid=source_data_source_id)
-        source_document_repository: Repository = self.get_repository(source_data_source)
+        source_document_repository: DataSource = self.get_repository(source_data_source)
         source_document: DTO = get_document_by_ref(request_object.source)
         if not source_document:
             raise EntityNotFoundException(uid=f"{str(source)}")
@@ -63,7 +62,7 @@ class MoveFileUseCase(uc.UseCase):
 
         # Add destination
         destination_data_source = DataSource(uid=destination_data_source_uid)
-        destination_document_repository: Repository = self.get_repository(destination_data_source)
+        destination_document_repository: DataSource = self.get_repository(destination_data_source)
         data = source_document.data
         data["name"] = destination.name
         destination_document = DTO(uid=source_document.uid, data=data)

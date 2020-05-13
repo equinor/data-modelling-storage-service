@@ -1,15 +1,13 @@
 import re
 from functools import lru_cache
 from typing import List, Union
-from urllib import parse
 
 from api.classes.tree_node import Node
-from api.core.repository.repository_exceptions import (
+from api.core.storage.repository_exceptions import (
     EntityNotFoundException,
-    FileNotFoundException,
     RootPackageNotFoundException,
 )
-from api.core.repository.repository_factory import get_repository
+from api.core.storage.internal.data_source_factory import get_data_source
 from api.utils.helper_functions import get_data_source_and_path, get_package_and_path
 from api.utils.logging import logger
 
@@ -60,7 +58,7 @@ def get_document_uid_by_path(path: str, repository) -> Union[str, None]:
 def get_document_by_ref(type_ref) -> DTO:
     # TODO: Get DataSource from Package's config file
     data_source_id, path = get_data_source_and_path(type_ref)
-    document_repository = get_repository(data_source_id)
+    document_repository = get_data_source(data_source_id)
     type_id = get_document_uid_by_path(path, document_repository)
     if not type_id:
         raise EntityNotFoundException(uid=type_ref)

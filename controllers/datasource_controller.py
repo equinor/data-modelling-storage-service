@@ -12,7 +12,7 @@ from flask import request, Response
 
 from api.core.use_case.get_data_sources_use_case import GetDataSourcesUseCase
 
-from api.core.repository.data_source_repository import DataSourceRepository
+from api.core.storage.internal.data_source_repository import DataSourceRepository
 
 
 def get_data_source(data_source_id):

@@ -3,11 +3,11 @@ from pathlib import Path
 from typing import Union
 
 from api.classes.dto import DTO
-from api.core.repository import Repository
-from api.core.repository.repository_exceptions import TemplateNotFound
+from api.core.storage import data_source
+from api.core.storage.repository_exceptions import TemplateNotFound
 
 
-class TemplateRepositoryFromFile(Repository):
+class TemplateRepositoryFromFile(data_source):
     def __init__(self, location: Union[str, Path]):
         self.path = Path(location)
 

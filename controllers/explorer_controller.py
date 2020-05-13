@@ -2,7 +2,7 @@ import json
 
 from flask import request, Response
 
-from api.core.repository.repository_factory import get_repository
+from api.core.storage.internal.data_source_factory import get_data_source
 from api.core.serializers.dto_json_serializer import DTOSerializer
 from api.core.use_case.add_document_to_path_use_case import AddDocumentToPathRequestObject, AddDocumentToPathUseCase
 from api.core.use_case.add_document_use_case import AddDocumentUseCase, AddDocumentRequestObject
@@ -51,7 +51,7 @@ def add_to_path(data_source_id, body):
 
 def add_package(data_source_id, body):
     request_data = request.get_json()
-    document_repository = get_repository(data_source_id)
+    document_repository = get_data_source(data_source_id)
     use_case = AddRootPackageUseCase(document_repository=document_repository, data_source_id=data_source_id)
     request_object = AddRootPackageRequestObject.from_dict(request_data)
     response = use_case.execute(request_object)
@@ -74,7 +74,7 @@ def add_raw(data_source_id, body):
 
 def move(data_source_id, body):  # noqa: E501
     request_data = request.get_json()
-    use_case = MoveFileUseCase(get_repository=get_repository)
+    use_case = MoveFileUseCase(get_repository=get_data_source)
     request_object = MoveFileRequestObject.from_dict(request_data)
     response = use_case.execute(request_object)
     return Response(

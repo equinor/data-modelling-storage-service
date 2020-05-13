@@ -2,13 +2,13 @@ from unittest import mock, skip
 from uuid import uuid4
 
 from api.core.use_case.add_file_use_case import AddFileRequestObject, AddFileUseCase
-from api.core.repository import Repository
+from api.core.storage import data_source
 
 
 @skip("not working")
 def test_without_parameters():
 
-    document_repository: Repository = mock.Mock()
+    document_repository: data_source = mock.Mock()
 
     parent_id = str(uuid4())
 

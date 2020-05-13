@@ -1,14 +1,8 @@
-from api.core.enums import PRIMITIVES
-from api.core.repository.repository_factory import get_repository
+from api.core.storage.internal.data_source_factory import get_data_source
 from api.core.service.document_service import DocumentService
 from api.core.shared import request_object as req
 from api.core.shared import response_object as res
 from api.core.shared import use_case as uc
-from api.core.utility import get_document_by_ref
-
-from api.classes.blueprint_attribute import BlueprintAttribute
-from api.classes.dto import DTO
-from api.utils.logging import logger
 
 
 class GetDocumentRequestObject(req.ValidRequestObject):
@@ -40,7 +34,7 @@ class GetDocumentRequestObject(req.ValidRequestObject):
 
 
 class GetDocumentUseCase(uc.UseCase):
-    def __init__(self, repository_provider=get_repository):
+    def __init__(self, repository_provider=get_data_source):
         self.repository_provider = repository_provider
         self.document_service = DocumentService(repository_provider=self.repository_provider)
 

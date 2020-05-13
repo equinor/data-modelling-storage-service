@@ -1,12 +1,19 @@
 {
-  "type": "mongo-db",
-  "host": "db",
-  "port": 27017,
-  "username": "maf",
-  "password": "maf",
-  "tls": false,
   "name": "apps",
-  "database": "local",
-  "collection": "applications",
-  "documentType": "applications"
+  "repositories": {
+    "apps": {
+      "type": "mongo-db",
+      "host": "db",
+      "port": 27017,
+      "username": "maf",
+      "password": "maf",
+      "tls": false,
+      "name": "apps",
+      "database": "local",
+      "collection": "applications",
+      "documentType": "applications"
+    }
+  }
 }
+
+

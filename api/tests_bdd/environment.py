@@ -38,7 +38,7 @@ def before_scenario(context, scenario):
     if "skip" in scenario.effective_tags:
         scenario.skip("Marked with @skip")
 
-    context.client = app.test_client()
+    context.repository = app.test_client()
     context.ctx = app.test_request_context()
     context.ctx.push()
 

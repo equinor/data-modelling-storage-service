@@ -8,17 +8,17 @@ from api.classes.dto import DTO
 from api.classes.storage_recipe import StorageRecipe
 from api.classes.tree_node import ListNode, Node
 from api.core.enums import DMT, SIMOS
-from api.core.repository import Repository
-from api.core.repository.mongo import MongoDBClient
-from api.core.repository.repository_exceptions import (
+from api.core.storage import data_source
+from api.core.storage.repositories.mongo import MongoDBClient
+from api.core.storage.repositories.zip import ZipFileClient
+from api.core.storage.repository_exceptions import (
     DuplicateFileNameException,
     EntityNotFoundException,
     FileNotFoundException,
     InvalidDocumentNameException,
     RepositoryException,
 )
-from api.core.repository.zip_file import ZipFileClient
-from api.core.use_case.utils.build_complex_search import build_mongo_query, get_complex_search_dict
+from api.core.use_case.utils.build_complex_search import build_mongo_query
 from api.core.use_case.utils.create_entity import CreateEntity
 from api.core.utility import BlueprintProvider, duplicate_filename, url_safe_name
 from api.utils.logging import logger
@@ -32,7 +32,7 @@ def get_required_attributes(type: str):
     ]
 
 
-def get_document(document_uid: str, document_repository: Repository):
+def get_document(document_uid: str, document_repository: data_source):
     document: DTO = document_repository.get(str(document_uid))
 
     if not document:
@@ -42,7 +42,7 @@ def get_document(document_uid: str, document_repository: Repository):
 
 
 def get_resolved_document(
-    document: DTO, document_repository: Repository, blueprint_provider: BlueprintProvider
+    document: DTO, document_repository: data_source, blueprint_provider: BlueprintProvider
 ) -> Dict:
     blueprint: Blueprint = blueprint_provider.get_blueprint(document.type)
 
@@ -98,7 +98,7 @@ def get_resolved_document(
 
 
 def get_complete_document(
-    document_uid: str, document_repository: Repository, blueprint_provider: BlueprintProvider
+    document_uid: str, document_repository: data_source, blueprint_provider: BlueprintProvider
 ) -> Dict:
     document = get_document(document_uid=document_uid, document_repository=document_repository)
 
@@ -118,7 +118,7 @@ class DocumentService:
         self.blueprint_provider.invalidate_cache()
 
     def save(self, node: Union[Node, ListNode], data_source_id: str, repository=None, path="") -> None:
-        # If not passed a custom repository to save into, use the DocumentService's repository
+        # If not passed a custom storage to save into, use the DocumentService's storage
         if not repository:
             repository = self.repository_provider(data_source_id)
 
@@ -126,7 +126,7 @@ class DocumentService:
         for child in node.children:
             # A list node is always contained on parent. Need to check the blueprint
             if child.is_array() and not child.attribute_is_contained():
-                # If the node is a package, we build the path string to be used by "export zip"-repository
+                # If the node is a package, we build the path string to be used by "export zip"-storage
                 if node.type == DMT.PACKAGE.value:
                     path = f"{path}/{node.name}/" if path else f"{node.name}"
                 [self.save(x, data_source_id, repository, path) for x in child.children]
@@ -169,7 +169,7 @@ class DocumentService:
             root_node: Node = Node.from_dict(
                 complete_document, complete_document.get("_id"), blueprint_provider=self.blueprint_provider
             )
-            # Save the selected node, using custom ZipFile repository
+            # Save the selected node, using custom ZipFile storage
             self.save(root_node, data_source_id, ZipFileClient(zip_file))
 
         memory_file.seek(0)
@@ -368,9 +368,9 @@ class DocumentService:
     def search(self, data_source_id, search_data):
         repository = self.repository_provider(data_source_id)
 
-        if not isinstance(repository.client, MongoDBClient):
+        if not isinstance(repository.repository, MongoDBClient):
             raise RepositoryException(
-                f"Search is not supported on this repository type; {type(repository.client).__name__}"
+                f"Search is not supported on this repository type; {type(repository.repository).__name__}"
             )
 
         # TODO: This looks strange. Change how we get the "get_blueprint()"

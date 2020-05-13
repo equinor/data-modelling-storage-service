@@ -1,6 +1,7 @@
 from typing import List, Dict
 
 from api.config import Config
+from api.core.storage.data_source import DataSource
 from api.services.database import dmt_database
 from api.core.enums import DataSourceType
 
@@ -40,4 +41,4 @@ class DataSourceRepository:
         return str(result.inserted_id)
 
     def get(self, id: str):
-        return self.collection.find_one(filter={"_id": id})
+        return DataSource.from_dict(self.collection.find_one(filter={"_id": id}))

@@ -4,7 +4,7 @@ from unittest import mock
 from api.classes.blueprint_attribute import BlueprintAttribute
 from api.classes.dto import DTO
 from api.classes.tree_node import Node
-from api.core.repository import Repository
+from api.core.storage import data_source
 from api.core.service.document_service import DocumentService, get_complete_document
 from api.tests.core.document_service.common import blueprint_provider
 from api.tests.util_tests import flatten_dict
@@ -30,7 +30,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_3 = {"_id": "3", "name": "Reference 1", "description": "", "type": "blueprint_2"}
         document_4 = {"_id": "4", "name": "Reference 2", "description": "", "type": "blueprint_2"}
 
-        document_repository: Repository = mock.Mock()
+        document_repository: data_source = mock.Mock()
 
         def mock_get(document_id: str):
             if document_id == "1":

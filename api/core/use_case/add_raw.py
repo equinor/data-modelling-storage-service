@@ -2,8 +2,8 @@ from typing import Dict
 from uuid import uuid4
 
 from api.classes.dto import DTO
-from api.core.repository import Repository
-from api.core.repository.repository_factory import get_repository
+from api.core.storage import data_source
+from api.core.storage.internal.data_source_factory import get_data_source
 from api.core.shared import request_object as req
 from api.core.shared import response_object as res
 from api.core.shared import use_case as uc
@@ -39,7 +39,7 @@ class AddRawUseCase(uc.UseCase):
         uid: str = request_object.uid
         new_node_id = str(uuid4()) if not uid else uid
         document: DTO = DTO(uid=new_node_id, data=data)
-        document_repository: Repository = get_repository(data_source_id)
+        document_repository: data_source = get_data_source(data_source_id)
         document_repository.add(document)
 
         return res.ResponseSuccess(new_node_id)
