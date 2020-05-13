@@ -3,7 +3,7 @@ from api.core.shared import response_object as res
 from api.core.shared import use_case as uc
 from api.core.service.document_service import DocumentService
 
-from api.core.storage.internal.data_source_factory import get_data_source
+from api.core.storage.internal.data_source_repository import get_data_source
 
 
 class AddFileRequestObject(req.ValidRequestObject):

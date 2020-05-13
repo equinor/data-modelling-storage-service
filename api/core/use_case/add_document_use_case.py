@@ -4,7 +4,7 @@ from uuid import uuid4
 from api.core.utility import BlueprintProvider
 
 from api.classes.tree_node import Node
-from api.core.storage.internal.data_source_factory import get_data_source
+from api.core.storage.internal.data_source_repository import get_data_source
 from api.core.service.document_service import DocumentService
 from api.core.shared import request_object as req
 from api.core.shared import response_object as res

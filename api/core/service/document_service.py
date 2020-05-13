@@ -368,10 +368,10 @@ class DocumentService:
     def search(self, data_source_id, search_data):
         repository = self.repository_provider(data_source_id)
 
-        if not isinstance(repository.repository, MongoDBClient):
-            raise RepositoryException(
-                f"Search is not supported on this repository type; {type(repository.repository).__name__}"
-            )
+        # if not isinstance(repository.repository.client, MongoDBClient):
+        #     raise RepositoryException(
+        #         f"Search is not supported on this repository type; {type(repository.repository).__name__}"
+        #     )
 
         # TODO: This looks strange. Change how we get the "get_blueprint()"
         get_blueprint = self.get_blueprint().get_blueprint

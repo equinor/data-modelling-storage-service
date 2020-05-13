@@ -6,7 +6,7 @@ from api.core.service.document_service import DocumentService
 from api.core.use_case.utils.create_entity import CreateEntity
 from api.core.utility import BlueprintProvider
 from api.classes.tree_node import Node, ListNode
-from api.core.storage.internal.data_source_factory import get_data_source
+from api.core.storage.internal.data_source_repository import get_data_source
 
 blueprint_provider = BlueprintProvider()
 

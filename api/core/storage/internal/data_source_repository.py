@@ -42,3 +42,7 @@ class DataSourceRepository:
 
     def get(self, id: str):
         return DataSource.from_dict(self.collection.find_one(filter={"_id": id}))
+
+
+def get_data_source(data_source_id: str) -> DataSource:
+    return DataSourceRepository().get(data_source_id)

@@ -1,5 +1,5 @@
 from api.core.enums import PRIMITIVES
-from api.core.storage.internal.data_source_factory import get_data_source
+from api.core.storage.internal.data_source_repository import get_data_source
 from api.core.service.document_service import DocumentService
 from api.core.shared import request_object as req
 from api.core.shared import response_object as res

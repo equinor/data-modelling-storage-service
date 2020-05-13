@@ -6,7 +6,7 @@ from api.classes.dto import DTO
 from api.core.enums import DMT
 from api.core.storage.data_source import DataSource
 from api.core.storage.repository_exceptions import InvalidDocumentNameException
-from api.core.storage.internal.data_source_factory import get_data_source
+from api.core.storage.internal.data_source_repository import get_data_source
 from api.core.utility import url_safe_name
 from api.utils.logging import logger
 

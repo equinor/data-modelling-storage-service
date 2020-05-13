@@ -2,7 +2,7 @@ import json
 
 from flask import request, Response
 
-from api.core.storage.internal.data_source_factory import get_data_source
+from api.core.storage.internal.data_source_repository import get_data_source
 from api.core.serializers.dto_json_serializer import DTOSerializer
 from api.core.use_case.add_document_to_path_use_case import AddDocumentToPathRequestObject, AddDocumentToPathUseCase
 from api.core.use_case.add_document_use_case import AddDocumentUseCase, AddDocumentRequestObject

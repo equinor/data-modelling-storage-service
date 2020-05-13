@@ -4,8 +4,8 @@ from unittest import mock
 from api.classes.blueprint import Blueprint
 from api.classes.dto import DTO
 from api.core.storage import data_source
-from api.core.storage.file import TemplateRepositoryFromFile
 from api.core.service.document_service import DocumentService
+from api.core.storage.repositories.file import TemplateRepositoryFromFile
 from api.utils.data_structure.compare import pretty_eq
 from api.utils.helper_functions import schemas_location
 

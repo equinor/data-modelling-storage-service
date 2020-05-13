@@ -3,7 +3,7 @@ from api.classes.dto import DTO
 from api.core.storage.repository_exceptions import FileNotFoundException
 from flask import Response
 
-from api.core.storage.internal.data_source_factory import get_data_source
+from api.core.storage.internal.data_source_repository import get_data_source
 
 from api.core.service.document_service import DocumentService
 import json

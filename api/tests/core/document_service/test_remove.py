@@ -2,8 +2,8 @@ import unittest
 from unittest import mock
 
 from api.classes.dto import DTO
-from api.core.storage import data_source
 from api.core.service.document_service import DocumentService
+from api.core.storage import data_source
 from api.tests.core.document_service.common import blueprint_provider
 from api.utils.data_structure.compare import pretty_eq
 

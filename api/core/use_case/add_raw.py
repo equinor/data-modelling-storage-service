@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from api.classes.dto import DTO
 from api.core.storage import data_source
-from api.core.storage.internal.data_source_factory import get_data_source
+from api.core.storage.internal.data_source_repository import get_data_source
 from api.core.shared import request_object as req
 from api.core.shared import response_object as res
 from api.core.shared import use_case as uc

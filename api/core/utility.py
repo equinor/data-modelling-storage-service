@@ -7,7 +7,7 @@ from api.core.storage.repository_exceptions import (
     EntityNotFoundException,
     RootPackageNotFoundException,
 )
-from api.core.storage.internal.data_source_factory import get_data_source
+from api.core.storage.internal.data_source_repository import get_data_source
 from api.utils.helper_functions import get_data_source_and_path, get_package_and_path
 from api.utils.logging import logger
 

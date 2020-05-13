@@ -3,7 +3,7 @@ import json
 from behave import given
 
 from api.core.storage import data_source
-from api.core.storage.internal.data_source_factory import get_data_source
+from api.core.storage.internal.data_source_repository import get_data_source
 from api.utils.logging import logger
 from api.utils.package_import import import_package
 
@@ -15,7 +15,7 @@ from api.config import Config
 def step_impl(context):
     for folder in Config.SYSTEM_FOLDERS:
         logger.setLevel("ERROR")
-        import_package(f"{Config.APPLICATION_HOME}/core/{folder}", collection=Config.SYSTEM_COLLECTION, is_root=True)
+        import_package(f"{Config.APPLICATION_HOME}/core/{folder}", is_root=True, data_source="system")
         logger.setLevel("INFO")
 
 
