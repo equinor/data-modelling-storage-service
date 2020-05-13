@@ -8,17 +8,17 @@ from api.classes.dto import DTO
 from api.classes.storage_recipe import StorageRecipe
 from api.classes.tree_node import ListNode, Node
 from api.core.enums import DMT, SIMOS
-from api.core.repository import Repository
-from api.core.repository.mongo import MongoDBClient
-from api.core.repository.repository_exceptions import (
+from api.core.storage.data_source import DataSource
+from api.core.storage.repositories.mongo import MongoDBClient
+from api.core.storage.repositories.zip import ZipFileClient
+from api.core.storage.repository_exceptions import (
     DuplicateFileNameException,
     EntityNotFoundException,
     FileNotFoundException,
     InvalidDocumentNameException,
     RepositoryException,
 )
-from api.core.repository.zip_file import ZipFileClient
-from api.core.use_case.utils.build_complex_search import build_mongo_query, get_complex_search_dict
+from api.core.use_case.utils.build_complex_search import build_mongo_query
 from api.core.use_case.utils.create_entity import CreateEntity
 from api.core.utility import BlueprintProvider, duplicate_filename, url_safe_name
 from api.utils.logging import logger
@@ -32,7 +32,7 @@ def get_required_attributes(type: str):
     ]
 
 
-def get_document(document_uid: str, document_repository: Repository):
+def get_document(document_uid: str, document_repository: DataSource):
     document: DTO = document_repository.get(str(document_uid))
 
     if not document:
@@ -43,7 +43,7 @@ def get_document(document_uid: str, document_repository: Repository):
 
 def get_resolved_document(
     document: DTO,
-    document_repository: Repository,
+    document_repository: DataSource,
     blueprint_provider: BlueprintProvider,
     depth: int = 999,
     depth_count: int = 0,
@@ -113,7 +113,7 @@ def get_resolved_document(
 
 
 def get_complete_document(
-    document_uid: str, document_repository: Repository, blueprint_provider: BlueprintProvider, depth: int = 999
+    document_uid: str, document_repository: DataSource, blueprint_provider: BlueprintProvider, depth: int = 999
 ) -> Dict:
     document = get_document(document_uid=document_uid, document_repository=document_repository)
 
@@ -132,7 +132,7 @@ class DocumentService:
         self.blueprint_provider.invalidate_cache()
 
     def save(self, node: Union[Node, ListNode], data_source_id: str, repository=None, path="") -> None:
-        # If not passed a custom repository to save into, use the DocumentService's repository
+        # If not passed a custom repository to save into, use the DocumentService's storage
         if not repository:
             repository = self.repository_provider(data_source_id)
 
@@ -380,11 +380,11 @@ class DocumentService:
         return {"uid": new_node.node_id}
 
     def search(self, data_source_id, search_data):
-        repository = self.repository_provider(data_source_id)
+        repository: DataSource = self.repository_provider(data_source_id)
 
-        if not isinstance(repository.client, MongoDBClient):
+        if not isinstance(repository.get_default_repository().client, MongoDBClient):
             raise RepositoryException(
-                f"Search is not supported on this repository type; {type(repository.client).__name__}"
+                f"Search is not supported on this repository type; {type(repository.repository).__name__}"
             )
 
         # TODO: This looks strange. Change how we get the "get_blueprint()"

@@ -1,6 +1,6 @@
 from api.classes.blueprint import Blueprint
 from api.classes.dto import DTO
-from api.core.repository.file import TemplateRepositoryFromFile
+from api.core.storage.repositories.file import TemplateRepositoryFromFile
 from api.utils.helper_functions import schemas_location
 
 blueprint_1 = {

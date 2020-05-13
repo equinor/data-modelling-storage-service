@@ -1,11 +1,11 @@
-from api.core.repository.db_client_interface import DBClientInterface
+from api.core.storage.repository_interface import RepositoryInterface
 from azure.storage.blob.blockblobservice import BlockBlobService
 from typing import Dict, List, Optional
 import json
 
 
-class AzureBlobStorageClient(DBClientInterface):
-    def __init__(self, account_name: str, account_key: str, collection: str):
+class AzureBlobStorageClient(RepositoryInterface):
+    def __init__(self, account_name: str, account_key: str, collection: str, **kwargs):
         blob_service_client = BlockBlobService(account_name=account_name, account_key=account_key)
         self.blob_service_client = blob_service_client
         self.collection = collection

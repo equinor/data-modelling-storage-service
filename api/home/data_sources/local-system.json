@@ -1,11 +1,17 @@
 {
-  "type": "mongo-db",
-  "host": "db",
-  "port": 27017,
-  "username": "maf",
-  "password": "maf",
-  "tls": false,
   "name": "system",
-  "database": "local",
-  "collection": "system"
+  "repositories": {
+    "system": {
+      "type": "mongo-db",
+      "host": "db",
+      "port": 27017,
+      "username": "maf",
+      "password": "maf",
+      "tls": false,
+      "name": "system",
+      "database": "local",
+      "collection": "system"
+    }
+  }
 }
+

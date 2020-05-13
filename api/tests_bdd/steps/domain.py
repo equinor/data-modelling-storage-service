@@ -6,7 +6,7 @@ from api.core.service.document_service import DocumentService
 from api.core.use_case.utils.create_entity import CreateEntity
 from api.core.utility import BlueprintProvider
 from api.classes.tree_node import Node, ListNode
-from api.core.repository.repository_factory import get_repository
+from api.core.storage.internal.data_source_repository import get_data_source
 
 blueprint_provider = BlueprintProvider()
 
@@ -84,5 +84,5 @@ def step_impl_documents(context, data_source_id: str, collection: str):
     context.documents = {}
     tree = generate_tree(data_source_id, context.table)
     tree.show_tree()
-    document_service = DocumentService(repository_provider=get_repository)
+    document_service = DocumentService(repository_provider=get_data_source)
     document_service.save(node=tree, data_source_id=data_source_id)

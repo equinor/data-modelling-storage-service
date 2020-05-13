@@ -2,15 +2,15 @@ import unittest
 from unittest import mock
 
 from api.classes.dto import DTO
-from api.core.repository import Repository
 from api.core.service.document_service import DocumentService
+
 from api.tests.core.document_service.common import blueprint_provider
 from api.utils.data_structure.compare import pretty_eq
 
 
 class DocumentServiceTestCase(unittest.TestCase):
     def test_remove_document(self):
-        document_repository: Repository = mock.Mock()
+        document_repository = mock.Mock()
 
         document_1 = {"_id": "1", "name": "Parent", "description": "", "type": "blueprint_1"}
 
@@ -32,7 +32,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.delete.assert_called_with("1")
 
     def test_remove_document_with_model_and_storage_uncontained_children(self):
-        repository: Repository = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {
@@ -73,7 +73,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert pretty_eq(expected, doc_storage) is None
 
     def test_remove_nested(self):
-        document_repository: Repository = mock.Mock()
+        document_repository = mock.Mock()
 
         document_1 = {
             "_id": "1",
@@ -101,7 +101,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.update.assert_called_once()
 
     def test_remove_reference(self):
-        document_repository: Repository = mock.Mock()
+        document_repository = mock.Mock()
 
         document_1 = {
             "_id": "1",
@@ -133,7 +133,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.delete.assert_called_with("2")
 
     def test_remove_optional(self):
-        repository: Repository = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {

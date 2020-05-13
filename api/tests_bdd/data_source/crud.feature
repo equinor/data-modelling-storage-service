@@ -15,8 +15,8 @@ Feature: Data Sources
     And the response should contain
     """
     {
-      "host": "db",
-      "name": "system"
+      "name": "system",
+      "id": "system"
     }
     """
 
@@ -28,15 +28,12 @@ Feature: Data Sources
     """
     [
       {
-        "host": "client",
         "name": "Local workspace"
       },
       {
-        "host": "db",
         "name": "entities"
       },
       {
-        "host": "db",
         "name": "SSR-DataSource"
       }
     ]
@@ -46,17 +43,22 @@ Feature: Data Sources
     Given i access the resource url "/api/v1/data-sources/myTest-DataSource"
     And data modelling tool templates are imported
     When i make a "POST" request
-      """
-       {
-      "type": "mongo-db",
-      "host": "database-server.equinor.com",
-      "port": 27017,
-      "username": "test",
-      "password": "testpassword",
-      "tls": false,
+    """
+    {
       "name": "myTest-DataSource",
-      "database": "mariner",
-      "collection": "blueprints"
+      "repositories": {
+        "myTest-DataSource": {
+          "type": "mongo-db",
+          "host": "database-server.equinor.com",
+          "port": 27017,
+          "username": "test",
+          "password": "testpassword",
+          "tls": false,
+          "name": "myTest-DataSource",
+          "database": "mariner",
+          "collection": "blueprints"
+        }
       }
+    }
     """
     Then the response status should be "OK"

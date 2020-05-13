@@ -1,9 +1,11 @@
 import connexion
+
 from api.config import Config
 
 
 def create_app(config):
     connexion_app = connexion.App(__name__, specification_dir="./openapi/")
+    connexion_app.debug = bool(Config.FLASK_DEBUG)
 
     flask_app = connexion_app.app
     flask_app.config.from_object(config)

@@ -2,7 +2,7 @@ from typing import Callable, Dict, List
 
 from api.classes.blueprint import Blueprint
 from api.classes.blueprint_attribute import BlueprintAttribute
-from api.core.repository.repository_exceptions import InvalidAttributeException, RepositoryException
+from api.core.storage.repository_exceptions import InvalidAttributeException, RepositoryException
 
 
 def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: Dict, key: str, get_blueprint: Callable):

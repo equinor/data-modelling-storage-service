@@ -4,16 +4,15 @@ from unittest import mock
 from api.classes.blueprint_attribute import BlueprintAttribute
 from api.classes.dto import DTO
 from api.classes.tree_node import Node
-from api.core.repository import Repository
-from api.core.service.document_service import DocumentService, get_complete_document
+from api.core.service.document_service import DocumentService
+
 from api.tests.core.document_service.common import blueprint_provider
 from api.tests.util_tests import flatten_dict
-from api.utils.data_structure.compare import pretty_eq
 
 
 class DocumentServiceTestCase(unittest.TestCase):
     def test_save_update(self):
-        repository: Repository = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {
@@ -74,7 +73,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert doc_4_after == doc_storage["4"]
 
     def test_save_append(self):
-        repository: Repository = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {"_id": "1", "name": "Parent", "description": "", "type": "blueprint_1", "references": []},
@@ -126,7 +125,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert flatten_dict(document_1_after).items() == flatten_dict(doc_storage["1"]).items()
 
     def test_save_delete(self):
-        repository: Repository = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {

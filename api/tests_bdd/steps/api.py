@@ -30,15 +30,17 @@ def step_make_request(context, method):
     headers = get_headers(context)
 
     if method == "PUT":
-        context.response = context.client.put(context.url, data=data, content_type="application/json", headers=headers)
+        context.response = context.repository.put(
+            context.url, data=data, content_type="application/json", headers=headers
+        )
     elif method == "POST":
-        context.response = context.client.post(
+        context.response = context.repository.post(
             context.url, data=data, content_type="application/json", headers=headers
         )
     elif method == "GET":
-        context.response = context.client.get(context.url, content_type="application/json", headers=headers)
+        context.response = context.repository.get(context.url, content_type="application/json", headers=headers)
     elif method == "DELETE":
-        context.response = context.client.delete(context.url, content_type="application/json", headers=headers)
+        context.response = context.repository.delete(context.url, content_type="application/json", headers=headers)
 
     context.response_status = context.response.status_code
     if context.response.content_type == "application/json":
