@@ -151,7 +151,8 @@ class DocumentService:
         # Expand this when adding new repositories requiring PATH
         if isinstance(repository, ZipFileClient):
             dto.data["__path__"] = path
-        repository.update(dto)
+
+        repository.update(dto, node.get_context_storage_attribute())
 
     def get_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
         try:

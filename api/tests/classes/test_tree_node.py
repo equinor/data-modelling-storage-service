@@ -66,6 +66,7 @@ blueprint_3 = {
             "type": "system/SIMOS/BlueprintAttribute",
             "name": "reference",
             "optional": True,
+            "contained": False,
         },
     ],
     "storageRecipes": [],

@@ -13,6 +13,13 @@
       "tls": false,
       "database": "local",
       "collection": "SSR-DataSource"
+    },
+    "azure": {
+      "type": "AZURE_BLOB_STORAGE",
+      "account_name": "dmssfilestorage",
+      "account_key": "",
+      "name": "azure",
+      "collection": "dmss"
     }
   }
 }

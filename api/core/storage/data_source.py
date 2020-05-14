@@ -3,6 +3,7 @@ from typing import Dict, List, Union
 from api.classes.document_look_up import DocumentLookUp
 from api.classes.dto import DTO
 from api.classes.repository import Repository
+from api.classes.storage_recipe import StorageAttribute
 from api.config import Config
 from api.core.storage.repository_exceptions import EntityNotFoundException
 from api.services.database import dmt_database
@@ -11,7 +12,6 @@ from api.utils.logging import logger
 data_source_collection = dmt_database[f"{Config.DATA_SOURCES_COLLECTION}"]
 
 
-# TODO: Make choices from StorageRecipe
 class DataSource:
     def __init__(self, name: str, repositories):
         self.name = name
@@ -21,12 +21,22 @@ class DataSource:
     def from_dict(cls, a_dict):
         return cls(a_dict["name"], {key: Repository(**value) for key, value in a_dict["repositories"].items()})
 
+    def _get_repo_from_storage_attribute(self, storage_attribute: StorageAttribute = None) -> Repository:
+        # Not too smart yet...
+        # Returns the first repo with a matching "dataType" value, or the first Repo if no match
+        if storage_attribute:
+            for r in self.repositories.values():
+                if storage_attribute.data_type in r.data_types:
+                    return r
+        return self.get_default_repository()
+
     def _get_documents_repository(self, document_id) -> Repository:
         lookup = self.lookup(document_id)
         return self.repositories[lookup["repository"]]
 
     # TODO: Read default attribute from DataSource spec
-    def get_default_repository(self):
+    def get_default_repository(self) -> Repository:
+        # Now just returns the first repo in the ordered_dict
         return next(iter(self.repositories.values()))
 
     def lookup(self, document_id) -> Dict:
@@ -70,12 +80,12 @@ class DataSource:
         if result:
             return DTO(result)
 
-    def update(self, document: DTO) -> None:
+    def update(self, document: DTO, storage_attribute: StorageAttribute = None) -> None:
         # Since update() can also insert, we must check if it exists, and if not, insert a lookup
         try:
             repo = self._get_documents_repository(document.uid)
         except EntityNotFoundException:
-            repo = self.get_default_repository()
+            repo = self._get_repo_from_storage_attribute(storage_attribute)
             self.insert_lookup(DocumentLookUp(document.uid, repo.name, document.uid, "", document.type))
         if (
             not document.name == document.data["name"]
@@ -85,8 +95,8 @@ class DataSource:
             raise ValueError("The meta data and tha 'data' object in the DTO does not match!")
         repo.update(document.uid, document.data)
 
-    def add(self, document: DTO) -> None:
-        repo = self.get_default_repository()
+    def add(self, document: DTO, storage_attribute: StorageAttribute = None) -> None:
+        repo = self._get_repo_from_storage_attribute(storage_attribute)
         self.insert_lookup(DocumentLookUp(document.uid, repo.name, document.uid, "", document.type))
         repo.add(document.uid, document.data)
 
@@ -97,4 +107,5 @@ class DataSource:
             self.remove_lookup(uid)
             repo.delete(uid)
         except EntityNotFoundException:
+            logger.warn(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
             pass

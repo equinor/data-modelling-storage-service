@@ -48,7 +48,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO):
+        def mock_update(dto: DTO, storage_attribute):
             doc_storage[dto.uid] = dto.data
 
         def mock_delete(document_id: str):
@@ -156,7 +156,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO):
+        def mock_update(dto: DTO, storage_attribute):
             doc_storage[dto.uid] = dto.data
             return None
 
