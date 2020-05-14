@@ -20,7 +20,9 @@ def before_all(context):
 
 def wipe_added_data_sources(context):
     for data_source in context.data_sources.values():
-        dmt_database.drop_collection(data_source["collection"])
+        mongo_collections = [repo.get("collection") for repo in data_source["repositories"].values()]
+        for collection in mongo_collections:
+            dmt_database.drop_collection(collection)
 
 
 def after_all(context):

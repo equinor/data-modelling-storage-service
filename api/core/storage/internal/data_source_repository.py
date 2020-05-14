@@ -13,25 +13,9 @@ class DataSourceRepository:
         all_sources = [
             {"id": "local", "host": "client", "name": "Local workspace", "type": DataSourceType.LOCAL.value}
         ]
-        for data_source in self.collection.find(projection=["name", "host", "type"]):
+        for data_source in self.collection.find(projection={"name"}):
             data_source["id"] = data_source.pop("_id")
-
-            data_source_type = DataSourceType(data_source["type"])
-
-            if data_source_type == DataSourceType.MONGO:
-                all_sources.append(
-                    {
-                        "id": data_source["id"],
-                        "host": data_source["host"],
-                        "name": data_source["name"],
-                        "type": data_source_type.value,
-                    }
-                )
-            if data_source_type == DataSourceType.AZURE_BLOB_STORAGE:
-                # TODO: Remove host?
-                all_sources.append(
-                    {"id": data_source["id"], "name": data_source["name"], "type": data_source_type.value, "host": ""}
-                )
+            all_sources.append({"id": data_source["id"], "name": data_source["name"]})
 
         return all_sources
 

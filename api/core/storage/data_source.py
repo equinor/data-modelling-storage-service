@@ -39,16 +39,14 @@ class DataSource:
         return res["documentLookUp"][document_id]
 
     def insert_lookup(self, lookup: DocumentLookUp):
-        res = data_source_collection.update_one(
+        return data_source_collection.update_one(
             filter={"_id": self.name}, update={"$set": {f"documentLookUp.{lookup.lookup_id}": lookup.to_dict()}}
         )
-        return res
 
     def remove_lookup(self, lookup_id):
-        res = data_source_collection.update_one(
+        return data_source_collection.update_one(
             filter={"_id": self.name}, update={"$unset": {f"documentLookUp.{lookup_id}": ""}}
         )
-        return res
 
     def get(self, uid: str) -> DTO:
         repo = self._get_repository(uid)
@@ -73,7 +71,12 @@ class DataSource:
             return DTO(result)
 
     def update(self, document: DTO) -> None:
-        repo = self._get_repository(document.uid)
+        # Since update() can also insert, we must check if it exists, and if not, insert a lookup
+        try:
+            repo = self._get_repository(document.uid)
+        except EntityNotFoundException:
+            repo = self._get_default_repository()
+            self.insert_lookup(DocumentLookUp(document.uid, repo.name, document.uid, "", document.type))
         if (
             not document.name == document.data["name"]
             or not document.type == document.data["type"]
@@ -88,5 +91,10 @@ class DataSource:
         repo.add(document.uid, document.data)
 
     def delete(self, uid: str) -> None:
-        repo = self._get_repository(uid)
-        repo.delete(uid)
+        # If lookup not found, assume it's deleted
+        try:
+            repo = self._get_repository(uid)
+            self.remove_lookup(uid)
+            repo.delete(uid)
+        except EntityNotFoundException:
+            pass

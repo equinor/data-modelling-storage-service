@@ -1,18 +1,12 @@
 import json
 
-from api.core.serializers.create_data_source_serializer import CreateDataSourceSerializer
-
-from api.core.use_case.create_data_source_use_case import CreateDataSourceUseCase, CreateDataSourceRequestObject
-from api.core.use_case.get_data_source_use_case import GetDataSourceUseCase, GetDataSourceUseCaseRequestObject
-
-from controllers.status_codes import STATUS_CODES
-
-from api.core.serializers.get_data_sources_serializer import GetDataSourcesSerializer
 from flask import request, Response
 
-from api.core.use_case.get_data_sources_use_case import GetDataSourcesUseCase
-
 from api.core.storage.internal.data_source_repository import DataSourceRepository
+from api.core.use_case.create_data_source_use_case import CreateDataSourceRequestObject, CreateDataSourceUseCase
+from api.core.use_case.get_data_source_use_case import GetDataSourceUseCase, GetDataSourceUseCaseRequestObject
+from api.core.use_case.get_data_sources_use_case import GetDataSourcesUseCase
+from controllers.status_codes import STATUS_CODES
 
 
 def get_data_source(data_source_id):
@@ -20,7 +14,11 @@ def get_data_source(data_source_id):
     use_case = GetDataSourceUseCase(data_source_repository)
     request_object = GetDataSourceUseCaseRequestObject.from_dict({"data_source_id": data_source_id})
     response = use_case.execute(request_object)
-    return Response(json.dumps(response.value), mimetype="application/json", status=STATUS_CODES[response.type],)
+    return Response(
+        json.dumps({"name": response.value.name, "id": response.value.name}),
+        mimetype="application/json",
+        status=STATUS_CODES[response.type],
+    )
 
 
 def save(data_source_id):
@@ -30,19 +28,11 @@ def save(data_source_id):
         {"dataSourceId": data_source_id, "formData": request.get_json()}
     )
     response = use_case.execute(request_object)
-    return Response(
-        json.dumps(response.value, cls=CreateDataSourceSerializer),
-        mimetype="application/json",
-        status=STATUS_CODES[response.type],
-    )
+    return Response(json.dumps(response.value), mimetype="application/json", status=STATUS_CODES[response.type])
 
 
 def get_all():
     data_source_repository = DataSourceRepository()
     use_case = GetDataSourcesUseCase(data_source_repository)
     response = use_case.execute()
-    return Response(
-        json.dumps(response.value, cls=GetDataSourcesSerializer),
-        mimetype="application/json",
-        status=STATUS_CODES[response.type],
-    )
+    return Response(json.dumps(response.value), mimetype="application/json", status=STATUS_CODES[response.type])
