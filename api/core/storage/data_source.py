@@ -15,18 +15,18 @@ data_source_collection = dmt_database[f"{Config.DATA_SOURCES_COLLECTION}"]
 class DataSource:
     def __init__(self, name: str, repositories):
         self.name = name
-        self.repositories = repositories
+        self.repositories: Dict[Repository] = repositories
 
     @classmethod
     def from_dict(cls, a_dict):
         return cls(a_dict["name"], {key: Repository(**value) for key, value in a_dict["repositories"].items()})
 
-    def _get_repository(self, document_id) -> Repository:
+    def _get_documents_repository(self, document_id) -> Repository:
         lookup = self.lookup(document_id)
         return self.repositories[lookup["repository"]]
 
     # TODO: Read default attribute from DataSource spec
-    def _get_default_repository(self):
+    def get_default_repository(self):
         return next(iter(self.repositories.values()))
 
     def lookup(self, document_id) -> Dict:
@@ -49,7 +49,7 @@ class DataSource:
         )
 
     def get(self, uid: str) -> DTO:
-        repo = self._get_repository(uid)
+        repo = self._get_documents_repository(uid)
         try:
             result = repo.get(uid)
             return DTO(result)
@@ -59,13 +59,13 @@ class DataSource:
 
     # TODO: Implement find across repositories
     def find(self, filter: dict) -> Union[DTO, List[DTO]]:
-        repo = self._get_default_repository()
+        repo = self.get_default_repository()
         result = repo.find(filter)
         return [DTO(item) for item in result]
 
     # TODO: Deprecate this
     def first(self, filter: dict) -> Union[DTO, None]:
-        repo = self._get_default_repository()
+        repo = self.get_default_repository()
         result = repo.find_one(filter)
         if result:
             return DTO(result)
@@ -73,9 +73,9 @@ class DataSource:
     def update(self, document: DTO) -> None:
         # Since update() can also insert, we must check if it exists, and if not, insert a lookup
         try:
-            repo = self._get_repository(document.uid)
+            repo = self._get_documents_repository(document.uid)
         except EntityNotFoundException:
-            repo = self._get_default_repository()
+            repo = self.get_default_repository()
             self.insert_lookup(DocumentLookUp(document.uid, repo.name, document.uid, "", document.type))
         if (
             not document.name == document.data["name"]
@@ -86,14 +86,14 @@ class DataSource:
         repo.update(document.uid, document.data)
 
     def add(self, document: DTO) -> None:
-        repo = self._get_default_repository()
+        repo = self.get_default_repository()
         self.insert_lookup(DocumentLookUp(document.uid, repo.name, document.uid, "", document.type))
         repo.add(document.uid, document.data)
 
     def delete(self, uid: str) -> None:
         # If lookup not found, assume it's deleted
         try:
-            repo = self._get_repository(uid)
+            repo = self._get_documents_repository(uid)
             self.remove_lookup(uid)
             repo.delete(uid)
         except EntityNotFoundException:

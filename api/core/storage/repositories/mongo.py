@@ -9,12 +9,12 @@ from typing import Dict, List, Optional
 class MongoDBClient(RepositoryInterface):
     def __init__(
         self,
-        host: str,
         username: str,
         password: str,
-        database: str,
-        tls: bool,
-        collection: str,
+        host: str = "localhost",
+        database: str = "data_modelling",
+        collection: str = "data_modelling",
+        tls: bool = False,
         port: int = 27001,
         **kwargs,
     ):

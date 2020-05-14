@@ -59,7 +59,3 @@ def import_data_source(file):
 @app.cli.command()
 def nuke_db():
     wipe_db()
-
-
-# if __name__ == "__main__":
-#     init_application()

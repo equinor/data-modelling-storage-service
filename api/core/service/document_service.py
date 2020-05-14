@@ -8,7 +8,7 @@ from api.classes.dto import DTO
 from api.classes.storage_recipe import StorageRecipe
 from api.classes.tree_node import ListNode, Node
 from api.core.enums import DMT, SIMOS
-from api.core.storage import data_source
+from api.core.storage.data_source import DataSource
 from api.core.storage.repositories.mongo import MongoDBClient
 from api.core.storage.repositories.zip import ZipFileClient
 from api.core.storage.repository_exceptions import (
@@ -32,7 +32,7 @@ def get_required_attributes(type: str):
     ]
 
 
-def get_document(document_uid: str, document_repository: data_source):
+def get_document(document_uid: str, document_repository: DataSource):
     document: DTO = document_repository.get(str(document_uid))
 
     if not document:
@@ -42,7 +42,7 @@ def get_document(document_uid: str, document_repository: data_source):
 
 
 def get_resolved_document(
-    document: DTO, document_repository: data_source, blueprint_provider: BlueprintProvider
+    document: DTO, document_repository: DataSource, blueprint_provider: BlueprintProvider
 ) -> Dict:
     blueprint: Blueprint = blueprint_provider.get_blueprint(document.type)
 
@@ -98,7 +98,7 @@ def get_resolved_document(
 
 
 def get_complete_document(
-    document_uid: str, document_repository: data_source, blueprint_provider: BlueprintProvider
+    document_uid: str, document_repository: DataSource, blueprint_provider: BlueprintProvider
 ) -> Dict:
     document = get_document(document_uid=document_uid, document_repository=document_repository)
 
@@ -118,7 +118,7 @@ class DocumentService:
         self.blueprint_provider.invalidate_cache()
 
     def save(self, node: Union[Node, ListNode], data_source_id: str, repository=None, path="") -> None:
-        # If not passed a custom storage to save into, use the DocumentService's storage
+        # If not passed a custom repository to save into, use the DocumentService's storage
         if not repository:
             repository = self.repository_provider(data_source_id)
 
@@ -126,7 +126,7 @@ class DocumentService:
         for child in node.children:
             # A list node is always contained on parent. Need to check the blueprint
             if child.is_array() and not child.attribute_is_contained():
-                # If the node is a package, we build the path string to be used by "export zip"-storage
+                # If the node is a package, we build the path string to be used by "export zip"-repository
                 if node.type == DMT.PACKAGE.value:
                     path = f"{path}/{node.name}/" if path else f"{node.name}"
                 [self.save(x, data_source_id, repository, path) for x in child.children]
@@ -169,7 +169,7 @@ class DocumentService:
             root_node: Node = Node.from_dict(
                 complete_document, complete_document.get("_id"), blueprint_provider=self.blueprint_provider
             )
-            # Save the selected node, using custom ZipFile storage
+            # Save the selected node, using custom ZipFile repository
             self.save(root_node, data_source_id, ZipFileClient(zip_file))
 
         memory_file.seek(0)
@@ -366,12 +366,12 @@ class DocumentService:
         return {"uid": new_node.node_id}
 
     def search(self, data_source_id, search_data):
-        repository = self.repository_provider(data_source_id)
+        repository: DataSource = self.repository_provider(data_source_id)
 
-        # if not isinstance(repository.repository.client, MongoDBClient):
-        #     raise RepositoryException(
-        #         f"Search is not supported on this repository type; {type(repository.repository).__name__}"
-        #     )
+        if not isinstance(repository.get_default_repository().client, MongoDBClient):
+            raise RepositoryException(
+                f"Search is not supported on this repository type; {type(repository.repository).__name__}"
+            )
 
         # TODO: This looks strange. Change how we get the "get_blueprint()"
         get_blueprint = self.get_blueprint().get_blueprint

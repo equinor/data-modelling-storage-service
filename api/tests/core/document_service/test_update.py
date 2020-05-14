@@ -4,7 +4,7 @@ from unittest import mock
 from api.classes.dto import DTO
 from api.classes.tree_node import Node
 from api.core.service.document_service import DocumentService
-from api.core.storage import data_source
+
 from api.core.storage.repository_exceptions import DuplicateFileNameException
 from api.tests.core.document_service.common import blueprint_provider
 from api.utils.data_structure.compare import pretty_eq
@@ -12,7 +12,7 @@ from api.utils.data_structure.compare import pretty_eq
 
 class DocumentServiceTestCase(unittest.TestCase):
     def test_update_single_optional_complex(self):
-        repository: data_source = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {
@@ -56,7 +56,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert pretty_eq(doc_1_after, doc_storage["1"]) is None
 
     def test_add_optional(self):
-        repository: data_source = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {
@@ -99,7 +99,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert pretty_eq(doc_1_after, doc_storage["1"]) is None
 
     def test_add_optional_nested(self):
-        repository: data_source = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {
@@ -152,7 +152,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert pretty_eq(doc_1_after, doc_storage["1"]) is None
 
     def test_add_duplicate(self):
-        repository: data_source = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {

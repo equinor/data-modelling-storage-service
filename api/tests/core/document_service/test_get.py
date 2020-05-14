@@ -3,7 +3,6 @@ from unittest import mock
 
 from api.classes.dto import DTO
 from api.core.service.document_service import get_complete_document
-from api.core.storage import data_source
 from api.tests.core.document_service.common import blueprint_provider
 from api.utils.data_structure.compare import pretty_eq
 
@@ -27,7 +26,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_3 = {"_id": "3", "name": "Reference 1", "description": "", "type": "blueprint_2"}
         document_4 = {"_id": "4", "name": "Reference 2", "description": "", "type": "blueprint_2"}
 
-        document_repository: data_source = mock.Mock()
+        document_repository = mock.Mock()
 
         def mock_get(document_id: str):
             if document_id == "1":

@@ -3,14 +3,14 @@ from unittest import mock
 
 from api.classes.dto import DTO
 from api.core.service.document_service import DocumentService
-from api.core.storage import data_source
+
 from api.tests.core.document_service.common import blueprint_provider
 from api.utils.data_structure.compare import pretty_eq
 
 
 class DocumentServiceTestCase(unittest.TestCase):
     def test_rename_attribute(self):
-        document_repository: data_source = mock.Mock()
+        document_repository = mock.Mock()
 
         doc_storage = {
             "1": {
@@ -49,7 +49,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert pretty_eq(actual, doc_storage["1"]["nested"]) is None
 
     def test_rename_root_package(self):
-        document_repository: data_source = mock.Mock()
+        document_repository = mock.Mock()
 
         doc_storage = {
             "1": {
@@ -86,7 +86,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert pretty_eq(actual, doc_storage["1"]) is None
 
     def test_rename_single_reference(self):
-        document_repository: data_source = mock.Mock()
+        document_repository = mock.Mock()
 
         doc_storage = {
             "1": {
@@ -124,7 +124,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert pretty_eq(actual2, doc_storage["2"]) is None
 
     def test_rename_reference_list(self):
-        document_repository: data_source = mock.Mock()
+        document_repository = mock.Mock()
 
         doc_storage = {
             "1": {

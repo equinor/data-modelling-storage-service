@@ -1,6 +1,6 @@
 from api.classes.dto import DTO
 from api.core.enums import DMT
-from api.core.storage import data_source
+from api.core.storage.data_source import DataSource
 from api.core.storage.repository_exceptions import DuplicateFileNameException, FileNotFoundException
 from api.core.shared import request_object as req
 from api.core.shared import response_object as res
@@ -27,7 +27,7 @@ class AddRootPackageRequestObject(req.ValidRequestObject):
 
 
 class AddRootPackageUseCase(uc.UseCase):
-    def __init__(self, document_repository: data_source, data_source_id):
+    def __init__(self, document_repository: DataSource, data_source_id):
         self.document_repository = document_repository
         self.data_source_id = data_source_id
 

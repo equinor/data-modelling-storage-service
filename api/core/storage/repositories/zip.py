@@ -23,16 +23,16 @@ class ZipFileClient(RepositoryInterface):
             self.zip_file.writestr(write_to, binary_data)
 
     def get(self, uid: str):
-        return "Not implemented on ZipFile storage!"
+        return "Not implemented on ZipFile repository!"
 
     def add(self, uid: str, document: dict):
-        return "Not implemented on ZipFile storage!"
+        return "Not implemented on ZipFile repository!"
 
     def delete(self, uid: str):
-        return "Not implemented on ZipFile storage!"
+        return "Not implemented on ZipFile repository!"
 
     def find(self, filters):
-        return "Not implemented on ZipFile storage!"
+        return "Not implemented on ZipFile repository!"
 
     def find_one(self, filters):
-        return "Not implemented on ZipFile storage!"
+        return "Not implemented on ZipFile repository!"
