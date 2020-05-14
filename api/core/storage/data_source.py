@@ -3,6 +3,7 @@ from typing import Dict, List, Union
 from api.classes.document_look_up import DocumentLookUp
 from api.classes.dto import DTO
 from api.classes.repository import Repository
+from api.classes.storage_recipe import StorageRecipe
 from api.config import Config
 from api.core.storage.repository_exceptions import EntityNotFoundException
 from api.services.database import dmt_database
@@ -85,7 +86,7 @@ class DataSource:
             raise ValueError("The meta data and tha 'data' object in the DTO does not match!")
         repo.update(document.uid, document.data)
 
-    def add(self, document: DTO) -> None:
+    def add(self, document: DTO, storage_recipes: List[StorageRecipe] = None) -> None:
         repo = self.get_default_repository()
         self.insert_lookup(DocumentLookUp(document.uid, repo.name, document.uid, "", document.type))
         repo.add(document.uid, document.data)
