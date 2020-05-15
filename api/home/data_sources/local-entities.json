@@ -11,6 +11,18 @@
       "name": "entities",
       "database": "local",
       "collection": "entities"
+    },
+    "blob_storage": {
+      "dataTypes": ["blob"],
+      "type": "mongo-db",
+      "host": "db",
+      "port": 27017,
+      "username": "maf",
+      "password": "maf",
+      "tls": false,
+      "name": "blob_storage",
+      "database": "local",
+      "collection": "blob_storage"
     }
   }
 }

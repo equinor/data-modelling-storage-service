@@ -11,7 +11,7 @@ class ZipFileClient(RepositoryInterface):
     def __init__(self, zip_file: ZipFile):
         self.zip_file = zip_file
 
-    def update(self, dto: DTO):
+    def update(self, dto: DTO, storage_recipe=None):
         dto.data.pop("_id", None)
         dto.data.pop("uid", None)
         json_data = json.dumps(dto.data)

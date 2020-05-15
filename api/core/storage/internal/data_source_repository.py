@@ -1,5 +1,7 @@
 from typing import List, Dict
 
+from api.core.storage.repository_exceptions import RepositoryException
+
 from api.config import Config
 from api.core.storage.data_source import DataSource
 from api.services.database import dmt_database
@@ -25,7 +27,10 @@ class DataSourceRepository:
         return str(result.inserted_id)
 
     def get(self, id: str):
-        return DataSource.from_dict(self.collection.find_one(filter={"_id": id}))
+        data_source = self.collection.find_one(filter={"_id": id})
+        if not data_source:
+            raise RepositoryException(f"DataSource with id: '{id}' not found")
+        return DataSource.from_dict(data_source)
 
 
 def get_data_source(data_source_id: str) -> DataSource:

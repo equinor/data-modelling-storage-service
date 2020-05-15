@@ -38,6 +38,7 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
         document = DTO(data)
         if not url_safe_name(document.name):
             raise InvalidDocumentNameException(document.name)
+        # TODO: How to deal with nodes storage_attribute here?
         data_source.add(document)
         docs.append({"_id": document.uid, "name": document.name, "type": document.type})
 

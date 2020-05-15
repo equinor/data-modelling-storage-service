@@ -109,6 +109,7 @@ class DictImporter:
 
         try:
             for child_attribute in node.blueprint.get_none_primitive_types():
+                child_contained = node.blueprint.storage_recipes[0].is_contained(child_attribute.name)
                 # This will stop creation of recursive blueprints (only if they are optional)
                 if child_attribute.is_optional() and not entity:
                     continue
@@ -146,7 +147,8 @@ class DictImporter:
                 else:
                     attribute_data = entity.get(child_attribute.name, {})
                     child_node = cls._from_dict(
-                        uid=attribute_data.get("_id", ""),
+                        # The the child is not contained, get or create it's _id
+                        uid="" if child_contained else attribute_data.get("_id", str(uuid4())),
                         entity=attribute_data,
                         key=child_attribute.name,
                         blueprint_provider=blueprint_provider,
@@ -154,22 +156,7 @@ class DictImporter:
                         recursion_depth=recursion_depth + 1,
                     )
                     node.add_child(child_node)
-                    # TODO: Not sure where this fits in now....
-                    # else:
-                    #     error_node = Node(
-                    #         key=child_attribute.name,
-                    #         uid="",
-                    #         entity={
-                    #             "name": child_attribute.name,
-                    #             # avoid DtoException
-                    #             "type": "",
-                    #         },
-                    #         blueprint_provider=blueprint_provider,
-                    #     )
-                    #     error_node.set_error(f"failed to add attribute node: {child_attribute.name}")
-                    #     # #524 #543 the following line break several unit tests related to save and remove in the service.
-                    #     # node.add_child(error_node)
-                    #     logger.warning(f"Data problem: {child_attribute.name}")
+
             return node
         except AttributeError as error:
             logger.exception(error)
@@ -448,6 +435,13 @@ class Node(NodeBase):
             # Remove complex data
             else:
                 self.remove_by_path([attribute.name])
+
+    def get_context_storage_attribute(self):
+        # TODO: How to decide which storage_recipe?
+        if self.parent:
+            # The 'node.attribute.name' will be invalid for Package.content. Set it explicitly
+            nodes_attribute_on_parent = self.attribute.name if not self.parent.type == DMT.ENTITY.value else "content"
+            return self.parent.blueprint.storage_recipes[0].storage_attributes[nodes_attribute_on_parent]
 
 
 class ListNode(NodeBase):

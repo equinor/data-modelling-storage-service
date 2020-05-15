@@ -1,6 +1,5 @@
 from enum import auto, Enum
 
-
 PRIMITIVES = {"string", "number", "integer", "boolean"}
 
 
@@ -36,6 +35,13 @@ class RepositoryType(Enum):
     DocumentRepository = auto()
     PackageRepository = auto()
     BlueprintRepository = auto()
+
+
+class StorageDataTypes(Enum):
+    DEFAULT = "default"
+    SMALL = "small"
+    LARGE = "large"
+    BLOB = "blob"
 
 
 class SIMOS(Enum):

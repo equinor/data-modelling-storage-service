@@ -1,14 +1,15 @@
 from typing import Dict, List, Optional
 
-from api.core.enums import DataSourceType
+from api.core.enums import DataSourceType, StorageDataTypes
 from api.core.storage.repositories.azure_blob import AzureBlobStorageClient
 from api.core.storage.repositories.mongo import MongoDBClient
 from api.core.storage.repository_interface import RepositoryInterface
 
 
 class Repository(RepositoryInterface):
-    def __init__(self, name, **kwargs):
+    def __init__(self, name, dataTypes: List[str] = None, **kwargs):
         self.name = name
+        self.data_types = [StorageDataTypes(d) for d in dataTypes] if dataTypes else []
         self.client = self._get_client(**kwargs)
 
     def update(self, uid: str, document: Dict) -> bool:

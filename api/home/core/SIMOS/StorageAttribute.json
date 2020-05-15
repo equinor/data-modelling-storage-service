@@ -4,17 +4,25 @@
   "description": "This describes a storage recipe attribute",
   "attributes": [
     {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "name",
-      "default": "root",
-      "description": "Which attribute this StorageAttribute applies to. 'root' for the entire entity."
-    },
-    {
       "name": "type",
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
       "default": "system/SIMOS/StorageAttribute"
+    },
+    {
+      "attributeType": "string",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "name",
+      "default": "root",
+      "description": "Which attribute this StorageAttribute applies to."
+    },
+    {
+      "attributeType": "boolean",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "contained",
+      "optional": true,
+      "default": "true",
+      "description": "WARNING: Change how the entity is stored. Changing this value will make current entities unavailable. If True, dataType will have no effect"
     },
     {
       "attributeType": "string",
@@ -39,14 +47,6 @@
       "default": "",
       "optional": true,
       "description": "Description for the StoreAttribute"
-    },
-    {
-      "attributeType": "boolean",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "contained",
-      "optional": true,
-      "default": "true",
-      "description": "WARNING: Change how the entity is stored. Changing this value will make current entities unavailable"
     }
   ],
   "storageRecipes": [],
