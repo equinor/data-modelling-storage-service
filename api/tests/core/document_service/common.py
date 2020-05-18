@@ -54,7 +54,14 @@ uncontained_blueprint = {
             "type": "system/SIMOS/StorageRecipe",
             "name": "DefaultStorageRecipe",
             "description": "",
-            "attributes": [{"name": "uncontained_in_every_way", "type": "does_this_matter?", "contained": False}],
+            "attributes": [
+                {
+                    "name": "uncontained_in_every_way",
+                    "type": "does_this_matter?",
+                    "contained": False,
+                    "storageTypeAffinity": "blob",
+                }
+            ],
         }
     ],
 }

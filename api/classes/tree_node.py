@@ -364,10 +364,7 @@ class Node(NodeBase):
     @property
     def blueprint(self) -> Optional[Blueprint]:
         if self.type != "datasource":
-            try:
-                return self.blueprint_provider.get_blueprint(self.type)
-            except AttributeError as error:
-                print(error)
+            return self.blueprint_provider.get_blueprint(self.type)
 
     def attribute_is_contained(self):
         return self.parent.blueprint.storage_recipes[0].is_contained(self.key)

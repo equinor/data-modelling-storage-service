@@ -9,13 +9,14 @@ from api.core.storage.repository_exceptions import EntityNotFoundException
 from api.services.database import dmt_database
 from api.utils.logging import logger
 
-data_source_collection = dmt_database[f"{Config.DATA_SOURCES_COLLECTION}"]
-
 
 class DataSource:
-    def __init__(self, name: str, repositories):
+    def __init__(self, name: str, repositories, data_source_collection=None):
         self.name = name
         self.repositories: Dict[Repository] = repositories
+        self.data_source_collection = (
+            data_source_collection if data_source_collection else dmt_database[f"{Config.DATA_SOURCES_COLLECTION}"]
+        )
 
     @classmethod
     def from_dict(cls, a_dict):
@@ -40,7 +41,7 @@ class DataSource:
         return next(iter(self.repositories.values()))
 
     def lookup(self, document_id) -> Dict:
-        res = data_source_collection.find_one(
+        res = self.data_source_collection.find_one(
             filter={"_id": self.name, f"documentLookUp.{document_id}.lookUpId": document_id},
             projection={f"documentLookUp.{document_id}": True},
         )
@@ -49,12 +50,12 @@ class DataSource:
         return res["documentLookUp"][document_id]
 
     def insert_lookup(self, lookup: DocumentLookUp):
-        return data_source_collection.update_one(
+        return self.data_source_collection.update_one(
             filter={"_id": self.name}, update={"$set": {f"documentLookUp.{lookup.lookup_id}": lookup.to_dict()}}
         )
 
     def remove_lookup(self, lookup_id):
-        return data_source_collection.update_one(
+        return self.data_source_collection.update_one(
             filter={"_id": self.name}, update={"$unset": {f"documentLookUp.{lookup_id}": ""}}
         )
 
