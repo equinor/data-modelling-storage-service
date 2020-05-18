@@ -12,7 +12,7 @@ class StorageAttribute:
         self,
         name: str,
         contained: bool = DEFAULT_PRIMITIVE_CONTAINED,
-        dataType: str = StorageDataTypes.DEFAULT.value,
+        storageTypeAffinity: str = StorageDataTypes.DEFAULT.value,
         label: str = "",
         description: str = "",
         **kwargs,
@@ -20,19 +20,19 @@ class StorageAttribute:
         self.name = name
         self.is_contained = contained
         self.type = "system/SIMOS/StorageAttribute"
-        self.data_type = StorageDataTypes(dataType)
+        self.storage_type_affinity = StorageDataTypes(storageTypeAffinity)
         self.label = label
         self.description = description
 
     def __repr__(self):
-        return f"name: {self.name}, contained: {self.is_contained}, optional: {self.data_type}"
+        return f"name: {self.name}, contained: {self.is_contained}, optional: {self.storage_type_affinity}"
 
     def to_dict(self) -> Dict:
         return {
             "name": self.name,
             "contained": self.is_contained,
             "type": self.type,
-            "dataType": self.data_type,
+            "dataType": self.storage_type_affinity,
             "label": self.label,
             "description": self.description,
         }

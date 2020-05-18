@@ -2,12 +2,18 @@ Feature: Data Sources
 
   Background: There are data sources in the system
 
-    Given there are mongodb data sources
-      | host | port  | username | password | tls   | name           | database | collection     | type     |
-      | db   | 27017 | maf      | maf      | false | entities       | local    | documents      | mongo-db |
-      | db   | 27017 | maf      | maf      | false | SSR-DataSource | local    | SSR-DataSource | mongo-db |
-      | db   | 27017 | maf      | maf      | false | system         | local    | system         | mongo-db |
+    Given there are data sources
+      |       name         |
+      | entities   |
+      | SSR-DataSource   |
+      | system             |
 
+    Given there are repositories in the data sources
+      | data-source    | host | port  | username | password | tls   | name      | database | collection     | type     | dataTypes |
+      | entities       | db   | 27017 | maf      | maf      | false | repo1     | local    | documents      | mongo-db | default   |
+      | SSR-DataSource | db   | 27017 | maf      | maf      | false | blob-repo | local    | SSR-DataSource | mongo-db | default   |
+      | system         | db   | 27017 | maf      | maf      | false | system    | local    | system         | mongo-db | default   |
+    
   Scenario: Get single data source
     Given I access the resource url "/api/v1/data-sources/system"
     When I make a "GET" request
@@ -57,6 +63,38 @@ Feature: Data Sources
           "name": "myTest-DataSource",
           "database": "mariner",
           "collection": "blueprints"
+        }
+      }
+    }
+    """
+    Then the response status should be "OK"
+
+  Scenario: Create new data source with multiple repositories
+    Given i access the resource url "/api/v1/data-sources/MyMultiRepDS"
+    And data modelling tool templates are imported
+    When i make a "POST" request
+    """
+    {
+      "name": "MyMultiRepDS",
+      "repositories": {
+        "myMongoRepo": {
+          "type": "mongo-db",
+          "host": "database-server.equinor.com",
+          "port": 27017,
+          "username": "test",
+          "password": "testpassword",
+          "tls": false,
+          "name": "myMongoRepo",
+          "database": "mariner",
+          "collection": "blueprints"
+        },
+        "myAzureRepo": {
+          "type": "azure-blob-storage",
+          "account_name": "dmssfilestorage",
+          "account_key": "a-long-key",
+          "name": "myAzureRepo",
+          "collection": "dmss",
+          "documentType": "blueprints"
         }
       }
     }

@@ -18,11 +18,9 @@ def before_all(context):
         dmt_database.drop_collection(Config.DATA_SOURCES_COLLECTION)
 
 
-def wipe_added_data_sources(context):
-    for data_source in context.data_sources.values():
-        mongo_collections = [repo.get("collection") for repo in data_source["repositories"].values()]
-        for collection in mongo_collections:
-            dmt_database.drop_collection(collection)
+def wipe_added_repositories(context):
+    for repo in context.repositories.values():
+        dmt_database.drop_collection(repo["collection"])
 
 
 def after_all(context):
@@ -49,7 +47,7 @@ def after_scenario(context, scenario):
     wipe_db()
     dmt_database.drop_collection(Config.DATA_SOURCES_COLLECTION)
     if "data_sources" in context:
-        wipe_added_data_sources(context)
+        wipe_added_repositories(context)
     context.ctx.pop()
 
 

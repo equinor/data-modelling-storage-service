@@ -27,10 +27,10 @@
     {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
-      "name": "dataType",
+      "name": "storageTypeAffinity",
       "default": "default",
       "enumType": "system/SIMOS/enums/StorageTypes",
-      "description": "Will be used to decide in which repository the data will be stored"
+      "description": "Will be used to decide how the data will be stored"
     },
     {
       "name": "label",

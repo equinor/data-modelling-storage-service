@@ -26,7 +26,7 @@ class DataSource:
         # Returns the first repo with a matching "dataType" value, or the first Repo if no match
         if storage_attribute:
             for r in self.repositories.values():
-                if storage_attribute.data_type in r.data_types:
+                if storage_attribute.storage_type_affinity in r.data_types:
                     return r
         return self.get_default_repository()
 
