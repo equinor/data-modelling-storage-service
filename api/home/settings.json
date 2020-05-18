@@ -2,17 +2,10 @@
   "type": "system/SIMOS/Application",
   "name": "DMTApplicationSettings",
   "description": "",
-  "entities": ["CarPackage", "TodoDemo", "MatrixDemo"],
-  "packages": ["CarPackage", "Uncontained", "ComplexArrays", "TodoDemo", "marmo", "mooringSRS"],
+  "entities": ["CarPackage", "MatrixDemo"],
+  "packages": ["CarPackage", "Uncontained", "ComplexArrays", "marmo", "mooringSRS"],
   "models": ["system/SIMOS/Entity"],
   "actions": [
-    {
-      "name": "Todo Runnable",
-      "description": "Get and store all todos",
-      "input": "SSR-DataSource/TodoDemo/TodoList",
-      "output": "SSR-DataSource/TodoDemo/TodoList",
-      "method": "getTodoList"
-    },
     {
       "name": "Calculate",
       "description": "Simulate 80kmh concrete crash. Fiat panda 2011.",
