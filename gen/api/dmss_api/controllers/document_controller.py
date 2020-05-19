@@ -4,7 +4,7 @@ import six
 from dmss_api import util
 
 
-def get_by_id(data_source_id, document_id):  # noqa: E501
+def get_by_id(data_source_id, document_id, depth=None):  # noqa: E501
     """Get document by ID
 
      # noqa: E501
@@ -13,13 +13,15 @@ def get_by_id(data_source_id, document_id):  # noqa: E501
     :type data_source_id: str
     :param document_id: The document ID
     :type document_id: str
+    :param depth: Limit nested depth of result. Default&#x3D;999
+    :type depth: int
 
     :rtype: Dict[str, object]
     """
     return 'do some magic!'
 
 
-def get_by_path(data_source_id, path):  # noqa: E501
+def get_by_path(data_source_id, path, depth=None):  # noqa: E501
     """Get document by path
 
      # noqa: E501
@@ -28,6 +30,8 @@ def get_by_path(data_source_id, path):  # noqa: E501
     :type data_source_id: str
     :param path: The document path
     :type path: str
+    :param depth: Limit nested depth of result. Default&#x3D;999
+    :type depth: int
 
     :rtype: Dict[str, object]
     """

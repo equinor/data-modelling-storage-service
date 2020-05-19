@@ -12,9 +12,16 @@ import json
 def get_by_id(data_source_id, document_id):
     ui_recipe = request.args.get("ui_recipe")
     attribute = request.args.get("attribute")
+    depth = request.args.get("depth", "999")
     use_case = GetDocumentUseCase()
     request_object = GetDocumentRequestObject.from_dict(
-        {"data_source_id": data_source_id, "document_id": document_id, "ui_recipe": ui_recipe, "attribute": attribute}
+        {
+            "data_source_id": data_source_id,
+            "document_id": document_id,
+            "ui_recipe": ui_recipe,
+            "attribute": attribute,
+            "depth": depth,
+        }
     )
     response = use_case.execute(request_object)
     return Response(json.dumps(response.value), mimetype="application/json", status=STATUS_CODES[response.type])

@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 
 # **get_by_id**
-> dict(str, object) get_by_id(data_source_id, document_id)
+> dict(str, object) get_by_id(data_source_id, document_id, depth=depth)
 
 Get document by ID
 
@@ -35,10 +35,11 @@ with dmss_api.ApiClient() as api_client:
     api_instance = dmss_api.DocumentApi(api_client)
     data_source_id = 'data_source_id_example' # str | The data source ID
 document_id = 'document_id_example' # str | The document ID
+depth = 56 # int | Limit nested depth of result. Default=999 (optional)
 
     try:
         # Get document by ID
-        api_response = api_instance.get_by_id(data_source_id, document_id)
+        api_response = api_instance.get_by_id(data_source_id, document_id, depth=depth)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling DocumentApi->get_by_id: %s\n" % e)
@@ -50,6 +51,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **data_source_id** | **str**| The data source ID | 
  **document_id** | **str**| The document ID | 
+ **depth** | **int**| Limit nested depth of result. Default&#x3D;999 | [optional] 
 
 ### Return type
 
@@ -72,7 +74,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_by_path**
-> dict(str, object) get_by_path(data_source_id, path)
+> dict(str, object) get_by_path(data_source_id, path, depth=depth)
 
 Get document by path
 
@@ -97,10 +99,11 @@ with dmss_api.ApiClient() as api_client:
     api_instance = dmss_api.DocumentApi(api_client)
     data_source_id = 'data_source_id_example' # str | The data source ID
 path = 'path_example' # str | The document path
+depth = 56 # int | Limit nested depth of result. Default=999 (optional)
 
     try:
         # Get document by path
-        api_response = api_instance.get_by_path(data_source_id, path)
+        api_response = api_instance.get_by_path(data_source_id, path, depth=depth)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling DocumentApi->get_by_path: %s\n" % e)
@@ -112,6 +115,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **data_source_id** | **str**| The data source ID | 
  **path** | **str**| The document path | 
+ **depth** | **int**| Limit nested depth of result. Default&#x3D;999 | [optional] 
 
 ### Return type
 

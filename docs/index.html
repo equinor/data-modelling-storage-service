@@ -873,6 +873,15 @@ ul.nav-tabs {
   }
 };
     defs["inline_object_2"] = {
+  "required" : [ "directory" ],
+  "type" : "object",
+  "properties" : {
+    "directory" : {
+      "type" : "string"
+    }
+  }
+};
+    defs["inline_object_3"] = {
   "required" : [ "documentId", "name" ],
   "type" : "object",
   "properties" : {
@@ -892,7 +901,7 @@ ul.nav-tabs {
     }
   }
 };
-    defs["inline_object_3"] = {
+    defs["inline_object_4"] = {
   "required" : [ "type" ],
   "type" : "object",
   "properties" : {
@@ -956,6 +965,9 @@ ul.nav-tabs {
                       <a href="#api-Document-update">update</a>
                     </li>
                   <li class="nav-header" data-group="Explorer"><a href="#api-Explorer">API Methods - Explorer</a></li>
+                    <li data-group="Explorer" data-name="addDocument" class="">
+                      <a href="#api-Explorer-addDocument">addDocument</a>
+                    </li>
                     <li data-group="Explorer" data-name="addPackage" class="">
                       <a href="#api-Explorer-addPackage">addPackage</a>
                     </li>
@@ -973,6 +985,9 @@ ul.nav-tabs {
                     </li>
                     <li data-group="Explorer" data-name="remove" class="">
                       <a href="#api-Explorer-remove">remove</a>
+                    </li>
+                    <li data-group="Explorer" data-name="removeByPath" class="">
+                      <a href="#api-Explorer-removeByPath">removeByPath</a>
                     </li>
                     <li data-group="Explorer" data-name="rename" class="">
                       <a href="#api-Explorer-rename">rename</a>
@@ -2069,7 +2084,7 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Document-getById-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://0.0.0.0:8000/api/v1/documents/{dataSourceId}/{documentId}"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://0.0.0.0:8000/api/v1/documents/{dataSourceId}/{documentId}?depth="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Document-getById-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -2087,8 +2102,9 @@ public class DocumentApiExample {
         DocumentApi apiInstance = new DocumentApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String documentId = documentId_example; // String | The document ID
+        Integer depth = 56; // Integer | Limit nested depth of result. Default=999
         try {
-            map['String', Object] result = apiInstance.getById(dataSourceId, documentId);
+            map['String', Object] result = apiInstance.getById(dataSourceId, documentId, depth);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DocumentApi#getById");
@@ -2108,8 +2124,9 @@ public class DocumentApiExample {
         DocumentApi apiInstance = new DocumentApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String documentId = documentId_example; // String | The document ID
+        Integer depth = 56; // Integer | Limit nested depth of result. Default=999
         try {
-            map['String', Object] result = apiInstance.getById(dataSourceId, documentId);
+            map['String', Object] result = apiInstance.getById(dataSourceId, documentId, depth);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DocumentApi#getById");
@@ -2125,12 +2142,14 @@ public class DocumentApiExample {
                             <div class="tab-pane" id="examples-Document-getById-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
 String *documentId = documentId_example; // The document ID (default to null)
+Integer *depth = 56; // Limit nested depth of result. Default=999 (optional) (default to null)
 
 DocumentApi *apiInstance = [[DocumentApi alloc] init];
 
 // Get document by ID
 [apiInstance getByIdWith:dataSourceId
     documentId:documentId
+    depth:depth
               completionHandler: ^(map['String', Object] output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -2148,6 +2167,9 @@ DocumentApi *apiInstance = [[DocumentApi alloc] init];
 var api = new DataModellingStorageServiceApi.DocumentApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var documentId = documentId_example; // {String} The document ID
+var opts = {
+  'depth': 56 // {Integer} Limit nested depth of result. Default=999
+};
 
 var callback = function(error, data, response) {
   if (error) {
@@ -2156,7 +2178,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getById(dataSourceId, documentId, callback);
+api.getById(dataSourceId, documentId, opts, callback);
 </code></pre>
                             </div>
 
@@ -2180,11 +2202,12 @@ namespace Example
             var apiInstance = new DocumentApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var documentId = documentId_example;  // String | The document ID (default to null)
+            var depth = 56;  // Integer | Limit nested depth of result. Default=999 (optional)  (default to null)
 
             try
             {
                 // Get document by ID
-                map['String', Object] result = apiInstance.getById(dataSourceId, documentId);
+                map['String', Object] result = apiInstance.getById(dataSourceId, documentId, depth);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -2204,9 +2227,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 $api_instance = new OpenAPITools\Client\Api\DocumentApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $documentId = documentId_example; // String | The document ID
+$depth = 56; // Integer | Limit nested depth of result. Default=999
 
 try {
-    $result = $api_instance->getById($dataSourceId, $documentId);
+    $result = $api_instance->getById($dataSourceId, $documentId, $depth);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DocumentApi->getById: ', $e->getMessage(), PHP_EOL;
@@ -2222,9 +2246,10 @@ use WWW::OPenAPIClient::DocumentApi;
 my $api_instance = WWW::OPenAPIClient::DocumentApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $documentId = documentId_example; # String | The document ID
+my $depth = 56; # Integer | Limit nested depth of result. Default=999
 
 eval { 
-    my $result = $api_instance->getById(dataSourceId => $dataSourceId, documentId => $documentId);
+    my $result = $api_instance->getById(dataSourceId => $dataSourceId, documentId => $documentId, depth => $depth);
     print Dumper($result);
 };
 if ($@) {
@@ -2243,10 +2268,11 @@ from pprint import pprint
 api_instance = openapi_client.DocumentApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 documentId = documentId_example # String | The document ID (default to null)
+depth = 56 # Integer | Limit nested depth of result. Default=999 (optional) (default to null)
 
 try: 
     # Get document by ID
-    api_response = api_instance.get_by_id(dataSourceId, documentId)
+    api_response = api_instance.get_by_id(dataSourceId, documentId, depth=depth)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DocumentApi->getById: %s\n" % e)</code></pre>
@@ -2258,9 +2284,10 @@ except ApiException as e:
 pub fn main() {
     let dataSourceId = dataSourceId_example; // String
     let documentId = documentId_example; // String
+    let depth = 56; // Integer
 
     let mut context = DocumentApi::Context::default();
-    let result = client.getById(dataSourceId, documentId, &context).wait();
+    let result = client.getById(dataSourceId, documentId, depth, &context).wait();
     println!("{:?}", result);
 
 }
@@ -2332,6 +2359,33 @@ The document ID
 
 
 
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">depth</td>
+<td>
+
+
+    <div id="d2e199_getById_depth">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    Integer
+                </span>
+
+                    <div class="inner description marked">
+Limit nested depth of result. Default&#x3D;999
+                    </div>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
 
                           <h2>Responses</h2>
                             <h3 id="examples-Document-getById-title-200"></h3>
@@ -2436,7 +2490,7 @@ The document ID
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Document-getByPath-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://0.0.0.0:8000/api/v1/documents-by-path/{dataSourceId}?path="</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://0.0.0.0:8000/api/v1/documents-by-path/{dataSourceId}?path=&depth="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Document-getByPath-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -2454,8 +2508,9 @@ public class DocumentApiExample {
         DocumentApi apiInstance = new DocumentApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String path = path_example; // String | The document path
+        Integer depth = 56; // Integer | Limit nested depth of result. Default=999
         try {
-            map['String', Object] result = apiInstance.getByPath(dataSourceId, path);
+            map['String', Object] result = apiInstance.getByPath(dataSourceId, path, depth);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DocumentApi#getByPath");
@@ -2475,8 +2530,9 @@ public class DocumentApiExample {
         DocumentApi apiInstance = new DocumentApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String path = path_example; // String | The document path
+        Integer depth = 56; // Integer | Limit nested depth of result. Default=999
         try {
-            map['String', Object] result = apiInstance.getByPath(dataSourceId, path);
+            map['String', Object] result = apiInstance.getByPath(dataSourceId, path, depth);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DocumentApi#getByPath");
@@ -2492,12 +2548,14 @@ public class DocumentApiExample {
                             <div class="tab-pane" id="examples-Document-getByPath-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
 String *path = path_example; // The document path (default to null)
+Integer *depth = 56; // Limit nested depth of result. Default=999 (optional) (default to null)
 
 DocumentApi *apiInstance = [[DocumentApi alloc] init];
 
 // Get document by path
 [apiInstance getByPathWith:dataSourceId
     path:path
+    depth:depth
               completionHandler: ^(map['String', Object] output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -2515,6 +2573,9 @@ DocumentApi *apiInstance = [[DocumentApi alloc] init];
 var api = new DataModellingStorageServiceApi.DocumentApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var path = path_example; // {String} The document path
+var opts = {
+  'depth': 56 // {Integer} Limit nested depth of result. Default=999
+};
 
 var callback = function(error, data, response) {
   if (error) {
@@ -2523,7 +2584,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getByPath(dataSourceId, path, callback);
+api.getByPath(dataSourceId, path, opts, callback);
 </code></pre>
                             </div>
 
@@ -2547,11 +2608,12 @@ namespace Example
             var apiInstance = new DocumentApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var path = path_example;  // String | The document path (default to null)
+            var depth = 56;  // Integer | Limit nested depth of result. Default=999 (optional)  (default to null)
 
             try
             {
                 // Get document by path
-                map['String', Object] result = apiInstance.getByPath(dataSourceId, path);
+                map['String', Object] result = apiInstance.getByPath(dataSourceId, path, depth);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -2571,9 +2633,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 $api_instance = new OpenAPITools\Client\Api\DocumentApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $path = path_example; // String | The document path
+$depth = 56; // Integer | Limit nested depth of result. Default=999
 
 try {
-    $result = $api_instance->getByPath($dataSourceId, $path);
+    $result = $api_instance->getByPath($dataSourceId, $path, $depth);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DocumentApi->getByPath: ', $e->getMessage(), PHP_EOL;
@@ -2589,9 +2652,10 @@ use WWW::OPenAPIClient::DocumentApi;
 my $api_instance = WWW::OPenAPIClient::DocumentApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $path = path_example; # String | The document path
+my $depth = 56; # Integer | Limit nested depth of result. Default=999
 
 eval { 
-    my $result = $api_instance->getByPath(dataSourceId => $dataSourceId, path => $path);
+    my $result = $api_instance->getByPath(dataSourceId => $dataSourceId, path => $path, depth => $depth);
     print Dumper($result);
 };
 if ($@) {
@@ -2610,10 +2674,11 @@ from pprint import pprint
 api_instance = openapi_client.DocumentApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 path = path_example # String | The document path (default to null)
+depth = 56 # Integer | Limit nested depth of result. Default=999 (optional) (default to null)
 
 try: 
     # Get document by path
-    api_response = api_instance.get_by_path(dataSourceId, path)
+    api_response = api_instance.get_by_path(dataSourceId, path, depth=depth)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DocumentApi->getByPath: %s\n" % e)</code></pre>
@@ -2625,9 +2690,10 @@ except ApiException as e:
 pub fn main() {
     let dataSourceId = dataSourceId_example; // String
     let path = path_example; // String
+    let depth = 56; // Integer
 
     let mut context = DocumentApi::Context::default();
-    let result = client.getByPath(dataSourceId, path, &context).wait();
+    let result = client.getByPath(dataSourceId, path, depth, &context).wait();
     println!("{:?}", result);
 
 }
@@ -2700,6 +2766,26 @@ The document path
                 <div class="inner required">
                     Required
                 </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                <tr><td style="width:150px;">depth</td>
+<td>
+
+
+    <div id="d2e199_getByPath_depth">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    Integer
+                </span>
+
+                    <div class="inner description marked">
+Limit nested depth of result. Default&#x3D;999
+                    </div>
+            </div>
         </div>
     </div>
 </td>
@@ -3242,6 +3328,396 @@ Path to contained document
                   </section>
                 <section id="api-Explorer">
                   <h1>Explorer</h1>
+                    <div id="api-Explorer-addDocument">
+                      <article id="api-Explorer-addDocument-0" data-group="User" data-name="addDocument" data-version="0">
+                        <div class="pull-left">
+                          <h1>addDocument</h1>
+                          <p>Add document</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/explorer/{dataSourceId}/add-document</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Explorer-addDocument-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Explorer-addDocument-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Explorer-addDocument-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Explorer-addDocument-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Explorer-addDocument-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Explorer-addDocument-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Explorer-addDocument-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Explorer-addDocument-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Explorer-addDocument-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Explorer-addDocument-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Explorer-addDocument-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Explorer-addDocument-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Explorer-addDocument-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/add-document"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Explorer-addDocument-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.ExplorerApi;
+
+import java.io.File;
+import java.util.*;
+
+public class ExplorerApiExample {
+
+    public static void main(String[] args) {
+        
+        ExplorerApi apiInstance = new ExplorerApi();
+        String dataSourceId = dataSourceId_example; // String | The data source ID
+        map[String, Object] requestBody = Object; // map[String, Object] | 
+        try {
+            'String' result = apiInstance.addDocument(dataSourceId, requestBody);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ExplorerApi#addDocument");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Explorer-addDocument-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.ExplorerApi;
+
+public class ExplorerApiExample {
+
+    public static void main(String[] args) {
+        ExplorerApi apiInstance = new ExplorerApi();
+        String dataSourceId = dataSourceId_example; // String | The data source ID
+        map[String, Object] requestBody = Object; // map[String, Object] | 
+        try {
+            'String' result = apiInstance.addDocument(dataSourceId, requestBody);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ExplorerApi#addDocument");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Explorer-addDocument-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Explorer-addDocument-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+map[String, Object] *requestBody = Object; // 
+
+ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
+
+// Add document
+[apiInstance addDocumentWith:dataSourceId
+    requestBody:requestBody
+              completionHandler: ^('String' output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Explorer-addDocument-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
+
+var api = new DataModellingStorageServiceApi.ExplorerApi()
+var dataSourceId = dataSourceId_example; // {String} The data source ID
+var requestBody = Object; // {map[String, Object]} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.addDocument(dataSourceId, requestBody, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Explorer-addDocument-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Explorer-addDocument-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using dmss_api.Api;
+using dmss_api.Client;
+using dmss_api.Model;
+
+namespace Example
+{
+    public class addDocumentExample
+    {
+        public void main()
+        {
+            
+            var apiInstance = new ExplorerApi();
+            var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
+            var requestBody = new map[String, Object](); // map[String, Object] | 
+
+            try
+            {
+                // Add document
+                'String' result = apiInstance.addDocument(dataSourceId, requestBody);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling ExplorerApi.addDocument: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Explorer-addDocument-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new OpenAPITools\Client\Api\ExplorerApi();
+$dataSourceId = dataSourceId_example; // String | The data source ID
+$requestBody = Object; // map[String, Object] | 
+
+try {
+    $result = $api_instance->addDocument($dataSourceId, $requestBody);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling ExplorerApi->addDocument: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Explorer-addDocument-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::ExplorerApi;
+
+my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
+my $dataSourceId = dataSourceId_example; # String | The data source ID
+my $requestBody = WWW::OPenAPIClient::Object::map[String, Object]->new(); # map[String, Object] | 
+
+eval { 
+    my $result = $api_instance->addDocument(dataSourceId => $dataSourceId, requestBody => $requestBody);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling ExplorerApi->addDocument: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Explorer-addDocument-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = openapi_client.ExplorerApi()
+dataSourceId = dataSourceId_example # String | The data source ID (default to null)
+requestBody = Object # map[String, Object] | 
+
+try: 
+    # Add document
+    api_response = api_instance.add_document(dataSourceId, requestBody)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ExplorerApi->addDocument: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Explorer-addDocument-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate ExplorerApi;
+
+pub fn main() {
+    let dataSourceId = dataSourceId_example; // String
+    let requestBody = Object; // map[String, Object]
+
+    let mut context = ExplorerApi::Context::default();
+    let result = client.addDocument(dataSourceId, requestBody, &context).wait();
+    println!("{:?}", result);
+
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">dataSourceId*</td>
+<td>
+
+
+    <div id="d2e199_addDocument_dataSourceId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+The data source ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">requestBody <span style="color:red;">*</span></td>
+<td>
+<p class="marked">Object containing all info for a document</p>
+<script>
+$(document).ready(function() {
+  var schemaWrapper = {
+  "description" : "Object containing all info for a document",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/DocumentBody"
+      }
+    }
+  },
+  "required" : true
+};
+  var schema = findNode('schema', schemaWrapper).schema;
+  if (!schema) {
+      schema = schemaWrapper.schema;
+  }
+  if (schema.$ref != null) {
+    schema = defsParser.$refs.get(schema.$ref);
+  } else {
+    schemaWrapper.definitions = Object.assign({}, defs);
+    $RefParser.dereference(schemaWrapper).catch(function(err) {
+      console.log(err);
+    });
+  }
+
+  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+  var result = $('#d2e199_addDocument_requestBody');
+  result.empty();
+  result.append(view.render());
+});
+</script>
+<div id="d2e199_addDocument_requestBody"></div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Explorer-addDocument-title-200"></h3>
+                            <p id="examples-Explorer-addDocument-description-200" class="marked"></p>
+                            <script>
+                              var responseExplorer200_description = `Added document UID`;
+                              var responseExplorer200_description_break = responseExplorer200_description.indexOf('\n');
+                              if (responseExplorer200_description_break == -1) {
+                                $("#examples-Explorer-addDocument-title-200").text("Status: 200 - " + responseExplorer200_description);
+                              } else {
+                                $("#examples-Explorer-addDocument-title-200").text("Status: 200 - " + responseExplorer200_description.substring(0, responseExplorer200_description_break));
+                                $("#examples-Explorer-addDocument-description-200").html(responseExplorer200_description.substring(responseExplorer200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Explorer-addDocument-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Explorer-addDocument-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Explorer-addDocument-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Explorer-addDocument-200-schema">
+                                  <div id="responses-Explorer-addDocument-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Added document UID",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "type" : "string"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                            schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Explorer-addDocument-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Explorer-addDocument-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Explorer-addDocument-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-Explorer-addPackage">
                       <article id="api-Explorer-addPackage-0" data-group="User" data-name="addPackage" data-version="0">
                         <div class="pull-left">
@@ -5580,11 +6056,11 @@ $(document).ready(function() {
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Explorer-rename">
-                      <article id="api-Explorer-rename-0" data-group="User" data-name="rename" data-version="0">
+                    <div id="api-Explorer-removeByPath">
+                      <article id="api-Explorer-removeByPath-0" data-group="User" data-name="removeByPath" data-version="0">
                         <div class="pull-left">
-                          <h1>rename</h1>
-                          <p>Rename document</p>
+                          <h1>removeByPath</h1>
+                          <p>Remove document by path</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
@@ -5592,30 +6068,30 @@ $(document).ready(function() {
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="put"><code><span class="pln">/explorer/{dataSourceId}/rename</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/explorer/{dataSourceId}/remove-by-path</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Explorer-rename-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Explorer-rename-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Explorer-rename-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Explorer-rename-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Explorer-rename-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Explorer-rename-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Explorer-rename-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Explorer-rename-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Explorer-rename-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Explorer-rename-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Explorer-rename-0-python">Python</a></li>
-                          <li class=""><a href="#examples-Explorer-rename-0-rust">Rust</a></li>
+                          <li class="active"><a href="#examples-Explorer-removeByPath-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Explorer-removeByPath-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Explorer-removeByPath-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Explorer-removeByPath-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Explorer-removeByPath-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Explorer-removeByPath-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Explorer-removeByPath-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Explorer-removeByPath-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Explorer-removeByPath-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Explorer-removeByPath-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Explorer-removeByPath-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Explorer-removeByPath-0-rust">Rust</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Explorer-rename-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/rename"</code></pre>
+                          <div class="tab-pane active" id="examples-Explorer-removeByPath-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/remove-by-path"</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Explorer-rename-0-java">
+                          <div class="tab-pane" id="examples-Explorer-removeByPath-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
 import org.openapitools.client.auth.*;
 import org.openapitools.client.model.*;
@@ -5632,10 +6108,10 @@ public class ExplorerApiExample {
         String dataSourceId = dataSourceId_example; // String | The data source ID
         InlineObject2 inlineObject2 = ; // InlineObject2 | 
         try {
-            map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject2);
+            Object result = apiInstance.removeByPath(dataSourceId, inlineObject2);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ExplorerApi#rename");
+            System.err.println("Exception when calling ExplorerApi#removeByPath");
             e.printStackTrace();
         }
     }
@@ -5643,7 +6119,7 @@ public class ExplorerApiExample {
 </code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Explorer-rename-0-android">
+                          <div class="tab-pane" id="examples-Explorer-removeByPath-0-android">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.ExplorerApi;
 
 public class ExplorerApiExample {
@@ -5653,29 +6129,29 @@ public class ExplorerApiExample {
         String dataSourceId = dataSourceId_example; // String | The data source ID
         InlineObject2 inlineObject2 = ; // InlineObject2 | 
         try {
-            map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject2);
+            Object result = apiInstance.removeByPath(dataSourceId, inlineObject2);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ExplorerApi#rename");
+            System.err.println("Exception when calling ExplorerApi#removeByPath");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Explorer-rename-0-groovy">
+  <div class="tab-pane" id="examples-Explorer-removeByPath-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Explorer-rename-0-objc">
+                            <div class="tab-pane" id="examples-Explorer-removeByPath-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
 InlineObject2 *inlineObject2 = ; // 
 
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
 
-// Rename document
-[apiInstance renameWith:dataSourceId
+// Remove document by path
+[apiInstance removeByPathWith:dataSourceId
     inlineObject2:inlineObject2
-              completionHandler: ^(map['String', Object] output, NSError* error) {
+              completionHandler: ^(Object output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -5686,7 +6162,7 @@ ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Explorer-rename-0-javascript">
+                            <div class="tab-pane" id="examples-Explorer-removeByPath-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
 var api = new DataModellingStorageServiceApi.ExplorerApi()
@@ -5700,14 +6176,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.rename(dataSourceId, inlineObject2, callback);
+api.removeByPath(dataSourceId, inlineObject2, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Explorer-rename-0-angular">
+                            <!--<div class="tab-pane" id="examples-Explorer-removeByPath-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Explorer-rename-0-csharp">
+                            <div class="tab-pane" id="examples-Explorer-removeByPath-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using dmss_api.Api;
@@ -5716,7 +6192,7 @@ using dmss_api.Model;
 
 namespace Example
 {
-    public class renameExample
+    public class removeByPathExample
     {
         public void main()
         {
@@ -5727,13 +6203,13 @@ namespace Example
 
             try
             {
-                // Rename document
-                map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject2);
+                // Remove document by path
+                Object result = apiInstance.removeByPath(dataSourceId, inlineObject2);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling ExplorerApi.rename: " + e.Message );
+                Debug.Print("Exception when calling ExplorerApi.removeByPath: " + e.Message );
             }
         }
     }
@@ -5741,7 +6217,7 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Explorer-rename-0-php">
+                            <div class="tab-pane" id="examples-Explorer-removeByPath-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
@@ -5750,15 +6226,15 @@ $dataSourceId = dataSourceId_example; // String | The data source ID
 $inlineObject2 = ; // InlineObject2 | 
 
 try {
-    $result = $api_instance->rename($dataSourceId, $inlineObject2);
+    $result = $api_instance->removeByPath($dataSourceId, $inlineObject2);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling ExplorerApi->rename: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling ExplorerApi->removeByPath: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Explorer-rename-0-perl">
+                            <div class="tab-pane" id="examples-Explorer-removeByPath-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::ExplorerApi;
@@ -5768,15 +6244,15 @@ my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $inlineObject2 = WWW::OPenAPIClient::Object::InlineObject2->new(); # InlineObject2 | 
 
 eval { 
-    my $result = $api_instance->rename(dataSourceId => $dataSourceId, inlineObject2 => $inlineObject2);
+    my $result = $api_instance->removeByPath(dataSourceId => $dataSourceId, inlineObject2 => $inlineObject2);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling ExplorerApi->rename: $@\n";
+    warn "Exception when calling ExplorerApi->removeByPath: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Explorer-rename-0-python">
+                            <div class="tab-pane" id="examples-Explorer-removeByPath-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import openapi_client
@@ -5789,14 +6265,14 @@ dataSourceId = dataSourceId_example # String | The data source ID (default to nu
 inlineObject2 =  # InlineObject2 | 
 
 try: 
-    # Rename document
-    api_response = api_instance.rename(dataSourceId, inlineObject2)
+    # Remove document by path
+    api_response = api_instance.remove_by_path(dataSourceId, inlineObject2)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling ExplorerApi->rename: %s\n" % e)</code></pre>
+    print("Exception when calling ExplorerApi->removeByPath: %s\n" % e)</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Explorer-rename-0-rust">
+                            <div class="tab-pane" id="examples-Explorer-removeByPath-0-rust">
                               <pre class="prettyprint"><code class="language-rust">extern crate ExplorerApi;
 
 pub fn main() {
@@ -5804,7 +6280,7 @@ pub fn main() {
     let inlineObject2 = ; // InlineObject2
 
     let mut context = ExplorerApi::Context::default();
-    let result = client.rename(dataSourceId, inlineObject2, &context).wait();
+    let result = client.removeByPath(dataSourceId, inlineObject2, &context).wait();
     println!("{:?}", result);
 
 }
@@ -5829,7 +6305,7 @@ pub fn main() {
 <td>
 
 
-    <div id="d2e199_rename_dataSourceId">
+    <div id="d2e199_removeByPath_dataSourceId">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -5886,12 +6362,401 @@ $(document).ready(function() {
   }
 
   var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-  var result = $('#d2e199_rename_inlineObject2');
+  var result = $('#d2e199_removeByPath_inlineObject2');
   result.empty();
   result.append(view.render());
 });
 </script>
-<div id="d2e199_rename_inlineObject2"></div>
+<div id="d2e199_removeByPath_inlineObject2"></div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Explorer-removeByPath-title-200"></h3>
+                            <p id="examples-Explorer-removeByPath-description-200" class="marked"></p>
+                            <script>
+                              var responseExplorer200_description = `Remove status`;
+                              var responseExplorer200_description_break = responseExplorer200_description.indexOf('\n');
+                              if (responseExplorer200_description_break == -1) {
+                                $("#examples-Explorer-removeByPath-title-200").text("Status: 200 - " + responseExplorer200_description);
+                              } else {
+                                $("#examples-Explorer-removeByPath-title-200").text("Status: 200 - " + responseExplorer200_description.substring(0, responseExplorer200_description_break));
+                                $("#examples-Explorer-removeByPath-description-200").html(responseExplorer200_description.substring(responseExplorer200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Explorer-removeByPath-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Explorer-removeByPath-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Explorer-removeByPath-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Explorer-removeByPath-200-schema">
+                                  <div id="responses-Explorer-removeByPath-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Remove status",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "type" : "object"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                            schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Explorer-removeByPath-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Explorer-removeByPath-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Explorer-removeByPath-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Explorer-rename">
+                      <article id="api-Explorer-rename-0" data-group="User" data-name="rename" data-version="0">
+                        <div class="pull-left">
+                          <h1>rename</h1>
+                          <p>Rename document</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="put"><code><span class="pln">/explorer/{dataSourceId}/rename</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Explorer-rename-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Explorer-rename-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Explorer-rename-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Explorer-rename-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Explorer-rename-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Explorer-rename-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Explorer-rename-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Explorer-rename-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Explorer-rename-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Explorer-rename-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Explorer-rename-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Explorer-rename-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Explorer-rename-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/rename"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Explorer-rename-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.ExplorerApi;
+
+import java.io.File;
+import java.util.*;
+
+public class ExplorerApiExample {
+
+    public static void main(String[] args) {
+        
+        ExplorerApi apiInstance = new ExplorerApi();
+        String dataSourceId = dataSourceId_example; // String | The data source ID
+        InlineObject3 inlineObject3 = ; // InlineObject3 | 
+        try {
+            map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject3);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ExplorerApi#rename");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Explorer-rename-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.ExplorerApi;
+
+public class ExplorerApiExample {
+
+    public static void main(String[] args) {
+        ExplorerApi apiInstance = new ExplorerApi();
+        String dataSourceId = dataSourceId_example; // String | The data source ID
+        InlineObject3 inlineObject3 = ; // InlineObject3 | 
+        try {
+            map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject3);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ExplorerApi#rename");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Explorer-rename-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Explorer-rename-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+InlineObject3 *inlineObject3 = ; // 
+
+ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
+
+// Rename document
+[apiInstance renameWith:dataSourceId
+    inlineObject3:inlineObject3
+              completionHandler: ^(map['String', Object] output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Explorer-rename-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
+
+var api = new DataModellingStorageServiceApi.ExplorerApi()
+var dataSourceId = dataSourceId_example; // {String} The data source ID
+var inlineObject3 = ; // {InlineObject3} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.rename(dataSourceId, inlineObject3, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Explorer-rename-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Explorer-rename-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using dmss_api.Api;
+using dmss_api.Client;
+using dmss_api.Model;
+
+namespace Example
+{
+    public class renameExample
+    {
+        public void main()
+        {
+            
+            var apiInstance = new ExplorerApi();
+            var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
+            var inlineObject3 = new InlineObject3(); // InlineObject3 | 
+
+            try
+            {
+                // Rename document
+                map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject3);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling ExplorerApi.rename: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Explorer-rename-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new OpenAPITools\Client\Api\ExplorerApi();
+$dataSourceId = dataSourceId_example; // String | The data source ID
+$inlineObject3 = ; // InlineObject3 | 
+
+try {
+    $result = $api_instance->rename($dataSourceId, $inlineObject3);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling ExplorerApi->rename: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Explorer-rename-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::ExplorerApi;
+
+my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
+my $dataSourceId = dataSourceId_example; # String | The data source ID
+my $inlineObject3 = WWW::OPenAPIClient::Object::InlineObject3->new(); # InlineObject3 | 
+
+eval { 
+    my $result = $api_instance->rename(dataSourceId => $dataSourceId, inlineObject3 => $inlineObject3);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling ExplorerApi->rename: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Explorer-rename-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = openapi_client.ExplorerApi()
+dataSourceId = dataSourceId_example # String | The data source ID (default to null)
+inlineObject3 =  # InlineObject3 | 
+
+try: 
+    # Rename document
+    api_response = api_instance.rename(dataSourceId, inlineObject3)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ExplorerApi->rename: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Explorer-rename-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate ExplorerApi;
+
+pub fn main() {
+    let dataSourceId = dataSourceId_example; // String
+    let inlineObject3 = ; // InlineObject3
+
+    let mut context = ExplorerApi::Context::default();
+    let result = client.rename(dataSourceId, inlineObject3, &context).wait();
+    println!("{:?}", result);
+
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">dataSourceId*</td>
+<td>
+
+
+    <div id="d2e199_rename_dataSourceId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+The data source ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">inlineObject3 <span style="color:red;">*</span></td>
+<td>
+<p class="marked"></p>
+<script>
+$(document).ready(function() {
+  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/inline_object_3"
+      }
+    }
+  },
+  "required" : true
+};
+  var schema = findNode('schema', schemaWrapper).schema;
+  if (!schema) {
+      schema = schemaWrapper.schema;
+  }
+  if (schema.$ref != null) {
+    schema = defsParser.$refs.get(schema.$ref);
+  } else {
+    schemaWrapper.definitions = Object.assign({}, defs);
+    $RefParser.dereference(schemaWrapper).catch(function(err) {
+      console.log(err);
+    });
+  }
+
+  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+  var result = $('#d2e199_rename_inlineObject3');
+  result.empty();
+  result.append(view.render());
+});
+</script>
+<div id="d2e199_rename_inlineObject3"></div>
 </td>
 </tr>
 
@@ -6729,9 +7594,9 @@ public class SearchApiExample {
         
         SearchApi apiInstance = new SearchApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        InlineObject3 inlineObject3 = ; // InlineObject3 | 
+        InlineObject4 inlineObject4 = ; // InlineObject4 | 
         try {
-            map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject3);
+            map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject4);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SearchApi#searchEntities");
@@ -6750,9 +7615,9 @@ public class SearchApiExample {
     public static void main(String[] args) {
         SearchApi apiInstance = new SearchApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        InlineObject3 inlineObject3 = ; // InlineObject3 | 
+        InlineObject4 inlineObject4 = ; // InlineObject4 | 
         try {
-            map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject3);
+            map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject4);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SearchApi#searchEntities");
@@ -6767,13 +7632,13 @@ public class SearchApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Search-searchEntities-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-InlineObject3 *inlineObject3 = ; // 
+InlineObject4 *inlineObject4 = ; // 
 
 SearchApi *apiInstance = [[SearchApi alloc] init];
 
 // Search for entities
 [apiInstance searchEntitiesWith:dataSourceId
-    inlineObject3:inlineObject3
+    inlineObject4:inlineObject4
               completionHandler: ^(map['String', Object] output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -6790,7 +7655,7 @@ SearchApi *apiInstance = [[SearchApi alloc] init];
 
 var api = new DataModellingStorageServiceApi.SearchApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
-var inlineObject3 = ; // {InlineObject3} 
+var inlineObject4 = ; // {InlineObject4} 
 
 var callback = function(error, data, response) {
   if (error) {
@@ -6799,7 +7664,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.searchEntities(dataSourceId, inlineObject3, callback);
+api.searchEntities(dataSourceId, inlineObject4, callback);
 </code></pre>
                             </div>
 
@@ -6822,12 +7687,12 @@ namespace Example
             
             var apiInstance = new SearchApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
-            var inlineObject3 = new InlineObject3(); // InlineObject3 | 
+            var inlineObject4 = new InlineObject4(); // InlineObject4 | 
 
             try
             {
                 // Search for entities
-                map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject3);
+                map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject4);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -6846,10 +7711,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new OpenAPITools\Client\Api\SearchApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
-$inlineObject3 = ; // InlineObject3 | 
+$inlineObject4 = ; // InlineObject4 | 
 
 try {
-    $result = $api_instance->searchEntities($dataSourceId, $inlineObject3);
+    $result = $api_instance->searchEntities($dataSourceId, $inlineObject4);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling SearchApi->searchEntities: ', $e->getMessage(), PHP_EOL;
@@ -6864,10 +7729,10 @@ use WWW::OPenAPIClient::SearchApi;
 
 my $api_instance = WWW::OPenAPIClient::SearchApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
-my $inlineObject3 = WWW::OPenAPIClient::Object::InlineObject3->new(); # InlineObject3 | 
+my $inlineObject4 = WWW::OPenAPIClient::Object::InlineObject4->new(); # InlineObject4 | 
 
 eval { 
-    my $result = $api_instance->searchEntities(dataSourceId => $dataSourceId, inlineObject3 => $inlineObject3);
+    my $result = $api_instance->searchEntities(dataSourceId => $dataSourceId, inlineObject4 => $inlineObject4);
     print Dumper($result);
 };
 if ($@) {
@@ -6885,11 +7750,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = openapi_client.SearchApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
-inlineObject3 =  # InlineObject3 | 
+inlineObject4 =  # InlineObject4 | 
 
 try: 
     # Search for entities
-    api_response = api_instance.search_entities(dataSourceId, inlineObject3)
+    api_response = api_instance.search_entities(dataSourceId, inlineObject4)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling SearchApi->searchEntities: %s\n" % e)</code></pre>
@@ -6900,10 +7765,10 @@ except ApiException as e:
 
 pub fn main() {
     let dataSourceId = dataSourceId_example; // String
-    let inlineObject3 = ; // InlineObject3
+    let inlineObject4 = ; // InlineObject4
 
     let mut context = SearchApi::Context::default();
-    let result = client.searchEntities(dataSourceId, inlineObject3, &context).wait();
+    let result = client.searchEntities(dataSourceId, inlineObject4, &context).wait();
     println!("{:?}", result);
 
 }
@@ -6956,7 +7821,7 @@ The data source ID
                                 <th width="150px">Name</th>
                                 <th>Description</th>
                               </tr>
-                                <tr><td style="width:150px;">inlineObject3 <span style="color:red;">*</span></td>
+                                <tr><td style="width:150px;">inlineObject4 <span style="color:red;">*</span></td>
 <td>
 <p class="marked"></p>
 <script>
@@ -6965,7 +7830,7 @@ $(document).ready(function() {
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_object_3"
+        "$ref" : "#/components/schemas/inline_object_4"
       }
     }
   },
@@ -6985,12 +7850,12 @@ $(document).ready(function() {
   }
 
   var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-  var result = $('#d2e199_searchEntities_inlineObject3');
+  var result = $('#d2e199_searchEntities_inlineObject4');
   result.empty();
   result.append(view.render());
 });
 </script>
-<div id="d2e199_searchEntities_inlineObject3"></div>
+<div id="d2e199_searchEntities_inlineObject4"></div>
 </td>
 </tr>
 
