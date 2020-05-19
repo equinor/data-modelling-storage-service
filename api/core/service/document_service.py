@@ -42,8 +42,19 @@ def get_document(document_uid: str, document_repository: Repository):
 
 
 def get_resolved_document(
-    document: DTO, document_repository: Repository, blueprint_provider: BlueprintProvider
+    document: DTO,
+    document_repository: Repository,
+    blueprint_provider: BlueprintProvider,
+    depth: int = 999,
+    depth_count: int = 0,
 ) -> Dict:
+
+    if depth <= depth_count:
+        if depth_count >= 999:
+            raise RecursionError(f"Reached max-nested-depth (999). Most likely some recursive entities")
+        return document.data
+    depth_count += 1
+
     blueprint: Blueprint = blueprint_provider.get_blueprint(document.type)
 
     data: Dict = document.data
@@ -61,7 +72,11 @@ def get_resolved_document(
                             temp.append({})
                         else:
                             try:
-                                temp.append(get_resolved_document(DTO(item), document_repository, blueprint_provider))
+                                temp.append(
+                                    get_resolved_document(
+                                        DTO(item), document_repository, blueprint_provider, depth, depth_count
+                                    )
+                                )
                             except Exception as error:
                                 # error = f"The entity {item} is invalid! Type: {complex_attribute.attribute_type}"
                                 logger.exception(error)
@@ -70,14 +85,14 @@ def get_resolved_document(
                     document.data[attribute_name] = temp
                 else:
                     data[attribute_name] = get_resolved_document(
-                        DTO(complex_data), document_repository, blueprint_provider
+                        DTO(complex_data), document_repository, blueprint_provider, depth, depth_count
                     )
             else:
                 if complex_attribute.is_array():
                     children = []
                     for item in complex_data:
                         try:
-                            doc = get_complete_document(item["_id"], document_repository, blueprint_provider)
+                            doc = get_complete_document(item["_id"], document_repository, blueprint_provider, depth)
                             children.append(doc)
                         except Exception as error:
                             logger.exception(error)
@@ -86,9 +101,9 @@ def get_resolved_document(
                     data[attribute_name] = children
                 else:
                     data[attribute_name] = get_complete_document(
-                        complex_data["_id"], document_repository, blueprint_provider
+                        complex_data["_id"], document_repository, blueprint_provider, depth
                     )
-        # If there is no data, and the attribute is NOT optional, AND it NOT an array, raise an exception
+        # If there is no data, and the attribute is NOT optional, AND it's NOT an array, raise an exception
         else:
             if not complex_attribute.is_optional() and not complex_attribute.is_array():
                 error = f"The entity {document.name} is invalid! None-optional type {attribute_name} is missing."
@@ -98,12 +113,11 @@ def get_resolved_document(
 
 
 def get_complete_document(
-    document_uid: str, document_repository: Repository, blueprint_provider: BlueprintProvider
+    document_uid: str, document_repository: Repository, blueprint_provider: BlueprintProvider, depth: int = 999
 ) -> Dict:
     document = get_document(document_uid=document_uid, document_repository=document_repository)
 
-    temp = get_resolved_document(document, document_repository, blueprint_provider)
-    return temp
+    return get_resolved_document(document, document_repository, blueprint_provider, depth)
 
 
 class DocumentService:
@@ -139,10 +153,10 @@ class DocumentService:
             dto.data["__path__"] = path
         repository.update(dto)
 
-    def get_by_uid(self, data_source_id: str, document_uid: str) -> Node:
+    def get_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
         try:
             complete_document = get_complete_document(
-                document_uid, self.repository_provider(data_source_id), self.blueprint_provider
+                document_uid, self.repository_provider(data_source_id), self.blueprint_provider, depth
             )
         except EntityNotFoundException as error:
             # this is an edge case for packages where the reference in a package entity has wrong document id.

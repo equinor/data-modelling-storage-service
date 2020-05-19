@@ -99,6 +99,14 @@ paths:
         schema:
           type: string
         style: form
+      - description: Limit nested depth of result. Default=999
+        explode: true
+        in: query
+        name: depth
+        required: false
+        schema:
+          type: integer
+        style: form
       responses:
         "200":
           content:
@@ -130,6 +138,14 @@ paths:
         schema:
           type: string
         style: simple
+      - description: Limit nested depth of result. Default=999
+        explode: true
+        in: query
+        name: depth
+        required: false
+        schema:
+          type: integer
+        style: form
       responses:
         "200":
           content:

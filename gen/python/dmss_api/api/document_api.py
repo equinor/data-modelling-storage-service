@@ -47,6 +47,7 @@ class DocumentApi(object):
         :param async_req bool: execute request asynchronously
         :param str data_source_id: The data source ID (required)
         :param str document_id: The document ID (required)
+        :param int depth: Limit nested depth of result. Default=999
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -72,6 +73,7 @@ class DocumentApi(object):
         :param async_req bool: execute request asynchronously
         :param str data_source_id: The data source ID (required)
         :param str document_id: The document ID (required)
+        :param int depth: Limit nested depth of result. Default=999
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -90,7 +92,8 @@ class DocumentApi(object):
 
         all_params = [
             'data_source_id',
-            'document_id'
+            'document_id',
+            'depth'
         ]
         all_params.extend(
             [
@@ -127,6 +130,8 @@ class DocumentApi(object):
             path_params['documentId'] = local_var_params['document_id']  # noqa: E501
 
         query_params = []
+        if 'depth' in local_var_params and local_var_params['depth'] is not None:  # noqa: E501
+            query_params.append(('depth', local_var_params['depth']))  # noqa: E501
 
         header_params = {}
 
@@ -168,6 +173,7 @@ class DocumentApi(object):
         :param async_req bool: execute request asynchronously
         :param str data_source_id: The data source ID (required)
         :param str path: The document path (required)
+        :param int depth: Limit nested depth of result. Default=999
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -193,6 +199,7 @@ class DocumentApi(object):
         :param async_req bool: execute request asynchronously
         :param str data_source_id: The data source ID (required)
         :param str path: The document path (required)
+        :param int depth: Limit nested depth of result. Default=999
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -211,7 +218,8 @@ class DocumentApi(object):
 
         all_params = [
             'data_source_id',
-            'path'
+            'path',
+            'depth'
         ]
         all_params.extend(
             [
@@ -248,6 +256,8 @@ class DocumentApi(object):
         query_params = []
         if 'path' in local_var_params and local_var_params['path'] is not None:  # noqa: E501
             query_params.append(('path', local_var_params['path']))  # noqa: E501
+        if 'depth' in local_var_params and local_var_params['depth'] is not None:  # noqa: E501
+            query_params.append(('depth', local_var_params['depth']))  # noqa: E501
 
         header_params = {}
 
