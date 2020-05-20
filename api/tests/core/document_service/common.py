@@ -1,6 +1,6 @@
 from api.classes.blueprint import Blueprint
 from api.classes.dto import DTO
-from api.core.repository.file import TemplateRepositoryFromFile
+from api.core.storage.repositories.file import TemplateRepositoryFromFile
 from api.utils.helper_functions import schemas_location
 
 blueprint_1 = {
@@ -54,7 +54,14 @@ uncontained_blueprint = {
             "type": "system/SIMOS/StorageRecipe",
             "name": "DefaultStorageRecipe",
             "description": "",
-            "attributes": [{"name": "uncontained_in_every_way", "type": "does_this_matter?", "contained": False}],
+            "attributes": [
+                {
+                    "name": "uncontained_in_every_way",
+                    "type": "does_this_matter?",
+                    "contained": False,
+                    "storageTypeAffinity": "blob",
+                }
+            ],
         }
     ],
 }

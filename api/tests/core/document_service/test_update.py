@@ -3,16 +3,16 @@ from unittest import mock
 
 from api.classes.dto import DTO
 from api.classes.tree_node import Node
-from api.core.repository import Repository
-from api.core.repository.repository_exceptions import DuplicateFileNameException
 from api.core.service.document_service import DocumentService
+
+from api.core.storage.repository_exceptions import DuplicateFileNameException
 from api.tests.core.document_service.common import blueprint_provider
 from api.utils.data_structure.compare import pretty_eq
 
 
 class DocumentServiceTestCase(unittest.TestCase):
     def test_update_single_optional_complex(self):
-        repository: Repository = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {
@@ -35,7 +35,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO):
+        def mock_update(dto: DTO, storage_attribute):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -56,7 +56,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert pretty_eq(doc_1_after, doc_storage["1"]) is None
 
     def test_add_optional(self):
-        repository: Repository = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {
@@ -79,7 +79,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO):
+        def mock_update(dto: DTO, storage_attribute):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -99,7 +99,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert pretty_eq(doc_1_after, doc_storage["1"]) is None
 
     def test_add_optional_nested(self):
-        repository: Repository = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {
@@ -132,7 +132,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO):
+        def mock_update(dto: DTO, storage_attribute):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -152,7 +152,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert pretty_eq(doc_1_after, doc_storage["1"]) is None
 
     def test_add_duplicate(self):
-        repository: Repository = mock.Mock()
+        repository = mock.Mock()
 
         doc_storage = {
             "1": {
@@ -167,7 +167,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO):
+        def mock_update(dto: DTO, storage_attribute):
             doc_storage[dto.uid] = dto.data
             return None
 

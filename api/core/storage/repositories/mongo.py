@@ -1,14 +1,22 @@
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 
-from api.core.repository.db_client_interface import DBClientInterface
-from api.core.repository.repository_exceptions import EntityAlreadyExistsException
+from api.core.storage.repository_interface import RepositoryInterface
+from api.core.storage.repository_exceptions import EntityAlreadyExistsException
 from typing import Dict, List, Optional
 
 
-class MongoDBClient(DBClientInterface):
+class MongoDBClient(RepositoryInterface):
     def __init__(
-        self, host: str, username: str, password: str, database: str, tls: bool, collection: str, port: int = 27001
+        self,
+        username: str,
+        password: str,
+        host: str = "localhost",
+        database: str = "data_modelling",
+        collection: str = "data_modelling",
+        tls: bool = False,
+        port: int = 27001,
+        **kwargs,
     ):
         self.handler = MongoClient(
             host=host,

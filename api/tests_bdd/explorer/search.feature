@@ -2,11 +2,17 @@ Feature: Explorer - Search entity
 
   Background: There are data sources in the system
 
-    Given there are mongodb data sources
-      | host | port  | username | password | tls   | name       | database | collection     | type     |
-      | db   | 27017 | maf      | maf      | false | blueprints | local    | blueprints     | mongo-db |
-      | db   | 27017 | maf      | maf      | false | entities   | local    | entities       | mongo-db |
-      | db   | 27017 | maf      | maf      | false | system     | local    | system         | mongo-db |
+    Given there are data sources
+      | name       |
+      | entities   |
+      | blueprints |
+      | system     |
+
+    Given there are repositories in the data sources
+      | data-source    | host | port  | username | password | tls   | name      | database | collection | type     | dataTypes |
+      | entities       | db   | 27017 | maf      | maf      | false | repo1     | local    | entities   | mongo-db | default   |
+      | blueprints     | db   | 27017 | maf      | maf      | false | blob-repo | local    | blueprints | mongo-db | default   |
+      | system         | db   | 27017 | maf      | maf      | false | system    | local    | system     | mongo-db | default   |
 
     Given there exist document with id "1" in data source "blueprints"
     """

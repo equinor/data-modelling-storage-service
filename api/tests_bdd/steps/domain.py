@@ -6,7 +6,7 @@ from api.core.service.document_service import DocumentService
 from api.core.use_case.utils.create_entity import CreateEntity
 from api.core.utility import BlueprintProvider
 from api.classes.tree_node import Node, ListNode
-from api.core.repository.repository_factory import get_repository
+from api.core.storage.internal.data_source_repository import get_data_source
 
 blueprint_provider = BlueprintProvider()
 
@@ -60,7 +60,7 @@ def generate_tree_from_rows(node: Node, rows):
 
 
 def generate_tree(data_source_id: str, table):
-    root = Node(key=data_source_id, attribute=BlueprintAttribute(data_source_id, ""), uid=data_source_id)
+    root = Node(key=data_source_id, attribute=BlueprintAttribute(data_source_id, "data-source"), uid=data_source_id)
     root_package = list(filter(lambda row: row["parent_uid"] == "", table.rows))[0]
     if not root_package:
         raise Exception("Root package is not found, you need to specify root package")
@@ -84,5 +84,5 @@ def step_impl_documents(context, data_source_id: str, collection: str):
     context.documents = {}
     tree = generate_tree(data_source_id, context.table)
     tree.show_tree()
-    document_service = DocumentService(repository_provider=get_repository)
+    document_service = DocumentService(repository_provider=get_data_source)
     document_service.save(node=tree, data_source_id=data_source_id)

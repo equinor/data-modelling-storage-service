@@ -4,64 +4,17 @@
   "description": "This describes a storage recipe attribute",
   "attributes": [
     {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "name"
-    },
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
       "name": "type",
+      "attributeType": "string",
+      "type": "system/SIMOS/BlueprintAttribute",
       "default": "system/SIMOS/StorageAttribute"
     },
     {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
-      "name": "attributeType",
-      "default": "system/SIMOS/BlueprintAttribute",
-      "optional": true
-    },
-    {
-      "name": "label",
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "optional": true,
-      "default": ""
-    },
-    {
-      "name": "default",
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "optional": true,
-      "default": ""
-    },
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "description",
-      "default": "",
-      "optional": true
-    },
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "dimensions",
-      "optional": true,
-      "default": ""
-    },
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "enumType",
-      "default": "",
-      "optional": true
-    },
-    {
-      "attributeType": "boolean",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "optional",
-      "default": false,
-      "optional": "true"
+      "name": "name",
+      "default": "root",
+      "description": "Which attribute this StorageAttribute applies to."
     },
     {
       "attributeType": "boolean",
@@ -69,7 +22,31 @@
       "name": "contained",
       "optional": true,
       "default": "true",
-      "description": "WARNING: Change how the entity is stored. Changing this value will make current entities unavailable"
+      "description": "WARNING: Change how the entity is stored. Changing this value will make current entities unavailable. If True, dataType will have no effect"
+    },
+    {
+      "attributeType": "string",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "storageTypeAffinity",
+      "default": "default",
+      "enumType": "system/SIMOS/enums/StorageTypes",
+      "description": "Will be used to decide how the data will be stored"
+    },
+    {
+      "name": "label",
+      "attributeType": "string",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "optional": true,
+      "default": "",
+      "description": "Friendly name visible to user"
+    },
+    {
+      "attributeType": "string",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "description",
+      "default": "",
+      "optional": true,
+      "description": "Description for the StoreAttribute"
     }
   ],
   "storageRecipes": [],
@@ -93,13 +70,7 @@
           "required": true
         },
         {
-          "name": "enumType",
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "field": "hidden"
-        },
-        {
-          "name": "description",
+          "name": "label",
           "attributeType": "string",
           "type": "system/SIMOS/BlueprintAttribute",
           "field": "hidden"

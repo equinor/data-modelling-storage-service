@@ -3,15 +3,15 @@ from zipfile import ZipFile
 
 from api.classes.dto import DTO
 from api.core.enums import DMT
-from api.core.repository.db_client_interface import DBClientInterface
+from api.core.storage.repository_interface import RepositoryInterface
 from api.utils.logging import logger
 
 
-class ZipFileClient(DBClientInterface):
+class ZipFileClient(RepositoryInterface):
     def __init__(self, zip_file: ZipFile):
         self.zip_file = zip_file
 
-    def update(self, dto: DTO):
+    def update(self, dto: DTO, storage_recipe=None):
         dto.data.pop("_id", None)
         dto.data.pop("uid", None)
         json_data = json.dumps(dto.data)

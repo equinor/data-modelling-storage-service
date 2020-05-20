@@ -3,9 +3,8 @@ from unittest import mock
 
 from api.classes.blueprint import Blueprint
 from api.classes.dto import DTO
-from api.core.repository import Repository
-from api.core.repository.file import TemplateRepositoryFromFile
 from api.core.service.document_service import DocumentService
+from api.core.storage.repositories.file import TemplateRepositoryFromFile
 from api.utils.data_structure.compare import pretty_eq
 from api.utils.helper_functions import schemas_location
 
@@ -121,10 +120,10 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO):
+        def mock_update(dto: DTO, storage_attribute):
             doc_storage[dto.uid] = dto.data
 
-        document_repository: Repository = mock.Mock()
+        document_repository = mock.Mock()
         document_repository.get = mock_get
         document_repository.update = mock_update
 
@@ -272,10 +271,10 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO):
+        def mock_update(dto: DTO, storage_attribute):
             doc_storage[dto.uid] = dto.data
 
-        document_repository: Repository = mock.Mock()
+        document_repository = mock.Mock()
         document_repository.get = mock_get
         document_repository.update = mock_update
 

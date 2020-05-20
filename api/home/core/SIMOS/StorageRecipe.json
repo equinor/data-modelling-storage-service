@@ -6,7 +6,8 @@
     {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
-      "name": "name"
+      "name": "name",
+      "default": "default"
     },
     {
       "attributeType": "string",

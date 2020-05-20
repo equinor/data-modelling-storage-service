@@ -14,11 +14,15 @@ class CreateDataSourceRequestObject(request_object.ValidRequestObject):
         if not request_data.get("formData", None):
             invalid_req.add_error("Missing parameter", "There is no data in the request")
 
-        if not DataSourceType.has_value(request_data["formData"].get("type", "")):
-            invalid_req.add_error(
-                "Schema validation",
-                f"The data source is not a valid type. Valid types are; {[item.value for item in DataSourceType]}",
-            )
+        if not request_data["formData"].get("repositories"):
+            invalid_req.add_error("Missing parameter", "The DataSource has no repositories")
+
+        for datasource_type in [repo["type"] for repo in request_data["formData"]["repositories"].values()]:
+            if not DataSourceType.has_value(datasource_type):
+                invalid_req.add_error(
+                    "Schema validation",
+                    f"The data source is not a valid type. Valid types are; {[item.value for item in DataSourceType]}",
+                )
 
         if invalid_req.has_errors():
             return invalid_req

@@ -1,4 +1,4 @@
-from api.core.repository.repository_factory import get_repository
+from api.core.storage.internal.data_source_repository import get_data_source
 from api.core.service.document_service import DocumentService
 from api.core.shared import request_object as req
 from api.core.shared import response_object as res
@@ -46,7 +46,7 @@ class GetDocumentByPathRequestObject(req.ValidRequestObject):
 
 
 class GetDocumentByPathUseCase(uc.UseCase):
-    def __init__(self, repository_provider=get_repository):
+    def __init__(self, repository_provider=get_data_source):
         self.repository_provider = repository_provider
         self.document_service = DocumentService(repository_provider=self.repository_provider)
 

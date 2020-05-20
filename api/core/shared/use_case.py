@@ -1,4 +1,4 @@
-from api.core.repository.repository_exceptions import (
+from api.core.storage.repository_exceptions import (
     FileNotFoundException,
     EntityNotFoundException,
     InvalidDocumentNameException,

@@ -18,9 +18,9 @@ def before_all(context):
         dmt_database.drop_collection(Config.DATA_SOURCES_COLLECTION)
 
 
-def wipe_added_data_sources(context):
-    for data_source in context.data_sources.values():
-        dmt_database.drop_collection(data_source["collection"])
+def wipe_added_repositories(context):
+    for repo in context.repositories.values():
+        dmt_database.drop_collection(repo["collection"])
 
 
 def after_all(context):
@@ -38,7 +38,7 @@ def before_scenario(context, scenario):
     if "skip" in scenario.effective_tags:
         scenario.skip("Marked with @skip")
 
-    context.client = app.test_client()
+    context.repository = app.test_client()
     context.ctx = app.test_request_context()
     context.ctx.push()
 
@@ -47,7 +47,7 @@ def after_scenario(context, scenario):
     wipe_db()
     dmt_database.drop_collection(Config.DATA_SOURCES_COLLECTION)
     if "data_sources" in context:
-        wipe_added_data_sources(context)
+        wipe_added_repositories(context)
     context.ctx.pop()
 
 
