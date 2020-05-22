@@ -1,12 +1,26 @@
 {
-  "type": "mongo-db",
-  "host": "msa-dev.documents.azure.com",
-  "port": 10255,
-  "username": "msa-dev",
-  "password": "REPLACE_ME",
-  "tls": true,
+  "_id": "SSR-DataSource",
   "name": "SSR-DataSource",
-  "database": "REPLACE_ME",
-  "collection": "SSR-DataSource",
-  "_id": "SSR-DataSource"
+  "description": "A Test DataSource with Multiple Repositories",
+  "ACL": {},
+  "repositories": {
+    "mongo": {
+      "type": "mongo-db",
+      "host": "dmss-dev.documents.azure.com",
+      "port": 10255,
+      "username": "dmss-dev",
+      "password": "REPLACE_ME",
+      "tls": true,
+      "name": "SSR-DataSource",
+      "database": "production",
+      "collection": "SSR-DataSource"
+    },
+    "azure": {
+      "type": "AZURE_BLOB_STORAGE",
+      "account_name": "dmssfilestorage",
+      "account_key": "REPLACE_ME",
+      "name": "azure",
+      "collection": "dmss"
+    }
+  }
 }

@@ -1,12 +1,31 @@
 {
-  "type": "mongo-db",
-  "host": "msa-dev.documents.azure.com",
-  "port": 10255,
-  "username": "msa-dev",
-  "password": "REPLACE_ME",
-  "tls": true,
   "name": "entities",
-  "database": "REPLACE_ME",
-  "collection": "entities",
-  "_id": "entities"
+  "_id": "entities",
+  "repositories": {
+    "entities": {
+      "type": "mongo-db",
+      "host": "dmss-dev.documents.azure.com",
+      "port": 10255,
+      "username": "dmss-dev",
+      "password": "REPLACE_ME",
+      "tls": true,
+      "name": "entities",
+      "database": "production",
+      "collection": "entities"
+    },
+    "blob_storage": {
+      "type": "mongo-db",
+      "host": "dmss-dev.documents.azure.com",
+      "port": 10255,
+      "username": "dmss-dev",
+      "password": "REPLACE_ME",
+      "tls": true,
+      "name": "REPLACE_ME",
+      "database": "production",
+      "collection": "blob_storage",
+      "dataTypes": ["blob"]
+    }
+  }
 }
+
+
