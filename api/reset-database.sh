@@ -14,6 +14,6 @@ if [ "$ENVIRONMENT" = 'local' ]; then
     done
 fi
 
-sleep 10
+sleep 5
 
 flask init-application

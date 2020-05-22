@@ -13,7 +13,7 @@ Feature: Data Sources
       | entities       | db   | 27017 | maf      | maf      | false | repo1     | local    | documents      | mongo-db | default   |
       | SSR-DataSource | db   | 27017 | maf      | maf      | false | blob-repo | local    | SSR-DataSource | mongo-db | default   |
       | system         | db   | 27017 | maf      | maf      | false | system    | local    | system         | mongo-db | default   |
-    
+
   Scenario: Get single data source
     Given I access the resource url "/api/v1/data-sources/system"
     When I make a "GET" request
