@@ -26,6 +26,7 @@ class MongoDBClient(RepositoryInterface):
             tls=tls,
             connectTimeoutMS=5000,
             serverSelectionTimeoutMS=5000,
+            retryWrites=False,
         )[database]
         self.collection = collection
 
