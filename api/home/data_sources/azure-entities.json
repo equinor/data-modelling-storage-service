@@ -20,7 +20,7 @@
       "username": "dmss-dev",
       "password": "REPLACE_ME",
       "tls": true,
-      "name": "REPLACE_ME",
+      "name": "blob_storage",
       "database": "production",
       "collection": "blob_storage",
       "dataTypes": ["blob"]

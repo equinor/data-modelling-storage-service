@@ -11,7 +11,7 @@
       "username": "dmss-dev",
       "password": "REPLACE_ME",
       "tls": true,
-      "name": "SSR-DataSource",
+      "name": "mongo",
       "database": "production",
       "collection": "SSR-DataSource"
     },
