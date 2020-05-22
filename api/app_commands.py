@@ -39,7 +39,7 @@ def reset_core_packages():
 @app.cli.command()
 def drop_data_sources():
     print(f"Dropping collection data_sources")
-    dmt_database.drop_collection("data_sources")
+    dmt_database.drop_collection(f"{Config.DATA_SOURCES_COLLECTION}")
 
 
 @app.cli.command()
@@ -51,7 +51,7 @@ def import_data_source(file):
             id = document["name"]
             document["_id"] = id
             print(f"Importing {file} as data_source with id: {id}.")
-            dmt_database["data_sources"].replace_one({"_id": id}, document, upsert=True)
+            dmt_database[f"{Config.DATA_SOURCES_COLLECTION}"].replace_one({"_id": id}, document, upsert=True)
     except Exception as error:
         logger.error(f"Failed to import file {file}: {error}")
 

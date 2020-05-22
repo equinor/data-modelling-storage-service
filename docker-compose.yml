@@ -4,7 +4,7 @@ services:
   mainapi:
     build:
       context: .
-    image: mariner.azurecr.io/dmss
+    image: mariner.azurecr.io/dmss:latest
     restart: unless-stopped
     environment:
       ENVIRONMENT: azure
