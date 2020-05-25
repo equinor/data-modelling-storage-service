@@ -18,17 +18,12 @@ class Config:
     BLUEPRINT_COLLECTION = "SSR-DataSource"
     ENTITY_COLLECTION = "entities"
     DATA_SOURCES_COLLECTION = "data_sources"
-    DYNAMIC_MODELS = "dynamic_models"
     SYSTEM_COLLECTION = "system"
     CACHE_MAX_SIZE = 200
     APPLICATION_HOME = os.getenv("APPLICATION_HOME", f"{Path(__file__).parent.absolute()}/home")
     DMT_SETTINGS_FILE = f"{APPLICATION_HOME}/dmt_settings.json"
     ENTITY_SETTINGS_FILE = f"{APPLICATION_HOME}/settings.json"
     SYSTEM_FOLDERS = ["SIMOS"]
-    VERIFY_IMPORTS = os.getenv("DMT_VERIFY_IMPORTS", True)
-    PY_PROJECT_FILE = f"{pathlib.Path(__file__).parent}/../pyproject.toml"
-    with open(PY_PROJECT_FILE) as toml_file:
-        PY_PROJECT = toml.load(toml_file)
     with open(DMT_SETTINGS_FILE) as json_file:
         DMT_APPLICATION_SETTINGS = json.load(json_file)
     with open(ENTITY_SETTINGS_FILE) as json_file:

@@ -69,7 +69,7 @@
       "name": "widget",
       "description": "Widget for this property",
       "optional": true,
-      "enumType": "system/DMT/plugins/ui/edit/WidgetEnum",
+      "enumType": "apps/DMT/plugins/ui/edit/WidgetEnum",
       "default": ""
     },
     {
