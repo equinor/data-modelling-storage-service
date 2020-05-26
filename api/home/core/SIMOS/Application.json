@@ -68,17 +68,20 @@
         {
           "name": "packages",
           "type": "system/SIMOS/UiAttribute",
-          "field": "packages"
+          "field": "packages",
+          "forEachElement": false
         },
         {
           "name": "entities",
           "type": "system/SIMOS/UiAttribute",
-          "field": "packages"
+          "field": "packages",
+          "forEachElement": false
         },
         {
           "name": "models",
           "type": "system/SIMOS/UiAttribute",
-          "field": "blueprints"
+          "field": "blueprints",
+          "forEachElement": false
         }
       ]
     }

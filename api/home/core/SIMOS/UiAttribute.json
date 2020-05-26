@@ -50,6 +50,13 @@
       "default": ""
     },
     {
+      "attributeType": "boolean",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "forEachElement",
+      "optional": true,
+      "default": "true"
+    },
+    {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
       "name": "enumType",
