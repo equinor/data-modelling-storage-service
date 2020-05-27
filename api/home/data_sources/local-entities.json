@@ -12,17 +12,25 @@
       "database": "local",
       "collection": "entities"
     },
-    "blob_storage": {
-      "dataTypes": ["blob"],
+    "video_storage": {
+      "dataTypes": ["video"],
       "type": "mongo-db",
       "host": "db",
       "port": 27017,
       "username": "maf",
       "password": "maf",
       "tls": false,
-      "name": "blob_storage",
+      "name": "video_storage",
       "database": "local",
-      "collection": "blob_storage"
+      "collection": "videos"
+    },
+    "azure_blob": {
+      "dataTypes": ["blob"],
+      "type": "azure-blob-storage",
+      "account_name": "dmssfilestorage",
+      "account_key": "REPLACE_ME",
+      "name": "azure_blob",
+      "collection": "dmss"
     }
   }
 }
