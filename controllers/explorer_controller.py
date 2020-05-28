@@ -51,8 +51,8 @@ def add_to_path(data_source_id, body):
 
 def add_package(data_source_id, body):
     request_data = request.get_json()
-    document_repository = get_data_source(data_source_id)
-    use_case = AddRootPackageUseCase(document_repository=document_repository, data_source_id=data_source_id)
+    request_data["data_source_id"] = data_source_id
+    use_case = AddRootPackageUseCase()
     request_object = AddRootPackageRequestObject.from_dict(request_data)
     response = use_case.execute(request_object)
 

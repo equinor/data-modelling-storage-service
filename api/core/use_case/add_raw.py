@@ -41,5 +41,4 @@ class AddRawUseCase(uc.UseCase):
         document: DTO = DTO(uid=new_node_id, data=data)
         document_repository: DataSource = get_data_source(data_source_id)
         document_repository.add(document)
-
         return res.ResponseSuccess(new_node_id)

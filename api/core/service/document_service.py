@@ -247,16 +247,16 @@ class DocumentService:
         if not document:
             raise EntityNotFoundException(uid=document_id)
 
-        # Remove the actual document
-        self.repository_provider(data_source_id).delete(document.node_id)
-        logger.info(f"Removed document '{document.node_id}'")
-
         # Remove child references
         for child in document.traverse():
             # Only remove children if they ARE contained in model and NOT contained in storage
             if child.has_uid() and child.attribute.contained:
                 self.repository_provider(data_source_id).delete(child.uid)
                 logger.info(f"Removed child '{child.uid}'")
+
+        # Remove the actual document
+        self.repository_provider(data_source_id).delete(document.node_id)
+        logger.info(f"Removed document '{document.node_id}'")
 
     def rename_document(self, data_source_id: str, document_id: str, name: str, parent_uid: str = None):
         # Only root-packages have no parent_id
@@ -356,6 +356,9 @@ class DocumentService:
 
         if not url_safe_name(name):
             raise InvalidDocumentNameException(name)
+
+        if root.contains(name):
+            raise DuplicateFileNameException
 
         entity: Dict = CreateEntity(self.blueprint_provider, name=name, type=type, description=description).entity
 
