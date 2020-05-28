@@ -642,7 +642,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         assert pretty_eq(update_2, root.to_dict()) is None
 
-        actual = {
+        expected = {
             "_id": "1",
             "name": "New name",
             "type": "blueprint_1",
@@ -663,10 +663,10 @@ class TreenodeTestCase(unittest.TestCase):
         # reference and nested.nested.reference has uid and id generated since the tree now includes
         # nodes when attributes are missing, needed for having error nodes in the index.
 
-        actual_flat = flatten_dict(actual)
-        expected_flat = flatten_dict(root.to_dict())
+        expected_flat = flatten_dict(expected)
+        actual_flat = flatten_dict(root.to_dict())
         # less than only works on flat dictionaries.
-        assert actual_flat.items() <= expected_flat.items()
+        assert expected_flat.items() <= actual_flat.items()
 
     def test_from_dict(self):
         document_1 = {

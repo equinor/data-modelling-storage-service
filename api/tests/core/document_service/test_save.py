@@ -182,3 +182,73 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         assert flatten_dict(doc_1_after).items() <= flatten_dict(doc_storage["1"]).items()
         assert doc_storage["3"] is not None
+
+    def test_save_nested_uncontained(self):
+        repository = mock.Mock()
+
+        doc_storage = {}
+
+        doc_storage_expected = {
+            "1": {
+                "_id": "1",
+                "name": "Root",
+                "description": "I'm the root document",
+                "type": "blueprint_with_second_level_nested_uncontained_attribute",
+                "i_have_a_uncontained_attribute": {
+                    "type": "uncontained_blueprint",
+                    "name": "first",
+                    "description": "I'm the first nested document, contained",
+                    "uncontained_in_every_way": {
+                        "name": "im_a_uncontained_attribute",
+                        "type": "blueprint_2",
+                        "_id": "2",
+                    },
+                },
+            },
+            "2": {
+                "_id": "2",
+                "name": "im_a_uncontained_attribute",
+                "type": "blueprint_2",
+                "description": "I'm the second nested document, uncontained",
+            },
+        }
+
+        load_node = {
+            "_id": "1",
+            "name": "Root",
+            "description": "I'm the root document",
+            "type": "blueprint_with_second_level_nested_uncontained_attribute",
+            "i_have_a_uncontained_attribute": {
+                "type": "uncontained_blueprint",
+                "name": "first",
+                "description": "I'm the first nested document, contained",
+                "uncontained_in_every_way": {
+                    "_id": "2",
+                    "name": "im_a_uncontained_attribute",
+                    "type": "blueprint_2",
+                    "description": "I'm the second nested document, uncontained",
+                },
+            },
+        }
+
+        def mock_get(document_id: str):
+            return DTO(doc_storage[document_id])
+
+        def mock_update(dto: DTO, storage_attribute):
+            doc_storage[dto.uid] = dto.data
+            return None
+
+        repository.get = mock_get
+        repository.update = mock_update
+
+        def repository_provider(data_source_id):
+            return repository
+
+        document_service = DocumentService(
+            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+        )
+
+        node: Node = Node.from_dict(load_node, "1", blueprint_provider)
+        document_service.save(node, "testing")
+
+        assert doc_storage == doc_storage_expected

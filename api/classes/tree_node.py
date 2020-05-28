@@ -5,7 +5,7 @@ from uuid import uuid4
 from api.classes.blueprint import Blueprint
 from api.classes.blueprint_attribute import BlueprintAttribute
 from api.config import Config
-from api.core.enums import DMT
+from api.core.enums import DMT, SIMOS
 from api.utils.logging import logger
 
 
@@ -37,10 +37,15 @@ class DictExporter:
 
         return data
 
-    # Creates a "storage correct" dict from a Node. Writing references as references, and contained docs in full.
     @staticmethod
-    def to_ref_dict(node):
-        data = {"_id": node.uid}
+    def to_ref_dict(node, child_entities):
+        """
+        Rebuilds the entity as it should be stored based on the passed child entities that can be either contained
+        documents, or references.
+        """
+        data = {}
+        if node.uid:
+            data = {"_id": node.uid}
 
         # Primitive
         # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.
@@ -51,26 +56,17 @@ class DictExporter:
 
         # Complex
         for child in node.children:
-            if child.is_array():
-                # If the content of the list is not contained, i.e. references.
-                if not child.attribute_is_contained():
-                    data[child.key] = [
-                        {"_id": child.uid, "type": child.type, "name": child.name} for child in child.children
-                    ]
-                else:
-                    data[child.key] = [list_child.to_dict() for list_child in child.children]
-            else:
-                if child.not_contained():
-                    data[child.key] = {"_id": child.uid, "type": child.type, "name": child.name}
-                else:
-                    data[child.key] = child.to_dict()
+            data[child.key] = child_entities[child.key]
+
         return data
 
 
 class DictImporter:
     @classmethod
-    def from_dict(cls, entity, uid, blueprint_provider, key="", node_attribute: BlueprintAttribute = None):
-        return cls._from_dict(entity, uid, key, blueprint_provider, node_attribute)
+    def from_dict(
+        cls, entity, uid, blueprint_provider, key="", node_attribute: BlueprintAttribute = None, parent=None
+    ):
+        return cls._from_dict(entity, uid, key, blueprint_provider, node_attribute, parent=None)
 
     @classmethod
     def _from_dict(
@@ -81,6 +77,7 @@ class DictImporter:
         blueprint_provider,
         node_attribute: BlueprintAttribute = None,
         recursion_depth: int = 0,
+        parent=None,
     ):
 
         if recursion_depth >= Config.MAX_ENTITY_RECURSION_DEPTH:
@@ -98,7 +95,12 @@ class DictImporter:
             node_attribute = BlueprintAttribute(bp.name, entity["type"], bp.description)
         try:
             node = Node(
-                key=key, uid=uid, entity=entity, blueprint_provider=blueprint_provider, attribute=node_attribute
+                key=key,
+                uid=uid,
+                entity=entity,
+                blueprint_provider=blueprint_provider,
+                attribute=node_attribute,
+                parent=parent,
             )
         except KeyError as error:
             logger.exception(error)
@@ -195,9 +197,6 @@ class NodeBase:
             return None
 
         return self.parent.node_id
-
-    def is_storage_contained(self):
-        return self.uid == ""
 
     def not_contained(self):
         return not self.uid == ""
@@ -371,14 +370,16 @@ class Node(NodeBase):
         if self.type != "datasource":
             return self.blueprint_provider.get_blueprint(self.type)
 
-    def attribute_is_contained(self):
-        return self.parent.blueprint.storage_recipes[0].is_contained(self.key)
+    def attribute_is_storage_contained(self):
+        if not self.parent or self.parent.type == SIMOS.DATA_SOURCE_TYPE.value:
+            return False
+        return self.parent.blueprint.storage_recipes[0].is_contained(self.attribute.name)
 
     def to_dict(self):
         return DictExporter.to_dict(self)
 
-    def to_ref_dict(self):
-        return DictExporter.to_ref_dict(self)
+    def to_ref_dict(self, child_entites):
+        return DictExporter.to_ref_dict(self, child_entites)
 
     @property
     def name(self):
@@ -389,8 +390,8 @@ class Node(NodeBase):
         return self.attribute.attribute_type
 
     @staticmethod
-    def from_dict(entity, uid, blueprint_provider):
-        return DictImporter.from_dict(entity=entity, uid=uid, blueprint_provider=blueprint_provider)
+    def from_dict(entity, uid, blueprint_provider, node_attribute=None):
+        return DictImporter.from_dict(entity, uid, blueprint_provider, "", node_attribute)
 
     def remove(self):
         self.parent.remove_by_node_id(self.node_id)
@@ -402,14 +403,18 @@ class Node(NodeBase):
         # Replace the entire data of the node with the input dict. If it matches the blueprint...
 
     def update(self, data: Union[Dict, List]):
-        data.pop("_id", None)
+        # If it's an storageUncontained attribute, give it an ID if there is none
+        if not self.attribute_is_storage_contained() and not data.get("_id") and not self.uid:
+            # TODO: Dealing with Node uid should be done with a property setter. This is error prone
+            new_uid = str(uuid4())
+            self.entity["_id"] = new_uid
+            self.uid = new_uid
         # Modify and add for each key in posted data
         for key in data.keys():
+            if key == "_id":
+                continue
             new_data = data[key]
             attribute = self.blueprint.get_attribute_by_name(key)
-            if not attribute:
-                logger.error(f"Could not find attribute {key} in {self.uid}")
-                continue
 
             # Add/Modify primitive data
             if attribute.is_primitive():
@@ -419,7 +424,7 @@ class Node(NodeBase):
                 for index, child in enumerate(self.children):
                     if child.key == key:
                         # This means we are creating a new, non-contained document. Lists are always contained.
-                        if not child.attribute_is_contained() and child.uid == "" and not child.is_array():
+                        if not child.attribute_is_storage_contained() and child.uid == "" and not child.is_array():
                             new_node = DictImporter.from_dict(
                                 entity=new_data,
                                 uid=str(uuid4()),
@@ -465,7 +470,7 @@ class ListNode(NodeBase):
         self.entity = entity
         self.blueprint_provider = blueprint_provider
 
-    def attribute_is_contained(self):
+    def attribute_is_storage_contained(self):
         return self.blueprint.storage_recipes[0].is_contained(self.key)
 
     def to_dict(self):
@@ -491,7 +496,7 @@ class ListNode(NodeBase):
         for i, item in enumerate(data):
             # Set uid base on containment and existing(lack of) uid
             # This require the existing _id to be posted
-            uid = "" if self.attribute_is_contained() else item.get("_id", str(uuid4()))
-            self.children.append(
+            uid = "" if self.attribute_is_storage_contained() else item.get("_id", str(uuid4()))
+            self.add_child(
                 DictImporter.from_dict(entity=item, uid=uid, blueprint_provider=self.blueprint_provider, key=str(i))
             )

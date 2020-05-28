@@ -143,10 +143,10 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
             attribute_path="content",
         )
 
-        actual_1 = {"_id": "1", "content": [{"name": "complexArraysEntity", "type": "higher_rank_array"}]}
+        expected_1 = {"_id": "1", "content": [{"name": "complexArraysEntity", "type": "higher_rank_array"}]}
         # Disable Black formatting for the matrix
         # fmt: off
-        actual_2 = {
+        expected_2 = {
             "name": "complexArraysEntity",
             "type": "higher_rank_array",
             "1_dim-unfixed": [],
@@ -202,8 +202,8 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         }
         # fmt: on
 
-        assert pretty_eq(actual_1, doc_storage["1"]) is None
-        assert pretty_eq(actual_2, doc_storage[list(doc_storage)[1]]) is None
+        assert pretty_eq(expected_1, doc_storage["1"]) is None
+        assert pretty_eq(expected_2, doc_storage[list(doc_storage)[1]]) is None
 
     def test_update_complex_array(self):
 
@@ -360,7 +360,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
             },
         )
 
-        actual_1 = {
+        expected_1 = {
             "_id": "1",
             "name": "complexArraysEntity",
             "type": "higher_rank_array",
@@ -430,4 +430,4 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
             ],
         }
         # fmt: on
-        assert actual_1 == doc_storage["1"]
+        assert expected_1 == doc_storage["1"]

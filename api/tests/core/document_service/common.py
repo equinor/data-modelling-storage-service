@@ -34,6 +34,19 @@ blueprint_1 = {
     "uiRecipes": [],
 }
 
+blueprint_2 = {
+    "type": "system/SIMOS/Blueprint",
+    "name": "Blueprint 2",
+    "description": "Second blueprint",
+    "attributes": [
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
+    ],
+    "storageRecipes": [],
+    "uiRecipes": [],
+}
+
 uncontained_blueprint = {
     "type": "system/SIMOS/Blueprint",
     "name": "uncontained_blueprint",
@@ -66,17 +79,20 @@ uncontained_blueprint = {
     ],
 }
 
-blueprint_2 = {
+blueprint_with_second_level_nested_uncontained_attribute = {
     "type": "system/SIMOS/Blueprint",
-    "name": "Blueprint 2",
-    "description": "Second blueprint",
+    "name": "blueprint_with_second_level_nested_uncontained_attribute",
+    "description": "",
     "attributes": [
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
+        {
+            "attributeType": "uncontained_blueprint",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "i_have_a_uncontained_attribute",
+        },
     ],
-    "storageRecipes": [],
-    "uiRecipes": [],
 }
 
 blueprint_with_optional_attr = {
@@ -125,6 +141,8 @@ class BlueprintProvider:
             return Blueprint(DTO(blueprint_2))
         if type == "uncontained_blueprint":
             return Blueprint(DTO(uncontained_blueprint))
+        if type == "blueprint_with_second_level_nested_uncontained_attribute":
+            return Blueprint(DTO(blueprint_with_second_level_nested_uncontained_attribute))
         if type == "blueprint_with_optional_attr":
             return Blueprint(DTO(blueprint_with_optional_attr))
         if type == "blueprint_with_nested_optional_attr":

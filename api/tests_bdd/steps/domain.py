@@ -46,7 +46,7 @@ def generate_tree_from_rows(node: Node, rows):
                 uid=child_data["uid"],
                 entity=entity,
                 blueprint_provider=blueprint_provider,
-                attribute=BlueprintAttribute(child_data["name"], child_data["type"]),
+                attribute=BlueprintAttribute("content", child_data["type"]),
             )
 
             print(f"adding {child_node.node_id} to {node.node_id}")
