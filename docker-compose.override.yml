@@ -24,7 +24,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: maf
       MONGO_INITDB_ROOT_PASSWORD: maf
     volumes:
-      - mongodata:/data/db
+      - ./mongodata:/data/db
     logging:
       driver: "none"
 

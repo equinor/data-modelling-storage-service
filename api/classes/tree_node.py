@@ -82,6 +82,7 @@ class DictImporter:
         node_attribute: BlueprintAttribute = None,
         recursion_depth: int = 0,
     ):
+
         if recursion_depth >= Config.MAX_ENTITY_RECURSION_DEPTH:
             message = (
                 f"Reached maximum recursion depth while creating NodeTree ({recursion_depth}).\n"
@@ -298,6 +299,10 @@ class NodeBase:
     def has_children(self):
         return len(self.children) > 0
 
+    def contains(self, name: str):
+        keys = [child.key for child in self.children]
+        return name in keys
+
     def get_by_path(self, keys: List):
         if len(keys) == 0:
             return self
@@ -385,7 +390,7 @@ class Node(NodeBase):
 
     @staticmethod
     def from_dict(entity, uid, blueprint_provider):
-        return DictImporter.from_dict(entity, uid, blueprint_provider)
+        return DictImporter.from_dict(entity=entity, uid=uid, blueprint_provider=blueprint_provider)
 
     def remove(self):
         self.parent.remove_by_node_id(self.node_id)
