@@ -39,8 +39,9 @@ class RepositoryType(Enum):
 
 class StorageDataTypes(Enum):
     DEFAULT = "default"
-    SMALL = "small"
     LARGE = "large"
+    VERY_LARGE = "veryLarge"
+    VIDEO = "video"
     BLOB = "blob"
 
 
