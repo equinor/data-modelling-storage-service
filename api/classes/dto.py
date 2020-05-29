@@ -8,7 +8,7 @@ from uuid import uuid4
 class DTO:
     def __init__(self, data: Dict, uid: Optional[str] = None):
         if not data:
-            raise ValueError(f"Can't create a DTO from empty dict. Data was 'None'")
+            raise ValueError("Can't create a DTO from empty dict. Data was 'None'")
         self._uid = uid if uid is not None else data.get("_id", str(uuid4()))
         try:
             self._name = data["name"]

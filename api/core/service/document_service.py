@@ -52,7 +52,7 @@ def get_resolved_document(
 
     if depth <= depth_count:
         if depth_count >= 999:
-            raise RecursionError(f"Reached max-nested-depth (999). Most likely some recursive entities")
+            raise RecursionError("Reached max-nested-depth (999). Most likely some recursive entities")
         return document.data
     depth_count += 1
 

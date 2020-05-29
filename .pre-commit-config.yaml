@@ -8,14 +8,6 @@ repos:
     - id: check-json
     - id: check-yaml
 
-# Waiting for rev 3.8 to support ":="
-#- repo: https://gitlab.com/pycqa/flake8
-#  rev: 3.7.9
-#  hooks:
-#    - id: flake8
-#      args: ['--config=api/.flake8']
-#      language_version: python3.8
-
 - repo: https://github.com/ambv/black
   rev: 19.10b0
   hooks:
@@ -32,6 +24,11 @@ repos:
 
 - repo: local
   hooks:
+    - id: flake8
+      # The provided hook fails to read config file. Therefore this wrapper.
+      name: Python style checking
+      entry: sh -c "flake8"
+      language: system
     - id: safety
       name: Python vuln packages
       entry: sh -c ".venv/bin/python -m safety check"
@@ -41,4 +38,3 @@ repos:
       name: Unit Tests
       entry: sh -c ".venv/bin/python -m pytest api/tests"
       language: system
-

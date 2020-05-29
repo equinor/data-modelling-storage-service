@@ -67,7 +67,7 @@ def step_impl_contain(context):
 
 
 @then("the array at {dot_path} should be of length {length}")
-def step_impl_contain(context, dot_path, length):
+def step_impl_array_length(context, dot_path, length):
     actual = context.response_json
     target = find(actual, dot_path.split("."))
     result = len(target) == int(length)

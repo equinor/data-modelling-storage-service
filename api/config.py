@@ -1,9 +1,6 @@
 import json
 import os
-import pathlib
 from pathlib import Path
-
-import toml
 
 
 class Config:

@@ -20,7 +20,7 @@ class CreateDataSourceRequestObject(request_object.ValidRequestObject):
                 DataSourceType(type)
         except KeyError:
             invalid_req.add_error("Schema validation", "Posted datasource in missing a repository")
-        except ValueError as e:
+        except ValueError:
             invalid_req.add_error(
                 "Schema validation",
                 f"The data source is not a valid type. Valid types are; {[item.value for item in DataSourceType]}",

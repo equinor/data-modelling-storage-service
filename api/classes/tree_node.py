@@ -89,7 +89,7 @@ class DictImporter:
             logger.error(message)
             raise RecursionError(message)
 
-        # If no attribute, that means this was a "top-level" entity. We create a "fake" Attribute based on the Blueprint
+        # If no attribute, that means this was a "top-level" entity. We create an Attribute based on the Blueprint
         if not node_attribute:
             bp = blueprint_provider.get_blueprint(entity["type"])
             node_attribute = BlueprintAttribute(bp.name, entity["type"], bp.description)
@@ -131,7 +131,8 @@ class DictImporter:
                     for i, child in enumerate(children):
                         list_child_attribute = child_attribute
 
-                        # If the node is of type DMT/Package, we need to overwrite the attribute_type "Entity", and get it from the child.
+                        # If the node is of type DMT/Package, we need to override the attribute_type "Entity",
+                        # and get it from the child.
                         if node.type == DMT.PACKAGE.value and "type" in child:
                             content_attribute: BlueprintAttribute = deepcopy(child_attribute)
                             content_attribute.attribute_type = child["type"]

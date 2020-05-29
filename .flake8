@@ -1,0 +1,10 @@
+[flake8]
+; ignore = D203
+exclude =
+    .git,
+    __pycache__,
+    gen,
+    .venv,
+    venv,
+    tests
+max-line-length = 119

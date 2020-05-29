@@ -88,7 +88,7 @@ class CreateSearchQueryTestCase(unittest.TestCase):
         search_data = {
             "type": "NestedList",
             "name": "first_level",
-            "nestedList": [{"name": "second_level", "nestedList": [{"name": "third_level", "length": ["<100"]},]},],
+            "nestedList": [{"name": "second_level", "nestedList": [{"name": "third_level", "length": ["<100"]}]}],
         }
         query = build_mongo_query(blueprint_provider.get_blueprint, search_data)
 
