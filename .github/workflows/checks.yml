@@ -16,10 +16,11 @@ jobs:
         run: ./generate-api.sh
       - name: "Dev image"
         run: docker build -t devimage --target development .
-        # Bandit has some issues with exclude...
-#      - name: "Bandit"
-#        run: docker run devimage bandit -l --recursive -x tests
+      - name: "Bandit"
+        run: docker run devimage bandit --recursive -x tests api controllers
       - name: "Safety"
         run: docker run devimage safety check
       - name: "Black"
         run: docker run devimage black --check --diff api controllers app.py
+      - name: "Flake8"
+        run: docker run devimage flake8

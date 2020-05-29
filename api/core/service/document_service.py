@@ -4,6 +4,7 @@ from typing import Dict, List, Union
 from uuid import uuid4
 
 from api.classes.blueprint import Blueprint
+from api.classes.blueprint_attribute import BlueprintAttribute
 from api.classes.dto import DTO
 from api.classes.storage_recipe import StorageRecipe
 from api.classes.tree_node import ListNode, Node
@@ -51,7 +52,7 @@ def get_resolved_document(
 
     if depth <= depth_count:
         if depth_count >= 999:
-            raise RecursionError(f"Reached max-nested-depth (999). Most likely some recursive entities")
+            raise RecursionError("Reached max-nested-depth (999). Most likely some recursive entities")
         return document.data
     depth_count += 1
 
@@ -131,28 +132,39 @@ class DocumentService:
     def invalidate_cache(self):
         self.blueprint_provider.invalidate_cache()
 
-    def save(self, node: Union[Node, ListNode], data_source_id: str, repository=None, path="") -> None:
+    def save(self, node: Union[Node, ListNode], data_source_id: str, repository=None, path="") -> Dict:
+        """
+        Recursively saves a Node.
+        Digs down to the leaf child, and based on storageContained,
+        either saves the entity and returns the Reference, OR returns the entire entity.
+        """
         # If not passed a custom repository to save into, use the DocumentService's storage
         if not repository:
             repository = self.repository_provider(data_source_id)
 
-        # Update none-contained attributes
-        for child in node.children:
-            # A list node is always contained on parent. Need to check the blueprint
-            if child.is_array() and not child.attribute_is_contained():
-                # If the node is a package, we build the path string to be used by "export zip"-repository
-                if node.type == DMT.PACKAGE.value:
-                    path = f"{path}/{node.name}/" if path else f"{node.name}"
-                [self.save(x, data_source_id, repository, path) for x in child.children]
-            elif child.not_contained():
-                self.save(child, data_source_id, repository, path)
-        ref_dict = node.to_ref_dict()
-        dto = DTO(ref_dict)
-        # Expand this when adding new repositories requiring PATH
-        if isinstance(repository, ZipFileClient):
-            dto.data["__path__"] = path
+            # If the node is a package, we build the path string to be used by filesystem like repositories
+            if node.type == DMT.PACKAGE.value:
+                path = f"{path}/{node.name}/" if path else f"{node.name}"
 
-        repository.update(dto, node.get_context_storage_attribute())
+        child_entities = {}
+
+        for child in node.children:
+            if child.is_array():
+                child_entities[child.key] = [self.save(x, data_source_id, repository, path) for x in child.children]
+            else:
+                child_entities[child.key] = self.save(child, data_source_id, repository, path)
+
+        ref_dict = node.to_ref_dict(child_entities)
+
+        # If the node is not contained, and has data, save it!
+        if not node.attribute_is_storage_contained() and ref_dict:
+            dto = DTO(ref_dict)
+            # Expand this when adding new repositories requiring PATH
+            if isinstance(repository, ZipFileClient):
+                dto.data["__path__"] = path
+            repository.update(dto, node.get_context_storage_attribute())
+            return {"_id": node.uid, "type": node.type, "name": node.name}
+        return ref_dict
 
     def get_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
         try:
@@ -317,15 +329,15 @@ class DocumentService:
         if type == SIMOS.BLUEPRINT.value:
             entity["attributes"] = get_required_attributes(type=type)
 
+        new_node_id = str(uuid4()) if not parent.attribute_is_storage_contained() else ""
+        new_node_attribute = BlueprintAttribute(parent.key, type)
+        new_node = Node.from_dict(entity, new_node_id, self.blueprint_provider, new_node_attribute)
+
         if isinstance(parent, ListNode):
-            new_node_id = str(uuid4()) if not parent.attribute_is_contained() else ""
-            new_node = Node.from_dict(entity, new_node_id, self.blueprint_provider)
             new_node.key = str(len(parent.children)) if parent.is_array() else new_node.name
             parent.add_child(new_node)
         # This covers adding a new optional document (not appending to a list)
         else:
-            new_node_id = str(uuid4()) if not parent.is_storage_contained() else ""
-            new_node = Node.from_dict(entity, new_node_id, self.blueprint_provider)
             new_node.key = attribute_path.split(".")[-1]
             root.replace(parent.node_id, new_node)
 
@@ -371,10 +383,8 @@ class DocumentService:
         if duplicate_filename(parent, name):
             raise DuplicateFileNameException(data_source_id, f"{directory}/{name}")
 
-        new_node_id = str(uuid4()) if not parent.attribute_is_contained() else ""
-
+        new_node_id = str(uuid4()) if not parent.attribute_is_storage_contained() else ""
         new_node = Node.from_dict(entity, new_node_id, self.blueprint_provider)
-
         new_node.key = str(len(parent.children)) if parent.is_array() else ""
 
         parent.add_child(new_node)

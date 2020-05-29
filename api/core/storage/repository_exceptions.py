@@ -20,7 +20,8 @@ class EntityNotFoundException(RepositoryException):
 class InvalidDocumentNameException(RepositoryException):
     def __init__(self, name):
         super().__init__(
-            message=f"'{name}' is a invalid document name. Only alphanumeric, underscore, and dash are allowed characters"
+            message=f"'{name}' is a invalid document name. "
+            f"Only alphanumeric, underscore, and dash are allowed characters"
         )
 
 
@@ -43,7 +44,7 @@ class RootPackageNotFoundException(Exception):
         if self.data_source_id and self.file:
             return f"RootPackageNotFoundException, data_source: {self.data_source_id} file: {self.file}"
         else:
-            return f"RootPackageNotFoundException has been raised"
+            return "RootPackageNotFoundException has been raised"
 
 
 class FileNotFoundException(Exception):
@@ -56,7 +57,7 @@ class FileNotFoundException(Exception):
         if self.data_source_id and self.file:
             return f"FileNotFoundException, data_source: {self.data_source_id} file: {self.file}"
         else:
-            return f"FileNotFoundException has been raised"
+            return "FileNotFoundException has been raised"
 
 
 class DuplicateFileNameException(Exception):
@@ -68,4 +69,4 @@ class DuplicateFileNameException(Exception):
         if self.data_source_id and self.path:
             return f"DuplicateFileNameInPackageException, '{self.data_source_id}/{self.path}' already exists"
         else:
-            return f"DuplicateFileNameInPackageException has been raised"
+            return "DuplicateFileNameInPackageException has been raised"

@@ -50,7 +50,7 @@ class Dimension:
             return nested_list
 
         if self.dimensions == [""]:
-            raise Exception(f"This attribute is not an array!")
+            raise Exception("This attribute is not an array!")
         self.value = create_default_array_recursive(self.dimensions)
         return self.value
 

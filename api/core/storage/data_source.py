@@ -60,7 +60,10 @@ class DataSource:
         )
 
     def get(self, uid: str) -> DTO:
-        repo = self._get_documents_repository(uid)
+        try:
+            repo = self._get_documents_repository(uid)
+        except EntityNotFoundException:
+            raise EntityNotFoundException(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
         try:
             result = repo.get(uid)
             return DTO(result)
@@ -88,6 +91,7 @@ class DataSource:
         except EntityNotFoundException:
             repo = self._get_repo_from_storage_attribute(storage_attribute)
             self.insert_lookup(DocumentLookUp(document.uid, repo.name, document.uid, "", document.type))
+
         if (
             not document.name == document.data["name"]
             or not document.type == document.data["type"]
