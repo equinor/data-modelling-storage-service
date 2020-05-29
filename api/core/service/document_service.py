@@ -8,7 +8,7 @@ from api.classes.blueprint_attribute import BlueprintAttribute
 from api.classes.dto import DTO
 from api.classes.storage_recipe import StorageRecipe
 from api.classes.tree_node import ListNode, Node
-from api.core.enums import DMT, SIMOS
+from api.core.enums import DMT, REQUIRED_ATTRIBUTES, SIMOS
 from api.core.storage.data_source import DataSource
 from api.core.storage.repositories.mongo import MongoDBClient
 from api.core.storage.repositories.zip import ZipFileClient
@@ -17,6 +17,7 @@ from api.core.storage.repository_exceptions import (
     EntityNotFoundException,
     FileNotFoundException,
     InvalidDocumentNameException,
+    InvalidEntityException,
     RepositoryException,
 )
 from api.core.use_case.utils.build_complex_search import build_mongo_query
@@ -292,6 +293,12 @@ class DocumentService:
         return {"uid": target_node.node_id}
 
     def update_document(self, data_source_id: str, document_id: str, data: dict, attribute_path: str = None):
+        for attr in REQUIRED_ATTRIBUTES:
+            if not data.get(attr):
+                raise InvalidEntityException(
+                    f"Tried to update with missing required attribute '{attr}'. '{REQUIRED_ATTRIBUTES}' are required"
+                )
+
         root: Node = self.get_by_uid(data_source_id, document_id)
         if not root:
             raise EntityNotFoundException(uid=document_id)

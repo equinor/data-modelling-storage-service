@@ -5,7 +5,7 @@ from uuid import uuid4
 from api.classes.blueprint import Blueprint
 from api.classes.blueprint_attribute import BlueprintAttribute
 from api.config import Config
-from api.core.enums import DMT, SIMOS
+from api.core.enums import DMT, REQUIRED_ATTRIBUTES, SIMOS
 from api.utils.logging import logger
 
 
@@ -407,6 +407,7 @@ class Node(NodeBase):
         # If it's an storageUncontained attribute, give it an ID if there is none
         if not self.attribute_is_storage_contained() and not data.get("_id") and not self.uid:
             # TODO: Dealing with Node uid should be done with a property setter. This is error prone
+            # TODO: Same for required props. 'type' and 'name'. Should throw error if unset in node.entity
             new_uid = str(uuid4())
             self.entity["_id"] = new_uid
             self.uid = new_uid
@@ -416,6 +417,8 @@ class Node(NodeBase):
                 continue
             new_data = data[key]
             attribute = self.blueprint.get_attribute_by_name(key)
+            if not attribute:
+                continue
 
             # Add/Modify primitive data
             if attribute.is_primitive():
@@ -438,8 +441,12 @@ class Node(NodeBase):
                         else:
                             child.update(new_data)
 
-        # Remove for every key in blueprint not in data
-        removed_attributes = [attr for attr in self.blueprint.attributes if attr.name not in data]
+        # Remove for every key in blueprint not in data or is a required attribute
+        removed_attributes = [
+            attr
+            for attr in self.blueprint.attributes
+            if attr.name not in data and attr.name not in REQUIRED_ATTRIBUTES
+        ]
         for attribute in removed_attributes:
             # Pop primitive data
             if attribute.is_primitive():
