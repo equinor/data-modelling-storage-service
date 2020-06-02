@@ -17,6 +17,11 @@ class EntityNotFoundException(RepositoryException):
         super().__init__(message=f"The entity, with id {uid} is not found")
 
 
+class InvalidEntityException(RepositoryException):
+    def __init__(self, message):
+        super().__init__(message=message)
+
+
 class InvalidDocumentNameException(RepositoryException):
     def __init__(self, name):
         super().__init__(

@@ -24,7 +24,7 @@
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
       "enumType": "system/SIMOS/enums/ActionTypes",
-      "default": "separateResultFile",
+      "default": "resultInEntity",
       "optional": true,
       "description": "The type of the action."
     },

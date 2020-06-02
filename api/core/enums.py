@@ -2,6 +2,8 @@ from enum import auto, Enum
 
 PRIMITIVES = {"string", "number", "integer", "boolean"}
 
+REQUIRED_ATTRIBUTES = ("name", "type")
+
 
 class PrimitiveDataTypes(Enum):
     STR = "string"
