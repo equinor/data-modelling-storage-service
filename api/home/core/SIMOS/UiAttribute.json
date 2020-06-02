@@ -52,6 +52,13 @@
     {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
+      "name": "arrayField",
+      "optional": true,
+      "default": ""
+    },
+    {
+      "attributeType": "string",
+      "type": "system/SIMOS/BlueprintAttribute",
       "name": "enumType",
       "optional": true,
       "default": ""

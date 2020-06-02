@@ -1,4 +1,4 @@
-{
+  {
   "type": "system/SIMOS/Blueprint",
   "name": "Application",
   "description": "This describes an application",
@@ -68,17 +68,17 @@
         {
           "name": "packages",
           "type": "system/SIMOS/UiAttribute",
-          "field": "packages"
+          "arrayField": "packages"
         },
         {
           "name": "entities",
           "type": "system/SIMOS/UiAttribute",
-          "field": "packages"
+          "arrayField": "packages"
         },
         {
           "name": "models",
           "type": "system/SIMOS/UiAttribute",
-          "field": "blueprints"
+          "arrayField": "blueprints"
         }
       ]
     }
