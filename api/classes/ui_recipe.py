@@ -17,12 +17,14 @@ class RecipeAttribute:
         name: str,
         is_contained: bool,
         field: str = None,
+        array_field: str = None,
         collapsible: bool = None,
         ui_recipe: str = None,
         mapping: str = None,
     ):
         self.name = name
         self.is_contained = is_contained
+        self.array_field = array_field
         self.field = field
         self.collapsible = collapsible
         self.ui_recipe = ui_recipe
@@ -32,6 +34,8 @@ class RecipeAttribute:
         result = {"name": self.name, "contained": self.is_contained}
         if self.field:
             result["field"] = self.field
+        if self.array_field:
+            result["arrayField"] = self.array_field
         if self.collapsible:
             result["collapsible"] = self.collapsible
         if self.ui_recipe:

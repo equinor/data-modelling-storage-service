@@ -2,7 +2,7 @@ from typing import Dict, List
 
 from api.classes.blueprint_attribute import BlueprintAttribute
 from api.classes.dto import DTO
-from api.classes.recipe import DefaultRecipe, Recipe, RecipeAttribute
+from api.classes.ui_recipe import DefaultRecipe, Recipe, RecipeAttribute
 from api.classes.storage_recipe import DefaultStorageRecipe, StorageRecipe
 from api.core.enums import PRIMITIVES
 
@@ -26,7 +26,8 @@ def get_ui_recipe(recipes: List[Dict]):
                 RecipeAttribute(
                     name=attr["name"],
                     is_contained=attr.get("contained", True),
-                    field=attr.get("field"),
+                    array_field=attr.get("arrayField", None),
+                    field=attr.get("field", None),
                     collapsible=attr.get("collapsible", None),
                     ui_recipe=attr.get("uiRecipe", None),
                     mapping=attr.get("mapping", None),
