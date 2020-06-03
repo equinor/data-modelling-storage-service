@@ -22,6 +22,7 @@ Add document
 
 ### Example
 
+* Bearer (JWT) Authentication (jwt):
 ```python
 from __future__ import print_function
 import time
@@ -34,9 +35,18 @@ configuration = dmss_api.Configuration(
     host = "http://0.0.0.0:8000/api/v1"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization (JWT): jwt
+configuration = dmss_api.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
 
 # Enter a context with an instance of the API client
-with dmss_api.ApiClient() as api_client:
+with dmss_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = dmss_api.ExplorerApi(api_client)
     data_source_id = 'data_source_id_example' # str | The data source ID
@@ -63,7 +73,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[jwt](../README.md#jwt)
 
 ### HTTP request headers
 
@@ -84,6 +94,7 @@ Add package
 
 ### Example
 
+* Bearer (JWT) Authentication (jwt):
 ```python
 from __future__ import print_function
 import time
@@ -96,9 +107,18 @@ configuration = dmss_api.Configuration(
     host = "http://0.0.0.0:8000/api/v1"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization (JWT): jwt
+configuration = dmss_api.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
 
 # Enter a context with an instance of the API client
-with dmss_api.ApiClient() as api_client:
+with dmss_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = dmss_api.ExplorerApi(api_client)
     data_source_id = 'data_source_id_example' # str | The data source ID
@@ -125,7 +145,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[jwt](../README.md#jwt)
 
 ### HTTP request headers
 
@@ -146,6 +166,7 @@ Add raw document
 
 ### Example
 
+* Bearer (JWT) Authentication (jwt):
 ```python
 from __future__ import print_function
 import time
@@ -158,9 +179,18 @@ configuration = dmss_api.Configuration(
     host = "http://0.0.0.0:8000/api/v1"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization (JWT): jwt
+configuration = dmss_api.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
 
 # Enter a context with an instance of the API client
-with dmss_api.ApiClient() as api_client:
+with dmss_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = dmss_api.ExplorerApi(api_client)
     data_source_id = 'data_source_id_example' # str | The data source ID
@@ -187,7 +217,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[jwt](../README.md#jwt)
 
 ### HTTP request headers
 
@@ -208,6 +238,7 @@ Add document to parent
 
 ### Example
 
+* Bearer (JWT) Authentication (jwt):
 ```python
 from __future__ import print_function
 import time
@@ -220,9 +251,18 @@ configuration = dmss_api.Configuration(
     host = "http://0.0.0.0:8000/api/v1"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization (JWT): jwt
+configuration = dmss_api.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
 
 # Enter a context with an instance of the API client
-with dmss_api.ApiClient() as api_client:
+with dmss_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = dmss_api.ExplorerApi(api_client)
     data_source_id = 'data_source_id_example' # str | The data source ID
@@ -249,7 +289,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[jwt](../README.md#jwt)
 
 ### HTTP request headers
 
@@ -270,6 +310,7 @@ Add document to path
 
 ### Example
 
+* Bearer (JWT) Authentication (jwt):
 ```python
 from __future__ import print_function
 import time
@@ -282,9 +323,18 @@ configuration = dmss_api.Configuration(
     host = "http://0.0.0.0:8000/api/v1"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization (JWT): jwt
+configuration = dmss_api.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
 
 # Enter a context with an instance of the API client
-with dmss_api.ApiClient() as api_client:
+with dmss_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = dmss_api.ExplorerApi(api_client)
     data_source_id = 'data_source_id_example' # str | The data source ID
@@ -311,7 +361,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[jwt](../README.md#jwt)
 
 ### HTTP request headers
 
@@ -332,6 +382,7 @@ Move document
 
 ### Example
 
+* Bearer (JWT) Authentication (jwt):
 ```python
 from __future__ import print_function
 import time
@@ -344,9 +395,18 @@ configuration = dmss_api.Configuration(
     host = "http://0.0.0.0:8000/api/v1"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization (JWT): jwt
+configuration = dmss_api.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
 
 # Enter a context with an instance of the API client
-with dmss_api.ApiClient() as api_client:
+with dmss_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = dmss_api.ExplorerApi(api_client)
     data_source_id = 'data_source_id_example' # str | The data source ID
@@ -373,7 +433,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[jwt](../README.md#jwt)
 
 ### HTTP request headers
 
@@ -394,6 +454,7 @@ Remove document
 
 ### Example
 
+* Bearer (JWT) Authentication (jwt):
 ```python
 from __future__ import print_function
 import time
@@ -406,9 +467,18 @@ configuration = dmss_api.Configuration(
     host = "http://0.0.0.0:8000/api/v1"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization (JWT): jwt
+configuration = dmss_api.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
 
 # Enter a context with an instance of the API client
-with dmss_api.ApiClient() as api_client:
+with dmss_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = dmss_api.ExplorerApi(api_client)
     data_source_id = 'data_source_id_example' # str | The data source ID
@@ -435,7 +505,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[jwt](../README.md#jwt)
 
 ### HTTP request headers
 
@@ -456,6 +526,7 @@ Remove document by path
 
 ### Example
 
+* Bearer (JWT) Authentication (jwt):
 ```python
 from __future__ import print_function
 import time
@@ -468,9 +539,18 @@ configuration = dmss_api.Configuration(
     host = "http://0.0.0.0:8000/api/v1"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization (JWT): jwt
+configuration = dmss_api.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
 
 # Enter a context with an instance of the API client
-with dmss_api.ApiClient() as api_client:
+with dmss_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = dmss_api.ExplorerApi(api_client)
     data_source_id = 'data_source_id_example' # str | The data source ID
@@ -497,7 +577,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[jwt](../README.md#jwt)
 
 ### HTTP request headers
 
@@ -518,6 +598,7 @@ Rename document
 
 ### Example
 
+* Bearer (JWT) Authentication (jwt):
 ```python
 from __future__ import print_function
 import time
@@ -530,9 +611,18 @@ configuration = dmss_api.Configuration(
     host = "http://0.0.0.0:8000/api/v1"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization (JWT): jwt
+configuration = dmss_api.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
 
 # Enter a context with an instance of the API client
-with dmss_api.ApiClient() as api_client:
+with dmss_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = dmss_api.ExplorerApi(api_client)
     data_source_id = 'data_source_id_example' # str | The data source ID
@@ -559,7 +649,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[jwt](../README.md#jwt)
 
 ### HTTP request headers
 

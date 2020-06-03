@@ -41,22 +41,28 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_document(data_source_id, request_body, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param dict(str, object) request_body: Object containing all info for a document (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param request_body: Object containing all info for a document (required)
+        :type request_body: dict(str, object)
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: str
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: str
         """
         kwargs['_return_http_data_only'] = True
         return self.add_document_with_http_info(data_source_id, request_body, **kwargs)  # noqa: E501
@@ -66,24 +72,31 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_document_with_http_info(data_source_id, request_body, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param dict(str, object) request_body: Object containing all info for a document (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param request_body: Object containing all info for a document (required)
+        :type request_body: dict(str, object)
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(str, status_code(int), headers(HTTPHeaderDict))
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(str, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -143,7 +156,7 @@ class ExplorerApi(object):
             ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = []  # noqa: E501
+        auth_settings = ['jwt']  # noqa: E501
 
         return self.api_client.call_api(
             '/explorer/{dataSourceId}/add-document', 'POST',
@@ -166,22 +179,28 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_package(data_source_id, request_body, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param dict(str, object) request_body: Object containing all info for a document (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param request_body: Object containing all info for a document (required)
+        :type request_body: dict(str, object)
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: dict(str, object)
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: dict(str, object)
         """
         kwargs['_return_http_data_only'] = True
         return self.add_package_with_http_info(data_source_id, request_body, **kwargs)  # noqa: E501
@@ -191,24 +210,31 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_package_with_http_info(data_source_id, request_body, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param dict(str, object) request_body: Object containing all info for a document (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param request_body: Object containing all info for a document (required)
+        :type request_body: dict(str, object)
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(dict(str, object), status_code(int), headers(HTTPHeaderDict))
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(dict(str, object), status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -268,7 +294,7 @@ class ExplorerApi(object):
             ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = []  # noqa: E501
+        auth_settings = ['jwt']  # noqa: E501
 
         return self.api_client.call_api(
             '/explorer/{dataSourceId}/add-package', 'POST',
@@ -291,22 +317,28 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_raw(data_source_id, request_body, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param dict(str, object) request_body: Object containing all info for a document (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param request_body: Object containing all info for a document (required)
+        :type request_body: dict(str, object)
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: str
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: str
         """
         kwargs['_return_http_data_only'] = True
         return self.add_raw_with_http_info(data_source_id, request_body, **kwargs)  # noqa: E501
@@ -316,24 +348,31 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_raw_with_http_info(data_source_id, request_body, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param dict(str, object) request_body: Object containing all info for a document (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param request_body: Object containing all info for a document (required)
+        :type request_body: dict(str, object)
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(str, status_code(int), headers(HTTPHeaderDict))
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(str, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -393,7 +432,7 @@ class ExplorerApi(object):
             ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = []  # noqa: E501
+        auth_settings = ['jwt']  # noqa: E501
 
         return self.api_client.call_api(
             '/explorer/{dataSourceId}/add-raw', 'POST',
@@ -416,22 +455,28 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_to_parent(data_source_id, inline_object, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param InlineObject inline_object: (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param inline_object: (required)
+        :type inline_object: InlineObject
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: InlineResponse2001
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: InlineResponse2001
         """
         kwargs['_return_http_data_only'] = True
         return self.add_to_parent_with_http_info(data_source_id, inline_object, **kwargs)  # noqa: E501
@@ -441,24 +486,31 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_to_parent_with_http_info(data_source_id, inline_object, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param InlineObject inline_object: (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param inline_object: (required)
+        :type inline_object: InlineObject
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(InlineResponse2001, status_code(int), headers(HTTPHeaderDict))
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(InlineResponse2001, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -518,7 +570,7 @@ class ExplorerApi(object):
             ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = []  # noqa: E501
+        auth_settings = ['jwt']  # noqa: E501
 
         return self.api_client.call_api(
             '/explorer/{dataSourceId}/add-to-parent', 'POST',
@@ -541,22 +593,28 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_to_path(data_source_id, request_body, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param dict(str, object) request_body: Object containing all info for a document (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param request_body: Object containing all info for a document (required)
+        :type request_body: dict(str, object)
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: dict(str, object)
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: dict(str, object)
         """
         kwargs['_return_http_data_only'] = True
         return self.add_to_path_with_http_info(data_source_id, request_body, **kwargs)  # noqa: E501
@@ -566,24 +624,31 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_to_path_with_http_info(data_source_id, request_body, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param dict(str, object) request_body: Object containing all info for a document (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param request_body: Object containing all info for a document (required)
+        :type request_body: dict(str, object)
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(dict(str, object), status_code(int), headers(HTTPHeaderDict))
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(dict(str, object), status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -643,7 +708,7 @@ class ExplorerApi(object):
             ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = []  # noqa: E501
+        auth_settings = ['jwt']  # noqa: E501
 
         return self.api_client.call_api(
             '/explorer/{dataSourceId}/add-to-path', 'POST',
@@ -666,22 +731,28 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.move(data_source_id, request_body, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param dict(str, object) request_body: Object containing all info for a document (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param request_body: Object containing all info for a document (required)
+        :type request_body: dict(str, object)
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: dict(str, object)
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: dict(str, object)
         """
         kwargs['_return_http_data_only'] = True
         return self.move_with_http_info(data_source_id, request_body, **kwargs)  # noqa: E501
@@ -691,24 +762,31 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.move_with_http_info(data_source_id, request_body, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param dict(str, object) request_body: Object containing all info for a document (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param request_body: Object containing all info for a document (required)
+        :type request_body: dict(str, object)
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(dict(str, object), status_code(int), headers(HTTPHeaderDict))
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(dict(str, object), status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -768,7 +846,7 @@ class ExplorerApi(object):
             ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = []  # noqa: E501
+        auth_settings = ['jwt']  # noqa: E501
 
         return self.api_client.call_api(
             '/explorer/{dataSourceId}/move', 'PUT',
@@ -791,22 +869,28 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.remove(data_source_id, inline_object1, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param InlineObject1 inline_object1: (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param inline_object1: (required)
+        :type inline_object1: InlineObject1
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: object
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: object
         """
         kwargs['_return_http_data_only'] = True
         return self.remove_with_http_info(data_source_id, inline_object1, **kwargs)  # noqa: E501
@@ -816,24 +900,31 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.remove_with_http_info(data_source_id, inline_object1, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param InlineObject1 inline_object1: (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param inline_object1: (required)
+        :type inline_object1: InlineObject1
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(object, status_code(int), headers(HTTPHeaderDict))
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(object, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -893,7 +984,7 @@ class ExplorerApi(object):
             ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = []  # noqa: E501
+        auth_settings = ['jwt']  # noqa: E501
 
         return self.api_client.call_api(
             '/explorer/{dataSourceId}/remove', 'POST',
@@ -916,22 +1007,28 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.remove_by_path(data_source_id, inline_object2, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param InlineObject2 inline_object2: (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param inline_object2: (required)
+        :type inline_object2: InlineObject2
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: object
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: object
         """
         kwargs['_return_http_data_only'] = True
         return self.remove_by_path_with_http_info(data_source_id, inline_object2, **kwargs)  # noqa: E501
@@ -941,24 +1038,31 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.remove_by_path_with_http_info(data_source_id, inline_object2, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param InlineObject2 inline_object2: (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param inline_object2: (required)
+        :type inline_object2: InlineObject2
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(object, status_code(int), headers(HTTPHeaderDict))
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(object, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1018,7 +1122,7 @@ class ExplorerApi(object):
             ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = []  # noqa: E501
+        auth_settings = ['jwt']  # noqa: E501
 
         return self.api_client.call_api(
             '/explorer/{dataSourceId}/remove-by-path', 'POST',
@@ -1041,22 +1145,28 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.rename(data_source_id, inline_object3, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param InlineObject3 inline_object3: (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param inline_object3: (required)
+        :type inline_object3: InlineObject3
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: dict(str, object)
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: dict(str, object)
         """
         kwargs['_return_http_data_only'] = True
         return self.rename_with_http_info(data_source_id, inline_object3, **kwargs)  # noqa: E501
@@ -1066,24 +1176,31 @@ class ExplorerApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.rename_with_http_info(data_source_id, inline_object3, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param InlineObject3 inline_object3: (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param inline_object3: (required)
+        :type inline_object3: InlineObject3
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(dict(str, object), status_code(int), headers(HTTPHeaderDict))
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(dict(str, object), status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1143,7 +1260,7 @@ class ExplorerApi(object):
             ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = []  # noqa: E501
+        auth_settings = ['jwt']  # noqa: E501
 
         return self.api_client.call_api(
             '/explorer/{dataSourceId}/rename', 'PUT',

@@ -67,7 +67,7 @@ class InlineObject2(object):
 
 
         :param directory: The directory of this InlineObject2.  # noqa: E501
-        :type: str
+        :type directory: str
         """
         if self.local_vars_configuration.client_side_validation and directory is None:  # noqa: E501
             raise ValueError("Invalid value for `directory`, must not be `None`")  # noqa: E501

@@ -4,6 +4,10 @@ from pathlib import Path
 
 
 class Config:
+    AUTH_ENABLED = os.getenv("AUTH_ENABLED", "0") in ("1", "True", "true")
+    AUTH_SECRET = os.getenv("AUTH_SECRET")
+    AUTH_JWT_AUDIENCE = os.getenv("AUTH_JWT_AUDIENCE", "97a6b5bd-63fb-42c6-bb75-7e5de2394ba0")
+    AUTH_JWK_URL = os.getenv("AUTH_JWK_URL", "https://login.microsoftonline.com/common/discovery/v2.0/keys")
     MONGO_USERNAME = os.getenv("MONGO_INITDB_ROOT_USERNAME", "maf")
     MONGO_PASSWORD = os.getenv("MONGO_INITDB_ROOT_PASSWORD", "maf")
     MONGO_URI = os.getenv("MONGO_AZURE_URI", "")

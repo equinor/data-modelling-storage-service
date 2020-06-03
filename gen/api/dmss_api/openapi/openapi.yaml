@@ -5,6 +5,8 @@ info:
   version: 0.1.0
 servers:
 - url: http://0.0.0.0:8000/api/v1
+security:
+- jwt: []
 tags:
 - description: Packages
   name: package
@@ -701,3 +703,9 @@ components:
       required:
       - type
       type: object
+  securitySchemes:
+    jwt:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: api.utils.authentication.decode_jwt

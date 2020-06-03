@@ -79,7 +79,7 @@ class InlineObject(object):
 
 
         :param name: The name of this InlineObject.  # noqa: E501
-        :type: str
+        :type name: str
         """
         if self.local_vars_configuration.client_side_validation and name is None:  # noqa: E501
             raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
@@ -102,7 +102,7 @@ class InlineObject(object):
 
 
         :param parent_id: The parent_id of this InlineObject.  # noqa: E501
-        :type: str
+        :type parent_id: str
         """
         if self.local_vars_configuration.client_side_validation and parent_id is None:  # noqa: E501
             raise ValueError("Invalid value for `parent_id`, must not be `None`")  # noqa: E501
@@ -125,7 +125,7 @@ class InlineObject(object):
 
 
         :param type: The type of this InlineObject.  # noqa: E501
-        :type: str
+        :type type: str
         """
         if self.local_vars_configuration.client_side_validation and type is None:  # noqa: E501
             raise ValueError("Invalid value for `type`, must not be `None`")  # noqa: E501
@@ -148,7 +148,7 @@ class InlineObject(object):
 
 
         :param attribute: The attribute of this InlineObject.  # noqa: E501
-        :type: str
+        :type attribute: str
         """
         if self.local_vars_configuration.client_side_validation and attribute is None:  # noqa: E501
             raise ValueError("Invalid value for `attribute`, must not be `None`")  # noqa: E501

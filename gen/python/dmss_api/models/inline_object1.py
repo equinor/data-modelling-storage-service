@@ -71,7 +71,7 @@ class InlineObject1(object):
 
 
         :param parent_id: The parent_id of this InlineObject1.  # noqa: E501
-        :type: str
+        :type parent_id: str
         """
 
         self._parent_id = parent_id
@@ -92,7 +92,7 @@ class InlineObject1(object):
 
 
         :param document_id: The document_id of this InlineObject1.  # noqa: E501
-        :type: str
+        :type document_id: str
         """
         if self.local_vars_configuration.client_side_validation and document_id is None:  # noqa: E501
             raise ValueError("Invalid value for `document_id`, must not be `None`")  # noqa: E501

@@ -7,6 +7,11 @@ class RepositoryException(Exception):
         return repr(self.message)
 
 
+class AuthenticationException(RepositoryException):
+    def __init__(self, message):
+        super().__init__(message=message)
+
+
 class EntityAlreadyExistsException(RepositoryException):
     def __init__(self, document_id):
         super().__init__(message=f"The document, with id {document_id} already exists")

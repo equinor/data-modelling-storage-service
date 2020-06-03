@@ -58,6 +58,15 @@ configuration = dmss_api.Configuration(
     host = "http://0.0.0.0:8000/api/v1"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization (JWT): jwt
+configuration = dmss_api.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
 
 
 # Enter a context with an instance of the API client
@@ -113,7 +122,11 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Authorization
 
- All endpoints do not require authorization.
+
+## jwt
+
+- **Type**: Bearer authentication (JWT)
+
 
 ## Author
 

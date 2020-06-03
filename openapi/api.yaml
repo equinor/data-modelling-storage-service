@@ -16,6 +16,10 @@ tags:
     description: Virtual file system
   - name: datasource
     description: Data sources
+
+# Enables authentication for all paths
+security:
+      - jwt: []
 paths:
   /data-sources:
     get:
@@ -537,6 +541,12 @@ paths:
               schema:
                 type: string
 components:
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: api.utils.authentication.decode_jwt
   requestBodies:
     DocumentBody:
       required: true

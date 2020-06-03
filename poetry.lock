@@ -128,6 +128,14 @@ d = ["aiohttp (>=3.3.2)", "aiohttp-cors"]
 
 [[package]]
 category = "main"
+description = "Extensible memoizing collections and decorators"
+name = "cachetools"
+optional = false
+python-versions = "~=3.5"
+version = "4.1.0"
+
+[[package]]
+category = "main"
 description = "Python package for providing Mozilla's CA Bundle."
 name = "certifi"
 optional = false
@@ -667,6 +675,19 @@ version = "2.4.1"
 
 [[package]]
 category = "main"
+description = "JSON Web Token implementation in Python"
+name = "pyjwt"
+optional = false
+python-versions = "*"
+version = "1.7.1"
+
+[package.extras]
+crypto = ["cryptography (>=1.4)"]
+flake8 = ["flake8", "flake8-import-order", "pep8-naming"]
+test = ["pytest (>=4.0.1,<5.0.0)", "pytest-cov (>=2.6.0,<3.0.0)", "pytest-runner (>=4.2,<5.0.0)"]
+
+[[package]]
+category = "main"
 description = "Python driver for MongoDB <http://www.mongodb.org>"
 name = "pymongo"
 optional = false
@@ -960,7 +981,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "110d1850ff9033c9d6fc6d0d21257889561da71d73d13fa980d776141e2a11f2"
+content-hash = "96e7621f7a08c51540ca769fa2b3d5d6239b00e0a98e6ddc7f99f2f708193ad4"
 python-versions = "3.8.*"
 
 [metadata.files]
@@ -1003,6 +1024,10 @@ behave = [
 black = [
     {file = "black-19.10b0-py36-none-any.whl", hash = "sha256:1b30e59be925fafc1ee4565e5e08abef6b03fe455102883820fe5ee2e4734e0b"},
     {file = "black-19.10b0.tar.gz", hash = "sha256:c2edb73a08e9e0e6f65a0e6af18b059b8b1cdd5bef997d7a0b181df93dc81539"},
+]
+cachetools = [
+    {file = "cachetools-4.1.0-py3-none-any.whl", hash = "sha256:de5d88f87781602201cde465d3afe837546663b168e8b39df67411b0bf10cefc"},
+    {file = "cachetools-4.1.0.tar.gz", hash = "sha256:1d057645db16ca7fe1f3bd953558897603d6f0b9c51ed9d11eb4d071ec4e2aab"},
 ]
 certifi = [
     {file = "certifi-2020.4.5.1-py2.py3-none-any.whl", hash = "sha256:1d987a998c75633c40847cc966fcf5904906c920a7f17ef374f5aa4282abd304"},
@@ -1272,6 +1297,10 @@ pyflakes = [
 pygments = [
     {file = "Pygments-2.4.1-py2.py3-none-any.whl", hash = "sha256:36586500a94cd97f8c2c19d251cdb78868d1a822e0e491bfc1d811766aedb772"},
     {file = "Pygments-2.4.1.tar.gz", hash = "sha256:b437bc0d04dc36f1f5b3592985b3e0a3d0af46b7c39199231706d19a4ee63344"},
+]
+pyjwt = [
+    {file = "PyJWT-1.7.1-py2.py3-none-any.whl", hash = "sha256:5c6eca3c2940464d106b99ba83b00c6add741c9becaec087fb7ccdefea71350e"},
+    {file = "PyJWT-1.7.1.tar.gz", hash = "sha256:8d59a976fb773f3e6a39c85636357c4f0e242707394cadadd9814f5cbaa20e96"},
 ]
 pymongo = [
     {file = "pymongo-3.10.1-cp27-cp27m-macosx_10_14_intel.whl", hash = "sha256:a732838c78554c1257ff2492f5c8c4c7312d0aecd7f732149e255f3749edd5ee"},

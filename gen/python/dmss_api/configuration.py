@@ -70,6 +70,7 @@ class Configuration(object):
       when the OpenAPI document validation rules do not match the actual API data
       received by the server.
 
+    :Example:
     """
 
     _default = None
@@ -343,6 +344,14 @@ class Configuration(object):
         :return: The Auth Settings information dict.
         """
         auth = {}
+        if self.access_token is not None:
+            auth['jwt'] = {
+                'type': 'bearer',
+                'in': 'header',
+                'format': 'JWT',
+                'key': 'Authorization',
+                'value': 'Bearer ' + self.access_token
+            }
         return auth
 
     def to_debug_report(self):

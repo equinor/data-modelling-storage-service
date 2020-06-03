@@ -67,7 +67,7 @@ class InlineObject4(object):
 
 
         :param type: The type of this InlineObject4.  # noqa: E501
-        :type: str
+        :type type: str
         """
         if self.local_vars_configuration.client_side_validation and type is None:  # noqa: E501
             raise ValueError("Invalid value for `type`, must not be `None`")  # noqa: E501

@@ -41,22 +41,28 @@ class SearchApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.search_entities(data_source_id, inline_object4, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param InlineObject4 inline_object4: (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param inline_object4: (required)
+        :type inline_object4: InlineObject4
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: dict(str, object)
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: dict(str, object)
         """
         kwargs['_return_http_data_only'] = True
         return self.search_entities_with_http_info(data_source_id, inline_object4, **kwargs)  # noqa: E501
@@ -66,24 +72,31 @@ class SearchApi(object):
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.search_entities_with_http_info(data_source_id, inline_object4, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str data_source_id: The data source ID (required)
-        :param InlineObject4 inline_object4: (required)
+        :param data_source_id: The data source ID (required)
+        :type data_source_id: str
+        :param inline_object4: (required)
+        :type inline_object4: InlineObject4
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(dict(str, object), status_code(int), headers(HTTPHeaderDict))
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(dict(str, object), status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -143,7 +156,7 @@ class SearchApi(object):
             ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = []  # noqa: E501
+        auth_settings = ['jwt']  # noqa: E501
 
         return self.api_client.call_api(
             '/search/{dataSourceId}', 'POST',
