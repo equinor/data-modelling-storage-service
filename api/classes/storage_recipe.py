@@ -39,9 +39,12 @@ class StorageAttribute:
 
 
 class StorageRecipe:
-    def __init__(self, name: str, attributes: List[Dict] = None):
+    def __init__(
+        self, name: str, attributes: List[Dict] = None, storageAffinity: str = StorageDataTypes.DEFAULT.value
+    ):
         attributes = attributes if attributes else []
         self.name = name
+        self.storage_affinity = StorageDataTypes(storageAffinity)
         self.storage_attributes = {attribute["name"]: StorageAttribute(**attribute) for attribute in attributes}
 
     def is_contained(self, attribute_name, attribute_type=None):
@@ -55,6 +58,7 @@ class StorageRecipe:
     def to_dict(self) -> Dict:
         return {
             "name": self.name,
+            "storageAffinity": self.storage_affinity,
             "attributes": [attribute.to_dict() for attribute in self.storage_attributes],
         }
 

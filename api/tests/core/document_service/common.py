@@ -129,6 +129,47 @@ blueprint_with_nested_optional_attr = {
     ],
 }
 
+blueprint_with_storageAffinity_in_root = {
+    "type": "system/SIMOS/Blueprint",
+    "name": "blob",
+    "description": "Test for a blueprint with storageAffinity in storageRecipe",
+    "attributes": [
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "someData", "default": ""},
+    ],
+    "storageRecipes": [
+        {
+            "name": "default",
+            "type": "system/SIMOS/StorageRecipe",
+            "description": "",
+            "storageAffinity": "blob",
+            "attributes": [],
+        }
+    ],
+}
+
+blobContainer = {
+    "type": "system/SIMOS/Blueprint",
+    "name": "blobContainer",
+    "description": "A basic blueprint that has a non-storageContained blob, none specified storageAffinity ",
+    "attributes": [
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
+        {"attributeType": "blob", "type": "system/SIMOS/BlueprintAttribute", "name": "blob",},
+    ],
+    "storageRecipes": [
+        {
+            "name": "default",
+            "type": "system/SIMOS/StorageRecipe",
+            "description": "",
+            "attributes": [{"name": "blob", "type": "does_this_matter?", "contained": False}],
+        }
+    ],
+}
+
 file_repository_test = TemplateRepositoryFromFile(schemas_location())
 
 
@@ -147,6 +188,10 @@ class BlueprintProvider:
             return Blueprint(DTO(blueprint_with_optional_attr))
         if type == "blueprint_with_nested_optional_attr":
             return Blueprint(DTO(blueprint_with_nested_optional_attr))
+        if type == "blob":
+            return Blueprint(DTO(blueprint_with_storageAffinity_in_root))
+        if type == "blobContainer":
+            return Blueprint(DTO(blobContainer))
         else:
             return Blueprint(DTO(file_repository_test.get(type)))
 

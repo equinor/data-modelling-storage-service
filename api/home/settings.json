@@ -3,7 +3,7 @@
   "name": "DMTApplicationSettings",
   "description": "",
   "entities": ["CarPackage", "MatrixDemo"],
-  "packages": ["CarPackage", "Uncontained", "ComplexArrays", "marmo", "mooringSRS"],
+  "packages": ["CarPackage", "ComplexArrays", "marmo", "mooringSRS", "StorageDemo"],
   "models": ["system/SIMOS/Entity"],
   "actions": [
     {
