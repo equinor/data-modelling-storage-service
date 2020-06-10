@@ -4,14 +4,21 @@ from api.classes.blueprint_attribute import BlueprintAttribute
 from api.classes.dto import DTO
 from api.classes.ui_recipe import DefaultRecipe, Recipe, RecipeAttribute
 from api.classes.storage_recipe import DefaultStorageRecipe, StorageRecipe
-from api.core.enums import PRIMITIVES
+from api.core.enums import PRIMITIVES, StorageDataTypes
 
 
 def get_storage_recipes(recipes: List[Dict], attributes: List[BlueprintAttribute]):
     if not recipes:
         return [DefaultStorageRecipe(attributes)]
     else:
-        return [StorageRecipe(name=recipe["name"], attributes=recipe["attributes"]) for recipe in recipes]
+        return [
+            StorageRecipe(
+                name=recipe["name"],
+                storageAffinity=recipe.get("storageAffinity", StorageDataTypes.DEFAULT.value),
+                attributes=recipe["attributes"],
+            )
+            for recipe in recipes
+        ]
 
 
 def get_ui_recipe(recipes: List[Dict]):

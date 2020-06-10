@@ -4,8 +4,9 @@ from uuid import uuid4
 
 from api.classes.blueprint import Blueprint
 from api.classes.blueprint_attribute import BlueprintAttribute
+from api.classes.storage_recipe import StorageAttribute
 from api.config import Config
-from api.core.enums import DMT, REQUIRED_ATTRIBUTES, SIMOS
+from api.core.enums import DMT, REQUIRED_ATTRIBUTES, SIMOS, StorageDataTypes
 from api.utils.logging import logger
 
 
@@ -460,7 +461,16 @@ class Node(NodeBase):
         if self.parent and self.parent.type != "data-source":
             # The 'node.attribute.name' will be invalid for Package.content. Set it explicitly
             nodes_attribute_on_parent = self.attribute.name if not self.parent.type == DMT.ENTITY.value else "content"
-            return self.parent.blueprint.storage_recipes[0].storage_attributes[nodes_attribute_on_parent]
+            storage_attribute = self.parent.blueprint.storage_recipes[0].storage_attributes[nodes_attribute_on_parent]
+
+            # If the attribute has default StorageAffinity in the parent, get it from the nodes own storageRecipe
+            if storage_attribute.storage_type_affinity is StorageDataTypes.DEFAULT:
+                storage_attribute.storage_type_affinity = self.blueprint.storage_recipes[0].storage_affinity
+            return storage_attribute
+        # If no parent, the node is always contained, and get storageAffinity from the nodes own storageRecipe
+        return StorageAttribute(
+            name=self.type, contained=True, storageTypeAffinity=self.blueprint.storage_recipes[0].storage_affinity
+        )
 
 
 class ListNode(NodeBase):
