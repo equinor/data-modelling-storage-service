@@ -7,19 +7,22 @@
       "name": "name",
       "optional": false,
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute"
+      "type": "system/SIMOS/BlueprintAttribute",
+      "label": "Name"
     },
     {
       "name": "type",
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute"
+      "type": "system/SIMOS/BlueprintAttribute",
+      "label": "Type"
     },
     {
       "name": "description",
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
       "default": "",
-      "optional": true
+      "optional": true,
+      "label": "Description"
     }
   ],
   "storageRecipes": [],
@@ -32,8 +35,13 @@
         {
           "name": "type",
           "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "system/SIMOS/UiAttribute",
           "field": "type"
+        },
+        {
+          "name": "type",
+          "type": "system/SIMOS/UiAttribute",
+          "label": "Type"
         }
       ]
     }

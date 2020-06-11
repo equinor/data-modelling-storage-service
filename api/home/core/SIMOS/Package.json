@@ -6,19 +6,22 @@
     {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
-      "name": "name"
+      "name": "name",
+      "label": "Name"
     },
     {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
       "name": "description",
+      "label": "Description",
       "default": "",
       "optional": true
     },
     {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
-      "name": "type"
+      "name": "type",
+      "label": "Type"
     },
     {
       "attributeType": "boolean",
