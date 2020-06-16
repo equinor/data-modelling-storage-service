@@ -164,7 +164,7 @@ class DocumentService:
             if isinstance(repository, ZipFileClient):
                 dto.data["__path__"] = path
             repository.update(dto, node.get_context_storage_attribute())
-            return {"_id": node.uid, "type": node.type, "name": node.name}
+            return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
         return ref_dict
 
     def get_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
@@ -391,7 +391,7 @@ class DocumentService:
             raise DuplicateFileNameException(data_source_id, f"{directory}/{name}")
 
         new_node_id = str(uuid4()) if not parent.attribute_is_storage_contained() else ""
-        new_node = Node.from_dict(entity, new_node_id, self.blueprint_provider)
+        new_node = Node.from_dict(entity, new_node_id, self.blueprint_provider, parent.attribute)
         new_node.key = str(len(parent.children)) if parent.is_array() else ""
 
         parent.add_child(new_node)
