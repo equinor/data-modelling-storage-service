@@ -19,7 +19,7 @@
       "account_name": "dmssfilestorage",
       "account_key": "",
       "name": "azure",
-      "collection": "dmss"
+      "container": "dmss"
     }
   }
 }

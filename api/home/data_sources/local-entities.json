@@ -30,7 +30,7 @@
       "account_name": "dmssfilestorage",
       "account_key": "REPLACE_ME",
       "name": "azure_blob",
-      "collection": "dmss"
+      "container": "dmss"
     }
   }
 }

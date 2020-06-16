@@ -5,38 +5,38 @@ import json
 
 
 class AzureBlobStorageClient(RepositoryInterface):
-    def __init__(self, account_name: str, account_key: str, collection: str, **kwargs):
+    def __init__(self, account_name: str, account_key: str, container: str, **kwargs):
         blob_service_client = BlockBlobService(account_name=account_name, account_key=account_key)
         self.blob_service_client = blob_service_client
-        self.collection = collection
+        self.container = container
 
     def get(self, uid: str) -> Dict:
-        result = self.blob_service_client.get_blob_to_text(self.collection, uid)
+        result = self.blob_service_client.get_blob_to_text(self.container, uid)
         document = json.loads(result.content)
         document["_id"] = uid
         return document
 
     def add(self, uid: str, document: Dict) -> bool:
         output = json.dumps(document)
-        self.blob_service_client.create_blob_from_text(self.collection, uid, output)
+        self.blob_service_client.create_blob_from_text(self.container, uid, output)
 
     def update(self, uid: str, document: Dict) -> bool:
         output = json.dumps(document)
-        self.blob_service_client.create_blob_from_text(self.collection, uid, output)
+        self.blob_service_client.create_blob_from_text(self.container, uid, output)
 
     def delete(self, uid: str) -> bool:
-        self.blob_service_client.delete_blob(self.collection, uid)
+        self.blob_service_client.delete_blob(self.container, uid)
 
     def find(self, filters: Dict) -> Optional[List[Dict]]:
         # TODO: implement efficient filter functionality by using the python azure api
-        if self.blob_service_client.exists(self.collection):
+        if self.blob_service_client.exists(self.container):
             # self.blob_service_client.create_container(self.collection)
-            blobs = self.blob_service_client.list_blobs(self.collection)
+            blobs = self.blob_service_client.list_blobs(self.container)
             result = self._filter(blobs, filters)
             return result
 
     def find_one(self, filters: Dict) -> Optional[Dict]:
-        blobs = self.blob_service_client.list_blobs(self.collection)
+        blobs = self.blob_service_client.list_blobs(self.container)
         result = self._filter(blobs, filters)
         if len(result) > 0:
             return result[0]
