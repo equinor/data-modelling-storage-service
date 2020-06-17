@@ -33,46 +33,71 @@ class InlineObject2(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'directory': 'str'
+        'parent_id': 'str',
+        'document_id': 'str'
     }
 
     attribute_map = {
-        'directory': 'directory'
+        'parent_id': 'parentId',
+        'document_id': 'documentId'
     }
 
-    def __init__(self, directory=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, parent_id=None, document_id=None, local_vars_configuration=None):  # noqa: E501
         """InlineObject2 - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._directory = None
+        self._parent_id = None
+        self._document_id = None
         self.discriminator = None
 
-        self.directory = directory
+        self.parent_id = parent_id
+        self.document_id = document_id
 
     @property
-    def directory(self):
-        """Gets the directory of this InlineObject2.  # noqa: E501
+    def parent_id(self):
+        """Gets the parent_id of this InlineObject2.  # noqa: E501
 
 
-        :return: The directory of this InlineObject2.  # noqa: E501
+        :return: The parent_id of this InlineObject2.  # noqa: E501
         :rtype: str
         """
-        return self._directory
+        return self._parent_id
 
-    @directory.setter
-    def directory(self, directory):
-        """Sets the directory of this InlineObject2.
+    @parent_id.setter
+    def parent_id(self, parent_id):
+        """Sets the parent_id of this InlineObject2.
 
 
-        :param directory: The directory of this InlineObject2.  # noqa: E501
-        :type: str
+        :param parent_id: The parent_id of this InlineObject2.  # noqa: E501
+        :type parent_id: str
         """
-        if self.local_vars_configuration.client_side_validation and directory is None:  # noqa: E501
-            raise ValueError("Invalid value for `directory`, must not be `None`")  # noqa: E501
 
-        self._directory = directory
+        self._parent_id = parent_id
+
+    @property
+    def document_id(self):
+        """Gets the document_id of this InlineObject2.  # noqa: E501
+
+
+        :return: The document_id of this InlineObject2.  # noqa: E501
+        :rtype: str
+        """
+        return self._document_id
+
+    @document_id.setter
+    def document_id(self, document_id):
+        """Sets the document_id of this InlineObject2.
+
+
+        :param document_id: The document_id of this InlineObject2.  # noqa: E501
+        :type document_id: str
+        """
+        if self.local_vars_configuration.client_side_validation and document_id is None:  # noqa: E501
+            raise ValueError("Invalid value for `document_id`, must not be `None`")  # noqa: E501
+
+        self._document_id = document_id
 
     def to_dict(self):
         """Returns the model properties as a dict"""

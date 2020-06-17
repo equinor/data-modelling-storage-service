@@ -75,6 +75,8 @@ class CreateEntity:
             return True
         except JSONDecodeError:
             return False
+        except StopIteration:
+            return False
 
     @staticmethod
     def parse_json(attr: BlueprintAttribute):

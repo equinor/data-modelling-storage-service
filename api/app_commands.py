@@ -5,7 +5,7 @@ from api.config import Config
 from api.core.utility import wipe_db
 from api.services.database import dmt_database
 from api.utils.logging import logger
-from api.utils.package_import import import_package
+from api.utils.package_import import import_blob, import_package
 
 app = create_app(Config)
 
@@ -25,6 +25,8 @@ def init_application():
         import_package(
             f"{Config.APPLICATION_HOME}/entities/{folder}", data_source=Config.ENTITY_COLLECTION, is_root=True
         )
+    for path in Config.IMPORT_BLOBS:
+        import_blob(path)
 
 
 @app.cli.command()

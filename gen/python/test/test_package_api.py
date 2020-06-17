@@ -28,6 +28,13 @@ class TestPackageApi(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_find_by_name(self):
+        """Test case for find_by_name
+
+        Query packages  # noqa: E501
+        """
+        pass
+
     def test_get(self):
         """Test case for get
 

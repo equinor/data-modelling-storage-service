@@ -1,0 +1,59 @@
+{
+  "name": "PDF",
+  "type": "system/SIMOS/Blueprint",
+  "description": "Contains metadata for a PDF, and a id for the PDF Blob",
+  "attributes": [
+    {
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "name",
+      "attributeType": "string"
+    }, {
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "description",
+      "attributeType": "string"
+    }, {
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "type",
+      "attributeType": "string",
+      "default": "system/SIMOS/Blueprint"
+    }, {
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "blob_reference",
+      "description": "id for the data blob",
+      "attributeType": "string",
+      "contained": true
+    }, {
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "size",
+      "description": "Size of the PDF in bytes",
+      "attributeType": "integer",
+      "optional": true,
+      "contained": true
+    }, {
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "tags",
+      "description": "List of tags used for indexing",
+      "attributeType": "string",
+      "dimensions": "*",
+      "optional": true,
+      "contained": true
+    }, {
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "author",
+      "description": "Author of the PDF",
+      "attributeType": "string",
+      "default": "",
+      "contained": true
+    }
+  ],
+  "storageRecipes": [],
+  "uiRecipes": [
+    {
+      "type": "system/SIMOS/UiRecipe",
+      "name": "PDFView",
+      "description": "Embedded PDF View",
+      "plugin": "VIEW_PDF",
+      "attributes": []
+    }
+  ]
+}

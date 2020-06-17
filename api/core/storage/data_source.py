@@ -1,10 +1,14 @@
+import io
 from typing import Dict, List, Union
+
+from werkzeug.datastructures import FileStorage
 
 from api.classes.document_look_up import DocumentLookUp
 from api.classes.dto import DTO
 from api.classes.repository import Repository
 from api.classes.storage_recipe import StorageAttribute
 from api.config import Config
+from api.core.enums import StorageDataTypes
 from api.core.storage.repository_exceptions import EntityNotFoundException
 from api.services.database import dmt_database
 from api.utils.logging import logger
@@ -22,13 +26,15 @@ class DataSource:
     def from_dict(cls, a_dict):
         return cls(a_dict["name"], {key: Repository(**value) for key, value in a_dict["repositories"].items()})
 
-    def _get_repo_from_storage_attribute(self, storage_attribute: StorageAttribute = None) -> Repository:
+    def _get_repo_from_storage_attribute(self, storage_attribute: StorageAttribute = None, strict=False) -> Repository:
         # Not too smart yet...
         # Returns the first repo with a matching "dataType" value, or the first Repo if no match
         if storage_attribute:
             for r in self.repositories.values():
                 if storage_attribute.storage_type_affinity in r.data_types:
                     return r
+        if strict:
+            raise ValueError(f"No repository for '{storage_attribute.storage_type_affinity}' data configured")
         return self.get_default_repository()
 
     def _get_documents_repository(self, document_id) -> Repository:
@@ -61,15 +67,14 @@ class DataSource:
 
     def get(self, uid: str) -> DTO:
         try:
-            repo = self._get_documents_repository(uid)
+            lookup = self.lookup(uid)
+            repo = self.repositories[lookup["repository"]]
+            return DTO(repo.get(uid))
         except EntityNotFoundException:
             raise EntityNotFoundException(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
-        try:
-            result = repo.get(uid)
-            return DTO(result)
         except Exception as error:
             logger.exception(error)
-            raise EntityNotFoundException(f"the document with uid: {uid} was not found")
+            raise EntityNotFoundException(f"Unknown error on fetching the document with uid: {uid} was not found")
 
     # TODO: Implement find across repositories
     def find(self, filter: dict) -> Union[DTO, List[DTO]]:
@@ -104,6 +109,33 @@ class DataSource:
         repo = self._get_repo_from_storage_attribute(storage_attribute)
         self.insert_lookup(DocumentLookUp(document.uid, repo.name, document.uid, "", document.type))
         repo.add(document.uid, document.data)
+
+    def update_blob(self, uid, file: FileStorage) -> None:
+        if not isinstance(file, FileStorage):
+            raise RecursionError("Can only save object of type 'FileStorage'")
+        repo = self._get_repo_from_storage_attribute(
+            StorageAttribute("generic_blob", False, StorageDataTypes.BLOB.value), strict=True
+        )
+        self.insert_lookup(DocumentLookUp(uid, repo.name, uid, "", "blob"))
+        # TODO: Some sanity checks on the file. werkzug safe_files() etc.
+        repo.update_blob(uid, file.read())
+
+    def get_blob(self, uid: str) -> io.BytesIO:
+        try:
+            repo = self._get_documents_repository(uid)
+            if not repo:
+                logger.error(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
+                raise EntityNotFoundException(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
+
+            return io.BytesIO(repo.get_blob(uid))
+
+        except EntityNotFoundException:
+            logger.error(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
+            raise EntityNotFoundException(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
+
+        except Exception as error:
+            logger.exception(error)
+            raise EntityNotFoundException(f"The blob with uid: {uid} was not found")
 
     def delete(self, uid: str) -> None:
         # If lookup not found, assume it's deleted

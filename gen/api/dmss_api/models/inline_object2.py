@@ -15,21 +15,26 @@ class InlineObject2(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, directory=None):  # noqa: E501
+    def __init__(self, parent_id=None, document_id=None):  # noqa: E501
         """InlineObject2 - a model defined in OpenAPI
 
-        :param directory: The directory of this InlineObject2.  # noqa: E501
-        :type directory: str
+        :param parent_id: The parent_id of this InlineObject2.  # noqa: E501
+        :type parent_id: str
+        :param document_id: The document_id of this InlineObject2.  # noqa: E501
+        :type document_id: str
         """
         self.openapi_types = {
-            'directory': str
+            'parent_id': str,
+            'document_id': str
         }
 
         self.attribute_map = {
-            'directory': 'directory'
+            'parent_id': 'parentId',
+            'document_id': 'documentId'
         }
 
-        self._directory = directory
+        self._parent_id = parent_id
+        self._document_id = document_id
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineObject2':
@@ -43,24 +48,45 @@ class InlineObject2(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def directory(self):
-        """Gets the directory of this InlineObject2.
+    def parent_id(self):
+        """Gets the parent_id of this InlineObject2.
 
 
-        :return: The directory of this InlineObject2.
+        :return: The parent_id of this InlineObject2.
         :rtype: str
         """
-        return self._directory
+        return self._parent_id
 
-    @directory.setter
-    def directory(self, directory):
-        """Sets the directory of this InlineObject2.
+    @parent_id.setter
+    def parent_id(self, parent_id):
+        """Sets the parent_id of this InlineObject2.
 
 
-        :param directory: The directory of this InlineObject2.
-        :type directory: str
+        :param parent_id: The parent_id of this InlineObject2.
+        :type parent_id: str
         """
-        if directory is None:
-            raise ValueError("Invalid value for `directory`, must not be `None`")  # noqa: E501
 
-        self._directory = directory
+        self._parent_id = parent_id
+
+    @property
+    def document_id(self):
+        """Gets the document_id of this InlineObject2.
+
+
+        :return: The document_id of this InlineObject2.
+        :rtype: str
+        """
+        return self._document_id
+
+    @document_id.setter
+    def document_id(self, document_id):
+        """Sets the document_id of this InlineObject2.
+
+
+        :param document_id: The document_id of this InlineObject2.
+        :type document_id: str
+        """
+        if document_id is None:
+            raise ValueError("Invalid value for `document_id`, must not be `None`")  # noqa: E501
+
+        self._document_id = document_id

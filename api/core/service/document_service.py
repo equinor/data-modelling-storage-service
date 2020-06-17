@@ -1,14 +1,14 @@
-import io
-import zipfile
 from typing import Dict, List, Union
 from uuid import uuid4
+
+from werkzeug.datastructures import FileStorage
 
 from api.classes.blueprint import Blueprint
 from api.classes.blueprint_attribute import BlueprintAttribute
 from api.classes.dto import DTO
 from api.classes.storage_recipe import StorageRecipe
 from api.classes.tree_node import ListNode, Node
-from api.core.enums import DMT, REQUIRED_ATTRIBUTES, SIMOS
+from api.core.enums import BLOB_TYPES, DMT, REQUIRED_ATTRIBUTES, SIMOS
 from api.core.storage.data_source import DataSource
 from api.core.storage.repositories.mongo import MongoDBClient
 from api.core.storage.repositories.zip import ZipFileClient
@@ -50,7 +50,6 @@ def get_resolved_document(
     depth: int = 999,
     depth_count: int = 0,
 ) -> Dict:
-
     if depth <= depth_count:
         if depth_count >= 999:
             raise RecursionError("Reached max-nested-depth (999). Most likely some recursive entities")
@@ -116,7 +115,7 @@ def get_resolved_document(
 
 def get_complete_document(
     document_uid: str, document_repository: DataSource, blueprint_provider: BlueprintProvider, depth: int = 999
-) -> Dict:
+) -> dict:
     document = get_document(document_uid=document_uid, document_repository=document_repository)
 
     return get_resolved_document(document, document_repository, blueprint_provider, depth)
@@ -133,12 +132,29 @@ class DocumentService:
     def invalidate_cache(self):
         self.blueprint_provider.invalidate_cache()
 
+    def save_blob_data(self, node, repository):
+        # If the file is created or updated, the blob_reference is a dict.
+        if isinstance(node.entity["blob_reference"], dict):
+            reference = node.entity["blob_reference"].get("_id")
+            file: FileStorage = node.entity["blob_reference"]["file"]
+            if not reference:
+                uid = str(uuid4())
+            reference = f"{repository.name}/{uid}"
+            repository.update_blob(uid, file)
+            node.entity["size"] = file.seek(0, 2)
+        else:
+            reference = node.entity["blob_reference"]
+
+        return reference
+
     def save(self, node: Union[Node, ListNode], data_source_id: str, repository=None, path="") -> Dict:
         """
         Recursively saves a Node.
         Digs down to the leaf child, and based on storageContained,
         either saves the entity and returns the Reference, OR returns the entire entity.
         """
+        if not node.entity:
+            return {}
         # If not passed a custom repository to save into, use the DocumentService's storage
         if not repository:
             repository = self.repository_provider(data_source_id)
@@ -154,6 +170,10 @@ class DocumentService:
                 child_entities[child.key] = [self.save(x, data_source_id, repository, path) for x in child.children]
             else:
                 child_entities[child.key] = self.save(child, data_source_id, repository, path)
+
+        if node.type in BLOB_TYPES:
+            # Every blueprint of a 'blob_type', has the 'blob_reference' attribute
+            node.entity["blob_reference"] = self.save_blob_data(node, repository)
 
         ref_dict = node.to_ref_dict(child_entities)
 
@@ -182,26 +202,6 @@ class DocumentService:
         return Node.from_dict(
             complete_document, complete_document.get("_id"), blueprint_provider=self.blueprint_provider
         )
-
-    def create_zip_export(self, data_source_id: str, document_uid: str) -> io.BytesIO:
-        try:
-            complete_document = get_complete_document(
-                document_uid, self.repository_provider(data_source_id), self.blueprint_provider
-            )
-        except EntityNotFoundException as error:
-            logger.exception(error)
-            raise EntityNotFoundException(document_uid)
-
-        memory_file = io.BytesIO()
-        with zipfile.ZipFile(memory_file, mode="w") as zip_file:
-            root_node: Node = Node.from_dict(
-                complete_document, complete_document.get("_id"), blueprint_provider=self.blueprint_provider
-            )
-            # Save the selected node, using custom ZipFile repository
-            self.save(root_node, data_source_id, ZipFileClient(zip_file))
-
-        memory_file.seek(0)
-        return memory_file
 
     def get_by_path(self, data_source_id: str, directory: str):
         ref_elements = directory.split("/", 1)
@@ -361,8 +361,26 @@ class DocumentService:
 
         return self._remove_document(data_source_id, root.uid)
 
+    @staticmethod
+    def _merge_entity_and_files(node, files):
+        """
+        Recursively adds the matching posted file to the blob_reference in the node
+        """
+        if node.type in BLOB_TYPES:
+            try:
+                node.entity["blob_reference"] = {"file": files[node.entity["blob_reference"]]}
+            except KeyError:
+                raise KeyError("File referenced in entity does not match any filename posted")
+        for node in node.traverse():
+            if node.entity:
+                for t in node.blueprint.get_blob_types():
+                    try:
+                        node.entity[t.name]["blob_reference"] = {"file": files[node.entity[t.name]["blob_reference"]]}
+                    except KeyError:
+                        raise KeyError("File referenced in entity does not match any filename posted")
+
     # Add file by parent directory
-    def add(self, data_source_id: str, directory: str, document: dict):
+    def add(self, data_source_id: str, directory: str, document: dict, files: dict):
         # Convert filesystem path to NodeTree path
         tree_path = "/content/".join(directory.split("/"))
         root: Node = self.get_by_path(data_source_id, tree_path)
@@ -391,7 +409,15 @@ class DocumentService:
             raise DuplicateFileNameException(data_source_id, f"{directory}/{name}")
 
         new_node_id = str(uuid4()) if not parent.attribute_is_storage_contained() else ""
-        new_node = Node.from_dict(entity, new_node_id, self.blueprint_provider, parent.attribute)
+
+        new_node = Node.from_dict(
+            {**entity, **document},
+            new_node_id,
+            self.blueprint_provider,
+            BlueprintAttribute(name="content", attribute_type=type),
+        )
+        self._merge_entity_and_files(new_node, files)
+
         new_node.key = str(len(parent.children)) if parent.is_array() else ""
 
         parent.add_child(new_node)

@@ -28,10 +28,24 @@ class TestExplorerApi(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_add_document(self):
+        """Test case for add_document
+
+        Add document  # noqa: E501
+        """
+        pass
+
     def test_add_package(self):
         """Test case for add_package
 
         Add package  # noqa: E501
+        """
+        pass
+
+    def test_add_raw(self):
+        """Test case for add_raw
+
+        Add raw document  # noqa: E501
         """
         pass
 
@@ -60,6 +74,13 @@ class TestExplorerApi(unittest.TestCase):
         """Test case for remove
 
         Remove document  # noqa: E501
+        """
+        pass
+
+    def test_remove_by_path(self):
+        """Test case for remove_by_path
+
+        Remove document by path  # noqa: E501
         """
         pass
 

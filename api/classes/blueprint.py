@@ -4,7 +4,7 @@ from api.classes.blueprint_attribute import BlueprintAttribute
 from api.classes.dto import DTO
 from api.classes.ui_recipe import DefaultRecipe, Recipe, RecipeAttribute
 from api.classes.storage_recipe import DefaultStorageRecipe, StorageRecipe
-from api.core.enums import PRIMITIVES, StorageDataTypes
+from api.core.enums import BLOB_TYPES, PRIMITIVES, StorageDataTypes
 
 
 def get_storage_recipes(recipes: List[Dict], attributes: List[BlueprintAttribute]):
@@ -89,6 +89,10 @@ class Blueprint:
 
     def get_none_primitive_types(self) -> List[BlueprintAttribute]:
         blueprints = [attribute for attribute in self.attributes if attribute.attribute_type not in PRIMITIVES]
+        return blueprints
+
+    def get_blob_types(self) -> List[BlueprintAttribute]:
+        blueprints = [attribute for attribute in self.attributes if attribute.attribute_type in BLOB_TYPES]
         return blueprints
 
     def get_primitive_types(self) -> List[BlueprintAttribute]:

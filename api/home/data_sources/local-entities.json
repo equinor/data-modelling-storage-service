@@ -2,6 +2,7 @@
   "name": "entities",
   "repositories": {
     "entities": {
+      "dataTypes": ["blob"],
       "type": "mongo-db",
       "host": "db",
       "port": 27017,

@@ -1,9 +1,11 @@
+from typing import Dict, List, Optional
+
+import gridfs
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 
+from api.core.storage.repository_exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from api.core.storage.repository_interface import RepositoryInterface
-from api.core.storage.repository_exceptions import EntityAlreadyExistsException
-from typing import Dict, List, Optional
 
 
 class MongoDBClient(RepositoryInterface):
@@ -28,6 +30,7 @@ class MongoDBClient(RepositoryInterface):
             serverSelectionTimeoutMS=5000,
             retryWrites=False,
         )[database]
+        self.blob_handler = gridfs.GridFS(self.handler)
         self.collection = collection
 
     def get(self, uid: str) -> Dict:
@@ -57,3 +60,12 @@ class MongoDBClient(RepositoryInterface):
 
     def find_one(self, filters: Dict) -> Optional[Dict]:
         return self.handler[self.collection].find_one(filter=filters)
+
+    def update_blob(self, uid: str, blob: bytearray):
+        return self.blob_handler.put(blob, _id=uid)
+
+    def get_blob(self, uid: str) -> bytearray:
+        blob = self.blob_handler.get(uid)
+        if not blob:
+            raise EntityNotFoundException(uid)
+        return blob.read()

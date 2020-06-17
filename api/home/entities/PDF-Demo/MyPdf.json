@@ -1,0 +1,12 @@
+{
+  "name": "MyPdf",
+  "type": "system/SIMOS/blob_types/PDF",
+  "description": "Test",
+  "blob_reference": "entities/1234",
+  "author": "Stig Oskar",
+  "size": 4003782,
+  "tags": [
+    "Marine",
+    "Renewable"
+  ]
+}

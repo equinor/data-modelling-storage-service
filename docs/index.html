@@ -860,6 +860,24 @@ ul.nav-tabs {
   }
 };
     defs["inline_object_1"] = {
+  "type" : "object",
+  "properties" : {
+    "directory" : {
+      "type" : "string"
+    },
+    "document" : {
+      "type" : "string"
+    },
+    "files" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "format" : "binary"
+      }
+    }
+  }
+};
+    defs["inline_object_2"] = {
   "required" : [ "documentId" ],
   "type" : "object",
   "properties" : {
@@ -872,7 +890,7 @@ ul.nav-tabs {
     }
   }
 };
-    defs["inline_object_2"] = {
+    defs["inline_object_3"] = {
   "required" : [ "directory" ],
   "type" : "object",
   "properties" : {
@@ -881,7 +899,7 @@ ul.nav-tabs {
     }
   }
 };
-    defs["inline_object_3"] = {
+    defs["inline_object_4"] = {
   "required" : [ "documentId", "name" ],
   "type" : "object",
   "properties" : {
@@ -901,7 +919,7 @@ ul.nav-tabs {
     }
   }
 };
-    defs["inline_object_4"] = {
+    defs["inline_object_5"] = {
   "required" : [ "type" ],
   "type" : "object",
   "properties" : {
@@ -944,6 +962,10 @@ ul.nav-tabs {
             -->
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
+                  <li class="nav-header" data-group="Blob"><a href="#api-Blob">API Methods - Blob</a></li>
+                    <li data-group="Blob" data-name="getBlobById" class="">
+                      <a href="#api-Blob-getBlobById">getBlobById</a>
+                    </li>
                   <li class="nav-header" data-group="Datasource"><a href="#api-Datasource">API Methods - Datasource</a></li>
                     <li data-group="Datasource" data-name="getAll" class="">
                       <a href="#api-Datasource-getAll">getAll</a>
@@ -1024,6 +1046,377 @@ ul.nav-tabs {
           </div>
         </div>
         <div id="sections">
+                <section id="api-Blob">
+                  <h1>Blob</h1>
+                    <div id="api-Blob-getBlobById">
+                      <article id="api-Blob-getBlobById-0" data-group="User" data-name="getBlobById" data-version="0">
+                        <div class="pull-left">
+                          <h1>getBlobById</h1>
+                          <p>Get blob by ID</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/blobs/{dataSourceId}/{blobId}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Blob-getBlobById-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Blob-getBlobById-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Blob-getBlobById-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Blob-getBlobById-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Blob-getBlobById-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Blob-getBlobById-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Blob-getBlobById-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Blob-getBlobById-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Blob-getBlobById-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Blob-getBlobById-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Blob-getBlobById-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Blob-getBlobById-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Blob-getBlobById-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://0.0.0.0:8000/api/v1/blobs/{dataSourceId}/{blobId}"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Blob-getBlobById-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.BlobApi;
+
+import java.io.File;
+import java.util.*;
+
+public class BlobApiExample {
+
+    public static void main(String[] args) {
+        
+        BlobApi apiInstance = new BlobApi();
+        String dataSourceId = dataSourceId_example; // String | The data source ID
+        String blobId = blobId_example; // String | The blob ID
+        try {
+            File result = apiInstance.getBlobById(dataSourceId, blobId);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling BlobApi#getBlobById");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Blob-getBlobById-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.BlobApi;
+
+public class BlobApiExample {
+
+    public static void main(String[] args) {
+        BlobApi apiInstance = new BlobApi();
+        String dataSourceId = dataSourceId_example; // String | The data source ID
+        String blobId = blobId_example; // String | The blob ID
+        try {
+            File result = apiInstance.getBlobById(dataSourceId, blobId);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling BlobApi#getBlobById");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Blob-getBlobById-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Blob-getBlobById-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+String *blobId = blobId_example; // The blob ID (default to null)
+
+BlobApi *apiInstance = [[BlobApi alloc] init];
+
+// Get blob by ID
+[apiInstance getBlobByIdWith:dataSourceId
+    blobId:blobId
+              completionHandler: ^(File output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Blob-getBlobById-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
+
+var api = new DataModellingStorageServiceApi.BlobApi()
+var dataSourceId = dataSourceId_example; // {String} The data source ID
+var blobId = blobId_example; // {String} The blob ID
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getBlobById(dataSourceId, blobId, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Blob-getBlobById-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Blob-getBlobById-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using dmss_api.Api;
+using dmss_api.Client;
+using dmss_api.Model;
+
+namespace Example
+{
+    public class getBlobByIdExample
+    {
+        public void main()
+        {
+            
+            var apiInstance = new BlobApi();
+            var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
+            var blobId = blobId_example;  // String | The blob ID (default to null)
+
+            try
+            {
+                // Get blob by ID
+                File result = apiInstance.getBlobById(dataSourceId, blobId);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling BlobApi.getBlobById: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Blob-getBlobById-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new OpenAPITools\Client\Api\BlobApi();
+$dataSourceId = dataSourceId_example; // String | The data source ID
+$blobId = blobId_example; // String | The blob ID
+
+try {
+    $result = $api_instance->getBlobById($dataSourceId, $blobId);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling BlobApi->getBlobById: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Blob-getBlobById-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::BlobApi;
+
+my $api_instance = WWW::OPenAPIClient::BlobApi->new();
+my $dataSourceId = dataSourceId_example; # String | The data source ID
+my $blobId = blobId_example; # String | The blob ID
+
+eval { 
+    my $result = $api_instance->getBlobById(dataSourceId => $dataSourceId, blobId => $blobId);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling BlobApi->getBlobById: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Blob-getBlobById-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = openapi_client.BlobApi()
+dataSourceId = dataSourceId_example # String | The data source ID (default to null)
+blobId = blobId_example # String | The blob ID (default to null)
+
+try: 
+    # Get blob by ID
+    api_response = api_instance.get_blob_by_id(dataSourceId, blobId)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling BlobApi->getBlobById: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Blob-getBlobById-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate BlobApi;
+
+pub fn main() {
+    let dataSourceId = dataSourceId_example; // String
+    let blobId = blobId_example; // String
+
+    let mut context = BlobApi::Context::default();
+    let result = client.getBlobById(dataSourceId, blobId, &context).wait();
+    println!("{:?}", result);
+
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">dataSourceId*</td>
+<td>
+
+
+    <div id="d2e199_getBlobById_dataSourceId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+The data source ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                  <tr><td style="width:150px;">blobId*</td>
+<td>
+
+
+    <div id="d2e199_getBlobById_blobId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+The blob ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Blob-getBlobById-title-200"></h3>
+                            <p id="examples-Blob-getBlobById-description-200" class="marked"></p>
+                            <script>
+                              var responseBlob200_description = `A Blob`;
+                              var responseBlob200_description_break = responseBlob200_description.indexOf('\n');
+                              if (responseBlob200_description_break == -1) {
+                                $("#examples-Blob-getBlobById-title-200").text("Status: 200 - " + responseBlob200_description);
+                              } else {
+                                $("#examples-Blob-getBlobById-title-200").text("Status: 200 - " + responseBlob200_description.substring(0, responseBlob200_description_break));
+                                $("#examples-Blob-getBlobById-description-200").html(responseBlob200_description.substring(responseBlob200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Blob-getBlobById-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Blob-getBlobById-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Blob-getBlobById-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Blob-getBlobById-200-schema">
+                                  <div id="responses-Blob-getBlobById-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "A Blob",
+  "content" : {
+    "application/octet-stream" : {
+      "schema" : {
+        "type" : "string",
+        "format" : "binary"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                            schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Blob-getBlobById-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Blob-getBlobById-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Blob-getBlobById-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                  </section>
                 <section id="api-Datasource">
                   <h1>Datasource</h1>
                     <div id="api-Datasource-getAll">
@@ -4937,9 +5330,11 @@ public class ExplorerApiExample {
         
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        map[String, Object] requestBody = Object; // map[String, Object] | 
+        String directory = directory_example; // String | 
+        String document = document_example; // String | 
+        array[File] files = BINARY_DATA_HERE; // array[File] | 
         try {
-            map['String', Object] result = apiInstance.addToPath(dataSourceId, requestBody);
+            map['String', Object] result = apiInstance.addToPath(dataSourceId, directory, document, files);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ExplorerApi#addToPath");
@@ -4958,9 +5353,11 @@ public class ExplorerApiExample {
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        map[String, Object] requestBody = Object; // map[String, Object] | 
+        String directory = directory_example; // String | 
+        String document = document_example; // String | 
+        array[File] files = BINARY_DATA_HERE; // array[File] | 
         try {
-            map['String', Object] result = apiInstance.addToPath(dataSourceId, requestBody);
+            map['String', Object] result = apiInstance.addToPath(dataSourceId, directory, document, files);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ExplorerApi#addToPath");
@@ -4975,13 +5372,17 @@ public class ExplorerApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-addToPath-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-map[String, Object] *requestBody = Object; // 
+String *directory = directory_example; //  (optional) (default to null)
+String *document = document_example; //  (optional) (default to null)
+array[File] *files = BINARY_DATA_HERE; //  (optional) (default to null)
 
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
 
 // Add document to path
 [apiInstance addToPathWith:dataSourceId
-    requestBody:requestBody
+    directory:directory
+    document:document
+    files:files
               completionHandler: ^(map['String', Object] output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -4998,7 +5399,11 @@ ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
 
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
-var requestBody = Object; // {map[String, Object]} 
+var opts = {
+  'directory': directory_example, // {String} 
+  'document': document_example, // {String} 
+  'files': BINARY_DATA_HERE // {array[File]} 
+};
 
 var callback = function(error, data, response) {
   if (error) {
@@ -5007,7 +5412,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.addToPath(dataSourceId, requestBody, callback);
+api.addToPath(dataSourceId, opts, callback);
 </code></pre>
                             </div>
 
@@ -5030,12 +5435,14 @@ namespace Example
             
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
-            var requestBody = new map[String, Object](); // map[String, Object] | 
+            var directory = directory_example;  // String |  (optional)  (default to null)
+            var document = document_example;  // String |  (optional)  (default to null)
+            var files = new array[File](); // array[File] |  (optional)  (default to null)
 
             try
             {
                 // Add document to path
-                map['String', Object] result = apiInstance.addToPath(dataSourceId, requestBody);
+                map['String', Object] result = apiInstance.addToPath(dataSourceId, directory, document, files);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -5054,10 +5461,12 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
-$requestBody = Object; // map[String, Object] | 
+$directory = directory_example; // String | 
+$document = document_example; // String | 
+$files = BINARY_DATA_HERE; // array[File] | 
 
 try {
-    $result = $api_instance->addToPath($dataSourceId, $requestBody);
+    $result = $api_instance->addToPath($dataSourceId, $directory, $document, $files);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling ExplorerApi->addToPath: ', $e->getMessage(), PHP_EOL;
@@ -5072,10 +5481,12 @@ use WWW::OPenAPIClient::ExplorerApi;
 
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
-my $requestBody = WWW::OPenAPIClient::Object::map[String, Object]->new(); # map[String, Object] | 
+my $directory = directory_example; # String | 
+my $document = document_example; # String | 
+my $files = [BINARY_DATA_HERE]; # array[File] | 
 
 eval { 
-    my $result = $api_instance->addToPath(dataSourceId => $dataSourceId, requestBody => $requestBody);
+    my $result = $api_instance->addToPath(dataSourceId => $dataSourceId, directory => $directory, document => $document, files => $files);
     print Dumper($result);
 };
 if ($@) {
@@ -5093,11 +5504,13 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
-requestBody = Object # map[String, Object] | 
+directory = directory_example # String |  (optional) (default to null)
+document = document_example # String |  (optional) (default to null)
+files = BINARY_DATA_HERE # array[File] |  (optional) (default to null)
 
 try: 
     # Add document to path
-    api_response = api_instance.add_to_path(dataSourceId, requestBody)
+    api_response = api_instance.add_to_path(dataSourceId, directory=directory, document=document, files=files)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ExplorerApi->addToPath: %s\n" % e)</code></pre>
@@ -5108,10 +5521,12 @@ except ApiException as e:
 
 pub fn main() {
     let dataSourceId = dataSourceId_example; // String
-    let requestBody = Object; // map[String, Object]
+    let directory = directory_example; // String
+    let document = document_example; // String
+    let files = BINARY_DATA_HERE; // array[File]
 
     let mut context = ExplorerApi::Context::default();
-    let result = client.addToPath(dataSourceId, requestBody, &context).wait();
+    let result = client.addToPath(dataSourceId, directory, document, files, &context).wait();
     println!("{:?}", result);
 
 }
@@ -5158,53 +5573,68 @@ The data source ID
                             </table>
 
 
-                            <div class="methodsubtabletitle">Body parameters</div>
+
+                            <div class="methodsubtabletitle">Form parameters</div>
                             <table id="methodsubtable">
                               <tr>
                                 <th width="150px">Name</th>
                                 <th>Description</th>
                               </tr>
-                                <tr><td style="width:150px;">requestBody <span style="color:red;">*</span></td>
+                                  <tr><td style="width:150px;">directory</td>
 <td>
-<p class="marked">Object containing all info for a document</p>
-<script>
-$(document).ready(function() {
-  var schemaWrapper = {
-  "description" : "Object containing all info for a document",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/DocumentBody"
-      }
-    }
-  },
-  "required" : true
-};
-  var schema = findNode('schema', schemaWrapper).schema;
-  if (!schema) {
-      schema = schemaWrapper.schema;
-  }
-  if (schema.$ref != null) {
-    schema = defsParser.$refs.get(schema.$ref);
-  } else {
-    schemaWrapper.definitions = Object.assign({}, defs);
-    $RefParser.dereference(schemaWrapper).catch(function(err) {
-      console.log(err);
-    });
-  }
 
-  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-  var result = $('#d2e199_addToPath_requestBody');
-  result.empty();
-  result.append(view.render());
-});
-</script>
-<div id="d2e199_addToPath_requestBody"></div>
+
+    <div id="d2e199_addToPath_directory">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                  <tr><td style="width:150px;">document</td>
+<td>
+
+
+    <div id="d2e199_addToPath_document">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                  <tr><td style="width:150px;">files</td>
+<td>
+
+
+    <div id="d2e199_addToPath_files">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    array[File]
+                </span>
+                    <span class="format">
+                        (binary)
+                    </span>
+
+            </div>
+        </div>
+    </div>
 </td>
 </tr>
 
                             </table>
-
 
 
                           <h2>Responses</h2>
@@ -5717,9 +6147,9 @@ public class ExplorerApiExample {
         
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        InlineObject1 inlineObject1 = ; // InlineObject1 | 
+        InlineObject2 inlineObject2 = ; // InlineObject2 | 
         try {
-            Object result = apiInstance.remove(dataSourceId, inlineObject1);
+            Object result = apiInstance.remove(dataSourceId, inlineObject2);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ExplorerApi#remove");
@@ -5738,9 +6168,9 @@ public class ExplorerApiExample {
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        InlineObject1 inlineObject1 = ; // InlineObject1 | 
+        InlineObject2 inlineObject2 = ; // InlineObject2 | 
         try {
-            Object result = apiInstance.remove(dataSourceId, inlineObject1);
+            Object result = apiInstance.remove(dataSourceId, inlineObject2);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ExplorerApi#remove");
@@ -5755,13 +6185,13 @@ public class ExplorerApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-remove-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-InlineObject1 *inlineObject1 = ; // 
+InlineObject2 *inlineObject2 = ; // 
 
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
 
 // Remove document
 [apiInstance removeWith:dataSourceId
-    inlineObject1:inlineObject1
+    inlineObject2:inlineObject2
               completionHandler: ^(Object output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -5778,7 +6208,7 @@ ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
 
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
-var inlineObject1 = ; // {InlineObject1} 
+var inlineObject2 = ; // {InlineObject2} 
 
 var callback = function(error, data, response) {
   if (error) {
@@ -5787,7 +6217,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.remove(dataSourceId, inlineObject1, callback);
+api.remove(dataSourceId, inlineObject2, callback);
 </code></pre>
                             </div>
 
@@ -5810,12 +6240,12 @@ namespace Example
             
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
-            var inlineObject1 = new InlineObject1(); // InlineObject1 | 
+            var inlineObject2 = new InlineObject2(); // InlineObject2 | 
 
             try
             {
                 // Remove document
-                Object result = apiInstance.remove(dataSourceId, inlineObject1);
+                Object result = apiInstance.remove(dataSourceId, inlineObject2);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -5834,10 +6264,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
-$inlineObject1 = ; // InlineObject1 | 
+$inlineObject2 = ; // InlineObject2 | 
 
 try {
-    $result = $api_instance->remove($dataSourceId, $inlineObject1);
+    $result = $api_instance->remove($dataSourceId, $inlineObject2);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling ExplorerApi->remove: ', $e->getMessage(), PHP_EOL;
@@ -5852,10 +6282,10 @@ use WWW::OPenAPIClient::ExplorerApi;
 
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
-my $inlineObject1 = WWW::OPenAPIClient::Object::InlineObject1->new(); # InlineObject1 | 
+my $inlineObject2 = WWW::OPenAPIClient::Object::InlineObject2->new(); # InlineObject2 | 
 
 eval { 
-    my $result = $api_instance->remove(dataSourceId => $dataSourceId, inlineObject1 => $inlineObject1);
+    my $result = $api_instance->remove(dataSourceId => $dataSourceId, inlineObject2 => $inlineObject2);
     print Dumper($result);
 };
 if ($@) {
@@ -5873,11 +6303,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
-inlineObject1 =  # InlineObject1 | 
+inlineObject2 =  # InlineObject2 | 
 
 try: 
     # Remove document
-    api_response = api_instance.remove(dataSourceId, inlineObject1)
+    api_response = api_instance.remove(dataSourceId, inlineObject2)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ExplorerApi->remove: %s\n" % e)</code></pre>
@@ -5888,10 +6318,10 @@ except ApiException as e:
 
 pub fn main() {
     let dataSourceId = dataSourceId_example; // String
-    let inlineObject1 = ; // InlineObject1
+    let inlineObject2 = ; // InlineObject2
 
     let mut context = ExplorerApi::Context::default();
-    let result = client.remove(dataSourceId, inlineObject1, &context).wait();
+    let result = client.remove(dataSourceId, inlineObject2, &context).wait();
     println!("{:?}", result);
 
 }
@@ -5944,7 +6374,7 @@ The data source ID
                                 <th width="150px">Name</th>
                                 <th>Description</th>
                               </tr>
-                                <tr><td style="width:150px;">inlineObject1 <span style="color:red;">*</span></td>
+                                <tr><td style="width:150px;">inlineObject2 <span style="color:red;">*</span></td>
 <td>
 <p class="marked"></p>
 <script>
@@ -5953,7 +6383,7 @@ $(document).ready(function() {
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_object_1"
+        "$ref" : "#/components/schemas/inline_object_2"
       }
     }
   },
@@ -5973,12 +6403,12 @@ $(document).ready(function() {
   }
 
   var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-  var result = $('#d2e199_remove_inlineObject1');
+  var result = $('#d2e199_remove_inlineObject2');
   result.empty();
   result.append(view.render());
 });
 </script>
-<div id="d2e199_remove_inlineObject1"></div>
+<div id="d2e199_remove_inlineObject2"></div>
 </td>
 </tr>
 
@@ -6106,9 +6536,9 @@ public class ExplorerApiExample {
         
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        InlineObject2 inlineObject2 = ; // InlineObject2 | 
+        InlineObject3 inlineObject3 = ; // InlineObject3 | 
         try {
-            Object result = apiInstance.removeByPath(dataSourceId, inlineObject2);
+            Object result = apiInstance.removeByPath(dataSourceId, inlineObject3);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ExplorerApi#removeByPath");
@@ -6127,9 +6557,9 @@ public class ExplorerApiExample {
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        InlineObject2 inlineObject2 = ; // InlineObject2 | 
+        InlineObject3 inlineObject3 = ; // InlineObject3 | 
         try {
-            Object result = apiInstance.removeByPath(dataSourceId, inlineObject2);
+            Object result = apiInstance.removeByPath(dataSourceId, inlineObject3);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ExplorerApi#removeByPath");
@@ -6144,13 +6574,13 @@ public class ExplorerApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-removeByPath-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-InlineObject2 *inlineObject2 = ; // 
+InlineObject3 *inlineObject3 = ; // 
 
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
 
 // Remove document by path
 [apiInstance removeByPathWith:dataSourceId
-    inlineObject2:inlineObject2
+    inlineObject3:inlineObject3
               completionHandler: ^(Object output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -6167,7 +6597,7 @@ ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
 
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
-var inlineObject2 = ; // {InlineObject2} 
+var inlineObject3 = ; // {InlineObject3} 
 
 var callback = function(error, data, response) {
   if (error) {
@@ -6176,7 +6606,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.removeByPath(dataSourceId, inlineObject2, callback);
+api.removeByPath(dataSourceId, inlineObject3, callback);
 </code></pre>
                             </div>
 
@@ -6199,12 +6629,12 @@ namespace Example
             
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
-            var inlineObject2 = new InlineObject2(); // InlineObject2 | 
+            var inlineObject3 = new InlineObject3(); // InlineObject3 | 
 
             try
             {
                 // Remove document by path
-                Object result = apiInstance.removeByPath(dataSourceId, inlineObject2);
+                Object result = apiInstance.removeByPath(dataSourceId, inlineObject3);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -6223,10 +6653,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
-$inlineObject2 = ; // InlineObject2 | 
+$inlineObject3 = ; // InlineObject3 | 
 
 try {
-    $result = $api_instance->removeByPath($dataSourceId, $inlineObject2);
+    $result = $api_instance->removeByPath($dataSourceId, $inlineObject3);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling ExplorerApi->removeByPath: ', $e->getMessage(), PHP_EOL;
@@ -6241,10 +6671,10 @@ use WWW::OPenAPIClient::ExplorerApi;
 
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
-my $inlineObject2 = WWW::OPenAPIClient::Object::InlineObject2->new(); # InlineObject2 | 
+my $inlineObject3 = WWW::OPenAPIClient::Object::InlineObject3->new(); # InlineObject3 | 
 
 eval { 
-    my $result = $api_instance->removeByPath(dataSourceId => $dataSourceId, inlineObject2 => $inlineObject2);
+    my $result = $api_instance->removeByPath(dataSourceId => $dataSourceId, inlineObject3 => $inlineObject3);
     print Dumper($result);
 };
 if ($@) {
@@ -6262,11 +6692,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
-inlineObject2 =  # InlineObject2 | 
+inlineObject3 =  # InlineObject3 | 
 
 try: 
     # Remove document by path
-    api_response = api_instance.remove_by_path(dataSourceId, inlineObject2)
+    api_response = api_instance.remove_by_path(dataSourceId, inlineObject3)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ExplorerApi->removeByPath: %s\n" % e)</code></pre>
@@ -6277,10 +6707,10 @@ except ApiException as e:
 
 pub fn main() {
     let dataSourceId = dataSourceId_example; // String
-    let inlineObject2 = ; // InlineObject2
+    let inlineObject3 = ; // InlineObject3
 
     let mut context = ExplorerApi::Context::default();
-    let result = client.removeByPath(dataSourceId, inlineObject2, &context).wait();
+    let result = client.removeByPath(dataSourceId, inlineObject3, &context).wait();
     println!("{:?}", result);
 
 }
@@ -6333,7 +6763,7 @@ The data source ID
                                 <th width="150px">Name</th>
                                 <th>Description</th>
                               </tr>
-                                <tr><td style="width:150px;">inlineObject2 <span style="color:red;">*</span></td>
+                                <tr><td style="width:150px;">inlineObject3 <span style="color:red;">*</span></td>
 <td>
 <p class="marked"></p>
 <script>
@@ -6342,7 +6772,7 @@ $(document).ready(function() {
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_object_2"
+        "$ref" : "#/components/schemas/inline_object_3"
       }
     }
   },
@@ -6362,12 +6792,12 @@ $(document).ready(function() {
   }
 
   var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-  var result = $('#d2e199_removeByPath_inlineObject2');
+  var result = $('#d2e199_removeByPath_inlineObject3');
   result.empty();
   result.append(view.render());
 });
 </script>
-<div id="d2e199_removeByPath_inlineObject2"></div>
+<div id="d2e199_removeByPath_inlineObject3"></div>
 </td>
 </tr>
 
@@ -6495,9 +6925,9 @@ public class ExplorerApiExample {
         
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        InlineObject3 inlineObject3 = ; // InlineObject3 | 
+        InlineObject4 inlineObject4 = ; // InlineObject4 | 
         try {
-            map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject3);
+            map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject4);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ExplorerApi#rename");
@@ -6516,9 +6946,9 @@ public class ExplorerApiExample {
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        InlineObject3 inlineObject3 = ; // InlineObject3 | 
+        InlineObject4 inlineObject4 = ; // InlineObject4 | 
         try {
-            map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject3);
+            map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject4);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ExplorerApi#rename");
@@ -6533,13 +6963,13 @@ public class ExplorerApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-rename-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-InlineObject3 *inlineObject3 = ; // 
+InlineObject4 *inlineObject4 = ; // 
 
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
 
 // Rename document
 [apiInstance renameWith:dataSourceId
-    inlineObject3:inlineObject3
+    inlineObject4:inlineObject4
               completionHandler: ^(map['String', Object] output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -6556,7 +6986,7 @@ ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
 
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
-var inlineObject3 = ; // {InlineObject3} 
+var inlineObject4 = ; // {InlineObject4} 
 
 var callback = function(error, data, response) {
   if (error) {
@@ -6565,7 +6995,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.rename(dataSourceId, inlineObject3, callback);
+api.rename(dataSourceId, inlineObject4, callback);
 </code></pre>
                             </div>
 
@@ -6588,12 +7018,12 @@ namespace Example
             
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
-            var inlineObject3 = new InlineObject3(); // InlineObject3 | 
+            var inlineObject4 = new InlineObject4(); // InlineObject4 | 
 
             try
             {
                 // Rename document
-                map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject3);
+                map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject4);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -6612,10 +7042,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
-$inlineObject3 = ; // InlineObject3 | 
+$inlineObject4 = ; // InlineObject4 | 
 
 try {
-    $result = $api_instance->rename($dataSourceId, $inlineObject3);
+    $result = $api_instance->rename($dataSourceId, $inlineObject4);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling ExplorerApi->rename: ', $e->getMessage(), PHP_EOL;
@@ -6630,10 +7060,10 @@ use WWW::OPenAPIClient::ExplorerApi;
 
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
-my $inlineObject3 = WWW::OPenAPIClient::Object::InlineObject3->new(); # InlineObject3 | 
+my $inlineObject4 = WWW::OPenAPIClient::Object::InlineObject4->new(); # InlineObject4 | 
 
 eval { 
-    my $result = $api_instance->rename(dataSourceId => $dataSourceId, inlineObject3 => $inlineObject3);
+    my $result = $api_instance->rename(dataSourceId => $dataSourceId, inlineObject4 => $inlineObject4);
     print Dumper($result);
 };
 if ($@) {
@@ -6651,11 +7081,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
-inlineObject3 =  # InlineObject3 | 
+inlineObject4 =  # InlineObject4 | 
 
 try: 
     # Rename document
-    api_response = api_instance.rename(dataSourceId, inlineObject3)
+    api_response = api_instance.rename(dataSourceId, inlineObject4)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ExplorerApi->rename: %s\n" % e)</code></pre>
@@ -6666,10 +7096,10 @@ except ApiException as e:
 
 pub fn main() {
     let dataSourceId = dataSourceId_example; // String
-    let inlineObject3 = ; // InlineObject3
+    let inlineObject4 = ; // InlineObject4
 
     let mut context = ExplorerApi::Context::default();
-    let result = client.rename(dataSourceId, inlineObject3, &context).wait();
+    let result = client.rename(dataSourceId, inlineObject4, &context).wait();
     println!("{:?}", result);
 
 }
@@ -6722,7 +7152,7 @@ The data source ID
                                 <th width="150px">Name</th>
                                 <th>Description</th>
                               </tr>
-                                <tr><td style="width:150px;">inlineObject3 <span style="color:red;">*</span></td>
+                                <tr><td style="width:150px;">inlineObject4 <span style="color:red;">*</span></td>
 <td>
 <p class="marked"></p>
 <script>
@@ -6731,7 +7161,7 @@ $(document).ready(function() {
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_object_3"
+        "$ref" : "#/components/schemas/inline_object_4"
       }
     }
   },
@@ -6751,12 +7181,12 @@ $(document).ready(function() {
   }
 
   var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-  var result = $('#d2e199_rename_inlineObject3');
+  var result = $('#d2e199_rename_inlineObject4');
   result.empty();
   result.append(view.render());
 });
 </script>
-<div id="d2e199_rename_inlineObject3"></div>
+<div id="d2e199_rename_inlineObject4"></div>
 </td>
 </tr>
 
@@ -7594,9 +8024,9 @@ public class SearchApiExample {
         
         SearchApi apiInstance = new SearchApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        InlineObject4 inlineObject4 = ; // InlineObject4 | 
+        InlineObject5 inlineObject5 = ; // InlineObject5 | 
         try {
-            map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject4);
+            map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject5);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SearchApi#searchEntities");
@@ -7615,9 +8045,9 @@ public class SearchApiExample {
     public static void main(String[] args) {
         SearchApi apiInstance = new SearchApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        InlineObject4 inlineObject4 = ; // InlineObject4 | 
+        InlineObject5 inlineObject5 = ; // InlineObject5 | 
         try {
-            map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject4);
+            map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject5);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SearchApi#searchEntities");
@@ -7632,13 +8062,13 @@ public class SearchApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Search-searchEntities-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-InlineObject4 *inlineObject4 = ; // 
+InlineObject5 *inlineObject5 = ; // 
 
 SearchApi *apiInstance = [[SearchApi alloc] init];
 
 // Search for entities
 [apiInstance searchEntitiesWith:dataSourceId
-    inlineObject4:inlineObject4
+    inlineObject5:inlineObject5
               completionHandler: ^(map['String', Object] output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -7655,7 +8085,7 @@ SearchApi *apiInstance = [[SearchApi alloc] init];
 
 var api = new DataModellingStorageServiceApi.SearchApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
-var inlineObject4 = ; // {InlineObject4} 
+var inlineObject5 = ; // {InlineObject5} 
 
 var callback = function(error, data, response) {
   if (error) {
@@ -7664,7 +8094,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.searchEntities(dataSourceId, inlineObject4, callback);
+api.searchEntities(dataSourceId, inlineObject5, callback);
 </code></pre>
                             </div>
 
@@ -7687,12 +8117,12 @@ namespace Example
             
             var apiInstance = new SearchApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
-            var inlineObject4 = new InlineObject4(); // InlineObject4 | 
+            var inlineObject5 = new InlineObject5(); // InlineObject5 | 
 
             try
             {
                 // Search for entities
-                map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject4);
+                map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject5);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -7711,10 +8141,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new OpenAPITools\Client\Api\SearchApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
-$inlineObject4 = ; // InlineObject4 | 
+$inlineObject5 = ; // InlineObject5 | 
 
 try {
-    $result = $api_instance->searchEntities($dataSourceId, $inlineObject4);
+    $result = $api_instance->searchEntities($dataSourceId, $inlineObject5);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling SearchApi->searchEntities: ', $e->getMessage(), PHP_EOL;
@@ -7729,10 +8159,10 @@ use WWW::OPenAPIClient::SearchApi;
 
 my $api_instance = WWW::OPenAPIClient::SearchApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
-my $inlineObject4 = WWW::OPenAPIClient::Object::InlineObject4->new(); # InlineObject4 | 
+my $inlineObject5 = WWW::OPenAPIClient::Object::InlineObject5->new(); # InlineObject5 | 
 
 eval { 
-    my $result = $api_instance->searchEntities(dataSourceId => $dataSourceId, inlineObject4 => $inlineObject4);
+    my $result = $api_instance->searchEntities(dataSourceId => $dataSourceId, inlineObject5 => $inlineObject5);
     print Dumper($result);
 };
 if ($@) {
@@ -7750,11 +8180,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = openapi_client.SearchApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
-inlineObject4 =  # InlineObject4 | 
+inlineObject5 =  # InlineObject5 | 
 
 try: 
     # Search for entities
-    api_response = api_instance.search_entities(dataSourceId, inlineObject4)
+    api_response = api_instance.search_entities(dataSourceId, inlineObject5)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling SearchApi->searchEntities: %s\n" % e)</code></pre>
@@ -7765,10 +8195,10 @@ except ApiException as e:
 
 pub fn main() {
     let dataSourceId = dataSourceId_example; // String
-    let inlineObject4 = ; // InlineObject4
+    let inlineObject5 = ; // InlineObject5
 
     let mut context = SearchApi::Context::default();
-    let result = client.searchEntities(dataSourceId, inlineObject4, &context).wait();
+    let result = client.searchEntities(dataSourceId, inlineObject5, &context).wait();
     println!("{:?}", result);
 
 }
@@ -7821,7 +8251,7 @@ The data source ID
                                 <th width="150px">Name</th>
                                 <th>Description</th>
                               </tr>
-                                <tr><td style="width:150px;">inlineObject4 <span style="color:red;">*</span></td>
+                                <tr><td style="width:150px;">inlineObject5 <span style="color:red;">*</span></td>
 <td>
 <p class="marked"></p>
 <script>
@@ -7830,7 +8260,7 @@ $(document).ready(function() {
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_object_4"
+        "$ref" : "#/components/schemas/inline_object_5"
       }
     }
   },
@@ -7850,12 +8280,12 @@ $(document).ready(function() {
   }
 
   var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-  var result = $('#d2e199_searchEntities_inlineObject4');
+  var result = $('#d2e199_searchEntities_inlineObject5');
   result.empty();
   result.append(view.render());
 });
 </script>
-<div id="d2e199_searchEntities_inlineObject4"></div>
+<div id="d2e199_searchEntities_inlineObject5"></div>
 </td>
 </tr>
 

@@ -41,3 +41,9 @@ class TemplateRepositoryFromFile(RepositoryInterface):
 
     def update(self, document: DTO) -> None:
         raise NotImplementedError
+
+    def get_blob(self, uid):
+        raise NotImplementedError
+
+    def update_blob(self, uid: str, blob: bytearray):
+        raise NotImplementedError

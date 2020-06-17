@@ -1,6 +1,7 @@
 from enum import auto, Enum
 
 PRIMITIVES = {"string", "number", "integer", "boolean"}
+BLOB_TYPES = ("system/SIMOS/blob_types/PDF",)
 
 REQUIRED_ATTRIBUTES = ("name", "type")
 
