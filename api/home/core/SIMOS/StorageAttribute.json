@@ -22,7 +22,7 @@
       "name": "contained",
       "optional": true,
       "default": "true",
-      "description": "WARNING: Change how the entity is stored. Changing this value will make current entities unavailable. If True, dataType will have no effect"
+      "description": "WARNING: Change how the entity is stored. Changing this value will make current entities unavailable. If True, storageTypeAffinity will have no effect"
     },
     {
       "attributeType": "string",
