@@ -28,17 +28,24 @@ class TestDatasourceApi(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_add(self):
-        """Test case for add
-
-        Add data source  # noqa: E501
-        """
-        pass
-
     def test_get_all(self):
         """Test case for get_all
 
         Get all data sources  # noqa: E501
+        """
+        pass
+
+    def test_get_data_source(self):
+        """Test case for get_data_source
+
+        Get data source  # noqa: E501
+        """
+        pass
+
+    def test_save(self):
+        """Test case for save
+
+        Add data source  # noqa: E501
         """
         pass
 

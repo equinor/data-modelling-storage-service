@@ -15,26 +15,31 @@ class InlineObject1(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, parent_id=None, document_id=None):  # noqa: E501
+    def __init__(self, directory=None, document=None, files=None):  # noqa: E501
         """InlineObject1 - a model defined in OpenAPI
 
-        :param parent_id: The parent_id of this InlineObject1.  # noqa: E501
-        :type parent_id: str
-        :param document_id: The document_id of this InlineObject1.  # noqa: E501
-        :type document_id: str
+        :param directory: The directory of this InlineObject1.  # noqa: E501
+        :type directory: str
+        :param document: The document of this InlineObject1.  # noqa: E501
+        :type document: str
+        :param files: The files of this InlineObject1.  # noqa: E501
+        :type files: List[file]
         """
         self.openapi_types = {
-            'parent_id': str,
-            'document_id': str
+            'directory': str,
+            'document': str,
+            'files': List[file]
         }
 
         self.attribute_map = {
-            'parent_id': 'parentId',
-            'document_id': 'documentId'
+            'directory': 'directory',
+            'document': 'document',
+            'files': 'files'
         }
 
-        self._parent_id = parent_id
-        self._document_id = document_id
+        self._directory = directory
+        self._document = document
+        self._files = files
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineObject1':
@@ -48,45 +53,64 @@ class InlineObject1(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def parent_id(self):
-        """Gets the parent_id of this InlineObject1.
+    def directory(self):
+        """Gets the directory of this InlineObject1.
 
 
-        :return: The parent_id of this InlineObject1.
+        :return: The directory of this InlineObject1.
         :rtype: str
         """
-        return self._parent_id
+        return self._directory
 
-    @parent_id.setter
-    def parent_id(self, parent_id):
-        """Sets the parent_id of this InlineObject1.
+    @directory.setter
+    def directory(self, directory):
+        """Sets the directory of this InlineObject1.
 
 
-        :param parent_id: The parent_id of this InlineObject1.
-        :type parent_id: str
+        :param directory: The directory of this InlineObject1.
+        :type directory: str
         """
 
-        self._parent_id = parent_id
+        self._directory = directory
 
     @property
-    def document_id(self):
-        """Gets the document_id of this InlineObject1.
+    def document(self):
+        """Gets the document of this InlineObject1.
 
 
-        :return: The document_id of this InlineObject1.
+        :return: The document of this InlineObject1.
         :rtype: str
         """
-        return self._document_id
+        return self._document
 
-    @document_id.setter
-    def document_id(self, document_id):
-        """Sets the document_id of this InlineObject1.
+    @document.setter
+    def document(self, document):
+        """Sets the document of this InlineObject1.
 
 
-        :param document_id: The document_id of this InlineObject1.
-        :type document_id: str
+        :param document: The document of this InlineObject1.
+        :type document: str
         """
-        if document_id is None:
-            raise ValueError("Invalid value for `document_id`, must not be `None`")  # noqa: E501
 
-        self._document_id = document_id
+        self._document = document
+
+    @property
+    def files(self):
+        """Gets the files of this InlineObject1.
+
+
+        :return: The files of this InlineObject1.
+        :rtype: List[file]
+        """
+        return self._files
+
+    @files.setter
+    def files(self, files):
+        """Sets the files of this InlineObject1.
+
+
+        :param files: The files of this InlineObject1.
+        :type files: List[file]
+        """
+
+        self._files = files

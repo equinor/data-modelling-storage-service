@@ -36,17 +36,14 @@ class TestInlineObject1(unittest.TestCase):
         # model = dmss_api.models.inline_object1.InlineObject1()  # noqa: E501
         if include_optional :
             return InlineObject1(
-                name = '0', 
-                parent_id = '0', 
-                description = '0', 
-                document_id = '0'
+                directory = '0', 
+                document = '0', 
+                files = [
+                    bytes(b'blah')
+                    ]
             )
         else :
             return InlineObject1(
-                name = '0',
-                parent_id = '0',
-                description = '0',
-                document_id = '0',
         )
 
     def testInlineObject1(self):

@@ -3,6 +3,7 @@ from __future__ import absolute_import
 # flake8: noqa
 
 # import apis into api package
+from dmss_api.api.blob_api import BlobApi
 from dmss_api.api.datasource_api import DatasourceApi
 from dmss_api.api.document_api import DocumentApi
 from dmss_api.api.explorer_api import ExplorerApi

@@ -131,6 +131,34 @@ paths:
                 type: array
                 items:
                   type: object
+  /blobs/{dataSourceId}/{blobId}:
+    get:
+      operationId: get_blob_by_id
+      x-openapi-router-controller: controllers.blob_controller
+      tags:
+        - blob
+      summary: Get blob by ID
+      parameters:
+        - name: dataSourceId
+          in: path
+          description: 'The data source ID'
+          required: true
+          schema:
+            type: string
+        - name: blobId
+          in: path
+          description: 'The blob ID'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A Blob
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
   /documents/{dataSourceId}/{documentId}:
     get:
       operationId: get_by_id
@@ -314,7 +342,21 @@ paths:
           schema:
             type: string
       requestBody:
-        $ref: '#/components/requestBodies/DocumentBody'
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                directory:
+                  type: string
+                # This should be an object, but that ain't working because of connexion validation
+                document:
+                  type: string
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
       responses:
         '200':
           description: Added document

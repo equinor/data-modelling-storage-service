@@ -2,6 +2,8 @@ import json
 
 from behave import when, given
 
+from werkzeug.datastructures import FileStorage
+
 
 def context_response_json(context):
     response = context.response
@@ -18,6 +20,23 @@ def get_headers(context):
     header = {}
     # Add authentication?
     return header
+
+
+@when('i make a "{method}" request with "{number_of_files}" files')
+def step_make_file_request(context, method, number_of_files):
+    data = json.loads(context.text)
+    # data["files"] = {}
+    data["document"] = json.dumps(data["document"])
+    if method == "POST":
+        with open("api/tests_bdd/steps/test_pdf.pdf", "rb") as file:
+            byte_file = FileStorage(file)
+            for n in range(1, int(number_of_files) + 1):
+                data[f"file{n}"] = byte_file
+            context.response = context.repository.post(context.url, data=data, content_type="multipart/form-data")
+
+    context.response_status = context.response.status_code
+    if context.response.content_type == "application/json":
+        context_response_json(context)
 
 
 @when('i make a "{method}" request')

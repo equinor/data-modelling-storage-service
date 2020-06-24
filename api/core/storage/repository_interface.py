@@ -26,3 +26,11 @@ class RepositoryInterface(ABC):
     @abstractmethod
     def find_one(self, filters: Dict) -> Dict:
         """Find one method to be implemented"""
+
+    @abstractmethod
+    def update_blob(self, uid: str, blob: bytearray):
+        """Update blob method to be implemented"""
+
+    @abstractmethod
+    def get_blob(self, uid: str) -> bytearray:
+        """Get blob method to be implemented"""

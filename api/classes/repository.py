@@ -30,6 +30,12 @@ class Repository(RepositoryInterface):
     def add(self, uid: str, document: Dict) -> bool:
         return self.client.add(uid, document)
 
+    def update_blob(self, uid: str, blob: bytes) -> bool:
+        return self.client.update_blob(uid, blob)
+
+    def get_blob(self, uid: str) -> bytes:
+        return self.client.get_blob(uid)
+
     @staticmethod
     def _get_client(**kwargs):
 

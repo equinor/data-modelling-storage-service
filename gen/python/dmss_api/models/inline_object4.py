@@ -33,49 +33,123 @@ class InlineObject4(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'type': 'str'
+        'name': 'str',
+        'parent_id': 'str',
+        'description': 'str',
+        'document_id': 'str'
     }
 
     attribute_map = {
-        'type': 'type'
+        'name': 'name',
+        'parent_id': 'parentId',
+        'description': 'description',
+        'document_id': 'documentId'
     }
 
-    def __init__(self, type=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, name=None, parent_id=None, description=None, document_id=None, local_vars_configuration=None):  # noqa: E501
         """InlineObject4 - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._type = None
+        self._name = None
+        self._parent_id = None
+        self._description = None
+        self._document_id = None
         self.discriminator = None
 
-        self.type = type
+        self.name = name
+        self.parent_id = parent_id
+        self.description = description
+        self.document_id = document_id
 
     @property
-    def type(self):
-        """Gets the type of this InlineObject4.  # noqa: E501
+    def name(self):
+        """Gets the name of this InlineObject4.  # noqa: E501
 
 
-        :return: The type of this InlineObject4.  # noqa: E501
+        :return: The name of this InlineObject4.  # noqa: E501
         :rtype: str
         """
-        return self._type
+        return self._name
 
-    @type.setter
-    def type(self, type):
-        """Sets the type of this InlineObject4.
+    @name.setter
+    def name(self, name):
+        """Sets the name of this InlineObject4.
 
 
-        :param type: The type of this InlineObject4.  # noqa: E501
-        :type: str
+        :param name: The name of this InlineObject4.  # noqa: E501
+        :type name: str
         """
-        if self.local_vars_configuration.client_side_validation and type is None:  # noqa: E501
-            raise ValueError("Invalid value for `type`, must not be `None`")  # noqa: E501
-        if (self.local_vars_configuration.client_side_validation and
-                type is not None and len(type) < 5):
-            raise ValueError("Invalid value for `type`, length must be greater than or equal to `5`")  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and name is None:  # noqa: E501
+            raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
 
-        self._type = type
+        self._name = name
+
+    @property
+    def parent_id(self):
+        """Gets the parent_id of this InlineObject4.  # noqa: E501
+
+
+        :return: The parent_id of this InlineObject4.  # noqa: E501
+        :rtype: str
+        """
+        return self._parent_id
+
+    @parent_id.setter
+    def parent_id(self, parent_id):
+        """Sets the parent_id of this InlineObject4.
+
+
+        :param parent_id: The parent_id of this InlineObject4.  # noqa: E501
+        :type parent_id: str
+        """
+
+        self._parent_id = parent_id
+
+    @property
+    def description(self):
+        """Gets the description of this InlineObject4.  # noqa: E501
+
+
+        :return: The description of this InlineObject4.  # noqa: E501
+        :rtype: str
+        """
+        return self._description
+
+    @description.setter
+    def description(self, description):
+        """Sets the description of this InlineObject4.
+
+
+        :param description: The description of this InlineObject4.  # noqa: E501
+        :type description: str
+        """
+
+        self._description = description
+
+    @property
+    def document_id(self):
+        """Gets the document_id of this InlineObject4.  # noqa: E501
+
+
+        :return: The document_id of this InlineObject4.  # noqa: E501
+        :rtype: str
+        """
+        return self._document_id
+
+    @document_id.setter
+    def document_id(self, document_id):
+        """Sets the document_id of this InlineObject4.
+
+
+        :param document_id: The document_id of this InlineObject4.  # noqa: E501
+        :type document_id: str
+        """
+        if self.local_vars_configuration.client_side_validation and document_id is None:  # noqa: E501
+            raise ValueError("Invalid value for `document_id`, must not be `None`")  # noqa: E501
+
+        self._document_id = document_id
 
     def to_dict(self):
         """Returns the model properties as a dict"""

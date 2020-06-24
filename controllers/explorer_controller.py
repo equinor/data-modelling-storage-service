@@ -39,10 +39,10 @@ def add_to_parent(data_source_id, body):
 
 
 def add_to_path(data_source_id, body):
-    request_data = request.get_json()
-    request_data["data_source_id"] = data_source_id
+    body["data_source_id"] = data_source_id
+    body["files"] = request.files
     use_case = AddDocumentToPathUseCase()
-    request_object = AddDocumentToPathRequestObject.from_dict(request_data)
+    request_object = AddDocumentToPathRequestObject.from_dict(body)
     response = use_case.execute(request_object)
     return Response(
         json.dumps(response.value, cls=DTOSerializer), mimetype="application/json", status=STATUS_CODES[response.type]

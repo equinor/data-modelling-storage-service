@@ -16,11 +16,11 @@ import unittest
 import datetime
 
 import dmss_api
-from dmss_api.models.inline_response2002 import InlineResponse2002  # noqa: E501
+from dmss_api.models.inline_object5 import InlineObject5  # noqa: E501
 from dmss_api.rest import ApiException
 
-class TestInlineResponse2002(unittest.TestCase):
-    """InlineResponse2002 unit test stubs"""
+class TestInlineObject5(unittest.TestCase):
+    """InlineObject5 unit test stubs"""
 
     def setUp(self):
         pass
@@ -29,21 +29,22 @@ class TestInlineResponse2002(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test InlineResponse2002
+        """Test InlineObject5
             include_option is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # model = dmss_api.models.inline_response2002.InlineResponse2002()  # noqa: E501
+        # model = dmss_api.models.inline_object5.InlineObject5()  # noqa: E501
         if include_optional :
-            return InlineResponse2002(
-                uid = '0'
+            return InlineObject5(
+                type = '01234'
             )
         else :
-            return InlineResponse2002(
+            return InlineObject5(
+                type = '01234',
         )
 
-    def testInlineResponse2002(self):
-        """Test InlineResponse2002"""
+    def testInlineObject5(self):
+        """Test InlineObject5"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

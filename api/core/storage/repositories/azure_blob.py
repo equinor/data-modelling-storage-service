@@ -20,6 +20,12 @@ class AzureBlobStorageClient(RepositoryInterface):
         output = json.dumps(document)
         self.blob_service_client.create_blob_from_text(self.container, uid, output)
 
+    def update_blob(self, uid: str, blob: bytearray):
+        self.blob_service_client.create_blob_from_bytes(self.container, uid, blob)
+
+    def get_blob(self, uid: str) -> bytearray:
+        return self.blob_service_client.get_blob_to_bytes(self.container, uid).content
+
     def update(self, uid: str, document: Dict) -> bool:
         output = json.dumps(document)
         self.blob_service_client.create_blob_from_text(self.container, uid, output)

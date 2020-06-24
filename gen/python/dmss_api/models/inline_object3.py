@@ -33,123 +33,46 @@ class InlineObject3(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'name': 'str',
-        'parent_id': 'str',
-        'description': 'str',
-        'document_id': 'str'
+        'directory': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
-        'parent_id': 'parentId',
-        'description': 'description',
-        'document_id': 'documentId'
+        'directory': 'directory'
     }
 
-    def __init__(self, name=None, parent_id=None, description=None, document_id=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, directory=None, local_vars_configuration=None):  # noqa: E501
         """InlineObject3 - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._name = None
-        self._parent_id = None
-        self._description = None
-        self._document_id = None
+        self._directory = None
         self.discriminator = None
 
-        self.name = name
-        self.parent_id = parent_id
-        self.description = description
-        self.document_id = document_id
+        self.directory = directory
 
     @property
-    def name(self):
-        """Gets the name of this InlineObject3.  # noqa: E501
+    def directory(self):
+        """Gets the directory of this InlineObject3.  # noqa: E501
 
 
-        :return: The name of this InlineObject3.  # noqa: E501
+        :return: The directory of this InlineObject3.  # noqa: E501
         :rtype: str
         """
-        return self._name
+        return self._directory
 
-    @name.setter
-    def name(self, name):
-        """Sets the name of this InlineObject3.
+    @directory.setter
+    def directory(self, directory):
+        """Sets the directory of this InlineObject3.
 
 
-        :param name: The name of this InlineObject3.  # noqa: E501
-        :type: str
+        :param directory: The directory of this InlineObject3.  # noqa: E501
+        :type directory: str
         """
-        if self.local_vars_configuration.client_side_validation and name is None:  # noqa: E501
-            raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and directory is None:  # noqa: E501
+            raise ValueError("Invalid value for `directory`, must not be `None`")  # noqa: E501
 
-        self._name = name
-
-    @property
-    def parent_id(self):
-        """Gets the parent_id of this InlineObject3.  # noqa: E501
-
-
-        :return: The parent_id of this InlineObject3.  # noqa: E501
-        :rtype: str
-        """
-        return self._parent_id
-
-    @parent_id.setter
-    def parent_id(self, parent_id):
-        """Sets the parent_id of this InlineObject3.
-
-
-        :param parent_id: The parent_id of this InlineObject3.  # noqa: E501
-        :type: str
-        """
-
-        self._parent_id = parent_id
-
-    @property
-    def description(self):
-        """Gets the description of this InlineObject3.  # noqa: E501
-
-
-        :return: The description of this InlineObject3.  # noqa: E501
-        :rtype: str
-        """
-        return self._description
-
-    @description.setter
-    def description(self, description):
-        """Sets the description of this InlineObject3.
-
-
-        :param description: The description of this InlineObject3.  # noqa: E501
-        :type: str
-        """
-
-        self._description = description
-
-    @property
-    def document_id(self):
-        """Gets the document_id of this InlineObject3.  # noqa: E501
-
-
-        :return: The document_id of this InlineObject3.  # noqa: E501
-        :rtype: str
-        """
-        return self._document_id
-
-    @document_id.setter
-    def document_id(self, document_id):
-        """Sets the document_id of this InlineObject3.
-
-
-        :param document_id: The document_id of this InlineObject3.  # noqa: E501
-        :type: str
-        """
-        if self.local_vars_configuration.client_side_validation and document_id is None:  # noqa: E501
-            raise ValueError("Invalid value for `document_id`, must not be `None`")  # noqa: E501
-
-        self._document_id = document_id
+        self._directory = directory
 
     def to_dict(self):
         """Returns the model properties as a dict"""

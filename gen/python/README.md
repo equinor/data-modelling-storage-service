@@ -63,14 +63,16 @@ configuration = dmss_api.Configuration(
 # Enter a context with an instance of the API client
 with dmss_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = dmss_api.DatasourceApi(api_client)
-    
+    api_instance = dmss_api.BlobApi(api_client)
+    data_source_id = 'data_source_id_example' # str | The data source ID
+blob_id = 'blob_id_example' # str | The blob ID
+
     try:
-        # Get all data sources
-        api_response = api_instance.get_all()
+        # Get blob by ID
+        api_response = api_instance.get_blob_by_id(data_source_id, blob_id)
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling DatasourceApi->get_all: %s\n" % e)
+        print("Exception when calling BlobApi->get_blob_by_id: %s\n" % e)
     
 ```
 
@@ -80,6 +82,7 @@ All URIs are relative to *http://0.0.0.0:8000/api/v1*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*BlobApi* | [**get_blob_by_id**](docs/BlobApi.md#get_blob_by_id) | **GET** /blobs/{dataSourceId}/{blobId} | Get blob by ID
 *DatasourceApi* | [**get_all**](docs/DatasourceApi.md#get_all) | **GET** /data-sources | Get all data sources
 *DatasourceApi* | [**get_data_source**](docs/DatasourceApi.md#get_data_source) | **GET** /data-sources/{dataSourceId} | Get data source
 *DatasourceApi* | [**save**](docs/DatasourceApi.md#save) | **POST** /data-sources/{dataSourceId} | Add data source
@@ -107,6 +110,7 @@ Class | Method | HTTP request | Description
  - [InlineObject2](docs/InlineObject2.md)
  - [InlineObject3](docs/InlineObject3.md)
  - [InlineObject4](docs/InlineObject4.md)
+ - [InlineObject5](docs/InlineObject5.md)
  - [InlineResponse200](docs/InlineResponse200.md)
  - [InlineResponse2001](docs/InlineResponse2001.md)
 

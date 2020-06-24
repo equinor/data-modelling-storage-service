@@ -33,71 +33,97 @@ class InlineObject1(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'parent_id': 'str',
-        'document_id': 'str'
+        'directory': 'str',
+        'document': 'str',
+        'files': 'list[file]'
     }
 
     attribute_map = {
-        'parent_id': 'parentId',
-        'document_id': 'documentId'
+        'directory': 'directory',
+        'document': 'document',
+        'files': 'files'
     }
 
-    def __init__(self, parent_id=None, document_id=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, directory=None, document=None, files=None, local_vars_configuration=None):  # noqa: E501
         """InlineObject1 - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._parent_id = None
-        self._document_id = None
+        self._directory = None
+        self._document = None
+        self._files = None
         self.discriminator = None
 
-        self.parent_id = parent_id
-        self.document_id = document_id
+        if directory is not None:
+            self.directory = directory
+        if document is not None:
+            self.document = document
+        if files is not None:
+            self.files = files
 
     @property
-    def parent_id(self):
-        """Gets the parent_id of this InlineObject1.  # noqa: E501
+    def directory(self):
+        """Gets the directory of this InlineObject1.  # noqa: E501
 
 
-        :return: The parent_id of this InlineObject1.  # noqa: E501
+        :return: The directory of this InlineObject1.  # noqa: E501
         :rtype: str
         """
-        return self._parent_id
+        return self._directory
 
-    @parent_id.setter
-    def parent_id(self, parent_id):
-        """Sets the parent_id of this InlineObject1.
+    @directory.setter
+    def directory(self, directory):
+        """Sets the directory of this InlineObject1.
 
 
-        :param parent_id: The parent_id of this InlineObject1.  # noqa: E501
-        :type: str
+        :param directory: The directory of this InlineObject1.  # noqa: E501
+        :type directory: str
         """
 
-        self._parent_id = parent_id
+        self._directory = directory
 
     @property
-    def document_id(self):
-        """Gets the document_id of this InlineObject1.  # noqa: E501
+    def document(self):
+        """Gets the document of this InlineObject1.  # noqa: E501
 
 
-        :return: The document_id of this InlineObject1.  # noqa: E501
+        :return: The document of this InlineObject1.  # noqa: E501
         :rtype: str
         """
-        return self._document_id
+        return self._document
 
-    @document_id.setter
-    def document_id(self, document_id):
-        """Sets the document_id of this InlineObject1.
+    @document.setter
+    def document(self, document):
+        """Sets the document of this InlineObject1.
 
 
-        :param document_id: The document_id of this InlineObject1.  # noqa: E501
-        :type: str
+        :param document: The document of this InlineObject1.  # noqa: E501
+        :type document: str
         """
-        if self.local_vars_configuration.client_side_validation and document_id is None:  # noqa: E501
-            raise ValueError("Invalid value for `document_id`, must not be `None`")  # noqa: E501
 
-        self._document_id = document_id
+        self._document = document
+
+    @property
+    def files(self):
+        """Gets the files of this InlineObject1.  # noqa: E501
+
+
+        :return: The files of this InlineObject1.  # noqa: E501
+        :rtype: list[file]
+        """
+        return self._files
+
+    @files.setter
+    def files(self, files):
+        """Sets the files of this InlineObject1.
+
+
+        :param files: The files of this InlineObject1.  # noqa: E501
+        :type files: list[file]
+        """
+
+        self._files = files
 
     def to_dict(self):
         """Returns the model properties as a dict"""

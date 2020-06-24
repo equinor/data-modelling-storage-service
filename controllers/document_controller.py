@@ -1,12 +1,12 @@
-from api.core.serializers.dto_json_serializer import DTOSerializer
-
-from api.core.use_case.update_document_use_case import UpdateDocumentRequestObject, UpdateDocumentUseCase
-
-from api.core.use_case.get_document_by_path_use_case import GetDocumentByPathUseCase, GetDocumentByPathRequestObject
-from api.core.use_case.get_document_use_case import GetDocumentUseCase, GetDocumentRequestObject
-from flask import Response, request
-from controllers.status_codes import STATUS_CODES
 import json
+
+from flask import request, Response
+
+from api.core.serializers.dto_json_serializer import DTOSerializer
+from api.core.use_case.get_document_by_path_use_case import GetDocumentByPathRequestObject, GetDocumentByPathUseCase
+from api.core.use_case.get_document_use_case import GetDocumentRequestObject, GetDocumentUseCase
+from api.core.use_case.update_document_use_case import UpdateDocumentRequestObject, UpdateDocumentUseCase
+from controllers.status_codes import STATUS_CODES
 
 
 def get_by_id(data_source_id, document_id):
@@ -24,6 +24,7 @@ def get_by_id(data_source_id, document_id):
         }
     )
     response = use_case.execute(request_object)
+
     return Response(json.dumps(response.value), mimetype="application/json", status=STATUS_CODES[response.type])
 
 

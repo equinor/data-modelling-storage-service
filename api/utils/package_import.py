@@ -2,6 +2,8 @@ import json
 import os
 from typing import Dict, List, Union
 
+from werkzeug.datastructures import FileStorage
+
 from api.classes.dto import DTO
 from api.core.enums import DMT
 from api.core.storage.data_source import DataSource
@@ -43,6 +45,12 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
         docs.append({"_id": document.uid, "name": document.name, "type": document.type})
 
     return docs
+
+
+def import_blob(path_tuple: str):
+    data_source: DataSource = get_data_source(data_source_id="entities")
+    with open(path_tuple[0], "rb") as blob_file:
+        data_source.update_blob(path_tuple[1], FileStorage(blob_file))
 
 
 def import_package(path, data_source: str, is_root: bool = False) -> Union[Dict]:

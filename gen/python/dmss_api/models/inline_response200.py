@@ -68,7 +68,7 @@ class InlineResponse200(object):
 
 
         :param data: The data of this InlineResponse200.  # noqa: E501
-        :type: dict(str, object)
+        :type data: dict(str, object)
         """
 
         self._data = data

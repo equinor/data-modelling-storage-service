@@ -15,6 +15,38 @@ tags:
 - description: Data sources
   name: datasource
 paths:
+  /blobs/{dataSourceId}/{blobId}:
+    get:
+      operationId: get_blob_by_id
+      parameters:
+      - description: The data source ID
+        explode: false
+        in: path
+        name: dataSourceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The blob ID
+        explode: false
+        in: path
+        name: blobId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: A Blob
+      summary: Get blob by ID
+      tags:
+      - blob
+      x-openapi-router-controller: controllers.blob_controller
   /data-sources:
     get:
       operationId: get_all
@@ -330,7 +362,21 @@ paths:
           type: string
         style: simple
       requestBody:
-        $ref: '#/components/requestBodies/DocumentBody'
+        $ref: '#/components/requestBodies/inline_object_1'
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                directory:
+                  type: string
+                document:
+                  type: string
+                files:
+                  items:
+                    format: binary
+                    type: string
+                  type: array
+              type: object
       responses:
         "200":
           content:
@@ -380,7 +426,7 @@ paths:
           type: string
         style: simple
       requestBody:
-        $ref: '#/components/requestBodies/inline_object_1'
+        $ref: '#/components/requestBodies/inline_object_2'
         content:
           application/json:
             schema:
@@ -419,7 +465,7 @@ paths:
           type: string
         style: simple
       requestBody:
-        $ref: '#/components/requestBodies/inline_object_2'
+        $ref: '#/components/requestBodies/inline_object_3'
         content:
           application/json:
             schema:
@@ -455,7 +501,7 @@ paths:
           type: string
         style: simple
       requestBody:
-        $ref: '#/components/requestBodies/inline_object_3'
+        $ref: '#/components/requestBodies/inline_object_4'
         content:
           application/json:
             schema:
@@ -556,7 +602,7 @@ paths:
           type: string
         style: simple
       requestBody:
-        $ref: '#/components/requestBodies/inline_object_4'
+        $ref: '#/components/requestBodies/inline_object_5'
         content:
           application/json:
             schema:
@@ -597,10 +643,9 @@ components:
       required: true
     inline_object_1:
       content:
-        application/json:
+        multipart/form-data:
           schema:
             $ref: '#/components/schemas/inline_object_1'
-      required: true
     inline_object_2:
       content:
         application/json:
@@ -618,6 +663,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/inline_object_4'
+      required: true
+    inline_object_5:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_5'
       required: true
   schemas:
     DocumentResponse:
@@ -662,6 +713,18 @@ components:
           type: string
     inline_object_1:
       properties:
+        directory:
+          type: string
+        document:
+          type: string
+        files:
+          items:
+            format: binary
+            type: string
+          type: array
+      type: object
+    inline_object_2:
+      properties:
         parentId:
           nullable: true
           type: string
@@ -670,14 +733,14 @@ components:
       required:
       - documentId
       type: object
-    inline_object_2:
+    inline_object_3:
       properties:
         directory:
           type: string
       required:
       - directory
       type: object
-    inline_object_3:
+    inline_object_4:
       properties:
         name:
           type: string
@@ -693,7 +756,7 @@ components:
       - documentId
       - name
       type: object
-    inline_object_4:
+    inline_object_5:
       properties:
         type:
           minLength: 5

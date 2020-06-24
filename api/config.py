@@ -21,6 +21,7 @@ class Config:
     DMT_SETTINGS_FILE = f"{APPLICATION_HOME}/dmt_settings.json"
     ENTITY_SETTINGS_FILE = f"{APPLICATION_HOME}/settings.json"
     SYSTEM_FOLDERS = ["SIMOS"]
+    IMPORT_BLOBS = [("api/tests_bdd/steps/test_pdf.pdf", "1234")]
     with open(DMT_SETTINGS_FILE) as json_file:
         DMT_APPLICATION_SETTINGS = json.load(json_file)
     with open(ENTITY_SETTINGS_FILE) as json_file:

@@ -68,7 +68,7 @@ class InlineResponse2001(object):
 
 
         :param uid: The uid of this InlineResponse2001.  # noqa: E501
-        :type: str
+        :type uid: str
         """
 
         self._uid = uid

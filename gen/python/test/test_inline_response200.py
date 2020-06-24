@@ -36,7 +36,7 @@ class TestInlineResponse200(unittest.TestCase):
         # model = dmss_api.models.inline_response200.InlineResponse200()  # noqa: E501
         if include_optional :
             return InlineResponse200(
-                uid = '0'
+                data = { }
             )
         else :
             return InlineResponse200(
