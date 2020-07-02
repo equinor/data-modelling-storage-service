@@ -93,6 +93,10 @@ class ExplorerApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
@@ -110,7 +114,8 @@ class ExplorerApi(object):
                 'async_req',
                 '_return_http_data_only',
                 '_preload_content',
-                '_request_timeout'
+                '_request_timeout',
+                '_request_auth'
             ]
         )
 
@@ -172,7 +177,8 @@ class ExplorerApi(object):
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=local_var_params.get('_preload_content', True),
             _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            collection_formats=collection_formats,
+            _request_auth=local_var_params.get('_request_auth'))
 
     def add_package(self, data_source_id, request_body, **kwargs):  # noqa: E501
         """Add package  # noqa: E501
@@ -231,6 +237,10 @@ class ExplorerApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
@@ -248,7 +258,8 @@ class ExplorerApi(object):
                 'async_req',
                 '_return_http_data_only',
                 '_preload_content',
-                '_request_timeout'
+                '_request_timeout',
+                '_request_auth'
             ]
         )
 
@@ -310,7 +321,8 @@ class ExplorerApi(object):
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=local_var_params.get('_preload_content', True),
             _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            collection_formats=collection_formats,
+            _request_auth=local_var_params.get('_request_auth'))
 
     def add_raw(self, data_source_id, request_body, **kwargs):  # noqa: E501
         """Add raw document  # noqa: E501
@@ -369,6 +381,10 @@ class ExplorerApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
@@ -386,7 +402,8 @@ class ExplorerApi(object):
                 'async_req',
                 '_return_http_data_only',
                 '_preload_content',
-                '_request_timeout'
+                '_request_timeout',
+                '_request_auth'
             ]
         )
 
@@ -448,7 +465,8 @@ class ExplorerApi(object):
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=local_var_params.get('_preload_content', True),
             _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            collection_formats=collection_formats,
+            _request_auth=local_var_params.get('_request_auth'))
 
     def add_to_parent(self, data_source_id, inline_object, **kwargs):  # noqa: E501
         """Add document to parent  # noqa: E501
@@ -507,6 +525,10 @@ class ExplorerApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
@@ -524,7 +546,8 @@ class ExplorerApi(object):
                 'async_req',
                 '_return_http_data_only',
                 '_preload_content',
-                '_request_timeout'
+                '_request_timeout',
+                '_request_auth'
             ]
         )
 
@@ -586,7 +609,8 @@ class ExplorerApi(object):
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=local_var_params.get('_preload_content', True),
             _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            collection_formats=collection_formats,
+            _request_auth=local_var_params.get('_request_auth'))
 
     def add_to_path(self, data_source_id, **kwargs):  # noqa: E501
         """Add document to path  # noqa: E501
@@ -653,6 +677,10 @@ class ExplorerApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
@@ -672,7 +700,8 @@ class ExplorerApi(object):
                 'async_req',
                 '_return_http_data_only',
                 '_preload_content',
-                '_request_timeout'
+                '_request_timeout',
+                '_request_auth'
             ]
         )
 
@@ -735,7 +764,8 @@ class ExplorerApi(object):
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=local_var_params.get('_preload_content', True),
             _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            collection_formats=collection_formats,
+            _request_auth=local_var_params.get('_request_auth'))
 
     def move(self, data_source_id, request_body, **kwargs):  # noqa: E501
         """Move document  # noqa: E501
@@ -794,6 +824,10 @@ class ExplorerApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
@@ -811,7 +845,8 @@ class ExplorerApi(object):
                 'async_req',
                 '_return_http_data_only',
                 '_preload_content',
-                '_request_timeout'
+                '_request_timeout',
+                '_request_auth'
             ]
         )
 
@@ -873,7 +908,8 @@ class ExplorerApi(object):
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=local_var_params.get('_preload_content', True),
             _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            collection_formats=collection_formats,
+            _request_auth=local_var_params.get('_request_auth'))
 
     def remove(self, data_source_id, inline_object2, **kwargs):  # noqa: E501
         """Remove document  # noqa: E501
@@ -932,6 +968,10 @@ class ExplorerApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
@@ -949,7 +989,8 @@ class ExplorerApi(object):
                 'async_req',
                 '_return_http_data_only',
                 '_preload_content',
-                '_request_timeout'
+                '_request_timeout',
+                '_request_auth'
             ]
         )
 
@@ -1011,7 +1052,8 @@ class ExplorerApi(object):
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=local_var_params.get('_preload_content', True),
             _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            collection_formats=collection_formats,
+            _request_auth=local_var_params.get('_request_auth'))
 
     def remove_by_path(self, data_source_id, inline_object3, **kwargs):  # noqa: E501
         """Remove document by path  # noqa: E501
@@ -1070,6 +1112,10 @@ class ExplorerApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
@@ -1087,7 +1133,8 @@ class ExplorerApi(object):
                 'async_req',
                 '_return_http_data_only',
                 '_preload_content',
-                '_request_timeout'
+                '_request_timeout',
+                '_request_auth'
             ]
         )
 
@@ -1149,7 +1196,8 @@ class ExplorerApi(object):
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=local_var_params.get('_preload_content', True),
             _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            collection_formats=collection_formats,
+            _request_auth=local_var_params.get('_request_auth'))
 
     def rename(self, data_source_id, inline_object4, **kwargs):  # noqa: E501
         """Rename document  # noqa: E501
@@ -1208,6 +1256,10 @@ class ExplorerApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
@@ -1225,7 +1277,8 @@ class ExplorerApi(object):
                 'async_req',
                 '_return_http_data_only',
                 '_preload_content',
-                '_request_timeout'
+                '_request_timeout',
+                '_request_auth'
             ]
         )
 
@@ -1287,4 +1340,5 @@ class ExplorerApi(object):
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
             _preload_content=local_var_params.get('_preload_content', True),
             _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            collection_formats=collection_formats,
+            _request_auth=local_var_params.get('_request_auth'))

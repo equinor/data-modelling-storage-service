@@ -919,16 +919,6 @@ ul.nav-tabs {
     }
   }
 };
-    defs["inline_object_5"] = {
-  "required" : [ "type" ],
-  "type" : "object",
-  "properties" : {
-    "type" : {
-      "minLength" : 5,
-      "type" : "string"
-    }
-  }
-};
     defs["inline_response_200"] = {
   "properties" : {
     "data" : {
@@ -1081,7 +1071,9 @@ ul.nav-tabs {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Blob-getBlobById-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://0.0.0.0:8000/api/v1/blobs/{dataSourceId}/{blobId}"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+ -H "Accept: application/octet-stream"\
+ "http://0.0.0.0:8000/api/v1/blobs/{dataSourceId}/{blobId}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Blob-getBlobById-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -1093,12 +1085,13 @@ import java.io.File;
 import java.util.*;
 
 public class BlobApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         BlobApi apiInstance = new BlobApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String blobId = blobId_example; // String | The blob ID
+        
         try {
             File result = apiInstance.getBlobById(dataSourceId, blobId);
             System.out.println(result);
@@ -1115,11 +1108,11 @@ public class BlobApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.BlobApi;
 
 public class BlobApiExample {
-
     public static void main(String[] args) {
         BlobApi apiInstance = new BlobApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String blobId = blobId_example; // String | The blob ID
+        
         try {
             File result = apiInstance.getBlobById(dataSourceId, blobId);
             System.out.println(result);
@@ -1135,28 +1128,31 @@ public class BlobApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Blob-getBlobById-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-String *blobId = blobId_example; // The blob ID (default to null)
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 BlobApi *apiInstance = [[BlobApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+String *blobId = blobId_example; // The blob ID (default to null)
 
 // Get blob by ID
 [apiInstance getBlobByIdWith:dataSourceId
     blobId:blobId
               completionHandler: ^(File output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Blob-getBlobById-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.BlobApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var blobId = blobId_example; // {String} The blob ID
@@ -1189,18 +1185,16 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new BlobApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var blobId = blobId_example;  // String | The blob ID (default to null)
 
-            try
-            {
+            try {
                 // Get blob by ID
                 File result = apiInstance.getBlobById(dataSourceId, blobId);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling BlobApi.getBlobById: " + e.Message );
             }
         }
@@ -1213,6 +1207,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\BlobApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $blobId = blobId_example; // String | The blob ID
@@ -1231,6 +1226,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::BlobApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::BlobApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $blobId = blobId_example; # String | The blob ID
@@ -1251,7 +1247,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.BlobApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 blobId = blobId_example # String | The blob ID (default to null)
@@ -1273,8 +1269,8 @@ pub fn main() {
 
     let mut context = BlobApi::Context::default();
     let result = client.getBlobById(dataSourceId, blobId, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -1452,7 +1448,9 @@ The blob ID
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Datasource-getAll-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://0.0.0.0:8000/api/v1/data-sources"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+ -H "Accept: application/json"\
+ "http://0.0.0.0:8000/api/v1/data-sources"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Datasource-getAll-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -1464,10 +1462,11 @@ import java.io.File;
 import java.util.*;
 
 public class DatasourceApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         DatasourceApi apiInstance = new DatasourceApi();
+        
         try {
             array[Object] result = apiInstance.getAll();
             System.out.println(result);
@@ -1484,9 +1483,9 @@ public class DatasourceApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DatasourceApi;
 
 public class DatasourceApiExample {
-
     public static void main(String[] args) {
         DatasourceApi apiInstance = new DatasourceApi();
+        
         try {
             array[Object] result = apiInstance.getAll();
             System.out.println(result);
@@ -1503,24 +1502,27 @@ public class DatasourceApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Datasource-getAll-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
 DatasourceApi *apiInstance = [[DatasourceApi alloc] init];
 
 // Get all data sources
 [apiInstance getAllWithCompletionHandler: 
               ^(array[Object] output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Datasource-getAll-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.DatasourceApi()
 var callback = function(error, data, response) {
   if (error) {
@@ -1550,16 +1552,14 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new DatasourceApi();
 
-            try
-            {
+            try {
                 // Get all data sources
                 array[Object] result = apiInstance.getAll();
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling DatasourceApi.getAll: " + e.Message );
             }
         }
@@ -1572,6 +1572,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DatasourceApi();
 
 try {
@@ -1588,6 +1589,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::DatasourceApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DatasourceApi->new();
 
 eval { 
@@ -1606,7 +1608,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.DatasourceApi()
 
 try: 
@@ -1624,8 +1626,8 @@ pub fn main() {
 
     let mut context = DatasourceApi::Context::default();
     let result = client.getAll(&context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -1749,7 +1751,9 @@ pub fn main() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Datasource-getDataSource-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://0.0.0.0:8000/api/v1/data-sources/{dataSourceId}"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+ -H "Accept: application/json"\
+ "http://0.0.0.0:8000/api/v1/data-sources/{dataSourceId}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Datasource-getDataSource-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -1761,11 +1765,12 @@ import java.io.File;
 import java.util.*;
 
 public class DatasourceApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         DatasourceApi apiInstance = new DatasourceApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
+        
         try {
             map['String', Object] result = apiInstance.getDataSource(dataSourceId);
             System.out.println(result);
@@ -1782,10 +1787,10 @@ public class DatasourceApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DatasourceApi;
 
 public class DatasourceApiExample {
-
     public static void main(String[] args) {
         DatasourceApi apiInstance = new DatasourceApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
+        
         try {
             map['String', Object] result = apiInstance.getDataSource(dataSourceId);
             System.out.println(result);
@@ -1801,26 +1806,29 @@ public class DatasourceApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Datasource-getDataSource-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 DatasourceApi *apiInstance = [[DatasourceApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
 
 // Get data source
 [apiInstance getDataSourceWith:dataSourceId
               completionHandler: ^(map['String', Object] output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Datasource-getDataSource-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.DatasourceApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 
@@ -1852,17 +1860,15 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new DatasourceApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
 
-            try
-            {
+            try {
                 // Get data source
                 map['String', Object] result = apiInstance.getDataSource(dataSourceId);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling DatasourceApi.getDataSource: " + e.Message );
             }
         }
@@ -1875,6 +1881,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DatasourceApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 
@@ -1892,6 +1899,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::DatasourceApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DatasourceApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 
@@ -1911,7 +1919,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.DatasourceApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 
@@ -1931,8 +1939,8 @@ pub fn main() {
 
     let mut context = DatasourceApi::Context::default();
     let result = client.getDataSource(dataSourceId, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -2084,7 +2092,10 @@ The data source ID
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Datasource-save-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://0.0.0.0:8000/api/v1/data-sources/{dataSourceId}"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Accept: application/json"\
+ -H "Content-Type: application/json"\
+ "http://0.0.0.0:8000/api/v1/data-sources/{dataSourceId}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Datasource-save-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -2096,12 +2107,13 @@ import java.io.File;
 import java.util.*;
 
 public class DatasourceApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         DatasourceApi apiInstance = new DatasourceApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         map[String, Object] requestBody = Object; // map[String, Object] | 
+        
         try {
             inline_response_200 result = apiInstance.save(dataSourceId, requestBody);
             System.out.println(result);
@@ -2118,11 +2130,11 @@ public class DatasourceApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DatasourceApi;
 
 public class DatasourceApiExample {
-
     public static void main(String[] args) {
         DatasourceApi apiInstance = new DatasourceApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         map[String, Object] requestBody = Object; // map[String, Object] | 
+        
         try {
             inline_response_200 result = apiInstance.save(dataSourceId, requestBody);
             System.out.println(result);
@@ -2138,28 +2150,31 @@ public class DatasourceApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Datasource-save-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-map[String, Object] *requestBody = Object; // 
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 DatasourceApi *apiInstance = [[DatasourceApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+map[String, Object] *requestBody = Object; // 
 
 // Add data source
 [apiInstance saveWith:dataSourceId
     requestBody:requestBody
               completionHandler: ^(inline_response_200 output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Datasource-save-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.DatasourceApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var requestBody = Object; // {map[String, Object]} 
@@ -2192,18 +2207,16 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new DatasourceApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var requestBody = new map[String, Object](); // map[String, Object] | 
 
-            try
-            {
+            try {
                 // Add data source
                 inline_response_200 result = apiInstance.save(dataSourceId, requestBody);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling DatasourceApi.save: " + e.Message );
             }
         }
@@ -2216,6 +2229,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DatasourceApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $requestBody = Object; // map[String, Object] | 
@@ -2234,6 +2248,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::DatasourceApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DatasourceApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $requestBody = WWW::OPenAPIClient::Object::map[String, Object]->new(); # map[String, Object] | 
@@ -2254,7 +2269,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.DatasourceApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 requestBody = Object # map[String, Object] | 
@@ -2276,8 +2291,8 @@ pub fn main() {
 
     let mut context = DatasourceApi::Context::default();
     let result = client.save(dataSourceId, requestBody, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -2477,7 +2492,9 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Document-getById-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://0.0.0.0:8000/api/v1/documents/{dataSourceId}/{documentId}?depth="</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+ -H "Accept: application/json"\
+ "http://0.0.0.0:8000/api/v1/documents/{dataSourceId}/{documentId}?depth="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Document-getById-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -2489,13 +2506,14 @@ import java.io.File;
 import java.util.*;
 
 public class DocumentApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         DocumentApi apiInstance = new DocumentApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String documentId = documentId_example; // String | The document ID
         Integer depth = 56; // Integer | Limit nested depth of result. Default=999
+        
         try {
             map['String', Object] result = apiInstance.getById(dataSourceId, documentId, depth);
             System.out.println(result);
@@ -2512,12 +2530,12 @@ public class DocumentApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DocumentApi;
 
 public class DocumentApiExample {
-
     public static void main(String[] args) {
         DocumentApi apiInstance = new DocumentApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String documentId = documentId_example; // String | The document ID
         Integer depth = 56; // Integer | Limit nested depth of result. Default=999
+        
         try {
             map['String', Object] result = apiInstance.getById(dataSourceId, documentId, depth);
             System.out.println(result);
@@ -2533,30 +2551,33 @@ public class DocumentApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Document-getById-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+DocumentApi *apiInstance = [[DocumentApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
 String *documentId = documentId_example; // The document ID (default to null)
 Integer *depth = 56; // Limit nested depth of result. Default=999 (optional) (default to null)
-
-DocumentApi *apiInstance = [[DocumentApi alloc] init];
 
 // Get document by ID
 [apiInstance getByIdWith:dataSourceId
     documentId:documentId
     depth:depth
               completionHandler: ^(map['String', Object] output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Document-getById-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.DocumentApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var documentId = documentId_example; // {String} The document ID
@@ -2592,19 +2613,17 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new DocumentApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var documentId = documentId_example;  // String | The document ID (default to null)
             var depth = 56;  // Integer | Limit nested depth of result. Default=999 (optional)  (default to null)
 
-            try
-            {
+            try {
                 // Get document by ID
                 map['String', Object] result = apiInstance.getById(dataSourceId, documentId, depth);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling DocumentApi.getById: " + e.Message );
             }
         }
@@ -2617,6 +2636,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DocumentApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $documentId = documentId_example; // String | The document ID
@@ -2636,6 +2656,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::DocumentApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DocumentApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $documentId = documentId_example; # String | The document ID
@@ -2657,7 +2678,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.DocumentApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 documentId = documentId_example # String | The document ID (default to null)
@@ -2681,8 +2702,8 @@ pub fn main() {
 
     let mut context = DocumentApi::Context::default();
     let result = client.getById(dataSourceId, documentId, depth, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -2883,7 +2904,9 @@ Limit nested depth of result. Default&#x3D;999
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Document-getByPath-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://0.0.0.0:8000/api/v1/documents-by-path/{dataSourceId}?path=&depth="</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+ -H "Accept: application/json"\
+ "http://0.0.0.0:8000/api/v1/documents-by-path/{dataSourceId}?path=&depth="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Document-getByPath-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -2895,13 +2918,14 @@ import java.io.File;
 import java.util.*;
 
 public class DocumentApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         DocumentApi apiInstance = new DocumentApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String path = path_example; // String | The document path
         Integer depth = 56; // Integer | Limit nested depth of result. Default=999
+        
         try {
             map['String', Object] result = apiInstance.getByPath(dataSourceId, path, depth);
             System.out.println(result);
@@ -2918,12 +2942,12 @@ public class DocumentApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DocumentApi;
 
 public class DocumentApiExample {
-
     public static void main(String[] args) {
         DocumentApi apiInstance = new DocumentApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String path = path_example; // String | The document path
         Integer depth = 56; // Integer | Limit nested depth of result. Default=999
+        
         try {
             map['String', Object] result = apiInstance.getByPath(dataSourceId, path, depth);
             System.out.println(result);
@@ -2939,30 +2963,33 @@ public class DocumentApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Document-getByPath-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+DocumentApi *apiInstance = [[DocumentApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
 String *path = path_example; // The document path (default to null)
 Integer *depth = 56; // Limit nested depth of result. Default=999 (optional) (default to null)
-
-DocumentApi *apiInstance = [[DocumentApi alloc] init];
 
 // Get document by path
 [apiInstance getByPathWith:dataSourceId
     path:path
     depth:depth
               completionHandler: ^(map['String', Object] output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Document-getByPath-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.DocumentApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var path = path_example; // {String} The document path
@@ -2998,19 +3025,17 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new DocumentApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var path = path_example;  // String | The document path (default to null)
             var depth = 56;  // Integer | Limit nested depth of result. Default=999 (optional)  (default to null)
 
-            try
-            {
+            try {
                 // Get document by path
                 map['String', Object] result = apiInstance.getByPath(dataSourceId, path, depth);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling DocumentApi.getByPath: " + e.Message );
             }
         }
@@ -3023,6 +3048,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DocumentApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $path = path_example; // String | The document path
@@ -3042,6 +3068,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::DocumentApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DocumentApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $path = path_example; # String | The document path
@@ -3063,7 +3090,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.DocumentApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 path = path_example # String | The document path (default to null)
@@ -3087,8 +3114,8 @@ pub fn main() {
 
     let mut context = DocumentApi::Context::default();
     let result = client.getByPath(dataSourceId, path, depth, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -3289,7 +3316,10 @@ Limit nested depth of result. Default&#x3D;999
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Document-update-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT "http://0.0.0.0:8000/api/v1/documents/{dataSourceId}/{documentId}?attribute="</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT\
+ -H "Accept: application/json"\
+ -H "Content-Type: application/json"\
+ "http://0.0.0.0:8000/api/v1/documents/{dataSourceId}/{documentId}?attribute="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Document-update-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -3301,14 +3331,15 @@ import java.io.File;
 import java.util.*;
 
 public class DocumentApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         DocumentApi apiInstance = new DocumentApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String documentId = documentId_example; // String | The document ID
         map[String, Object] requestBody = Object; // map[String, Object] | 
         String attribute = attribute_example; // String | Path to contained document
+        
         try {
             map['String', Object] result = apiInstance.update(dataSourceId, documentId, requestBody, attribute);
             System.out.println(result);
@@ -3325,13 +3356,13 @@ public class DocumentApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DocumentApi;
 
 public class DocumentApiExample {
-
     public static void main(String[] args) {
         DocumentApi apiInstance = new DocumentApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String documentId = documentId_example; // String | The document ID
         map[String, Object] requestBody = Object; // map[String, Object] | 
         String attribute = attribute_example; // String | Path to contained document
+        
         try {
             map['String', Object] result = apiInstance.update(dataSourceId, documentId, requestBody, attribute);
             System.out.println(result);
@@ -3347,12 +3378,14 @@ public class DocumentApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Document-update-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+DocumentApi *apiInstance = [[DocumentApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
 String *documentId = documentId_example; // The document ID (default to null)
 map[String, Object] *requestBody = Object; // 
 String *attribute = attribute_example; // Path to contained document (optional) (default to null)
-
-DocumentApi *apiInstance = [[DocumentApi alloc] init];
 
 // Update document
 [apiInstance updateWith:dataSourceId
@@ -3360,19 +3393,20 @@ DocumentApi *apiInstance = [[DocumentApi alloc] init];
     requestBody:requestBody
     attribute:attribute
               completionHandler: ^(map['String', Object] output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Document-update-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.DocumentApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var documentId = documentId_example; // {String} The document ID
@@ -3409,20 +3443,18 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new DocumentApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var documentId = documentId_example;  // String | The document ID (default to null)
             var requestBody = new map[String, Object](); // map[String, Object] | 
             var attribute = attribute_example;  // String | Path to contained document (optional)  (default to null)
 
-            try
-            {
+            try {
                 // Update document
                 map['String', Object] result = apiInstance.update(dataSourceId, documentId, requestBody, attribute);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling DocumentApi.update: " + e.Message );
             }
         }
@@ -3435,6 +3467,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DocumentApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $documentId = documentId_example; // String | The document ID
@@ -3455,6 +3488,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::DocumentApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DocumentApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $documentId = documentId_example; # String | The document ID
@@ -3477,7 +3511,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.DocumentApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 documentId = documentId_example # String | The document ID (default to null)
@@ -3503,8 +3537,8 @@ pub fn main() {
 
     let mut context = DocumentApi::Context::default();
     let result = client.update(dataSourceId, documentId, requestBody, attribute, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -3754,7 +3788,10 @@ Path to contained document
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Explorer-addDocument-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/add-document"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Accept: application/json"\
+ -H "Content-Type: application/json"\
+ "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/add-document"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Explorer-addDocument-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -3766,12 +3803,13 @@ import java.io.File;
 import java.util.*;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         map[String, Object] requestBody = Object; // map[String, Object] | 
+        
         try {
             'String' result = apiInstance.addDocument(dataSourceId, requestBody);
             System.out.println(result);
@@ -3788,11 +3826,11 @@ public class ExplorerApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.ExplorerApi;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         map[String, Object] requestBody = Object; // map[String, Object] | 
+        
         try {
             'String' result = apiInstance.addDocument(dataSourceId, requestBody);
             System.out.println(result);
@@ -3808,28 +3846,31 @@ public class ExplorerApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-addDocument-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-map[String, Object] *requestBody = Object; // 
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+map[String, Object] *requestBody = Object; // 
 
 // Add document
 [apiInstance addDocumentWith:dataSourceId
     requestBody:requestBody
               completionHandler: ^('String' output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Explorer-addDocument-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var requestBody = Object; // {map[String, Object]} 
@@ -3862,18 +3903,16 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var requestBody = new map[String, Object](); // map[String, Object] | 
 
-            try
-            {
+            try {
                 // Add document
                 'String' result = apiInstance.addDocument(dataSourceId, requestBody);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling ExplorerApi.addDocument: " + e.Message );
             }
         }
@@ -3886,6 +3925,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $requestBody = Object; // map[String, Object] | 
@@ -3904,6 +3944,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::ExplorerApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $requestBody = WWW::OPenAPIClient::Object::map[String, Object]->new(); # map[String, Object] | 
@@ -3924,7 +3965,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 requestBody = Object # map[String, Object] | 
@@ -3946,8 +3987,8 @@ pub fn main() {
 
     let mut context = ExplorerApi::Context::default();
     let result = client.addDocument(dataSourceId, requestBody, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -4144,7 +4185,10 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Explorer-addPackage-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/add-package"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Accept: application/json"\
+ -H "Content-Type: application/json"\
+ "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/add-package"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Explorer-addPackage-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -4156,12 +4200,13 @@ import java.io.File;
 import java.util.*;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         map[String, Object] requestBody = Object; // map[String, Object] | 
+        
         try {
             map['String', Object] result = apiInstance.addPackage(dataSourceId, requestBody);
             System.out.println(result);
@@ -4178,11 +4223,11 @@ public class ExplorerApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.ExplorerApi;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         map[String, Object] requestBody = Object; // map[String, Object] | 
+        
         try {
             map['String', Object] result = apiInstance.addPackage(dataSourceId, requestBody);
             System.out.println(result);
@@ -4198,28 +4243,31 @@ public class ExplorerApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-addPackage-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-map[String, Object] *requestBody = Object; // 
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+map[String, Object] *requestBody = Object; // 
 
 // Add package
 [apiInstance addPackageWith:dataSourceId
     requestBody:requestBody
               completionHandler: ^(map['String', Object] output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Explorer-addPackage-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var requestBody = Object; // {map[String, Object]} 
@@ -4252,18 +4300,16 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var requestBody = new map[String, Object](); // map[String, Object] | 
 
-            try
-            {
+            try {
                 // Add package
                 map['String', Object] result = apiInstance.addPackage(dataSourceId, requestBody);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling ExplorerApi.addPackage: " + e.Message );
             }
         }
@@ -4276,6 +4322,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $requestBody = Object; // map[String, Object] | 
@@ -4294,6 +4341,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::ExplorerApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $requestBody = WWW::OPenAPIClient::Object::map[String, Object]->new(); # map[String, Object] | 
@@ -4314,7 +4362,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 requestBody = Object # map[String, Object] | 
@@ -4336,8 +4384,8 @@ pub fn main() {
 
     let mut context = ExplorerApi::Context::default();
     let result = client.addPackage(dataSourceId, requestBody, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -4534,7 +4582,10 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Explorer-addRaw-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/add-raw"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Accept: application/json"\
+ -H "Content-Type: application/json"\
+ "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/add-raw"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Explorer-addRaw-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -4546,12 +4597,13 @@ import java.io.File;
 import java.util.*;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         map[String, Object] requestBody = Object; // map[String, Object] | 
+        
         try {
             'String' result = apiInstance.addRaw(dataSourceId, requestBody);
             System.out.println(result);
@@ -4568,11 +4620,11 @@ public class ExplorerApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.ExplorerApi;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         map[String, Object] requestBody = Object; // map[String, Object] | 
+        
         try {
             'String' result = apiInstance.addRaw(dataSourceId, requestBody);
             System.out.println(result);
@@ -4588,28 +4640,31 @@ public class ExplorerApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-addRaw-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-map[String, Object] *requestBody = Object; // 
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+map[String, Object] *requestBody = Object; // 
 
 // Add raw document
 [apiInstance addRawWith:dataSourceId
     requestBody:requestBody
               completionHandler: ^('String' output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Explorer-addRaw-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var requestBody = Object; // {map[String, Object]} 
@@ -4642,18 +4697,16 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var requestBody = new map[String, Object](); // map[String, Object] | 
 
-            try
-            {
+            try {
                 // Add raw document
                 'String' result = apiInstance.addRaw(dataSourceId, requestBody);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling ExplorerApi.addRaw: " + e.Message );
             }
         }
@@ -4666,6 +4719,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $requestBody = Object; // map[String, Object] | 
@@ -4684,6 +4738,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::ExplorerApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $requestBody = WWW::OPenAPIClient::Object::map[String, Object]->new(); # map[String, Object] | 
@@ -4704,7 +4759,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 requestBody = Object # map[String, Object] | 
@@ -4726,8 +4781,8 @@ pub fn main() {
 
     let mut context = ExplorerApi::Context::default();
     let result = client.addRaw(dataSourceId, requestBody, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -4924,7 +4979,10 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Explorer-addToParent-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/add-to-parent"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Accept: application/json"\
+ -H "Content-Type: application/json"\
+ "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/add-to-parent"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Explorer-addToParent-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -4936,12 +4994,13 @@ import java.io.File;
 import java.util.*;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         InlineObject inlineObject = ; // InlineObject | 
+        
         try {
             inline_response_200_1 result = apiInstance.addToParent(dataSourceId, inlineObject);
             System.out.println(result);
@@ -4958,11 +5017,11 @@ public class ExplorerApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.ExplorerApi;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         InlineObject inlineObject = ; // InlineObject | 
+        
         try {
             inline_response_200_1 result = apiInstance.addToParent(dataSourceId, inlineObject);
             System.out.println(result);
@@ -4978,28 +5037,31 @@ public class ExplorerApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-addToParent-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-InlineObject *inlineObject = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+InlineObject *inlineObject = ; // 
 
 // Add document to parent
 [apiInstance addToParentWith:dataSourceId
     inlineObject:inlineObject
               completionHandler: ^(inline_response_200_1 output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Explorer-addToParent-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var inlineObject = ; // {InlineObject} 
@@ -5032,18 +5094,16 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var inlineObject = new InlineObject(); // InlineObject | 
 
-            try
-            {
+            try {
                 // Add document to parent
                 inline_response_200_1 result = apiInstance.addToParent(dataSourceId, inlineObject);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling ExplorerApi.addToParent: " + e.Message );
             }
         }
@@ -5056,6 +5116,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $inlineObject = ; // InlineObject | 
@@ -5074,6 +5135,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::ExplorerApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $inlineObject = WWW::OPenAPIClient::Object::InlineObject->new(); # InlineObject | 
@@ -5094,7 +5156,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 inlineObject =  # InlineObject | 
@@ -5116,8 +5178,8 @@ pub fn main() {
 
     let mut context = ExplorerApi::Context::default();
     let result = client.addToParent(dataSourceId, inlineObject, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -5313,7 +5375,10 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Explorer-addToPath-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/add-to-path"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Accept: application/json"\
+ -H "Content-Type: multipart/form-data"\
+ "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/add-to-path"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Explorer-addToPath-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -5325,14 +5390,15 @@ import java.io.File;
 import java.util.*;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String directory = directory_example; // String | 
         String document = document_example; // String | 
         array[File] files = BINARY_DATA_HERE; // array[File] | 
+        
         try {
             map['String', Object] result = apiInstance.addToPath(dataSourceId, directory, document, files);
             System.out.println(result);
@@ -5349,13 +5415,13 @@ public class ExplorerApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.ExplorerApi;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String directory = directory_example; // String | 
         String document = document_example; // String | 
         array[File] files = BINARY_DATA_HERE; // array[File] | 
+        
         try {
             map['String', Object] result = apiInstance.addToPath(dataSourceId, directory, document, files);
             System.out.println(result);
@@ -5371,12 +5437,14 @@ public class ExplorerApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-addToPath-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
 String *directory = directory_example; //  (optional) (default to null)
 String *document = document_example; //  (optional) (default to null)
 array[File] *files = BINARY_DATA_HERE; //  (optional) (default to null)
-
-ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
 
 // Add document to path
 [apiInstance addToPathWith:dataSourceId
@@ -5384,19 +5452,20 @@ ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
     document:document
     files:files
               completionHandler: ^(map['String', Object] output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Explorer-addToPath-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var opts = {
@@ -5433,20 +5502,18 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var directory = directory_example;  // String |  (optional)  (default to null)
             var document = document_example;  // String |  (optional)  (default to null)
             var files = new array[File](); // array[File] |  (optional)  (default to null)
 
-            try
-            {
+            try {
                 // Add document to path
                 map['String', Object] result = apiInstance.addToPath(dataSourceId, directory, document, files);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling ExplorerApi.addToPath: " + e.Message );
             }
         }
@@ -5459,6 +5526,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $directory = directory_example; // String | 
@@ -5479,6 +5547,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::ExplorerApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $directory = directory_example; # String | 
@@ -5501,7 +5570,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 directory = directory_example # String |  (optional) (default to null)
@@ -5527,8 +5596,8 @@ pub fn main() {
 
     let mut context = ExplorerApi::Context::default();
     let result = client.addToPath(dataSourceId, directory, document, files, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -5740,7 +5809,10 @@ The data source ID
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Explorer-move-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/move"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT\
+ -H "Accept: application/json"\
+ -H "Content-Type: application/json"\
+ "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/move"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Explorer-move-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -5752,12 +5824,13 @@ import java.io.File;
 import java.util.*;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         map[String, Object] requestBody = Object; // map[String, Object] | 
+        
         try {
             map['String', Object] result = apiInstance.move(dataSourceId, requestBody);
             System.out.println(result);
@@ -5774,11 +5847,11 @@ public class ExplorerApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.ExplorerApi;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         map[String, Object] requestBody = Object; // map[String, Object] | 
+        
         try {
             map['String', Object] result = apiInstance.move(dataSourceId, requestBody);
             System.out.println(result);
@@ -5794,28 +5867,31 @@ public class ExplorerApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-move-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-map[String, Object] *requestBody = Object; // 
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+map[String, Object] *requestBody = Object; // 
 
 // Move document
 [apiInstance moveWith:dataSourceId
     requestBody:requestBody
               completionHandler: ^(map['String', Object] output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Explorer-move-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var requestBody = Object; // {map[String, Object]} 
@@ -5848,18 +5924,16 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var requestBody = new map[String, Object](); // map[String, Object] | 
 
-            try
-            {
+            try {
                 // Move document
                 map['String', Object] result = apiInstance.move(dataSourceId, requestBody);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling ExplorerApi.move: " + e.Message );
             }
         }
@@ -5872,6 +5946,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $requestBody = Object; // map[String, Object] | 
@@ -5890,6 +5965,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::ExplorerApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $requestBody = WWW::OPenAPIClient::Object::map[String, Object]->new(); # map[String, Object] | 
@@ -5910,7 +5986,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 requestBody = Object # map[String, Object] | 
@@ -5932,8 +6008,8 @@ pub fn main() {
 
     let mut context = ExplorerApi::Context::default();
     let result = client.move(dataSourceId, requestBody, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -6130,7 +6206,10 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Explorer-remove-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/remove"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Accept: application/json"\
+ -H "Content-Type: application/json"\
+ "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/remove"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Explorer-remove-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -6142,12 +6221,13 @@ import java.io.File;
 import java.util.*;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         InlineObject2 inlineObject2 = ; // InlineObject2 | 
+        
         try {
             Object result = apiInstance.remove(dataSourceId, inlineObject2);
             System.out.println(result);
@@ -6164,11 +6244,11 @@ public class ExplorerApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.ExplorerApi;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         InlineObject2 inlineObject2 = ; // InlineObject2 | 
+        
         try {
             Object result = apiInstance.remove(dataSourceId, inlineObject2);
             System.out.println(result);
@@ -6184,28 +6264,31 @@ public class ExplorerApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-remove-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-InlineObject2 *inlineObject2 = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+InlineObject2 *inlineObject2 = ; // 
 
 // Remove document
 [apiInstance removeWith:dataSourceId
     inlineObject2:inlineObject2
               completionHandler: ^(Object output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Explorer-remove-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var inlineObject2 = ; // {InlineObject2} 
@@ -6238,18 +6321,16 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var inlineObject2 = new InlineObject2(); // InlineObject2 | 
 
-            try
-            {
+            try {
                 // Remove document
                 Object result = apiInstance.remove(dataSourceId, inlineObject2);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling ExplorerApi.remove: " + e.Message );
             }
         }
@@ -6262,6 +6343,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $inlineObject2 = ; // InlineObject2 | 
@@ -6280,6 +6362,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::ExplorerApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $inlineObject2 = WWW::OPenAPIClient::Object::InlineObject2->new(); # InlineObject2 | 
@@ -6300,7 +6383,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 inlineObject2 =  # InlineObject2 | 
@@ -6322,8 +6405,8 @@ pub fn main() {
 
     let mut context = ExplorerApi::Context::default();
     let result = client.remove(dataSourceId, inlineObject2, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -6519,7 +6602,10 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Explorer-removeByPath-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/remove-by-path"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Accept: application/json"\
+ -H "Content-Type: application/json"\
+ "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/remove-by-path"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Explorer-removeByPath-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -6531,12 +6617,13 @@ import java.io.File;
 import java.util.*;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         InlineObject3 inlineObject3 = ; // InlineObject3 | 
+        
         try {
             Object result = apiInstance.removeByPath(dataSourceId, inlineObject3);
             System.out.println(result);
@@ -6553,11 +6640,11 @@ public class ExplorerApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.ExplorerApi;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         InlineObject3 inlineObject3 = ; // InlineObject3 | 
+        
         try {
             Object result = apiInstance.removeByPath(dataSourceId, inlineObject3);
             System.out.println(result);
@@ -6573,28 +6660,31 @@ public class ExplorerApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-removeByPath-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-InlineObject3 *inlineObject3 = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+InlineObject3 *inlineObject3 = ; // 
 
 // Remove document by path
 [apiInstance removeByPathWith:dataSourceId
     inlineObject3:inlineObject3
               completionHandler: ^(Object output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Explorer-removeByPath-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var inlineObject3 = ; // {InlineObject3} 
@@ -6627,18 +6717,16 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var inlineObject3 = new InlineObject3(); // InlineObject3 | 
 
-            try
-            {
+            try {
                 // Remove document by path
                 Object result = apiInstance.removeByPath(dataSourceId, inlineObject3);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling ExplorerApi.removeByPath: " + e.Message );
             }
         }
@@ -6651,6 +6739,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $inlineObject3 = ; // InlineObject3 | 
@@ -6669,6 +6758,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::ExplorerApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $inlineObject3 = WWW::OPenAPIClient::Object::InlineObject3->new(); # InlineObject3 | 
@@ -6689,7 +6779,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 inlineObject3 =  # InlineObject3 | 
@@ -6711,8 +6801,8 @@ pub fn main() {
 
     let mut context = ExplorerApi::Context::default();
     let result = client.removeByPath(dataSourceId, inlineObject3, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -6908,7 +6998,10 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Explorer-rename-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/rename"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT\
+ -H "Accept: application/json"\
+ -H "Content-Type: application/json"\
+ "http://0.0.0.0:8000/api/v1/explorer/{dataSourceId}/rename"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Explorer-rename-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -6920,12 +7013,13 @@ import java.io.File;
 import java.util.*;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         InlineObject4 inlineObject4 = ; // InlineObject4 | 
+        
         try {
             map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject4);
             System.out.println(result);
@@ -6942,11 +7036,11 @@ public class ExplorerApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.ExplorerApi;
 
 public class ExplorerApiExample {
-
     public static void main(String[] args) {
         ExplorerApi apiInstance = new ExplorerApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         InlineObject4 inlineObject4 = ; // InlineObject4 | 
+        
         try {
             map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject4);
             System.out.println(result);
@@ -6962,28 +7056,31 @@ public class ExplorerApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Explorer-rename-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-InlineObject4 *inlineObject4 = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 ExplorerApi *apiInstance = [[ExplorerApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+InlineObject4 *inlineObject4 = ; // 
 
 // Rename document
 [apiInstance renameWith:dataSourceId
     inlineObject4:inlineObject4
               completionHandler: ^(map['String', Object] output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Explorer-rename-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.ExplorerApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var inlineObject4 = ; // {InlineObject4} 
@@ -7016,18 +7113,16 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new ExplorerApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var inlineObject4 = new InlineObject4(); // InlineObject4 | 
 
-            try
-            {
+            try {
                 // Rename document
                 map['String', Object] result = apiInstance.rename(dataSourceId, inlineObject4);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling ExplorerApi.rename: " + e.Message );
             }
         }
@@ -7040,6 +7135,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\ExplorerApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $inlineObject4 = ; // InlineObject4 | 
@@ -7058,6 +7154,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::ExplorerApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::ExplorerApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $inlineObject4 = WWW::OPenAPIClient::Object::InlineObject4->new(); # InlineObject4 | 
@@ -7078,7 +7175,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.ExplorerApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 inlineObject4 =  # InlineObject4 | 
@@ -7100,8 +7197,8 @@ pub fn main() {
 
     let mut context = ExplorerApi::Context::default();
     let result = client.rename(dataSourceId, inlineObject4, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -7300,7 +7397,9 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Package-findByName-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://0.0.0.0:8000/api/v1/packages/{dataSourceId}/findByName/{name}"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+ -H "Accept: application/json"\
+ "http://0.0.0.0:8000/api/v1/packages/{dataSourceId}/findByName/{name}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Package-findByName-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -7312,12 +7411,13 @@ import java.io.File;
 import java.util.*;
 
 public class PackageApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         PackageApi apiInstance = new PackageApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String name = name_example; // String | The name of the package to find
+        
         try {
             Object result = apiInstance.findByName(dataSourceId, name);
             System.out.println(result);
@@ -7334,11 +7434,11 @@ public class PackageApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.PackageApi;
 
 public class PackageApiExample {
-
     public static void main(String[] args) {
         PackageApi apiInstance = new PackageApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
         String name = name_example; // String | The name of the package to find
+        
         try {
             Object result = apiInstance.findByName(dataSourceId, name);
             System.out.println(result);
@@ -7354,28 +7454,31 @@ public class PackageApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Package-findByName-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-String *name = name_example; // The name of the package to find (default to null)
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 PackageApi *apiInstance = [[PackageApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+String *name = name_example; // The name of the package to find (default to null)
 
 // Query packages
 [apiInstance findByNameWith:dataSourceId
     name:name
               completionHandler: ^(Object output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Package-findByName-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.PackageApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 var name = name_example; // {String} The name of the package to find
@@ -7408,18 +7511,16 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new PackageApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
             var name = name_example;  // String | The name of the package to find (default to null)
 
-            try
-            {
+            try {
                 // Query packages
                 Object result = apiInstance.findByName(dataSourceId, name);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling PackageApi.findByName: " + e.Message );
             }
         }
@@ -7432,6 +7533,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\PackageApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 $name = name_example; // String | The name of the package to find
@@ -7450,6 +7552,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::PackageApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::PackageApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 my $name = name_example; # String | The name of the package to find
@@ -7470,7 +7573,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.PackageApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 name = name_example # String | The name of the package to find (default to null)
@@ -7492,8 +7595,8 @@ pub fn main() {
 
     let mut context = PackageApi::Context::default();
     let result = client.findByName(dataSourceId, name, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -7667,7 +7770,9 @@ The name of the package to find
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Package-get-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://0.0.0.0:8000/api/v1/packages/{dataSourceId}"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+ -H "Accept: application/json"\
+ "http://0.0.0.0:8000/api/v1/packages/{dataSourceId}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Package-get-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -7679,11 +7784,12 @@ import java.io.File;
 import java.util.*;
 
 public class PackageApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         PackageApi apiInstance = new PackageApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
+        
         try {
             array[Object] result = apiInstance.get(dataSourceId);
             System.out.println(result);
@@ -7700,10 +7806,10 @@ public class PackageApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.PackageApi;
 
 public class PackageApiExample {
-
     public static void main(String[] args) {
         PackageApi apiInstance = new PackageApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
+        
         try {
             array[Object] result = apiInstance.get(dataSourceId);
             System.out.println(result);
@@ -7719,26 +7825,29 @@ public class PackageApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Package-get-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 PackageApi *apiInstance = [[PackageApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
 
 // Get packages
 [apiInstance getWith:dataSourceId
               completionHandler: ^(array[Object] output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Package-get-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.PackageApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
 
@@ -7770,17 +7879,15 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new PackageApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
 
-            try
-            {
+            try {
                 // Get packages
                 array[Object] result = apiInstance.get(dataSourceId);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling PackageApi.get: " + e.Message );
             }
         }
@@ -7793,6 +7900,7 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\PackageApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
 
@@ -7810,6 +7918,7 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::PackageApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::PackageApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
 
@@ -7829,7 +7938,7 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.PackageApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
 
@@ -7849,8 +7958,8 @@ pub fn main() {
 
     let mut context = PackageApi::Context::default();
     let result = client.get(dataSourceId, &context).wait();
-    println!("{:?}", result);
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -8007,7 +8116,10 @@ The data source ID
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Search-searchEntities-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://0.0.0.0:8000/api/v1/search/{dataSourceId}"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Accept: application/json"\
+ -H "Content-Type: application/json"\
+ "http://0.0.0.0:8000/api/v1/search/{dataSourceId}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Search-searchEntities-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -8019,14 +8131,15 @@ import java.io.File;
 import java.util.*;
 
 public class SearchApiExample {
-
     public static void main(String[] args) {
         
+        // Create an instance of the API class
         SearchApi apiInstance = new SearchApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        InlineObject5 inlineObject5 = ; // InlineObject5 | 
+        map[String, Object] requestBody = ; // map[String, Object] | 
+        
         try {
-            map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject5);
+            map['String', Object] result = apiInstance.searchEntities(dataSourceId, requestBody);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SearchApi#searchEntities");
@@ -8041,13 +8154,13 @@ public class SearchApiExample {
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.SearchApi;
 
 public class SearchApiExample {
-
     public static void main(String[] args) {
         SearchApi apiInstance = new SearchApi();
         String dataSourceId = dataSourceId_example; // String | The data source ID
-        InlineObject5 inlineObject5 = ; // InlineObject5 | 
+        map[String, Object] requestBody = ; // map[String, Object] | 
+        
         try {
-            map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject5);
+            map['String', Object] result = apiInstance.searchEntities(dataSourceId, requestBody);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SearchApi#searchEntities");
@@ -8061,31 +8174,34 @@ public class SearchApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Search-searchEntities-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
-InlineObject5 *inlineObject5 = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">
 
+// Create an instance of the API class
 SearchApi *apiInstance = [[SearchApi alloc] init];
+String *dataSourceId = dataSourceId_example; // The data source ID (default to null)
+map[String, Object] *requestBody = ; // 
 
 // Search for entities
 [apiInstance searchEntitiesWith:dataSourceId
-    inlineObject5:inlineObject5
+    requestBody:requestBody
               completionHandler: ^(map['String', Object] output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
 </code></pre>
                             </div>
 
                             <div class="tab-pane" id="examples-Search-searchEntities-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DataModellingStorageServiceApi = require('data_modelling_storage_service_api');
 
+// Create an instance of the API class
 var api = new DataModellingStorageServiceApi.SearchApi()
 var dataSourceId = dataSourceId_example; // {String} The data source ID
-var inlineObject5 = ; // {InlineObject5} 
+var requestBody = ; // {map[String, Object]} 
 
 var callback = function(error, data, response) {
   if (error) {
@@ -8094,7 +8210,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.searchEntities(dataSourceId, inlineObject5, callback);
+api.searchEntities(dataSourceId, requestBody, callback);
 </code></pre>
                             </div>
 
@@ -8115,18 +8231,16 @@ namespace Example
         public void main()
         {
             
+            // Create an instance of the API class
             var apiInstance = new SearchApi();
             var dataSourceId = dataSourceId_example;  // String | The data source ID (default to null)
-            var inlineObject5 = new InlineObject5(); // InlineObject5 | 
+            var requestBody = new map[String, Object](); // map[String, Object] | 
 
-            try
-            {
+            try {
                 // Search for entities
-                map['String', Object] result = apiInstance.searchEntities(dataSourceId, inlineObject5);
+                map['String', Object] result = apiInstance.searchEntities(dataSourceId, requestBody);
                 Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Debug.Print("Exception when calling SearchApi.searchEntities: " + e.Message );
             }
         }
@@ -8139,12 +8253,13 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\SearchApi();
 $dataSourceId = dataSourceId_example; // String | The data source ID
-$inlineObject5 = ; // InlineObject5 | 
+$requestBody = ; // map[String, Object] | 
 
 try {
-    $result = $api_instance->searchEntities($dataSourceId, $inlineObject5);
+    $result = $api_instance->searchEntities($dataSourceId, $requestBody);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling SearchApi->searchEntities: ', $e->getMessage(), PHP_EOL;
@@ -8157,12 +8272,13 @@ try {
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::SearchApi;
 
+# Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::SearchApi->new();
 my $dataSourceId = dataSourceId_example; # String | The data source ID
-my $inlineObject5 = WWW::OPenAPIClient::Object::InlineObject5->new(); # InlineObject5 | 
+my $requestBody = WWW::OPenAPIClient::Object::map[String, Object]->new(); # map[String, Object] | 
 
 eval { 
-    my $result = $api_instance->searchEntities(dataSourceId => $dataSourceId, inlineObject5 => $inlineObject5);
+    my $result = $api_instance->searchEntities(dataSourceId => $dataSourceId, requestBody => $requestBody);
     print Dumper($result);
 };
 if ($@) {
@@ -8177,14 +8293,14 @@ import openapi_client
 from openapi_client.rest import ApiException
 from pprint import pprint
 
-# create an instance of the API class
+# Create an instance of the API class
 api_instance = openapi_client.SearchApi()
 dataSourceId = dataSourceId_example # String | The data source ID (default to null)
-inlineObject5 =  # InlineObject5 | 
+requestBody =  # map[String, Object] | 
 
 try: 
     # Search for entities
-    api_response = api_instance.search_entities(dataSourceId, inlineObject5)
+    api_response = api_instance.search_entities(dataSourceId, requestBody)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling SearchApi->searchEntities: %s\n" % e)</code></pre>
@@ -8195,12 +8311,12 @@ except ApiException as e:
 
 pub fn main() {
     let dataSourceId = dataSourceId_example; // String
-    let inlineObject5 = ; // InlineObject5
+    let requestBody = ; // map[String, Object]
 
     let mut context = SearchApi::Context::default();
-    let result = client.searchEntities(dataSourceId, inlineObject5, &context).wait();
-    println!("{:?}", result);
+    let result = client.searchEntities(dataSourceId, requestBody, &context).wait();
 
+    println!("{:?}", result);
 }
 </code></pre>
                             </div>
@@ -8251,16 +8367,25 @@ The data source ID
                                 <th width="150px">Name</th>
                                 <th>Description</th>
                               </tr>
-                                <tr><td style="width:150px;">inlineObject5 <span style="color:red;">*</span></td>
+                                <tr><td style="width:150px;">requestBody <span style="color:red;">*</span></td>
 <td>
-<p class="marked"></p>
+<p class="marked">A JSON object containing search parameters</p>
 <script>
 $(document).ready(function() {
   var schemaWrapper = {
+  "description" : "A JSON object containing search parameters",
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_object_5"
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "minLength" : 5,
+            "type" : "string"
+          }
+        },
+        "additionalProperties" : true
       }
     }
   },
@@ -8280,12 +8405,12 @@ $(document).ready(function() {
   }
 
   var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-  var result = $('#d2e199_searchEntities_inlineObject5');
+  var result = $('#d2e199_searchEntities_requestBody');
   result.empty();
   result.append(view.render());
 });
 </script>
-<div id="d2e199_searchEntities_inlineObject5"></div>
+<div id="d2e199_searchEntities_requestBody"></div>
 </td>
 </tr>
 

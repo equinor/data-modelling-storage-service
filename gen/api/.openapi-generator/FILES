@@ -1,6 +1,5 @@
 .dockerignore
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 Dockerfile
 README.md
@@ -22,17 +21,10 @@ dmss_api/models/inline_object1.py
 dmss_api/models/inline_object2.py
 dmss_api/models/inline_object3.py
 dmss_api/models/inline_object4.py
-dmss_api/models/inline_object5.py
 dmss_api/models/inline_response200.py
 dmss_api/models/inline_response2001.py
 dmss_api/openapi/openapi.yaml
 dmss_api/test/__init__.py
-dmss_api/test/test_blob_controller.py
-dmss_api/test/test_datasource_controller.py
-dmss_api/test/test_document_controller.py
-dmss_api/test/test_explorer_controller.py
-dmss_api/test/test_package_controller.py
-dmss_api/test/test_search_controller.py
 dmss_api/typing_utils.py
 dmss_api/util.py
 git_push.sh

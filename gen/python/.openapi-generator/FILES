@@ -1,6 +1,5 @@
 .gitignore
 .gitlab-ci.yml
-.openapi-generator-ignore
 .travis.yml
 README.md
 dmss_api/__init__.py
@@ -20,7 +19,6 @@ dmss_api/models/inline_object1.py
 dmss_api/models/inline_object2.py
 dmss_api/models/inline_object3.py
 dmss_api/models/inline_object4.py
-dmss_api/models/inline_object5.py
 dmss_api/models/inline_response200.py
 dmss_api/models/inline_response2001.py
 dmss_api/rest.py
@@ -33,7 +31,6 @@ docs/InlineObject1.md
 docs/InlineObject2.md
 docs/InlineObject3.md
 docs/InlineObject4.md
-docs/InlineObject5.md
 docs/InlineResponse200.md
 docs/InlineResponse2001.md
 docs/PackageApi.md
@@ -44,18 +41,4 @@ setup.cfg
 setup.py
 test-requirements.txt
 test/__init__.py
-test/test_blob_api.py
-test/test_datasource_api.py
-test/test_document_api.py
-test/test_explorer_api.py
-test/test_inline_object.py
-test/test_inline_object1.py
-test/test_inline_object2.py
-test/test_inline_object3.py
-test/test_inline_object4.py
-test/test_inline_object5.py
-test/test_inline_response200.py
-test/test_inline_response2001.py
-test/test_package_api.py
-test/test_search_api.py
 tox.ini

@@ -8,7 +8,7 @@ Method | HTTP request | Description
 
 
 # **search_entities**
-> dict(str, object) search_entities(data_source_id, inline_object5)
+> dict(str, object) search_entities(data_source_id, request_body)
 
 Search for entities
 
@@ -32,11 +32,11 @@ with dmss_api.ApiClient() as api_client:
     # Create an instance of the API class
     api_instance = dmss_api.SearchApi(api_client)
     data_source_id = 'data_source_id_example' # str | The data source ID
-inline_object5 = dmss_api.InlineObject5() # InlineObject5 | 
+request_body = None # dict(str, object) | A JSON object containing search parameters
 
     try:
         # Search for entities
-        api_response = api_instance.search_entities(data_source_id, inline_object5)
+        api_response = api_instance.search_entities(data_source_id, request_body)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling SearchApi->search_entities: %s\n" % e)
@@ -47,7 +47,7 @@ inline_object5 = dmss_api.InlineObject5() # InlineObject5 |
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **data_source_id** | **str**| The data source ID | 
- **inline_object5** | [**InlineObject5**](InlineObject5.md)|  | 
+ **request_body** | [**dict(str, object)**](object.md)| A JSON object containing search parameters | 
 
 ### Return type
 

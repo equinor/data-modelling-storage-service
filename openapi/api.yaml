@@ -548,6 +548,7 @@ paths:
                   minLength: 5
               required:
                 - type
+              additionalProperties: true
       responses:
         '200':
           description: Search results

@@ -602,10 +602,10 @@ paths:
           type: string
         style: simple
       requestBody:
-        $ref: '#/components/requestBodies/inline_object_5'
         content:
           application/json:
             schema:
+              additionalProperties: true
               properties:
                 type:
                   minLength: 5
@@ -663,12 +663,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/inline_object_4'
-      required: true
-    inline_object_5:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/inline_object_5'
       required: true
   schemas:
     DocumentResponse:
@@ -755,12 +749,4 @@ components:
       required:
       - documentId
       - name
-      type: object
-    inline_object_5:
-      properties:
-        type:
-          minLength: 5
-          type: string
-      required:
-      - type
       type: object
