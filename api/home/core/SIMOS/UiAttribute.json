@@ -190,8 +190,7 @@
         {
           "name": "uiRecipe",
           "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "field": "hidden"
+          "type": "system/SIMOS/BlueprintAttribute"
         },
         {
           "name": "default",
