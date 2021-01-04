@@ -146,6 +146,14 @@
           "contained": true
         }
       ]
+    },
+    {
+      "name": "Table(BP)",
+      "type": "system/SIMOS/UiRecipe",
+      "description": "Table view of Blueprint",
+      "plugin": "EXTERNAL",
+      "options": [],
+      "attributes": []
     }
   ]
 }
