@@ -1,4 +1,4 @@
-FROM python:3-alpine as base
+FROM python:3.8-slim as base
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 CMD /usr/src/app/api/init.sh
@@ -8,10 +8,7 @@ ENV PYTHONUNBUFFERED=1
 ENV FLASK_APP=/usr/src/app/app.py
 ENV PYTHONPATH=/usr/src/app
 
-RUN apk update && \
-    # Needed to compile a poetry dependecy(cryptography)
-    apk add  gcc musl-dev python3-dev libffi-dev openssl-dev && \
-    pip install --upgrade pip && \
+RUN pip install --upgrade pip && \
     pip install poetry && \
     poetry config virtualenvs.create false
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-set -euo pipefail
+set -eu
 
 
 if [ ! -e /usr/src/app/api/home/first-run-false ] && [ "$ENVIRONMENT" = 'local' ]; then
