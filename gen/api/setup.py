@@ -4,7 +4,7 @@ import sys
 from setuptools import setup, find_packages
 
 NAME = "dmss_api"
-VERSION = ""
+VERSION = "${API_VERSION}"
 
 # To install the library, run the following
 #

@@ -6,14 +6,44 @@ from api.core.utility import wipe_db
 from api.services.database import dmt_database
 from api.utils.logging import logger
 from api.utils.package_import import import_blob, import_package
+from pathlib import Path
+import glob
+import time
 
 app = create_app(Config)
 
 
 @app.cli.command()
+def reset_database_local():
+    __reset_database("local")
+
+@app.cli.command()
+@click.argument("database_id")
+def reset_database(database_id):
+    __reset_database(database_id)
+
+def __reset_database(database_id):
+    wipe_db()
+    print("Dropping collection data_sources")
+    dmt_database.drop_collection(f"{Config.DATA_SOURCES_COLLECTION}")
+    
+    print("Importing DataSources")
+    path = Path(__file__).parent / f"home/data_sources/{database_id}*.json"
+    for dataSource in glob.glob(str(path)):
+        __import_ds(dataSource)
+
+    time.sleep(5)
+
+    __init_app()
+@app.cli.command()
 def init_application():
+    __init_app()
+    
+def __init_app():
     for folder in Config.SYSTEM_FOLDERS:
-        import_package(f"{Config.APPLICATION_HOME}/core/{folder}", data_source=Config.SYSTEM_COLLECTION, is_root=True)
+        home = Path(Config.APPLICATION_HOME)
+        path = home / 'core' / folder
+        import_package(str(path), data_source=Config.SYSTEM_COLLECTION, is_root=True)
 
     for folder in Config.ENTITY_APPLICATION_SETTINGS["packages"]:
         import_package(
@@ -47,6 +77,9 @@ def drop_data_sources():
 @app.cli.command()
 @click.argument("file")
 def import_data_source(file):
+    __import_ds(file)
+
+def __import_ds(file):
     try:
         with open(file) as json_file:
             document = json.load(json_file)
