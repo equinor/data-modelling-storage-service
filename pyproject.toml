@@ -18,6 +18,11 @@ wasmer = "0.3.0"
 toml = "0.10.0"
 connexion = "^2.6.0"
 azure-storage-blob = "2.1.0"
+cryptography = "3.3.2"
+Jinja2 = "2.11.3"
+jsonpickle = "1.4.2"
+py = "1.10"
+PyYAML = "5.4"
 
 [tool.poetry.dev-dependencies]
 pydevd = "^1.6"
