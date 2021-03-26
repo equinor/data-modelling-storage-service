@@ -1,21 +1,19 @@
-from app import create_app
 from api.config import Config
 from api.core.utility import wipe_db
 from api.services.database import dmt_database
 from api.tests_bdd.results import print_overview_errors, print_overview_features
+from fastapi.testclient import TestClient
 
-app = create_app(Config)
-app.config["TESTING"] = True
-app.config["PRESERVE_CONTEXT_ON_EXCEPTION"] = False
-app.config["CACHE_MAX_SIZE"] = 0
+from app import app
+
+test_client = TestClient(app)
 
 
 def before_all(context):
     context.errors = []
     context.features = []
-    with app.app_context():
-        wipe_db()
-        dmt_database.drop_collection(Config.DATA_SOURCES_COLLECTION)
+    wipe_db()
+    dmt_database.drop_collection(Config.DATA_SOURCES_COLLECTION)
 
 
 def wipe_added_repositories(context):
@@ -38,9 +36,7 @@ def before_scenario(context, scenario):
     if "skip" in scenario.effective_tags:
         scenario.skip("Marked with @skip")
 
-    context.repository = app.test_client()
-    context.ctx = app.test_request_context()
-    context.ctx.push()
+    context.test_client = test_client
 
 
 def after_scenario(context, scenario):
@@ -48,7 +44,6 @@ def after_scenario(context, scenario):
     dmt_database.drop_collection(Config.DATA_SOURCES_COLLECTION)
     if "data_sources" in context:
         wipe_added_repositories(context)
-    context.ctx.pop()
 
 
 def after_step(context, step):

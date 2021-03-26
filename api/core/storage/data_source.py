@@ -1,7 +1,6 @@
 import io
 from typing import Dict, List, Union
 
-from werkzeug.datastructures import FileStorage
 
 from api.classes.document_look_up import DocumentLookUp
 from api.classes.dto import DTO
@@ -110,9 +109,7 @@ class DataSource:
         self.insert_lookup(DocumentLookUp(document.uid, repo.name, document.uid, "", document.type))
         repo.add(document.uid, document.data)
 
-    def update_blob(self, uid, file: FileStorage) -> None:
-        if not isinstance(file, FileStorage):
-            raise RecursionError("Can only save object of type 'FileStorage'")
+    def update_blob(self, uid, file) -> None:
         repo = self._get_repo_from_storage_attribute(
             StorageAttribute("generic_blob", False, StorageDataTypes.BLOB.value), strict=True
         )

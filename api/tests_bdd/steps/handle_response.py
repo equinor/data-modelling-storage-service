@@ -20,22 +20,19 @@ STATUS_CODES = {
 
 @then('the response status should be "{status}"')
 def step_response_status(context, status):
-    if context.response_status != STATUS_CODES[status]:
+    if context.response.status_code != STATUS_CODES[status]:
         pp = pprint.PrettyPrinter(indent=2)
         pretty_print = "\n Actual: \n {} \n Expected: \n {}".format(
-            pp.pformat(context.response_status), pp.pformat(STATUS_CODES[status])
+            pp.pformat(context.response.status_code), pp.pformat(STATUS_CODES[status])
         )
         print(pretty_print)
-        if "response_json" in context:
-            print(context.response_json)
-        else:
-            print(context.response.data)
-    assert context.response_status == STATUS_CODES[status]
+        print(context.response.json())
+    assert context.response.status_code == STATUS_CODES[status]
 
 
 @then("the response should equal")
 def step_impl_equal(context):
-    actual = context.response_json
+    actual = context.response.json()
     data = context.text or context.data
     expected = json.loads(data)
     result = DeepDiff(expected, actual, ignore_order=True)
@@ -47,7 +44,7 @@ def step_impl_equal(context):
 
 @then("the response at {dot_path} should equal")
 def step_impl_equal_dot_path(context, dot_path):
-    actual = context.response_json
+    actual = context.response.json()
     target = find(actual, dot_path.split("."))
     data = context.text or context.data
     expected = json.loads(data)
@@ -60,7 +57,7 @@ def step_impl_equal_dot_path(context, dot_path):
 
 @then("the response should contain")
 def step_impl_contain(context):
-    actual = context.response_json
+    actual = context.response.json()
     data = context.text or context.data
     expected = json.loads(data)
     pretty_eq(expected, actual)
@@ -68,7 +65,7 @@ def step_impl_contain(context):
 
 @then("the array at {dot_path} should be of length {length}")
 def step_impl_array_length(context, dot_path, length):
-    actual = context.response_json
+    actual = context.response.json()
     target = find(actual, dot_path.split("."))
     result = len(target) == int(length)
     if not result:
@@ -79,6 +76,6 @@ def step_impl_array_length(context, dot_path, length):
 
 @then("the response should be")
 def step_impl_should_be(context):
-    actual = context.response_json
+    actual = context.response.json()
     data = context.text or context.data
     pretty_eq(data, actual)
