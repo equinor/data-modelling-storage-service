@@ -12,8 +12,13 @@ router = APIRouter()
 
 
 @router.get("/documents/{data_source_id}/{document_id}")
-def get_by_id(data_source_id: str, document_id: str, ui_recipe: Optional[str] = None, attribute: Optional[str] = None,
-              depth: int = 999):
+def get_by_id(
+    data_source_id: str,
+    document_id: str,
+    ui_recipe: Optional[str] = None,
+    attribute: Optional[str] = None,
+    depth: int = 999,
+):
     use_case = GetDocumentUseCase()
     request_object = GetDocumentRequestObject.from_dict(
         {
@@ -30,8 +35,9 @@ def get_by_id(data_source_id: str, document_id: str, ui_recipe: Optional[str] = 
 
 
 @router.get("/documents-by-path/{data_source_id}")
-def get_by_path(data_source_id: str, ui_recipe: Optional[str] = None, attribute: Optional[str] = None,
-                path: Optional[str] = None):
+def get_by_path(
+    data_source_id: str, ui_recipe: Optional[str] = None, attribute: Optional[str] = None, path: Optional[str] = None
+):
     use_case = GetDocumentByPathUseCase()
     request_object = GetDocumentByPathRequestObject.from_dict(
         {"data_source_id": data_source_id, "path": path, "ui_recipe": ui_recipe, "attribute": attribute}

@@ -3,8 +3,6 @@ import json
 from behave import when, given
 
 
-
-
 @given('i access the resource url "{url}"')
 def step_access_url(context, url):
     context.url = str(url)
@@ -18,9 +16,8 @@ def step_make_file_request(context, method, number_of_files):
         with open("api/tests_bdd/steps/test_pdf.pdf", "rb") as file:
             files = []
             for n in range(1, int(number_of_files) + 1):
-                files.append(('files', (f"file{n}", file)))
+                files.append(("files", (f"file{n}", file)))
             context.response = context.test_client.post(context.url, data=data, files=files)
-
 
 
 @when('i make a "{method}" request')
@@ -38,4 +35,3 @@ def step_make_request(context, method):
         context.response = context.test_client.get(context.url)
     elif method == "DELETE":
         context.response = context.test_client.delete(context.url)
-

@@ -16,16 +16,16 @@ def get_data_source(data_source_id: str):
     use_case = GetDataSourceUseCase(data_source_repository)
     request_object = GetDataSourceUseCaseRequestObject.from_dict({"data_source_id": data_source_id})
     response = use_case.execute(request_object)
-    return JSONResponse({"name": response.value.name, "id": response.value.name}, status_code=STATUS_CODES[response.type])
+    return JSONResponse(
+        {"name": response.value.name, "id": response.value.name}, status_code=STATUS_CODES[response.type]
+    )
 
 
 @router.post("/data-sources/{data_source_id}")
 def save(data_source_id: str, request: dict):
     data_source_repository = DataSourceRepository()
     use_case = CreateDataSourceUseCase(data_source_repository=data_source_repository)
-    request_object = CreateDataSourceRequestObject.from_dict(
-        {"dataSourceId": data_source_id, "formData": request}
-    )
+    request_object = CreateDataSourceRequestObject.from_dict({"dataSourceId": data_source_id, "formData": request})
     response = use_case.execute(request_object)
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 

@@ -37,8 +37,12 @@ def add_to_parent(data_source_id: str, request_data: dict):
 
 
 @router.post("/explorer/{data_source_id}/add-to-path")
-def add_to_path(data_source_id: str, document: str = Form(...), directory: str = Form(...),
-                files: Optional[List[UploadFile]] = File(None)):
+def add_to_path(
+    data_source_id: str,
+    document: str = Form(...),
+    directory: str = Form(...),
+    files: Optional[List[UploadFile]] = File(None),
+):
     body = {}
     body["data_source_id"] = data_source_id
     body["files"] = {f.filename: f.file for f in files}

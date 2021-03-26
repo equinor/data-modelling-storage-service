@@ -4,13 +4,20 @@ import click
 import uvicorn
 from fastapi import FastAPI
 
+
 from api.config import Config
 from api.core.utility import wipe_db
 from api.services.database import dmt_database
 from api.utils.logging import logger
 from api.utils.package_import import import_blob, import_package
-from controllers import blob_controller, datasource_controller, document_controller, explorer_controller, \
-    package_controller, search_controller
+from controllers import (
+    blob_controller,
+    datasource_controller,
+    document_controller,
+    explorer_controller,
+    package_controller,
+    search_controller,
+)
 
 server_root = "/api"
 version = "v1"
@@ -87,5 +94,5 @@ def nuke_db():
     wipe_db()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()
