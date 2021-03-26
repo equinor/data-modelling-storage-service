@@ -26,7 +26,7 @@ repos:
     - id: flake8
       # The provided hook fails to read config file. Therefore this wrapper.
       name: Python style checking
-      entry: sh -c "flake8"
+      entry: sh -c ".venv/bin/python -m flake8"
       language: system
     - id: safety
       name: Python vuln packages

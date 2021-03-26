@@ -1,4 +1,4 @@
-FROM python:3.8-slim as base
+FROM python:3.9-slim as base
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 CMD /usr/src/app/api/init.sh

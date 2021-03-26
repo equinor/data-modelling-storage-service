@@ -11,6 +11,10 @@ router = APIRouter()
 
 @router.get("/packages/{data_source_id}")
 def get(data_source_id: str):
+    """
+    List all root packages in the requested data source
+    """
+    # TODO: Use UseCase. It not returns 500 on a 404
     document_service = DocumentService(repository_provider=get_data_source)
     root_packages = document_service.get_root_packages(data_source_id=data_source_id)
     return JSONResponse([package.to_dict() for package in root_packages])
@@ -18,6 +22,9 @@ def get(data_source_id: str):
 
 @router.get("/packages/{data_source_id}/findByName/{name}")
 def find_by_name(data_source_id: str, name: str):
+    """
+    Get a root package by it's exact name
+    """
     package: DTO = get_data_source(data_source_id).first(
         {"type": "system/SIMOS/Package", "isRoot": True, "name": name}
     )
