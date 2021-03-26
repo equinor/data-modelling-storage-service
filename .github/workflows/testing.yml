@@ -12,8 +12,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
-      - name: "Generate API"
-        run: ./generate-api.sh
       - name: "Build Docker Images"
         run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml build
       - name: "BDD Tests"

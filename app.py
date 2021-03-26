@@ -38,7 +38,9 @@ def cli():
 
 @cli.command()
 def run():
-    uvicorn.run("app:app", host="0.0.0.0", port=5000, reload=Config.ENVIRONMENT == "local")
+    uvicorn.run(
+        "app:app", host="0.0.0.0", port=5000, reload=Config.ENVIRONMENT == "local", log_level=Config.LOGGER_LEVEL
+    )
 
 
 @cli.command()

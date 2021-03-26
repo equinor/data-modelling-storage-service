@@ -22,7 +22,6 @@ click = "^7.1.2"
 
 [tool.poetry.dev-dependencies]
 pydevd = "^1.6"
-pytest = "^5.1"
 behave = "1.2.6"
 colorclass = "1.0.1"
 terminaltables = "3.1.0"
@@ -34,6 +33,10 @@ safety = "^1.8.7"
 black = "^19.10b0"
 flake8 = "^3.8.2"
 bandit = "^1.6.2"
+pytest = "^6.2.3"
+
+[tool.pytest]
+addopts = ["--ignore gen"]
 
 [tool.black]
 line-length = 119

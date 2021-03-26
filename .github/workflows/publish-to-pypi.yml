@@ -7,38 +7,25 @@ on:
 
 jobs:
   build-n-publish:
-    name: Publish DMSS API to PyPI
-    runs-on: ubuntu-18.04
+    name: Publish DMSS API package to PyPI
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@master
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v1
+      - uses: actions/setup-python@v1
         with:
           python-version: 3.7
       - name: Install wheel and twine
-        run: >-
-          python -m
-          pip install
-          wheel
-          twine
-          --user
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+        run: python -m pip install wheel twine --user
+      - name: Set version env var
+        run: echo "PACKAGE_VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
       - name: Generate dmss-api
-        working-directory: '.'
-        env:
-          API_VERSION: ${{ steps.get_version.outputs.VERSION }}
-        run: ./generate-python-client.sh
+        run: docker build -t devimage --target development . && docker run -d -p "8000:5000" devimage && ./generate-python-package.sh
       - name: Build a binary wheel and a source tarball
-        working-directory: './gen/python'
+        working-directory: './gen/dmss_api'
         run: python3 setup.py sdist bdist_wheel
       - name: Publish gpa-api to PyPI
-        working-directory: './gen/python'
+        working-directory: './gen/dmss_api'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.pypi_password }}
-        run: >-
-          python -m
-          twine upload
-          dist/*
+        run: python -m twine upload dist/*

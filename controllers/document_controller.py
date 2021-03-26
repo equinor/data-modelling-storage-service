@@ -12,13 +12,13 @@ from controllers.status_codes import STATUS_CODES
 router = APIRouter()
 
 
-@router.get("/documents/{data_source_id}/{document_id}")
+@router.get("/documents/{data_source_id}/{document_id}", operation_id="document_get_by_id")
 def get_by_id(
     data_source_id: str,
     document_id: str,
     ui_recipe: Optional[str] = None,
     attribute: Optional[str] = None,
-    depth: conint(gt=0, lt=1000) = 999,
+    depth: conint(gt=-1, lt=1000) = 999,
 ):
     use_case = GetDocumentUseCase()
     response = use_case.execute(
@@ -34,7 +34,7 @@ def get_by_id(
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-@router.get("/documents-by-path/{data_source_id}")
+@router.get("/documents-by-path/{data_source_id}", operation_id="document_get_by_path")
 def get_by_path(
     data_source_id: str, ui_recipe: Optional[str] = None, attribute: Optional[str] = None, path: Optional[str] = None
 ):
@@ -48,7 +48,7 @@ def get_by_path(
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-@router.put("/documents/{data_source_id}/{document_id}")
+@router.put("/documents/{data_source_id}/{document_id}", operation_id="document_update")
 def update(data_source_id: str, document_id: str, data: dict, attribute: Optional[str] = None):
     update_use_case = UpdateDocumentUseCase()
     response = update_use_case.execute(

@@ -10,7 +10,7 @@ on:
 jobs:
   build-n-publish:
     name: Build and deploy
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     env:
       DOCKER_IMAGE: mariner.azurecr.io/dmss
@@ -18,25 +18,23 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: "Build Docker image"
-        run: |
-          ./generate-api.sh
-          $(which docker) build --tag ${DOCKER_IMAGE}:latest .
+        run: docker build --tag ${DOCKER_IMAGE}:latest .
       - name: "Docker Login"
         if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
-        run: echo ${{ secrets.DOCKER_PASSWORD }} | $(which docker) login mariner.azurecr.io --password-stdin --username ${{ secrets.DOCKER_USERNAME }}
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login mariner.azurecr.io --password-stdin --username ${{ secrets.DOCKER_USERNAME }}
       - name: "Push Docker image (latest)"
         if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
-        run: $(which docker) push ${DOCKER_IMAGE}:latest
+        run: docker push ${DOCKER_IMAGE}:latest
       - name: "Determine tag"
         if: "startsWith(github.ref, 'refs/tags/')"
         id: "determine-tag"
         run: "echo \"::set-output name=tag::${GITHUB_REF#refs/tags/}\""
       - name: "Tag Docker image (versioned)"
         if: "startsWith(github.ref, 'refs/tags/')"
-        run: $(which docker) tag ${{ env.DOCKER_IMAGE }} ${{ env.DOCKER_IMAGE }}:${{ steps.determine-tag.outputs.tag }}
+        run: docker tag ${{ env.DOCKER_IMAGE }} ${{ env.DOCKER_IMAGE }}:${{ steps.determine-tag.outputs.tag }}
       - name: "Push Docker image (versioned)"
         if: "startsWith(github.ref, 'refs/tags/')"
-        run: $(which docker) push ${{ env.DOCKER_IMAGE }}:${{ steps.determine-tag.outputs.tag }}
+        run: docker push ${{ env.DOCKER_IMAGE }}:${{ steps.determine-tag.outputs.tag }}
       - name: "Docker Logout"
         if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
-        run: $(which docker) logout
+        run: docker logout

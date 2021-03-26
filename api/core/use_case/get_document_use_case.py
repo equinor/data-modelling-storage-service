@@ -13,7 +13,7 @@ class GetDocumentRequest(DataSource):
     document_id: str
     ui_recipe: Optional[str] = None
     attribute: Optional[str] = None
-    depth: conint(gt=0, lt=1000) = 999
+    depth: conint(gt=-1, lt=1000) = 999
 
 
 class GetDocumentUseCase(uc.UseCase):

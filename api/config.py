@@ -8,7 +8,7 @@ class Config:
     MONGO_PASSWORD = os.getenv("MONGO_INITDB_ROOT_PASSWORD", "maf")
     MONGO_URI = os.getenv("MONGO_AZURE_URI", "")
     MONGO_DB = os.getenv("ENVIRONMENT", os.getenv("RADIX_ENVIRONMENT", "local"))
-    LOGGER_LEVEL = os.getenv("LOGGING_LEVEL", "INFO")
+    LOGGER_LEVEL = os.getenv("LOGGING_LEVEL", "INFO").lower()
     MAX_ENTITY_RECURSION_DEPTH = os.getenv("MAX_ENTITY_RECURSION_DEPTH", 50)
     ENVIRONMENT = os.getenv("ENVIRONMENT", "local")
     BLUEPRINT_COLLECTION = "SSR-DataSource"
