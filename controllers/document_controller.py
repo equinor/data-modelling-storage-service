@@ -1,18 +1,24 @@
-import json
+from typing import Optional
 
-from flask import request, Response
+from fastapi import APIRouter
+from starlette.responses import JSONResponse
 
-from api.core.serializers.dto_json_serializer import DTOSerializer
 from api.core.use_case.get_document_by_path_use_case import GetDocumentByPathRequestObject, GetDocumentByPathUseCase
 from api.core.use_case.get_document_use_case import GetDocumentRequestObject, GetDocumentUseCase
 from api.core.use_case.update_document_use_case import UpdateDocumentRequestObject, UpdateDocumentUseCase
 from controllers.status_codes import STATUS_CODES
 
+router = APIRouter()
 
-def get_by_id(data_source_id, document_id):
-    ui_recipe = request.args.get("ui_recipe")
-    attribute = request.args.get("attribute")
-    depth = request.args.get("depth", "999")
+
+@router.get("/documents/{data_source_id}/{document_id}")
+def get_by_id(
+    data_source_id: str,
+    document_id: str,
+    ui_recipe: Optional[str] = None,
+    attribute: Optional[str] = None,
+    depth: int = 999,
+):
     use_case = GetDocumentUseCase()
     request_object = GetDocumentRequestObject.from_dict(
         {
@@ -25,29 +31,26 @@ def get_by_id(data_source_id, document_id):
     )
     response = use_case.execute(request_object)
 
-    return Response(json.dumps(response.value), mimetype="application/json", status=STATUS_CODES[response.type])
+    return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-def get_by_path(data_source_id):
-    document_path = request.args.get("path")
-    ui_recipe = request.args.get("ui_recipe")
-    attribute = request.args.get("attribute")
+@router.get("/documents-by-path/{data_source_id}")
+def get_by_path(
+    data_source_id: str, ui_recipe: Optional[str] = None, attribute: Optional[str] = None, path: Optional[str] = None
+):
     use_case = GetDocumentByPathUseCase()
     request_object = GetDocumentByPathRequestObject.from_dict(
-        {"data_source_id": data_source_id, "path": document_path, "ui_recipe": ui_recipe, "attribute": attribute}
+        {"data_source_id": data_source_id, "path": path, "ui_recipe": ui_recipe, "attribute": attribute}
     )
     response = use_case.execute(request_object)
-    return Response(json.dumps(response.value), mimetype="application/json", status=STATUS_CODES[response.type])
+    return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-def update(data_source_id, document_id):
-    data = request.get_json()
-    attribute = request.args.get("attribute")
+@router.put("/documents/{data_source_id}/{document_id}")
+def update(data_source_id: str, document_id: str, attribute: Optional[str] = None, data: Optional[dict] = None):
     request_object = UpdateDocumentRequestObject.from_dict(
         {"data_source_id": data_source_id, "data": data, "document_id": document_id, "attribute": attribute}
     )
     update_use_case = UpdateDocumentUseCase()
     response = update_use_case.execute(request_object)
-    return Response(
-        json.dumps(response.value, cls=DTOSerializer), mimetype="application/json", status=STATUS_CODES[response.type]
-    )
+    return JSONResponse(response.value, status_code=STATUS_CODES[response.type])

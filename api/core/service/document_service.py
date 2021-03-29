@@ -1,7 +1,6 @@
+from tempfile import SpooledTemporaryFile
 from typing import Dict, List, Union
 from uuid import uuid4
-
-from werkzeug.datastructures import FileStorage
 
 from api.classes.blueprint import Blueprint
 from api.classes.blueprint_attribute import BlueprintAttribute
@@ -136,7 +135,7 @@ class DocumentService:
         # If the file is created or updated, the blob_reference is a dict.
         if isinstance(node.entity["blob_reference"], dict):
             reference = node.entity["blob_reference"].get("_id")
-            file: FileStorage = node.entity["blob_reference"]["file"]
+            file: SpooledTemporaryFile = node.entity["blob_reference"]["file"]
             if not reference:
                 uid = str(uuid4())
             reference = f"{repository.name}/{uid}"

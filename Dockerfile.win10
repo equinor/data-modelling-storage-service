@@ -5,7 +5,6 @@ CMD /usr/src/app/api/init.sh
 EXPOSE 8000
 
 ENV PYTHONUNBUFFERED=1
-ENV FLASK_APP=/usr/src/app/app.py
 ENV PYTHONPATH=/usr/src/app
 
 # Configure for running on Equinor Windows 10 PC with Docker
