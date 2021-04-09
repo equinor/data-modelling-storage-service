@@ -47,11 +47,8 @@ Feature: Explorer - Add Root Package
       "type": "system/SIMOS/Package"
     }
     """
-    Then the response status should be "Bad Request"
+    Then the response status should be "Unprocessable Entity"
     And the response should equal
     """
-    {
-      "type": "PARAMETERS_ERROR",
-      "message": "name: is missing"
-    }
+    {"detail": [{"loc": ["body", "name"], "msg": "field required", "type": "value_error.missing"}]}
     """

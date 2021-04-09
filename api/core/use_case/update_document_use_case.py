@@ -1,56 +1,29 @@
-from typing import Dict
+from typing import Optional
 
-from api.core.storage.internal.data_source_repository import get_data_source
 from api.core.service.document_service import DocumentService
-from api.core.shared import request_object as req
 from api.core.shared import response_object as res
 from api.core.shared import use_case as uc
+from api.core.storage.internal.data_source_repository import get_data_source
+from api.request_types.shared import DataSource
 
 
-class UpdateDocumentRequestObject(req.ValidRequestObject):
-    def __init__(self, data_source_id=None, document_id=None, data=None, attribute=None):
-        self.data_source_id = data_source_id
-        self.data = data
-        self.document_id = document_id
-        self.attribute = attribute
-
-    @classmethod
-    def from_dict(cls, adict):
-        invalid_req = req.InvalidRequestObject()
-
-        if "data_source_id" not in adict:
-            invalid_req.add_error("data_source_id", "is missing")
-
-        if "document_id" not in adict:
-            invalid_req.add_error("document_id", "is missing")
-
-        if "data" not in adict:
-            invalid_req.add_error("data", "is missing")
-
-        if invalid_req.has_errors():
-            return invalid_req
-
-        return cls(
-            data_source_id=adict.get("data_source_id"),
-            data=adict.get("data"),
-            document_id=adict.get("document_id"),
-            attribute=adict.get("attribute"),
-        )
+class UpdateDocumentRequest(DataSource):
+    document_id: str
+    data: dict
+    attribute: Optional[str] = None
 
 
 class UpdateDocumentUseCase(uc.UseCase):
     def __init__(self, repository_provider=get_data_source):
         self.repository_provider = repository_provider
 
-    def process_request(self, request_object: UpdateDocumentRequestObject):
-        data_source_id = request_object.data_source_id
-        document_id: str = request_object.document_id
-        data: Dict = request_object.data
-        attribute_path: str = request_object.attribute
-
+    def process_request(self, req: UpdateDocumentRequest):
         document_service = DocumentService(repository_provider=self.repository_provider)
         document = document_service.update_document(
-            data_source_id=data_source_id, document_id=document_id, data=data, attribute_path=attribute_path
+            data_source_id=req.data_source_id,
+            document_id=req.document_id,
+            data=req.data,
+            attribute_path=req.attribute,
         )
         document_service.invalidate_cache()
         return res.ResponseSuccess(document)

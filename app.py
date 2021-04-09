@@ -22,7 +22,7 @@ from controllers import (
 server_root = "/api"
 version = "v1"
 prefix = f"{server_root}/{version}"
-app = FastAPI()
+app = FastAPI(title="Data Modelling Storage Service", description="API for basic data modelling interaction")
 app.include_router(blob_controller.router, prefix=prefix)
 app.include_router(datasource_controller.router, prefix=prefix)
 app.include_router(document_controller.router, prefix=prefix)
@@ -38,7 +38,7 @@ def cli():
 
 @cli.command()
 def run():
-    uvicorn.run("app:app", host="0.0.0.0", port=5000, reload=True)
+    uvicorn.run("app:app", host="0.0.0.0", port=5000, reload=Config.ENVIRONMENT == "local")
 
 
 @cli.command()

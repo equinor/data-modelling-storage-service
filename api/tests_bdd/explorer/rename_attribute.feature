@@ -250,7 +250,7 @@ Feature: Explorer - Remove file
   {
     "parentId": "2",
     "documentId": "2.uiRecipes.1",
-    "name": "New Name"
+    "name": "NewName"
   }
   """
     Then the response status should be "OK"
@@ -274,7 +274,7 @@ Feature: Explorer - Remove file
         },
         {
           "type": "system/SIMOS/UiRecipe",
-          "name": "New Name",
+          "name": "NewName",
           "description": "",
           "attributes": []
         }
@@ -291,7 +291,7 @@ Feature: Explorer - Remove file
   {
     "parentId": "6",
     "documentId": "6.item",
-    "name": "New Name"
+    "name": "NewName"
   }
   """
     Then the response status should be "OK"
@@ -305,7 +305,7 @@ Feature: Explorer - Remove file
       "name": "container",
       "description": "",
       "item": {
-        "name": "New Name"
+        "name": "NewName"
       }
     }
   }

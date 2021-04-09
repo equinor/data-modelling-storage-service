@@ -11,6 +11,7 @@ STATUS_CODES = {
     "Created": 201,
     "No Content": 204,
     "Bad Request": 400,
+    "Unprocessable Entity": 422,
     "Unauthorized": 401,
     "Not Found": 404,
     "Conflict": 409,

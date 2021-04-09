@@ -166,7 +166,7 @@ Feature: Explorer - Add file
     When i make a "POST" request with "4" files
     """
     {
-      "directory": "root_package",
+      "directory": "/root_package/",
       "document": {
         "name": "new_pdf_container",
         "type": "data-source-name/root_package/MultiplePdfContainer",

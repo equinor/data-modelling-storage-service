@@ -1,9 +1,10 @@
 from typing import List, Dict
 
-from api.core.storage.repository_exceptions import RepositoryException
+from api.core.storage.repository_exceptions import EntityNotFoundException
 
 from api.config import Config
 from api.core.storage.data_source import DataSource
+from api.request_types.create_data_source import DataSourceRequest
 from api.services.database import dmt_database
 from api.core.enums import DataSourceType
 
@@ -21,7 +22,8 @@ class DataSourceRepository:
 
         return all_sources
 
-    def create(self, id: str, document):
+    def create(self, id: str, document: DataSourceRequest):
+        document = document.dict()
         document["_id"] = id
         result = self.collection.insert_one(document)
         return str(result.inserted_id)
@@ -29,7 +31,7 @@ class DataSourceRepository:
     def get(self, id: str):
         data_source = self.collection.find_one(filter={"_id": id})
         if not data_source:
-            raise RepositoryException(f"DataSource with id: '{id}' not found")
+            raise EntityNotFoundException(f"DataSource with id: '{id}' not found")
         return DataSource.from_dict(data_source)
 
 

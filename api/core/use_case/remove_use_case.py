@@ -1,52 +1,30 @@
-from api.core.storage.internal.data_source_repository import get_data_source
+from typing import Optional
+
+from pydantic.main import BaseModel
+
 from api.core.service.document_service import DocumentService
-from api.core.shared import request_object as req
 from api.core.shared import response_object as res
 from api.core.shared import use_case as uc
+from api.core.storage.internal.data_source_repository import get_data_source
 
 
-class RemoveFileRequestObject(req.ValidRequestObject):
-    def __init__(self, data_source_id=None, parent_id=None, document_id=None):
-        self.data_source_id = data_source_id
-        self.parent_id = parent_id
-        self.document_id = document_id
-
-    @classmethod
-    def from_dict(cls, adict):
-        invalid_req = req.InvalidRequestObject()
-
-        if "data_source_id" not in adict:
-            invalid_req.add_error("data_source_id", "is missing")
-
-        if "documentId" not in adict:
-            invalid_req.add_error("documentId", "is missing")
-
-        if "parentId" not in adict:
-            invalid_req.add_error("parentId", "is missing")
-
-        if invalid_req.has_errors():
-            return invalid_req
-
-        return cls(
-            data_source_id=adict.get("data_source_id"),
-            parent_id=adict.get("parentId"),
-            document_id=adict.get("documentId"),
-        )
+class RemoveRequest(BaseModel):
+    parentId: Optional[str] = None
+    documentId: str
+    data_source_id: Optional[str] = None
 
 
 class RemoveUseCase(uc.UseCase):
     def __init__(self, repository_provider=get_data_source):
         self.repository_provider = repository_provider
 
-    def process_request(self, request_object):
-        data_source_id: str = request_object.data_source_id
-        document_id: str = request_object.document_id
-        split_parent_id: str = request_object.parent_id.split(".") if request_object.parent_id else None
+    def process_request(self, req: RemoveRequest):
+        split_parent_id: str = req.parentId.split(".") if req.parentId else None
         parent_id = None
         if split_parent_id:
             parent_id = split_parent_id[0]
 
         document_service = DocumentService(repository_provider=self.repository_provider)
-        document_service.remove_document(data_source_id, document_id, parent_id)
+        document_service.remove_document(req.data_source_id, req.documentId, parent_id)
         document_service.invalidate_cache()
         return res.ResponseSuccess(True)

@@ -405,7 +405,7 @@ class Node(NodeBase):
         # Replace the entire data of the node with the input dict. If it matches the blueprint...
 
     def update(self, data: Union[Dict, List]):
-        # If it's an storageUncontained attribute, give it an ID if there is none
+        # If it's an storageUncontained attribute, crate a new ID if missing
         if not self.attribute_is_storage_contained() and not data.get("_id") and not self.uid:
             # TODO: Dealing with Node uid should be done with a property setter. This is error prone
             # TODO: Same for required props. 'type' and 'name'. Should throw error if unset in node.entity

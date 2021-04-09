@@ -1,60 +1,45 @@
 from pathlib import Path
 
+from pydantic.main import BaseModel
+
 from api.classes.dto import DTO
-from api.core.storage.data_source import DataSource
-from api.core.storage.repository_exceptions import EntityAlreadyExistsException, EntityNotFoundException
-from api.core.shared import request_object as req
 from api.core.shared import response_object as res
 from api.core.shared import use_case as uc
+from api.core.storage.data_source import DataSource
+from api.core.storage.repository_exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from api.core.utility import get_document_by_ref
 from api.utils.logging import logger
 
 
-class MoveFileRequestObject(req.ValidRequestObject):
-    def __init__(self, source=None, destination=None):
-        self.source = source
-        self.destination = destination
-
-    @classmethod
-    def from_dict(cls, adict):
-        invalid_req = req.InvalidRequestObject()
-
-        if "source" not in adict:
-            invalid_req.add_error("source", "is missing")
-
-        if "destination" not in adict:
-            invalid_req.add_error("destination", "is missing")
-
-        if invalid_req.has_errors():
-            return invalid_req
-
-        return cls(source=adict.get("source"), destination=adict.get("destination"))
+class MoveRequest(BaseModel):
+    source: str
+    destination: str
 
 
 class MoveFileUseCase(uc.UseCase):
     def __init__(self, get_repository):
         self.get_repository = get_repository
 
-    def process_request(self, request_object: MoveFileRequestObject):
-        source_data_source_id, source = request_object.source.split("/", 1)
-        destination_data_source_uid, destination = request_object.destination.split("/", 1)
-        source: Path = Path(request_object.source)
-        destination: Path = Path(request_object.destination)
+    def process_request(self, req: MoveRequest):
+        source_data_source_id, source = req.source.split("/", 1)
+        destination_data_source_uid, destination = req.destination.split("/", 1)
+        source: Path = Path(req.source)
+        destination: Path = Path(req.destination)
 
         # Check if the new destination package exists
         if different_parent := source.parent != destination.parent:
             new_parent_document = get_document_by_ref(f"{destination_data_source_uid}/{str(destination.parent)}")
             if not new_parent_document:
-                raise EntityNotFoundException(request_object.destination)
+                raise EntityNotFoundException(req.destination)
 
         # Check if document already exists in destination
-        if get_document_by_ref(request_object.destination):
-            raise EntityAlreadyExistsException(request_object.destination)
+        if get_document_by_ref(req.destination):
+            raise EntityAlreadyExistsException(req.destination)
 
         # Remove source document
         source_data_source = DataSource(uid=source_data_source_id)
         source_document_repository: DataSource = self.get_repository(source_data_source)
-        source_document: DTO = get_document_by_ref(request_object.source)
+        source_document: DTO = get_document_by_ref(req.source)
         if not source_document:
             raise EntityNotFoundException(uid=f"{str(source)}")
         source_document_repository.delete(source_document.uid)
