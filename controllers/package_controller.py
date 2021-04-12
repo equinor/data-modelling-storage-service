@@ -9,7 +9,7 @@ from api.core.storage.repository_exceptions import FileNotFoundException
 router = APIRouter()
 
 
-@router.get("/packages/{data_source_id}")
+@router.get("/packages/{data_source_id}", operation_id="package_get")
 def get(data_source_id: str):
     """
     List all root packages in the requested data source
@@ -20,7 +20,7 @@ def get(data_source_id: str):
     return JSONResponse([package.to_dict() for package in root_packages])
 
 
-@router.get("/packages/{data_source_id}/findByName/{name}")
+@router.get("/packages/{data_source_id}/findByName/{name}", operation_id="package_find_by_name")
 def find_by_name(data_source_id: str, name: str):
     """
     Get a root package by it's exact name

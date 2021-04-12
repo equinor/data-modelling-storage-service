@@ -1,8 +1,8 @@
 import json
 import os
+from tempfile import SpooledTemporaryFile
 from typing import Dict, List, Union
 
-from werkzeug.datastructures import FileStorage
 
 from api.classes.dto import DTO
 from api.core.enums import DMT
@@ -50,7 +50,7 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
 def import_blob(path_tuple: str):
     data_source: DataSource = get_data_source(data_source_id="entities")
     with open(path_tuple[0], "rb") as blob_file:
-        data_source.update_blob(path_tuple[1], FileStorage(blob_file))
+        data_source.update_blob(path_tuple[1], SpooledTemporaryFile(blob_file))
 
 
 def import_package(path, data_source: str, is_root: bool = False) -> Union[Dict]:

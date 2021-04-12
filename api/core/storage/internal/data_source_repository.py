@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from api.core.storage.repository_exceptions import EntityNotFoundException
+from api.core.storage.repository_exceptions import DataSourceNotFoundException
 
 from api.config import Config
 from api.core.storage.data_source import DataSource
@@ -31,7 +31,7 @@ class DataSourceRepository:
     def get(self, id: str):
         data_source = self.collection.find_one(filter={"_id": id})
         if not data_source:
-            raise EntityNotFoundException(f"DataSource with id: '{id}' not found")
+            raise DataSourceNotFoundException(id)
         return DataSource.from_dict(data_source)
 
 

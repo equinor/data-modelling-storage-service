@@ -12,8 +12,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
-      - name: "Generate API"
-        run: ./generate-api.sh
       - name: "Dev image"
         run: docker build -t devimage --target development .
       - name: "Bandit"
@@ -24,3 +22,6 @@ jobs:
         run: docker run devimage black --check --diff api controllers app.py
       - name: "Flake8"
         run: docker run devimage flake8
+      - name: "Generate API"
+        run: docker run -d -p "8000:5000" devimage && ./generate-python-package.sh
+

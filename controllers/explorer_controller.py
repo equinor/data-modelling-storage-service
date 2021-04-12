@@ -8,26 +8,30 @@ from api.core.storage.internal.data_source_repository import get_data_source
 from api.core.use_case.add_document_to_path_use_case import AddDocumentToPathRequest, AddDocumentToPathUseCase
 from api.core.use_case.add_document_use_case import AddDocumentRequest, AddDocumentUseCase
 from api.core.use_case.add_file_use_case import AddFileUseCase, AddToParentRequest
+from api.core.use_case.add_raw import AddRawRequest
 from api.core.use_case.add_raw import AddRawUseCase
 from api.core.use_case.add_root_package_use_case import AddRootPackageRequest, AddRootPackageUseCase
 from api.core.use_case.move_file_use_case import MoveFileUseCase, MoveRequest
 from api.core.use_case.remove_by_path_use_case import RemoveByPathRequest, RemoveByPathUseCase
 from api.core.use_case.remove_use_case import RemoveRequest, RemoveUseCase
 from api.core.use_case.rename_file_use_case import RenameRequest, RenameUseCase
-from api.request_types.shared import EntityName, NamedEntity
+from api.request_types.shared import EntityName
 from controllers.status_codes import STATUS_CODES
 
 router = APIRouter()
 
 
-@router.post("/explorer/{data_source_id}/add-document")
-def add_document(data_source_id: str, document: NamedEntity):
+@router.post("/explorer/{data_source_id}/add-document", operation_id="explorer_add_document")
+def add_document(data_source_id: str, document: dict):
+    """
+    Posted document must be a valid Entity ('name' and 'type' required)
+    """
     use_case = AddDocumentUseCase()
     response = use_case.execute(AddDocumentRequest(data_source_id=data_source_id, data=document))
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-@router.post("/explorer/{data_source_id}/add-to-parent")
+@router.post("/explorer/{data_source_id}/add-to-parent", operation_id="explorer_add_to_parent")
 def add_to_parent(data_source_id: str, request_data: AddToParentRequest):
     """
     Add a new document into an existing one. Must match it's parents attribute type
@@ -38,7 +42,7 @@ def add_to_parent(data_source_id: str, request_data: AddToParentRequest):
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-@router.post("/explorer/{data_source_id}/add-to-path")
+@router.post("/explorer/{data_source_id}/add-to-path", operation_id="explorer_add_to_path")
 def add_to_path(
     data_source_id: str,
     document: Json = Form(...),
@@ -55,7 +59,7 @@ def add_to_path(
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-@router.post("/explorer/{data_source_id}/add-package")
+@router.post("/explorer/{data_source_id}/add-package", operation_id="explorer_add_package")
 def add_package(data_source_id: str, name: EntityName):
     use_case = AddRootPackageUseCase()
     response = use_case.execute(AddRootPackageRequest(data_source_id=data_source_id, name=name.name))
@@ -64,23 +68,26 @@ def add_package(data_source_id: str, name: EntityName):
 
 
 # TODO: Create test for this
-@router.post("/explorer/{data_source_id}/add-raw")
-def add_raw(data_source_id: str, document: NamedEntity):
+@router.post("/explorer/{data_source_id}/add-raw", operation_id="explorer_add_raw")
+def add_raw(data_source_id: str, document: dict):
+    """
+        Posted document must be a valid Entity ('name' and 'type' required)
+        """
     use_case = AddRawUseCase()
-    response = use_case.execute({"data_source_id": data_source_id, "document": document})
+    response = use_case.execute(AddRawRequest(data_source_id=data_source_id, document=document))
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
 # TODO: Create test for this
 # TODO: DataSource is not needed in the path, as it's contained in the source and dest parameters
-@router.post("/explorer/{data_source_id}/move")
-def move(request_data: MoveRequest):  # noqa: E501
+@router.post("/explorer/{data_source_id}/move", operation_id="explorer_move")
+def move(data_source_id: str, request_data: MoveRequest):  # noqa: E501
     use_case = MoveFileUseCase(get_repository=get_data_source)
     response = use_case.execute(request_data)
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-@router.post("/explorer/{data_source_id}/remove")
+@router.post("/explorer/{data_source_id}/remove", operation_id="explorer_remove")
 def remove(data_source_id: str, remove_request: RemoveRequest):  # noqa: E501
     remove_request.data_source_id = data_source_id
     use_case = RemoveUseCase()
@@ -88,7 +95,7 @@ def remove(data_source_id: str, remove_request: RemoveRequest):  # noqa: E501
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-@router.post("/explorer/{data_source_id}/remove-by-path")
+@router.post("/explorer/{data_source_id}/remove-by-path", operation_id="explorer_remove_by_path")
 def remove_by_path(data_source_id: str, request: RemoveByPathRequest):  # noqa: E501
     request.data_source_id = data_source_id
     use_case = RemoveByPathUseCase()
@@ -96,7 +103,7 @@ def remove_by_path(data_source_id: str, request: RemoveByPathRequest):  # noqa: 
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-@router.put("/explorer/{data_source_id}/rename")
+@router.put("/explorer/{data_source_id}/rename", operation_id="explorer_rename")
 def rename(data_source_id: str, request_data: RenameRequest):  # noqa: E501
     request_data.data_source_id = data_source_id
     use_case = RenameUseCase()

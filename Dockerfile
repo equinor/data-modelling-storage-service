@@ -16,17 +16,9 @@ COPY poetry.lock poetry.lock
 
 FROM base as development
 RUN poetry install
-# Install API
-COPY requirements.txt requirements.txt
-COPY gen gen
-RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . /usr/src/app
 
 FROM base as prod
-# Install API
-COPY requirements.txt requirements.txt
-COPY gen gen
 RUN poetry install --no-dev
-RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . /usr/src/app
 

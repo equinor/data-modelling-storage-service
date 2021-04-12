@@ -12,8 +12,8 @@ from controllers.status_codes import STATUS_CODES
 router = APIRouter()
 
 
-@router.get("/data-sources/{data_source_id}")
-def get_data_source(data_source_id: str):
+@router.get("/data-sources/{data_source_id}", operation_id="data_source_get")
+def get(data_source_id: str):
     data_source_repository = DataSourceRepository()
     use_case = GetDataSourceUseCase(data_source_repository)
     response = use_case.execute(DataSource(data_source_id=data_source_id))
@@ -22,7 +22,7 @@ def get_data_source(data_source_id: str):
     )
 
 
-@router.post("/data-sources/{data_source_id}")
+@router.post("/data-sources/{data_source_id}", operation_id="data_source_save")
 def save(data_source_id: str, new_data_source: DataSourceRequest):
     """
     Create or update a data source configuration
@@ -35,7 +35,7 @@ def save(data_source_id: str, new_data_source: DataSourceRequest):
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-@router.get("/data-sources")
+@router.get("/data-sources", operation_id="data_source_get_all")
 def get_all():
     data_source_repository = DataSourceRepository()
     use_case = GetDataSourcesUseCase(data_source_repository)
