@@ -46,7 +46,9 @@ def run():
 @cli.command()
 def init_application():
     for folder in Config.SYSTEM_FOLDERS:
-        import_package(f"{Config.APPLICATION_HOME}/core/{folder}", data_source=Config.SYSTEM_COLLECTION, is_root=True)
+        import_package(
+            f"{Config.APPLICATION_HOME}/system/{folder}", data_source=Config.SYSTEM_COLLECTION, is_root=True
+        )
 
     for folder in Config.ENTITY_APPLICATION_SETTINGS["packages"]:
         import_package(
@@ -60,15 +62,6 @@ def init_application():
         )
     for path in Config.IMPORT_BLOBS:
         import_blob(path)
-
-
-@cli.command()
-def reset_core_packages():
-    logger.warning(f"Dropping {Config.SYSTEM_COLLECTION} collection ")
-    dmt_database.drop_collection(f"{Config.SYSTEM_COLLECTION}")
-    logger.warning("Importing core packages...")
-    for folder in Config.SYSTEM_FOLDERS:
-        import_package(f"{Config.APPLICATION_HOME}/core/{folder}", data_source=Config.SYSTEM_COLLECTION, is_root=True)
 
 
 @cli.command()

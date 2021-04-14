@@ -15,7 +15,7 @@ from api.config import Config
 def step_impl(context):
     for folder in Config.SYSTEM_FOLDERS:
         logger.setLevel("ERROR")
-        import_package(f"{Config.APPLICATION_HOME}/core/{folder}", is_root=True, data_source="system")
+        import_package(f"{Config.APPLICATION_HOME}/system/{folder}", is_root=True, data_source="system")
         logger.setLevel("INFO")
 
 

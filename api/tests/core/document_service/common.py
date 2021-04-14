@@ -1,7 +1,6 @@
 from api.classes.blueprint import Blueprint
 from api.classes.dto import DTO
-from api.core.storage.repositories.file import TemplateRepositoryFromFile
-from api.utils.helper_functions import schemas_location
+from api.core.storage.repositories.file import LocalFileRepository
 
 blueprint_1 = {
     "type": "system/SIMOS/Blueprint",
@@ -170,7 +169,7 @@ blobContainer = {
     ],
 }
 
-file_repository_test = TemplateRepositoryFromFile(schemas_location())
+file_repository_test = LocalFileRepository()
 
 
 class BlueprintProvider:

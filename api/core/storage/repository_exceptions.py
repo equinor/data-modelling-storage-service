@@ -35,11 +35,6 @@ class InvalidDocumentNameException(RepositoryException):
         )
 
 
-class TemplateNotFound(RepositoryException):
-    def __init__(self, template_id):
-        super().__init__(message=f"The template with ID, {template_id}, was not found")
-
-
 class InvalidAttributeException(RepositoryException):
     def __init__(self, attribute_name, type):
         super().__init__(message=f"'{attribute_name}' is not a valid attribute in the '{type}'")

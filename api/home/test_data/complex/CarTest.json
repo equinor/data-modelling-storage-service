@@ -12,17 +12,17 @@
       "name": "type",
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
-      "default": "ds/test_data/complex/CarTest"
+      "default": "test_data/complex/CarTest"
     },
     {
       "type": "system/SIMOS/BlueprintAttribute",
       "name": "wheel",
-      "attributeType": "ds/test_data/complex/WheelTest"
+      "attributeType": "test_data/complex/WheelTest"
     },
     {
       "type": "system/SIMOS/BlueprintAttribute",
       "name": "wheels",
-      "attributeType": "ds/test_data/complex/WheelTest",
+      "attributeType": "test_data/complex/WheelTest",
       "dimensions": "*"
     },
     {
@@ -68,13 +68,13 @@
     {
       "type": "system/SIMOS/BlueprintAttribute",
       "name": "engine",
-      "attributeType": "ds/test_data/complex/EngineTest"
+      "attributeType": "test_data/complex/EngineTest"
     },
     {
       "type": "system/SIMOS/BlueprintAttribute",
       "name": "engine2",
       "optional": true,
-      "attributeType": "ds/test_data/complex/EngineTest"
+      "attributeType": "test_data/complex/EngineTest"
     }
   ]
 }
