@@ -1,34 +1,26 @@
 import json
 from pathlib import Path
-from typing import Dict, Union
+from typing import Dict, Optional, Union
 
 from api.classes.dto import DTO
-from api.core.storage.repository_exceptions import TemplateNotFound
 from api.core.storage.repository_interface import RepositoryInterface
 
 
-class TemplateRepositoryFromFile(RepositoryInterface):
-    def __init__(self, location: Union[str, Path]):
+class LocalFileRepository(RepositoryInterface):
+    def __init__(self, location: Optional[Union[str, Path]] = None):
+        if location is None:
+            location = f"{str(Path(__file__).parent.parent.parent.parent)}/home/"
         self.path = Path(location)
 
-    def get(self, template_type: str):
-        data_source, *rest = template_type.split("/")
-        template_type = "/".join(rest)
-        path = self.path
-        if data_source == "system":
-            path = path / "core"
-        elif data_source == "SSR-DataSource":
-            path = path / "blueprints"
+    def get(self, doc_ref: str) -> dict:
         try:
-            with open(str(path / f"{template_type}.json")) as f:
-                schema = json.load(f)
+            with open(f"{self.path}/{doc_ref}.json") as f:
+                return json.load(f)
         except FileNotFoundError:
-            raise TemplateNotFound(template_type)
-        return schema
+            raise FileNotFoundError(f"'{doc_ref}' not found. Are DMSS core blueprints available at {self.path}?")
 
     def find(self, filter: dict, single=None, raw=None) -> DTO:
-        template_type = filter["type"]
-        return self.get(template_type)
+        return self.get(filter["type"])
 
     def find_one(self, filters: Dict) -> Dict:
         raise NotImplementedError

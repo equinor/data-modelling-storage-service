@@ -4,9 +4,8 @@ from enum import Enum
 from api.classes.blueprint import Blueprint
 from api.classes.blueprint_attribute import BlueprintAttribute
 from api.classes.dto import DTO
-from api.core.storage.repositories.file import TemplateRepositoryFromFile
+from api.core.storage.repositories.file import LocalFileRepository
 from api.core.use_case.utils.create_entity import CreateEntity
-from api.utils.helper_functions import schemas_location
 
 
 class Types(Enum):
@@ -27,17 +26,17 @@ class CreateEntityTestCase(unittest.TestCase):
                 "fuelPump": {
                     "name": "fuelPump",
                     "description": "A standard fuel pump",
-                    "type": "ds/test_data/complex/FuelPumpTest",
+                    "type": "test_data/complex/FuelPumpTest",
                 },
                 "power": 120,
-                "type": "ds/test_data/complex/EngineTest",
+                "type": "test_data/complex/EngineTest",
             },
             "is_sedan": True,
             "description": "crappy car",
             "name": "Mercedes",
             "seats": 2,
-            "type": "ds/test_data/complex/CarTest",
-            "wheel": {"name": "wheel", "power": 0.0, "type": "ds/test_data/complex/WheelTest"},
+            "type": "test_data/complex/CarTest",
+            "wheel": {"name": "wheel", "power": 0.0, "type": "test_data/complex/WheelTest"},
             "wheels": [],
             "floatValues": [2.1, 3.1, 4.2],
             "intValues": [1, 5, 4, 2],
@@ -45,13 +44,13 @@ class CreateEntityTestCase(unittest.TestCase):
             "stringValues": ["one", "two", "three"],
         }
 
-        file_repository_test = TemplateRepositoryFromFile(schemas_location())
+        file_repository_test = LocalFileRepository()
 
         class BlueprintProvider:
             def get_blueprint(self, template_type: str):
                 return Blueprint(DTO(file_repository_test.get(template_type)))
 
-        type = "ds/test_data/complex/CarTest"
+        type = "test_data/complex/CarTest"
 
         entity = CreateEntity(
             blueprint_provider=BlueprintProvider(), type=type, description="crappy car", name="Mercedes"

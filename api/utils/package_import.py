@@ -13,24 +13,6 @@ from api.core.utility import url_safe_name
 from api.utils.logging import logger
 
 
-def get_template_type(directory: str, file: str) -> str:
-    path = f"{directory}/{file}"
-    if path.endswith(".json"):
-        path = path[: -len(".json")]
-    if "/core/" in path:
-        path = replace_prefix(path, "system", "core")
-    elif "/blueprints/" in path:
-        path = replace_prefix(path, "SSR-DataSource", "blueprints")
-    else:
-        raise ValueError
-    return path
-
-
-def replace_prefix(path, prefix, where):
-    index = path.find(f"/{where}/")
-    return f"{prefix}/{path[index + len(f'/{where}/'):]}"
-
-
 def _add_documents(path, documents, data_source) -> List[Dict]:
     docs = []
     for file in documents:

@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Tuple, Union
 
 
@@ -15,7 +14,3 @@ def get_package_and_path(reference: str) -> Tuple[str, Union[list, None]]:
     if len(elements) == 0:
         return package, None
     return package, elements
-
-
-def schemas_location() -> Path:
-    return Path(__file__).parent.parent / "home"

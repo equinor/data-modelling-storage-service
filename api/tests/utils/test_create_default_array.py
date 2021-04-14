@@ -3,9 +3,8 @@ import unittest
 from api.classes.blueprint import Blueprint
 from api.classes.dimension import Dimension
 from api.classes.dto import DTO
-from api.core.storage.repositories.file import TemplateRepositoryFromFile
+from api.core.storage.repositories.file import LocalFileRepository
 from api.core.use_case.utils.create_entity import CreateEntity
-from api.utils.helper_functions import schemas_location
 
 package_blueprint = {
     "type": "system/SIMOS/Blueprint",
@@ -86,7 +85,7 @@ higher_rank_array_blueprint = {
     ],
 }
 
-file_repository_test = TemplateRepositoryFromFile(schemas_location())
+file_repository_test = LocalFileRepository()
 
 
 class BlueprintProvider:
