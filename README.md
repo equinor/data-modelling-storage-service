@@ -16,7 +16,7 @@ In order to run the commands described below, you need:
 ## Running 
 
 ```bash
-./generate-api.sh # You need to generate the API before starting the service
+./generate-python-package.sh # You need to generate the API before starting the service
 docker-compose build
 docker-compose up
 ```
@@ -28,7 +28,7 @@ API documentation can be found at [http://localhost:8000/api/v1/ui](http://local
 To refresh the database after first-time:
 
 ```
-docker-compose exec mainapi ./api/reset-database.sh
+docker-compose exec dmss ./api/reset-database.sh
 ```
 
 ## Available client APIs
@@ -69,19 +69,19 @@ poetry install
 Run BDD tests:
 
 ```
-docker-compose run --rm mainapi behave
+docker-compose run --rm dmss behave
 ```
 
 Run BDD tests by regexp:
 
 ```
-docker-compose run --rm mainapi behave -n "Scenario name" # Run single test  
+docker-compose run --rm dmss behave -n "Scenario name" # Run single test  
 ```
 
 Run unit tests:
 
 ```
-docker-compose run --rm mainapi pytest api
+docker-compose run --rm dmss pytest api
 ```
 
 

@@ -3,7 +3,7 @@
 gen/
 data/
 h5/
-/api/home/first-run-false
+/src/home/first-run-false
 
 ### macOS ###
 # General
@@ -134,13 +134,14 @@ typings/
 .idea/runConfigurations/.gitignore
 
 .doit.db
-api/core/domain/dynamic_models/__init__.py
+src/core/domain/dynamic_models/__init__.py
 
 /.mypy_cache/
-/api/.coverage
+/src/.coverage
 .generated/
 
 venv
 /api.egg-info/
 .vscode
 mongodata/
+/gen/

@@ -1,18 +1,14 @@
 version: "3.4"
 
 services:
-  mainapi:
+  dmss:
+    image: development
     build:
       context: .
       target: development
-    image: development
-    volumes:
-      - ./api/home:/code/home
     environment:
       ENVIRONMENT: local
       MONGO_INITDB_ROOT_PASSWORD: maf
-    links:
-      - db
 
   db:
     environment:

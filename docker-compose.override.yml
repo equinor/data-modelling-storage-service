@@ -1,12 +1,12 @@
 version: "3.4"
 
 services:
-  mainapi:
+  dmss:
     build:
       target: development
     image: main-api-dev
     volumes:
-      - ./:/usr/src/app
+      - ./src:/code
     environment:
       ENVIRONMENT: local
       MONGO_AZURE_URI: ${MONGO_AZURE_URI}
@@ -16,8 +16,6 @@ services:
   db:
     image: mongo:3.4
     command: --quiet
-    depends_on:
-      - db-ui
     environment:
       MONGO_INITDB_ROOT_USERNAME: maf
       MONGO_INITDB_ROOT_PASSWORD: maf
