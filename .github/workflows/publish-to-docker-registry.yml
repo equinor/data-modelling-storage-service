@@ -3,6 +3,9 @@ name: Publish DMSS API to docker registry and artifacts
 on:
   push
 
+env:
+  DOCKER_IMAGE: mariner.azurecr.io/dmss
+
 jobs:
 
   store-images-as-artifacts:
