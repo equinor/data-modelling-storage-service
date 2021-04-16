@@ -49,13 +49,10 @@ jobs:
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login mariner.azurecr.io --password-stdin --username ${{ secrets.DOCKER_USERNAME }}
           docker pull $DOCKER_IMAGE:latest
-      - name: pull image from docker hub
-        run: |
-          docker pull python:3.9-slim
-          docker images
+      
       - name: save docker images
         run: |
-          docker save $DOCKER_IMAGE:latest python:3.9-slim > DMSS_IMAGES.tar
+          docker save $DOCKER_IMAGE:latest > DMSS_IMAGES.tar
           ls -sh DMSS_IMAGES.tar
       - name: upload images as artifacts
         uses: actions/upload-artifact@v2
