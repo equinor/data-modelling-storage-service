@@ -1,7 +1,7 @@
 name: Publish DMSS API to docker registry and artifacts
 
 on:
-  push:
+  push
 
 jobs:
 
