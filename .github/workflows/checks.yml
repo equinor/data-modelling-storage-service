@@ -6,20 +6,16 @@ jobs:
   cheking:
     name: Run checks
     runs-on: ubuntu-18.04
-
-    env:
-      DOCKER_IMAGE: dmss-api-test
-
     steps:
       - uses: actions/checkout@master
       - name: "Dev image"
         run: docker build -t devimage --target development .
       - name: "Bandit"
-        run: docker run devimage bandit --recursive -x tests api controllers
+        run: docker run devimage bandit --recursive --exclude ./tests/* .
       - name: "Safety"
         run: docker run devimage safety check
       - name: "Black"
-        run: docker run devimage black --check --diff api controllers app.py
+        run: docker run devimage black --check --diff .
       - name: "Flake8"
         run: docker run devimage flake8
       - name: "Generate API"

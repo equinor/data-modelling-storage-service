@@ -6,5 +6,6 @@ exclude =
     gen,
     .venv,
     venv,
-    tests
+    src/tests/*
+    tests/*
 max-line-length = 119

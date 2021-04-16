@@ -13,27 +13,27 @@ repos:
   hooks:
     - id: black
       language_version: python3.8
-      exclude: ^api/gen/*
+      files: ^src/.*\.py$
 - repo: https://github.com/PyCQA/bandit
   rev: 1.6.2
   hooks:
     - id: bandit
       args: [-l, --recursive, -x, tests]
-      files: ^(api|controllers)/.*\.py$
+      files: ^src/.*\.py$
 
 - repo: local
   hooks:
     - id: flake8
       # The provided hook fails to read config file. Therefore this wrapper.
       name: Python style checking
-      entry: sh -c ".venv/bin/python -m flake8"
+      entry: sh -c ".venv/bin/python -m flake8 src"
       language: system
     - id: safety
-      name: Python vuln packages
+      name: Dependencies CVE check
       entry: sh -c ".venv/bin/python -m safety check"
       language: system
       files: poetry.lock
     - id: pytest
       name: Unit Tests
-      entry: sh -c ".venv/bin/python -m pytest api/tests"
+      entry: sh -c "export PYTHONPATH=./src && .venv/bin/python -m pytest src/tests"
       language: system

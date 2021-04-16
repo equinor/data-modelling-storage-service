@@ -1,2 +1,2 @@
 [behave]
-paths=api/tests_bdd
+paths=tests/bdd

@@ -1,7 +1,7 @@
 version: "3.4"
 
 services:
-  mainapi:
+  dmss:
     build:
       context: .
     image: mariner.azurecr.io/dmss:latest
@@ -10,12 +10,8 @@ services:
       ENVIRONMENT: azure
       MONGO_INITDB_ROOT_USERNAME: maf
       MONGO_INITDB_ROOT_PASSWORD: maf
-      APPLICATION_HOME: /usr/src/app/api/home
     depends_on:
       - db
-    links:
-      - db
-
   db:
     image: mongo:3.4
     command: --quiet
