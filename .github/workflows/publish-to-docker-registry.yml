@@ -1,4 +1,4 @@
-name: Publish DMSS API to docker registry
+name: Publish DMSS API to docker registry and artifacts
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@master
       - name: pull latest DMSS images
         run: |
-          docker login mariner.azurecr.io --password-stdin --username ${{ secrets.DOCKER_USERNAME }}
+          docker login mariner.azurecr.io -p ${{secrets.DOCKER_PASSWORD}} --username ${{ secrets.DOCKER_USERNAME }}
           docker pull $DOCKER_IMAGE:latest
 
       - name: pull image from docker hub
