@@ -9,9 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: pull latest DMSS images
+      - name: pull latest DMSS image
         run: |
-          docker login -u mariner -p ${{secrets.DOCKER_PASSWORD}} mariner.azurecr.io
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login mariner.azurecr.io --password-stdin --username ${{ secrets.DOCKER_USERNAME }}
           docker pull $DOCKER_IMAGE:latest
 
       - name: pull image from docker hub
