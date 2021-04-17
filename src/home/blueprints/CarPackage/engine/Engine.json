@@ -94,6 +94,13 @@
           "mapping": "column"
         }
       ]
+    },
+    {
+      "type": "system/SIMOS/UiRecipe",
+      "name": "default-form",
+      "description": "Default Form",
+      "plugin": "EXTERNAL",
+      "attributes": []
     }
   ]
 }

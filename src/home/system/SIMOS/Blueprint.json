@@ -154,6 +154,19 @@
       "plugin": "EXTERNAL",
       "options": [],
       "attributes": []
+    },
+    {
+      "type": "system/SIMOS/UiRecipe",
+      "name": "default-form",
+      "description": "Default Form",
+      "plugin": "EXTERNAL",
+      "attributes": [
+        {
+          "name": "attributes",
+          "type": "system/SIMOS/UiAttribute",
+          "field": "attribute"
+        }
+      ]
     }
   ]
 }
