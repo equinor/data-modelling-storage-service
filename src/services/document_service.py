@@ -1,5 +1,5 @@
 from tempfile import SpooledTemporaryFile
-from typing import Dict, List, Union
+from typing import Callable, Dict, List, Union
 from uuid import uuid4
 
 from domain_classes.blueprint import Blueprint
@@ -34,19 +34,10 @@ def get_required_attributes(type: str):
     ]
 
 
-def get_document(document_uid: str, document_repository: DataSource):
-    document: DTO = document_repository.get(str(document_uid))
-
-    if not document:
-        raise EntityNotFoundException(uid=document_uid)
-
-    return document
-
-
 def get_resolved_document(
     document: DTO,
     document_repository: DataSource,
-    blueprint_provider: BlueprintProvider,
+    blueprint_provider: Callable[[str], Blueprint],
     depth: int = 999,
     depth_count: int = 0,
 ) -> Dict:
@@ -56,7 +47,7 @@ def get_resolved_document(
         return document.data
     depth_count += 1
 
-    blueprint: Blueprint = blueprint_provider.get_blueprint(document.type)
+    blueprint: Blueprint = blueprint_provider(document.type)
 
     data: Dict = document.data
 
@@ -114,11 +105,13 @@ def get_resolved_document(
 
 
 def get_complete_document(
-    document_uid: str, document_repository: DataSource, blueprint_provider: BlueprintProvider, depth: int = 999
+    document_uid: str,
+    document_repository: DataSource,
+    blueprint_provider: Callable[[str], Blueprint],
+    depth: int = 999,
 ) -> dict:
-    document = get_document(document_uid=document_uid, document_repository=document_repository)
-
-    return get_resolved_document(document, document_repository, blueprint_provider, depth)
+    raw_document = document_repository.get(str(document_uid))
+    return get_resolved_document(raw_document, document_repository, blueprint_provider, depth)
 
 
 class DocumentService:
@@ -126,8 +119,10 @@ class DocumentService:
         self.blueprint_provider = blueprint_provider
         self.repository_provider = repository_provider
 
-    def get_blueprint(self):
-        return self.blueprint_provider
+    def get_blueprint(self, type: str) -> Blueprint:
+        blueprint: Blueprint = self.blueprint_provider.get_blueprint(type)
+        blueprint.realize_extends(self.blueprint_provider.get_blueprint)
+        return blueprint
 
     def invalidate_cache(self):
         self.blueprint_provider.invalidate_cache()
@@ -190,7 +185,7 @@ class DocumentService:
     def get_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
         try:
             complete_document = get_complete_document(
-                document_uid, self.repository_provider(data_source_id), self.blueprint_provider, depth
+                document_uid, self.repository_provider(data_source_id), self.get_blueprint, depth
             )
         except EntityNotFoundException as error:
             # this is an edge case for packages where the reference in a package entity has wrong document id.
@@ -199,9 +194,7 @@ class DocumentService:
             logger.exception(error)
             raise EntityNotFoundException(document_uid)
 
-        return Node.from_dict(
-            complete_document, complete_document.get("_id"), blueprint_provider=self.blueprint_provider
-        )
+        return Node.from_dict(complete_document, complete_document.get("_id"), blueprint_provider=self.get_blueprint)
 
     def get_by_path(self, data_source_id: str, directory: str):
         ref_elements = directory.split("/", 1)
@@ -214,11 +207,11 @@ class DocumentService:
             raise FileNotFoundException(data_source_id, package_name, is_root=True)
 
         complete_document = get_complete_document(
-            package.uid, self.repository_provider(data_source_id), self.blueprint_provider
+            package.uid, self.repository_provider(data_source_id), self.get_blueprint
         )
 
         dto = DTO(complete_document)
-        node = Node.from_dict(dto.data, dto.uid, blueprint_provider=self.blueprint_provider)
+        node = Node.from_dict(dto.data, dto.uid, blueprint_provider=self.get_blueprint)
 
         if len(ref_elements) > 1:
             path = ref_elements[1]
@@ -332,14 +325,14 @@ class DocumentService:
         if parent.duplicate_attribute(name):
             raise DuplicateFileNameException(data_source_id, f"{parent.name}/{name}")
 
-        entity: Dict = CreateEntity(self.blueprint_provider, name=name, type=type, description=description).entity
+        entity: Dict = CreateEntity(self.get_blueprint, name=name, type=type, description=description).entity
 
         if type == SIMOS.BLUEPRINT.value:
             entity["attributes"] = get_required_attributes(type=type)
 
         new_node_id = str(uuid4()) if not parent.attribute_is_storage_contained() else ""
         new_node_attribute = BlueprintAttribute(parent.key, type)
-        new_node = Node.from_dict(entity, new_node_id, self.blueprint_provider, new_node_attribute)
+        new_node = Node.from_dict(entity, new_node_id, self.get_blueprint, new_node_attribute)
 
         if isinstance(parent, ListNode):
             new_node.key = str(len(parent.children)) if parent.is_array() else new_node.name
@@ -398,7 +391,7 @@ class DocumentService:
         if root.contains(name):
             raise DuplicateFileNameException
 
-        entity: Dict = CreateEntity(self.blueprint_provider, name=name, type=type, description=description).entity
+        entity: Dict = CreateEntity(self.get_blueprint, name=name, type=type, description=description).entity
 
         if type == SIMOS.BLUEPRINT.value:
             entity["attributes"] = get_required_attributes(type=type)
@@ -415,7 +408,7 @@ class DocumentService:
         new_node = Node.from_dict(
             {**entity, **document},
             new_node_id,
-            self.blueprint_provider,
+            self.get_blueprint,
             BlueprintAttribute(name="content", attribute_type=type),
         )
         self._merge_entity_and_files(new_node, files)
@@ -436,10 +429,7 @@ class DocumentService:
                 f"Search is not supported on this repository type; {type(repository.repository).__name__}"
             )
 
-        # TODO: This looks strange. Change how we get the "get_blueprint()"
-        get_blueprint = self.get_blueprint().get_blueprint
-
-        process_search_data = build_mongo_query(get_blueprint, search_data)
+        process_search_data = build_mongo_query(self.get_blueprint, search_data)
 
         result: List[DTO] = repository.find(process_search_data)
         result_list = {}

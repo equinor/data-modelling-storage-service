@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 from domain_classes.dto import DTO
-from services.document_service import get_complete_document
+from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider
 from utils.data_structure.compare import pretty_eq
 
@@ -26,8 +26,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_3 = {"_id": "3", "name": "Reference 1", "description": "", "type": "blueprint_2"}
         document_4 = {"_id": "4", "name": "Reference 2", "description": "", "type": "blueprint_2"}
 
-        document_repository = mock.Mock()
-
         def mock_get(document_id: str):
             if document_id == "1":
                 return DTO(data=document_1.copy())
@@ -39,11 +37,13 @@ class DocumentServiceTestCase(unittest.TestCase):
                 return DTO(data=document_4.copy())
             return None
 
+        document_repository = mock.Mock()
         document_repository.get = mock_get
 
-        root = get_complete_document(
-            document_uid="1", document_repository=document_repository, blueprint_provider=blueprint_provider
+        document_service: DocumentService = DocumentService(
+            repository_provider=lambda x: document_repository, blueprint_provider=blueprint_provider
         )
+        root = document_service.get_by_uid("datasource", "1").to_dict()
 
         assert isinstance(root, dict)
 

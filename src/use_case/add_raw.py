@@ -5,7 +5,6 @@ from restful import response_object as res
 from restful.request_types.shared import DataSource, NamedEntity
 from restful.use_case import UseCase
 from storage.internal.data_source_repository import get_data_source
-from utils.get_blueprint import BlueprintProvider
 
 
 class AddRawRequest(DataSource):
@@ -13,9 +12,6 @@ class AddRawRequest(DataSource):
 
 
 class AddRawUseCase(UseCase):
-    def __init__(self, blueprint_provider=BlueprintProvider()):
-        self.blueprint_provider = blueprint_provider
-
     def process_request(self, req: AddRawRequest):
         uid: str = req.document.uid
         new_node_id = str(uuid4()) if not uid else uid

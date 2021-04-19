@@ -114,7 +114,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "0",
                 uid="2",
                 entity=doc_storage["2"],
-                blueprint_provider=blueprint_provider,
+                blueprint_provider=document_service.get_blueprint,
                 attribute=BlueprintAttribute("references", "blueprint_2"),
             )
         )
@@ -247,7 +247,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=repository_provider
         )
 
-        node: Node = Node.from_dict(load_node, "1", blueprint_provider)
+        node: Node = Node.from_dict(load_node, "1", document_service.get_blueprint)
         document_service.save(node, "testing")
 
         assert doc_storage == doc_storage_expected

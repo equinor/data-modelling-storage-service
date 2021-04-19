@@ -56,6 +56,34 @@ blueprint_2 = {
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
     ],
     "storageRecipes": [],
+    "uiRecipes": [{"name": "default", "description": "", "plugin": "edit1"}],
+}
+
+extended_blueprint = {
+    "type": "system/SIMOS/Blueprint",
+    "extends": ["blueprint_2"],
+    "name": "ExtendedBlueprint",
+    "description": "This Blueprint extends blueprint 2",
+    "attributes": [{"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "another_value"},],
+    "storageRecipes": [
+        {
+            "name": "default",
+            "type": "system/SIMOS/StorageRecipe",
+            "description": "",
+            "storageAffinity": "blob",
+            "attributes": [],
+        }
+    ],
+    "uiRecipes": [{"name": "default", "description": "", "plugin": "edit2"}],
+}
+
+second_level_extended_blueprint = {
+    "type": "system/SIMOS/Blueprint",
+    "extends": ["ExtendedBlueprint"],
+    "name": "SecondLevelExtendedBlueprint",
+    "description": "This Blueprint extends 'ExtendedBlueprint'",
+    "attributes": [{"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "a_third_value"}],
+    "storageRecipes": [],
     "uiRecipes": [],
 }
 
@@ -192,6 +220,10 @@ class BlueprintProvider:
             return Blueprint(DTO(blueprint_1))
         if type == "blueprint_2":
             return Blueprint(DTO(blueprint_2))
+        if type == "ExtendedBlueprint":
+            return Blueprint(DTO(extended_blueprint))
+        if type == "SecondLevelExtendedBlueprint":
+            return Blueprint(DTO(second_level_extended_blueprint))
         if type == "uncontained_blueprint":
             return Blueprint(DTO(uncontained_blueprint))
         if type == "blueprint_with_second_level_nested_uncontained_attribute":

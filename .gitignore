@@ -145,3 +145,4 @@ venv
 .vscode
 mongodata/
 /gen/
+/src/.behaverc

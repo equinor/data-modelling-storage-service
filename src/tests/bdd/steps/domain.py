@@ -1,14 +1,13 @@
 from behave import given
 
 from domain_classes.blueprint_attribute import BlueprintAttribute
+from domain_classes.tree_node import ListNode, Node
 from enums import DMT, SIMOS
 from services.document_service import DocumentService
-from domain_classes.tree_node import Node, ListNode
 from storage.internal.data_source_repository import get_data_source
 from utils.create_entity import CreateEntity
-from utils.get_blueprint import BlueprintProvider
 
-blueprint_provider = BlueprintProvider()
+document_service = DocumentService(get_data_source)
 
 
 def generate_tree_from_rows(node: Node, rows):
@@ -24,7 +23,7 @@ def generate_tree_from_rows(node: Node, rows):
                 key="content",
                 uid="",
                 entity=data,
-                blueprint_provider=blueprint_provider,
+                blueprint_provider=document_service.get_blueprint,
                 attribute=BlueprintAttribute("content", DMT.ENTITY.value),
             )
             node.add_child(content_node)
@@ -36,7 +35,7 @@ def generate_tree_from_rows(node: Node, rows):
         if row["parent_uid"] == node.uid:
             child_data = row.as_dict()
             entity = CreateEntity(
-                blueprint_provider=blueprint_provider,
+                blueprint_provider=document_service.get_blueprint,
                 type=child_data["type"],
                 description=child_data.get("description", ""),
                 name=child_data["name"],
@@ -45,7 +44,7 @@ def generate_tree_from_rows(node: Node, rows):
                 key="",
                 uid=child_data["uid"],
                 entity=entity,
-                blueprint_provider=blueprint_provider,
+                blueprint_provider=document_service.get_blueprint,
                 attribute=BlueprintAttribute("content", child_data["type"]),
             )
 
@@ -70,7 +69,7 @@ def generate_tree(data_source_id: str, table):
         key="root",
         uid=root_package["uid"],
         entity=root_package_data,
-        blueprint_provider=blueprint_provider,
+        blueprint_provider=document_service.get_blueprint,
         parent=root,
         attribute=BlueprintAttribute("root", DMT.PACKAGE.value),
     )
