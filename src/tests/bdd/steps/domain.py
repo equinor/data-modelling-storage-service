@@ -81,7 +81,7 @@ def generate_tree(data_source_id: str, table):
 @given('there are documents for the data source "{data_source_id}" in collection "{collection}"')
 def step_impl_documents(context, data_source_id: str, collection: str):
     context.documents = {}
-    tree = generate_tree(data_source_id, context.table)
+    tree: Node = generate_tree(data_source_id, context.table)
     tree.show_tree()
     document_service = DocumentService(repository_provider=get_data_source)
     document_service.save(node=tree, data_source_id=data_source_id)

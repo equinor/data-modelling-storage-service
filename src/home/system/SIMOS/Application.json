@@ -1,25 +1,9 @@
   {
   "type": "system/SIMOS/Blueprint",
+  "extends": ["system/SIMOS/NamedEntity"],
   "name": "Application",
   "description": "This describes an application",
   "attributes": [
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "name"
-    },
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "type",
-      "default": "system/SIMOS/Application"
-    },
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "description",
-      "default": "Create an application by exporting Blueprints and Entities, and configuring context menus."
-    },
     {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",

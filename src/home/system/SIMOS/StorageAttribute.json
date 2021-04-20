@@ -1,14 +1,9 @@
 {
   "type": "system/SIMOS/Blueprint",
   "name": "StorageAttribute",
+  "extends": ["system/SIMOS/NamedEntity"],
   "description": "This describes a storage recipe attribute",
   "attributes": [
-    {
-      "name": "type",
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "default": "system/SIMOS/StorageAttribute"
-    },
     {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
