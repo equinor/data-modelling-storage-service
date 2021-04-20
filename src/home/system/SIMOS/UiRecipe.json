@@ -84,7 +84,7 @@
     {
       "name": "Edit",
       "type": "system/SIMOS/UiRecipe",
-      "plugin": "EDIT_PLUGIN",
+      "plugin": "default-form",
       "attributes": [
         {
           "name": "name",

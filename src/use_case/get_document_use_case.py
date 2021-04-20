@@ -1,13 +1,13 @@
 from typing import Optional
 
-from pydantic import conint, BaseModel, Field
+from pydantic import conint, BaseModel
 from services.document_service import DocumentService
 from restful.request_types.shared import DataSource
 from restful.response_object import ResponseSuccess
 from restful.use_case import UseCase
 from storage.internal.data_source_repository import get_data_source
-from interfaces.interfaces import BaseResponse
 from typing import Dict
+
 
 class GetDocumentRequest(DataSource):
     document_id: str
@@ -16,7 +16,7 @@ class GetDocumentRequest(DataSource):
     depth: conint(gt=-1, lt=1000) = 999
 
 
-class GetDocumentResponse(BaseModel, BaseResponse):
+class GetDocumentResponse(BaseModel):
     blueprint: Dict
     document: Dict
 

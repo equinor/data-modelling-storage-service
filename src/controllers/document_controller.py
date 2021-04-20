@@ -2,13 +2,12 @@ from typing import Optional
 
 from fastapi import APIRouter
 from pydantic import conint
-from starlette.responses import JSONResponse, Response
+from starlette.responses import JSONResponse
 
 from use_case.get_document_by_path_use_case import GetDocumentByPathRequest, GetDocumentByPathUseCase
 from use_case.get_document_use_case import GetDocumentRequest, GetDocumentUseCase
 from use_case.update_document_use_case import UpdateDocumentRequest, UpdateDocumentUseCase
 from restful.status_codes import STATUS_CODES
-import json
 
 from use_case.get_document_use_case import GetDocumentResponse
 
@@ -17,7 +16,9 @@ from use_case.get_document_by_path_use_case import GetDocumentByPathResponse
 router = APIRouter()
 
 
-@router.get("/documents/{data_source_id}/{document_id}", operation_id="document_get_by_id", response_model=GetDocumentResponse)
+@router.get(
+    "/documents/{data_source_id}/{document_id}", operation_id="document_get_by_id", response_model=GetDocumentResponse
+)
 def get_by_id(
     data_source_id: str,
     document_id: str,
@@ -26,7 +27,7 @@ def get_by_id(
     depth: conint(gt=-1, lt=1000) = 999,
 ):
     use_case = GetDocumentUseCase()
-    response : GetDocumentResponse = use_case.execute(
+    response: GetDocumentResponse = use_case.execute(
         GetDocumentRequest(
             data_source_id=data_source_id,
             document_id=document_id,
@@ -35,12 +36,14 @@ def get_by_id(
             depth=depth,
         )
     )
-
-    # Response(content=json.dumps(response.value), media_type="application/json", status_code=STATUS_CODES[response.type])
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-@router.get("/documents-by-path/{data_source_id}", operation_id="document_get_by_path", response_model=GetDocumentByPathResponse)
+@router.get(
+    "/documents-by-path/{data_source_id}",
+    operation_id="document_get_by_path",
+    response_model=GetDocumentByPathResponse,
+)
 def get_by_path(
     data_source_id: str, ui_recipe: Optional[str] = None, attribute: Optional[str] = None, path: Optional[str] = None
 ):

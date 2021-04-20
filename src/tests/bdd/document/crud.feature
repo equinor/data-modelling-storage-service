@@ -15,6 +15,7 @@ Feature: Document 2
       | data-source-name | db   | 27017 | maf      | maf      | false | doc-repo   | local    | test       | mongo-db | default      |
       | system           | db   | 27017 | maf      | maf      | false | system     | local    | system     | mongo-db | default      |
 
+
     Given there exist document with id "2" in data source "test-source-name"
     """
     {
