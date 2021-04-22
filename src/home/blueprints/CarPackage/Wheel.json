@@ -43,7 +43,7 @@
       "name": "Edit",
       "type": "system/SIMOS/UiRecipe",
       "description": "",
-      "plugin": "EDIT_PLUGIN",
+      "plugin": "default-form",
       "field": "",
       "hideTab": false,
       "options": [],
@@ -65,71 +65,6 @@
           "disabled": false,
           "required": false,
           "mapping": ""
-        }
-      ]
-    },
-    {
-      "name": "WheelTable",
-      "type": "system/SIMOS/UiRecipe",
-      "description": "",
-      "plugin": "TABLE",
-      "field": "",
-      "hideTab": true,
-      "options": [],
-      "attributes": [
-        {
-          "name": "name",
-          "type": "system/SIMOS/UiAttribute",
-          "description": "",
-          "label": "",
-          "uiRecipe": "",
-          "dimensions": "",
-          "enumType": "",
-          "field": "",
-          "widget": "",
-          "default": "",
-          "options": [],
-          "optional": false,
-          "contained": true,
-          "disabled": false,
-          "required": false,
-          "mapping": "column"
-        },
-        {
-          "name": "description",
-          "type": "system/SIMOS/UiAttribute",
-          "description": "",
-          "label": "",
-          "uiRecipe": "",
-          "dimensions": "",
-          "enumType": "",
-          "field": "",
-          "widget": "",
-          "default": "",
-          "options": [],
-          "optional": false,
-          "contained": true,
-          "disabled": false,
-          "required": false,
-          "mapping": "column"
-        },
-        {
-          "name": "diameter",
-          "type": "system/SIMOS/UiAttribute",
-          "description": "",
-          "label": "",
-          "uiRecipe": "",
-          "dimensions": "",
-          "enumType": "",
-          "field": "",
-          "widget": "",
-          "default": "",
-          "options": [],
-          "optional": false,
-          "contained": true,
-          "disabled": false,
-          "required": false,
-          "mapping": "column"
         }
       ]
     }

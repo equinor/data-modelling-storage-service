@@ -105,19 +105,6 @@
     },
     {
       "type": "system/SIMOS/UiRecipe",
-      "name": "Edit",
-      "description": "",
-      "plugin": "EDIT_PLUGIN",
-      "attributes": [
-        {
-          "name": "attributes",
-          "type": "system/SIMOS/UiAttribute",
-          "field": "attribute"
-        }
-      ]
-    },
-    {
-      "type": "system/SIMOS/UiRecipe",
       "name": "INDEX",
       "description": "",
       "plugin": "INDEX",
@@ -148,12 +135,17 @@
       ]
     },
     {
-      "name": "Table(BP)",
       "type": "system/SIMOS/UiRecipe",
-      "description": "Table view of Blueprint",
-      "plugin": "EXTERNAL",
-      "options": [],
-      "attributes": []
+      "name": "Edit",
+      "description": "Default Form",
+      "plugin": "default-form",
+      "attributes": [
+        {
+          "name": "attributes",
+          "type": "system/SIMOS/UiAttribute",
+          "field": "attribute"
+        }
+      ]
     }
   ]
 }

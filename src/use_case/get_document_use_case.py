@@ -1,12 +1,12 @@
 from typing import Optional
 
-from pydantic import conint
-
+from pydantic import conint, BaseModel
 from services.document_service import DocumentService
 from restful.request_types.shared import DataSource
 from restful.response_object import ResponseSuccess
 from restful.use_case import UseCase
 from storage.internal.data_source_repository import get_data_source
+from typing import Dict
 
 
 class GetDocumentRequest(DataSource):
@@ -14,6 +14,11 @@ class GetDocumentRequest(DataSource):
     ui_recipe: Optional[str] = None
     attribute: Optional[str] = None
     depth: conint(gt=-1, lt=1000) = 999
+
+
+class GetDocumentResponse(BaseModel):
+    blueprint: Dict
+    document: Dict
 
 
 class GetDocumentUseCase(UseCase):

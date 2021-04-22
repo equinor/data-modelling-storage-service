@@ -58,55 +58,5 @@
       ]
     }
   ],
-  "uiRecipes": [
-    {
-      "name": "EnginePlot",
-      "type": "system/SIMOS/UiRecipe",
-      "description": "",
-      "plugin": "PLOT",
-      "options": [],
-      "attributes": [
-        {
-          "name": "name",
-          "type": "system/SIMOS/UiAttribute",
-          "mapping": "title",
-          "options": []
-        }, {
-          "name": "value1",
-          "type": "system/SIMOS/UiAttribute",
-          "mapping": "line",
-          "options": []
-        }, {
-          "name": "value2",
-          "type": "system/SIMOS/UiAttribute",
-          "mapping": "line",
-          "options": []
-        }
-      ]
-    }, {
-      "name": "EngineTable",
-      "type": "system/SIMOS/UiRecipe",
-      "description": "",
-      "plugin": "TABLE",
-      "options": [],
-      "attributes": [
-        {
-          "name": "name",
-          "type": "system/SIMOS/UiAttribute",
-          "mapping": "title",
-          "options": []
-        }, {
-          "name": "value1",
-          "type": "system/SIMOS/UiAttribute",
-          "mapping": "column",
-          "options": []
-        }, {
-          "name": "value2",
-          "type": "system/SIMOS/UiAttribute",
-          "mapping": "column",
-          "options": []
-        }
-      ]
-    }
-  ]
+  "uiRecipes": []
 }

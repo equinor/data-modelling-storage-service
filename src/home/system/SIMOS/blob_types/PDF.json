@@ -54,7 +54,7 @@
       "type": "system/SIMOS/UiRecipe",
       "name": "PDFView",
       "description": "Embedded PDF View",
-      "plugin": "VIEW_PDF",
+      "plugin": "default-pdf",
       "attributes": []
     }
   ]

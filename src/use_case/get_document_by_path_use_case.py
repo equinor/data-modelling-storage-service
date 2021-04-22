@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Dict
 
 from restful.request_types.shared import DataSource
 from storage.internal.data_source_repository import get_data_source
@@ -6,12 +6,18 @@ from services.document_service import DocumentService
 from restful import response_object as res
 from restful import use_case as uc
 from utils.find_document_by_path import get_document_by_ref
+from pydantic import BaseModel
 
 
 class GetDocumentByPathRequest(DataSource):
     ui_recipe: Optional[str] = None
     attribute: Optional[str] = None
     path: Optional[str] = None
+
+
+class GetDocumentByPathResponse(BaseModel):
+    blueprint: Dict
+    document: Dict
 
 
 class GetDocumentByPathUseCase(uc.UseCase):

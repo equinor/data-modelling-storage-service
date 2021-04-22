@@ -53,7 +53,7 @@
   "storageRecipes": [],
   "uiRecipes": [
     {
-      "plugin": "EDIT_PLUGIN",
+      "plugin": "default-form",
       "name": "Edit",
       "type": "system/SIMOS/UiRecipe",
       "attributes": [
