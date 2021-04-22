@@ -7,13 +7,14 @@ on:
     tags:
       - "v**"
 
+
+env:
+  DOCKER_IMAGE: mariner.azurecr.io/dmss
+
 jobs:
   build-n-publish:
     name: Build and deploy
     runs-on: ubuntu-20.04
-
-    env:
-      DOCKER_IMAGE: mariner.azurecr.io/dmss
 
     steps:
       - uses: actions/checkout@master
@@ -38,3 +39,23 @@ jobs:
       - name: "Docker Logout"
         if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
         run: docker logout
+
+  store-images-as-artifacts:
+    depends-on: [build-n-publish]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: pull latest DMSS image
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login mariner.azurecr.io --password-stdin --username ${{ secrets.DOCKER_USERNAME }}
+          docker pull $DOCKER_IMAGE:latest
+      
+      - name: save docker images
+        run: |
+          docker save $DOCKER_IMAGE:latest > DMSS_IMAGES.tar
+          ls -sh DMSS_IMAGES.tar
+      - name: upload images as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dmss-artifact
+          path: DMSS_IMAGES.tar
