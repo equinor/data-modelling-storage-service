@@ -5,7 +5,12 @@
 ### Using docker
 
 ```
-docker-compose run --rm api behave
+docker-compose run --rm dmss behave
+```
+
+#### Running a feature file
+```
+docker-compose run --rm dmss behave tests/bdd/data_source/crud.feature
 ```
 
 ### Using PyCharm

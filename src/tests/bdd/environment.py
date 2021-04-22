@@ -12,6 +12,8 @@ test_client = TestClient(app)
 def before_all(context):
     context.errors = []
     context.features = []
+    context.createdPackages = []
+    context.createdBlueprints = []
     wipe_db()
     dmt_database.drop_collection(Config.DATA_SOURCES_COLLECTION)
 

@@ -41,6 +41,9 @@ Feature: Data Sources
       },
       {
         "name": "SSR-DataSource"
+      },
+      {
+        "name": "system"
       }
     ]
     """
@@ -68,6 +71,31 @@ Feature: Data Sources
     }
     """
     Then the response status should be "OK"
+
+  Scenario: Update existing data source
+    Given i access the resource url "/api/v1/data-sources/myTest-DataSource"
+    And data modelling tool templates are imported
+    When i make a "POST" request
+    """
+    {
+      "name": "myTest-DataSource",
+      "repositories": {
+        "myTest-DataSource": {
+          "type": "mongo-db",
+          "host": "new-database-server.equinor.com/",
+          "port": 27017,
+          "username": "new_username",
+          "password": "new_password",
+          "tls": false,
+          "name": "myTest-DataSource",
+          "database": "mariner",
+          "collection": "blueprints"
+        }
+      }
+    }
+    """
+    Then the response status should be "OK"
+    
 
   Scenario: Create new data source with multiple repositories
     Given i access the resource url "/api/v1/data-sources/MyMultiRepDS"

@@ -21,14 +21,14 @@ docker-compose build
 docker-compose up
 ```
 
-API documentation can be found at [http://localhost:8000/api/v1/ui](http://localhost:8000/api/v1/ui).
+API documentation can be found at [http://localhost:8000/docs](http://localhost:8000/docs).
 
 ### Database
 
 To refresh the database after first-time:
 
 ```
-docker-compose exec dmss ./api/reset-database.sh
+docker-compose exec dmss ./reset-database.sh
 ```
 
 ## Available client APIs
