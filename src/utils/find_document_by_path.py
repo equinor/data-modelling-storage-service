@@ -1,13 +1,15 @@
 from typing import List, Union
 
 from domain_classes.dto import DTO
+from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from utils.exceptions import EntityNotFoundException, RootPackageNotFoundException
-from utils.logging import logger
 from utils.string_helpers import get_data_source_and_path, get_package_and_path
 
 
-def _find_document_in_package_by_path(package: DTO, path_elements: List[str], repository) -> Union[str, dict, None]:
+def _find_document_in_package_by_path(
+    package: DTO, path_elements: List[str], data_source: DataSource
+) -> Union[str, dict, None]:
     """
     :param package: A Package object to search down into
     :param path_elements: A list representation of the path to the document. Starting from _this_ package
@@ -18,17 +20,19 @@ def _find_document_in_package_by_path(package: DTO, path_elements: List[str], re
         target = path_elements[0]
         file = next((f for f in package["content"] if f.get("name") == target), None)
         if not file:
-            logger.error(f"The document {target} could not be found in the package {package.name}")
-            return
+            raise FileNotFoundError(f"The document {target} could not be found in the package {package.name}")
         return file["_id"]
     else:
-        next_package = next((p for p in package["content"] if p["name"] == path_elements[0]), None)
+        next_package_ref = next((p for p in package["content"] if p["name"] == path_elements[0]), None)
+        if not next_package_ref:
+            raise FileNotFoundError(f"The package {path_elements[0]} could not be found in the package {package.name}")
+        next_package: DTO = data_source.first({"_id": next_package_ref["_id"]})
         if not next_package:
-            logger.error(f"The package {path_elements[0]} could not be found in the package {package.name}")
-            return
-        next_package: DTO = repository.first({"_id": next_package["_id"]})
+            raise FileNotFoundError(
+                f"Could not find a package '{next_package_ref['_id']}' in datasource {data_source.name}"
+            )
         del path_elements[0]
-        return _find_document_in_package_by_path(next_package, path_elements, repository)
+        return _find_document_in_package_by_path(next_package, path_elements, data_source)
 
 
 def get_document_uid_by_path(path: str, repository) -> Union[str, None]:

@@ -100,7 +100,7 @@ class BlueprintProvider:
             return Blueprint(DTO(file_repository_test.get(template_type)))
 
 
-blueprint_provider = BlueprintProvider()
+blueprint_provider = BlueprintProvider().get_blueprint
 
 
 class DefaultArrayTestCase(unittest.TestCase):

@@ -1,23 +1,9 @@
 {
   "type": "system/SIMOS/Blueprint",
+  "extends": ["SSR-DataSource/CarPackage/Vehicle"],
   "name": "Car",
   "description": "This describes a car",
   "attributes": [
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "name"
-    },
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "type"
-    },
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "description"
-    },
     {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
