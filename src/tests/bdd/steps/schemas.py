@@ -1,9 +1,9 @@
 import json
-from typing import Dict
+from typing import Dict, List
 
 from behave import given
 
-
+import yaml
 from storage.internal.data_source_repository import get_data_source
 from utils.logging import logger
 from utils.package_import import import_package
@@ -25,6 +25,62 @@ def step_impl_2(context, uid: str, data_source_id: str):
     document: DTO = DTO(uid=uid, data=json.loads(context.text))
     document_repository = get_data_source(data_source_id)
     document_repository.add(document)
+
+
+
+def store_package_in_data_source(uid: str, dataSourceId: str, package: Dict):
+    document: DTO = DTO(uid=uid, data=package)
+    documentRepository = get_data_source(dataSourceId)
+    documentRepository.add(document)
+
+
+@given('Add to data source "{dataSourceId}"')
+def convert_yaml_to_json(context, dataSourceId: str):
+    yaml_content_as_dict: dict = yaml.safe_load(context.text)
+    print(json.dumps(yaml_content_as_dict, indent=2))
+
+    packageNames: List[string] = list(yaml_content_as_dict['RootPackages'].keys()) #['TestData', 'TestData2']
+
+    package_blueprint_info: Dict
+
+    for packageName in packageNames:
+        packageBlueprints: List[Dict] = yaml_content_as_dict['RootPackages'][f"{packageName}"]['content']
+        packageContent: List[Dict] = generate_package_content(packageName, packageBlueprints, dataSourceId)
+        packageJson: Dict = generate_root_package_as_json(packageName, packageContent)
+
+        print(json.dumps(packageJson, indent=2))
+
+        #store package in storage
+        packageUid = yaml_content_as_dict['RootPackages'][f"{packageName}"]['id']
+        store_package_in_data_source(packageUid, dataSourceId, packageJson)
+
+
+def generate_package_content(packageName: str, packageBlueprints: List[Dict], dataSourceId: str):
+    ###### packageBlueprintNames: list[str] = list(packageBlueprints.keys())
+    packageContent: List[Dict] = []
+    for blueprintName in list(packageBlueprints.keys()):
+        blueprint = packageBlueprints[f"{blueprintName}"]
+        packageBlueprintInfo = {
+            "_id": blueprint['id'],
+            "name": blueprintName,
+            "type": f"{dataSourceId}/{packageName}/{blueprintName}"
+        }
+        packageContent.append(packageBlueprintInfo)
+    return packageContent
+
+#todo move this func to utils or soemthing
+def generate_root_package_as_json(packageName: str, packageContent: List[Dict], storageRecipes: List = []):
+    package: Dict = {
+        "name": packageName,
+        "description": "",
+        "type": "system/SIMOS/Package",
+        "content": packageContent,
+        "isRoot": "true",
+        "storageRecipes": storageRecipes,
+        "uiRecipes": []
+    }
+    return package
+
 
 
 @given('there exists a package "{packageName}" with id "{uid}" in data source "{dataSourceId}"')
