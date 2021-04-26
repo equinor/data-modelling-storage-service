@@ -204,7 +204,7 @@ class DocumentService:
             {"type": "system/SIMOS/Package", "isRoot": True, "name": package_name}
         )
         if not package:
-            raise FileNotFoundException(data_source_id, package_name, is_root=True)
+            raise FileNotFoundException(data_source_id, package_name)
 
         complete_document = get_complete_document(
             package.uid, self.repository_provider(data_source_id), self.get_blueprint

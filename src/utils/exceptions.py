@@ -8,8 +8,8 @@ class RepositoryException(Exception):
 
 
 class EntityAlreadyExistsException(RepositoryException):
-    def __init__(self, document_id):
-        super().__init__(message=f"The document, with id {document_id} already exists")
+    def __init__(self, document_id=None, message: str = None):
+        super().__init__(message=f"The document, with id {document_id} already exists" if not message else message)
 
 
 class EntityNotFoundException(RepositoryException):
@@ -47,22 +47,21 @@ class RootPackageNotFoundException(Exception):
 
     def __str__(self):
         if self.data_source_id and self.file:
-            return f"RootPackageNotFoundException, data_source: {self.data_source_id} file: {self.file}"
+            return f"No root package with name '{self.file}', in data source '{self.data_source_id}' could be found."
         else:
-            return "RootPackageNotFoundException has been raised"
+            return "The root package could not be found"
 
 
 class FileNotFoundException(Exception):
-    def __init__(self, data_source_id=None, file=None, is_root=False):
+    def __init__(self, data_source_id=None, file=None):
         self.data_source_id = data_source_id if data_source_id else None
         self.file = file if file else None
-        self.is_root = is_root
 
     def __str__(self):
         if self.data_source_id and self.file:
-            return f"FileNotFoundException, data_source: {self.data_source_id} file: {self.file}"
+            return f"No file with name '{self.file}', in data source '{self.data_source_id}' could be found."
         else:
-            return "FileNotFoundException has been raised"
+            return "The file could not be found in the data source"
 
 
 class DuplicateFileNameException(Exception):
@@ -72,6 +71,8 @@ class DuplicateFileNameException(Exception):
 
     def __str__(self):
         if self.data_source_id and self.path:
-            return f"DuplicateFileNameInPackageException, '{self.data_source_id}/{self.path}' already exists"
+            return f"'{self.data_source_id}/{self.path}' already exists"
         else:
-            return "DuplicateFileNameInPackageException has been raised"
+            return (
+                "Can't create the requested document, one with the same name within the same package already exists."
+            )

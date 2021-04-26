@@ -333,7 +333,6 @@ Feature: Document 2
 
   Scenario: Update document (attribute and not contained)
     Given i access the resource url "/api/v1/documents/data-source-name/6?attribute=itemNotContained"
-    And data modelling tool templates are imported
     When i make a "PUT" request
     """
     {
