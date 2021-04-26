@@ -16,6 +16,14 @@
     {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
+      "name": "extends",
+      "default": "[]",
+      "optional": true,
+      "dimensions": "*"
+    },
+    {
+      "attributeType": "string",
+      "type": "system/SIMOS/BlueprintAttribute",
       "name": "description",
       "default": "",
       "optional": true

@@ -32,7 +32,7 @@ class StorageAttribute:
             "name": self.name,
             "contained": self.is_contained,
             "type": self.type,
-            "dataType": self.storage_type_affinity,
+            "dataType": self.storage_type_affinity.value,
             "label": self.label,
             "description": self.description,
         }
@@ -63,8 +63,8 @@ class StorageRecipe:
     def to_dict(self) -> Dict:
         return {
             "name": self.name,
-            "storageAffinity": self.storage_affinity,
-            "attributes": [attribute.to_dict() for attribute in self.storage_attributes],
+            "storageAffinity": self.storage_affinity.value,
+            "attributes": [attribute.to_dict() for attribute in self.storage_attributes.values()],
         }
 
     def none_contained_attributes(self) -> List[str]:

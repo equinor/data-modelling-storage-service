@@ -67,7 +67,7 @@ class DataSourceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=repository_provider
         )
 
-        node: Node = Node.from_dict(uncontained_doc, "1", blueprint_provider)
+        node: Node = Node.from_dict(uncontained_doc, "1", document_service.get_blueprint)
 
         document_service.save(node, "testing")
 
@@ -126,7 +126,7 @@ class DataSourceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=repository_provider
         )
 
-        node: Node = Node.from_dict(blob_doc, "1", blueprint_provider)
+        node: Node = Node.from_dict(blob_doc, "1", document_service.get_blueprint)
 
         document_service.save(node, "testing")
 
@@ -190,7 +190,7 @@ class DataSourceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=repository_provider
         )
 
-        node: Node = Node.from_dict(blob_doc, "1", blueprint_provider)
+        node: Node = Node.from_dict(blob_doc, "1", document_service.get_blueprint)
 
         document_service.save(node, "testing")
 

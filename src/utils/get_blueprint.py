@@ -8,25 +8,13 @@ from utils.find_document_by_path import get_document_by_ref
 from utils.logging import logger
 
 
-@lru_cache(maxsize=Config.CACHE_MAX_SIZE)
-def get_blueprint_cached(type: str) -> Blueprint:
-    try:
-        document: DTO = get_document_by_ref(type)
-        return Blueprint(document)
-    except Exception as error:
-        logger.exception(error)
-        raise EntityNotFoundException(uid=type)
-
-
 class BlueprintProvider:
-    def __init__(self):
-        self.get_blueprint = get_blueprint_cached
-
-    def get_blueprint(self, type: str) -> Blueprint:
+    @staticmethod
+    @lru_cache(maxsize=Config.CACHE_MAX_SIZE)
+    def get_blueprint(type: str) -> Blueprint:
         try:
-            logger.debug(f"Fetching Blueprint {type}")
-            document = self.get_blueprint(type)
-            return document
+            document: DTO = get_document_by_ref(type)
+            return Blueprint(document)
         except Exception as error:
             logger.exception(error)
             raise EntityNotFoundException(uid=type)

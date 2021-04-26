@@ -1,26 +1,9 @@
 {
   "type": "system/SIMOS/Blueprint",
+  "extends": ["system/SIMOS/NamedEntity"],
   "name": "UiRecipe",
   "description": "This describes ui recipe",
   "attributes": [
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "name",
-      "default": ""
-    },
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "type"
-    },
-    {
-      "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "name": "description",
-      "optional": true,
-      "default": ""
-    },
     {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
