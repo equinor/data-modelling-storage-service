@@ -1,6 +1,5 @@
 import json
 import os
-from tempfile import SpooledTemporaryFile
 from typing import Dict, List, Union
 
 from domain_classes.dto import DTO
@@ -8,8 +7,8 @@ from enums import DMT
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from utils.exceptions import InvalidDocumentNameException
-from utils.string_helpers import url_safe_name
 from utils.logging import logger
+from utils.string_helpers import url_safe_name
 
 
 def _add_documents(path, documents, data_source) -> List[Dict]:
@@ -31,7 +30,7 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
 def import_blob(path_tuple: str):
     data_source: DataSource = get_data_source(data_source_id="entities")
     with open(path_tuple[0], "rb") as blob_file:
-        data_source.update_blob(path_tuple[1], SpooledTemporaryFile(blob_file))
+        data_source.update_blob(path_tuple[1], blob_file)
 
 
 def import_package(path, data_source: str, is_root: bool = False) -> Union[Dict]:
