@@ -4,6 +4,7 @@ gen/
 data/
 h5/
 /src/home/first-run-false
+/src/.behaverc
 
 ### macOS ###
 # General

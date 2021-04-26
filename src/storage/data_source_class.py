@@ -1,4 +1,3 @@
-import io
 from typing import Dict, List, Union
 
 from config import Config
@@ -116,14 +115,14 @@ class DataSource:
         # TODO: Some sanity checks on the file. werkzug safe_files() etc.
         repo.update_blob(uid, file.read())
 
-    def get_blob(self, uid: str) -> io.BytesIO:
+    def get_blob(self, uid: str) -> bytes:
         try:
             repo = self._get_documents_repository(uid)
             if not repo:
                 logger.error(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
                 raise EntityNotFoundException(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
 
-            return io.BytesIO(repo.get_blob(uid))
+            return repo.get_blob(uid)
 
         except EntityNotFoundException:
             logger.error(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
