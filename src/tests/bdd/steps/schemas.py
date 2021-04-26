@@ -28,8 +28,8 @@ def step_impl_2(context, uid: str, data_source_id: str):
 
 
 
-def store_package_in_data_source(uid: str, dataSourceId: str, package: Dict):
-    document: DTO = DTO(uid=uid, data=package)
+def store_document_in_data_source(uid: str, dataSourceId: str, document: Dict):
+    document: DTO = DTO(uid=uid, data=document)
     documentRepository = get_data_source(dataSourceId)
     documentRepository.add(document)
 
@@ -37,22 +37,74 @@ def store_package_in_data_source(uid: str, dataSourceId: str, package: Dict):
 @given('Add to data source "{dataSourceId}"')
 def convert_yaml_to_json(context, dataSourceId: str):
     yaml_content_as_dict: dict = yaml.safe_load(context.text)
-    print(json.dumps(yaml_content_as_dict, indent=2))
-
     packageNames: List[string] = list(yaml_content_as_dict['RootPackages'].keys()) #['TestData', 'TestData2']
-
     package_blueprint_info: Dict
 
+    # generate package and blueprint documents and store them in data source
     for packageName in packageNames:
         packageBlueprints: List[Dict] = yaml_content_as_dict['RootPackages'][f"{packageName}"]['content']
         packageContent: List[Dict] = generate_package_content(packageName, packageBlueprints, dataSourceId)
-        packageJson: Dict = generate_root_package_as_json(packageName, packageContent)
+        packageDocument: Dict = generate_root_package_document(packageName, packageContent)
 
-        print(json.dumps(packageJson, indent=2))
-
-        #store package in storage
         packageUid = yaml_content_as_dict['RootPackages'][f"{packageName}"]['id']
-        store_package_in_data_source(packageUid, dataSourceId, packageJson)
+        store_document_in_data_source(packageUid, dataSourceId, packageDocument)
+        print("--- PACKAGE DOCUMENT ---")
+        print(json.dumps(packageDocument, indent=2))
+        print(" ")
+
+        #store blueprint documents in data source
+        for blueprintName in list(packageBlueprints.keys()):
+            blueprint: Dict = packageBlueprints[f'{blueprintName}']
+            blueprintDocument: Dict = generate_blueprint_document(blueprint, blueprintName)
+            blueprintUid = blueprint['id']
+            store_document_in_data_source(blueprintUid, dataSourceId, blueprintDocument)
+            print("--- BLUEPRINT DOCUMNET ---")
+            print(json.dumps(blueprintDocument, indent=2))
+            print(" ")
+
+
+
+def generate_blueprint_document(blueprint: Dict, blueprintName: str, storageRecipes: List = []):
+    attributesList: List[Dict] = []
+    append_default_attributes(
+        attributesList)  # default attributes = attributes that exist for all blueprints: type, description and name
+
+    for attributeName in list(blueprint['attributes'].keys()):
+        attribute = blueprint['attributes'][f'{attributeName}']
+        attribute['name'] = attributeName
+        attribute['type'] = "system/SIMOS/BlueprintAttribute" # is it ok to hardcode this value??
+        attributesList.append(attribute)
+
+    blueprint_document = {
+        "type": blueprint['type'],
+        "name": blueprintName,
+        "description": "",
+        "attributes" : attributesList,
+        "storageRecipes": storageRecipes,
+        "uiRecipes": []
+    }
+    return blueprint_document
+
+def append_default_attributes(attributesList: List[Dict]):
+    attributesList.append(
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "name"
+        }
+    )
+    attributesList.append({
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "optional": "true",
+            "default": "",
+            "name": "description"
+        })
+    attributesList.append({
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "type"
+        })
 
 
 def generate_package_content(packageName: str, packageBlueprints: List[Dict], dataSourceId: str):
@@ -69,7 +121,7 @@ def generate_package_content(packageName: str, packageBlueprints: List[Dict], da
     return packageContent
 
 #todo move this func to utils or soemthing
-def generate_root_package_as_json(packageName: str, packageContent: List[Dict], storageRecipes: List = []):
+def generate_root_package_document(packageName: str, packageContent: List[Dict], storageRecipes: List = []):
     package: Dict = {
         "name": packageName,
         "description": "",

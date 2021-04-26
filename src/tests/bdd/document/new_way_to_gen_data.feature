@@ -33,12 +33,36 @@ Feature: # Enter feature name here
                 optional: true
               extra:
                 attributeType: string
-          ItemType2:
+              complexList:
+                dimensions: "*"
+                optional: true
+                attributeType: test-source-name/TestData/ItemTypeTwo
+          ItemTypeTwo:
             id: 3
             type: system/SIMOS/Blueprint
             attributes:
               extra:
                 attributeType: string
+                optional: true
+          TestContainer:
+            id: 6
+            type: system/SIMOS/Blueprint
+            attributes:
+              itemContained:
+                optional: true
+                attributeType: test-source-name/TestData/ItemType
+              itemsContained:
+                optional: true
+                dimensions: "*"
+                attributeType: test-source-name/TestData/ItemType
+              itemNotContained:
+                optional: false
+                attributeType: test-source-name/TestData/ItemType
+              itemsNotContained:
+                optional: true,
+                dimensions: "*"
+                attributeType: test-source-name/TestData/ItemType
+
       TestData2:
         id: 4
         content:
