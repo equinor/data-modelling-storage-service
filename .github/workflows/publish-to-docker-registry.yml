@@ -41,7 +41,7 @@ jobs:
         run: docker logout
 
   store-images-as-artifacts:
-    depends-on: [build-n-publish]
+    needs: build-n-publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
