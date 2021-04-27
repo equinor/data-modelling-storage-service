@@ -29,5 +29,5 @@ def find_by_name(data_source_id: str, name: str):
         {"type": "system/SIMOS/Package", "isRoot": True, "name": name}
     )
     if not package:
-        raise FileNotFoundException(data_source_id, name, is_root=True)
+        raise FileNotFoundException(data_source_id, name)
     return JSONResponse(package.to_dict()["data"])
