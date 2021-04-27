@@ -26,7 +26,6 @@ def step_impl_2(context, uid: str, data_source_id: str):
     document_repository.add(document)
 
 
-
 def store_document_in_data_source(uid: str, data_source_id: str, document: Dict):
     document: DTO = DTO(uid=uid, data=document)
     document_repository = get_data_source(data_source_id)
@@ -36,43 +35,44 @@ def store_document_in_data_source(uid: str, data_source_id: str, document: Dict)
 @given('Add to data source "{data_source_id}"')
 def create_packages_and_blueprints(context, data_source_id: str):
     yaml_content: Dict = yaml.safe_load(context.text)
-    package_names: List[str] = list(yaml_content['RootPackages'].keys())
+    package_names: List[str] = list(yaml_content["RootPackages"].keys())
 
     # generate package and blueprint documents and store them in data source
     for package_name in package_names:
-        package_blueprints: Dict = yaml_content['RootPackages'][f"{package_name}"]['content']
+        package_blueprints: Dict = yaml_content["RootPackages"][f"{package_name}"]["content"]
         package_content: List[Dict] = generate_package_content(package_name, package_blueprints, data_source_id)
         package_document: Dict = generate_root_package_document(package_name, package_content)
 
         # store package document in data source
-        package_uid = yaml_content['RootPackages'][f"{package_name}"]['id']
+        package_uid = yaml_content["RootPackages"][f"{package_name}"]["id"]
         store_document_in_data_source(package_uid, data_source_id, package_document)
 
         # store blueprint document(s) in data source
         for blueprint_name in list(package_blueprints.keys()):
-            blueprint: Dict = package_blueprints[f'{blueprint_name}']
+            blueprint: Dict = package_blueprints[f"{blueprint_name}"]
             blueprint_document: Dict = generate_blueprint_document(blueprint, blueprint_name)
-            blueprint_uid = blueprint['id']
+            blueprint_uid = blueprint["id"]
             store_document_in_data_source(blueprint_uid, data_source_id, blueprint_document)
+
 
 def generate_blueprint_document(blueprint: Dict, blueprint_name: str):
     attributes_list: List[Dict] = []
     append_default_attributes(attributes_list)  # default attributes = type, description and name
 
-    for attribute_name in list(blueprint['attributes'].keys()):
-        attribute = blueprint['attributes'][f'{attribute_name}']
-        attribute['name'] = attribute_name
-        attribute['type'] = "system/SIMOS/BlueprintAttribute"
+    for attribute_name in list(blueprint["attributes"].keys()):
+        attribute = blueprint["attributes"][f"{attribute_name}"]
+        attribute["name"] = attribute_name
+        attribute["type"] = "system/SIMOS/BlueprintAttribute"
         attributes_list.append(attribute)
 
     storage_recipes: List = get_storage_recipes(blueprint)
     blueprint_document = {
-        "type": blueprint['type'],
+        "type": blueprint["type"],
         "name": blueprint_name,
         "description": "",
-        "attributes" : attributes_list,
+        "attributes": attributes_list,
         "storageRecipes": storage_recipes,
-        "uiRecipes": []
+        "uiRecipes": [],
     }
     return blueprint_document
 
@@ -80,17 +80,17 @@ def generate_blueprint_document(blueprint: Dict, blueprint_name: str):
 def get_storage_recipes(blueprint: Dict):
     if "storageRecipes" in blueprint:
         storage_recipes: List[Dict] = []
-        for storage_recipe_name in list(blueprint['storageRecipes'].keys()):
-            recipe: Dict = blueprint['storageRecipes'][f'{storage_recipe_name}']
+        for storage_recipe_name in list(blueprint["storageRecipes"].keys()):
+            recipe: Dict = blueprint["storageRecipes"][f"{storage_recipe_name}"]
             recipie_attributes_list: list = []
-            for attribute_name in recipe['attributes']:
+            for attribute_name in recipe["attributes"]:
                 pass
-                recipe_attribute: Dict = recipe['attributes'][f'{attribute_name}']
-                recipe_attribute['name'] = attribute_name
+                recipe_attribute: Dict = recipe["attributes"][f"{attribute_name}"]
+                recipe_attribute["name"] = attribute_name
                 recipie_attributes_list.append(recipe_attribute)
-            recipe['attributes'] = recipie_attributes_list
-            recipe['name'] = storage_recipe_name
-            recipe['description'] = ""
+            recipe["attributes"] = recipie_attributes_list
+            recipe["name"] = storage_recipe_name
+            recipe["description"] = ""
             storage_recipes.append(recipe)
     else:
         storage_recipes: List = []
@@ -98,25 +98,17 @@ def get_storage_recipes(blueprint: Dict):
 
 
 def append_default_attributes(attributes_list: List[Dict]):
+    attributes_list.append({"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"})
     attributes_list.append(
         {
             "attributeType": "string",
             "type": "system/SIMOS/BlueprintAttribute",
-            "name": "name"
-        }
-    )
-    attributes_list.append({
-            "attributeType": "string",
-            "type": "system/SIMOS/BlueprintAttribute",
             "optional": "true",
             "default": "",
-            "name": "description"
-        })
-    attributes_list.append({
-            "attributeType": "string",
-            "type": "system/SIMOS/BlueprintAttribute",
-            "name": "type"
-        })
+            "name": "description",
+        }
+    )
+    attributes_list.append({"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"})
 
 
 def generate_package_content(package_name: str, package_blueprints: List[Dict], data_source_id: str):
@@ -124,9 +116,9 @@ def generate_package_content(package_name: str, package_blueprints: List[Dict], 
     for blueprint_name in list(package_blueprints.keys()):
         blueprint = package_blueprints[f"{blueprint_name}"]
         package_blueprint_info = {
-            "_id": blueprint['id'],
+            "_id": blueprint["id"],
             "name": blueprint_name,
-            "type": f"{data_source_id}/{package_name}/{blueprint_name}"
+            "type": f"{data_source_id}/{package_name}/{blueprint_name}",
         }
         package_content.append(package_blueprint_info)
     return package_content
@@ -140,6 +132,6 @@ def generate_root_package_document(package_name: str, package_content: List[Dict
         "content": package_content,
         "isRoot": "true",
         "storageRecipes": storage_recipes,
-        "uiRecipes": []
+        "uiRecipes": [],
     }
     return package
