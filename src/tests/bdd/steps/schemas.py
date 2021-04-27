@@ -140,7 +140,7 @@ def generate_package_content(package_name: str, package_blueprints: List[Dict], 
         package_content.append(package_blueprint_info)
     return package_content
 
-#todo move this func to utils or soemthing
+
 def generate_root_package_document(package_name: str, package_content: List[Dict], storage_recipes: List = []):
     package: Dict = {
         "name": package_name,
@@ -154,7 +154,7 @@ def generate_root_package_document(package_name: str, package_content: List[Dict
     return package
 
 
-
+"""
 @given('there exists a package "{packageName}" with id "{uid}" in data source "{dataSourceId}"')
 def create_package(context, package_name: str, data_source_id: str, uid: str):
     package: Dict[Dict, str, str] = {
@@ -177,8 +177,8 @@ def create_package(context, package_name: str, data_source_id: str, uid: str):
     document: DTO = DTO(uid=package["packageId"], data=package["jsonContent"])
     document_repository = get_data_source(package["dataSourceId"])
     document_repository.add(document)
-
-
+"""
+"""
 # a "bare minimum blueprint" = a blueprint with only required attributes (name and type)
 @given('the package "{packageName}" contains a bare minimum blueprint "{blueprintName}" with id "{blueprintId}"')
 def append_blueprint_to_package(context, packageName: str, blueprintName: str, blueprintId: str):
@@ -231,8 +231,8 @@ def append_blueprint_to_package(context, packageName: str, blueprintName: str, b
     context.createdBlueprints = context.createdBlueprints + [
         blueprint
     ]  # using an array makes it possible to create several packages in a single scenario.
-
-
+"""
+"""
 @given('"{blueprintName}" has an optional attribute "{attributeName}" of type "{attributeType}"')
 def append_attribute_to_blueprint(context, blueprintName: str, attributeName: str, attributeType: str):
 
@@ -265,9 +265,9 @@ def append_attribute_to_blueprint(context, blueprintName: str, attributeName: st
     context.createdBlueprints = createdBlueprints
 
 
-# todo: avoid duplicate code in the below function
 
-
+"""
+"""
 @given(
     '"{blueprintName}" has an optional array attribute "{attributeName}" of type "{attributeType}" with dimensions "{dimensions}"'
 )
@@ -302,3 +302,4 @@ def append_attribute_to_blueprint(
         if createdBlueprints[i]["jsonContent"]["name"] == blueprintName:
             createdBlueprints[i] = chosenBlueprint
     context.createdBlueprints = createdBlueprints
+"""

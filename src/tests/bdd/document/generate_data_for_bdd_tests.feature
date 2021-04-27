@@ -23,19 +23,14 @@ Feature: [test] generate package and blueprints in a simplified way
 
     #this scenario tries to genearte the similar data as in the "Background" part of /bdd/document/crud.feature
 
-  Scenario: generate a test package with two blueprints
-    Given there exists a package "TestData" with id "1" in data source "test-source-name"
-    And the package "TestData" contains a bare minimum blueprint "ItemType" with id "2"  
-    And "ItemType" has an optional attribute "list" of type "string"
-    And "ItemType" has an optional attribute "extra" of type "string"
-    And "ItemType" has an optional array attribute "complexList" of type "string" with dimensions "*"
-    And the package "TestData" contains a bare minimum blueprint "ItemTypeTwo" with id "3"
-    And "ItemTypeTwo" has an optional attribute "extra" of type "string"
+  #Scenario: generate a test package with two blueprints
+  #  Given there exists a package "TestData" with id "1" in data source "test-source-name"
+  #  And the package "TestData" contains a bare minimum blueprint "ItemType" with id "2"
+  #  And "ItemType" has an optional attribute "list" of type "string"
+  #  And "ItemType" has an optional attribute "extra" of type "string"
+  #  And "ItemType" has an optional array attribute "complexList" of type "string" with dimensions "*"
+  #  And the package "TestData" contains a bare minimum blueprint "ItemTypeTwo" with id "3"
+  #  And "ItemTypeTwo" has an optional attribute "extra" of type "string"
 
 
-
-
-    # todo: be able to generate storage recipie for a blueprint
-    # todo: be able to add non optional attribute to blueprint
-    
     
