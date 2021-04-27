@@ -14,7 +14,7 @@ Feature: Explorer - Remove
       | SSR-DataSource   | db   | 27017 | maf      | maf      | false | blob-repo | local    | SSR-DataSource | mongo-db | default   |
       | system           | db   | 27017 | maf      | maf      | false | system    | local    | system         | mongo-db | default   |
 
-    Given data modelling tool templates are imported
+    Given SIMOS core package are imported
 
     Given there are documents for the data source "data-source-name" in collection "documents"
       | uid | parent_uid | name          | description | type                   |

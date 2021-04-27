@@ -95,7 +95,7 @@ Feature: Explorer - Add contained node
 
   Scenario: Add nested contained node
     Given i access the resource url "/api/v1/explorer/entities/add-to-parent"
-    And data modelling tool templates are imported
+    And SIMOS core package are imported
     When i make a "POST" request
     """
     {

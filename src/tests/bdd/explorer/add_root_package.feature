@@ -16,7 +16,7 @@ Feature: Explorer - Add Root Package
 
   Scenario: Add root package
     Given i access the resource url "/api/v1/explorer/data-source-name/add-package"
-    And data modelling tool templates are imported
+    And SIMOS core package are imported
     When i make a "POST" request
     """
     {
@@ -40,7 +40,7 @@ Feature: Explorer - Add Root Package
 
   Scenario: Add root package with missing parameter name should fail
     Given i access the resource url "/api/v1/explorer/data-source-name/add-package"
-    And data modelling tool templates are imported
+    And SIMOS core package are imported
     When i make a "POST" request
     """
     {

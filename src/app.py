@@ -11,6 +11,7 @@ from utils.logging import logger
 from utils.package_import import import_blob, import_package
 from controllers import (
     blob_controller,
+    blueprint_controller,
     datasource_controller,
     document_controller,
     explorer_controller,
@@ -29,6 +30,7 @@ app.include_router(document_controller.router, prefix=prefix)
 app.include_router(explorer_controller.router, prefix=prefix)
 app.include_router(package_controller.router, prefix=prefix)
 app.include_router(search_controller.router, prefix=prefix)
+app.include_router(blueprint_controller.router, prefix=prefix)
 
 
 @click.group()
@@ -49,6 +51,7 @@ def run():
 
 @cli.command()
 def init_application():
+    logger.info("############## IMPORTING DEMO FILES ################")
     for folder in Config.SYSTEM_FOLDERS:
         import_package(
             f"{Config.APPLICATION_HOME}/system/{folder}", data_source=Config.SYSTEM_COLLECTION, is_root=True
@@ -66,31 +69,30 @@ def init_application():
         )
     for path in Config.IMPORT_BLOBS:
         import_blob(path)
-
-
-@cli.command()
-def drop_data_sources():
-    print("Dropping collection data_sources")
-    dmt_database.drop_collection(f"{Config.DATA_SOURCES_COLLECTION}")
+    logger.info("############## DONE ################")
 
 
 @cli.command()
 @click.argument("file")
 def import_data_source(file):
+    logger.info("############## IMPORTING DataSource's ################")
     try:
         with open(file) as json_file:
             document = json.load(json_file)
             id = document["name"]
             document["_id"] = id
-            print(f"Importing {file} as data_source with id: {id}.")
+            logger.info(f"Importing {file} as data_source with id: {id}.")
             dmt_database[f"{Config.DATA_SOURCES_COLLECTION}"].replace_one({"_id": id}, document, upsert=True)
     except Exception as error:
         logger.error(f"Failed to import file {file}: {error}")
+    logger.info("############## DONE ################")
 
 
 @cli.command()
 def nuke_db():
+    logger.info("########## PURGING DATABASE #########")
     wipe_db()
+    logger.info("############## DONE ################")
 
 
 if __name__ == "__main__":

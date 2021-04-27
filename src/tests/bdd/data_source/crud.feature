@@ -47,7 +47,7 @@ Feature: Data Sources
 
   Scenario: Create new data source
     Given i access the resource url "/api/v1/data-sources/myTest-DataSource"
-    And data modelling tool templates are imported
+    And SIMOS core package are imported
     When i make a "POST" request
     """
     {
@@ -71,7 +71,7 @@ Feature: Data Sources
 
   Scenario: Create new data source with multiple repositories
     Given i access the resource url "/api/v1/data-sources/MyMultiRepDS"
-    And data modelling tool templates are imported
+    And SIMOS core package are imported
     When i make a "POST" request
     """
     {

@@ -13,7 +13,7 @@ Feature: Explorer - Add file
       | data-source-name | db   | 27017 | maf      | maf      | false | blob-repo | local    | test       | mongo-db | blob      |
       | system           | db   | 27017 | maf      | maf      | false | system    | local    | system     | mongo-db | default   |
 
-    Given data modelling tool templates are imported
+    Given SIMOS core package are imported
 
     Given there exist document with id "1" in data source "data-source-name"
     """

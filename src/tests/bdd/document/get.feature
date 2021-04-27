@@ -199,7 +199,7 @@ Feature: Document 2
     }
     """
 
-    Given data modelling tool templates are imported
+    Given SIMOS core package are imported
 
     Given there are documents for the data source "data-source-name" in collection "documents"
       | uid | parent_uid | name          | description | type                                    |

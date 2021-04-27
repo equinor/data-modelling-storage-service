@@ -12,7 +12,7 @@ Feature: Blob - Get
       | system      | db   | 27017 | maf      | maf      | false | system    | local    | system     | mongo-db | default   |
       |  stuff      | db   | 27017 | maf      | maf      | false | blobs     | local    | blobs      | mongo-db | blob      |
       |  stuff      | db   | 27017 | maf      | maf      | false | documents | local    | documents  | mongo-db | default   |
-    Given data modelling tool templates are imported
+    Given SIMOS core package are imported
     Given there exists a blob with id "1234" in data source "stuff" loaded from "tests/bdd/steps/test_pdf.pdf"
 
   Scenario: Get a blob by id
