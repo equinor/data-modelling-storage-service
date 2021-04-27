@@ -147,3 +147,4 @@ venv
 mongodata/
 /gen/
 /src/.behaverc
+home/first-run-false
