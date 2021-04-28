@@ -22,7 +22,7 @@ jobs:
         run: docker build -t devimage --target development . && docker run -d -p "8000:5000" devimage && ./generate-python-package.sh
       - name: Build a binary wheel and a source tarball
         working-directory: './gen/dmss_api'
-        run: python3 setup.py sdist bdist_wheel
+        run: sudo python3 setup.py sdist bdist_wheel
       - name: Publish gpa-api to PyPI
         working-directory: './gen/dmss_api'
         env:
