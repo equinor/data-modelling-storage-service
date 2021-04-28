@@ -104,7 +104,7 @@ Feature: Explorer - Search entity
 
   Scenario: Search with primitive filter, all hit
     Given i access the resource url "/api/v1/search/entities"
-    And data modelling tool templates are imported
+    And SIMOS core package are imported
     When i make a "POST" request
     """
     {
@@ -140,7 +140,7 @@ Feature: Explorer - Search entity
     """
   Scenario: Search with primitive filter, 1 hit
     Given i access the resource url "/api/v1/search/entities"
-    And data modelling tool templates are imported
+    And SIMOS core package are imported
     When i make a "POST" request
     """
     {

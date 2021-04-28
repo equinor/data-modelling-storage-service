@@ -244,7 +244,7 @@ Feature: Explorer - Remove file
 
   Scenario: Rename attribute - the index ui recipe
     Given i access the resource url "/api/v1/explorer/data-source-name/rename"
-    And data modelling tool templates are imported
+    And SIMOS core package are imported
     When i make a "PUT" request
   """
   {
@@ -285,7 +285,7 @@ Feature: Explorer - Remove file
 
   Scenario: Rename attribute - the item
     Given i access the resource url "/api/v1/explorer/data-source-name/rename"
-    And data modelling tool templates are imported
+    And SIMOS core package are imported
     When i make a "PUT" request
   """
   {

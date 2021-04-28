@@ -9,6 +9,7 @@ from domain_classes.storage_recipe import StorageRecipe
 from domain_classes.tree_node import ListNode, Node
 from enums import BLOB_TYPES, DMT, REQUIRED_ATTRIBUTES, SIMOS
 from storage.data_source_class import DataSource
+from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
 from storage.repositories.zip import ZipFileClient
 from utils.build_complex_search import build_mongo_query
@@ -115,7 +116,7 @@ def get_complete_document(
 
 
 class DocumentService:
-    def __init__(self, repository_provider, blueprint_provider=BlueprintProvider()):
+    def __init__(self, repository_provider=get_data_source, blueprint_provider=BlueprintProvider()):
         self.blueprint_provider = blueprint_provider
         self.repository_provider = repository_provider
 
