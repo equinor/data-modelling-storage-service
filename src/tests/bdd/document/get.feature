@@ -247,14 +247,12 @@ Feature: Document 2
     And the response should contain
     """
     {
-       "document":{
-          "_id": "4",
-          "name": "document_1",
-          "description": "",
-          "type": "system/SIMOS/Package",
-          "isRoot": false,
-          "content": []
-      }
+      "_id": "4",
+      "name": "document_1",
+      "description": "",
+      "type": "system/SIMOS/Package",
+      "isRoot": false,
+      "content": []
     }
     """
 

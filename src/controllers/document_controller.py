@@ -11,7 +11,6 @@ from restful.status_codes import STATUS_CODES
 
 from use_case.get_document_use_case import GetDocumentResponse
 
-from use_case.get_document_by_path_use_case import GetDocumentByPathResponse
 
 router = APIRouter()
 
@@ -40,9 +39,7 @@ def get_by_id(
 
 
 @router.get(
-    "/documents-by-path/{data_source_id}",
-    operation_id="document_get_by_path",
-    response_model=GetDocumentByPathResponse,
+    "/documents-by-path/{data_source_id}", operation_id="document_get_by_path", response_model=dict,
 )
 def get_by_path(
     data_source_id: str, ui_recipe: Optional[str] = None, attribute: Optional[str] = None, path: Optional[str] = None
@@ -51,7 +48,7 @@ def get_by_path(
     Get a document by it's path in the form "{dataSource}/{rootPackage}/{subPackage(s)?/{name}
     """
     use_case = GetDocumentByPathUseCase()
-    response: GetDocumentByPathResponse = use_case.execute(
+    response = use_case.execute(
         GetDocumentByPathRequest(data_source_id=data_source_id, path=path, ui_recipe=ui_recipe, attribute=attribute)
     )
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
