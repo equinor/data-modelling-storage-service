@@ -152,6 +152,11 @@
           "name": "attributes",
           "type": "system/SIMOS/UiAttribute",
           "field": "attribute"
+        },
+        {
+          "name": "extends",
+          "type": "system/SIMOS/UiAttribute",
+          "field": "blueprint"
         }
       ]
     }
