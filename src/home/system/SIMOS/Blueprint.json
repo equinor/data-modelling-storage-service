@@ -98,6 +98,11 @@
           "contained": false
         },
         {
+          "name": "extends",
+          "type": "system/SIMOS/UiAttribute",
+          "contained": false
+        },
+        {
           "name": "storageRecipes",
           "type": "system/SIMOS/UiAttribute",
           "dimensions": "*",
