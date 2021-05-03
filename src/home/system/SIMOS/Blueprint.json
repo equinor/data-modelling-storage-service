@@ -98,6 +98,11 @@
           "contained": false
         },
         {
+          "name": "extends",
+          "type": "system/SIMOS/UiAttribute",
+          "contained": false
+        },
+        {
           "name": "storageRecipes",
           "type": "system/SIMOS/UiAttribute",
           "dimensions": "*",
@@ -152,6 +157,11 @@
           "name": "attributes",
           "type": "system/SIMOS/UiAttribute",
           "field": "attribute"
+        },
+        {
+          "name": "extends",
+          "type": "system/SIMOS/UiAttribute",
+          "field": "blueprint"
         }
       ]
     }
