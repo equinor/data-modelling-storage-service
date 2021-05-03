@@ -5,6 +5,14 @@
   "description": "This describes a blueprint attribute",
   "attributes": [
     {
+      "name": "type",
+      "attributeType": "string",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "label": "Type",
+      "default": "system/SIMOS/BlueprintAttribute",
+      "optional": false
+    },
+    {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
       "name": "attributeType",
