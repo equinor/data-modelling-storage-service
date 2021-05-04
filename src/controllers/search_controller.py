@@ -7,7 +7,7 @@ from use_case.search_use_case import SearchDataRequest, SearchRequest, SearchUse
 router = APIRouter()
 
 
-@router.post("/search/{data_source_id}", operation_id="search")
+@router.post("/search/{data_source_id}", operation_id="search", response_model=dict)
 def search(data_source_id: str, request: SearchDataRequest):
     use_case = SearchUseCase()
     response = use_case.execute(SearchRequest(data_source_id=data_source_id, data=request))
