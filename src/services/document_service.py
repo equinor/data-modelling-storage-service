@@ -1,7 +1,9 @@
+from functools import lru_cache
 from tempfile import SpooledTemporaryFile
 from typing import Callable, Dict, List, Union
 from uuid import uuid4
 
+from config import Config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
@@ -120,6 +122,7 @@ class DocumentService:
         self.blueprint_provider = blueprint_provider
         self.repository_provider = repository_provider
 
+    @lru_cache(maxsize=Config.CACHE_MAX_SIZE)
     def get_blueprint(self, type: str) -> Blueprint:
         blueprint: Blueprint = self.blueprint_provider.get_blueprint(type)
         blueprint.realize_extends(self.blueprint_provider.get_blueprint)
