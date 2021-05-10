@@ -210,6 +210,7 @@ class DocumentService:
         if not package:
             raise FileNotFoundException(data_source_id, package_name)
 
+        # TODO: This is slow and unnecessary, step through each document instead, only fetching what is needed.
         complete_document = get_complete_document(
             package.uid, self.repository_provider(data_source_id), self.get_blueprint
         )
@@ -289,7 +290,9 @@ class DocumentService:
 
         return {"uid": target_node.node_id}
 
-    def update_document(self, data_source_id: str, document_id: str, data: dict, attribute_path: str = None):
+    def update_document(
+        self, data_source_id: str, document_id: str, data: dict, attribute_path: str = None, reference: bool = False
+    ):
         for attr in REQUIRED_ATTRIBUTES:
             if not data.get(attr):
                 raise InvalidEntityException(
@@ -302,11 +305,30 @@ class DocumentService:
 
         target_node = root
 
-        # If it's a contained nested node, set the modify target based on dotted-path
+        # If it's a contained nested node(or reference), set the modify target based on dotted-path
         if attribute_path:
             target_node = root.search(f"{document_id}.{attribute_path}")
 
-        target_node.update(data)
+        # If we are updating a reference, no fancy recursive updating
+        if reference:
+            if not data.get("_id"):
+                raise InvalidEntityException("'_id' is required when inserting a reference")
+
+            # Check that target exists and has correct values
+            referenced_document: DTO = self.repository_provider(data_source_id).get(data["_id"])
+            if data["name"] != referenced_document.name or data["type"] != referenced_document.type:
+                raise InvalidEntityException(
+                    f"The 'name' and 'type' values of the reference does not match the referenced document."
+                    f"'{data['name']}' --> '{referenced_document.name}',"
+                    f"{data['type']} --> {referenced_document.type}"
+                )
+            target_node.entity["name"] = data["name"]
+            target_node.entity["type"] = data["type"]
+            target_node.entity["_id"] = data["_id"]
+            target_node.uid = data["_id"]
+
+        else:
+            target_node.update(data)
         self.save(root, data_source_id)
 
         logger.info(f"Updated document '{target_node.node_id}''")

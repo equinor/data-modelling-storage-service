@@ -11,6 +11,7 @@ class UpdateDocumentRequest(DataSource):
     document_id: str
     data: dict
     attribute: Optional[str] = None
+    reference: bool = False
 
 
 class UpdateDocumentUseCase(UseCase):
@@ -24,6 +25,7 @@ class UpdateDocumentUseCase(UseCase):
             document_id=req.document_id,
             data=req.data,
             attribute_path=req.attribute,
+            reference=req.reference,
         )
         document_service.invalidate_cache()
         return ResponseSuccess(document)
