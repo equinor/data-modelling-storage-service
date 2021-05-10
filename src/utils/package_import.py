@@ -2,6 +2,7 @@ import json
 import os
 from typing import Dict, List, Union
 
+from config import Config
 from domain_classes.dto import DTO
 from enums import DMT
 from storage.data_source_class import DataSource
@@ -15,7 +16,7 @@ from utils.string_helpers import url_safe_name
 def _add_documents(path, documents, data_source) -> List[Dict]:
     docs = []
     for file in documents:
-        logger.info(f"Working on {file}...")
+        logger.debug(f"Working on {file}...")
         with open(f"{path}/{file}") as json_file:
             data = json.load(json_file)
         document = DTO(data)
@@ -29,7 +30,7 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
 
 
 def import_blob(path_tuple: str):
-    data_source: DataSource = get_data_source(data_source_id="entities")
+    data_source: DataSource = get_data_source(data_source_id=Config.DEMO_DATASOURCE)
     with open(path_tuple[0], "rb") as blob_file:
         data_source.update_blob(path_tuple[1], blob_file)
 

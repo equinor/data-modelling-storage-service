@@ -45,37 +45,30 @@ def run():
         host="0.0.0.0",  # nosec
         port=5000,
         reload=Config.ENVIRONMENT == "local",
-        log_level=Config.LOGGER_LEVEL,
+        log_level=Config.LOGGER_LEVEL.lower(),
     )
 
 
 @cli.command()
 def init_application():
-    logger.info("############## IMPORTING DEMO FILES ################")
+    logger.info("-------------- IMPORTING DEMO FILES ----------------")
     for folder in Config.SYSTEM_FOLDERS:
         import_package(
             f"{Config.APPLICATION_HOME}/system/{folder}", data_source=Config.SYSTEM_COLLECTION, is_root=True
         )
 
+    logger.info(f"Importing demo package(s) {Config.ENTITY_APPLICATION_SETTINGS['packages']}")
     for folder in Config.ENTITY_APPLICATION_SETTINGS["packages"]:
-        import_package(
-            f"{Config.APPLICATION_HOME}/blueprints/{folder}", data_source=Config.BLUEPRINT_COLLECTION, is_root=True
-        )
+        import_package(f"{Config.APPLICATION_HOME}/{folder}", data_source=Config.DEMO_DATASOURCE, is_root=True)
 
-    logger.info(f"Importing entity package(s) {Config.ENTITY_APPLICATION_SETTINGS['entities']}")
-    for folder in Config.ENTITY_APPLICATION_SETTINGS["entities"]:
-        import_package(
-            f"{Config.APPLICATION_HOME}/entities/{folder}", data_source=Config.ENTITY_COLLECTION, is_root=True
-        )
     for path in Config.IMPORT_BLOBS:
         import_blob(path)
-    logger.info("############## DONE ################")
+    logger.info("-------------- DONE ----------------")
 
 
 @cli.command()
 @click.argument("file")
 def import_data_source(file):
-    logger.info("############## IMPORTING DataSource's ################")
     try:
         with open(file) as json_file:
             document = json.load(json_file)
@@ -85,14 +78,13 @@ def import_data_source(file):
             dmt_database[f"{Config.DATA_SOURCES_COLLECTION}"].replace_one({"_id": id}, document, upsert=True)
     except Exception as error:
         logger.error(f"Failed to import file {file}: {error}")
-    logger.info("############## DONE ################")
 
 
 @cli.command()
 def nuke_db():
-    logger.info("########## PURGING DATABASE #########")
+    logger.info("---------- PURGING DATABASE --------")
     wipe_db()
-    logger.info("############## DONE ################")
+    logger.info("-------------- DONE ----------------")
 
 
 if __name__ == "__main__":

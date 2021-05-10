@@ -11,7 +11,7 @@ Feature: Explorer - Add file
     Given there are repositories in the data sources
       | data-source      | host | port  | username | password | tls   | name      | database | collection     | type     | dataTypes |
       | data-source-name | db   | 27017 | maf      | maf      | false | repo1     | local    | documents      | mongo-db | default   |
-      | SSR-DataSource   | db   | 27017 | maf      | maf      | false | blob-repo | local    | SSR-DataSource | mongo-db | default   |
+      | demo-DS   | db   | 27017 | maf      | maf      | false | blob-repo | local    | demo-DS | mongo-db | default   |
       | system           | db   | 27017 | maf      | maf      | false | system    | local    | system         | mongo-db | default   |
 
     Given SIMOS core package are imported
