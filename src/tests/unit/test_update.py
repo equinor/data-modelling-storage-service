@@ -190,7 +190,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "uncontained_blueprint",
                 "uncontained_in_every_way": {},
             },
-            "something": {"_id": "something", "name": "something", "description": "", "type": "something",},
+            "something": {"_id": "something", "name": "something", "description": "", "type": "blueprint_2",},
         }
 
         def mock_get(document_id: str):
@@ -209,14 +209,14 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service.update_document(
             "testing",
             document_id="1",
-            data={"_id": "something", "name": "something", "type": "something"},
+            data={"_id": "something", "name": "something", "type": "blueprint_2"},
             attribute_path="uncontained_in_every_way",
             reference=True,
         )
         assert doc_storage["1"]["uncontained_in_every_way"] == {
             "_id": "something",
             "name": "something",
-            "type": "something",
+            "type": "blueprint_2",
         }
 
     def test_insert_reference_target_does_not_exist(self):
@@ -293,7 +293,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             document_service.update_document(
                 "testing",
                 document_id="1",
-                data={"_id": "2", "name": "something", "type": "something"},
+                data={"_id": "2", "name": "something", "type": "wrong_type"},
                 attribute_path="uncontained_in_every_way",
                 reference=True,
             )
@@ -309,7 +309,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "uncontained_blueprint",
                 "uncontained_in_every_way": {},
             },
-            "something": {"_id": "something", "name": "something", "description": "", "type": "something",},
+            "2": {"_id": "2", "name": "something", "description": "", "type": "blueprint_2",},
         }
 
         def mock_get(document_id: str):
@@ -329,9 +329,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             "testing",
             document_id="1",
             data={
-                "_id": "something",
+                "_id": "2",
                 "name": "something",
-                "type": "something",
+                "type": "blueprint_2",
                 "description": "hallO",
                 "something": "something",
             },
@@ -339,9 +339,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             reference=True,
         )
         assert doc_storage["1"]["uncontained_in_every_way"] == {
-            "_id": "something",
+            "_id": "2",
             "name": "something",
-            "type": "something",
+            "type": "blueprint_2",
         }
 
     def test_insert_reference_missing_required_attribute(self):
