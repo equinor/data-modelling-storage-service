@@ -316,6 +316,11 @@ class DocumentService:
 
             # Check that target exists and has correct values
             referenced_document: DTO = self.repository_provider(data_source_id).get(data["_id"])
+            if target_node.type != referenced_document.type:
+                raise InvalidEntityException(
+                    f"The referenced entity should be of type '{target_node.type}'"
+                    f", but was '{referenced_document.type}'"
+                )
             if data["name"] != referenced_document.name or data["type"] != referenced_document.type:
                 raise InvalidEntityException(
                     f"The 'name' and 'type' values of the reference does not match the referenced document."
