@@ -1,5 +1,5 @@
 {
-  "name": "Scenario",
+  "name": "Environment",
   "description": "",
   "type": "system/SIMOS/Blueprint",
   "attributes": [
@@ -8,7 +8,7 @@
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
       "description": "variable name for named accessing",
-      "default": "scenario",
+      "default": "environment",
       "contained": true,
       "optional": false
     },
@@ -27,18 +27,26 @@
       "type": "system/SIMOS/BlueprintAttribute"
     },
     {
-      "name": "env",
-      "attributeType": "SSR-DataSource/mooringSRS/env/Environment",
+      "name": "wave",
       "type": "system/SIMOS/BlueprintAttribute",
-      "description": "environment",
+      "attributeType": "demo-DS/demoPackage/mooringSRS/env/Wave",
+      "description": "wave",
       "contained": true,
-      "optional": false
+      "optional": true
     },
     {
-      "name": "output",
-      "attributeType": "SSR-DataSource/mooringSRS/run/RunOutput",
+      "name": "wind",
       "type": "system/SIMOS/BlueprintAttribute",
-      "description": "run output",
+      "attributeType": "demo-DS/demoPackage/mooringSRS/env/Wind",
+      "description": "wind",
+      "contained": true,
+      "optional": true
+    },
+    {
+      "name": "current",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "demo-DS/demoPackage/mooringSRS/env/Current",
+      "description": "current",
       "contained": true,
       "optional": true
     }

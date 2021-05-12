@@ -2,7 +2,6 @@ from typing import List, Dict
 
 
 from config import Config
-from enums import DataSourceType
 from services.database import dmt_database
 from restful.request_types.create_data_source import DataSourceRequest
 from storage.data_source_class import DataSource
@@ -13,9 +12,7 @@ class DataSourceRepository:
     collection = dmt_database[f"{Config.DATA_SOURCES_COLLECTION}"]
 
     def list(self) -> List[Dict]:
-        all_sources = [
-            {"id": "local", "host": "client", "name": "Local workspace", "type": DataSourceType.LOCAL.value}
-        ]
+        all_sources = []
         for data_source in self.collection.find(projection={"name"}):
             data_source["id"] = data_source.pop("_id")
             all_sources.append({"id": data_source["id"], "name": data_source["name"]})

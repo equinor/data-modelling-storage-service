@@ -19,7 +19,7 @@
     }, {
       "type": "system/SIMOS/BlueprintAttribute",
       "name": "blob",
-      "attributeType": "SSR-DataSource/BlobTypes/Blob",
+      "attributeType": "demo-DS/demoPackage/BlobTypes/Blob",
       "contained": true
     }
   ],

@@ -1,7 +1,7 @@
 {
-  "name": "entities",
+  "name": "demo-DS",
   "repositories": {
-    "entities": {
+    "default": {
       "dataTypes": ["blob"],
       "type": "mongo-db",
       "host": "db",
@@ -9,9 +9,9 @@
       "username": "maf",
       "password": "maf",
       "tls": false,
-      "name": "entities",
+      "name": "default",
       "database": "local",
-      "collection": "entities"
+      "collection": "demo-DS"
     },
     "video_storage": {
       "dataTypes": ["video"],

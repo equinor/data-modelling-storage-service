@@ -37,7 +37,7 @@
     },
     {
       "name": "signals",
-      "attributeType": "SSR-DataSource/marmo/containers/EquallySpacedSignal",
+      "attributeType": "demo-DS/demoPackage/marmo/containers/EquallySpacedSignal",
       "type": "system/SIMOS/BlueprintAttribute",
       "description": "",
       "dimensions": "*",

@@ -2,30 +2,30 @@
   "type": "system/SIMOS/Application",
   "name": "DMTApplicationSettings",
   "description": "",
-  "entities": ["CarPackage", "MatrixDemo", "PDF-Demo"],
-  "packages": ["CarPackage", "ComplexArrays", "marmo", "mooringSRS", "StorageDemo"],
+  "entities": [],
+  "packages": ["demoPackage"],
   "models": ["system/SIMOS/Entity"],
   "actions": [
     {
       "name": "Calculate",
       "description": "Simulate 80kmh concrete crash. Fiat panda 2011.",
-      "input": "SSR-DataSource/CarPackage/Car",
-      "output": "SSR-DataSource/CarPackage/Car",
+      "input": "demo-DS/CarPackage/Car",
+      "output": "demo-DS/CarPackage/Car",
       "method": "run"
     },
     {
       "name": "Cancel",
       "description": "Cancel a car calculation",
-      "input": "SSR-DataSource/CarPackage/Car",
-      "output": "SSR-DataSource/CarPackage/Car",
+      "input": "demo-DS/CarPackage/Car",
+      "output": "demo-DS/CarPackage/Car",
       "method": "cancel"
     },
     {
       "name": "ResultFile",
       "type": "system/SIMOS/Action",
       "description": "Save result in resultFile",
-      "input": "SSR-DataSource/ActionsTest/WheelWithStatus",
-      "output": "SSR-DataSource/ActionsTest/WheelWithStatus",
+      "input": "demo-DS/ActionsTest/WheelWithStatus",
+      "output": "demo-DS/ActionsTest/WheelWithStatus",
       "method": "runResultFile",
       "actionType": "separateResultFile"
     },
@@ -33,8 +33,8 @@
       "name": "NoResult",
       "type": "system/SIMOS/Action",
       "description": "No Result Action",
-      "input": "SSR-DataSource/ActionsTest/WheelWithStatus",
-      "output": "SSR-DataSource/ActionsTest/WheelWithStatus",
+      "input": "demo-DS/ActionsTest/WheelWithStatus",
+      "output": "demo-DS/ActionsTest/WheelWithStatus",
       "method": "runNoResult",
       "actionType": "noResult"
     },
@@ -43,8 +43,8 @@
       "type": "system/SIMOS/Action",
       "description": "Save result in entity",
       "actionType": "resultInEntity",
-      "input": "SSR-DataSource/ActionsTest/WheelWithStatus",
-      "output": "SSR-DataSource/ActionsTest/WheelWithStatus",
+      "input": "demo-DS/ActionsTest/WheelWithStatus",
+      "output": "demo-DS/ActionsTest/WheelWithStatus",
       "method": "runResultInEntity"
     }
   ]
