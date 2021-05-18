@@ -1,19 +1,18 @@
 Feature: Document 2
 
   Background: There are data sources in the system
+    Given the system data source and SIMOS core package are available
 
     Given there are data sources
       |       name         |
       | data-source-name   |
       | test-source-name   |
-      | system             |
 
     Given there are repositories in the data sources
       | data-source      | host | port  | username | password | tls   | name       | database | collection | type     | dataTypes    |
       | data-source-name | db   | 27017 | maf      | maf      | false | repo1      | local    | documents  | mongo-db | default      |
       | test-source-name | db   | 27017 | maf      | maf      | false | blob-repo  | local    | blob-data  | mongo-db | default,blob |
       | data-source-name | db   | 27017 | maf      | maf      | false | doc-repo   | local    | test       | mongo-db | default      |
-      | system           | db   | 27017 | maf      | maf      | false | system     | local    | system     | mongo-db | default      |
 
 
     Given there exist document with id "2" in data source "test-source-name"
@@ -199,8 +198,6 @@ Feature: Document 2
         "uiRecipes":[]
     }
     """
-
-    Given SIMOS core package are imported
 
     Given there are documents for the data source "data-source-name" in collection "documents"
       | uid | parent_uid | name          | description | type                                    |

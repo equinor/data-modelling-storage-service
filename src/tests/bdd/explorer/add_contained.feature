@@ -1,12 +1,12 @@
 Feature: Explorer - Add contained node
 
   Background: There are data sources in the system
+    Given the system data source and SIMOS core package are available
 
     Given there are data sources
       | name       |
       | entities   |
       | blueprints |
-      | system     |
 
     Given there are repositories in the data sources
       | data-source    | host | port  | username | password | tls   | name      | database | collection | type     | dataTypes |
@@ -95,7 +95,6 @@ Feature: Explorer - Add contained node
 
   Scenario: Add nested contained node
     Given i access the resource url "/api/v1/explorer/entities/add-to-parent"
-    And SIMOS core package are imported
     When i make a "POST" request
     """
     {

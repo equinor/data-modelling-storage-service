@@ -10,6 +10,7 @@ from domain_classes.dto import DTO
 from domain_classes.storage_recipe import StorageRecipe
 from domain_classes.tree_node import ListNode, Node
 from enums import BLOB_TYPES, DMT, REQUIRED_ATTRIBUTES, SIMOS
+from restful.request_types.shared import Reference
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
@@ -129,7 +130,7 @@ class DocumentService:
         return blueprint
 
     def invalidate_cache(self):
-        self.blueprint_provider.invalidate_cache()
+        self.get_blueprint.cache_clear()
 
     def save_blob_data(self, node, repository):
         # If the file is created or updated, the blob_reference is a dict.
@@ -156,7 +157,7 @@ class DocumentService:
             return {}
         # If not passed a custom repository to save into, use the DocumentService's storage
         if not repository:
-            repository = self.repository_provider(data_source_id)
+            repository: DataSource = self.repository_provider(data_source_id)
 
             # If the node is a package, we build the path string to be used by filesystem like repositories
             if node.type == DMT.PACKAGE.value:
@@ -290,6 +291,7 @@ class DocumentService:
 
         return {"uid": target_node.node_id}
 
+    # TODO: Remove reference stuff when separate endpoint is working
     def update_document(
         self, data_source_id: str, document_id: str, data: dict, attribute_path: str = None, reference: bool = False
     ):
@@ -300,9 +302,6 @@ class DocumentService:
                 )
 
         root: Node = self.get_by_uid(data_source_id, document_id)
-        if not root:
-            raise EntityNotFoundException(uid=document_id)
-
         target_node = root
 
         # If it's a contained nested node(or reference), set the modify target based on dotted-path
@@ -351,7 +350,7 @@ class DocumentService:
             raise EntityNotFoundException(uid=parent_id)
         parent: Node = root.get_by_path(attribute_path.split(".")) if attribute_path else root
 
-        # Check if a file/attributre with the same name already exists on the target
+        # Check if a file/attribute with the same name already exists on the target
         # if duplicate_filename(parent, name):
         if parent.duplicate_attribute(name):
             raise DuplicateFileNameException(data_source_id, f"{parent.name}/{name}")
@@ -468,3 +467,61 @@ class DocumentService:
             result_list[doc.name] = doc.data
 
         return result_list
+
+    def insert_reference(
+        self, data_source_id: str, document_id: str, reference: Reference, attribute_path: str
+    ) -> dict:
+        root: Node = self.get_by_uid(data_source_id, document_id)
+        attribute_node = root.search(f"{document_id}.{attribute_path}")
+
+        # Check that target exists and has correct values
+        # The SIMOS/Entity type can reference any type (used by Package)
+        referenced_document: DTO = self.repository_provider(data_source_id).get(reference.uid)
+        if DMT.ENTITY.value != attribute_node.type != referenced_document.type:
+            raise InvalidEntityException(
+                f"The referenced entity should be of type '{attribute_node.type}'"
+                f", but was '{referenced_document.type}'"
+            )
+        if reference.name != referenced_document.name or reference.type != referenced_document.type:
+            raise InvalidEntityException(
+                f"The 'name' and 'type' values of the reference does not match the referenced document."
+                f"'{reference.name}' --> '{referenced_document.name}',"
+                f"{reference.type} --> {referenced_document.type}"
+            )
+        # If the node to update is a list, append to end
+        if attribute_node.is_array():
+            attribute_node.add_child(
+                Node.from_dict(
+                    entity={**reference.dict(by_alias=True), "_id": str(reference.uid)},
+                    uid=str(reference.uid),
+                    blueprint_provider=self.get_blueprint,
+                    node_attribute=attribute_node.attribute,
+                )
+            )
+        else:
+            attribute_node.entity = {**reference.dict(by_alias=True), "_id": str(reference.uid)}
+            attribute_node.uid = str(reference.uid)
+        self.save(root, data_source_id)
+
+        logger.info(
+            f"Inserted reference to '{referenced_document.name}'({referenced_document.uid})"
+            f" as '{attribute_path}' in '{root.name}'({root.uid})"
+        )
+
+        return root.to_dict()
+
+    def remove_reference(self, data_source_id: str, document_id: str, attribute_path: str) -> dict:
+        root: Node = self.get_by_uid(data_source_id, document_id)
+        attribute_node = root.search_by_attribute(attribute_path.split("."), root=True)
+        if not attribute_node:
+            raise Exception(f"Could not find the '{attribute_path}' Node on '{document_id}'")
+
+        # If we are removing a reference from a list, pop child with posted index
+        if attribute_node.parent.is_array():
+            attribute_node.parent.children.pop(int(attribute_path.split(".")[-1]))
+        else:
+            attribute_node.entity = {}
+        self.save(root, data_source_id)
+        logger.info(f"Removed reference for '{attribute_path}' in '{root.name}'({root.uid})")
+
+        return root.to_dict()

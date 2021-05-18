@@ -1,18 +1,16 @@
 Feature: Data Sources
 
   Background: There are data sources in the system
-
+    Given the system data source and SIMOS core package are available
     Given there are data sources
-      |       name         |
-      | entities   |
-      | demo-DS   |
-      | system             |
+      |    name  |
+      | entities |
+      | demo-DS  |
 
     Given there are repositories in the data sources
-      | data-source    | host | port  | username | password | tls   | name      | database | collection     | type     | dataTypes |
-      | entities       | db   | 27017 | maf      | maf      | false | repo1     | local    | documents      | mongo-db | default   |
-      | demo-DS | db   | 27017 | maf      | maf      | false | blob-repo | local    | demo-DS | mongo-db | default   |
-      | system         | db   | 27017 | maf      | maf      | false | system    | local    | system         | mongo-db | default   |
+      | data-source | host | port  | username | password | tls   | name      | database | collection     | type     | dataTypes |
+      | entities    | db   | 27017 | maf      | maf      | false | repo1     | local    | documents      | mongo-db | default   |
+      | demo-DS     | db   | 27017 | maf      | maf      | false | blob-repo | local    | demo-DS        | mongo-db | default   |
 
   Scenario: Get single data source
     Given I access the resource url "/api/v1/data-sources/system"
@@ -33,6 +31,7 @@ Feature: Data Sources
     And the response should contain
     """
     [
+      {},
       {
         "name": "entities"
       },
@@ -44,7 +43,6 @@ Feature: Data Sources
 
   Scenario: Create new data source
     Given i access the resource url "/api/v1/data-sources/myTest-DataSource"
-    And SIMOS core package are imported
     When i make a "POST" request
     """
     {
@@ -68,7 +66,6 @@ Feature: Data Sources
 
   Scenario: Create new data source with multiple repositories
     Given i access the resource url "/api/v1/data-sources/MyMultiRepDS"
-    And SIMOS core package are imported
     When i make a "POST" request
     """
     {

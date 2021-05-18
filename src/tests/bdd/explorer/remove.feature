@@ -1,20 +1,16 @@
 Feature: Explorer - Remove
 
   Background: There are data sources in the system
-
+    Given the system data source and SIMOS core package are available
     Given there are data sources
       | name             |
       | data-source-name |
       | blueprints       |
-      | system           |
 
     Given there are repositories in the data sources
       | data-source      | host | port  | username | password | tls   | name      | database | collection     | type     | dataTypes |
       | data-source-name | db   | 27017 | maf      | maf      | false | repo1     | local    | documents      | mongo-db | default   |
       | demo-DS   | db   | 27017 | maf      | maf      | false | blob-repo | local    | demo-DS | mongo-db | default   |
-      | system           | db   | 27017 | maf      | maf      | false | system    | local    | system         | mongo-db | default   |
-
-    Given SIMOS core package are imported
 
     Given there are documents for the data source "data-source-name" in collection "documents"
       | uid | parent_uid | name          | description | type                   |
