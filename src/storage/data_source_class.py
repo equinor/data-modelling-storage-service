@@ -1,5 +1,7 @@
 from typing import Dict, List, Union
 
+from pydantic import UUID4
+
 from config import Config
 from domain_classes.document_look_up import DocumentLookUp
 from domain_classes.dto import DTO
@@ -62,7 +64,8 @@ class DataSource:
             filter={"_id": self.name}, update={"$unset": {f"documentLookUp.{lookup_id}": ""}}
         )
 
-    def get(self, uid: str) -> DTO:
+    def get(self, uid: Union[str, UUID4]) -> DTO:
+        uid = str(uid)
         try:
             lookup = self.lookup(uid)
             repo = self.repositories[lookup["repository"]]

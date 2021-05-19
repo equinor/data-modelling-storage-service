@@ -1,4 +1,4 @@
-from pydantic import constr, UUID4
+from pydantic import constr, Field, root_validator, UUID4
 from pydantic.main import BaseModel, Extra
 
 # Only allow characters a-9 and '_' + '-'
@@ -18,8 +18,14 @@ class DataSource(BaseModel):
     data_source_id: constr(min_length=3, max_length=128, regex=name_regex, strip_whitespace=True)
 
 
-class UUIDType(BaseModel):
-    uid: UUID4
+class EntityUUID(BaseModel):
+    uid: UUID4 = Field(..., alias="_id")
+
+
+class Reference(EntityType, EntityName, EntityUUID):
+    @root_validator(pre=True)
+    def from_underscore_id_to_uid(cls, values):
+        return {**values, "uid": values.get("_id")}
 
 
 class NamedEntity(EntityType, EntityName, extra=Extra.allow):

@@ -1,9 +1,9 @@
 from services.database import dmt_database
+from utils.logging import logger
 
 
 def wipe_db():
-    print("Dropping all collections")
-    # FIXME: Read names from the database
+    logger.info("Dropping all collections")
     for name in dmt_database.list_collection_names():
-        print(f"Dropping collection '{name}'")
+        logger.debug(f"Dropping collection '{name}'")
         dmt_database.drop_collection(name)

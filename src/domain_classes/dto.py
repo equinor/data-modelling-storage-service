@@ -1,12 +1,15 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 from uuid import uuid4
 
 
 # For backwards compatibility, data is not a private property.
 # But to get and set any "non-standard" properties, use 'my_dto["my_key"]' instead of 'my_dto.data["my_key"]'.
 # The goal is to encapsulate the 'data' dict in the DTO class
+from pydantic import UUID4
+
+
 class DTO:
-    def __init__(self, data: Dict, uid: Optional[str] = None):
+    def __init__(self, data: Dict, uid: Optional[Union[str, UUID4]] = None):
         if not data:
             raise ValueError("Can't create a DTO from empty dict. Data was 'None'")
         self._uid = uid if uid is not None else data.get("_id", str(uuid4()))
@@ -66,4 +69,4 @@ class DTO:
         return str(self._uid)
 
     def to_dict(self):
-        return {"uid": self.uid, "data": self.data}
+        return {"uid": str(self.uid), "data": self.data}

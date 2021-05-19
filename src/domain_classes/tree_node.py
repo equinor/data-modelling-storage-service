@@ -64,9 +64,7 @@ class DictExporter:
 
 class DictImporter:
     @classmethod
-    def from_dict(
-        cls, entity, uid, blueprint_provider, key="", node_attribute: BlueprintAttribute = None, parent=None
-    ):
+    def from_dict(cls, entity, uid, blueprint_provider, key="", node_attribute: BlueprintAttribute = None):
         return cls._from_dict(entity, uid, key, blueprint_provider, node_attribute, parent=None)
 
     @classmethod
@@ -290,6 +288,28 @@ class NodeBase:
 
         return None
 
+    def search_by_attribute(self, attribute_path: List[str], root=False) -> Union["Node", None]:
+        """
+        In a Node structure, traverse the structure downwards based on the 'key', returning the Node found at the end
+        :param attribute_path: A list of attributes(keys)
+        :param root: Toggle this when being called on the first Node,
+            so not to skip the first attribute (simplifies interface)
+        :return: The Node representing the attribute at the end of the path, or None
+        """
+        attribute_path = [""] + attribute_path if root else attribute_path
+        if len(attribute_path) == 1:
+            if self.key == attribute_path[0]:
+                return self
+            return None
+        return next(
+            (
+                child.search_by_attribute(attribute_path[1:])
+                for child in self.children
+                if child.key == attribute_path[1]
+            ),
+            None,
+        )
+
     def replace(self, node_id, new_node):
         for node in self.traverse():
             for i, n in enumerate(node.children):
@@ -396,7 +416,7 @@ class Node(NodeBase):
         return self.attribute.attribute_type
 
     @staticmethod
-    def from_dict(entity, uid, blueprint_provider, node_attribute=None):
+    def from_dict(entity, uid, blueprint_provider, node_attribute: BlueprintAttribute = None):
         return DictImporter.from_dict(entity, uid, blueprint_provider, "", node_attribute)
 
     def remove(self):

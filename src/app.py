@@ -17,6 +17,7 @@ from controllers import (
     explorer_controller,
     package_controller,
     search_controller,
+    reference_controller,
 )
 from utils.wipe_db import wipe_db
 
@@ -31,6 +32,7 @@ app.include_router(explorer_controller.router, prefix=prefix)
 app.include_router(package_controller.router, prefix=prefix)
 app.include_router(search_controller.router, prefix=prefix)
 app.include_router(blueprint_controller.router, prefix=prefix)
+app.include_router(reference_controller.router, prefix=prefix)
 
 
 @click.group()

@@ -1,19 +1,16 @@
 Feature: Explorer - Add file
 
   Background: There are data sources in the system
-
+    Given the system data source and SIMOS core package are available
     Given there are data sources
       | name             |
       | data-source-name |
-      | system           |
 
     Given there are repositories in the data sources
       | data-source      | host | port  | username | password | tls   | name      | database | collection | type     | dataTypes |
       | data-source-name | db   | 27017 | maf      | maf      | false | repo1     | local    | documents  | mongo-db | default   |
       | data-source-name | db   | 27017 | maf      | maf      | false | blob-repo | local    | test       | mongo-db | blob      |
-      | system           | db   | 27017 | maf      | maf      | false | system    | local    | system     | mongo-db | default   |
 
-    Given SIMOS core package are imported
 
     Given there exist document with id "1" in data source "data-source-name"
     """
