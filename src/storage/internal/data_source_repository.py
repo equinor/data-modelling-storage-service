@@ -1,15 +1,22 @@
 from typing import List, Dict
 
+from pymongo.errors import DuplicateKeyError
 
 from config import Config
 from services.database import dmt_database
 from restful.request_types.create_data_source import DataSourceRequest
 from storage.data_source_class import DataSource
-from utils.exceptions import DataSourceNotFoundException
+from utils.exceptions import DataSourceAlreadyExistsException, DataSourceNotFoundException, InvalidEntityException
+from utils.logging import logger
 
 
 class DataSourceRepository:
     collection = dmt_database[f"{Config.DATA_SOURCES_COLLECTION}"]
+
+    # TODO
+    @staticmethod
+    def validate_data_source(document: dict):
+        pass
 
     def list(self) -> List[Dict]:
         all_sources = []
@@ -22,7 +29,14 @@ class DataSourceRepository:
     def create(self, id: str, document: DataSourceRequest):
         document = document.dict()
         document["_id"] = id
-        result = self.collection.insert_one(document)
+        try:
+            self.validate_data_source(document)
+            result = self.collection.insert_one(document)
+        except InvalidEntityException:
+            raise InvalidEntityException(f"Failed to create data source '{id}'. The posted entity is invalid...")
+        except DuplicateKeyError:
+            logger.warning(f"Tried to create a datasource that already exists ('{id}')")
+            raise DataSourceAlreadyExistsException(id)
         return str(result.inserted_id)
 
     def get(self, id: str) -> DataSource:

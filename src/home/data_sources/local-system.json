@@ -8,7 +8,6 @@
       "username": "maf",
       "password": "maf",
       "tls": false,
-      "name": "system",
       "database": "local",
       "collection": "system"
     }

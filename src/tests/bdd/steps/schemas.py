@@ -31,7 +31,6 @@ def step_impl(context):
                 "username": "maf",
                 "password": "maf",
                 "tls": False,
-                "name": "system",
                 "database": "local",
                 "collection": "system",
                 "type": "mongo-db",

@@ -7,7 +7,6 @@ from enums import DataSourceType
 
 class Repository(BaseModel, use_enum_values=True):
     type: DataSourceType
-    name: str
     host: Optional[str] = None
     port: Optional[int] = None
     username: Optional[str] = None
