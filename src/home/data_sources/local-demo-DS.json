@@ -9,7 +9,6 @@
       "username": "maf",
       "password": "maf",
       "tls": false,
-      "name": "default",
       "database": "local",
       "collection": "demo-DS"
     },
@@ -21,7 +20,6 @@
       "username": "maf",
       "password": "maf",
       "tls": false,
-      "name": "video_storage",
       "database": "local",
       "collection": "videos"
     },
@@ -30,7 +28,6 @@
       "type": "azure-blob-storage",
       "account_name": "dmssfilestorage",
       "account_key": "REPLACE_ME",
-      "name": "azure_blob",
       "container": "dmss"
     }
   }

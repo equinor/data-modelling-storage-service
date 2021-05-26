@@ -23,7 +23,9 @@ class DataSource:
 
     @classmethod
     def from_dict(cls, a_dict):
-        return cls(a_dict["name"], {key: Repository(**value) for key, value in a_dict["repositories"].items()})
+        return cls(
+            a_dict["name"], {key: Repository(name=key, **value) for key, value in a_dict["repositories"].items()}
+        )
 
     def _get_repo_from_storage_attribute(self, storage_attribute: StorageAttribute = None, strict=False) -> Repository:
         # Not too smart yet...
