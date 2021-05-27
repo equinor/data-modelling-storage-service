@@ -4,6 +4,7 @@ import traceback
 from utils.exceptions import (
     DataSourceAlreadyExistsException,
     DataSourceNotFoundException,
+    EntityAlreadyExistsException,
     EntityNotFoundException,
     FileNotFoundException,
     InvalidDocumentNameException,
@@ -21,6 +22,8 @@ class UseCase(object):
             return res.ResponseFailure.build_resource_error(not_found.message)
         except InvalidDocumentNameException as invalid_name:
             return res.ResponseFailure.build_parameters_error(invalid_name.message)
+        except EntityAlreadyExistsException as e:
+            return res.ResponseFailure.build_parameters_error(e)
         except FileNotFoundException as not_found:
             return res.ResponseFailure.build_resource_error(
                 f"The file '{not_found.file}' was not found on data source '{not_found.data_source_id}'"

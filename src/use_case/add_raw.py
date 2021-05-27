@@ -13,7 +13,7 @@ class AddRawRequest(DataSource):
 
 class AddRawUseCase(UseCase):
     def process_request(self, req: AddRawRequest):
-        uid: str = req.document.uid
+        uid: str = req.document.dict().get("_id")
         new_node_id = str(uuid4()) if not uid else uid
         document: DTO = DTO(uid=new_node_id, data=req.document.dict())
         document_repository = get_data_source(req.data_source_id)

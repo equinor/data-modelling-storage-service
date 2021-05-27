@@ -23,7 +23,7 @@ router = APIRouter()
 @router.post("/explorer/{data_source_id}/add-document", operation_id="explorer_add_document")
 def add_document(data_source_id: str, document: dict):
     """
-    Posted document must be a valid Entity ('name' and 'type' required)
+    Posted document must be a valid entity of the available blueprint (blueprint must exist).
     """
     use_case = AddDocumentUseCase()
     response = use_case.execute(AddDocumentRequest(data_source_id=data_source_id, data=document))
@@ -70,8 +70,11 @@ def add_package(data_source_id: str, name: EntityName):
 @router.post("/explorer/{data_source_id}/add-raw", operation_id="explorer_add_raw")
 def add_raw(data_source_id: str, document: dict):
     """
-        Posted document must be a valid Entity ('name' and 'type' required)
-        """
+    NOTE: The 'add-document' operation is to be preferred.
+    This is mainly for bootstrapping and imports.
+    Blueprint need not exist, and so there is no validation.
+    Posted document must be a valid Entity ('name' and 'type' required).
+    """
     use_case = AddRawUseCase()
     response = use_case.execute(AddRawRequest(data_source_id=data_source_id, document=document))
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
