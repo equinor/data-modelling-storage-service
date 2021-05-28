@@ -17,14 +17,14 @@ class DocumentServiceTestCase(unittest.TestCase):
             "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
             "reference": {"_id": "2", "name": "Reference", "type": "blueprint_2"},
             "references": [
-                {"_id": "3", "name": "Reference 1", "type": "blueprint_2"},
-                {"_id": "4", "name": "Reference 2", "type": "blueprint_2"},
+                {"_id": "3", "name": "Reference1", "type": "blueprint_2"},
+                {"_id": "4", "name": "Reference2", "type": "blueprint_2"},
             ],
         }
 
         document_2 = {"_id": "2", "name": "Reference", "description": "", "type": "blueprint_2"}
-        document_3 = {"_id": "3", "name": "Reference 1", "description": "", "type": "blueprint_2"}
-        document_4 = {"_id": "4", "name": "Reference 2", "description": "", "type": "blueprint_2"}
+        document_3 = {"_id": "3", "name": "Reference1", "description": "", "type": "blueprint_2"}
+        document_4 = {"_id": "4", "name": "Reference2", "description": "", "type": "blueprint_2"}
 
         def mock_get(document_id: str):
             if document_id == "1":

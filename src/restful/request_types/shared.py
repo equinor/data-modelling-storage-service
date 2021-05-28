@@ -28,5 +28,11 @@ class Reference(EntityType, EntityName, EntityUUID):
         return {**values, "uid": values.get("_id")}
 
 
+class UncontainedEntity(EntityType, EntityName, EntityUUID, extra=Extra.allow):
+    @root_validator(pre=True)
+    def from_underscore_id_to_uid(cls, values):
+        return {**values, "uid": values.get("_id")}
+
+
 class NamedEntity(EntityType, EntityName, extra=Extra.allow):
     pass

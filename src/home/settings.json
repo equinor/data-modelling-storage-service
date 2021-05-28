@@ -3,7 +3,7 @@
   "name": "DMTApplicationSettings",
   "description": "",
   "entities": [],
-  "packages": [],
+  "packages": ["demoPackage"],
   "models": ["system/SIMOS/Entity"],
   "actions": [
     {
