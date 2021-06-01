@@ -45,7 +45,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         node: Node = document_service.get_by_uid("testing", "1")
-        contained_node: Node = node.search("4")
+        contained_node: Node = node.get_by_path("references.1".split("."))
         contained_node.update({"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "blueprint_2"})
         document_service.save(node, "testing")
 

@@ -4,14 +4,15 @@ from uuid import uuid4
 
 from pydantic import ValidationError
 
+from config import Config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from config import Config
 from domain_classes.storage_recipe import StorageAttribute
+from enums import DMT, PRIMITIVES, REQUIRED_ATTRIBUTES, StorageDataTypes
 from restful.request_types.shared import NamedEntity
-from utils.exceptions import InvalidEntityException
-from enums import DMT, REQUIRED_ATTRIBUTES, StorageDataTypes
+from utils.exceptions import InvalidChildTypeException, InvalidEntityException
 from utils.logging import logger
+from utils.valid_extended_type import valid_extended_type
 
 
 class DictExporter:
@@ -67,14 +68,14 @@ class DictExporter:
         for child in node.children:
             if child.is_array():
                 # If the content of the list is not contained, i.e. references.
-                if not child.storage_contained():
+                if not child.storage_contained:
                     data[child.key] = [
                         {"_id": child.uid, "type": child.type, "name": child.name} for child in child.children
                     ]
                 else:
                     data[child.key] = [list_child.to_dict() for list_child in child.children]
             else:
-                if not child.contained() and child.entity:
+                if not child.contained and child.entity:
                     data[child.key] = {"_id": child.uid, "type": child.type, "name": child.name}
                 else:
                     data[child.key] = child.to_dict()
@@ -218,6 +219,11 @@ class NodeBase:
     def type(self):
         return self._type
 
+    @property
+    def blueprint(self) -> Optional[Blueprint]:
+        if self.type != "datasource":
+            return self.blueprint_provider(self.type)
+
     @type.setter
     def type(self, value):  # Type can be changed after initiation. e.g Multiple valid specialised types
         self._type = value
@@ -235,14 +241,13 @@ class NodeBase:
 
         return self.parent.node_id
 
+    @property
     def storage_contained(self):
         if not self.parent or self.parent.type == DMT.DATASOURCE.value:
             return False
         return self.parent.blueprint.storage_recipes[0].is_contained(self.attribute.name)
 
-    def not_contained(self):
-        return not self.uid == ""
-
+    @property
     def contained(self):
         return self.attribute.contained
 
@@ -257,20 +262,20 @@ class NodeBase:
             return self.uid
         if not self.parent:
             return self.uid
-        if self.contained() and not self.storage_contained() and not self.is_array():
+        if self.contained and not self.storage_contained and not self.is_array():
             return self.uid
         return ".".join(self.path() + [self.key])
 
     def path(self):
         path = []
         parent = self.parent
-        while parent and parent.storage_contained():
-            path += [parent.key]
+        while parent:  # Build the path from Node.key until the node has no key (root node)
+            path += [parent.key] if parent.key else [parent.uid]
             parent = parent.parent
         # Since we build the path "bottom-up", it need's to be revered.
         # eg. [parent, grand_parent, grand_grand_parent]
         path.reverse()
-        return [parent.uid] + path
+        return path
 
     def traverse(self):
         """Iterate in pre-order depth-first search order (DFS)"""
@@ -352,7 +357,7 @@ class NodeBase:
         keys = [child.key for child in self.children]
         return name in keys
 
-    def get_by_path(self, keys: List):
+    def get_by_path(self, keys: List[str]):
         if len(keys) == 0:
             return self
 
@@ -403,11 +408,14 @@ class NodeBase:
             return True
 
     def validate_self_type_on_parent(self):
-        if self.parent:
-            if self.parent.is_array():
-                self.parent.blueprint.valid_child_type(self.parent.key, self.type)
-                return
-            self.parent.blueprint.valid_child_type(self.key, self.type)
+        if not self.parent:
+            return True
+        key = self.key if not self.parent.is_array() else self.parent.key  # Use attribute key, not list index
+        valid_type = self.parent.blueprint.get_attribute_type_by_key(key)  # Valid type as defined in parents blueprint
+        if not valid_extended_type(
+            valid_type, [self.type] + self.blueprint.extends, self.blueprint_provider
+        ):  # Resolve extends
+            raise InvalidChildTypeException(self.type, key, valid_type)
 
 
 class Node(NodeBase):
@@ -425,16 +433,6 @@ class Node(NodeBase):
 
     def is_root(self):
         return super().is_root()
-
-    @property
-    def blueprint(self) -> Optional[Blueprint]:
-        if self.type != "datasource":
-            return self.blueprint_provider(self.type)
-
-    def attribute_is_storage_contained(self):
-        if not self.parent or self.parent.type == DMT.DATASOURCE.value:
-            return False
-        return self.parent.blueprint.storage_recipes[0].is_contained(self.attribute.name)
 
     def to_dict(self):
         return DictExporter.to_dict(self)
@@ -457,7 +455,7 @@ class Node(NodeBase):
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
     def update(self, data: Union[dict, list]):
         # If it's an storageUncontained attribute, crate a new ID if missing
-        if not self.attribute_is_storage_contained() and not data.get("_id") and not self.uid:
+        if not self.storage_contained and not data.get("_id") and not self.uid:
             # TODO: Dealing with Node uid should be done with a property setter. This is error prone
             # TODO: Same for required props. 'type' and 'name'. Should throw error if unset in node.entity
             new_uid = str(uuid4())
@@ -482,21 +480,31 @@ class Node(NodeBase):
                 self.entity[key] = new_data
             # Add/Modify complex data
             else:
-                for index, child in enumerate(self.children):
-                    if child.key == key:
-                        # This means we are creating a new, non-contained document. Lists are always contained.
-                        if not child.attribute_is_storage_contained() and child.uid == "" and not child.is_array():
-                            new_node = DictImporter.from_dict(
-                                entity=new_data,
-                                uid=str(uuid4()),
-                                key=key,
-                                blueprint_provider=self.blueprint_provider,
-                                node_attribute=attribute,
-                            )
-                            # new_node.parent = self
-                            self.children[index] = new_node
-                        else:
-                            child.update(new_data)
+                for attr in REQUIRED_ATTRIBUTES:
+                    if attr not in data.keys():
+                        raise InvalidEntityException(
+                            f"Tried to update with missing required attribute '{attr}'. "
+                            f"'{REQUIRED_ATTRIBUTES}' are required"
+                        )
+                child = self.get_by_path([key])
+                if not child:
+                    raise InvalidEntityException(
+                        f"The type '{self.type}' has no complex attribute of type "
+                        f"'{attribute.attribute_type}'. Valid attribute types are blueprint "
+                        f"references, and primitive types {tuple(PRIMITIVES)}"
+                    )
+                # This means we are creating a new, non-contained document. Lists are always contained.
+                if not child.storage_contained and not child.uid and not child.is_array():
+                    new_node = DictImporter.from_dict(
+                        entity=new_data,
+                        uid=str(uuid4()),
+                        key=key,
+                        blueprint_provider=self.blueprint_provider,
+                        node_attribute=attribute,
+                    )
+                    self.children.append(new_node)
+                else:
+                    child.update(new_data)
 
         # Remove for every key in blueprint not in data or is a required attribute
         removed_attributes = [
@@ -541,9 +549,6 @@ class ListNode(NodeBase):
     ):
         super().__init__(key, attribute, uid, parent=parent, blueprint_provider=blueprint_provider, entity=entity)
 
-    def attribute_is_storage_contained(self):
-        return self.blueprint.storage_recipes[0].is_contained(self.key)
-
     def to_dict(self):
         return [child.to_dict() for child in self.children]
 
@@ -564,7 +569,7 @@ class ListNode(NodeBase):
 
             # Set uid base on containment and existing(lack of) uid
             # This require the existing _id to be posted
-            uid = "" if self.attribute_is_storage_contained() else item.get("_id", str(uuid4()))
+            uid = "" if self.storage_contained else item.get("_id", str(uuid4()))
             self.add_child(
                 DictImporter.from_dict(entity=item, uid=uid, blueprint_provider=self.blueprint_provider, key=str(i))
             )
