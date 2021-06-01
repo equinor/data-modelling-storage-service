@@ -41,10 +41,10 @@ class DocumentServiceTestCase(unittest.TestCase):
             repository_provider=repository_provider, blueprint_provider=blueprint_provider
         )
         document_service.rename_document(
-            data_source_id="testing", parent_uid="1", document_id="1.nested", name="New name"
+            data_source_id="testing", parent_uid="1", document_id="1.nested", name="New_name"
         )
 
-        actual = {"name": "New name", "description": "", "type": "blueprint_2"}
+        actual = {"name": "New_name", "description": "", "type": "blueprint_2"}
 
         assert pretty_eq(actual, doc_storage["1"]["nested"]) is None
 
@@ -79,9 +79,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = DocumentService(
             repository_provider=repository_provider, blueprint_provider=blueprint_provider
         )
-        document_service.rename_document(data_source_id="testing", document_id="1", name="New name")
+        document_service.rename_document(data_source_id="testing", document_id="1", name="New_name")
 
-        actual = {"_id": "1", "name": "New name"}
+        actual = {"_id": "1", "name": "New_name"}
 
         assert pretty_eq(actual, doc_storage["1"]) is None
 
@@ -115,10 +115,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = DocumentService(
             repository_provider=repository_provider, blueprint_provider=blueprint_provider
         )
-        document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New name")
+        document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New_name")
 
-        actual = {"_id": "1", "reference": {"_id": "2", "name": "New name", "type": "blueprint_2"}}
-        actual2 = {"_id": "2", "name": "New name", "type": "blueprint_2"}
+        actual = {"_id": "1", "reference": {"_id": "2", "name": "New_name", "type": "blueprint_2"}}
+        actual2 = {"_id": "2", "name": "New_name", "type": "blueprint_2"}
 
         assert pretty_eq(actual, doc_storage["1"]) is None
         assert pretty_eq(actual2, doc_storage["2"]) is None
@@ -153,10 +153,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = DocumentService(
             repository_provider=repository_provider, blueprint_provider=blueprint_provider
         )
-        document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New name")
+        document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New_name")
 
-        actual = {"_id": "1", "references": [{"_id": "2", "name": "New name", "type": "blueprint_2"}]}
-        actual2 = {"_id": "2", "name": "New name", "type": "blueprint_2"}
+        actual = {"_id": "1", "references": [{"_id": "2", "name": "New_name", "type": "blueprint_2"}]}
+        actual2 = {"_id": "2", "name": "New_name", "type": "blueprint_2"}
 
         assert pretty_eq(actual, doc_storage["1"]) is None
         assert pretty_eq(actual2, doc_storage["2"]) is None

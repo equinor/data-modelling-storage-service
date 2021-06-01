@@ -29,7 +29,10 @@ class BlueprintAttribute:
         self.enum_type = enum_type if enum_type else ""
 
     def __repr__(self):
-        return f"name: {self.name}, contained: {self.contained}, optional: {self.optional}"
+        return (
+            f"Name: '{self.name}', Type: '{self.attribute_type}' "
+            f"Contained: '{self.contained}', Optional: '{self.optional}'"
+        )
 
     def is_array(self):
         return self.dimensions.is_array()

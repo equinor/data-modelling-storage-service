@@ -43,7 +43,6 @@ blueprint_1 = {
             ],
         }
     ],
-    "uiRecipes": [],
 }
 
 blueprint_2 = {
