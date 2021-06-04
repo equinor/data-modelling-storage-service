@@ -1,7 +1,7 @@
 # Created by https://www.gitignore.io/api/macos
 # Edit at https://www.gitignore.io/?templates=macos
 gen/
-data/
+/data/
 h5/
 /src/home/first-run-false
 /src/.behaverc
@@ -148,3 +148,4 @@ mongodata/
 /gen/
 /src/.behaverc
 home/first-run-false
+

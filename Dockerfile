@@ -1,6 +1,7 @@
 FROM python:3.9-slim as base
 WORKDIR /code
-CMD /code/init.sh
+ENTRYPOINT ["/code/init.sh"]
+CMD ["api"]
 EXPOSE 8000
 
 ENV PYTHONUNBUFFERED=1

@@ -1,4 +1,4 @@
-from enum import auto, Enum
+from enum import Enum
 
 PRIMITIVES = {"string", "number", "integer", "boolean"}
 BLOB_TYPES = ("system/SIMOS/blob_types/PDF",)
@@ -23,24 +23,18 @@ class PrimitiveDataTypes(Enum):
             return str
 
 
-class DataSourceType(Enum):
+class RepositoryType(Enum):
     MONGO = "mongo-db"
     AZURE_BLOB_STORAGE = "azure-blob-storage"
     LOCAL = "localStorage"
 
     @staticmethod
     def has_value(value):
-        values = [item.value for item in DataSourceType]
-        return value in values
+        if next((item for item in RepositoryType if item.value == value), None):
+            return True
 
 
-class RepositoryType(Enum):
-    DocumentRepository = auto()
-    PackageRepository = auto()
-    BlueprintRepository = auto()
-
-
-class StorageDataTypes(Enum):
+class StorageDataTypes(str, Enum):
     DEFAULT = "default"
     LARGE = "large"
     VERY_LARGE = "veryLarge"

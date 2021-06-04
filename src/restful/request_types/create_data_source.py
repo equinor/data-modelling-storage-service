@@ -1,12 +1,13 @@
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 from pydantic.main import BaseModel
 
-from enums import DataSourceType
+from enums import RepositoryType, StorageDataTypes
 
 
 class Repository(BaseModel, use_enum_values=True):
-    type: DataSourceType
+    type: RepositoryType
+    data_types: Optional[List[StorageDataTypes]] = None
     host: Optional[str] = None
     port: Optional[int] = None
     username: Optional[str] = None
@@ -15,6 +16,7 @@ class Repository(BaseModel, use_enum_values=True):
     collection: Optional[str] = None
     account_name: Optional[str] = None
     account_key: Optional[str] = None
+    container: Optional[str] = None
     tls: Optional[bool] = True
 
 

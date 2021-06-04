@@ -8,8 +8,8 @@ Feature: Explorer - Add file
 
     Given there are repositories in the data sources
       | data-source      | host | port  | username | password | tls   | name      | database | collection | type     | dataTypes |
-      | data-source-name | db   | 27017 | maf      | maf      | false | repo1     | local    | documents  | mongo-db | default   |
-      | data-source-name | db   | 27017 | maf      | maf      | false | blob-repo | local    | test       | mongo-db | blob      |
+      | data-source-name | db   | 27017 | maf      | maf      | false | repo1     |  bdd-test    | documents  | mongo-db | default   |
+      | data-source-name | db   | 27017 | maf      | maf      | false | blob-repo |  bdd-test    | test       | mongo-db | blob      |
 
 
     Given there exist document with id "1" in data source "data-source-name"

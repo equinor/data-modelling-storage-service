@@ -6,9 +6,11 @@ from fastapi import FastAPI
 
 
 from config import Config
-from services.database import dmt_database
+from services.database import data_source_collection
+from storage.internal.data_source_repository import DataSourceRepository
+from utils.exceptions import ImportException, InvalidDataSourceException
 from utils.logging import logger
-from utils.package_import import import_blob, import_package
+from utils.package_import import import_package
 from controllers import (
     blob_controller,
     blueprint_controller,
@@ -53,18 +55,8 @@ def run():
 
 @cli.command()
 def init_application():
-    logger.info("-------------- IMPORTING DEMO FILES ----------------")
-    for folder in Config.SYSTEM_FOLDERS:
-        import_package(
-            f"{Config.APPLICATION_HOME}/system/{folder}", data_source=Config.SYSTEM_COLLECTION, is_root=True
-        )
-
-    logger.info(f"Importing demo package(s) {Config.ENTITY_APPLICATION_SETTINGS['packages']}")
-    for folder in Config.ENTITY_APPLICATION_SETTINGS["packages"]:
-        import_package(f"{Config.APPLICATION_HOME}/{folder}", data_source=Config.DEMO_DATASOURCE, is_root=True)
-
-    for path in Config.IMPORT_BLOBS:
-        import_blob(path)
+    logger.info("-------------- IMPORTING CORE DOCUMENTS FILES ----------------")
+    import_package(f"{Config.APPLICATION_HOME}/system/SIMOS", data_source=Config.CORE_DATA_SOURCE, is_root=True)
     logger.info("-------------- DONE ----------------")
 
 
@@ -74,12 +66,17 @@ def import_data_source(file):
     try:
         with open(file) as json_file:
             document = json.load(json_file)
+            try:
+                DataSourceRepository.validate_data_source(document)
+            except InvalidDataSourceException as error:
+                logger.error(error)
+                exit(1)
             id = document["name"]
             document["_id"] = id
             logger.info(f"Importing {file} as data_source with id: {id}.")
-            dmt_database[f"{Config.DATA_SOURCES_COLLECTION}"].replace_one({"_id": id}, document, upsert=True)
+            data_source_collection.replace_one({"_id": id}, document, upsert=True)
     except Exception as error:
-        logger.error(f"Failed to import file {file}: {error}")
+        raise ImportException(f"Failed to import file {file}: {error}")
 
 
 @cli.command()
@@ -87,6 +84,16 @@ def nuke_db():
     logger.info("---------- PURGING DATABASE --------")
     wipe_db()
     logger.info("-------------- DONE ----------------")
+
+
+@cli.command()
+@click.pass_context
+def reset_app(context):
+    context.invoke(nuke_db)
+    logger.info("---------- CREATING DATA SOURCES --------")
+    context.invoke(import_data_source, file="/code/home/system/data_sources/system.json")
+    logger.info("-------------- DONE ----------------")
+    context.invoke(init_application)
 
 
 if __name__ == "__main__":

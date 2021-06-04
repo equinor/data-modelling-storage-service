@@ -10,7 +10,7 @@ from domain_classes.dto import DTO
 from domain_classes.storage_recipe import StorageRecipe
 from domain_classes.tree_node import ListNode, Node
 from enums import BLOB_TYPES, DMT, SIMOS
-from restful.request_types.shared import Reference
+from restful.request_types.shared import NamedEntity, Reference
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
@@ -371,51 +371,30 @@ class DocumentService:
                     except KeyError:
                         raise KeyError("File referenced in entity does not match any filename posted")
 
-    # Add file by parent directory
-    def add(self, data_source_id: str, directory: str, document: dict, files: dict):
-        # Convert filesystem path to NodeTree path
-        tree_path = "/content/".join(directory.split("/"))
-        root: Node = self.get_by_path(data_source_id, tree_path)
-        if not root:
-            raise EntityNotFoundException(uid=directory)
+    # Add entity by path
+    def add(self, data_source_id: str, path: str, document: NamedEntity, files: dict):
+        target: Node = self.get_by_path(data_source_id, path)
+        if not target:
+            raise EntityNotFoundException(uid=path)
 
-        name = document["name"]
-        type = document["type"]
-        description = document["description"]
-
-        if not url_safe_name(name):
-            raise InvalidDocumentNameException(name)
-
-        if root.contains(name):
-            raise DuplicateFileNameException
-
-        entity: Dict = CreateEntity(self.get_blueprint, name=name, type=type, description=description).entity
-
-        if type == SIMOS.BLUEPRINT.value:
-            entity["attributes"] = get_required_attributes(type=type)
-
-        parent = root.search(f"{root.uid}.content")
-
-        # Check if a file with the same name already exists in the target package
-        # if duplicate_filename(parent, name):
-        if parent.duplicate_attribute(name):
-            raise DuplicateFileNameException(data_source_id, f"{directory}/{name}")
-
-        new_node_id = str(uuid4()) if not parent.storage_contained else ""
+        new_node_id = str(uuid4()) if not target.storage_contained else ""
 
         new_node = Node.from_dict(
-            {**entity, **document},
+            {**document.dict()},
             new_node_id,
             self.get_blueprint,
-            BlueprintAttribute(name="content", attribute_type=type),
+            BlueprintAttribute(name=path.split("/")[-1], attribute_type=document.type),
         )
         self._merge_entity_and_files(new_node, files)
 
-        new_node.key = str(len(parent.children)) if parent.is_array() else ""
-
-        parent.add_child(new_node)
-
-        self.save(root, data_source_id)
+        if isinstance(target, ListNode):
+            new_node.parent = target
+            target.add_child(new_node)
+            self.save(target.parent, data_source_id)
+        else:
+            new_node.parent = target.parent
+            target = new_node
+            self.save(target, data_source_id)
 
         return {"uid": new_node.node_id}
 

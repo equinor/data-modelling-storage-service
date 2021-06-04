@@ -94,3 +94,13 @@ class InvalidChildTypeException(Exception):
             f"The type '{invalid_type}' is not a valid type for the "
             f"'{key}' attribute. The type should be of type '{valid_type}'"
         )
+
+
+class ImportException(Exception):
+    def __init__(self, message=None):
+        self.message = message if message else "Something went wrong during the import"
+
+
+class InvalidDataSourceException(Exception):
+    def __init__(self, message=None):
+        self.message = message if message else "The data source is invalid"

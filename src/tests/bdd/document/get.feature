@@ -8,10 +8,10 @@ Feature: Get document
       | test-source-name   |
 
     Given there are repositories in the data sources
-      | data-source      | host | port  | username | password | tls   | name       | database | collection | type     | dataTypes    |
-      | data-source-name | db   | 27017 | maf      | maf      | false | repo1      | local    | documents  | mongo-db | default      |
-      | test-source-name | db   | 27017 | maf      | maf      | false | blob-repo  | local    | blob-data  | mongo-db | default,blob |
-      | data-source-name | db   | 27017 | maf      | maf      | false | doc-repo   | local    | test       | mongo-db | default      |
+      | data-source      | host | port  | username | password | tls   | name       | database    | collection | type     | dataTypes    |
+      | data-source-name | db   | 27017 | maf      | maf      | false | repo1      | bdd-test    | documents  | mongo-db | default      |
+      | test-source-name | db   | 27017 | maf      | maf      | false | blob-repo  | bdd-test    | blob-data  | mongo-db | default,blob |
+      | data-source-name | db   | 27017 | maf      | maf      | false | doc-repo   | bdd-test    | test       | mongo-db | default      |
 
     Given there exist document with id "2" in data source "test-source-name"
     """

@@ -1,9 +1,11 @@
-from services.database import dmt_database
+from services.database import mongo_client
 from utils.logging import logger
 
 
 def wipe_db():
-    logger.info("Dropping all collections")
-    for name in dmt_database.list_collection_names():
-        logger.debug(f"Dropping collection '{name}'")
-        dmt_database.drop_collection(name)
+    databases = mongo_client.list_database_names()
+    databases = [n for n in databases if n not in ("admin", "local")]  # Don't delete the mongo admin or local database
+    logger.warning(f"Dropping all databases ({databases})")
+    for db_name in databases:
+        logger.debug(f"Dropping database '{db_name}' from the DMSS system MongoDB server")
+        mongo_client.drop_database(db_name)

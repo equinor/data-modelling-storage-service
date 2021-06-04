@@ -17,7 +17,7 @@ class LocalFileRepository(RepositoryInterface):
             with open(f"{self.path}/{doc_ref}.json") as f:
                 return json.load(f)
         except FileNotFoundError:
-            raise FileNotFoundError(f"'{doc_ref}' not found. Are DMSS core blueprints available at {self.path}?")
+            raise FileNotFoundError(f"'{doc_ref}' not found. Are DMSS core blueprints available at '{self.path}'?")
 
     def find(self, filter: dict, single=None, raw=None) -> DTO:
         return self.get(filter["type"])

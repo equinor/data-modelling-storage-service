@@ -5,13 +5,13 @@ from pydantic import validator
 
 from restful.response_object import ResponseSuccess
 from services.document_service import DocumentService
-from restful.request_types.shared import DataSource
+from restful.request_types.shared import DataSource, NamedEntity
 from restful.use_case import UseCase
 from storage.internal.data_source_repository import get_data_source
 
 
 class AddDocumentToPathRequest(DataSource):
-    document: dict
+    document: NamedEntity
     directory: str
     files: Optional[List[UploadFile]] = File(None)
 
@@ -28,7 +28,7 @@ class AddDocumentToPathUseCase(UseCase):
         document_service = DocumentService(repository_provider=self.repository_provider)
         document = document_service.add(
             data_source_id=req.data_source_id,
-            directory=req.directory,
+            path=req.directory,
             document=req.document,
             files={f.filename: f.file for f in req.files},
         )

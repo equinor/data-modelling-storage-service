@@ -9,8 +9,8 @@ Feature: Explorer - Remove file
 
     Given there are repositories in the data sources
       | data-source      | host | port  | username | password | tls   | name      | database | collection     | type     | dataTypes |
-      | data-source-name | db   | 27017 | maf      | maf      | false | repo1     | local    | documents      | mongo-db | default   |
-      | demo-DS   | db   | 27017 | maf      | maf      | false | blob-repo | local    | demo-DS | mongo-db | default   |
+      | data-source-name | db   | 27017 | maf      | maf      | false | repo1     |  bdd-test    | documents      | mongo-db | default   |
+      | demo-DS   | db   | 27017 | maf      | maf      | false | blob-repo |  bdd-test    | demo-DS | mongo-db | default   |
 
     Given there exist document with id "1" in data source "data-source-name"
     """
