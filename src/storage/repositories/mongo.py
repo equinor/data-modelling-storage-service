@@ -42,7 +42,7 @@ class MongoDBClient(RepositoryInterface):
         try:
             return self.handler[self.collection].insert_one(document).acknowledged
         except DuplicateKeyError:
-            raise EntityAlreadyExistsException(document["id"])
+            raise EntityAlreadyExistsException
 
     def update(self, uid: str, document: Dict) -> bool:
         try:

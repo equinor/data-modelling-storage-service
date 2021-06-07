@@ -2,11 +2,15 @@ from copy import deepcopy
 from typing import Dict, List, Optional, Union
 from uuid import uuid4
 
+from pydantic import ValidationError
+
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from config import Config
 from domain_classes.storage_recipe import StorageAttribute
 from enums import DMT, REQUIRED_ATTRIBUTES, SIMOS, StorageDataTypes
+from restful.request_types.shared import NamedEntity
+from utils.exceptions import InvalidEntityException
 from utils.logging import logger
 
 
@@ -36,6 +40,10 @@ class DictExporter:
             else:
                 data[node.key] = node.to_dict()
 
+        try:  # Last sanity check on the produced dict
+            NamedEntity(**data)
+        except ValidationError as e:
+            raise InvalidEntityException(e)
         return data
 
     @staticmethod
@@ -132,7 +140,7 @@ class DictImporter:
 
                         # If the node is of type DMT/Package, we need to override the attribute_type "Entity",
                         # and get it from the child.
-                        if node.type == DMT.PACKAGE.value and "type" in child:
+                        if node.type == DMT.PACKAGE.value:
                             content_attribute: BlueprintAttribute = deepcopy(child_attribute)
                             content_attribute.attribute_type = child["type"]
                             list_child_attribute = content_attribute

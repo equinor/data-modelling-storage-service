@@ -9,7 +9,7 @@ from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
 from services.database import dmt_database
-from utils.exceptions import EntityNotFoundException
+from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from utils.logging import logger
 
 
@@ -110,7 +110,12 @@ class DataSource:
     def add(self, document: DTO, storage_attribute: StorageAttribute = None) -> None:
         repo = self._get_repo_from_storage_attribute(storage_attribute)
         self.insert_lookup(DocumentLookUp(document.uid, repo.name, document.uid, "", document.type))
-        repo.add(document.uid, document.data)
+        try:
+            repo.add(document.uid, document.data)
+        except EntityAlreadyExistsException:
+            raise EntityAlreadyExistsException(
+                message=f"The document with id '{document.uid}' already exist in data source '{self.name}'"
+            )
 
     def update_blob(self, uid, file) -> None:
         repo = self._get_repo_from_storage_attribute(

@@ -9,7 +9,7 @@ class RepositoryException(Exception):
 
 class EntityAlreadyExistsException(RepositoryException):
     def __init__(self, document_id=None, message: str = None):
-        super().__init__(message=f"The document, with id {document_id} already exists" if not message else message)
+        super().__init__(message=f"The document with id '{document_id}' already exists" if not message else message)
 
 
 class EntityNotFoundException(RepositoryException):
