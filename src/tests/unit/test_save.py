@@ -31,21 +31,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             "4": {"_id": "4", "name": "ref2", "description": "TEST", "type": "blueprint_2"},
         }
 
-        doc_1_after = {
-            "_id": "1",
-            "name": "Parent",
-            "description": "",
-            "type": "blueprint_1",
-            "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
-            "reference": {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
-            "references": [
-                {"_id": "3", "name": "ref1", "type": "blueprint_2"},
-                {"_id": "4", "name": "ref2", "type": "blueprint_2"},
-            ],
-        }
-
-        doc_4_after = {"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "blueprint_2"}
-
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
@@ -53,23 +38,18 @@ class DocumentServiceTestCase(unittest.TestCase):
             doc_storage[dto.uid] = dto.data
             return None
 
-        def repository_provider(data_source_id):
-            if data_source_id == "testing":
-                return repository
-
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
         )
 
         node: Node = document_service.get_by_uid("testing", "1")
         contained_node: Node = node.search("4")
-        contained_node.update(doc_4_after.copy())
+        contained_node.update({"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "blueprint_2"})
         document_service.save(node, "testing")
 
-        assert doc_1_after == doc_storage["1"]
-        assert doc_4_after == doc_storage["4"]
+        assert doc_storage["4"] == {"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "blueprint_2"}
 
     def test_save_append(self):
         repository = mock.Mock()
@@ -79,16 +59,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {"_id": "2", "name": "a_reference", "description": "", "type": "blueprint_2"},
         }
 
-        document_1_after = {
-            "_id": "1",
-            "name": "Parent",
-            "description": "",
-            "type": "blueprint_1",
-            "nested": {},
-            "reference": {},
-            "references": [{"name": "a_reference", "type": "blueprint_2", "_id": "2"}],
-        }
-
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
@@ -99,12 +69,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
 
-        def repository_provider(data_source_id):
-            if data_source_id == "testing":
-                return repository
-
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
         )
 
         node: Node = document_service.get_by_uid("testing", "1")
@@ -120,8 +86,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         document_service.save(node, "testing")
 
-        # assert document_1_after == doc_storage["1"]
-        assert flatten_dict(document_1_after).items() == flatten_dict(doc_storage["1"]).items()
+        assert doc_storage["1"]["references"] == [{"name": "a_reference", "type": "blueprint_2", "_id": "2"}]
 
     def test_save_delete(self):
         repository = mock.Mock()
@@ -185,9 +150,7 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_save_nested_uncontained(self):
         repository = mock.Mock()
 
-        doc_storage = {}
-
-        doc_storage_expected = {
+        doc_storage = {
             "1": {
                 "_id": "1",
                 "name": "Root",
@@ -198,36 +161,13 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "name": "first",
                     "description": "I'm the first nested document, contained",
                     "uncontained_in_every_way": {
+                        "_id": "2",
                         "name": "im_a_uncontained_attribute",
                         "type": "blueprint_2",
-                        "_id": "2",
+                        "description": "I'm the second nested document, uncontained",
                     },
                 },
-            },
-            "2": {
-                "_id": "2",
-                "name": "im_a_uncontained_attribute",
-                "type": "blueprint_2",
-                "description": "I'm the second nested document, uncontained",
-            },
-        }
-
-        load_node = {
-            "_id": "1",
-            "name": "Root",
-            "description": "I'm the root document",
-            "type": "blueprint_with_second_level_nested_uncontained_attribute",
-            "i_have_a_uncontained_attribute": {
-                "type": "uncontained_blueprint",
-                "name": "first",
-                "description": "I'm the first nested document, contained",
-                "uncontained_in_every_way": {
-                    "_id": "2",
-                    "name": "im_a_uncontained_attribute",
-                    "type": "blueprint_2",
-                    "description": "I'm the second nested document, uncontained",
-                },
-            },
+            }
         }
 
         def mock_get(document_id: str):
@@ -240,14 +180,11 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
 
-        def repository_provider(data_source_id):
-            return repository
-
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
         )
 
-        node: Node = Node.from_dict(load_node, "1", document_service.get_blueprint)
+        node: Node = Node.from_dict(doc_storage["1"], "1", document_service.get_blueprint)
         document_service.save(node, "testing")
 
-        assert doc_storage == doc_storage_expected
+        assert doc_storage["2"]["description"] == "I'm the second nested document, uncontained"

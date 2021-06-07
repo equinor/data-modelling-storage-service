@@ -53,13 +53,9 @@ def get_by_path(
 
 
 @router.put("/documents/{data_source_id}/{document_id}", operation_id="document_update")
-def update(
-    data_source_id: str, document_id: str, data: dict, attribute: Optional[str] = None, reference: bool = False
-):
+def update(data_source_id: str, document_id: str, data: dict, attribute: Optional[str] = None):
     update_use_case = UpdateDocumentUseCase()
     response = update_use_case.execute(
-        UpdateDocumentRequest(
-            data_source_id=data_source_id, data=data, document_id=document_id, attribute=attribute, reference=reference
-        )
+        UpdateDocumentRequest(data_source_id=data_source_id, data=data, document_id=document_id, attribute=attribute)
     )
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])

@@ -102,7 +102,7 @@ def get_resolved_document(
         # If there is no data, and the attribute is NOT optional, AND it's NOT an array, raise an exception
         else:
             if not complex_attribute.is_optional() and not complex_attribute.is_array():
-                error = f"The entity {document.name} is invalid! None-optional type {attribute_name} is missing."
+                error = f"The entity {document.name} is invalid! None-optional type '{attribute_name}' is missing."
                 logger.error(error)
 
     return data
@@ -291,10 +291,7 @@ class DocumentService:
 
         return {"uid": target_node.node_id}
 
-    # TODO: Remove reference stuff when separate endpoint is working
-    def update_document(
-        self, data_source_id: str, document_id: str, data: dict, attribute_path: str = None, reference: bool = False
-    ):
+    def update_document(self, data_source_id: str, document_id: str, data: dict, attribute_path: str = None):
         for attr in REQUIRED_ATTRIBUTES:
             if not data.get(attr):
                 raise InvalidEntityException(
@@ -306,33 +303,10 @@ class DocumentService:
 
         # If it's a contained nested node(or reference), set the modify target based on dotted-path
         if attribute_path:
-            target_node = root.search(f"{document_id}.{attribute_path}")
+            target_node = root.get_by_path(attribute_path.split("."))
+            # target_node = root.search(f"{document_id}.{attribute_path}")
 
-        # If we are updating a reference, no fancy recursive updating
-        if reference:
-            if not data.get("_id"):
-                raise InvalidEntityException("'_id' is required when inserting a reference")
-
-            # Check that target exists and has correct values
-            referenced_document: DTO = self.repository_provider(data_source_id).get(data["_id"])
-            if target_node.type != referenced_document.type:
-                raise InvalidEntityException(
-                    f"The referenced entity should be of type '{target_node.type}'"
-                    f", but was '{referenced_document.type}'"
-                )
-            if data["name"] != referenced_document.name or data["type"] != referenced_document.type:
-                raise InvalidEntityException(
-                    f"The 'name' and 'type' values of the reference does not match the referenced document."
-                    f"'{data['name']}' --> '{referenced_document.name}',"
-                    f"{data['type']} --> {referenced_document.type}"
-                )
-            target_node.entity["name"] = data["name"]
-            target_node.entity["type"] = data["type"]
-            target_node.entity["_id"] = data["_id"]
-            target_node.uid = data["_id"]
-
-        else:
-            target_node.update(data)
+        target_node.update(data)
         self.save(root, data_source_id)
 
         logger.info(f"Updated document '{target_node.node_id}''")
@@ -512,7 +486,7 @@ class DocumentService:
 
     def remove_reference(self, data_source_id: str, document_id: str, attribute_path: str) -> dict:
         root: Node = self.get_by_uid(data_source_id, document_id)
-        attribute_node = root.search_by_attribute(attribute_path.split("."), root=True)
+        attribute_node = root.get_by_path(attribute_path.split("."))
         if not attribute_node:
             raise Exception(f"Could not find the '{attribute_path}' Node on '{document_id}'")
 

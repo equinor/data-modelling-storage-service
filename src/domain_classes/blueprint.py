@@ -5,6 +5,7 @@ from domain_classes.dto import DTO
 from domain_classes.storage_recipe import DefaultStorageRecipe, StorageRecipe
 from domain_classes.ui_recipe import DefaultRecipe, Recipe, RecipeAttribute
 from enums import BLOB_TYPES, PRIMITIVES, StorageDataTypes
+from utils.exceptions import InvalidChildTypeException
 
 
 def get_storage_recipes(recipes: List[Dict], attributes: List[BlueprintAttribute]):
@@ -89,6 +90,12 @@ class Blueprint:
     def __eq__(self, other):
         return self.to_dict() == other.to_dict()
 
+    def __str__(self):
+        return (
+            f"Name: '{self.name}', Attributes: "
+            f"{[f'{n}({self.get_attribute_type_by_key(n)})' for n in self.get_attribute_names()]}"
+        )
+
     def get_none_primitive_types(self) -> List[BlueprintAttribute]:
         blueprints = [attribute for attribute in self.attributes if attribute.attribute_type not in PRIMITIVES]
         return blueprints
@@ -101,7 +108,7 @@ class Blueprint:
         blueprints = [attribute for attribute in self.attributes if attribute.attribute_type in PRIMITIVES]
         return blueprints
 
-    def get_attribute_names(self):
+    def get_attribute_names(self) -> List[str]:
         return [attribute.name for attribute in self.attributes]
 
     def get_ui_recipe(self, name=None):
@@ -173,3 +180,7 @@ class Blueprint:
             [attr for attr in new_storage_recipes.values()] if new_storage_recipes else self.storage_recipes
         )
         self.ui_recipes = [attr for attr in new_ui_recipes.values()]
+
+    def valid_child_type(self, key: str, type: str):
+        if type != self.get_attribute_type_by_key(key):
+            raise InvalidChildTypeException(type, key, self.get_attribute_type_by_key(key))

@@ -10,7 +10,7 @@ router = APIRouter()
 @router.get("/blueprint/{type_ref:path}", operation_id="blueprint_get", response_model=dict)
 def get_blueprint(type_ref: str):
     """
-    Fetch the Blueprint of a type (including extended attributes)
+    Fetch the Blueprint of a type (including inherited attributes)
     """
     use_case = GetBlueprintUseCase()
     response = use_case.execute(type_ref)

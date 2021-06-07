@@ -81,3 +81,11 @@ class DuplicateFileNameException(Exception):
             return (
                 "Can't create the requested document, one with the same name within the same package already exists."
             )
+
+
+class InvalidChildTypeException(Exception):
+    def __init__(self, invalid_type, key, valid_type):
+        super().__init__(
+            f"The type '{invalid_type}' is not a valid type for the "
+            f"'{key}' attribute. The type should be of type '{valid_type}'"
+        )
