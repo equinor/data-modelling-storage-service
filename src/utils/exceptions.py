@@ -32,6 +32,11 @@ class InvalidEntityException(RepositoryException):
         super().__init__(message=message)
 
 
+class InvalidBlueprintException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
+
 class InvalidDocumentNameException(RepositoryException):
     def __init__(self, name):
         super().__init__(

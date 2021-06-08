@@ -146,7 +146,7 @@ class TreenodeTestCase(unittest.TestCase):
     def test_replace(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "blueprint_1"}
         root = Node(
-            key="root",
+            key="",
             uid="1",
             entity=root_data,
             blueprint_provider=get_blueprint,
@@ -431,7 +431,7 @@ class TreenodeTestCase(unittest.TestCase):
     def test_node_id(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "blueprint_1"}
         root = Node(
-            key="root",
+            key="",
             uid="1",
             entity=root_data,
             blueprint_provider=get_blueprint,

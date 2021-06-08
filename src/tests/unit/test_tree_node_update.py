@@ -8,12 +8,7 @@ from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_blueprint_provider import blueprint_provider
 from utils.data_structure.compare import pretty_eq
-from utils.exceptions import (
-    DuplicateFileNameException,
-    EntityNotFoundException,
-    InvalidChildTypeException,
-    InvalidEntityException,
-)
+from utils.exceptions import DuplicateFileNameException, InvalidChildTypeException
 
 
 class MultiTypeBlueprintProvider:
@@ -32,6 +27,25 @@ class MultiTypeBlueprintProvider:
                                 "attributeType": "base_child",
                                 "type": "system/SIMOS/BlueprintAttribute",
                                 "optional": True,
+                            },
+                        ],
+                    }
+                )
+            )
+        if type == "parent_w_list":  # Just a container with a list
+            return Blueprint(
+                DTO(
+                    {
+                        "name": "Parent",
+                        "type": "system/SIMOS/Blueprint",
+                        "extends": ["system/SIMOS/NamedEntity"],
+                        "attributes": [
+                            {
+                                "name": "SomeChild",
+                                "attributeType": "base_child",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "optional": True,
+                                "dimensions": "*",
                             },
                         ],
                     }
@@ -61,6 +75,23 @@ class MultiTypeBlueprintProvider:
                             {
                                 "name": "AnExtraValue",
                                 "attributeType": "string",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                            },
+                        ],
+                    }
+                )
+            )
+        if type == "extra_special_child":  # A blueprint that extends from 'base_child', and adds an extra attribute
+            return Blueprint(
+                DTO(
+                    {
+                        "name": "ExtraSpecialChild",
+                        "type": "system/SIMOS/Blueprint",
+                        "extends": ["system/SIMOS/NamedEntity", "special_child"],
+                        "attributes": [
+                            {
+                                "name": "AnotherExtraValue",
+                                "attributeType": "boolean",
                                 "type": "system/SIMOS/BlueprintAttribute",
                             },
                         ],
@@ -102,14 +133,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             }
         }
 
-        doc_1_after = {
-            "_id": "1",
-            "name": "Parent",
-            "description": "Test",
-            "type": "blueprint_with_optional_attr",
-            "im_optional": {},
-        }
-
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
@@ -128,10 +151,18 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         node: Node = document_service.get_by_uid("testing", "1")
-        node.update(doc_1_after)
+        node.update(
+            {
+                "_id": "1",
+                "name": "Parent",
+                "description": "Test",
+                "type": "blueprint_with_optional_attr",
+                "im_optional": {},
+            }
+        )
         document_service.save(node, "testing")
 
-        assert pretty_eq(doc_1_after, doc_storage["1"]) is None
+        assert doc_storage["1"]["im_optional"] == {}
 
     def test_add_optional(self):
         repository = mock.Mock()
@@ -284,202 +315,142 @@ class DocumentServiceTestCase(unittest.TestCase):
         with self.assertRaises(DuplicateFileNameException):
             document_service.add_document("testing", "1", "blueprint_2", "duplicate", "This is my new entity", "")
 
-    # def test_insert_reference(self):
-    #     repository = mock.Mock()
-    #
-    #     doc_storage = {
-    #         "1": {
-    #             "_id": "1",
-    #             "name": "Parent",
-    #             "description": "",
-    #             "type": "uncontained_blueprint",
-    #             "uncontained_in_every_way": {},
-    #         },
-    #         "something": {"_id": "something", "name": "something", "description": "", "type": "blueprint_2",},
-    #     }
-    #
-    #     def mock_get(document_id: str):
-    #         return DTO(doc_storage[document_id])
-    #
-    #     def mock_update(dto: DTO, storage_attribute):
-    #         doc_storage[dto.uid] = dto.data
-    #         return None
-    #
-    #     repository.get = mock_get
-    #     repository.update = mock_update
-    #     document_service = DocumentService(
-    #         blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
-    #     )
-    #
-    #     document_service.update_document(
-    #         "testing",
-    #         document_id="1",
-    #         data={"_id": "something", "name": "something", "type": "blueprint_2"},
-    #         attribute_path="uncontained_in_every_way",
-    #         reference=True,
-    #     )
-    #     assert doc_storage["1"]["uncontained_in_every_way"] == {
-    #         "_id": "something",
-    #         "name": "something",
-    #         "type": "blueprint_2",
-    #     }
-    #
-    # def test_insert_reference_target_does_not_exist(self):
-    #     repository = mock.Mock()
-    #
-    #     doc_storage = {
-    #         "1": {
-    #             "_id": "1",
-    #             "name": "Parent",
-    #             "description": "",
-    #             "type": "uncontained_blueprint",
-    #             "uncontained_in_every_way": {},
-    #         }
-    #     }
-    #
-    #     def mock_get(document_id: str):
-    #         try:
-    #             return DTO(doc_storage[document_id])
-    #         except KeyError:
-    #             raise EntityNotFoundException(f"{document_id} was not found in the 'test' data-sources lookupTable")
-    #
-    #     def mock_update(dto: DTO, storage_attribute):
-    #         doc_storage[dto.uid] = dto.data
-    #         return None
-    #
-    #     repository.get = mock_get
-    #     repository.update = mock_update
-    #     document_service = DocumentService(
-    #         blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
-    #     )
-    #
-    #     with self.assertRaises(EntityNotFoundException):
-    #         document_service.update_document(
-    #             "testing",
-    #             document_id="1",
-    #             data={"_id": "something", "name": "something", "type": "something"},
-    #             attribute_path="uncontained_in_every_way",
-    #             reference=True,
-    #         )
-    #
-    # def test_insert_reference_target_exists_but_wrong_type(self):
-    #     repository = mock.Mock()
-    #
-    #     doc_storage = {
-    #         "1": {
-    #             "_id": "1",
-    #             "name": "Parent",
-    #             "description": "",
-    #             "type": "uncontained_blueprint",
-    #             "uncontained_in_every_way": {},
-    #         },
-    #         "2": {
-    #             "_id": "2",
-    #             "name": "something",
-    #             "description": "hgallo",
-    #             "type": "ExtendedBlueprint",
-    #             "another_value": "hei du",
-    #         },
-    #     }
-    #
-    #     def mock_get(document_id: str):
-    #         return DTO(doc_storage[document_id])
-    #
-    #     def mock_update(dto: DTO, storage_attribute):
-    #         doc_storage[dto.uid] = dto.data
-    #
-    #     repository.get = mock_get
-    #     repository.update = mock_update
-    #     document_service = DocumentService(
-    #         blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
-    #     )
-    #
-    #     with self.assertRaises(InvalidEntityException):
-    #         document_service.update_document(
-    #             "testing",
-    #             document_id="1",
-    #             data={"_id": "2", "name": "something", "type": "wrong_type"},
-    #             attribute_path="uncontained_in_every_way",
-    #             reference=True,
-    #         )
-    #
-    # def test_insert_reference_too_many_attributes(self):
-    #     repository = mock.Mock()
-    #
-    #     doc_storage = {
-    #         "1": {
-    #             "_id": "1",
-    #             "name": "Parent",
-    #             "description": "",
-    #             "type": "uncontained_blueprint",
-    #             "uncontained_in_every_way": {},
-    #         },
-    #         "2": {"_id": "2", "name": "something", "description": "", "type": "blueprint_2",},
-    #     }
-    #
-    #     def mock_get(document_id: str):
-    #         return DTO(doc_storage[document_id])
-    #
-    #     def mock_update(dto: DTO, storage_attribute):
-    #         doc_storage[dto.uid] = dto.data
-    #         return None
-    #
-    #     repository.get = mock_get
-    #     repository.update = mock_update
-    #     document_service = DocumentService(
-    #         blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
-    #     )
-    #
-    #     document_service.update_document(
-    #         "testing",
-    #         document_id="1",
-    #         data={
-    #             "_id": "2",
-    #             "name": "something",
-    #             "type": "blueprint_2",
-    #             "description": "hallO",
-    #             "something": "something",
-    #         },
-    #         attribute_path="uncontained_in_every_way",
-    #         reference=True,
-    #     )
-    #     assert doc_storage["1"]["uncontained_in_every_way"] == {
-    #         "_id": "2",
-    #         "name": "something",
-    #         "type": "blueprint_2",
-    #     }
-    #
-    # def test_insert_reference_missing_required_attribute(self):
-    #     repository = mock.Mock()
-    #
-    #     doc_storage = {
-    #         "1": {
-    #             "_id": "1",
-    #             "name": "Parent",
-    #             "description": "",
-    #             "type": "uncontained_blueprint",
-    #             "uncontained_in_every_way": {},
-    #         }
-    #     }
-    #
-    #     def mock_get(document_id: str):
-    #         return DTO(doc_storage[document_id])
-    #
-    #     def mock_update(dto: DTO, storage_attribute):
-    #         doc_storage[dto.uid] = dto.data
-    #         return None
-    #
-    #     repository.get = mock_get
-    #     repository.update = mock_update
-    #     document_service = DocumentService(
-    #         blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
-    #     )
-    #
-    #     with self.assertRaises(InvalidEntityException):
-    #         document_service.update_document(
-    #             "testing",
-    #             document_id="1",
-    #             data={"_id": "something", "type": "something"},
-    #             attribute_path="uncontained_in_every_way",
-    #             reference=True,
-    #         )
+    def test_add_valid_specialized_child_type(self):
+        repository = mock.Mock()
+
+        doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "parent", "SomeChild": {}}}
+
+        def mock_get(document_id: str):
+            return DTO(doc_storage[document_id])
+
+        def mock_update(dto: DTO, *args):
+            doc_storage[dto.uid] = dto.data
+            return None
+
+        repository.get = mock_get
+        repository.update = mock_update
+        document_service = DocumentService(
+            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x: repository
+        )
+        document_service.update_document(
+            data_source_id="testing",
+            document_id="1",
+            attribute_path="SomeChild",
+            data={"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!"},
+        )
+        assert doc_storage["1"]["SomeChild"] == {
+            "name": "whatever",
+            "type": "special_child",
+            "AnExtraValue": "Hallo there!",
+        }
+
+    def test_add_valid_second_level_specialized_child_type(self):
+        repository = mock.Mock()
+
+        doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "parent", "SomeChild": {}}}
+
+        def mock_get(document_id: str):
+            return DTO(doc_storage[document_id])
+
+        def mock_update(dto: DTO, *args):
+            doc_storage[dto.uid] = dto.data
+            return None
+
+        repository.get = mock_get
+        repository.update = mock_update
+        document_service = DocumentService(
+            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x: repository
+        )
+        document_service.update_document(
+            data_source_id="testing",
+            document_id="1",
+            attribute_path="SomeChild",
+            data={
+                "name": "whatever",
+                "type": "extra_special_child",
+                "AnExtraValue": "Hallo there!",
+                "AnotherExtraValue": True,
+            },
+        )
+        assert doc_storage["1"]["SomeChild"] == {
+            "name": "whatever",
+            "type": "extra_special_child",
+            "AnExtraValue": "Hallo there!",
+            "AnotherExtraValue": True,
+        }
+
+    def test_add_valid_second_level_specialized_child_type_to_list_attribute(self):
+        repository = mock.Mock()
+
+        doc_storage = {
+            "1": {"_id": "1", "name": "parent", "description": "", "type": "parent_w_list", "SomeChild": []}
+        }
+
+        def mock_get(document_id: str):
+            return DTO(doc_storage[document_id])
+
+        def mock_update(dto: DTO, *args):
+            doc_storage[dto.uid] = dto.data
+            return None
+
+        repository.get = mock_get
+        repository.update = mock_update
+        document_service = DocumentService(
+            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x: repository
+        )
+        document_service.update_document(
+            data_source_id="testing",
+            document_id="1",
+            attribute_path="SomeChild",
+            data=[
+                {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!",},
+                {
+                    "name": "whatever",
+                    "type": "extra_special_child",
+                    "AnExtraValue": "Hallo there!",
+                    "AnotherExtraValue": True,
+                },
+            ],
+        )
+        assert doc_storage["1"]["SomeChild"] == [
+            {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!",},
+            {
+                "name": "whatever",
+                "type": "extra_special_child",
+                "AnExtraValue": "Hallo there!",
+                "AnotherExtraValue": True,
+            },
+        ]
+
+    def test_add_invalid_child_type_to_list_attribute(self):
+        repository = mock.Mock()
+
+        doc_storage = {
+            "1": {"_id": "1", "name": "parent", "description": "", "type": "parent_w_list", "SomeChild": []}
+        }
+
+        def mock_get(document_id: str):
+            return DTO(doc_storage[document_id])
+
+        def mock_update(dto: DTO, *args):
+            doc_storage[dto.uid] = dto.data
+            return None
+
+        repository.get = mock_get
+        repository.update = mock_update
+        document_service = DocumentService(
+            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x: repository
+        )
+
+        with self.assertRaises(InvalidChildTypeException) as error:
+            document_service.update_document(
+                data_source_id="testing",
+                document_id="1",
+                attribute_path="SomeChild",
+                data=[
+                    {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!",},
+                    {"name": "whatever", "type": "special_child_no_inherit", "AnExtraValue": "Hallo there!",},
+                ],
+            )
+        print(error.exception)
+        assert doc_storage["1"]["SomeChild"] == []

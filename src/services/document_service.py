@@ -9,7 +9,7 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
 from domain_classes.storage_recipe import StorageRecipe
 from domain_classes.tree_node import ListNode, Node
-from enums import BLOB_TYPES, DMT, REQUIRED_ATTRIBUTES, SIMOS
+from enums import BLOB_TYPES, DMT, SIMOS
 from restful.request_types.shared import Reference
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
@@ -178,7 +178,7 @@ class DocumentService:
         ref_dict = node.to_ref_dict(child_entities)
 
         # If the node is not contained, and has data, save it!
-        if not node.attribute_is_storage_contained() and ref_dict:
+        if not node.storage_contained and ref_dict:
             dto = DTO(ref_dict)
             # Expand this when adding new repositories requiring PATH
             if isinstance(repository, ZipFileClient):
@@ -291,26 +291,20 @@ class DocumentService:
 
         return {"uid": target_node.node_id}
 
-    def update_document(self, data_source_id: str, document_id: str, data: dict, attribute_path: str = None):
-        for attr in REQUIRED_ATTRIBUTES:
-            if not data.get(attr):
-                raise InvalidEntityException(
-                    f"Tried to update with missing required attribute '{attr}'. '{REQUIRED_ATTRIBUTES}' are required"
-                )
-
+    def update_document(
+        self, data_source_id: str, document_id: str, data: Union[dict, list], attribute_path: str = None
+    ):
         root: Node = self.get_by_uid(data_source_id, document_id)
         target_node = root
 
-        # If it's a contained nested node(or reference), set the modify target based on dotted-path
+        # If it's a contained nested node, set the modify target based on dotted-path
         if attribute_path:
             target_node = root.get_by_path(attribute_path.split("."))
-            # target_node = root.search(f"{document_id}.{attribute_path}")
 
         target_node.update(data)
         self.save(root, data_source_id)
 
         logger.info(f"Updated document '{target_node.node_id}''")
-
         return {"data": target_node.to_dict()}
 
     def add_document(
@@ -334,7 +328,7 @@ class DocumentService:
         if type == SIMOS.BLUEPRINT.value:
             entity["attributes"] = get_required_attributes(type=type)
 
-        new_node_id = str(uuid4()) if not parent.attribute_is_storage_contained() else ""
+        new_node_id = str(uuid4()) if not parent.storage_contained else ""
         new_node_attribute = BlueprintAttribute(parent.key, type)
         new_node = Node.from_dict(entity, new_node_id, self.get_blueprint, new_node_attribute)
 
@@ -407,7 +401,7 @@ class DocumentService:
         if parent.duplicate_attribute(name):
             raise DuplicateFileNameException(data_source_id, f"{directory}/{name}")
 
-        new_node_id = str(uuid4()) if not parent.attribute_is_storage_contained() else ""
+        new_node_id = str(uuid4()) if not parent.storage_contained else ""
 
         new_node = Node.from_dict(
             {**entity, **document},
