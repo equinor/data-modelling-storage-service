@@ -2,14 +2,14 @@ from copy import deepcopy
 from typing import Dict, List, Optional, Union
 from uuid import uuid4
 
-from pydantic import ValidationError
+# from pydantic import ValidationError
+# from restful.request_types.shared import NamedEntity
 
 from config import Config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute
 from enums import DMT, PRIMITIVES, REQUIRED_ATTRIBUTES, StorageDataTypes
-from restful.request_types.shared import NamedEntity
 from utils.exceptions import InvalidChildTypeException, InvalidEntityException
 from utils.logging import logger
 from utils.valid_extended_type import valid_extended_type
@@ -41,10 +41,14 @@ class DictExporter:
             else:
                 data[node.key] = node.to_dict()
 
+        """
         try:  # Last sanity check on the produced dict
+            logger.exception(data)
             NamedEntity(**data)
         except ValidationError as e:
             raise InvalidEntityException(str(e))
+        """
+
         return data
 
     @staticmethod
