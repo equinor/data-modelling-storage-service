@@ -18,7 +18,6 @@ RESERVED_MONGO_DATABASES = ("admin", "local", "data-source-database")
 
 
 class DataSourceRepository:
-    # TODO
     @staticmethod
     def validate_data_source(document: dict):
         try:

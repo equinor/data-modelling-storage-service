@@ -40,7 +40,7 @@ def create_repositories(context):
     # Then add repositories with default values to the data sources
     for row in context.table:
         document = {
-            "dataTypes": ["default"],
+            "data_types": ["default"],
             "host": "db",
             "port": 27017,
             "username": "maf",
