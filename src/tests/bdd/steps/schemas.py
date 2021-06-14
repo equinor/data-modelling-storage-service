@@ -4,8 +4,8 @@ from behave import given
 
 from config import Config
 from domain_classes.dto import DTO
-from services.database import dmt_database
-from storage.internal.data_source_repository import get_data_source
+from services.database import data_source_collection
+from storage.internal.data_source_repository import DataSourceRepository, get_data_source
 from utils.logging import logger
 from utils.package_import import import_package
 
@@ -25,20 +25,20 @@ def step_impl(context):
         "name": "system",
         "repositories": {
             "system": {
-                "dataTypes": ["default"],
+                "data_types": ["default"],
                 "host": "db",
                 "port": 27017,
                 "username": "maf",
                 "password": "maf",
                 "tls": False,
-                "database": "local",
-                "collection": "system",
+                "database": "DMSS-core-bdd",
+                "collection": "DMSS-core-bdd",
                 "type": "mongo-db",
             }
         },
     }
-    dmt_database["data_sources"].insert_one(document)
-    dmt_database.drop_collection("system")
+    DataSourceRepository.validate_data_source(document)
+    data_source_collection.insert_one(document)
 
     # Import SIMOS package
     logger.setLevel("ERROR")

@@ -1,25 +1,21 @@
 from typing import Dict, List, Union
 
 from pydantic import UUID4
-
-from config import Config
 from domain_classes.document_look_up import DocumentLookUp
 from domain_classes.dto import DTO
 from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
-from services.database import dmt_database
+from services.database import data_source_collection
 from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from utils.logging import logger
 
 
 class DataSource:
-    def __init__(self, name: str, repositories, data_source_collection=None):
+    def __init__(self, name: str, repositories, data_source_collection=data_source_collection):
         self.name = name
         self.repositories: Dict[Repository] = repositories
-        self.data_source_collection = (
-            data_source_collection if data_source_collection else dmt_database[f"{Config.DATA_SOURCES_COLLECTION}"]
-        )
+        self.data_source_collection = data_source_collection
 
     @classmethod
     def from_dict(cls, a_dict):

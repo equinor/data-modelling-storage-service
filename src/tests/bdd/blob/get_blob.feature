@@ -8,8 +8,8 @@ Feature: Blob - Get
       | stuff  |
     Given there are repositories in the data sources
       | data-source | host | port  | username | password | tls   | name      | database | collection | type     | dataTypes |
-      |  stuff      | db   | 27017 | maf      | maf      | false | blobs     | local    | blobs      | mongo-db | blob      |
-      |  stuff      | db   | 27017 | maf      | maf      | false | documents | local    | documents  | mongo-db | default   |
+      |  stuff      | db   | 27017 | maf      | maf      | false | blobs     |  bdd-test    | blobs      | mongo-db | blob      |
+      |  stuff      | db   | 27017 | maf      | maf      | false | documents |  bdd-test    | documents  | mongo-db | default   |
 
     Given there exists a blob with id "1234" in data source "stuff" loaded from "tests/bdd/steps/test_pdf.pdf"
 

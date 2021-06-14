@@ -1,15 +1,15 @@
 from typing import Dict, List, Optional
 
-from enums import DataSourceType, StorageDataTypes
+from enums import RepositoryType, StorageDataTypes
 from storage.repositories.azure_blob import AzureBlobStorageClient
 from storage.repositories.mongo import MongoDBClient
 from storage.repository_interface import RepositoryInterface
 
 
 class Repository(RepositoryInterface):
-    def __init__(self, name, dataTypes: List[str] = None, **kwargs):
+    def __init__(self, name, data_types: List[str] = None, **kwargs):
         self.name = name
-        self.data_types = [StorageDataTypes(d) for d in dataTypes] if dataTypes else []
+        self.data_types = [StorageDataTypes(d) for d in data_types] if data_types else []
         self.client = self._get_client(**kwargs)
 
     def update(self, uid: str, document: Dict) -> bool:
@@ -39,8 +39,8 @@ class Repository(RepositoryInterface):
     @staticmethod
     def _get_client(**kwargs):
 
-        if kwargs["type"] == DataSourceType.MONGO.value:
+        if kwargs["type"] == RepositoryType.MONGO.value:
             return MongoDBClient(**kwargs)
 
-        if kwargs["type"] == DataSourceType.AZURE_BLOB_STORAGE.value:
+        if kwargs["type"] == RepositoryType.AZURE_BLOB_STORAGE.value:
             return AzureBlobStorageClient(**kwargs)

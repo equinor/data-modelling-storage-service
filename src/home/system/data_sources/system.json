@@ -1,18 +1,16 @@
 {
-  "name": "apps",
+  "name": "system",
   "repositories": {
-    "apps": {
+    "a": {
       "type": "mongo-db",
       "host": "db",
       "port": 27017,
       "username": "maf",
       "password": "maf",
       "tls": false,
-      "database": "local",
-      "collection": "applications",
-      "documentType": "applications"
+      "database": "DMSS-core",
+      "collection": "DMSS-core"
     }
   }
 }
-
 

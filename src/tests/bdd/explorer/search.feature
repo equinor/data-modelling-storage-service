@@ -9,8 +9,8 @@ Feature: Explorer - Search entity
 
     Given there are repositories in the data sources
       | data-source    | host | port  | username | password | tls   | name      | database | collection | type     | dataTypes |
-      | entities       | db   | 27017 | maf      | maf      | false | repo1     | local    | entities   | mongo-db | default   |
-      | blueprints     | db   | 27017 | maf      | maf      | false | blob-repo | local    | blueprints | mongo-db | default   |
+      | entities       | db   | 27017 | maf      | maf      | false | repo1     |  bdd-test    | entities   | mongo-db | default   |
+      | blueprints     | db   | 27017 | maf      | maf      | false | blob-repo |  bdd-test    | blueprints | mongo-db | default   |
 
     Given there exist document with id "1" in data source "blueprints"
     """
