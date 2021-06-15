@@ -10,7 +10,7 @@
       "name": "plugin",
       "optional": true,
       "default": "",
-      "enumType": "apps/DMT/plugins/ui/UiPluginsEnum"
+      "enumType": "DMT-DS/DMT/plugins/ui/UiPluginsEnum"
     },
     {
       "attributeType": "string",
