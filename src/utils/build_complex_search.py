@@ -51,6 +51,8 @@ def build_mongo_query(get_blueprint: Callable, search_data: Dict) -> Dict:
     process_search_data = {"type": type}
 
     for key, search_value in search_data.items():
+        if not search_value:
+            continue
         attribute: BlueprintAttribute = blueprint.get_attribute_by_name(key)
 
         if attribute.is_primitive():
