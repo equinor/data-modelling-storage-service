@@ -40,7 +40,7 @@ class CreateEntity:
         type = attr.attribute_type
 
         # TODO: Generalize this "setting_defaults" and reuse everywhere (schema)
-        if default_value is not None and len(default_value) > 0 and attr.is_array():
+        if default_value is not None and len(str(default_value)) > 0 and attr.is_array():
             try:
                 return json.loads(default_value)
             except JSONDecodeError:
