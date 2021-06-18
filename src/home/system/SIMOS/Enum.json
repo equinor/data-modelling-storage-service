@@ -2,6 +2,7 @@
   "type": "system/SIMOS/Blueprint",
   "name": "Enum",
   "description": "This describes an enum",
+  "extends": ["system/SIMOS/DefaultUiRecipes"],
   "attributes": [
     {
       "attributeType": "string",

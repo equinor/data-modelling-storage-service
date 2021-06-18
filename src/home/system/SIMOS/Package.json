@@ -1,6 +1,6 @@
 {
   "type": "system/SIMOS/Blueprint",
-  "extends": ["system/SIMOS/NamedEntity"],
+  "extends": ["system/SIMOS/DefaultUiRecipes","system/SIMOS/NamedEntity"],
   "name": "Package",
   "description": "This is a blueprint for a package that contains documents and other packages",
   "attributes": [

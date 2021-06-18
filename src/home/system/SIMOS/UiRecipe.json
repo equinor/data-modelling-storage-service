@@ -1,21 +1,21 @@
 {
   "type": "system/SIMOS/Blueprint",
-  "extends": ["system/SIMOS/NamedEntity"],
+  "extends": ["system/SIMOS/DefaultUiRecipes","system/SIMOS/NamedEntity"],
   "name": "UiRecipe",
   "description": "This describes ui recipe",
   "attributes": [
     {
+      "name": "plugin",
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
-      "name": "plugin",
       "optional": true,
       "default": "",
       "enumType": "DMT-DS/DMT/plugins/ui/UiPluginsEnum"
     },
     {
+      "name": "field",
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
-      "name": "field",
       "optional": true,
       "default": ""
     },
@@ -27,17 +27,17 @@
       "default": "false"
     },
     {
+      "name": "options",
       "type": "system/SIMOS/BlueprintAttribute",
       "attributeType": "system/SIMOS/UiAttributeOption",
-      "name": "options",
       "dimensions": "*",
       "contained": true,
       "optional": true
     },
     {
+      "name": "attributes",
       "type": "system/SIMOS/BlueprintAttribute",
       "attributeType": "system/SIMOS/UiAttribute",
-      "name": "attributes",
       "dimensions": "*",
       "optional": true,
       "contained": true

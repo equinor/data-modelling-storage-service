@@ -55,9 +55,9 @@ def run():
 
 @cli.command()
 def init_application():
-    logger.info("-------------- IMPORTING CORE DOCUMENTS FILES ----------------")
+    logger.info("IMPORTING CORE DOCUMENTS")
     import_package(f"{Config.APPLICATION_HOME}/system/SIMOS", data_source=Config.CORE_DATA_SOURCE, is_root=True)
-    logger.info("-------------- DONE ----------------")
+    logger.debug("DONE")
 
 
 @cli.command()
@@ -73,7 +73,7 @@ def import_data_source(file):
                 exit(1)
             id = document["name"]
             document["_id"] = id
-            logger.info(f"Importing {file} as data_source with id: {id}.")
+            logger.debug(f"Importing {file} as data_source with id: {id}.")
             data_source_collection.replace_one({"_id": id}, document, upsert=True)
     except Exception as error:
         raise ImportException(f"Failed to import file {file}: {error}")
@@ -81,18 +81,18 @@ def import_data_source(file):
 
 @cli.command()
 def nuke_db():
-    logger.info("---------- PURGING DATABASE --------")
+    logger.info("PURGING DATABASE")
     wipe_db()
-    logger.info("-------------- DONE ----------------")
+    logger.debug("DONE")
 
 
 @cli.command()
 @click.pass_context
 def reset_app(context):
     context.invoke(nuke_db)
-    logger.info("---------- CREATING DATA SOURCES --------")
+    logger.info("CREATING SYSTEM DATA SOURCE")
     context.invoke(import_data_source, file="/code/home/system/data_sources/system.json")
-    logger.info("-------------- DONE ----------------")
+    logger.debug("DONE")
     context.invoke(init_application)
 
 

@@ -1,6 +1,6 @@
 {
   "type": "system/SIMOS/Blueprint",
-  "extends": ["system/SIMOS/NamedEntity"],
+  "extends": ["system/SIMOS/DefaultUiRecipes","system/SIMOS/NamedEntity"],
   "name": "Annotation",
   "description": "This describes an annotation",
   "attributes": [

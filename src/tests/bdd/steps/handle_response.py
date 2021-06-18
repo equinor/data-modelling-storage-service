@@ -3,8 +3,9 @@ import json
 from deepdiff import DeepDiff
 import pprint
 
-from utils.data_structure.compare import pretty_eq
+from utils.data_structure.compare import pretty_eq, print_pygments
 from utils.data_structure.find import find
+from dictdiffer import diff
 
 STATUS_CODES = {
     "OK": 200,
@@ -61,7 +62,13 @@ def step_impl_contain(context):
     actual = context.response.json()
     data = context.text or context.data
     expected = json.loads(data)
-    pretty_eq(expected, actual)
+    result = diff(actual, expected)
+    changes = [diff for diff in result if diff[0] == "change"]
+    if changes:
+        for c in changes:
+            location = c[1] if isinstance(c[1], str) else ".".join([str(v) for v in c[1]])
+            print_pygments({"location": location, "difference": {"actual": c[2][0], "expected": c[2][1]}})
+        raise ValueError("The response does not match the expected result")
 
 
 @then("the array at {dot_path} should be of length {length}")

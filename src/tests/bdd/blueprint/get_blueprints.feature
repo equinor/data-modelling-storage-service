@@ -13,7 +13,7 @@ Feature: Get a blueprint
       "name": "Entity",
       "description": "Blueprint for a DMT reference",
       "type": "system/SIMOS/Blueprint",
-      "extends": ["system/SIMOS/NamedEntity"],
+      "extends": ["system/SIMOS/DefaultUiRecipes", "system/SIMOS/NamedEntity"],
       "attributes": [
         {
           "name": "name",
@@ -59,17 +59,8 @@ Feature: Get a blueprint
       ],
       "uiRecipes": [
         {
-          "name": "DEFAULT_CREATE",
-          "attributes": [
-            {
-              "name": "type",
-              "contained": true,
-              "field": "blueprint"
-            }
-          ],
-          "hideTab": false,
-          "plugin": "Default",
-          "description": ""
+          "name": "Yaml",
+          "plugin": "yaml-view"
         }
       ]
     }
