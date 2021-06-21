@@ -36,7 +36,9 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
         )
         assert default_storage.storage_affinity == StorageDataTypes.BLOB
         default_ui: Recipe = next((attr for attr in full_blueprint.ui_recipes if attr.name == "default"), None)
+        special_ui: Recipe = next((attr for attr in full_blueprint.ui_recipes if attr.name == "aSpecialView"), None)
         assert default_ui.plugin == "edit2"
+        assert special_ui.plugin == "specialView"
 
     def test_updated_extended_entity(self):
         repository = mock.Mock()

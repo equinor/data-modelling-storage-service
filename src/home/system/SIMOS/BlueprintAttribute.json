@@ -1,6 +1,6 @@
 {
   "type": "system/SIMOS/Blueprint",
-  "extends": ["system/SIMOS/NamedEntity"],
+  "extends": ["system/SIMOS/DefaultUiRecipes","system/SIMOS/NamedEntity"],
   "name": "BlueprintAttribute",
   "description": "This describes a blueprint attribute",
   "attributes": [

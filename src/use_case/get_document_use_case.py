@@ -35,4 +35,4 @@ class GetDocumentUseCase(UseCase):
         if attribute:
             document = document.get_by_path(attribute.split("."))
 
-        return ResponseSuccess({"blueprint": document.blueprint.to_dict_raw(), "document": document.to_dict()})
+        return ResponseSuccess({"blueprint": document.blueprint.to_dict(), "document": document.to_dict()})

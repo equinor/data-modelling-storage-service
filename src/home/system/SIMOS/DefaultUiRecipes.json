@@ -1,0 +1,18 @@
+{
+  "type": "system/SIMOS/Blueprint",
+  "description": "A blueprint that defines the default UiRecipes",
+  "name": "DefaultUiRecipes",
+  "attributes": [],
+  "uiRecipes": [
+    {
+      "name": "Yaml",
+      "type": "system/SIMOS/UiRecipe",
+      "plugin": "yaml-view"
+    },
+    {
+      "name": "Edit",
+      "type": "system/SIMOS/UiRecipe",
+      "plugin": "default-form"
+    }
+  ]
+}

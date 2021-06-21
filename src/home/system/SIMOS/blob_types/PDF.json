@@ -1,7 +1,7 @@
 {
   "name": "PDF",
   "type": "system/SIMOS/Blueprint",
-  "extends": ["system/SIMOS/NamedEntity"],
+  "extends": ["system/SIMOS/DefaultUiRecipes","system/SIMOS/NamedEntity"],
   "description": "Contains metadata for a PDF, and a id for the PDF Blob",
   "attributes": [
     {

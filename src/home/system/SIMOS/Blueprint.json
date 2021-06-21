@@ -82,37 +82,25 @@
   ],
   "uiRecipes": [
     {
+      "name": "Yaml",
       "type": "system/SIMOS/UiRecipe",
-      "name": "DEFAULT_CREATE",
-      "description": "",
+      "plugin": "yaml-view"
+    },
+    {
+      "type": "system/SIMOS/UiRecipe",
+      "name": "Edit",
+      "description": "Default Form",
+      "plugin": "default-form",
       "attributes": [
         {
           "name": "attributes",
           "type": "system/SIMOS/UiAttribute",
-          "dimensions": "*",
-          "contained": false
-        },
-        {
-          "name": "type",
-          "type": "system/SIMOS/UiAttribute",
-          "contained": false
+          "field": "attribute"
         },
         {
           "name": "extends",
           "type": "system/SIMOS/UiAttribute",
-          "contained": false
-        },
-        {
-          "name": "storageRecipes",
-          "type": "system/SIMOS/UiAttribute",
-          "dimensions": "*",
-          "contained": false
-        },
-        {
-          "name": "uiRecipes",
-          "type": "system/SIMOS/UiAttribute",
-          "dimensions": "*",
-          "contained": false
+          "field": "blueprint"
         }
       ]
     },
@@ -144,24 +132,6 @@
           "type": "system/SIMOS/UiAttribute",
           "dimensions": "*",
           "contained": true
-        }
-      ]
-    },
-    {
-      "type": "system/SIMOS/UiRecipe",
-      "name": "Edit",
-      "description": "Default Form",
-      "plugin": "default-form",
-      "attributes": [
-        {
-          "name": "attributes",
-          "type": "system/SIMOS/UiAttribute",
-          "field": "attribute"
-        },
-        {
-          "name": "extends",
-          "type": "system/SIMOS/UiAttribute",
-          "field": "blueprint"
         }
       ]
     }

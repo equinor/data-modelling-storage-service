@@ -63,7 +63,7 @@ extended_blueprint = {
     "extends": ["blueprint_2"],
     "name": "ExtendedBlueprint",
     "description": "This Blueprint extends blueprint 2",
-    "attributes": [{"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "another_value"},],
+    "attributes": [{"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "another_value"}],
     "storageRecipes": [
         {
             "name": "default",
@@ -73,7 +73,10 @@ extended_blueprint = {
             "attributes": [],
         }
     ],
-    "uiRecipes": [{"name": "default", "description": "", "plugin": "edit2"}],
+    "uiRecipes": [
+        {"name": "default", "description": "", "plugin": "edit2"},
+        {"name": "aSpecialView", "description": "", "plugin": "specialView"},
+    ],
 }
 
 second_level_extended_blueprint = {

@@ -30,14 +30,6 @@ from utils.logging import logger
 from utils.string_helpers import url_safe_name
 
 
-def get_required_attributes(type: str):
-    return [
-        {"type": "system/SIMOS/BlueprintAttribute", "attributeType": "string", "name": "name"},
-        {"type": "system/SIMOS/BlueprintAttribute", "attributeType": "string", "name": "description"},
-        {"type": "system/SIMOS/BlueprintAttribute", "attributeType": "string", "name": "type", "default": type},
-    ]
-
-
 def get_resolved_document(
     document: DTO,
     document_repository: DataSource,
@@ -325,8 +317,8 @@ class DocumentService:
 
         entity: Dict = CreateEntity(self.get_blueprint, name=name, type=type, description=description).entity
 
-        if type == SIMOS.BLUEPRINT.value:
-            entity["attributes"] = get_required_attributes(type=type)
+        if type == SIMOS.BLUEPRINT.value:  # Extend default attributes and uiRecipes
+            entity["extends"] = ["system/SIMOS/DefaultUiRecipes", "system/SIMOS/NamedEntity"]
 
         new_node_id = str(uuid4()) if not parent.storage_contained else ""
         new_node_attribute = BlueprintAttribute(parent.key, type)
