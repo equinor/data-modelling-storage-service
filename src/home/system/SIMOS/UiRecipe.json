@@ -2,15 +2,14 @@
   "type": "system/SIMOS/Blueprint",
   "extends": ["system/SIMOS/DefaultUiRecipes","system/SIMOS/NamedEntity"],
   "name": "UiRecipe",
-  "description": "This describes ui recipe",
+  "description": "This describes uiRecipes",
   "attributes": [
     {
       "name": "plugin",
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
       "optional": true,
-      "default": "",
-      "enumType": "DMT-DS/DMT/plugins/ui/UiPluginsEnum"
+      "default": ""
     },
     {
       "name": "field",
