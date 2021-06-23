@@ -34,6 +34,10 @@ def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: Dict, 
 
         return float(search_value)
 
+    # Boolean
+    if attribute.attribute_type == "boolean":
+        return search_value.lower() in ("true", "1")
+
     # Complex
     if not attribute.is_primitive():
         search_value["type"] = attribute.attribute_type
