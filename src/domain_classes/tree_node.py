@@ -2,17 +2,17 @@ from copy import deepcopy
 from typing import Dict, List, Optional, Union
 from uuid import uuid4
 
-# from pydantic import ValidationError
-# from restful.request_types.shared import NamedEntity
+from pydantic import ValidationError
 
 from config import Config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute
 from enums import DMT, PRIMITIVES, REQUIRED_ATTRIBUTES, StorageDataTypes
+from restful.request_types.shared import NamedEntity
 from utils.exceptions import InvalidChildTypeException, InvalidEntityException
 from utils.logging import logger
-from utils.valid_extended_type import valid_extended_type
+from utils.validators import valid_extended_type
 
 
 class DictExporter:
@@ -27,6 +27,12 @@ class DictExporter:
         if node.uid:
             data["_id"] = node.uid
 
+        # Always add 'name' and 'type'
+        try:
+            data["name"] = node.entity["name"]
+            data["type"] = node.entity["type"]
+        except KeyError:
+            raise InvalidEntityException(f"The node '{node.uid}' is missing the 'name' and/or 'type' attributes")
         # Primitive
         # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.
         if node.blueprint is not None:
@@ -41,13 +47,11 @@ class DictExporter:
             else:
                 data[node.key] = node.to_dict()
 
-        """
         try:  # Last sanity check on the produced dict
-            logger.exception(data)
             NamedEntity(**data)
         except ValidationError as e:
+            logger.exception(data)
             raise InvalidEntityException(str(e))
-        """
 
         return data
 
@@ -60,6 +64,13 @@ class DictExporter:
         data = {}
         if node.uid:
             data = {"_id": node.uid}
+
+        # Always add 'name' and 'type', regardless of blueprint
+        try:
+            data["name"] = node.entity["name"]
+            data["type"] = node.entity["type"]
+        except KeyError:
+            raise InvalidEntityException(f"The node '{node.uid}' is missing the 'name' and/or 'type' attributes")
 
         # Primitive
         # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.

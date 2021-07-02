@@ -34,21 +34,21 @@ Feature: Explorer - Remove
     Then the response status should be "Not Found"
     And the response should equal
   """
-  {"type": "RESOURCE_ERROR", "message": "The entity, with id 1 is not found"}
+  {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '1' was not found in the 'data-source-name' data-source"}
   """
     Given I access the resource url "/api/v1/documents/data-source-name/2"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should equal
   """
-  {"type": "RESOURCE_ERROR", "message": "The entity, with id 2 is not found"}
+  {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '2' was not found in the 'data-source-name' data-source"}
   """
     Given I access the resource url "/api/v1/documents/data-source-name/3"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should equal
   """
-  {"type": "RESOURCE_ERROR", "message": "The entity, with id 3 is not found"}
+  {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '3' was not found in the 'data-source-name' data-source"}
   """
 
   Scenario: Remove file with no children
@@ -70,7 +70,7 @@ Feature: Explorer - Remove
     Then the response status should be "Not Found"
     And the response should equal
     """
-    {"type": "RESOURCE_ERROR", "message": "The entity, with id 2 is not found"}
+    {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '2' was not found in the 'data-source-name' data-source"}
     """
 
   Scenario: Remove file with no children
@@ -88,7 +88,7 @@ Feature: Explorer - Remove
     Then the response status should be "Not Found"
     And the response should equal
     """
-    {"type": "RESOURCE_ERROR", "message": "The entity, with id 3 is not found"}
+    {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '3' was not found in the 'data-source-name' data-source"}
     """
 
   Scenario: Remove file with children
@@ -106,13 +106,13 @@ Feature: Explorer - Remove
     Then the response status should be "Not Found"
     And the response should equal
   """
-  {"type": "RESOURCE_ERROR", "message": "The entity, with id 2 is not found"}
+  {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '2' was not found in the 'data-source-name' data-source"}
   """
     Given I access the resource url "/api/v1/documents/data-source-name/3"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should equal
   """
-  {"type": "RESOURCE_ERROR", "message": "The entity, with id 3 is not found"}
+  {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '3' was not found in the 'data-source-name' data-source"}
   """
 

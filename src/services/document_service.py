@@ -1,3 +1,4 @@
+import pprint
 from functools import lru_cache
 from tempfile import SpooledTemporaryFile
 from typing import Callable, Dict, List, Union
@@ -28,6 +29,9 @@ from utils.exceptions import (
 from utils.get_blueprint import BlueprintProvider
 from utils.logging import logger
 from utils.string_helpers import url_safe_name
+from utils.validators import valid_named_entity
+
+pretty_printer = pprint.PrettyPrinter()
 
 
 def get_resolved_document(
@@ -80,14 +84,26 @@ def get_resolved_document(
                     children = []
                     for item in complex_data:
                         try:
+                            valid_named_entity(item)
                             doc = get_complete_document(item["_id"], document_repository, blueprint_provider, depth)
-                            children.append(doc)
-                        except Exception as error:
-                            logger.exception(error)
-                            # todo add error node to children.
-                            # children.append(error_node)
+                        except InvalidEntityException as error:
+                            raise InvalidEntityException(
+                                f"{pprint.pformat(data)} is invalid.\n message: {error}"
+                            ) from None
+                        except EntityNotFoundException:
+                            raise InvalidEntityException(
+                                f"Document with id '{document.uid}' had a reference to a document with id"
+                                f" '{item['_id']}', but it was not found in data source '{document_repository.name}'"
+                            ) from None
+                        children.append(doc)
                     data[attribute_name] = children
                 else:
+                    try:
+                        valid_named_entity(complex_data)
+                    except InvalidEntityException as error:
+                        raise InvalidEntityException(
+                            f"{pprint.pformat(data)} is invalid.\n message: {error}"
+                        ) from None
                     data[attribute_name] = get_complete_document(
                         complex_data["_id"], document_repository, blueprint_provider, depth
                     )
@@ -122,7 +138,9 @@ class DocumentService:
         return blueprint
 
     def invalidate_cache(self):
+        logger.warning("Clearing blueprint cache")
         self.get_blueprint.cache_clear()
+        self.blueprint_provider.invalidate_cache()
 
     def save_blob_data(self, node, repository):
         # If the file is created or updated, the blob_reference is a dict.
@@ -180,16 +198,9 @@ class DocumentService:
         return ref_dict
 
     def get_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
-        try:
-            complete_document = get_complete_document(
-                document_uid, self.repository_provider(data_source_id), self.get_blueprint, depth
-            )
-        except EntityNotFoundException as error:
-            # this is an edge case for packages where the reference in a package entity has wrong document id.
-            # the code caller of this method knows the name and node_type that belongs to the document_uid.
-            # Thus, the caller code should create the Node and add error information to that node.
-            logger.exception(error)
-            raise EntityNotFoundException(document_uid)
+        complete_document = get_complete_document(
+            document_uid, self.repository_provider(data_source_id), self.get_blueprint, depth
+        )
 
         return Node.from_dict(complete_document, complete_document.get("_id"), blueprint_provider=self.get_blueprint)
 
@@ -251,16 +262,12 @@ class DocumentService:
         if not document:
             raise EntityNotFoundException(uid=document_id)
 
-        # Remove child references
+        # Remove self and children references
         for child in document.traverse():
             # Only remove children if they ARE contained in model and NOT contained in storage
             if child.has_uid() and child.attribute.contained:
                 self.repository_provider(data_source_id).delete(child.uid)
-                logger.info(f"Removed child '{child.uid}'")
-
-        # Remove the actual document
-        self.repository_provider(data_source_id).delete(document.node_id)
-        logger.info(f"Removed document '{document.node_id}'")
+                logger.info(f"Deleted document '{child.uid}'")
 
     def rename_document(self, data_source_id: str, document_id: str, name: str, parent_uid: str = None):
         # Only root-packages have no parent_id
@@ -343,6 +350,9 @@ class DocumentService:
         if not root:
             raise EntityNotFoundException(uid=directory)
 
+        if not root.is_root():  # If not deleting a root package, also remove the reference in the parent
+            root.parent.remove_by_path([root.key])
+            self.save(root.parent.parent, data_source_id)
         return self._remove_document(data_source_id, root.uid)
 
     @staticmethod

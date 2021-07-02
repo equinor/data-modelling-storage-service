@@ -24,13 +24,12 @@ def step_make_file_request(context, method, number_of_files):
 def step_make_request(context, method):
     data = {}
     if "text" in context and context.text:
-        context.request_json = json.loads(context.text)
-        data = json.dumps(context.request_json)
+        data = json.loads(context.text)
 
     if method == "PUT":
-        context.response = context.test_client.put(context.url, data=data)
+        context.response = context.test_client.put(context.url, json=data)
     elif method == "POST":
-        context.response = context.test_client.post(context.url, data=data)
+        context.response = context.test_client.post(context.url, json=data)
     elif method == "GET":
         context.response = context.test_client.get(context.url)
     elif method == "DELETE":

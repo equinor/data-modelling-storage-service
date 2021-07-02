@@ -4,7 +4,7 @@ class RepositoryException(Exception):
         self.message = message
 
     def __str__(self):
-        return repr(self.message)
+        return self.message
 
 
 class EntityAlreadyExistsException(RepositoryException):
@@ -13,8 +13,11 @@ class EntityAlreadyExistsException(RepositoryException):
 
 
 class EntityNotFoundException(RepositoryException):
-    def __init__(self, uid):
-        super().__init__(message=f"The entity, with id {uid} is not found")
+    def __init__(self, uid, message: str = None):
+        if message:
+            super().__init__(message=message)
+        else:
+            super().__init__(message=f"The entity, with id {uid} is not found")
 
 
 class DataSourceNotFoundException(RepositoryException):
