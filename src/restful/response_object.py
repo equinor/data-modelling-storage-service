@@ -14,6 +14,7 @@ class ResponseSuccess(object):
 class ResponseFailure(object):
     RESOURCE_ERROR = "RESOURCE_ERROR"
     PARAMETERS_ERROR = "PARAMETERS_ERROR"
+    UNPROCESSABLE_ENTITY = "UNPROCESSABLE_ENTITY"
     SYSTEM_ERROR = "SYSTEM_ERROR"
 
     def __init__(self, type_, message):
@@ -22,7 +23,7 @@ class ResponseFailure(object):
 
     def _format_message(self, msg):
         if isinstance(msg, Exception):
-            return "{}: {}".format(msg.__class__.__name__, "{}".format(msg))
+            return f"{msg.__class__.__name__}: {msg}"
         return msg
 
     @property
@@ -45,8 +46,5 @@ class ResponseFailure(object):
         return cls(cls.PARAMETERS_ERROR, message)
 
     @classmethod
-    def build_from_invalid_request_object(cls, invalid_request_object):
-        message = "\n".join(
-            ["{}: {}".format(err["parameter"], err["message"]) for err in invalid_request_object.errors]
-        )
-        return cls.build_parameters_error(message)
+    def build_entity_error(cls, message=None):
+        return cls(cls.UNPROCESSABLE_ENTITY, message)

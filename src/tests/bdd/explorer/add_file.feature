@@ -155,7 +155,7 @@ Feature: Explorer - Add file
     Then the response status should be "Not Found"
     And the response should equal
     """
-    {"type": "RESOURCE_ERROR", "message": "The entity, with id -1 is not found"}
+    {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '-1' was not found in the 'data-source-name' data-source"}
     """
 
   Scenario: Add file with multiple PDFs

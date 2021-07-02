@@ -69,7 +69,9 @@ class DataSource:
             repo = self.repositories[lookup["repository"]]
             return DTO(repo.get(uid))
         except EntityNotFoundException:
-            raise EntityNotFoundException(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
+            raise EntityNotFoundException(
+                uid, f"Document with id '{uid}' was not found in the '{self.name}' data-source"
+            )
         except Exception as error:
             logger.exception(error)
             raise EntityNotFoundException(f"Unknown error on fetching the document with uid: {uid} was not found")
@@ -145,5 +147,5 @@ class DataSource:
             self.remove_lookup(uid)
             repo.delete(uid)
         except EntityNotFoundException:
-            logger.warn(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
+            logger.warning(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
             pass
