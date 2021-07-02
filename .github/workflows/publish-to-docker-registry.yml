@@ -18,6 +18,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
+      - name: "Write version file"
+        run: echo $(git log -n 1 --format=format:'%C(yellow)%h% %C(blue)%>(12) %cs %C(green)%>(12,mtrunc)%aN%C(auto,reset)  %s%C(auto) %D') > src/version.txt
       - name: "Build Docker image"
         run: docker build --tag ${DOCKER_IMAGE}:latest .
       - name: "Docker Login"

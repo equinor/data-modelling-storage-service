@@ -44,6 +44,11 @@ def cli():
 
 @cli.command()
 def run():
+    try:
+        with open("./version.txt") as version_file:
+            print(f"VERSION: {version_file.read()}")
+    except FileNotFoundError:
+        pass
     uvicorn.run(
         "app:app",
         host="0.0.0.0",  # nosec
