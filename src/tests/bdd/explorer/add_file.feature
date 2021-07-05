@@ -24,6 +24,26 @@ Feature: Explorer - Add file
                 "_id": "2",
                 "name": "MultiplePdfContainer",
                 "type": "system/SIMOS/Blueprint"
+            },
+            {
+                "_id": "3",
+                "name": "BaseChild",
+                "type": "system/SIMOS/Blueprint"
+            },
+            {
+                "_id": "4",
+                "name": "Parent",
+                "type": "system/SIMOS/Blueprint"
+            },
+            {
+                "_id": "5",
+                "name": "SpecialChild",
+                "type": "system/SIMOS/Blueprint"
+            },
+            {
+                "_id": "6",
+                "name": "parentEntity",
+                "type": "data-source-name/root_package/Parent"
             }
         ]
     }
@@ -71,6 +91,108 @@ Feature: Explorer - Add file
     }
     """
 
+    Given there exist document with id "3" in data source "data-source-name"
+    """
+    {
+      "type": "system/SIMOS/Blueprint",
+      "name": "BaseChild",
+      "description": "",
+      "extends": ["system/SIMOS/NamedEntity"],
+      "attributes": [
+        {
+        "name": "AValue",
+        "attributeType": "integer",
+        "type": "system/SIMOS/BlueprintAttribute"
+        }
+      ]
+    }
+    """
+
+
+    Given there exist document with id "4" in data source "data-source-name"
+    """
+    {
+      "type": "system/SIMOS/Blueprint",
+      "name": "Parent",
+      "description": "",
+      "extends": ["system/SIMOS/NamedEntity"],
+      "attributes": [
+        {
+        "name": "SomeChild",
+        "attributeType": "data-source-name/root_package/BaseChild",
+        "type": "system/SIMOS/BlueprintAttribute"
+        }
+      ]
+    }
+    """
+
+    Given there exist document with id "5" in data source "data-source-name"
+    """
+    {
+      "type": "system/SIMOS/Blueprint",
+      "name": "SpecialChild",
+      "description": "",
+      "extends": ["data-source-name/root_package/BaseChild"],
+      "attributes": [
+        {
+          "name": "AnExtraValue",
+          "attributeType": "string",
+          "type": "system/SIMOS/BlueprintAttribute"
+        }
+      ]
+    }
+    """
+
+
+  Given there exist document with id "6" in data source "data-source-name"
+    """
+    {
+      "type": "data-source-name/root_package/Parent",
+      "name": "parentEntity",
+      "description": "",
+      "SomeChild": {}
+    }
+    """
+
+
+  Scenario: Add file - attribute for parentEntity
+    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
+    When i make a "POST" request
+    """
+    {
+      "name": "baseChildInParentEntity",
+      "parentId": "6",
+      "type": "data-source-name/root_package/BaseChild",
+      "attribute": "SomeChild",
+      "description": "base child in parent",
+      "AValue": 0
+    }
+    """
+    Then the response status should be "OK"
+    Given I access the resource url "/api/v1/documents/data-source-name/6"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+    "document":
+      {
+          "_id": "6",
+          "name": "parentEntity",
+          "type": "data-source-name/root_package/Parent",
+          "description": "",
+          "SomeChild":
+          {
+            "name": "baseChildInParentEntity",
+            "type": "data-source-name/root_package/BaseChild",
+            "description": "base child in parent",
+            "AValue": 0
+          }
+      }
+    }
+    """
+
+
   Scenario: Add file - not contained
     Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
     When i make a "POST" request
@@ -101,11 +223,22 @@ Feature: Explorer - Add file
               "name": "MultiplePdfContainer"
             },
             {
+              "name":"BaseChild"
+            },
+            {
+              "name":"Parent"
+            },
+            {
+              "name":"SpecialChild"
+            },
+            {
+              "name": "parentEntity"
+            },
+            {
               "name":"new_document"
             }
           ],
-          "isRoot":true,
-          "storageRecipes":[]
+          "isRoot":true
        }
     }
     """

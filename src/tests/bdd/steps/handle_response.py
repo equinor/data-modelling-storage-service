@@ -64,12 +64,16 @@ def step_impl_contain(context):
     actual = context.response.json()
     data = context.text or context.data
     expected = json.loads(data)
-    result = diff(actual, expected)
+    result = list(diff(actual, expected))
     changes = [diff for diff in result if diff[0] == "change"]
-    if changes:
+    missing_in_expected = [diff for diff in result if diff[0] == "add"] #find what is included in "actual", but is not included in the "expected"
+    if changes or missing_in_expected:
         for c in changes:
             location = c[1] if isinstance(c[1], str) else ".".join([str(v) for v in c[1]])
             print_pygments({"location": location, "difference": {"actual": c[2][0], "expected": c[2][1]}})
+        for m in missing_in_expected:
+            location = m[1] if isinstance(m[1], str) else ".".join([str(v) for v in m[1]])
+            print_pygments({"location": location, "missing value from actual response": m[2]})
         raise ValueError("The response does not match the expected result")
 
 
