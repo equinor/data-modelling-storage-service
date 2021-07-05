@@ -66,7 +66,9 @@ def step_impl_contain(context):
     expected = json.loads(data)
     result = list(diff(actual, expected))
     changes = [diff for diff in result if diff[0] == "change"]
-    missing_in_expected = [diff for diff in result if diff[0] == "add"] #find what is included in "actual", but is not included in the "expected"
+    missing_in_expected = [
+        diff for diff in result if diff[0] == "add"
+    ]  # find what is included in "actual", but is not included in the "expected"
     if changes or missing_in_expected:
         for c in changes:
             location = c[1] if isinstance(c[1], str) else ".".join([str(v) for v in c[1]])
