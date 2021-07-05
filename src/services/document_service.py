@@ -173,19 +173,17 @@ class DocumentService:
             if node.type == DMT.PACKAGE.value:
                 path = f"{path}/{node.name}/" if path else f"{node.name}"
 
-        child_entities = {}
-
         for child in node.children:
             if child.is_array():
-                child_entities[child.key] = [self.save(x, data_source_id, repository, path) for x in child.children]
+                [self.save(x, data_source_id, repository, path) for x in child.children]
             else:
-                child_entities[child.key] = self.save(child, data_source_id, repository, path)
+                self.save(child, data_source_id, repository, path)
 
         if node.type in BLOB_TYPES:
             # Every blueprint of a 'blob_type', has the 'blob_reference' attribute
             node.entity["blob_reference"] = self.save_blob_data(node, repository)
 
-        ref_dict = node.to_ref_dict(child_entities)
+        ref_dict = node.to_ref_dict()
 
         # If the node is not contained, and has data, save it!
         if not node.storage_contained and ref_dict:

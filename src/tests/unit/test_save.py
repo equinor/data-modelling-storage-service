@@ -5,7 +5,6 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
 from domain_classes.tree_node import Node
 from services.document_service import DocumentService
-
 from tests.unit.mock_blueprint_provider import blueprint_provider, flatten_dict
 
 
@@ -167,17 +166,20 @@ class DocumentServiceTestCase(unittest.TestCase):
                         "description": "I'm the second nested document, uncontained",
                     },
                 },
-            }
+            },
+            "3": {
+                "_id": "3",
+                "name": "ASelfContainedEntity",
+                "type": "blueprint_2",
+                "description": "ASelfContainedEntity",
+            },
         }
 
-        def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
-
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args):
             doc_storage[dto.uid] = dto.data
             return None
 
-        repository.get = mock_get
+        repository.get = lambda id: DTO(doc_storage[id])
         repository.update = mock_update
 
         document_service = DocumentService(
@@ -188,3 +190,13 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service.save(node, "testing")
 
         assert doc_storage["2"]["description"] == "I'm the second nested document, uncontained"
+        assert (
+            doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"].get("description") == None
+        )
+
+        # Testing updating the reference
+        node: Node = document_service.get_by_uid("testing", "1")
+        target_node = node.get_by_path(["i_have_a_uncontained_attribute", "uncontained_in_every_way"])
+        target_node.update(doc_storage["3"])
+        document_service.save(node, "testing")
+        assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"]["_id"] == "3"
