@@ -130,7 +130,7 @@ Feature: Get correct data for subtypes
     }
     """
 
-  Scenario: fetch parententity where SomeChild is a subtype
+  Scenario: fetch entity with a subtype attribute
     Given i access the resource url "/api/v1/documents/data-source-name/7"
     When I make a "GET" request
     Then the response status should be "OK"
@@ -156,7 +156,7 @@ Feature: Get correct data for subtypes
     """
 
 
-  Scenario: fetch parententity2
+  Scenario: fetch entity with original attribute type
     Given i access the resource url "/api/v1/documents/data-source-name/8"
     When I make a "GET" request
     Then the response status should be "OK"
