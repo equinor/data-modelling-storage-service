@@ -191,9 +191,7 @@ Feature: Get document
             }
 
         ],
-        "isRoot": true,
-        "storageRecipes":[],
-        "uiRecipes":[]
+        "isRoot": true
     }
     """
 
@@ -229,9 +227,7 @@ Feature: Get document
                 "name":"sub_package_2"
              }
           ],
-          "isRoot":true,
-          "storageRecipes":[],
-          "uiRecipes":[]
+          "isRoot":true
        }
     }
     """

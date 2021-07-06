@@ -129,6 +129,9 @@ class DictImporter:
         if not node_attribute:
             bp = blueprint_provider(entity["type"])
             node_attribute = BlueprintAttribute(bp.name, entity["type"], bp.description)
+        if entity:
+            node_attribute.attribute_type = entity["type"]
+
         try:
             node = Node(
                 key=key,

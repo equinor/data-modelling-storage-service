@@ -28,10 +28,8 @@ Feature: Explorer - Add Root Package
     {
         "data":{
            "name":"new_root_package",
-           "description":null,
            "type":"system/SIMOS/Package",
-           "isRoot":true,
-           "storageRecipes":[]
+           "isRoot":true
         }
     }
     """
