@@ -56,11 +56,13 @@ class DictExporter:
         return data
 
     @staticmethod
-    def to_ref_dict(node, child_entities):
+    def to_ref_dict(node):
         """
         Rebuilds the entity as it should be stored based on the passed child entities that can be either contained
         documents, or references.
         """
+        if node.is_empty():
+            return node.entity
         data = {}
         if node.uid:
             data = {"_id": node.uid}
@@ -88,12 +90,12 @@ class DictExporter:
                         {"_id": child.uid, "type": child.type, "name": child.name} for child in child.children
                     ]
                 else:
-                    data[child.key] = [list_child.to_dict() for list_child in child.children]
+                    data[child.key] = [list_child.to_ref_dict() for list_child in child.children]
             else:
                 if not child.contained and child.entity:
                     data[child.key] = {"_id": child.uid, "type": child.type, "name": child.name}
                 else:
-                    data[child.key] = child.to_dict()
+                    data[child.key] = child.to_ref_dict()
         return data
 
 
@@ -452,8 +454,8 @@ class Node(NodeBase):
     def to_dict(self):
         return DictExporter.to_dict(self)
 
-    def to_ref_dict(self, child_entites):
-        return DictExporter.to_ref_dict(self, child_entites)
+    def to_ref_dict(self):
+        return DictExporter.to_ref_dict(self)
 
     @property
     def name(self):
@@ -469,14 +471,8 @@ class Node(NodeBase):
 
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
     def update(self, data: Union[dict, list]):
-        # If it's an storageUncontained attribute, crate a new ID if missing
-        if not self.storage_contained and not data.get("_id") and not self.uid:
-            # TODO: Dealing with Node uid should be done with a property setter. This is error prone
-            # TODO: Same for required props. 'type' and 'name'. Should throw error if unset in node.entity
-            new_uid = str(uuid4())
-            self.entity["_id"] = new_uid
-            self.uid = new_uid
 
+        self.set_uid(data.get("_id"))
         # Set self.type from posted type, and validate against parent blueprint
         self.type = data.get("type", self.attribute.attribute_type)
         self.validate_self_type_on_parent()
@@ -550,6 +546,17 @@ class Node(NodeBase):
         return StorageAttribute(
             name=self.type, contained=True, storageTypeAffinity=self.blueprint.storage_recipes[0].storage_affinity
         )
+
+    def set_uid(self, new_id: str = None):
+        """
+        Based on storage contained, sets, or removes the documents uid. Creates new if missing.
+        """
+        if self.storage_contained:
+            self.uid = None
+            self.entity.pop("_id", None)
+        else:
+            self.uid = new_id if new_id else self.entity.get("_id", str(uuid4()))
+            self.entity["_id"] = self.uid
 
 
 class ListNode(NodeBase):
