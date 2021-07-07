@@ -90,10 +90,10 @@ def get_resolved_document(
                             raise InvalidEntityException(
                                 f"{pprint.pformat(data)} is invalid.\n message: {error}"
                             ) from None
-                        except EntityNotFoundException:
+                        except EntityNotFoundException as error:
                             raise InvalidEntityException(
-                                f"Document with id '{document.uid}' had a reference to a document with id"
-                                f" '{item['_id']}', but it was not found in data source '{document_repository.name}'"
+                                f"The document {{'name': {document.name}, '_id': {document.uid}}} has in invalid "
+                                f"child, and could not be loaded. Error: {error.message}"
                             ) from None
                         children.append(doc)
                     data[attribute_name] = children
@@ -344,6 +344,7 @@ class DocumentService:
     def remove_by_path(self, data_source_id: str, directory: str):
         # Convert filesystem path to NodeTree path
         tree_path = "/content/".join(directory.split("/"))
+        # TODO: Don't fetch complete document when deleting. Should not expect all references to be in place
         root: Node = self.get_by_path(data_source_id, tree_path)
         if not root:
             raise EntityNotFoundException(uid=directory)

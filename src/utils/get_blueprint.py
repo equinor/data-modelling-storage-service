@@ -17,7 +17,7 @@ class BlueprintProvider:
             return Blueprint(document)
         except Exception as error:
             logger.exception(error)
-            raise EntityNotFoundException(uid=type)
+            raise EntityNotFoundException(uid=type, message=f"The blueprint '{type}' could not be found")
 
     def invalidate_cache(self):
         try:
