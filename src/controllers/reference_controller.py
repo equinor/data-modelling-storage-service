@@ -1,6 +1,8 @@
 from fastapi import APIRouter
+from starlette.responses import JSONResponse
 
 from restful.request_types.shared import Reference
+from restful.status_codes import STATUS_CODES
 from use_case.delete_reference_use_case import DeleteReferenceRequest, DeleteReferenceUseCase
 from use_case.insert_reference_use_case import InsertReferenceRequest, InsertReferenceUseCase
 
@@ -16,7 +18,7 @@ def insert_reference(data_source_id: str, document_dotted_id: str, reference: Re
             data_source_id=data_source_id, document_id=document_id, reference=reference, attribute=attribute
         )
     )
-    return response.value
+    return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
 @router.delete(
@@ -28,4 +30,4 @@ def delete_reference(data_source_id: str, document_dotted_id: str):
     response = use_case.execute(
         DeleteReferenceRequest(data_source_id=data_source_id, document_id=document_id, attribute=attribute)
     )
-    return response.value
+    return JSONResponse(response.value, status_code=STATUS_CODES[response.type])

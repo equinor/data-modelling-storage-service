@@ -421,10 +421,14 @@ class DocumentService:
     ) -> dict:
         root: Node = self.get_by_uid(data_source_id, document_id)
         attribute_node = root.search(f"{document_id}.{attribute_path}")
+        if not attribute_node:
+            raise EntityNotFoundException(uid=document_id + attribute_path)
 
         # Check that target exists and has correct values
         # The SIMOS/Entity type can reference any type (used by Package)
         referenced_document: DTO = self.repository_provider(data_source_id).get(reference.uid)
+        if not referenced_document:
+            raise EntityNotFoundException(uid=data_source_id + reference.uid)
         if DMT.ENTITY.value != attribute_node.type != referenced_document.type:
             raise InvalidEntityException(
                 f"The referenced entity should be of type '{attribute_node.type}'"

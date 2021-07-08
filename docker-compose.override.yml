@@ -10,6 +10,7 @@ services:
       - ./.behaverc:/code/.behaverc
     environment:
       ENVIRONMENT: local
+      LOGGING_LEVEL: debug
       MONGO_AZURE_URI: ${MONGO_AZURE_URI}
     ports:
       - "8000:5000"
