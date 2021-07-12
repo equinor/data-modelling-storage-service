@@ -1,4 +1,5 @@
 import pprint
+import zipfile
 from functools import lru_cache
 from tempfile import SpooledTemporaryFile
 from typing import Callable, Dict, List, Union
@@ -169,9 +170,9 @@ class DocumentService:
         if not repository:
             repository: DataSource = self.repository_provider(data_source_id)
 
-            # If the node is a package, we build the path string to be used by filesystem like repositories
-            if node.type == DMT.PACKAGE.value:
-                path = f"{path}/{node.name}/" if path else f"{node.name}"
+        # If the node is a package, we build the path string to be used by filesystem like repositories
+        if node.type == DMT.PACKAGE.value:
+            path = f"{path}/{node.name}/" if path else f"{node.name}"
 
         for child in node.children:
             if child.is_array():
@@ -477,3 +478,12 @@ class DocumentService:
         logger.info(f"Removed reference for '{attribute_path}' in '{root.name}'({root.uid})")
 
         return root.to_dict()
+
+    def create_zip_export(self, absolute_document_ref: str) -> str:
+        data_source_id, document_uid = absolute_document_ref.split("/", 1)
+        document: Node = self.get_by_uid(data_source_id, document_uid)
+        # TODO: Is this secure?
+        with zipfile.ZipFile("temp_file.zip", mode="w") as zip_file:
+            # Save the selected node, using custom ZipFile repository
+            self.save(document, data_source_id, ZipFileClient(zip_file))
+            return "temp_file.zip"

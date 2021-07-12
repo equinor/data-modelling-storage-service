@@ -100,3 +100,9 @@ def step_impl_should_be(context):
 @then("the length of the response should not be zero")
 def step_impl(context):
     assert int(context.response.headers["content-length"]) != 0
+
+
+@then("response node should not be empty")
+def step_impl(context):
+    response = context.response
+    assert response.headers["content-type"] == "application/zip" and len(response.content) > 200
