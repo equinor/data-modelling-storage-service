@@ -121,6 +121,23 @@ uncontained_blueprint = {
     ],
 }
 
+uncontained_list_blueprint = {
+    "type": "system/SIMOS/Blueprint",
+    "name": "uncontained_list_blueprint",
+    "description": "uncontained_list_blueprint",
+    "attributes": [
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
+        {
+            "attributeType": "blueprint_2",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "uncontained_in_every_way",
+            "contained": False,
+            "dimensions": "*",
+        },
+    ],
+}
+
 blueprint_with_second_level_nested_uncontained_attribute = {
     "type": "system/SIMOS/Blueprint",
     "name": "blueprint_with_second_level_nested_uncontained_attribute",
@@ -228,6 +245,8 @@ class BlueprintProvider:
             return Blueprint(DTO(second_level_extended_blueprint))
         if type == "uncontained_blueprint":
             return Blueprint(DTO(uncontained_blueprint))
+        if type == "uncontained_list_blueprint":
+            return Blueprint(DTO(uncontained_list_blueprint))
         if type == "blueprint_with_second_level_nested_uncontained_attribute":
             return Blueprint(DTO(blueprint_with_second_level_nested_uncontained_attribute))
         if type == "blueprint_with_optional_attr":

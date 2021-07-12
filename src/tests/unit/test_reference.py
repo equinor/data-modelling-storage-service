@@ -1,5 +1,5 @@
 import unittest
-from unittest import mock, skip
+from unittest import mock
 
 from pydantic import ValidationError
 
@@ -291,8 +291,97 @@ class ReferenceTestCase(unittest.TestCase):
         )
         assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"] == {}
 
-    @skip
     def test_remove_reference_in_list(self):
-        raise NotImplementedError(
-            "Removing references where the attribute " "path contains list indexes probably does not work"
+        repository = mock.Mock()
+
+        doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "Parent",
+                "description": "",
+                "type": "uncontained_list_blueprint",
+                "uncontained_in_every_way": [
+                    {"_id": "2d7c3249-985d-43d2-83cf-a887e440825a", "name": "something", "type": "blueprint_2",},
+                    {"_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a", "name": "something", "type": "blueprint_2",},
+                ],
+            },
+            "2d7c3249-985d-43d2-83cf-a887e440825a": {
+                "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
+                "name": "something",
+                "type": "blueprint_2",
+            },
+            "42dbe4a5-0eb0-4ee2-826c-695172c3c35a": {
+                "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
+                "name": "something",
+                "type": "blueprint_2",
+            },
+        }
+
+        def mock_update(dto: DTO, *args):
+            doc_storage[dto.uid] = dto.data
+            return None
+
+        repository.get = lambda x: DTO(doc_storage[str(x)])
+        repository.update = mock_update
+        document_service = DocumentService(
+            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
         )
+
+        document_service.remove_reference(
+            "testing", document_id="1", attribute_path="uncontained_in_every_way.0",
+        )
+        assert len(doc_storage["1"]["uncontained_in_every_way"]) == 1
+        assert doc_storage["1"]["uncontained_in_every_way"][0] == {
+            "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
+            "name": "something",
+            "type": "blueprint_2",
+        }
+
+    def test_add_reference_in_list(self):
+        repository = mock.Mock()
+
+        doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "Parent",
+                "description": "",
+                "type": "uncontained_list_blueprint",
+                "uncontained_in_every_way": [
+                    {"_id": "2d7c3249-985d-43d2-83cf-a887e440825a", "name": "something", "type": "blueprint_2",}
+                ],
+            },
+            "2d7c3249-985d-43d2-83cf-a887e440825a": {
+                "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
+                "name": "something",
+                "type": "blueprint_2",
+            },
+            "42dbe4a5-0eb0-4ee2-826c-695172c3c35a": {
+                "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
+                "name": "something",
+                "type": "blueprint_2",
+            },
+        }
+
+        def mock_update(dto: DTO, *args):
+            doc_storage[dto.uid] = dto.data
+            return None
+
+        repository.get = lambda x: DTO(doc_storage[str(x)])
+        repository.update = mock_update
+        document_service = DocumentService(
+            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+        )
+        document_service.insert_reference(
+            "testing",
+            document_id="1",
+            reference=Reference.parse_obj(
+                {"_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a", "name": "something", "type": "blueprint_2",}
+            ),
+            attribute_path="uncontained_in_every_way",
+        )
+        assert len(doc_storage["1"]["uncontained_in_every_way"]) == 2
+        assert doc_storage["1"]["uncontained_in_every_way"][1] == {
+            "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
+            "name": "something",
+            "type": "blueprint_2",
+        }
