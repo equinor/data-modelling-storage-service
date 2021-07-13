@@ -18,7 +18,7 @@ class ZipFileClient(RepositoryInterface):
         dto.data.pop("__path__")
         json_data = json.dumps(dto.data)
         binary_data = json_data.encode()
-        logger.info(f"Writing: {dto.type} to {write_to}")
+        logger.debug(f"Writing: {dto.type} to {write_to}")
         if dto.type != DMT.PACKAGE.value:
             self.zip_file.writestr(write_to, binary_data)
 

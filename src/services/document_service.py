@@ -480,10 +480,11 @@ class DocumentService:
         return root.to_dict()
 
     def create_zip_export(self, absolute_document_ref: str) -> str:
+        archive_path = "temp_zip_archive.zip"
         data_source_id, document_uid = absolute_document_ref.split("/", 1)
         document: Node = self.get_by_uid(data_source_id, document_uid)
         # TODO: Is this secure?
-        with zipfile.ZipFile("temp_file.zip", mode="w") as zip_file:
+        with zipfile.ZipFile(archive_path, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=5) as zip_file:
             # Save the selected node, using custom ZipFile repository
             self.save(document, data_source_id, ZipFileClient(zip_file))
-            return "temp_file.zip"
+        return archive_path
