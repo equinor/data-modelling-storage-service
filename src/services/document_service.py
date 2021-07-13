@@ -31,6 +31,7 @@ from utils.get_blueprint import BlueprintProvider
 from utils.logging import logger
 from utils.string_helpers import url_safe_name
 from utils.validators import valid_named_entity
+from enums import DMT
 
 pretty_printer = pprint.PrettyPrinter()
 
@@ -315,7 +316,8 @@ class DocumentService:
         if not root:
             raise EntityNotFoundException(uid=parent_id)
         parent: Node = root.get_by_path(attribute_path.split(".")) if attribute_path else root
-
+        if root.attribute.attribute_type != DMT.PACKAGE.value:
+            parent.validate_type_on_parent(type)
         # Check if a file/attribute with the same name already exists on the target
         # if duplicate_filename(parent, name):
         if parent.duplicate_attribute(name):

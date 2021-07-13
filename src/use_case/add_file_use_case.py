@@ -10,6 +10,7 @@ from storage.internal.data_source_repository import get_data_source
 class AddToParentRequest(NamedEntity):
     parentId: str
     attribute: str
+    type: str
     description: Optional[str] = ""
     data: Optional[dict] = None
     data_source_id: Optional[str] = None

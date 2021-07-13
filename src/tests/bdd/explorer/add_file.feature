@@ -44,6 +44,16 @@ Feature: Explorer - Add file
                 "_id": "6",
                 "name": "parentEntity",
                 "type": "data-source-name/root_package/Parent"
+            },
+            {
+                "_id": "7",
+                "name": "Hobby",
+                "type": "system/SIMOS/Blueprint"
+            },
+            {
+                "_id": "8",
+                "name": "parentEntity2",
+                "type": "data-source-name/root_package/Parent"
             }
         ]
     }
@@ -120,7 +130,8 @@ Feature: Explorer - Add file
         {
         "name": "SomeChild",
         "attributeType": "data-source-name/root_package/BaseChild",
-        "type": "system/SIMOS/BlueprintAttribute"
+        "type": "system/SIMOS/BlueprintAttribute",
+        "optional": true
         }
       ]
     }
@@ -153,6 +164,34 @@ Feature: Explorer - Add file
       "SomeChild": {}
     }
     """
+
+  Given there exist document with id "7" in data source "data-source-name"
+    """
+    {
+      "type": "system/SIMOS/Blueprint",
+      "name": "Hobby",
+      "description": "",
+      "extends": ["system/SIMOS/NamedEntity"],
+      "attributes": [
+        {
+        "name": "difficulty",
+        "attributeType": "string",
+        "type": "system/SIMOS/BlueprintAttribute"
+        }
+      ]
+    }
+    """
+
+  Given there exist document with id "8" in data source "data-source-name"
+    """
+    {
+      "type": "data-source-name/root_package/Parent",
+      "name": "parentEntity2",
+      "description": "",
+      "SomeChild": {}
+    }
+    """
+
 
 
   Scenario: Add file - attribute for parentEntity
@@ -192,8 +231,38 @@ Feature: Explorer - Add file
     }
     """
 
+  Scenario: Add file with wrong subtype to parent entity
+    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
+    When i make a "POST" request
+    """
+    {
+      "name": "hobbynumber1",
+      "parentId": "8",
+      "type": "data-source-name/root_package/Hobby",
+      "attribute": "SomeChild",
+      "description": "example hobby",
+      "difficulty": "high"
+    }
+    """
+    Then the response status should be "System Error"
+    Given I access the resource url "/api/v1/documents/data-source-name/8"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+    "document":
+      {
+          "_id": "8",
+          "name": "parentEntity2",
+          "type": "data-source-name/root_package/Parent",
+          "description": "",
+          "SomeChild": {}
+      }
+    }
+    """
 
-  Scenario: Add file - not contained
+   Scenario: Add file - not contained
     Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
     When i make a "POST" request
     """
@@ -235,13 +304,21 @@ Feature: Explorer - Add file
               "name": "parentEntity"
             },
             {
-              "name":"new_document"
+              "name":"Hobby"
+            },
+            {
+              "name": "parentEntity2"
+            },
+            {
+              "name": "new_document"
             }
           ],
           "isRoot":true
        }
     }
     """
+
+
   @skip
   Scenario: Add file with missing parameter name should fail
     Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
