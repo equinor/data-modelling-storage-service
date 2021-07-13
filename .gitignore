@@ -5,6 +5,7 @@ gen/
 h5/
 /src/home/first-run-false
 /src/.behaverc
+temp_zip_archive.zip
 
 ### macOS ###
 # General
@@ -149,3 +150,4 @@ mongodata/
 /src/.behaverc
 home/first-run-false
 
+/src/version.txt

@@ -21,6 +21,7 @@ from controllers import (
     package_controller,
     search_controller,
     reference_controller,
+    export_controller,
 )
 from utils.wipe_db import wipe_db
 
@@ -36,6 +37,7 @@ app.include_router(package_controller.router, prefix=prefix)
 app.include_router(search_controller.router, prefix=prefix)
 app.include_router(blueprint_controller.router, prefix=prefix)
 app.include_router(reference_controller.router, prefix=prefix)
+app.include_router(export_controller.router, prefix=prefix)
 
 
 @app.middleware("http")
@@ -44,7 +46,7 @@ async def add_process_time_header(request: Request, call_next):
     response = await call_next(request)
     process_time = time.time() - start_time
     milliseconds = int(round(process_time * 1000))
-    logger.debug(f"\t{milliseconds}ms to process request")
+    logger.debug(f"Took \t{milliseconds}ms to process request '{request.url.path}'")
     return response
 
 

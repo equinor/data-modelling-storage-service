@@ -14,11 +14,11 @@ class ZipFileClient(RepositoryInterface):
     def update(self, dto: DTO, storage_recipe=None):
         dto.data.pop("_id", None)
         dto.data.pop("uid", None)
+        write_to = f"{dto.data['__path__']}/{dto.name}.json"
+        dto.data.pop("__path__")
         json_data = json.dumps(dto.data)
         binary_data = json_data.encode()
-        write_to = f"{dto.data['__path__']}/{dto.name}.json"
-        logger.info(f"Writing: {dto.type} to {write_to}")
-
+        logger.debug(f"Writing: {dto.type} to {write_to}")
         if dto.type != DMT.PACKAGE.value:
             self.zip_file.writestr(write_to, binary_data)
 
@@ -36,3 +36,9 @@ class ZipFileClient(RepositoryInterface):
 
     def find_one(self, filters):
         return "Not implemented on ZipFile repository!"
+
+    def get_blob(self, uid: str) -> bytearray:
+        raise NotImplementedError
+
+    def update_blob(self, uid: str, blob: bytearray):
+        raise NotImplementedError
