@@ -31,7 +31,6 @@ from utils.get_blueprint import BlueprintProvider
 from utils.logging import logger
 from utils.string_helpers import url_safe_name
 from utils.validators import valid_named_entity
-from enums import DMT
 
 pretty_printer = pprint.PrettyPrinter()
 
