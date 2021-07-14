@@ -95,7 +95,7 @@ class InvalidChildTypeException(Exception):
     def __init__(self, invalid_type, key, valid_type):
         super().__init__(
             f"The type '{invalid_type}' is not a valid type for the "
-            f"'{key}' attribute. The type should be of type '{valid_type}'"
+            f"'{key}' attribute. The type should be of type '{valid_type} (or extending from it)'"
         )
 
 
