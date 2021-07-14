@@ -50,7 +50,6 @@ def get_document_uid_by_path(path: str, repository) -> Union[str, None]:
 
 
 def get_document_by_ref(type_ref) -> DTO:
-    # TODO: Get DataSource from Package's config file
     data_source_id, path = get_data_source_and_path(type_ref)
     document_repository = get_data_source(data_source_id)
     type_id = get_document_uid_by_path(path, document_repository)

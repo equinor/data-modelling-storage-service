@@ -35,11 +35,9 @@ class CreateEntity:
 
     @staticmethod
     def parse_value(attr: BlueprintAttribute, blueprint_provider):
-        # @todo add exception handling
         default_value = attr.default
         type = attr.attribute_type
 
-        # TODO: Generalize this "setting_defaults" and reuse everywhere (schema)
         if default_value is not None and len(str(default_value)) > 0 and attr.is_array():
             try:
                 return json.loads(default_value)

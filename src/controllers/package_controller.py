@@ -14,7 +14,7 @@ def get(data_source_id: str):
     """
     List all root packages in the requested data source
     """
-    # TODO: Use UseCase. It not returns 500 on a 404
+    # TODO: Use UseCase. If not, it will return 500 on a 404
     document_service = DocumentService(repository_provider=get_data_source)
     root_packages = document_service.get_root_packages(data_source_id=data_source_id)
     return JSONResponse([package.to_dict() for package in root_packages])

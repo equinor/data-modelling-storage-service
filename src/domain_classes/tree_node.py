@@ -248,9 +248,6 @@ class NodeBase:
     def type(self, value):  # Type can be changed after initiation. e.g Multiple valid specialised types
         self._type = value
 
-    def has_uid(self):
-        return self.uid != ""
-
     def is_empty(self):
         return not self.entity
 
