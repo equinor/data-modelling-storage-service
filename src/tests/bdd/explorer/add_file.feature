@@ -49,11 +49,6 @@ Feature: Explorer - Add file
                 "_id": "7",
                 "name": "Hobby",
                 "type": "system/SIMOS/Blueprint"
-            },
-            {
-                "_id": "8",
-                "name": "parentEntity2",
-                "type": "data-source-name/root_package/Parent"
             }
         ]
     }
@@ -149,6 +144,13 @@ Feature: Explorer - Add file
           "name": "AnExtraValue",
           "attributeType": "string",
           "type": "system/SIMOS/BlueprintAttribute"
+        },
+        {
+          "name": "Hobbies",
+          "attributeType": "data-source-name/root_package/Hobby",
+          "type": "system/SIMOS/BlueprintAttribute",
+          "optional": true,
+          "dimensions": "*"
         }
       ]
     }
@@ -179,16 +181,6 @@ Feature: Explorer - Add file
         "type": "system/SIMOS/BlueprintAttribute"
         }
       ]
-    }
-    """
-
-  Given there exist document with id "8" in data source "data-source-name"
-    """
-    {
-      "type": "data-source-name/root_package/Parent",
-      "name": "parentEntity2",
-      "description": "",
-      "SomeChild": {}
     }
     """
 
@@ -237,7 +229,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "hobbynumber1",
-      "parentId": "8",
+      "parentId": "6",
       "type": "data-source-name/root_package/Hobby",
       "attribute": "SomeChild",
       "description": "example hobby",
@@ -245,7 +237,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "System Error"
-    Given I access the resource url "/api/v1/documents/data-source-name/8"
+    Given I access the resource url "/api/v1/documents/data-source-name/6"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -253,8 +245,8 @@ Feature: Explorer - Add file
     {
     "document":
       {
-          "_id": "8",
-          "name": "parentEntity2",
+          "_id": "6",
+          "name": "parentEntity",
           "type": "data-source-name/root_package/Parent",
           "description": "",
           "SomeChild": {}
@@ -262,7 +254,55 @@ Feature: Explorer - Add file
     }
     """
 
-   Scenario: Add file - not contained
+
+  Scenario: Add file with an extended type to parent entity
+    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
+    When i make a "POST" request
+    """
+    {
+      "name": "specialChild",
+      "parentId": "6",
+      "type": "data-source-name/root_package/SpecialChild",
+      "attribute": "SomeChild",
+      "description": "specialized child",
+      "AValue": 39,
+      "AnExtraValue": "abc",
+      "Hobbies": [
+        {
+          "name": "Football",
+          "type": "data-source-name/root_package/Hobby",
+          "description": "sport",
+          "difficulty": "high"
+        }
+      ]
+    }
+    """
+    Then the response status should be "OK"
+    Given I access the resource url "/api/v1/documents/data-source-name/6"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+    "document":
+      {
+          "_id": "6",
+          "name": "parentEntity",
+          "type": "data-source-name/root_package/Parent",
+          "description": "",
+          "SomeChild":
+          {
+            "name": "specialChild",
+            "type": "data-source-name/root_package/SpecialChild",
+            "description": "specialized child",
+            "AValue": 0,
+            "AnExtraValue": ""
+          }
+      }
+    }
+    """
+
+  Scenario: Add file - not contained
     Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
     When i make a "POST" request
     """
@@ -305,9 +345,6 @@ Feature: Explorer - Add file
             },
             {
               "name":"Hobby"
-            },
-            {
-              "name": "parentEntity2"
             },
             {
               "name": "new_document"

@@ -427,15 +427,15 @@ class NodeBase:
         if next((child for child in self.children if child.name == attribute), None):
             return True
 
-    def validate_type_on_parent(self, type):
+    def validate_type_on_parent(self):
         if not self.parent:
             return True
         key = self.key if not self.parent.is_array() else self.parent.key  # Use attribute key, not list index
         valid_type = self.parent.blueprint.get_attribute_type_by_key(key)  # Valid type as defined in parents blueprint
         if not valid_extended_type(
-            valid_type, [type] + self.blueprint.extends, self.blueprint_provider
+            valid_type, [self.type] + self.blueprint.extends, self.blueprint_provider
         ):  # Resolve extends
-            raise InvalidChildTypeException(type, key, valid_type)
+            raise InvalidChildTypeException(self.type, key, valid_type)
 
 
 class Node(NodeBase):
@@ -478,7 +478,7 @@ class Node(NodeBase):
         self.set_uid(data.get("_id"))
         # Set self.type from posted type, and validate against parent blueprint
         self.type = data.get("type", self.attribute.attribute_type)
-        self.validate_type_on_parent(self.type)
+        self.validate_type_on_parent()
 
         # Modify and add for each key in posted data
         for key in data.keys():
@@ -590,7 +590,7 @@ class ListNode(NodeBase):
         for i, item in enumerate(data):
             # Set self.type from posted type, and validate against parent blueprint
             self.type = item["type"]
-            self.validate_type_on_parent(self.type)
+            self.validate_type_on_parent()
 
             # Set uid base on containment and existing(lack of) uid
             # This require the existing _id to be posted

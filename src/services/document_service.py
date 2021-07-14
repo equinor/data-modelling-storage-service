@@ -315,8 +315,7 @@ class DocumentService:
         if not root:
             raise EntityNotFoundException(uid=parent_id)
         parent: Node = root.get_by_path(attribute_path.split(".")) if attribute_path else root
-        if root.attribute.attribute_type != DMT.PACKAGE.value:
-            parent.validate_type_on_parent(type)
+
         # Check if a file/attribute with the same name already exists on the target
         # if duplicate_filename(parent, name):
         if parent.duplicate_attribute(name):
@@ -338,7 +337,8 @@ class DocumentService:
         else:
             new_node.key = attribute_path.split(".")[-1]
             root.replace(parent.node_id, new_node)
-
+        if new_node.parent.attribute.attribute_type != DMT.ENTITY.value:
+            new_node.validate_type_on_parent()
         self.save(root, data_source_id)
 
         return {"uid": new_node.node_id}
