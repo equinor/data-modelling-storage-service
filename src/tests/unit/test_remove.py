@@ -14,19 +14,10 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_1 = {"_id": "1", "name": "Parent", "description": "", "type": "blueprint_1"}
 
-        def mock_get(document_id: str):
-            if document_id == "1":
-                return DTO(data=document_1.copy())
-            return None
-
-        document_repository.get = mock_get
-
-        def repository_provider(data_source_id):
-            if data_source_id == "testing":
-                return document_repository
+        document_repository.get = lambda id: DTO(data=document_1.copy())
 
         document_service = DocumentService(
-            repository_provider=repository_provider, blueprint_provider=blueprint_provider
+            repository_provider=lambda id: document_repository, blueprint_provider=blueprint_provider
         )
         document_service.remove_document(data_source_id="testing", document_id="1", parent_id=None)
         document_repository.delete.assert_called_with("1")

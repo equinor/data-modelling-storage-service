@@ -120,7 +120,6 @@ class DataSource:
             StorageAttribute("generic_blob", False, StorageDataTypes.BLOB.value), strict=True
         )
         self.insert_lookup(DocumentLookUp(uid, repo.name, uid, "", "blob"))
-        # TODO: Some sanity checks on the file. werkzug safe_files() etc.
         repo.update_blob(uid, file.read())
 
     def get_blob(self, uid: str) -> bytes:

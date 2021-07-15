@@ -22,14 +22,14 @@ from utils.create_entity import CreateEntity
 from utils.exceptions import (
     DuplicateFileNameException,
     EntityNotFoundException,
-    FileNotFoundException,
     InvalidDocumentNameException,
     InvalidEntityException,
     RepositoryException,
 )
+from utils.find_document_by_path import get_document_uid_by_path
 from utils.get_blueprint import BlueprintProvider
 from utils.logging import logger
-from utils.string_helpers import url_safe_name
+from utils.string_helpers import get_data_source_and_path, url_safe_name
 from utils.validators import valid_named_entity
 
 pretty_printer = pprint.PrettyPrinter()
@@ -203,29 +203,11 @@ class DocumentService:
 
         return Node.from_dict(complete_document, complete_document.get("_id"), blueprint_provider=self.get_blueprint)
 
-    def get_by_path(self, data_source_id: str, directory: str):
-        ref_elements = directory.split("/", 1)
-        package_name = ref_elements[0]
-
-        package: DTO = self.repository_provider(data_source_id).first(
-            {"type": "system/SIMOS/Package", "isRoot": True, "name": package_name}
-        )
-        if not package:
-            raise FileNotFoundException(data_source_id, package_name)
-
-        # TODO: This is slow and unnecessary, step through each document instead, only fetching what is needed.
-        complete_document = get_complete_document(
-            package.uid, self.repository_provider(data_source_id), self.get_blueprint
-        )
-
-        dto = DTO(complete_document)
-        node = Node.from_dict(dto.data, dto.uid, blueprint_provider=self.get_blueprint)
-
-        if len(ref_elements) > 1:
-            path = ref_elements[1]
-            return node.get_by_name_path(path.split("/"))
-        else:
-            return node
+    def get_by_path(self, absolute_reference: str) -> Node:
+        data_source_id, path = get_data_source_and_path(absolute_reference)
+        document_repository = get_data_source(data_source_id)
+        document_id = get_document_uid_by_path(path, document_repository)
+        return self.get_by_uid(data_source_id, document_id)
 
     def get_root_packages(self, data_source_id: str):
         result = self.repository_provider(data_source_id).find({"type": "system/SIMOS/Package", "isRoot": True})
@@ -246,7 +228,7 @@ class DocumentService:
             if not attribute_node:
                 raise EntityNotFoundException(uid=document_id)
 
-            if attribute_node.has_uid():
+            if not attribute_node.storage_contained:
                 self._remove_document(data_source_id, document_id)
 
             attribute_node.remove()
@@ -264,7 +246,7 @@ class DocumentService:
         # Remove self and children references
         for child in document.traverse():
             # Only remove children if they ARE contained in model and NOT contained in storage
-            if child.has_uid() and child.attribute.contained:
+            if not child.storage_contained and child.contained and not child.is_empty():
                 self.repository_provider(data_source_id).delete(child.uid)
                 logger.info(f"Deleted document '{child.uid}'")
 
@@ -344,17 +326,19 @@ class DocumentService:
         return {"uid": new_node.node_id}
 
     def remove_by_path(self, data_source_id: str, directory: str):
-        # Convert filesystem path to NodeTree path
-        tree_path = "/content/".join(directory.split("/"))
-        # TODO: Don't fetch complete document when deleting. Should not expect all references to be in place
-        root: Node = self.get_by_path(data_source_id, tree_path)
-        if not root:
-            raise EntityNotFoundException(uid=directory)
+        directory = directory.rstrip("/").lstrip("/")
 
-        if not root.is_root():  # If not deleting a root package, also remove the reference in the parent
-            root.parent.remove_by_path([root.key])
-            self.save(root.parent.parent, data_source_id)
-        return self._remove_document(data_source_id, root.uid)
+        if "/" in directory:
+            parent_uid = get_document_uid_by_path(
+                f"{'/'.join(directory.split('/')[0:-1])}", self.repository_provider(data_source_id)
+            )
+            child_uid = get_document_uid_by_path(directory, self.repository_provider(data_source_id))
+            self.remove_document(data_source_id, document_id=child_uid, parent_id=parent_uid)
+            return
+
+        # We are removing a root-package with no parent
+        document_id = get_document_uid_by_path(directory, self.repository_provider(data_source_id))
+        self.remove_document(data_source_id, document_id)
 
     @staticmethod
     def _merge_entity_and_files(node, files):
@@ -376,7 +360,7 @@ class DocumentService:
 
     # Add entity by path
     def add(self, data_source_id: str, path: str, document: NamedEntity, files: dict):
-        target: Node = self.get_by_path(data_source_id, path)
+        target: Node = self.get_by_path(f"{data_source_id}/{path}")
         if not target:
             raise EntityNotFoundException(uid=path)
 

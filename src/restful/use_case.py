@@ -33,7 +33,7 @@ class UseCase(object):
             return res.ResponseFailure.build_parameters_error(error)
         except Exception as exc:
             traceback.print_exc()
-            return res.ResponseFailure.build_system_error("{}: {}".format(exc.__class__.__name__, "{}".format(exc)))
+            return res.ResponseFailure.build_system_error(f"{exc.__class__.__name__}: {exc}")
 
     def process_request(self, request_object):
         raise NotImplementedError("process_request() not implemented by UseCase class")
