@@ -37,12 +37,15 @@ def step_impl_equal(context):
     actual = context.response.json()
     data = context.text or context.data
     expected = json.loads(data)
-    result = diff(actual, expected)
-    changes = [diff for diff in result if diff[0] == "change"]
-    if changes:
-        for c in changes:
-            location = c[1] if isinstance(c[1], str) else ".".join([str(v) for v in c[1]])
-            print_pygments({"location": location, "difference": {"actual": c[2][0], "expected": c[2][1]}})
+    difference = list(diff(actual, expected))
+    if difference:
+        changes = [diff for diff in difference if diff[0] == "change"]
+        for change in changes:
+            location = change[1] if isinstance(change[1], str) else ".".join([str(v) for v in change[1]])
+            print_pygments({"location": location, "difference": {"actual": change[2][0], "expected": change[2][1]}})
+        missing = [diff for diff in difference if diff[0] == "add"]
+        for m in missing:
+            print_pygments({"missing": m[2]})
         raise ValueError("The response does not match the expected result")
 
 

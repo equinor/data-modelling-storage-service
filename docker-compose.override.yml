@@ -12,8 +12,21 @@ services:
       ENVIRONMENT: local
       LOGGING_LEVEL: debug
       MONGO_AZURE_URI: ${MONGO_AZURE_URI}
+#      AUTH_ENABLED: "False"
+      AUTH_ENABLED: "True"
+      OAUTH_TOKEN_ENDPOINT: http://localhost:8080/auth/realms/dmss/protocol/openid-connect/token
+      OAUTH_AUTH_ENDPOINT: http://localhost:8080/auth/realms/dmss/protocol/openid-connect/auth
+      OAUTH_WELL_KNOWN: http://keycloak:8080/auth/realms/dmss/.well-known/openid-configuration
     ports:
       - "8000:5000"
+
+#  keycloak:
+#    image: quay.io/keycloak/keycloak:15.0.1
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      KEYCLOAK_USER: admin
+#      KEYCLOAK_PASSWORD: admin
 
   db:
     image: mongo:3.4
@@ -22,7 +35,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: maf
       MONGO_INITDB_ROOT_PASSWORD: maf
     volumes:
-      - ./data:/data/db
+      - ./data/db:/data/db
 
 
   db-ui:
