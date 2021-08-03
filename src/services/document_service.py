@@ -402,7 +402,7 @@ class DocumentService:
 
         return result_list
 
-    def find_parent_package(self, data_source_id: str, document_id: str):
+    def find_parent_packages(self, data_source_id: str, document_id: str):
         """
         find which package in data source = data_source_id that contains a document with id = document_id
         """
@@ -412,12 +412,17 @@ class DocumentService:
                 f"Search is not supported on this repository type; {type(repository.repository).__name__}"
             )
 
-        dtos_found: list = repository.find({"content._id": document_id})
-        if (len(dtos_found) != 1): raise Exception(f"Could not find package for document {document_id} ")
-        package_id = dtos_found[0].data["_id"]
-        is_root = dtos_found[0].data["isRoot"]
+        list_of_packages = []
+        is_root = False
+        while (is_root == False):
+            dtos_found: list = repository.find({"content._id": document_id})
+            if (len(dtos_found) != 1): raise Exception(f"Could not find package for document {document_id} ")
+            package_id = dtos_found[0].data["_id"]
+            is_root = dtos_found[0].data["isRoot"]
+            list_of_packages.append({"package_id": package_id, "is_root": is_root, "child_id": document_id})
+            document_id = package_id
 
-        return package_id, is_root
+        return list_of_packages
 
     def insert_reference(
         self, data_source_id: str, document_id: str, reference: Reference, attribute_path: str

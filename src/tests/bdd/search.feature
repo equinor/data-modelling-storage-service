@@ -98,10 +98,10 @@ Feature: seach
 
 
     Scenario: find parent package
-      Given I access the resource url "/api/v1/findParentPackage/data-source-name/5"
+      Given I access the resource url "/api/v1/findParentPackages/data-source-name/5"
       When I make a "GET" request
       Then the response status should be "OK"
       And the response should contain
       """
-        {"package_id": "3", "is_root": false}
+        [{"package_id": "3", "is_root": false, "child_id": "5"}, {"package_id": "1", "is_root": true, "child_id": "3"}]
       """
