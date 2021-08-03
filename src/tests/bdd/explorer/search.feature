@@ -76,7 +76,54 @@ Feature: Explorer - Search entity
       ]
     }
     """
+
+
+
+
+
     Given there exist document with id "1" in data source "entities"
+    """
+    {
+        "name": "root_package_for_entities",
+        "description": "",
+        "type": "system/SIMOS/Package",
+        "isRoot": true,
+        "content": [
+            {
+                "_id": "2",
+                "name": "PackageA",
+                "type": "system/SIMOS/Package"
+            }
+        ]
+    }
+    """
+
+    Given there exist document with id "2" in data source "entities"
+    """
+    {
+      "name": "PackageA",
+      "description": "",
+      "type": "system/SIMOS/Package",
+      "isRoot": false,
+      "content": [
+          {
+              "_id": "3",
+              "name": "primitive_1",
+              "type": "blueprints/root_package/ValuesBlueprint"
+          },
+          {
+              "_id": "4",
+              "name": "primitive_2",
+              "type": "blueprints/root_package/ValuesBlueprint"
+          }
+      ]
+    }
+    """
+
+
+
+
+    Given there exist document with id "3" in data source "entities"
     """
     {
       "name": "primitive_1",
@@ -88,7 +135,7 @@ Feature: Explorer - Search entity
     }
     """
 
-    Given there exist document with id "2" in data source "entities"
+    Given there exist document with id "4" in data source "entities"
     """
     {
       "name": "primitive_2",
@@ -116,7 +163,7 @@ Feature: Explorer - Search entity
     """
     {
       "primitive_2": {
-        "_id": "2",
+        "_id": "4",
         "name": "primitive_2",
         "description": "",
         "type": "blueprints/root_package/ValuesBlueprint",
@@ -125,7 +172,7 @@ Feature: Explorer - Search entity
         "a_string": "def"
       },
       "primitive_1": {
-        "_id": "1",
+        "_id": "3",
         "name": "primitive_1",
         "description": "",
         "type": "blueprints/root_package/ValuesBlueprint",
@@ -152,7 +199,7 @@ Feature: Explorer - Search entity
     """
     {
       "primitive_2": {
-        "_id": "2",
+        "_id": "4",
         "name": "primitive_2",
         "description": "",
         "type": "blueprints/root_package/ValuesBlueprint",
@@ -163,3 +210,13 @@ Feature: Explorer - Search entity
     }
     """
 
+
+
+  Scenario: find packages for an entity
+    Given I access the resource url "/api/v1/findPackages/entities/4"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+      [{"package_id": "1", "package_name": "root_package_for_entities", "is_root": true, "child_id": "2"}, {"package_id": "2", "package_name": "PackageA", "is_root": false, "child_id": "4"}]
+    """
