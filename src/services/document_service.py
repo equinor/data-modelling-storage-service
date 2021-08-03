@@ -415,16 +415,19 @@ class DocumentService:
 
         list_of_packages = []
         is_root = False
-        while (is_root == False):
+        while is_root is False:
             dtos_found: list = repository.find({"content._id": document_id})
-            if (len(dtos_found) != 1): raise Exception(f"Could not find package for document {document_id} ")
+            if len(dtos_found) != 1:
+                raise Exception(f"Could not find package for document {document_id} ")
             package_id = dtos_found[0].data["_id"]
             is_root = dtos_found[0].data["isRoot"]
             package_name = dtos_found[0].data["name"]
-            list_of_packages.append({"package_id": package_id, "package_name": package_name, "is_root": is_root, "child_id": document_id})
+            list_of_packages.append(
+                {"package_id": package_id, "package_name": package_name, "is_root": is_root, "child_id": document_id}
+            )
             document_id = package_id
 
-        return list_of_packages[::-1] #return list in reversed order
+        return list_of_packages[::-1]  # return list in reversed order
 
     def insert_reference(
         self, data_source_id: str, document_id: str, reference: Reference, attribute_path: str
