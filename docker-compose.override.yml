@@ -12,8 +12,8 @@ services:
       ENVIRONMENT: local
       LOGGING_LEVEL: debug
       MONGO_AZURE_URI: ${MONGO_AZURE_URI}
-#      AUTH_ENABLED: "False"
-      AUTH_ENABLED: "True"
+      AUTH_ENABLED: "False"
+#      AUTH_ENABLED: "True"
       OAUTH_TOKEN_ENDPOINT: http://localhost:8080/auth/realms/dmss/protocol/openid-connect/token
       OAUTH_AUTH_ENDPOINT: http://localhost:8080/auth/realms/dmss/protocol/openid-connect/auth
       OAUTH_WELL_KNOWN: http://keycloak:8080/auth/realms/dmss/.well-known/openid-configuration

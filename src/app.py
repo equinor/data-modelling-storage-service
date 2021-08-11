@@ -19,6 +19,7 @@ from controllers import (
     reference_controller,
     search_controller,
     whoami_controller,
+    healtcheck_controller,
 )
 from services.database import data_source_collection
 from storage.internal.data_source_repository import DataSourceRepository
@@ -38,6 +39,8 @@ app = FastAPI(
 
 public_routes = APIRouter()
 authenticated_routes = APIRouter()
+
+public_routes.include_router(healtcheck_controller.router)
 
 authenticated_routes.include_router(whoami_controller.router)
 authenticated_routes.include_router(blob_controller.router)
