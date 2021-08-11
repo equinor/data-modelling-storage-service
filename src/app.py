@@ -3,41 +3,58 @@ import time
 
 import click
 import uvicorn
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI, Security
 from starlette.requests import Request
 
+from authentication.authentication import get_current_user
 from config import Config
-from services.database import data_source_collection
-from storage.internal.data_source_repository import DataSourceRepository
-from utils.exceptions import ImportException, InvalidDataSourceException
-from utils.logging import logger
-from utils.package_import import import_package
 from controllers import (
     blob_controller,
     blueprint_controller,
     datasource_controller,
     document_controller,
     explorer_controller,
-    package_controller,
-    search_controller,
-    reference_controller,
     export_controller,
+    package_controller,
+    reference_controller,
+    search_controller,
+    whoami_controller,
+    healtcheck_controller,
 )
+from services.database import data_source_collection
+from storage.internal.data_source_repository import DataSourceRepository
+from utils.exceptions import ImportException, InvalidDataSourceException
+from utils.logging import logger
+from utils.package_import import import_package
 from utils.wipe_db import wipe_db
 
 server_root = "/api"
 version = "v1"
 prefix = f"{server_root}/{version}"
-app = FastAPI(title="Data Modelling Storage Service", description="API for basic data modelling interaction")
-app.include_router(blob_controller.router, prefix=prefix)
-app.include_router(datasource_controller.router, prefix=prefix)
-app.include_router(document_controller.router, prefix=prefix)
-app.include_router(explorer_controller.router, prefix=prefix)
-app.include_router(package_controller.router, prefix=prefix)
-app.include_router(search_controller.router, prefix=prefix)
-app.include_router(blueprint_controller.router, prefix=prefix)
-app.include_router(reference_controller.router, prefix=prefix)
-app.include_router(export_controller.router, prefix=prefix)
+app = FastAPI(
+    title="Data Modelling Storage Service",
+    description="API for basic data modelling interaction",
+    swagger_ui_init_oauth={"usePkceWithAuthorizationCodeGrant": True, "clientId": Config.OAUTH_CLIENT_ID},
+)
+
+public_routes = APIRouter()
+authenticated_routes = APIRouter()
+
+public_routes.include_router(healtcheck_controller.router)
+
+authenticated_routes.include_router(whoami_controller.router)
+authenticated_routes.include_router(blob_controller.router)
+authenticated_routes.include_router(datasource_controller.router)
+authenticated_routes.include_router(document_controller.router)
+authenticated_routes.include_router(export_controller.router)
+authenticated_routes.include_router(package_controller.router)
+authenticated_routes.include_router(search_controller.router)
+authenticated_routes.include_router(blueprint_controller.router)
+authenticated_routes.include_router(reference_controller.router)
+authenticated_routes.include_router(explorer_controller.router)
+
+app.include_router(authenticated_routes, prefix=prefix, dependencies=[Security(get_current_user)])
+app.include_router(public_routes, prefix=prefix)
 
 
 @app.middleware("http")
