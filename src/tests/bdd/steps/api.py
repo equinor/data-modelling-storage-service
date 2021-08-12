@@ -2,9 +2,9 @@ import json
 
 from behave import given, when
 
-from app import app
-from authentication.authentication import get_current_user
-from authentication.mock_users import fake_users_db
+from authentication import authentication
+from authentication.authentication import User
+from config import config
 
 
 @given('i access the resource url "{url}"')
@@ -40,7 +40,12 @@ def step_make_request(context, method):
         context.response = context.test_client.delete(context.url)
 
 
-@given('the logged in user is "{user}"')
-def step_set_access_token(context, user):
-    # Overrides the JWT validation dependency for all endpoints. Returning a mock user
-    app.dependency_overrides[get_current_user] = lambda: fake_users_db[user]
+@given('the logged in user is "{username}" with roles "{roles}"')
+def step_set_access_token(context, username, roles):
+    user = User(username=username, roles=roles.split(","))
+    authentication.user_context = user
+
+
+@given("authentication is enabled")
+def step_set_access_token(context):
+    config.AUTH_ENABLED = True

@@ -37,11 +37,13 @@ class DataSourceTestCase(unittest.TestCase):
             return None
 
         default_repo = mock.Mock()
+        default_repo.name = "default"
         default_repo.data_types = [StorageDataTypes.DEFAULT]
         default_repo.get = default_get
         default_repo.update = default_update
 
         blob_repo = mock.Mock()
+        blob_repo.name = "blob"
         blob_repo.data_types = [StorageDataTypes.BLOB]
         blob_repo.get = blob_get
         blob_repo.update = blob_update
@@ -59,12 +61,8 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        def repository_provider(data_source_id):
-            if data_source_id == "testing":
-                return data_source
-
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            blueprint_provider=blueprint_provider, repository_provider=lambda x: data_source
         )
 
         node: Node = Node.from_dict(uncontained_doc, "1", document_service.get_blueprint)
@@ -96,11 +94,13 @@ class DataSourceTestCase(unittest.TestCase):
             return None
 
         default_repo = mock.Mock()
+        default_repo.name = "default"
         default_repo.data_types = [StorageDataTypes.DEFAULT]
         default_repo.get = default_get
         default_repo.update = default_update
 
         blob_repo = mock.Mock()
+        blob_repo.name = "blob"
         blob_repo.data_types = [StorageDataTypes.BLOB]
         blob_repo.get = blob_get
         blob_repo.update = blob_update
@@ -118,12 +118,8 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        def repository_provider(data_source_id):
-            if data_source_id == "testing":
-                return data_source
-
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            blueprint_provider=blueprint_provider, repository_provider=lambda x: data_source
         )
 
         node: Node = Node.from_dict(blob_doc, "1", document_service.get_blueprint)
@@ -160,11 +156,13 @@ class DataSourceTestCase(unittest.TestCase):
             return None
 
         default_repo = mock.Mock()
+        default_repo.name = "default"
         default_repo.data_types = [StorageDataTypes.DEFAULT]
         default_repo.get = default_get
         default_repo.update = default_update
 
         blob_repo = mock.Mock()
+        blob_repo.name = "blob"
         blob_repo.data_types = [StorageDataTypes.BLOB]
         blob_repo.get = blob_get
         blob_repo.update = blob_update
@@ -182,12 +180,8 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        def repository_provider(data_source_id):
-            if data_source_id == "testing":
-                return data_source
-
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            blueprint_provider=blueprint_provider, repository_provider=lambda x: data_source
         )
 
         node: Node = Node.from_dict(blob_doc, "1", document_service.get_blueprint)

@@ -7,6 +7,7 @@ from fastapi import APIRouter, FastAPI, Security
 from starlette.requests import Request
 
 from authentication.authentication import get_current_user
+import authentication
 from config import Config
 from controllers import (
     blob_controller,
@@ -64,6 +65,14 @@ async def add_process_time_header(request: Request, call_next):
     process_time = time.time() - start_time
     milliseconds = int(round(process_time * 1000))
     logger.debug(f"Took \t{milliseconds}ms to process request '{request.url.path}'")
+    return response
+
+
+# TODO: Should probably look into other ways to handle user_context...
+@app.middleware("http")
+async def unset_user_context(request: Request, call_next):
+    response = await call_next(request)
+    authentication.user_context = None
     return response
 
 

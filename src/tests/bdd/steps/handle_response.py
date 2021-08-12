@@ -14,6 +14,7 @@ STATUS_CODES = {
     "Bad Request": 400,
     "Unprocessable Entity": 422,
     "Unauthorized": 401,
+    "Forbidden": 403,
     "Not Found": 404,
     "Conflict": 409,
     "System Error": 500,

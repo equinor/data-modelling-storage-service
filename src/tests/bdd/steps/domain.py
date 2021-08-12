@@ -1,5 +1,8 @@
+import json
+
 from behave import given
 
+from authentication.access_control import ACL
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from enums import DMT, SIMOS
@@ -87,3 +90,9 @@ def step_impl_documents(context, data_source_id: str, collection: str):
     tree.show_tree()
     document_service = DocumentService(repository_provider=get_data_source)
     document_service.save(node=tree, data_source_id=data_source_id)
+
+
+@given('AccessControlList for document "{document_id}" in data-source "{data_source}" is')
+def step_impl(context, document_id, data_source):
+    acl = ACL(**json.loads(context.text))
+    document_service.repository_provider(data_source).update_access_control(document_id, acl)
