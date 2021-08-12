@@ -63,7 +63,7 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
             "a_third_value": "amanothastring",
         }
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
 
         repository.get = lambda doc_id: DTO(doc_storage[doc_id])

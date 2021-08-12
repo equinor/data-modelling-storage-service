@@ -281,7 +281,7 @@ class NodeBase:
             return self.uid
         if self.contained and not self.storage_contained and not self.is_array():
             return self.uid
-        return ".".join(self.path() + [self.key])
+        return ".".join((self.parent.node_id, self.key))
 
     def path(self):
         path = []

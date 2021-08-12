@@ -4,15 +4,15 @@ Feature: Explorer - Add file
     Given the system data source and SIMOS core package are available
     Given there are data sources
       | name             |
-      | data-source-name |
+      | test-DS |
 
     Given there are repositories in the data sources
-      | data-source      | host | port  | username | password | tls   | name      | database | collection | type     | dataTypes |
-      | data-source-name | db   | 27017 | maf      | maf      | false | repo1     |  bdd-test    | documents  | mongo-db | default   |
-      | data-source-name | db   | 27017 | maf      | maf      | false | blob-repo |  bdd-test    | test       | mongo-db | blob      |
+      | data-source | host | port  | username | password | tls   | name      | database  | collection | type     | dataTypes |
+      | test-DS     | db   | 27017 | maf      | maf      | false | repo1     |  bdd-test | documents  | mongo-db | default   |
+      | test-DS     | db   | 27017 | maf      | maf      | false | blob-repo |  bdd-test | test       | mongo-db | blob      |
 
 
-    Given there exist document with id "1" in data source "data-source-name"
+    Given there exist document with id "1" in data source "test-DS"
     """
     {
         "name": "root_package",
@@ -43,7 +43,7 @@ Feature: Explorer - Add file
             {
                 "_id": "6",
                 "name": "parentEntity",
-                "type": "data-source-name/root_package/Parent"
+                "type": "test-DS/root_package/Parent"
             },
             {
                 "_id": "7",
@@ -53,7 +53,7 @@ Feature: Explorer - Add file
         ]
     }
     """
-    Given there exist document with id "2" in data source "data-source-name"
+    Given there exist document with id "2" in data source "test-DS"
     """
     {
       "type": "system/SIMOS/Blueprint",
@@ -88,7 +88,7 @@ Feature: Explorer - Add file
         },
         {
           "name": "pdf_container",
-          "attributeType": "data-source-name/root_package/MultiplePdfContainer",
+          "attributeType": "test-DS/root_package/MultiplePdfContainer",
           "type": "system/SIMOS/BlueprintAttribute",
           "optional": true
         }
@@ -96,7 +96,7 @@ Feature: Explorer - Add file
     }
     """
 
-    Given there exist document with id "3" in data source "data-source-name"
+    Given there exist document with id "3" in data source "test-DS"
     """
     {
       "type": "system/SIMOS/Blueprint",
@@ -114,7 +114,7 @@ Feature: Explorer - Add file
     """
 
 
-    Given there exist document with id "4" in data source "data-source-name"
+    Given there exist document with id "4" in data source "test-DS"
     """
     {
       "type": "system/SIMOS/Blueprint",
@@ -124,7 +124,7 @@ Feature: Explorer - Add file
       "attributes": [
         {
         "name": "SomeChild",
-        "attributeType": "data-source-name/root_package/BaseChild",
+        "attributeType": "test-DS/root_package/BaseChild",
         "type": "system/SIMOS/BlueprintAttribute",
         "optional": true
         }
@@ -132,13 +132,13 @@ Feature: Explorer - Add file
     }
     """
 
-    Given there exist document with id "5" in data source "data-source-name"
+    Given there exist document with id "5" in data source "test-DS"
     """
     {
       "type": "system/SIMOS/Blueprint",
       "name": "SpecialChild",
       "description": "",
-      "extends": ["data-source-name/root_package/BaseChild"],
+      "extends": ["test-DS/root_package/BaseChild"],
       "attributes": [
         {
           "name": "AnExtraValue",
@@ -147,7 +147,7 @@ Feature: Explorer - Add file
         },
         {
           "name": "Hobbies",
-          "attributeType": "data-source-name/root_package/Hobby",
+          "attributeType": "test-DS/root_package/Hobby",
           "type": "system/SIMOS/BlueprintAttribute",
           "optional": true,
           "dimensions": "*"
@@ -157,17 +157,17 @@ Feature: Explorer - Add file
     """
 
 
-  Given there exist document with id "6" in data source "data-source-name"
+  Given there exist document with id "6" in data source "test-DS"
     """
     {
-      "type": "data-source-name/root_package/Parent",
+      "type": "test-DS/root_package/Parent",
       "name": "parentEntity",
       "description": "",
       "SomeChild": {}
     }
     """
 
-  Given there exist document with id "7" in data source "data-source-name"
+  Given there exist document with id "7" in data source "test-DS"
     """
     {
       "type": "system/SIMOS/Blueprint",
@@ -184,23 +184,21 @@ Feature: Explorer - Add file
     }
     """
 
-
-
   Scenario: Add file - attribute for parentEntity
-    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
     When i make a "POST" request
     """
     {
       "name": "baseChildInParentEntity",
       "parentId": "6",
-      "type": "data-source-name/root_package/BaseChild",
+      "type": "test-DS/root_package/BaseChild",
       "attribute": "SomeChild",
       "description": "base child in parent",
       "AValue": 0
     }
     """
     Then the response status should be "OK"
-    Given I access the resource url "/api/v1/documents/data-source-name/6"
+    Given I access the resource url "/api/v1/documents/test-DS/6"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -210,12 +208,12 @@ Feature: Explorer - Add file
       {
           "_id": "6",
           "name": "parentEntity",
-          "type": "data-source-name/root_package/Parent",
+          "type": "test-DS/root_package/Parent",
           "description": "",
           "SomeChild":
           {
             "name": "baseChildInParentEntity",
-            "type": "data-source-name/root_package/BaseChild",
+            "type": "test-DS/root_package/BaseChild",
             "description": "base child in parent",
             "AValue": 0
           }
@@ -224,20 +222,20 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with wrong subtype to parent entity
-    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
     When i make a "POST" request
     """
     {
       "name": "hobbynumber1",
       "parentId": "6",
-      "type": "data-source-name/root_package/Hobby",
+      "type": "test-DS/root_package/Hobby",
       "attribute": "SomeChild",
       "description": "example hobby",
       "difficulty": "high"
     }
     """
     Then the response status should be "System Error"
-    Given I access the resource url "/api/v1/documents/data-source-name/6"
+    Given I access the resource url "/api/v1/documents/test-DS/6"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -247,22 +245,21 @@ Feature: Explorer - Add file
       {
           "_id": "6",
           "name": "parentEntity",
-          "type": "data-source-name/root_package/Parent",
+          "type": "test-DS/root_package/Parent",
           "description": "",
           "SomeChild": {}
       }
     }
     """
 
-
   Scenario: Add file with an extended type to parent entity
-    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
     When i make a "POST" request
     """
     {
       "name": "specialChild",
       "parentId": "6",
-      "type": "data-source-name/root_package/SpecialChild",
+      "type": "test-DS/root_package/SpecialChild",
       "attribute": "SomeChild",
       "description": "specialized child",
       "AValue": 39,
@@ -270,7 +267,7 @@ Feature: Explorer - Add file
       "Hobbies": [
         {
           "name": "Football",
-          "type": "data-source-name/root_package/Hobby",
+          "type": "test-DS/root_package/Hobby",
           "description": "sport",
           "difficulty": "high"
         }
@@ -278,7 +275,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-    Given I access the resource url "/api/v1/documents/data-source-name/6"
+    Given I access the resource url "/api/v1/documents/test-DS/6"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -288,12 +285,12 @@ Feature: Explorer - Add file
       {
           "_id": "6",
           "name": "parentEntity",
-          "type": "data-source-name/root_package/Parent",
+          "type": "test-DS/root_package/Parent",
           "description": "",
           "SomeChild":
           {
             "name": "specialChild",
-            "type": "data-source-name/root_package/SpecialChild",
+            "type": "test-DS/root_package/SpecialChild",
             "description": "specialized child",
             "AValue": 0,
             "AnExtraValue": ""
@@ -303,7 +300,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file - not contained
-    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
     When i make a "POST" request
     """
     {
@@ -314,7 +311,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-    Given I access the resource url "/api/v1/documents/data-source-name/1"
+    Given I access the resource url "/api/v1/documents/test-DS/1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -355,10 +352,9 @@ Feature: Explorer - Add file
     }
     """
 
-
   @skip
   Scenario: Add file with missing parameter name should fail
-    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
     When i make a "POST" request
     """
     {
@@ -374,7 +370,7 @@ Feature: Explorer - Add file
 
   @skip
   Scenario: Add file with missing parameters should fail
-    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
     When i make a "POST" request
     """
     {}
@@ -389,7 +385,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file to parent that does not exists
-    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
     When i make a "POST" request
     """
     {
@@ -402,18 +398,47 @@ Feature: Explorer - Add file
     Then the response status should be "Not Found"
     And the response should equal
     """
-    {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '-1' was not found in the 'data-source-name' data-source"}
+    {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '-1' was not found in the 'test-DS' data-source"}
+    """
+
+  Scenario: Add file to parent with missing permissions on parent
+    Given AccessControlList for document "1" in data-source "test-DS" is
+    """
+    {
+      "owner": "someoneElse",
+      "others": "READ"
+    }
+    """
+    Given the logged in user is "johndoe" with roles "a"
+    Given authentication is enabled
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
+    When i make a "POST" request
+    """
+    {
+      "name": "new_document",
+      "parentId": "1",
+      "type": "system/SIMOS/Blueprint",
+      "attribute": "content"
+    }
+    """
+    Then the response status should be "Forbidden"
+    And the response should equal
+    """
+    {
+    "type": "FORBIDDEN",
+    "message": "MissingPrivilegeException: The requested operation requires 'WRITE' privileges"
+    }
     """
 
   Scenario: Add file with multiple PDFs
-    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-path"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
     When i make a "POST" request with "4" files
     """
     {
       "directory": "/root_package/",
       "document": {
         "name": "new_pdf_container",
-        "type": "data-source-name/root_package/MultiplePdfContainer",
+        "type": "test-DS/root_package/MultiplePdfContainer",
         "description": "",
         "a_pdf": {
           "name": "MyPDF1",
@@ -431,7 +456,7 @@ Feature: Explorer - Add file
         },
         "pdf_container": {
           "name": "second_pdf_container",
-          "type": "data-source-name/root_package/MultiplePdfContainer",
+          "type": "test-DS/root_package/MultiplePdfContainer",
           "description": "",
           "a_pdf": {
             "name": "MyPDF3",

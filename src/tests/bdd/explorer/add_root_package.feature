@@ -2,19 +2,12 @@ Feature: Explorer - Add Root Package
 
   Background: There are data sources in the system
     Given the system data source and SIMOS core package are available
-
-    Given there are data sources
-      | name             |
-      | data-source-name |
-      | blueprints       |
-
-    Given there are repositories in the data sources
-      | data-source      | host | port  | username | password | tls   | name      | database | collection     | type     | dataTypes |
-      | data-source-name | db   | 27017 | maf      | maf      | false | repo1     |  bdd-test    | documents      | mongo-db | default   |
-      | demo-DS   | db   | 27017 | maf      | maf      | false | blob-repo |  bdd-test    | demo-DS | mongo-db | default   |
+    Given there are basic data sources with repositories
+      | name    |
+      | test-DS |
 
   Scenario: Add root package
-    Given i access the resource url "/api/v1/explorer/data-source-name/add-package"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-package"
     When i make a "POST" request
     """
     {
@@ -33,9 +26,35 @@ Feature: Explorer - Add Root Package
         }
     }
     """
+  Scenario: Add root package lacking permissions
+    Given AccessControlList for data-source "test-DS" is
+    """
+    {
+      "owner": "dmss-admin",
+      "others": "READ"
+    }
+    """
+    Given the logged in user is "johndoe" with roles "a"
+    Given authentication is enabled
+    Given i access the resource url "/api/v1/explorer/test-DS/add-package"
+    When i make a "POST" request
+    """
+    {
+      "name": "new_root_package",
+      "type": "system/SIMOS/Package"
+    }
+    """
+    Then the response status should be "Forbidden"
+    And the response should contain
+    """
+    {
+    "type": "FORBIDDEN",
+    "message": "MissingPrivilegeException: The requested operation requires 'WRITE' privileges"
+    }
+    """
 
   Scenario: Add root package with missing parameter name should fail
-    Given i access the resource url "/api/v1/explorer/data-source-name/add-package"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-package"
     When i make a "POST" request
     """
     {

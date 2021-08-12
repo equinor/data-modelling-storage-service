@@ -294,3 +294,38 @@ Feature: Access Control
     "message": "MissingPrivilegeException: The requested operation requires 'READ' privileges"
     }
     """
+
+  Scenario: Add file - not contained - inherit ACL
+    Given there exist document with id "2" in data source "test-DS"
+    """
+    {
+        "name": "root_package",
+        "description": "",
+        "type": "system/SIMOS/Package",
+        "isRoot": true,
+        "content": []
+    }
+    """
+    Given AccessControlList for document "2" in data-source "test-DS" is
+    """
+    {
+      "owner": "johndoe",
+      "roles": {"someRole": "WRITE", "someOtherRole": "READ"},
+      "users": {"per": "WRITE", "pål": "READ"},
+      "others": "NONE"
+    }
+    """
+    Given the logged in user is "johndoe" with roles "a"
+    Given authentication is enabled
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
+    When i make a "POST" request
+    """
+    {
+      "_id": "3",
+      "name": "new_document",
+      "parentId": "2",
+      "type": "system/SIMOS/Blueprint",
+      "attribute": "content"
+    }
+    """
+    Then the response status should be "OK"

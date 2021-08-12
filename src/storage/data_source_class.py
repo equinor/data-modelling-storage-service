@@ -9,7 +9,7 @@ from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
 from services.database import data_source_collection
-from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
+from utils.exceptions import EntityNotFoundException
 from utils.logging import logger
 
 
@@ -17,17 +17,27 @@ class DataSource:
     """
     A DataSource instance is an abstraction layer over several repositories(databases/storage backends).
     Access Control is done in the DataSource based on the Access Control Lists defined in the internal lookup tables.
+
     """
 
-    def __init__(self, name: str, repositories, data_source_collection=data_source_collection):
+    # Default DataSource ACL lets anyone create root-packages
+    default_acl = ACL(owner="dmss-admin", roles={"dmss-admin": AccessLevel.WRITE}, others=AccessLevel.WRITE)
+
+    def __init__(
+        self, name: str, acl: ACL = default_acl, repositories=None, data_source_collection=data_source_collection
+    ):
         self.name = name
+        # This ACL is used when adding root-packages
+        self.acl = acl
         self.repositories: Dict[str, Repository] = repositories
         self.data_source_collection = data_source_collection
 
     @classmethod
     def from_dict(cls, a_dict):
         return cls(
-            a_dict["name"], {key: Repository(name=key, **value) for key, value in a_dict["repositories"].items()}
+            a_dict["name"],
+            ACL(**a_dict.get("acl", cls.default_acl.dict())),
+            {key: Repository(name=key, **value) for key, value in a_dict["repositories"].items()},
         )
 
     def _get_repo_from_storage_attribute(self, storage_attribute: StorageAttribute = None, strict=False) -> Repository:
@@ -44,6 +54,10 @@ class DataSource:
     def _get_documents_repository(self, document_id) -> Repository:
         lookup = self._lookup(document_id)
         return self.repositories[lookup.repository]
+
+    def _validate_dto(self, dto: DTO):
+        if not dto.name == dto.data["name"] or not dto.type == dto.data["type"] or not dto.uid == dto.data["_id"]:
+            raise ValueError("The metadata and tha 'data' object in the DTO does not match!")
 
     # TODO: Read default attribute from DataSource spec
     def get_default_repository(self) -> Repository:
@@ -107,40 +121,37 @@ class DataSource:
         if result:
             return DTO(result)
 
-    def update(self, document: DTO, storage_attribute: StorageAttribute = None) -> None:
-        # Since update() can also insert, we must check if it exists, and if not, insert a lookup
-        try:
+    def update(self, document: DTO, storage_attribute: StorageAttribute = None, parent_id: str = None) -> None:
+        """
+        Create or update a document.
+        :param document: A DTO of the document to create or update.
+        :param storage_attribute: Used to decide on repository when creating new document
+        :param parent_id: Needed when adding a new child document that should inherit ACL.
+        :return: None
+        """
+        try:  # Get the documents lookup
             lookup = self._lookup(document.uid)
-            repo = self.repositories[lookup.repository]
-        except EntityNotFoundException:
+        except EntityNotFoundException:  # No lookup found --> Create a new document
+            parent_lookup = None
+
+            if parent_root_uid := parent_id.split(".")[0] if parent_id else None:
+                try:  # If parent_id passed, try to get it's lookup
+                    parent_lookup = self._lookup(parent_root_uid)
+                except EntityNotFoundException:  # The parent has not yet been created.
+                    pass
+
+            parent_acl = parent_lookup.acl if parent_lookup else self.acl  # If no parentLookup, use DataSource default
+            # Before inserting a new lookUp, check permissions on parent resource
+            access_control(parent_acl, AccessLevel.WRITE)
             repo = self._get_repo_from_storage_attribute(storage_attribute)
             lookup = DocumentLookUp(
-                lookup_id=document.uid, repository=repo.name, database_id=document.uid, acl=create_acl()
+                lookup_id=document.uid, repository=repo.name, database_id=document.uid, acl=parent_acl
             )
             self._update_lookup(lookup)
 
-        if (
-            not document.name == document.data["name"]
-            or not document.type == document.data["type"]
-            or not document.uid == document.data["_id"]
-        ):
-            raise ValueError("The metadata and tha 'data' object in the DTO does not match!")
+        repo = self.repositories[lookup.repository]
         access_control(lookup.acl, AccessLevel.WRITE)
         repo.update(document.uid, document.data)
-
-    # TODO: Ensure a root level restriction
-    # No access control on the 'add' operation. Permissions are checked in parent.
-    def add(self, document: DTO, storage_attribute: StorageAttribute = None) -> None:
-        repo: Repository = self._get_repo_from_storage_attribute(storage_attribute)
-        self._update_lookup(
-            DocumentLookUp(lookup_id=document.uid, repository=repo.name, database_id=document.uid, acl=create_acl())
-        )
-        try:
-            repo.add(document.uid, document.data)
-        except EntityAlreadyExistsException:
-            raise EntityAlreadyExistsException(
-                message=f"The document with id '{document.uid}' already exist in data source '{self.name}'"
-            )
 
     def update_blob(self, uid, file) -> None:
         repo = self._get_repo_from_storage_attribute(
