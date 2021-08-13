@@ -115,7 +115,7 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "primitive_2": {
+      "2": {
         "_id": "2",
         "name": "primitive_2",
         "description": "",
@@ -124,7 +124,7 @@ Feature: Explorer - Search entity
         "an_integer": 10,
         "a_string": "def"
       },
-      "primitive_1": {
+      "1": {
         "_id": "1",
         "name": "primitive_1",
         "description": "",
@@ -151,7 +151,7 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "primitive_2": {
+      "2": {
         "_id": "2",
         "name": "primitive_2",
         "description": "",
