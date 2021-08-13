@@ -398,7 +398,7 @@ class DocumentService:
         result: List[DTO] = repository.find(process_search_data)
         result_list = {}
         for doc in result:
-            result_list[doc.name] = doc.data
+            result_list[doc.uid] = doc.data
 
         return result_list
 
