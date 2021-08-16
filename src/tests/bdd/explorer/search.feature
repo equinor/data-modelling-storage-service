@@ -282,7 +282,7 @@ Feature: Explorer - Search entity
     }
     """
 
-  Scenario: Search for vectors, default sorting
+  Scenario: Search with sorting by default sort_by_attribute, name
     Given i access the resource url "/api/v1/search/entities"
     When i make a "POST" request
     """
