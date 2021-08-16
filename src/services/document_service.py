@@ -5,6 +5,7 @@ from tempfile import SpooledTemporaryFile
 from typing import Callable, Dict, List, Union
 from uuid import uuid4
 
+from authentication.access_control import ACL
 from config import Config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
@@ -403,6 +404,15 @@ class DocumentService:
             result_list[doc.uid] = doc.data
 
         return result_list
+
+    def set_acl(self, data_source_id: str, document_id: str, acl: ACL):
+        data_source: DataSource = self.repository_provider(data_source_id)
+        data_source.update_access_control(document_id, acl)
+
+    def get_acl(self, data_source_id, document_id) -> ACL:
+        data_source: DataSource = self.repository_provider(data_source_id)
+        lookup = data_source.get_access_control(document_id)
+        return lookup.acl
 
     def insert_reference(
         self, data_source_id: str, document_id: str, reference: Reference, attribute_path: str
