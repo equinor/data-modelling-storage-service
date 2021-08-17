@@ -9,6 +9,7 @@ from utils.exceptions import (
     FileNotFoundException,
     InvalidDocumentNameException,
     InvalidEntityException,
+    MissingPrivilegeException,
     RootPackageNotFoundException,
 )
 from utils.logging import logger
@@ -29,8 +30,10 @@ class UseCase(object):
         except (EntityAlreadyExistsException, InvalidDocumentNameException, InvalidEntityException) as e:
             logger.error(e)
             return res.ResponseFailure.build_entity_error(e)
-        except DataSourceAlreadyExistsException as error:
-            return res.ResponseFailure.build_parameters_error(error)
+        except MissingPrivilegeException as e:
+            return res.ResponseFailure.build_access_error(e)
+        except DataSourceAlreadyExistsException as e:
+            return res.ResponseFailure.build_parameters_error(e)
         except Exception as exc:
             traceback.print_exc()
             return res.ResponseFailure.build_system_error(f"{exc.__class__.__name__}: {exc}")

@@ -107,3 +107,8 @@ class ImportException(Exception):
 class InvalidDataSourceException(Exception):
     def __init__(self, message=None):
         self.message = message if message else "The data source is invalid"
+
+
+class MissingPrivilegeException(Exception):
+    def __init__(self, message=None):
+        self.message = message if message else "Missing privileges to perform operation on the resource"
