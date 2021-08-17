@@ -4,9 +4,9 @@ from domain_classes.dto import DTO
 from utils.exceptions import InvalidAttributeException
 
 
-def get_value_from_attribute_spec(doc: DTO, attribute_spec: List[str]):
+def get_value_from_attribute_spec(doc: DTO, attribute_path_elements: List[str]):
     data = doc.data
-    for attr_key in attribute_spec:
+    for attr_key in attribute_path_elements:
         try:
             val = data[attr_key]
         except KeyError:
@@ -19,6 +19,6 @@ def get_value_from_attribute_spec(doc: DTO, attribute_spec: List[str]):
 
 
 def sort_dtos_by_attribute(dto_list: List[DTO], dotted_attribute_path: str) -> List[DTO]:
-    attribute_path_elements = sort_by_attribute.split(".")
-    result_list.sort(key=lambda doc: get_value_from_attribute_spec(doc, attribute_spec))
-    return result_list
+    attribute_path_elements = dotted_attribute_path.split(".")
+    dto_list.sort(key=lambda doc: get_value_from_attribute_spec(doc, attribute_path_elements))
+    return dto_list

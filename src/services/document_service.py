@@ -18,7 +18,7 @@ from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
 from storage.repositories.zip import ZipFileClient
 from utils.build_complex_search import build_mongo_query
-from utils.sort_entities_by_attribute import sort_list_by_attribute
+from utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from utils.create_entity import CreateEntity
 from utils.exceptions import (
     DuplicateFileNameException,
@@ -397,7 +397,7 @@ class DocumentService:
         process_search_data = build_mongo_query(self.get_blueprint, search_data)
 
         result: List[DTO] = repository.find(process_search_data)
-        result_sorted: List[DTO] = sort_list_by_attribute(result, sort_by_attribute)
+        result_sorted: List[DTO] = sort_dtos_by_attribute(result, sort_by_attribute)
         result_list = {}
         for doc in result_sorted:
             result_list[doc.uid] = doc.data
