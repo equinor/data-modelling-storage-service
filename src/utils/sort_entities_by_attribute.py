@@ -18,7 +18,7 @@ def get_value_from_attribute_spec(doc: DTO, attribute_spec: List[str]):
         data = val
 
 
-def sort_list_by_attribute(result_list: List[DTO], sort_by_attribute: str) -> List[DTO]:
-    attribute_spec = sort_by_attribute.split(".")
+def sort_dtos_by_attribute(dto_list: List[DTO], dotted_attribute_path: str) -> List[DTO]:
+    attribute_path_elements = sort_by_attribute.split(".")
     result_list.sort(key=lambda doc: get_value_from_attribute_spec(doc, attribute_spec))
     return result_list
