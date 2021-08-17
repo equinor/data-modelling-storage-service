@@ -386,7 +386,7 @@ class DocumentService:
 
         return {"uid": new_node.node_id}
 
-    def search(self, data_source_id, search_data, sort_by_attribute):
+    def search(self, data_source_id, search_data, dotted_attribute_path):
         repository: DataSource = self.repository_provider(data_source_id)
 
         if not isinstance(repository.get_default_repository().client, MongoDBClient):
@@ -397,7 +397,7 @@ class DocumentService:
         process_search_data = build_mongo_query(self.get_blueprint, search_data)
 
         result: List[DTO] = repository.find(process_search_data)
-        result_sorted: List[DTO] = sort_dtos_by_attribute(result, sort_by_attribute)
+        result_sorted: List[DTO] = sort_dtos_by_attribute(result, dotted_attribute_path)
         result_list = {}
         for doc in result_sorted:
             result_list[doc.uid] = doc.data
