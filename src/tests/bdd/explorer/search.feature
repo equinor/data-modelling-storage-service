@@ -34,6 +34,11 @@ Feature: Explorer - Search entity
                 "_id": "4",
                 "name": "NestedBlueprint",
                 "type": "system/SIMOS/Blueprint"
+            },
+            {
+                "_id": "5",
+                "name": "NestedListBlueprint",
+                "type": "system/SIMOS/Blueprint"
             }
         ]
     }
@@ -132,6 +137,24 @@ Feature: Explorer - Search entity
     }
     """
 
+    Given there exist document with id "5" in data source "blueprints"
+    """
+    {
+      "name": "NestedListBlueprint",
+      "type": "system/SIMOS/Blueprint",
+      "description": "This describes a blueprint that contains a list of nested entities",
+      "attributes": [
+        {
+          "name": "VectorList",
+          "type": "system/SIMOS/BlueprintAttribute",
+          "attributeType": "blueprints/root_package/NestedVectorsBlueprint",
+          "dimensions": "*",
+          "contained": true
+        }
+      ]
+    }
+    """
+
     Given there exist document with id "1" in data source "entities"
     """
     {
@@ -183,6 +206,29 @@ Feature: Explorer - Search entity
         "height": 64.3,
         "width": 512.1
       }
+    }
+    """
+
+    Given there exist document with id "5" in data source "entities"
+    """
+    {
+      "name": "myNestedListEntity_1",
+      "description": "Some entity with a list of items",
+      "type": "blueprints/root_package/NestedListBlueprint",
+      "VectorList": [
+        {
+          "name": "Vector_1",
+          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "height": 64.3,
+          "width": 512.1
+        },
+        {
+          "name": "Vector_2",
+          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "height": 280.1,
+          "width": 123.4
+        }
+      ]
     }
     """
 
@@ -356,6 +402,41 @@ Feature: Explorer - Search entity
           "height": 223.3,
           "width": 133.7
         }
+      }
+    }
+    """
+
+  Scenario: Search with sorting by attribute, nested attribute from list by index
+    Given i access the resource url "/api/v1/search/entities?sort_by_attribute=VectorList.0.width"
+    When i make a "POST" request
+    """
+    {
+      "type": "blueprints/root_package/NestedListBlueprint"
+    }
+    """
+    Then the response status should be "OK"
+    And the response should equal
+    """
+    {
+      "5": {
+        "_id": "5",
+        "name": "myNestedListEntity_1",
+        "description": "Some entity with a list of items",
+        "type": "blueprints/root_package/NestedListBlueprint",
+        "VectorList": [
+          {
+            "name": "Vector_1",
+            "type": "blueprints/root_package/NestedVectorsBlueprint",
+            "height": 64.3,
+            "width": 512.1
+          },
+          {
+            "name": "Vector_2",
+            "type": "blueprints/root_package/NestedVectorsBlueprint",
+            "height": 280.1,
+            "width": 123.4
+          }
+        ]
       }
     }
     """
