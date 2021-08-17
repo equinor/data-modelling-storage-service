@@ -8,11 +8,16 @@ def get_value_from_attribute_spec(doc: DTO, attribute_path_elements: List[str]):
     data = doc.data
     for attr_key in attribute_path_elements:
         try:
+            # Convert to int if data is a list, and attr_key is numeric
+            if isinstance(data, list):
+                if attr_key.isnumeric():
+                    attr_key = int(attr_key)
             val = data[attr_key]
         except KeyError:
             raise InvalidAttributeException(attr_key, data["type"])
 
-        if not isinstance(val, dict):
+        # Return value if its type is comparable
+        if type(val) in [str, int, float, bool]:
             return val
 
         data = val
