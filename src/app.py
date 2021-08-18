@@ -21,6 +21,7 @@ from controllers import (
     search_controller,
     whoami_controller,
     healtcheck_controller,
+    access_control_controller,
 )
 from services.database import data_source_collection
 from storage.internal.data_source_repository import DataSourceRepository
@@ -53,6 +54,7 @@ authenticated_routes.include_router(search_controller.router)
 authenticated_routes.include_router(blueprint_controller.router)
 authenticated_routes.include_router(reference_controller.router)
 authenticated_routes.include_router(explorer_controller.router)
+authenticated_routes.include_router(access_control_controller.router)
 
 app.include_router(authenticated_routes, prefix=prefix, dependencies=[Security(get_current_user)])
 app.include_router(public_routes, prefix=prefix)

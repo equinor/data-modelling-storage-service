@@ -64,11 +64,16 @@ class DataSource:
             filter={"_id": self.name}, update={"$set": {f"documentLookUp.{lookup.lookup_id}": lookup.dict()}}
         )
 
-    # TODO: AC and test
     def update_access_control(self, document_id: str, acl: ACL) -> None:
         old_lookup = self._lookup(document_id)
+        access_control(old_lookup.acl, AccessLevel.WRITE)
         old_lookup.acl = acl
         self._update_lookup(old_lookup)
+
+    def get_access_control(self, document_id: str) -> DocumentLookUp:
+        lookup = self._lookup(document_id)
+        access_control(lookup.acl, AccessLevel.READ)
+        return lookup
 
     def _remove_lookup(self, lookup_id):
         return self.data_source_collection.update_one(

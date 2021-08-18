@@ -1,6 +1,6 @@
 import json
 
-from behave import given, when
+from behave import given, when, then
 
 from authentication import authentication
 from authentication.authentication import User
@@ -8,6 +8,7 @@ from config import config
 
 
 @given('i access the resource url "{url}"')
+@then('i access the resource url "{url}"')
 def step_access_url(context, url):
     context.url = str(url)
 
