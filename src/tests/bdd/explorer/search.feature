@@ -24,6 +24,21 @@ Feature: Explorer - Search entity
                 "_id": "2",
                 "name": "ValuesBlueprint",
                 "type": "system/SIMOS/Blueprint"
+            },
+            {
+                "_id": "3",
+                "name": "NestedVectorsBlueprint",
+                "type": "system/SIMOS/Blueprint"
+            },
+            {
+                "_id": "4",
+                "name": "NestedBlueprint",
+                "type": "system/SIMOS/Blueprint"
+            },
+            {
+                "_id": "5",
+                "name": "NestedListBlueprint",
+                "type": "system/SIMOS/Blueprint"
             }
         ]
     }
@@ -76,6 +91,70 @@ Feature: Explorer - Search entity
       ]
     }
     """
+
+    Given there exist document with id "3" in data source "blueprints"
+    """
+    {
+      "name": "NestedVectorsBlueprint",
+      "type": "system/SIMOS/Blueprint",
+      "description": "This describes a blueprint that has two attributes",
+      "attributes": [
+        {
+          "name": "height",
+          "type": "system/SIMOS/BlueprintAttribute",
+          "attributeType": "number",
+          "label": "height",
+          "default": "100.0",
+          "contained": "true"
+        },
+        {
+          "name": "width",
+          "type": "system/SIMOS/BlueprintAttribute",
+          "attributeType": "number",
+          "label": "width",
+          "default": "100.0",
+          "contained": "true"
+        }
+      ]
+    }
+    """
+
+    Given there exist document with id "4" in data source "blueprints"
+    """
+    {
+      "name": "NestedBlueprint",
+      "type": "system/SIMOS/Blueprint",
+      "description": "This describes a blueprint that has another blueprint as one of its attributes",
+      "attributes": [
+        {
+          "name": "Vectors",
+          "type": "system/SIMOS/BlueprintAttribute",
+          "attributeType": "blueprints/root_package/NestedVectorsBlueprint",
+          "label": "Vectors",
+          "contained": true
+        }
+      ]
+    }
+    """
+
+    Given there exist document with id "5" in data source "blueprints"
+    """
+    {
+      "name": "NestedListBlueprint",
+      "type": "system/SIMOS/Blueprint",
+      "description": "This describes a blueprint that contains a list of nested entities",
+      "attributes": [
+        {
+          "name": "VectorList",
+          "type": "system/SIMOS/BlueprintAttribute",
+          "attributeType": "blueprints/root_package/NestedVectorsBlueprint",
+          "dimensions": "*",
+          "contained": true
+        }
+      ]
+    }
+    """
+
     Given there exist document with id "1" in data source "entities"
     """
     {
@@ -97,6 +176,59 @@ Feature: Explorer - Search entity
       "a_number": 150.1,
       "an_integer": 10,
       "a_string": "def"
+    }
+    """
+
+    Given there exist document with id "3" in data source "entities"
+    """
+    {
+      "name": "nestedVectors_1",
+      "description": "Some nested vectors",
+      "type": "blueprints/root_package/NestedBlueprint",
+      "Vectors": {
+        "name": "Vectors",
+        "type": "blueprints/root_package/NestedVectorsBlueprint",
+        "height": 223.3,
+        "width": 133.7
+      }
+    }
+    """
+
+    Given there exist document with id "4" in data source "entities"
+    """
+    {
+      "name": "nestedVectors_2",
+      "description": "Some other nested vectors",
+      "type": "blueprints/root_package/NestedBlueprint",
+      "Vectors": {
+        "name": "Vectors",
+        "type": "blueprints/root_package/NestedVectorsBlueprint",
+        "height": 64.3,
+        "width": 512.1
+      }
+    }
+    """
+
+    Given there exist document with id "5" in data source "entities"
+    """
+    {
+      "name": "myNestedListEntity_1",
+      "description": "Some entity with a list of items",
+      "type": "blueprints/root_package/NestedListBlueprint",
+      "VectorList": [
+        {
+          "name": "Vector_1",
+          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "height": 64.3,
+          "width": 512.1
+        },
+        {
+          "name": "Vector_2",
+          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "height": 280.1,
+          "width": 123.4
+        }
+      ]
     }
     """
 
@@ -163,3 +295,148 @@ Feature: Explorer - Search entity
     }
     """
 
+  Scenario: Search with sorting by attribute, top level attribute
+    Given i access the resource url "/api/v1/search/entities?sort_by_attribute=a_number"
+    When i make a "POST" request
+    """
+    {
+      "type": "blueprints/root_package/ValuesBlueprint"
+    }
+    """
+    Then the response status should be "OK"
+    And the response should equal
+    """
+    {
+      "1": {
+        "_id": "1",
+        "name": "primitive_1",
+        "description": "",
+        "type": "blueprints/root_package/ValuesBlueprint",
+        "a_number": 120.0,
+        "an_integer": 5,
+        "a_string": "abc"
+      },
+      "2": {
+        "_id": "2",
+        "name": "primitive_2",
+        "description": "",
+        "type": "blueprints/root_package/ValuesBlueprint",
+        "a_number": 150.1,
+        "an_integer": 10,
+        "a_string": "def"
+      }
+    }
+    """
+
+  Scenario: Search with sorting by default sort_by_attribute, name
+    Given i access the resource url "/api/v1/search/entities"
+    When i make a "POST" request
+    """
+    {
+      "type": "blueprints/root_package/NestedBlueprint"
+    }
+    """
+    Then the response status should be "OK"
+    And the response should equal
+    """
+    {
+      "3": {
+        "_id": "3",
+        "name": "nestedVectors_1",
+        "description": "Some nested vectors",
+        "type": "blueprints/root_package/NestedBlueprint",
+        "Vectors": {
+          "name": "Vectors",
+          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "height": 223.3,
+          "width": 133.7
+        }
+      },
+      "4": {
+        "_id": "4",
+        "name": "nestedVectors_2",
+        "description": "Some other nested vectors",
+        "type": "blueprints/root_package/NestedBlueprint",
+        "Vectors": {
+          "name": "Vectors",
+          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "height": 64.3,
+          "width": 512.1
+        }
+      }
+    }
+    """
+
+  Scenario: Search with sorting by attribute, nested attribute, i.e. sub-attribute
+    Given i access the resource url "/api/v1/search/entities?sort_by_attribute=Vectors.height"
+    When i make a "POST" request
+    """
+    {
+      "type": "blueprints/root_package/NestedBlueprint"
+    }
+    """
+    Then the response status should be "OK"
+    And the response should equal
+    """
+    {
+      "4": {
+        "_id": "4",
+        "name": "nestedVectors_2",
+        "description": "Some other nested vectors",
+        "type": "blueprints/root_package/NestedBlueprint",
+        "Vectors": {
+          "name": "Vectors",
+          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "height": 64.3,
+          "width": 512.1
+        }
+      },
+      "3": {
+        "_id": "3",
+        "name": "nestedVectors_1",
+        "description": "Some nested vectors",
+        "type": "blueprints/root_package/NestedBlueprint",
+        "Vectors": {
+          "name": "Vectors",
+          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "height": 223.3,
+          "width": 133.7
+        }
+      }
+    }
+    """
+
+  Scenario: Search with sorting by attribute, nested attribute from list by index
+    Given i access the resource url "/api/v1/search/entities?sort_by_attribute=VectorList.0.width"
+    When i make a "POST" request
+    """
+    {
+      "type": "blueprints/root_package/NestedListBlueprint"
+    }
+    """
+    Then the response status should be "OK"
+    And the response should equal
+    """
+    {
+      "5": {
+        "_id": "5",
+        "name": "myNestedListEntity_1",
+        "description": "Some entity with a list of items",
+        "type": "blueprints/root_package/NestedListBlueprint",
+        "VectorList": [
+          {
+            "name": "Vector_1",
+            "type": "blueprints/root_package/NestedVectorsBlueprint",
+            "height": 64.3,
+            "width": 512.1
+          },
+          {
+            "name": "Vector_2",
+            "type": "blueprints/root_package/NestedVectorsBlueprint",
+            "height": 280.1,
+            "width": 123.4
+          }
+        ]
+      }
+    }
+    """

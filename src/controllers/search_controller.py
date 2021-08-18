@@ -8,7 +8,9 @@ router = APIRouter()
 
 
 @router.post("/search/{data_source_id}", operation_id="search", response_model=dict)
-def search(data_source_id: str, request: dict):
+def search(data_source_id: str, request: dict, sort_by_attribute: str = "name"):
     use_case = SearchUseCase()
-    response = use_case.execute(SearchRequest(data_source_id=data_source_id, data=request))
+    response = use_case.execute(
+        SearchRequest(data_source_id=data_source_id, data=request, dotted_attribute_path=sort_by_attribute)
+    )
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])

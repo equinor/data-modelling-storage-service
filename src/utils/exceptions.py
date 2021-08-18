@@ -30,6 +30,11 @@ class DataSourceAlreadyExistsException(RepositoryException):
         super().__init__(message=f"The data source, with id '{uid}' already exists")
 
 
+class InvalidSortByAttributeException(RepositoryException):
+    def __init__(self, sort_by_attribute, type):
+        super().__init__(message=f"'{sort_by_attribute}' is not a valid attribute in the '{type}'")
+
+
 class InvalidEntityException(RepositoryException):
     def __init__(self, message):
         super().__init__(message=message)
