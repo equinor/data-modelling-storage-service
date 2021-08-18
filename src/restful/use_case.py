@@ -10,6 +10,7 @@ from utils.exceptions import (
     InvalidDocumentNameException,
     InvalidEntityException,
     RootPackageNotFoundException,
+    InvalidSortByAttributeException,
 )
 from utils.logging import logger
 
@@ -29,7 +30,7 @@ class UseCase(object):
         except (EntityAlreadyExistsException, InvalidDocumentNameException, InvalidEntityException) as e:
             logger.error(e)
             return res.ResponseFailure.build_entity_error(e)
-        except DataSourceAlreadyExistsException as error:
+        except (DataSourceAlreadyExistsException, InvalidSortByAttributeException) as error:
             return res.ResponseFailure.build_parameters_error(error)
         except Exception as exc:
             traceback.print_exc()
