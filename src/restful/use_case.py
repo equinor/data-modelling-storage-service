@@ -9,6 +9,7 @@ from utils.exceptions import (
     FileNotFoundException,
     InvalidDocumentNameException,
     InvalidEntityException,
+    MissingPrivilegeException,
     RootPackageNotFoundException,
     InvalidSortByAttributeException,
 )
@@ -30,6 +31,8 @@ class UseCase(object):
         except (EntityAlreadyExistsException, InvalidDocumentNameException, InvalidEntityException) as e:
             logger.error(e)
             return res.ResponseFailure.build_entity_error(e)
+        except MissingPrivilegeException as e:
+            return res.ResponseFailure.build_access_error(e)
         except (DataSourceAlreadyExistsException, InvalidSortByAttributeException) as error:
             return res.ResponseFailure.build_parameters_error(error)
         except Exception as exc:

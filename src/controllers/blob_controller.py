@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from starlette.responses import FileResponse, Response
+from starlette.responses import FileResponse, JSONResponse, Response
 
 from restful.status_codes import STATUS_CODES
 from use_case.get_blob_use_case import GetBlobRequest, GetBlobUseCase
@@ -20,6 +20,6 @@ def get_by_id(data_source_id: str, blob_id: str):
     use_case = GetBlobUseCase()
     response = use_case.execute(GetBlobRequest(data_source_id=data_source_id, blob_id=blob_id))
     if not response.type == "SUCCESS":
-        return Response(response.value, status_code=STATUS_CODES[response.type])
+        return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
     # Response is string encoded 'bytes'
     return Response(response.value)

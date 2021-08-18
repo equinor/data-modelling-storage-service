@@ -1,16 +1,10 @@
-class DocumentLookUp:
-    def __init__(self, lookup_id, repository, database_id, path, type):
-        self.lookup_id = lookup_id
-        self.repository = repository
-        self.database_id = database_id
-        self.path = path
-        self.type = type
+from pydantic import BaseModel
 
-    def to_dict(self):
-        return {
-            "repository": self.repository,
-            "databaseId": self.database_id,
-            "lookUpId": self.lookup_id,
-            "path": self.path,
-            "type": self.type,
-        }
+from authentication.access_control import ACL
+
+
+class DocumentLookUp(BaseModel):
+    lookup_id: str
+    repository: str
+    database_id: str
+    acl: ACL

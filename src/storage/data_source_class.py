@@ -1,6 +1,8 @@
 from typing import Dict, List, Union
 
 from pydantic import UUID4
+
+from authentication.access_control import access_control, AccessLevel, ACL, create_acl
 from domain_classes.document_look_up import DocumentLookUp
 from domain_classes.dto import DTO
 from domain_classes.repository import Repository
@@ -12,9 +14,14 @@ from utils.logging import logger
 
 
 class DataSource:
+    """
+    A DataSource instance is an abstraction layer over several repositories(databases/storage backends).
+    Access Control is done in the DataSource based on the Access Control Lists defined in the internal lookup tables.
+    """
+
     def __init__(self, name: str, repositories, data_source_collection=data_source_collection):
         self.name = name
-        self.repositories: Dict[Repository] = repositories
+        self.repositories: Dict[str, Repository] = repositories
         self.data_source_collection = data_source_collection
 
     @classmethod
@@ -35,29 +42,35 @@ class DataSource:
         return self.get_default_repository()
 
     def _get_documents_repository(self, document_id) -> Repository:
-        lookup = self.lookup(document_id)
-        return self.repositories[lookup["repository"]]
+        lookup = self._lookup(document_id)
+        return self.repositories[lookup.repository]
 
     # TODO: Read default attribute from DataSource spec
     def get_default_repository(self) -> Repository:
         # Now just returns the first repo in the ordered_dict
         return next(iter(self.repositories.values()))
 
-    def lookup(self, document_id) -> Dict:
-        res = self.data_source_collection.find_one(
-            filter={"_id": self.name, f"documentLookUp.{document_id}.lookUpId": document_id},
+    def _lookup(self, document_id) -> DocumentLookUp:
+        if res := self.data_source_collection.find_one(
+            filter={"_id": self.name, f"documentLookUp.{document_id}.lookup_id": document_id},
             projection={f"documentLookUp.{document_id}": True},
-        )
-        if not res:
-            raise EntityNotFoundException(document_id)
-        return res["documentLookUp"][document_id]
+        ):
+            return DocumentLookUp(**res["documentLookUp"][document_id])
 
-    def insert_lookup(self, lookup: DocumentLookUp):
+        raise EntityNotFoundException(document_id)
+
+    def _update_lookup(self, lookup: DocumentLookUp):
         return self.data_source_collection.update_one(
-            filter={"_id": self.name}, update={"$set": {f"documentLookUp.{lookup.lookup_id}": lookup.to_dict()}}
+            filter={"_id": self.name}, update={"$set": {f"documentLookUp.{lookup.lookup_id}": lookup.dict()}}
         )
 
-    def remove_lookup(self, lookup_id):
+    # TODO: AC and test
+    def update_access_control(self, document_id: str, acl: ACL) -> None:
+        old_lookup = self._lookup(document_id)
+        old_lookup.acl = acl
+        self._update_lookup(old_lookup)
+
+    def _remove_lookup(self, lookup_id):
         return self.data_source_collection.update_one(
             filter={"_id": self.name}, update={"$unset": {f"documentLookUp.{lookup_id}": ""}}
         )
@@ -65,24 +78,24 @@ class DataSource:
     def get(self, uid: Union[str, UUID4]) -> DTO:
         uid = str(uid)
         try:
-            lookup = self.lookup(uid)
-            repo = self.repositories[lookup["repository"]]
+            lookup = self._lookup(uid)
+            access_control(lookup.acl, AccessLevel.READ)
+            repo = self.repositories[lookup.repository]
             return DTO(repo.get(uid))
         except EntityNotFoundException:
             raise EntityNotFoundException(
                 uid, f"Document with id '{uid}' was not found in the '{self.name}' data-source"
             )
-        except Exception as error:
-            logger.exception(error)
-            raise EntityNotFoundException(f"Unknown error on fetching the document with uid: {uid} was not found")
 
     # TODO: Implement find across repositories
+    # TODO: Enable AccessControl
     def find(self, filter: dict) -> Union[DTO, List[DTO]]:
         repo = self.get_default_repository()
         result = repo.find(filter)
         return [DTO(item) for item in result]
 
     # TODO: Deprecate this
+    # TODO: Enable AccessControl
     def first(self, filter: dict) -> Union[DTO, None]:
         repo = self.get_default_repository()
         result = repo.find_one(filter)
@@ -92,22 +105,31 @@ class DataSource:
     def update(self, document: DTO, storage_attribute: StorageAttribute = None) -> None:
         # Since update() can also insert, we must check if it exists, and if not, insert a lookup
         try:
-            repo = self._get_documents_repository(document.uid)
+            lookup = self._lookup(document.uid)
+            repo = self.repositories[lookup.repository]
         except EntityNotFoundException:
             repo = self._get_repo_from_storage_attribute(storage_attribute)
-            self.insert_lookup(DocumentLookUp(document.uid, repo.name, document.uid, "", document.type))
+            lookup = DocumentLookUp(
+                lookup_id=document.uid, repository=repo.name, database_id=document.uid, acl=create_acl()
+            )
+            self._update_lookup(lookup)
 
         if (
             not document.name == document.data["name"]
             or not document.type == document.data["type"]
             or not document.uid == document.data["_id"]
         ):
-            raise ValueError("The meta data and tha 'data' object in the DTO does not match!")
+            raise ValueError("The metadata and tha 'data' object in the DTO does not match!")
+        access_control(lookup.acl, AccessLevel.WRITE)
         repo.update(document.uid, document.data)
 
+    # TODO: Ensure a root level restriction
+    # No access control on the 'add' operation. Permissions are checked in parent.
     def add(self, document: DTO, storage_attribute: StorageAttribute = None) -> None:
-        repo = self._get_repo_from_storage_attribute(storage_attribute)
-        self.insert_lookup(DocumentLookUp(document.uid, repo.name, document.uid, "", document.type))
+        repo: Repository = self._get_repo_from_storage_attribute(storage_attribute)
+        self._update_lookup(
+            DocumentLookUp(lookup_id=document.uid, repository=repo.name, database_id=document.uid, acl=create_acl())
+        )
         try:
             repo.add(document.uid, document.data)
         except EntityAlreadyExistsException:
@@ -119,32 +141,23 @@ class DataSource:
         repo = self._get_repo_from_storage_attribute(
             StorageAttribute("generic_blob", False, StorageDataTypes.BLOB.value), strict=True
         )
-        self.insert_lookup(DocumentLookUp(uid, repo.name, uid, "", "blob"))
+        lookup = DocumentLookUp(lookup_id=uid, repository=repo.name, database_id=uid, acl=create_acl())
+        access_control(lookup.acl, AccessLevel.WRITE)
+        self._update_lookup(lookup)
         repo.update_blob(uid, file.read())
 
     def get_blob(self, uid: str) -> bytes:
-        try:
-            repo = self._get_documents_repository(uid)
-            if not repo:
-                logger.error(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
-                raise EntityNotFoundException(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
-
-            return repo.get_blob(uid)
-
-        except EntityNotFoundException:
-            logger.error(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
-            raise EntityNotFoundException(f"{uid} was not found in the '{self.name}' data-sources lookupTable")
-
-        except Exception as error:
-            logger.exception(error)
-            raise EntityNotFoundException(f"The blob with uid: {uid} was not found")
+        lookup = self._lookup(uid)
+        access_control(lookup.acl, AccessLevel.READ)
+        return self.repositories[lookup.repository].get_blob(lookup.database_id)
 
     def delete(self, uid: str) -> None:
         # If lookup not found, assume it's deleted
         try:
-            repo = self._get_documents_repository(uid)
-            self.remove_lookup(uid)
-            repo.delete(uid)
+            lookup = self._lookup(uid)
+            access_control(lookup.acl, AccessLevel.WRITE)
+            self._remove_lookup(uid)
+            self.repositories[lookup.repository].delete(uid)
         except EntityNotFoundException:
             logger.warning(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
             pass
