@@ -1,7 +1,7 @@
 from typing import List
 
 from domain_classes.dto import DTO
-from utils.exceptions import InvalidAttributeException
+from utils.exceptions import InvalidSortByAttributeException
 
 
 def get_value_from_attribute_spec(doc: DTO, attribute_path_elements: List[str]):
@@ -14,7 +14,7 @@ def get_value_from_attribute_spec(doc: DTO, attribute_path_elements: List[str]):
                     attr_key = int(attr_key)
             val = data[attr_key]
         except KeyError:
-            raise InvalidAttributeException(attr_key, data["type"])
+            raise InvalidSortByAttributeException(attr_key, data["type"])
 
         # Return value if its type is comparable
         if type(val) in [str, int, float, bool]:
