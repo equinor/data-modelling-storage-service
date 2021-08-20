@@ -30,7 +30,7 @@ class ReferenceTestCase(unittest.TestCase):
             },
         }
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -73,7 +73,7 @@ class ReferenceTestCase(unittest.TestCase):
             except KeyError:
                 raise EntityNotFoundException(f"{document_id} was not found in the 'test' data-sources lookupTable")
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -113,7 +113,7 @@ class ReferenceTestCase(unittest.TestCase):
             },
         }
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
 
         repository.get = lambda x: DTO(doc_storage[str(x)])
@@ -154,7 +154,7 @@ class ReferenceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[str(document_id)])
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -200,7 +200,7 @@ class ReferenceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -237,7 +237,7 @@ class ReferenceTestCase(unittest.TestCase):
             "something": {"_id": "something", "name": "something", "description": "", "type": "blueprint_2",},
         }
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -276,7 +276,7 @@ class ReferenceTestCase(unittest.TestCase):
             "something": {"_id": "something", "name": "something", "description": "", "type": "blueprint_2",},
         }
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -317,9 +317,8 @@ class ReferenceTestCase(unittest.TestCase):
             },
         }
 
-        def mock_update(dto: DTO, *args):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
-            return None
 
         repository.get = lambda x: DTO(doc_storage[str(x)])
         repository.update = mock_update
@@ -362,9 +361,8 @@ class ReferenceTestCase(unittest.TestCase):
             },
         }
 
-        def mock_update(dto: DTO, *args):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
-            return None
 
         repository.get = lambda x: DTO(doc_storage[str(x)])
         repository.update = mock_update

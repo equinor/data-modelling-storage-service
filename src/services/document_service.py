@@ -194,7 +194,8 @@ class DocumentService:
             # Expand this when adding new repositories requiring PATH
             if isinstance(repository, ZipFileClient):
                 dto.data["__path__"] = path
-            repository.update(dto, node.get_context_storage_attribute())
+            parent_uid = node.parent.node_id if node.parent else None
+            repository.update(dto, node.get_context_storage_attribute(), parent_id=parent_uid)
             return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
         return ref_dict
 

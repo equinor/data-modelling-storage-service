@@ -51,7 +51,7 @@ class MoveFileUseCase(UseCase):
         data = source_document.data
         data["name"] = destination.name
         destination_document = DTO(uid=source_document.uid, data=data)
-        destination_document_repository.add(destination_document)
+        destination_document_repository.update(destination_document)
         logger.info(f"Added document '{destination_document.uid}' to data source '{destination_data_source_uid}")
 
         # Update parent(s)

@@ -2,6 +2,7 @@ from typing import List, Dict
 
 from pymongo.errors import DuplicateKeyError
 
+from authentication.access_control import access_control, AccessLevel, ACL
 from enums import RepositoryType
 from services.database import data_source_collection
 from restful.request_types.create_data_source import DataSourceRequest
@@ -75,6 +76,11 @@ class DataSourceRepository:
         if not data_source:
             raise DataSourceNotFoundException(id)
         return DataSource.from_dict(data_source)
+
+    def update_access_control(self, data_source_id: str, acl: ACL) -> None:
+        data_source: DataSource = self.get(data_source_id)
+        access_control(data_source.acl, AccessLevel.WRITE)
+        data_source_collection.update_one(filter={"_id": data_source.name}, update={"$set": {"acl": acl.dict()}})
 
 
 def get_data_source(data_source_id: str) -> DataSource:

@@ -8,6 +8,7 @@ from domain_classes.tree_node import ListNode, Node
 from enums import DMT, SIMOS
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
+from storage.internal.data_source_repository import DataSourceRepository
 from utils.create_entity import CreateEntity
 
 document_service = DocumentService(get_data_source)
@@ -96,3 +97,9 @@ def step_impl_documents(context, data_source_id: str, collection: str):
 def step_impl(context, document_id, data_source):
     acl = ACL(**json.loads(context.text))
     document_service.repository_provider(data_source).update_access_control(document_id, acl)
+
+
+@given('AccessControlList for data-source "{data_source}" is')
+def step_impl(context, data_source):
+    acl = ACL(**json.loads(context.text))
+    DataSourceRepository().update_access_control(data_source, acl)

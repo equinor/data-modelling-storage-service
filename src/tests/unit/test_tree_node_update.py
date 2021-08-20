@@ -136,7 +136,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -188,7 +188,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -267,7 +267,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -302,7 +302,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
             return None
 
@@ -323,9 +323,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO, *args):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
-            return None
 
         repository.get = mock_get
         repository.update = mock_update
@@ -352,9 +351,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO, *args):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
-            return None
 
         repository.get = mock_get
         repository.update = mock_update
@@ -389,9 +387,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO, *args):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
-            return None
 
         repository.get = mock_get
         repository.update = mock_update
@@ -432,9 +429,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO, *args):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
-            return None
 
         repository.get = mock_get
         repository.update = mock_update

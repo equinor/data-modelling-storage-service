@@ -14,7 +14,7 @@ from utils.package_import import import_package
 def step_impl_2(context, uid: str, data_source_id: str):
     document: DTO = DTO(uid=uid, data=json.loads(context.text))
     document_repository = get_data_source(data_source_id)
-    document_repository.add(document)
+    document_repository.update(document)
 
 
 @given("the system data source and SIMOS core package are available")

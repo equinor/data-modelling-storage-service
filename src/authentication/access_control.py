@@ -33,6 +33,8 @@ class AccessLevel(Enum):
 
     @classmethod
     def validate(cls, v):
+        if isinstance(v, cls):
+            return v
         try:
             return cls[v]
         except KeyError:

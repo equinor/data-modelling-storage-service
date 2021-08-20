@@ -6,10 +6,10 @@ Feature: Exporting root packages
       | test-DS |
 
     Given there are documents for the data source "test-DS" in collection "test-DS"
-      | uid                                  | parent_uid                           | name          | type                   |
-      | 1 |                                      | blueprints    | system/SIMOS/Package   |
-      | 2 | 1 | sub_package_1 | system/SIMOS/Package   |
-      | 3 | 2 | document_1    | system/SIMOS/Blueprint |
+      | uid | parent_uid | name          | type                   |
+      | 1   |            | blueprints    | system/SIMOS/Package   |
+      | 2   | 1          | sub_package_1 | system/SIMOS/Package   |
+      | 3   | 2          | document_1    | system/SIMOS/Blueprint |
 
 
   Scenario: A user want's to export a root package

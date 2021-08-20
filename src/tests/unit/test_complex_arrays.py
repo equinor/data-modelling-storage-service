@@ -120,7 +120,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
 
         document_repository = mock.Mock()
@@ -271,7 +271,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def mock_update(dto: DTO, storage_attribute):
+        def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
 
         document_repository = mock.Mock()
