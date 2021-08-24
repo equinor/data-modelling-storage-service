@@ -25,9 +25,13 @@ def find_by_name(data_source_id: str, name: str):
     """
     Get a root package by it's exact name
     """
-    package: DTO = get_data_source(data_source_id).first(
+    package: [DTO] = get_data_source(data_source_id).find(
         {"type": "system/SIMOS/Package", "isRoot": True, "name": name}
     )
     if not package:
         raise FileNotFoundException(data_source_id, name)
-    return JSONResponse(package.to_dict()["data"])
+    if len(package) > 1:
+        Exception(
+            f"More than 1 root package with name '{name}' was returned from DataSource. That should not happen..."
+        )
+    return JSONResponse(package[0].to_dict()["data"])

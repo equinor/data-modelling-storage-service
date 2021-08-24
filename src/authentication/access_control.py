@@ -89,6 +89,9 @@ def access_control(acl: ACL, access_level_required: AccessLevel):
     raise MissingPrivilegeException(f"The requested operation requires '{access_level_required.name}' privileges")
 
 
-def create_acl(extra=None) -> ACL:
+def create_acl() -> ACL:
     user = current_user()
-    return ACL(owner=user.username)
+    return ACL(owner=user.username, roles=DEFAULT_ACL.roles, others=DEFAULT_ACL.others)
+
+
+DEFAULT_ACL = ACL(owner=config.DMSS_ADMIN, roles={config.DMSS_ADMIN_ROLE: AccessLevel.WRITE}, others=AccessLevel.WRITE)

@@ -2,14 +2,14 @@ from typing import Dict, List, Union
 
 from pydantic import UUID4
 
-from authentication.access_control import access_control, AccessLevel, ACL, create_acl
+from authentication.access_control import access_control, AccessLevel, ACL, create_acl, DEFAULT_ACL
 from domain_classes.document_look_up import DocumentLookUp
 from domain_classes.dto import DTO
 from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
 from services.database import data_source_collection
-from utils.exceptions import EntityNotFoundException
+from utils.exceptions import EntityNotFoundException, MissingPrivilegeException
 from utils.logging import logger
 
 
@@ -17,17 +17,14 @@ class DataSource:
     """
     A DataSource instance is an abstraction layer over several repositories(databases/storage backends).
     Access Control is done in the DataSource based on the Access Control Lists defined in the internal lookup tables.
-
     """
 
-    # Default DataSource ACL lets anyone create root-packages
-    default_acl = ACL(owner="dmss-admin", roles={"dmss-admin": AccessLevel.WRITE}, others=AccessLevel.WRITE)
-
     def __init__(
-        self, name: str, acl: ACL = default_acl, repositories=None, data_source_collection=data_source_collection
+        self, name: str, acl: ACL = DEFAULT_ACL, repositories=None, data_source_collection=data_source_collection,
     ):
         self.name = name
-        # This ACL is used when adding root-packages
+        # This ACL is used when there is no parent document to read ACL from. Controls who can create root-packages,
+        # and which ACL imported files will get.
         self.acl = acl
         self.repositories: Dict[str, Repository] = repositories
         self.data_source_collection = data_source_collection
@@ -36,7 +33,7 @@ class DataSource:
     def from_dict(cls, a_dict):
         return cls(
             a_dict["name"],
-            ACL(**a_dict.get("acl", cls.default_acl.dict())),
+            ACL(**a_dict.get("acl", DEFAULT_ACL.dict())),
             {key: Repository(name=key, **value) for key, value in a_dict["repositories"].items()},
         )
 
@@ -51,11 +48,8 @@ class DataSource:
             raise ValueError(f"No repository for '{storage_attribute.storage_type_affinity}' data configured")
         return self.get_default_repository()
 
-    def _get_documents_repository(self, document_id) -> Repository:
-        lookup = self._lookup(document_id)
-        return self.repositories[lookup.repository]
-
-    def _validate_dto(self, dto: DTO):
+    @staticmethod
+    def _validate_dto(dto: DTO):
         if not dto.name == dto.data["name"] or not dto.type == dto.data["type"] or not dto.uid == dto.data["_id"]:
             raise ValueError("The metadata and tha 'data' object in the DTO does not match!")
 
@@ -71,7 +65,9 @@ class DataSource:
         ):
             return DocumentLookUp(**res["documentLookUp"][document_id])
 
-        raise EntityNotFoundException(document_id)
+        raise EntityNotFoundException(
+            uid=document_id, message=f"Document with id '{document_id}' was not found in the '{self.name}' data-source"
+        )
 
     def _update_lookup(self, lookup: DocumentLookUp):
         return self.data_source_collection.update_one(
@@ -96,30 +92,24 @@ class DataSource:
 
     def get(self, uid: Union[str, UUID4]) -> DTO:
         uid = str(uid)
-        try:
-            lookup = self._lookup(uid)
-            access_control(lookup.acl, AccessLevel.READ)
-            repo = self.repositories[lookup.repository]
-            return DTO(repo.get(uid))
-        except EntityNotFoundException:
-            raise EntityNotFoundException(
-                uid, f"Document with id '{uid}' was not found in the '{self.name}' data-source"
-            )
+        lookup = self._lookup(uid)
+        access_control(lookup.acl, AccessLevel.READ)
+        repo = self.repositories[lookup.repository]
+        return DTO(repo.get(uid))
 
     # TODO: Implement find across repositories
-    # TODO: Enable AccessControl
     def find(self, filter: dict) -> Union[DTO, List[DTO]]:
         repo = self.get_default_repository()
-        result = repo.find(filter)
-        return [DTO(item) for item in result]
 
-    # TODO: Deprecate this
-    # TODO: Enable AccessControl
-    def first(self, filter: dict) -> Union[DTO, None]:
-        repo = self.get_default_repository()
-        result = repo.find_one(filter)
-        if result:
-            return DTO(result)
+        documents_with_access: List[DTO] = []
+        for dto in repo.find(filter):
+            if lookup := self._lookup(dto.get("_id")):
+                try:
+                    access_control(lookup.acl, AccessLevel.READ)
+                    documents_with_access.append(DTO(dto))
+                except MissingPrivilegeException:
+                    pass
+        return documents_with_access
 
     def update(self, document: DTO, storage_attribute: StorageAttribute = None, parent_id: str = None) -> None:
         """

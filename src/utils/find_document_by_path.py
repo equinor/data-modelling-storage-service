@@ -26,7 +26,7 @@ def _find_document_in_package_by_path(
         next_package_ref = next((p for p in package["content"] if p["name"] == path_elements[0]), None)
         if not next_package_ref:
             raise FileNotFoundError(f"The package {path_elements[0]} could not be found in the package {package.name}")
-        next_package: DTO = data_source.first({"_id": next_package_ref["_id"]})
+        next_package: DTO = data_source.get(next_package_ref["_id"])
         if not next_package:
             raise FileNotFoundError(
                 f"Could not find a package '{next_package_ref['_id']}' in datasource {data_source.name}"
@@ -37,13 +37,18 @@ def _find_document_in_package_by_path(
 
 def get_document_uid_by_path(path: str, repository) -> Union[str, None]:
     root_package_name, path_elements = get_package_and_path(path)
-    root_package: DTO = repository.first({"name": root_package_name, "isRoot": True})
+    root_package: [DTO] = repository.find({"name": root_package_name, "isRoot": True})
     if not root_package:
         raise RootPackageNotFoundException(repository.name, root_package_name)
+    if len(root_package) > 2:
+        Exception(
+            f"More than 1 root package with name '{root_package_name}' ",
+            "was returned from DataSource. That should not happen...",
+        )
     # Check if it's a root-package
     if not path_elements:
-        return root_package.uid
-    uid = _find_document_in_package_by_path(root_package, path_elements, repository)
+        return root_package[0].uid
+    uid = _find_document_in_package_by_path(root_package[0], path_elements, repository)
     if not uid:
         raise EntityNotFoundException(path)
     return uid

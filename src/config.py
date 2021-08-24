@@ -27,5 +27,8 @@ class Config:
                 "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
             )
 
+    DMSS_ADMIN = os.getenv("DMSS_ADMIN", "dmss-admin")
+    DMSS_ADMIN_ROLE = os.getenv("DMSS_ADMIN_ROLE", "dmss-admin")
+
 
 config = Config()

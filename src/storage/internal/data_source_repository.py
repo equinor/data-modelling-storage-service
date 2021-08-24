@@ -2,7 +2,7 @@ from typing import List, Dict
 
 from pymongo.errors import DuplicateKeyError
 
-from authentication.access_control import access_control, AccessLevel, ACL
+from authentication.access_control import access_control, AccessLevel, ACL, DEFAULT_ACL
 from enums import RepositoryType
 from services.database import data_source_collection
 from restful.request_types.create_data_source import DataSourceRequest
@@ -59,6 +59,7 @@ class DataSourceRepository:
         return all_sources
 
     def create(self, id: str, document: DataSourceRequest):
+        access_control(DEFAULT_ACL, AccessLevel.WRITE)
         document = document.dict()
         document["_id"] = id
         try:
