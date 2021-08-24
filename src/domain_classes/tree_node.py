@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from pydantic import ValidationError
 
-from config import Config
+from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute
@@ -116,7 +116,7 @@ class DictImporter:
         parent=None,
     ):
 
-        if recursion_depth >= Config.MAX_ENTITY_RECURSION_DEPTH:
+        if recursion_depth >= config.MAX_ENTITY_RECURSION_DEPTH:
             message = (
                 f"Reached maximum recursion depth while creating NodeTree ({recursion_depth}).\n"
                 f"Node: {node_attribute.name}, Type: {node_attribute.attribute_type}\n"
