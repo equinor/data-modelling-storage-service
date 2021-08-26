@@ -19,6 +19,7 @@ from storage.repositories.mongo import MongoDBClient
 from storage.repositories.zip import ZipFileClient
 from utils.build_complex_search import build_mongo_query
 from utils.create_entity import CreateEntity
+from utils.delete_documents import delete_document
 from utils.exceptions import (
     DuplicateFileNameException,
     EntityNotFoundException,
@@ -28,48 +29,12 @@ from utils.exceptions import (
 )
 from utils.find_document_by_path import get_document_uid_by_path
 from utils.get_blueprint import BlueprintProvider
+from utils.get_complete_document_by_id import get_complete_document
 from utils.logging import logger
 from utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from utils.string_helpers import get_data_source_and_path, url_safe_name
 
 pretty_printer = pprint.PrettyPrinter()
-
-
-def resolve_reference_list(x: list, document_repository: DataSource) -> list:
-    if not x:  # Return an empty list
-        return x
-    resolved = []
-
-    if isinstance(x[0], list):  # Call recursively for nested lists
-        resolved = [resolve_reference_list(item, document_repository) for item in x]
-    for value in x:
-        if isinstance(value, dict) and value.get("_id"):  # It's a reference!
-            resolved.append(get_complete_document(value["_id"], document_repository))
-        else:
-            resolved.append(value)
-    return resolved
-
-
-def get_complete_document(document_uid: str, data_source: DataSource, depth: int = 999, depth_count: int = 0,) -> dict:
-    document: DTO = data_source.get(str(document_uid))
-    if depth <= depth_count:
-        if depth_count >= 999:
-            raise RecursionError("Reached max-nested-depth (999). Most likely some recursive entities")
-        return document.data
-    depth_count += 1
-    entity: dict = document.data
-    for key, value in entity.items():
-        if isinstance(value, dict) or isinstance(value, list):  # Potentially complex
-            if not value:
-                continue
-            if isinstance(value, list):  # If it's a list, resolve any references
-                entity[key] = resolve_reference_list(value, data_source)
-            else:
-                value: dict
-                if ref_id := value.get("_id"):  # It's a reference
-                    entity[key] = get_complete_document(ref_id, data_source, depth_count)
-
-    return entity
 
 
 class DocumentService:
@@ -159,20 +124,6 @@ class DocumentService:
 
         return result
 
-    def _delete_complex_list(self, value: Union[list, dict], repository):
-        """
-        Digs down in any list (simple, matrix, complex), and delete any contained referenced documents
-        """
-        if isinstance(value, list):
-            [self._delete_complex_list(item, repository) for item in value]
-
-        # No more nested lists
-        if not isinstance(value, dict):  # References are dicts
-            return
-
-        if value.get("_id") and value.get("contained"):  # If the referenced document is model contained, delete it.
-            self._remove_document(repository, value["_id"])
-
     def remove_document(self, data_source_id: str, document_id: str):
         """
         Delete a document, and any model contained children.
@@ -191,7 +142,7 @@ class DocumentService:
                         attr = int(attr)
                     potential_reference = attr_value.pop(attr)
                     if potential_reference.get("_id") and potential_reference.get("contained") is True:
-                        self._remove_document(repository, potential_reference["_id"])
+                        delete_document(repository, potential_reference["_id"])
                     break
                 if isinstance(attr_value, list):
                     attr_value = attr_value[int(attr)]
@@ -200,25 +151,7 @@ class DocumentService:
             repository.update(root_document)
             return
         else:
-            self._remove_document(repository, document_id)
-
-    def _remove_document(self, repository, document_id):
-        """
-        Delete a document, and any model contained children.
-        """
-        document: DTO = repository.get(document_id)
-        # Delete model contained referenced documents, and then itself
-        for key, value in document.data.items():
-            if isinstance(value, dict) or isinstance(value, list):  # Potentially complex
-                if not value:
-                    continue
-                if isinstance(value, list):
-                    self._delete_complex_list(value, repository)
-                else:
-                    value: dict
-                    if value.get("_id") and value.get("contained") is True:  # It's a model contained reference
-                        self._remove_document(repository, value["_id"])
-        repository.delete(document_id)
+            delete_document(repository, document_id)
 
     def rename_document(self, data_source_id: str, document_id: str, name: str, parent_uid: str = None):
         # Only root-packages have no parent_id
@@ -306,12 +239,12 @@ class DocumentService:
             parent_node = self.get_by_uid(data_source_id, parent_uid)
             parent_node.children[0].remove_by_child_id(child_uid)  # The first child of a directory is always 'content'
             self.save(parent_node, data_source_id)
-            self.remove_document(data_source_id, document_id=child_uid)
+            delete_document(data_source_id, document_id=child_uid)
             return
 
         # We are removing a root-package with no parent
         document_id = get_document_uid_by_path(directory, self.repository_provider(data_source_id))
-        self.remove_document(data_source_id, document_id)
+        delete_document(data_source_id, document_id)
 
     @staticmethod
     def _merge_entity_and_files(node, files):

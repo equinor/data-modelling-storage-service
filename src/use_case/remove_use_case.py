@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic.main import BaseModel
 
 from services.document_service import DocumentService
@@ -10,7 +8,7 @@ from storage.internal.data_source_repository import get_data_source
 
 class RemoveRequest(BaseModel):
     documentId: str
-    data_source_id: Optional[str] = None
+    data_source_id: str
 
 
 class RemoveUseCase(UseCase):
