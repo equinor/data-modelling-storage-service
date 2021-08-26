@@ -230,21 +230,22 @@ class DocumentService:
 
     def remove_by_path(self, data_source_id: str, directory: str):
         directory = directory.rstrip("/").lstrip("/")
+        data_source = self.repository_provider(data_source_id)
 
         if "/" in directory:
             parent_uid = get_document_uid_by_path(
-                f"{'/'.join(directory.split('/')[0:-1])}", self.repository_provider(data_source_id)
+                f"{'/'.join(directory.split('/')[0:-1])}", data_source
             )
-            child_uid = get_document_uid_by_path(directory, self.repository_provider(data_source_id))
+            child_uid = get_document_uid_by_path(directory, data_source)
             parent_node = self.get_by_uid(data_source_id, parent_uid)
             parent_node.children[0].remove_by_child_id(child_uid)  # The first child of a directory is always 'content'
             self.save(parent_node, data_source_id)
-            delete_document(data_source_id, document_id=child_uid)
+            delete_document(data_source, document_id=child_uid)
             return
 
         # We are removing a root-package with no parent
-        document_id = get_document_uid_by_path(directory, self.repository_provider(data_source_id))
-        delete_document(data_source_id, document_id)
+        document_id = get_document_uid_by_path(directory, data_source)
+        delete_document(data_source, document_id)
 
     @staticmethod
     def _merge_entity_and_files(node, files):
