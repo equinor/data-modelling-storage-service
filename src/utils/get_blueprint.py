@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from config import Config
+from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.dto import DTO
 from utils.exceptions import EntityNotFoundException
@@ -10,7 +10,7 @@ from utils.logging import logger
 
 class BlueprintProvider:
     @staticmethod
-    @lru_cache(maxsize=Config.CACHE_MAX_SIZE)
+    @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def get_blueprint(type: str) -> Blueprint:
         try:
             document: DTO = get_document_by_ref(type)

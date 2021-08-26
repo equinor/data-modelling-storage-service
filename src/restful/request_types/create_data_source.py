@@ -3,6 +3,7 @@ from typing import Dict, List, Optional
 from pydantic.main import BaseModel
 
 from enums import RepositoryType, StorageDataTypes
+from utils.encryption import encrypt
 
 
 class Repository(BaseModel, use_enum_values=True):
@@ -19,7 +20,17 @@ class Repository(BaseModel, use_enum_values=True):
     container: Optional[str] = None
     tls: Optional[bool] = True
 
+    def dict(self) -> dict:
+        return {
+            **{k: v for k, v in self},
+            "password": encrypt(self.password) if self.password else None,
+            "account_key": encrypt(self.account_key) if self.account_key else None,
+        }
+
 
 class DataSourceRequest(BaseModel):
     name: str
     repositories: Dict[str, Repository]
+
+    def dict(self) -> dict:
+        return {"name": self.name, "repositories": {k: v.dict() for k, v in self.repositories.items()}}

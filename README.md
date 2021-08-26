@@ -17,6 +17,11 @@ In order to run the commands described below, you need:
 
 ```bash
 docker-compose build
+# Repository secrets are encrypted at rest. Therefore, an encryption key is needed.
+KEY=$(docker-compose run --rm dmss create-key)
+echo $KEY
+cp .env-template .env 
+echo "SECRET_KEY=$KEY" >> .env
 docker-compose up
 ```
 

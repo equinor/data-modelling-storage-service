@@ -6,7 +6,7 @@ from typing import Callable, Dict, List, Union
 from uuid import uuid4
 
 from authentication.access_control import ACL
-from config import Config
+from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
@@ -134,7 +134,7 @@ class DocumentService:
         self.blueprint_provider = blueprint_provider
         self.repository_provider = repository_provider
 
-    @lru_cache(maxsize=Config.CACHE_MAX_SIZE)
+    @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def get_blueprint(self, type: str) -> Blueprint:
         blueprint: Blueprint = self.blueprint_provider.get_blueprint(type)
         blueprint.realize_extends(self.blueprint_provider.get_blueprint)

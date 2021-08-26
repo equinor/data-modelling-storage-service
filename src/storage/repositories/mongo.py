@@ -3,6 +3,7 @@ from typing import Dict, List, Optional
 import gridfs
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
+from utils.encryption import decrypt
 
 from storage.repository_interface import RepositoryInterface
 from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
@@ -24,7 +25,7 @@ class MongoDBClient(RepositoryInterface):
             host=host,
             port=port,
             username=username,
-            password=password,
+            password=decrypt(password),
             tls=tls,
             connectTimeoutMS=5000,
             serverSelectionTimeoutMS=5000,

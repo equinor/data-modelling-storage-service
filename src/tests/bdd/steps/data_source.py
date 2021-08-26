@@ -1,4 +1,7 @@
 from behave import given
+from utils.encryption import encrypt
+
+from restful.request_types.create_data_source import DataSourceRequest
 from services.database import data_source_collection
 from storage.internal.data_source_repository import DataSourceRepository
 
@@ -18,7 +21,7 @@ def create_repositories(context):
             "host": row["host"],
             "port": int(row["port"]),
             "username": row["username"],
-            "password": row["password"],
+            "password": encrypt(row["password"]),
             "tls": row["tls"],
             "database": row["database"],
             "collection": row["collection"],
@@ -33,13 +36,14 @@ def create_repositories(context):
 @given("there are basic data sources with repositories")
 def create_repositories(context):
     # First, add data sources
+    document = {}
     for row in context.table:
         document = {"_id": row["name"], "name": row["name"]}
-        data_source_collection.insert_one(document)
 
     # Then add repositories with default values to the data sources
+    repos = {}
     for row in context.table:
-        document = {
+        repos[row["name"]] = {
             "data_types": ["default"],
             "host": "db",
             "port": 27017,
@@ -50,5 +54,5 @@ def create_repositories(context):
             "collection": row["name"],
             "type": "mongo-db",
         }
-        DataSourceRepository.validate_repository(document)
-        data_source_collection.update_one({"_id": row["name"]}, {"$set": {f"repositories.{row['name']}": document}})
+    document["repositories"] = repos
+    DataSourceRepository().create(document["name"], DataSourceRequest(**document))
