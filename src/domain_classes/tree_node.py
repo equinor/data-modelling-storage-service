@@ -87,13 +87,19 @@ class DictExporter:
                 # If the content of the list is not contained, i.e. references.
                 if not child.storage_contained:
                     data[child.key] = [
-                        {"_id": child.uid, "type": child.type, "name": child.name} for child in child.children
+                        {"_id": child.uid, "type": child.type, "name": child.name, "contained": child.contained}
+                        for child in child.children
                     ]
                 else:
                     data[child.key] = [list_child.to_ref_dict() for list_child in child.children]
             else:
                 if not child.contained and child.entity:
-                    data[child.key] = {"_id": child.uid, "type": child.type, "name": child.name}
+                    data[child.key] = {
+                        "_id": child.uid,
+                        "type": child.type,
+                        "name": child.name,
+                        "contained": child.contained,
+                    }
                 else:
                     data[child.key] = child.to_ref_dict()
         return data

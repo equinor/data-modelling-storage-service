@@ -24,8 +24,7 @@ Feature: Explorer - Remove
     When i make a "POST" request
   """
   {
-    "documentId": "1",
-    "parentId": null
+    "documentId": "1"
   }
   """
     Then the response status should be "OK"
@@ -56,8 +55,7 @@ Feature: Explorer - Remove
     When i make a "POST" request
     """
     {
-      "parentId": "1.content",
-      "documentId": "2"
+      "documentId": "1.content.0"
     }
     """
     Then the response status should be "OK"
@@ -73,13 +71,12 @@ Feature: Explorer - Remove
     {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '2' was not found in the 'data-source-name' data-source"}
     """
 
-  Scenario: Remove file with no children
+  Scenario: Remove another file with no children
     Given i access the resource url "/api/v1/explorer/data-source-name/remove"
     When i make a "POST" request
     """
     {
-      "parentId": "2.content",
-      "documentId": "3"
+      "documentId": "2.content.0"
     }
     """
     Then the response status should be "OK"
@@ -96,8 +93,7 @@ Feature: Explorer - Remove
     When i make a "POST" request
   """
   {
-    "parentId": "1.content",
-    "documentId": "2"
+    "documentId": "1.content.0"
   }
   """
     Then the response status should be "OK"
