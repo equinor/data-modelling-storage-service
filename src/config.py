@@ -26,14 +26,13 @@ class Config(BaseSettings):
     OAUTH_TOKEN_ENDPOINT: str = Field("", env="OAUTH_TOKEN_ENDPOINT")
     OAUTH_AUTH_ENDPOINT: str = Field("", env="OAUTH_AUTH_ENDPOINT")
     OAUTH_CLIENT_ID = Field("dmss", env="OAUTH_CLIENT_ID")
-    AUTH_AUDIENCE: str = Field("dmss", env="OAUTH_AUDIENCE")
-    if AUTH_ENABLED:
-        print("Authentication is enabled")
-        if not OAUTH_WELL_KNOWN or not OAUTH_TOKEN_ENDPOINT or not OAUTH_AUTH_ENDPOINT:
-            raise ValueError(
-                "Environment variable 'OAUTH_WELL_KNOWN', 'OAUTH_AUTH_ENDPOINT',"
-                "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
-            )
 
 
 config = Config()
+if config.AUTH_ENABLED:
+    print("Authentication is enabled")
+    if not config.OAUTH_WELL_KNOWN or not config.OAUTH_TOKEN_ENDPOINT or not config.OAUTH_AUTH_ENDPOINT:
+        raise ValueError(
+            "Environment variable 'OAUTH_WELL_KNOWN', 'OAUTH_AUTH_ENDPOINT',"
+            "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
+        )

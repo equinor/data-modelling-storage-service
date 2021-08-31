@@ -234,14 +234,8 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/v1/explorer/test-DS/remove"
-    When i make a "POST" request
-    """
-    {
-      "documentId": "1",
-      "parentId": null
-    }
-    """
+    Given i access the resource url "/api/v1/explorer/test-DS/1"
+    When i make a "DELETE" request
     Then the response status should be "Forbidden"
     And the response should contain
     """
@@ -260,14 +254,8 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/v1/explorer/test-DS/remove"
-    When i make a "POST" request
-    """
-    {
-      "documentId": "1",
-      "parentId": null
-    }
-    """
+    Given i access the resource url "/api/v1/explorer/test-DS/1"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/test-DS/1"
     When I make a "GET" request

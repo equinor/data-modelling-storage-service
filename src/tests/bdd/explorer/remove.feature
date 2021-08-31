@@ -20,13 +20,8 @@ Feature: Explorer - Remove
       | 3   | 2          | document_1    |             | system/SIMOS/Blueprint |
 
   Scenario: Remove root package
-    Given i access the resource url "/api/v1/explorer/data-source-name/remove"
-    When i make a "POST" request
-  """
-  {
-    "documentId": "1"
-  }
-  """
+    Given i access the resource url "/api/v1/explorer/data-source-name/1"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/1"
     When I make a "GET" request
@@ -51,13 +46,8 @@ Feature: Explorer - Remove
   """
 
   Scenario: Remove file with no children
-    Given i access the resource url "/api/v1/explorer/data-source-name/remove"
-    When i make a "POST" request
-    """
-    {
-      "documentId": "1.content.0"
-    }
-    """
+    Given i access the resource url "/api/v1/explorer/data-source-name/1.content.0"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/1"
     When I make a "GET" request
@@ -72,13 +62,8 @@ Feature: Explorer - Remove
     """
 
   Scenario: Remove another file with no children
-    Given i access the resource url "/api/v1/explorer/data-source-name/remove"
-    When i make a "POST" request
-    """
-    {
-      "documentId": "2.content.0"
-    }
-    """
+    Given i access the resource url "/api/v1/explorer/data-source-name/2.content.0"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/3"
     When I make a "GET" request
@@ -89,13 +74,8 @@ Feature: Explorer - Remove
     """
 
   Scenario: Remove file with children
-    Given i access the resource url "/api/v1/explorer/data-source-name/remove"
-    When i make a "POST" request
-  """
-  {
-    "documentId": "1.content.0"
-  }
-  """
+    Given i access the resource url "/api/v1/explorer/data-source-name/1.content.0"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/2"
     When I make a "GET" request
