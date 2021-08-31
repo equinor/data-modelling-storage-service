@@ -233,9 +233,7 @@ class DocumentService:
         data_source = self.repository_provider(data_source_id)
 
         if "/" in directory:
-            parent_uid = get_document_uid_by_path(
-                f"{'/'.join(directory.split('/')[0:-1])}", data_source
-            )
+            parent_uid = get_document_uid_by_path(f"{'/'.join(directory.split('/')[0:-1])}", data_source)
             child_uid = get_document_uid_by_path(directory, data_source)
             parent_node = self.get_by_uid(data_source_id, parent_uid)
             parent_node.children[0].remove_by_child_id(child_uid)  # The first child of a directory is always 'content'
