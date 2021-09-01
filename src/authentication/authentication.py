@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import Optional, Union, List
 
 import requests
 from cachetools import cached, TTLCache
@@ -56,8 +56,8 @@ async def get_current_user(token: str = Security(oauth2_scheme) if config.AUTH_E
         return user_context
     oid_config = fetch_openid_configuration()
     try:
-        payload = jwt.decode(token, oid_config["jwks"], algorithms=["RS256"], audience="dmss")
-        user = User(username=payload["sub"], email=payload.get("email"), **payload)
+        payload = jwt.decode(token, {"keys": oid_config["jwks"]}, algorithms=["RS256"], audience=config.AUTH_AUDIENCE)
+        user = User(username=payload["sub"], **payload)
     except JWTError as error:
         logger.warning(error)
         raise credentials_exception
