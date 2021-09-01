@@ -26,6 +26,7 @@ class Config(BaseSettings):
     OAUTH_TOKEN_ENDPOINT: str = Field("", env="OAUTH_TOKEN_ENDPOINT")
     OAUTH_AUTH_ENDPOINT: str = Field("", env="OAUTH_AUTH_ENDPOINT")
     OAUTH_CLIENT_ID = Field("dmss", env="OAUTH_CLIENT_ID")
+    AUTH_AUDIENCE: str = Field("dmss", env="OAUTH_AUDIENCE")
     if AUTH_ENABLED:
         print("Authentication is enabled")
         if not OAUTH_WELL_KNOWN or not OAUTH_TOKEN_ENDPOINT or not OAUTH_AUTH_ENDPOINT:
