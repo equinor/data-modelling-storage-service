@@ -479,7 +479,7 @@ class DocumentService:
 
     def create_zip_export(self, absolute_document_ref: str) -> str:
         # TODO: This is not SAFE. See; https://security.openstack.org/guidelines/dg_using-temporary-files-securely.html
-        archive_path = "/tmp/temp_zip_archive.zip"  # noseq
+        archive_path = "/tmp/temp_zip_archive.zip"  # nosec
         data_source_id, document_uid = absolute_document_ref.split("/", 1)
         document: Node = self.get_by_uid(data_source_id, document_uid)
         # TODO: Is this secure?
