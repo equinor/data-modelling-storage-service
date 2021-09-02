@@ -46,12 +46,7 @@ class MongoDBClient(RepositoryInterface):
             raise EntityAlreadyExistsException
 
     def update(self, uid: str, document: Dict) -> bool:
-        try:
-            # Update replaces the entire document in the database with the posted document
-            return self.handler[self.collection].replace_one({"_id": uid}, document, upsert=True).acknowledged
-        except Exception as error:
-            print("ERROR", error)
-            return False
+        return self.handler[self.collection].replace_one({"_id": uid}, document, upsert=True).acknowledged
 
     def delete(self, uid: str) -> bool:
         return self.handler[self.collection].delete_one(filter={"_id": uid}).acknowledged

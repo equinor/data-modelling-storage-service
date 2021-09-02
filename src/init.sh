@@ -1,10 +1,10 @@
 #!/bin/sh
 set -eu
 ENVIRON=${ENVIRONMENT:="production"}
-if [ ! -e /code/home/first-run-false ] && [ "$ENVIRON" = 'local' ]; then
+if [ ! -e /tmp/first-run-false ] && [ "$ENVIRON" = 'local' ]; then
   echo "Importing data"
   python3 /code/app.py reset-app
-  touch /code/home/first-run-false
+  touch /tmp/first-run-false
 fi
 
 if [ "$1" = 'api' ]; then
