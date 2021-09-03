@@ -85,7 +85,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         document_service.save(node, "testing")
 
-        assert doc_storage["1"]["references"] == [{"name": "a_reference", "type": "blueprint_2", "_id": "2"}]
+        assert doc_storage["1"]["references"] == [
+            {"name": "a_reference", "type": "blueprint_2", "_id": "2", "contained": True}
+        ]
 
     def test_save_delete(self):
         repository = mock.Mock()
@@ -115,8 +117,8 @@ class DocumentServiceTestCase(unittest.TestCase):
             "nested": {},
             "reference": {},
             "references": [
-                {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
-                {"_id": "4", "name": "a_reference", "type": "blueprint_2"},
+                {"_id": "2", "name": "a_reference", "type": "blueprint_2", "contained": True},
+                {"_id": "4", "name": "a_reference", "type": "blueprint_2", "contained": True},
             ],
         }
 

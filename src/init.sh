@@ -19,5 +19,3 @@ elif [ "$1" = 'behave' ]; then
 else
   exec "$@"
 fi
-
-

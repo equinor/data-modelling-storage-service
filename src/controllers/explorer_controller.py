@@ -89,11 +89,10 @@ def move(data_source_id: str, request_data: MoveRequest):  # noqa: E501
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-@router.post("/explorer/{data_source_id}/remove", operation_id="explorer_remove")
-def remove(data_source_id: str, remove_request: RemoveRequest):  # noqa: E501
-    remove_request.data_source_id = data_source_id
+@router.delete("/explorer/{data_source_id}/{dotted_id}", operation_id="explorer_remove")
+def remove(data_source_id: str, dotted_id: str):
     use_case = RemoveUseCase()
-    response = use_case.execute(remove_request)
+    response = use_case.execute(RemoveRequest(data_source_id=data_source_id, documentId=dotted_id))
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 

@@ -2,7 +2,7 @@ import pprint
 import zipfile
 from functools import lru_cache
 from tempfile import SpooledTemporaryFile
-from typing import Callable, Dict, List, Union
+from typing import Dict, List, Union
 from uuid import uuid4
 
 from authentication.access_control import ACL
@@ -10,7 +10,6 @@ from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
-from domain_classes.storage_recipe import StorageRecipe
 from domain_classes.tree_node import ListNode, Node
 from enums import BLOB_TYPES, DMT, SIMOS
 from restful.request_types.shared import NamedEntity, Reference
@@ -19,8 +18,8 @@ from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
 from storage.repositories.zip import ZipFileClient
 from utils.build_complex_search import build_mongo_query
-from utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from utils.create_entity import CreateEntity
+from utils.delete_documents import delete_document
 from utils.exceptions import (
     DuplicateFileNameException,
     EntityNotFoundException,
@@ -30,103 +29,12 @@ from utils.exceptions import (
 )
 from utils.find_document_by_path import get_document_uid_by_path
 from utils.get_blueprint import BlueprintProvider
+from utils.get_complete_document_by_id import get_complete_document
 from utils.logging import logger
+from utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from utils.string_helpers import get_data_source_and_path, url_safe_name
-from utils.validators import valid_named_entity
 
 pretty_printer = pprint.PrettyPrinter()
-
-
-def get_resolved_document(
-    document: DTO,
-    document_repository: DataSource,
-    blueprint_provider: Callable[[str], Blueprint],
-    depth: int = 999,
-    depth_count: int = 0,
-) -> Dict:
-    if depth <= depth_count:
-        if depth_count >= 999:
-            raise RecursionError("Reached max-nested-depth (999). Most likely some recursive entities")
-        return document.data
-    depth_count += 1
-
-    blueprint: Blueprint = blueprint_provider(document.type)
-
-    data: Dict = document.data
-
-    for complex_attribute in blueprint.get_none_primitive_types():
-        attribute_name = complex_attribute.name
-        if complex_data := document.get(attribute_name):
-            storage_recipe: StorageRecipe = blueprint.storage_recipes[0]
-            if storage_recipe.is_contained(attribute_name, complex_attribute.attribute_type):
-                if complex_attribute.is_array():
-                    temp = []
-                    for item in complex_data:
-                        # Only optional, and unfixed array attributes are allowed to have empty{} items.
-                        if not item and (complex_attribute.is_optional() or complex_attribute.dimensions.is_unfixed()):
-                            temp.append({})
-                        else:
-                            try:
-                                temp.append(
-                                    get_resolved_document(
-                                        DTO(item), document_repository, blueprint_provider, depth, depth_count
-                                    )
-                                )
-                            except Exception as error:
-                                # error = f"The entity {item} is invalid! Type: {complex_attribute.attribute_type}"
-                                logger.exception(error)
-                                raise Exception(error)
-
-                    document.data[attribute_name] = temp
-                else:
-                    data[attribute_name] = get_resolved_document(
-                        DTO(complex_data), document_repository, blueprint_provider, depth, depth_count
-                    )
-            else:
-                if complex_attribute.is_array():
-                    children = []
-                    for item in complex_data:
-                        try:
-                            valid_named_entity(item)
-                            doc = get_complete_document(item["_id"], document_repository, blueprint_provider, depth)
-                        except InvalidEntityException as error:
-                            raise InvalidEntityException(
-                                f"{pprint.pformat(data)} is invalid.\n message: {error}"
-                            ) from None
-                        except EntityNotFoundException as error:
-                            raise InvalidEntityException(
-                                f"The document {{'name': {document.name}, '_id': {document.uid}}} has in invalid "
-                                f"child, and could not be loaded. Error: {error.message}"
-                            ) from None
-                        children.append(doc)
-                    data[attribute_name] = children
-                else:
-                    try:
-                        valid_named_entity(complex_data)
-                    except InvalidEntityException as error:
-                        raise InvalidEntityException(
-                            f"{pprint.pformat(data)} is invalid.\n message: {error}"
-                        ) from None
-                    data[attribute_name] = get_complete_document(
-                        complex_data["_id"], document_repository, blueprint_provider, depth
-                    )
-        # If there is no data, and the attribute is NOT optional, AND it's NOT an array, raise an exception
-        else:
-            if not complex_attribute.is_optional() and not complex_attribute.is_array():
-                error = f"The entity {document.name} is invalid! None-optional type '{attribute_name}' is missing."
-                logger.error(error)
-
-    return data
-
-
-def get_complete_document(
-    document_uid: str,
-    document_repository: DataSource,
-    blueprint_provider: Callable[[str], Blueprint],
-    depth: int = 999,
-) -> dict:
-    raw_document = document_repository.get(str(document_uid))
-    return get_resolved_document(raw_document, document_repository, blueprint_provider, depth)
 
 
 class DocumentService:
@@ -200,10 +108,7 @@ class DocumentService:
         return ref_dict
 
     def get_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
-        complete_document = get_complete_document(
-            document_uid, self.repository_provider(data_source_id), self.get_blueprint, depth
-        )
-
+        complete_document = get_complete_document(document_uid, self.repository_provider(data_source_id), depth)
         return Node.from_dict(complete_document, complete_document.get("_id"), blueprint_provider=self.get_blueprint)
 
     def get_by_path(self, absolute_reference: str) -> Node:
@@ -219,39 +124,34 @@ class DocumentService:
 
         return result
 
-    def remove_document(self, data_source_id: str, document_id: str, parent_id: str = None):
-        if parent_id:
-            parent: Node = self.get_by_uid(data_source_id, parent_id)
+    def remove_document(self, data_source_id: str, document_id: str):
+        """
+        Delete a document, and any model contained children.
+        If document_id is a dotted attribute path, it will remove the reference in the parent.
+        Does not use the Node class, as blueprints wont necessarily be available when deleting.
+        """
+        repository = self.repository_provider(data_source_id)
+        if "." in document_id:
+            root_document: DTO = repository.get(document_id.split(".")[0])
+            path_after_root = document_id.split(".")[1:]
 
-            if not parent:
-                raise EntityNotFoundException(uid=parent_id)
-
-            attribute_node = parent.search(document_id)
-
-            if not attribute_node:
-                raise EntityNotFoundException(uid=document_id)
-
-            if not attribute_node.storage_contained:
-                self._remove_document(data_source_id, document_id)
-
-            attribute_node.remove()
-
-            self.save(parent, data_source_id)
-
+            attr_value = root_document.data
+            for index, attr in enumerate(path_after_root):
+                if index + 1 == len(path_after_root):
+                    if isinstance(attr_value, list):
+                        attr = int(attr)
+                    potential_reference = attr_value.pop(attr)
+                    if potential_reference.get("_id") and potential_reference.get("contained") is True:
+                        delete_document(repository, potential_reference["_id"])
+                    break
+                if isinstance(attr_value, list):
+                    attr_value = attr_value[int(attr)]
+                else:
+                    attr_value = attr_value[attr]
+            repository.update(root_document)
+            return
         else:
-            self._remove_document(data_source_id, document_id)
-
-    def _remove_document(self, data_source_id, document_id):
-        document: Node = self.get_by_uid(data_source_id, document_id)
-        if not document:
-            raise EntityNotFoundException(uid=document_id)
-
-        # Remove self and children references
-        for child in document.traverse():
-            # Only remove children if they ARE contained in model and NOT contained in storage
-            if not child.storage_contained and child.contained and not child.is_empty():
-                self.repository_provider(data_source_id).delete(child.uid)
-                logger.info(f"Deleted document '{child.uid}'")
+            delete_document(repository, document_id)
 
     def rename_document(self, data_source_id: str, document_id: str, name: str, parent_uid: str = None):
         # Only root-packages have no parent_id
@@ -330,18 +230,20 @@ class DocumentService:
 
     def remove_by_path(self, data_source_id: str, directory: str):
         directory = directory.rstrip("/").lstrip("/")
+        data_source = self.repository_provider(data_source_id)
 
         if "/" in directory:
-            parent_uid = get_document_uid_by_path(
-                f"{'/'.join(directory.split('/')[0:-1])}", self.repository_provider(data_source_id)
-            )
-            child_uid = get_document_uid_by_path(directory, self.repository_provider(data_source_id))
-            self.remove_document(data_source_id, document_id=child_uid, parent_id=parent_uid)
+            parent_uid = get_document_uid_by_path(f"{'/'.join(directory.split('/')[0:-1])}", data_source)
+            child_uid = get_document_uid_by_path(directory, data_source)
+            parent_node = self.get_by_uid(data_source_id, parent_uid)
+            parent_node.children[0].remove_by_child_id(child_uid)  # The first child of a directory is always 'content'
+            self.save(parent_node, data_source_id)
+            delete_document(data_source, document_id=child_uid)
             return
 
         # We are removing a root-package with no parent
-        document_id = get_document_uid_by_path(directory, self.repository_provider(data_source_id))
-        self.remove_document(data_source_id, document_id)
+        document_id = get_document_uid_by_path(directory, data_source)
+        delete_document(data_source, document_id)
 
     @staticmethod
     def _merge_entity_and_files(node, files):

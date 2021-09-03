@@ -51,6 +51,7 @@ class ReferenceTestCase(unittest.TestCase):
         assert doc_storage["1"]["uncontained_in_every_way"] == {
             "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
             "name": "something",
+            "contained": False,
             "type": "blueprint_2",
         }
 
@@ -182,6 +183,7 @@ class ReferenceTestCase(unittest.TestCase):
             "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
             "name": "something",
             "type": "blueprint_2",
+            "contained": False,
         }
 
     def test_insert_reference_missing_required_attribute(self):
@@ -334,6 +336,7 @@ class ReferenceTestCase(unittest.TestCase):
             "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
             "name": "something",
             "type": "blueprint_2",
+            "contained": False,
         }
 
     def test_add_reference_in_list(self):
@@ -372,8 +375,8 @@ class ReferenceTestCase(unittest.TestCase):
         document_service.insert_reference(
             "testing",
             document_id="1",
-            reference=Reference.parse_obj(
-                {"_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a", "name": "something", "type": "blueprint_2",}
+            reference=Reference(
+                **{"_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a", "name": "something", "type": "blueprint_2"}
             ),
             attribute_path="uncontained_in_every_way",
         )
@@ -382,4 +385,5 @@ class ReferenceTestCase(unittest.TestCase):
             "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
             "name": "something",
             "type": "blueprint_2",
+            "contained": False,
         }

@@ -20,14 +20,8 @@ Feature: Explorer - Remove
       | 3   | 2          | document_1    |             | system/SIMOS/Blueprint |
 
   Scenario: Remove root package
-    Given i access the resource url "/api/v1/explorer/data-source-name/remove"
-    When i make a "POST" request
-  """
-  {
-    "documentId": "1",
-    "parentId": null
-  }
-  """
+    Given i access the resource url "/api/v1/explorer/data-source-name/1"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/1"
     When I make a "GET" request
@@ -52,14 +46,8 @@ Feature: Explorer - Remove
   """
 
   Scenario: Remove file with no children
-    Given i access the resource url "/api/v1/explorer/data-source-name/remove"
-    When i make a "POST" request
-    """
-    {
-      "parentId": "1.content",
-      "documentId": "2"
-    }
-    """
+    Given i access the resource url "/api/v1/explorer/data-source-name/1.content.0"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/1"
     When I make a "GET" request
@@ -73,15 +61,9 @@ Feature: Explorer - Remove
     {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '2' was not found in the 'data-source-name' data-source"}
     """
 
-  Scenario: Remove file with no children
-    Given i access the resource url "/api/v1/explorer/data-source-name/remove"
-    When i make a "POST" request
-    """
-    {
-      "parentId": "2.content",
-      "documentId": "3"
-    }
-    """
+  Scenario: Remove another file with no children
+    Given i access the resource url "/api/v1/explorer/data-source-name/2.content.0"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/3"
     When I make a "GET" request
@@ -92,14 +74,8 @@ Feature: Explorer - Remove
     """
 
   Scenario: Remove file with children
-    Given i access the resource url "/api/v1/explorer/data-source-name/remove"
-    When i make a "POST" request
-  """
-  {
-    "parentId": "1.content",
-    "documentId": "2"
-  }
-  """
+    Given i access the resource url "/api/v1/explorer/data-source-name/1.content.0"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/2"
     When I make a "GET" request
