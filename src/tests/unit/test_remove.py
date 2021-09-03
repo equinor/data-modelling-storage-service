@@ -97,6 +97,75 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service.remove_document(data_source_id="testing", document_id="1.nested")
         assert doc_storage["1"].get("nested") is None
 
+    def test_remove_second_level_nested(self):
+        repository = mock.Mock()
+
+        doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "Parent",
+                "description": "",
+                "type": "blueprint_1",
+                "nested": {
+                    "name": "Nested",
+                    "description": "",
+                    "type": "blueprint_1",
+                    "nested": {"_id": "2", "name": "Parent", "contained": True, "type": "blueprint_1"},
+                },
+            },
+            "2": {"_id": "2", "name": "Parent", "description": "", "type": "blueprint_1",},
+        }
+
+        repository.get = lambda doc_id: DTO(doc_storage[doc_id])
+        repository.delete = lambda doc_id: doc_storage.pop(doc_id)
+        document_service = DocumentService(
+            repository_provider=lambda x: repository, blueprint_provider=blueprint_provider
+        )
+        document_service.remove_document(data_source_id="testing", document_id="1")
+        assert doc_storage.get("1") is None
+        assert doc_storage.get("2") is None
+
+    def test_remove_third_level_nested_list(self):
+        repository = mock.Mock()
+
+        doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "Parent",
+                "description": "",
+                "type": "blueprint_1",
+                "nested": {
+                    "name": "Nested",
+                    "description": "",
+                    "type": "blueprint_1",
+                    "nested": [
+                        {
+                            "name": "Parent",
+                            "type": "blueprint_1",
+                            "nested": [{"_id": "2", "name": "Parent", "contained": True, "type": "blueprint_1"}],
+                        },
+                        {
+                            "name": "Parent",
+                            "type": "blueprint_1",
+                            "nested": [{"_id": "3", "name": "Parent", "contained": True, "type": "blueprint_1"}],
+                        },
+                    ],
+                },
+            },
+            "2": {"_id": "2", "name": "Parent", "description": "", "type": "blueprint_1",},
+            "3": {"_id": "3", "name": "Parent", "description": "", "type": "blueprint_1",},
+        }
+
+        repository.get = lambda doc_id: DTO(doc_storage[doc_id])
+        repository.delete = lambda doc_id: doc_storage.pop(doc_id)
+        document_service = DocumentService(
+            repository_provider=lambda x: repository, blueprint_provider=blueprint_provider
+        )
+        document_service.remove_document(data_source_id="testing", document_id="1")
+        assert doc_storage.get("1") is None
+        assert doc_storage.get("2") is None
+        assert doc_storage.get("3") is None
+
     def test_remove_reference(self):
         repository = mock.Mock()
 
