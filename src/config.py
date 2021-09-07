@@ -26,6 +26,7 @@ class Config(BaseSettings):
     OAUTH_TOKEN_ENDPOINT: str = Field("", env="OAUTH_TOKEN_ENDPOINT")
     OAUTH_AUTH_ENDPOINT: str = Field("", env="OAUTH_AUTH_ENDPOINT")
     OAUTH_CLIENT_ID = Field("dmss", env="OAUTH_CLIENT_ID")
+    AUTH_AUDIENCE: str = Field("dmss", env="OAUTH_AUDIENCE")
 
 
 config = Config()
