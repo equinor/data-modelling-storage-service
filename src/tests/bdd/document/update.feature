@@ -210,7 +210,7 @@ Feature: Document 2
 
   Scenario: Update document (only contained)
     Given i access the resource url "/api/v1/documents/data-source-name/1"
-    When i make a "PUT" request
+    When i make a form-data "PUT" request
     """
     {
       "name": "package_1",
@@ -232,7 +232,7 @@ Feature: Document 2
 
   Scenario: Update document (both contained and not contained)
     Given i access the resource url "/api/v1/documents/data-source-name/6"
-    When i make a "PUT" request
+    When i make a form-data "PUT" request
     """
     {
       "name": "new_name",
@@ -330,7 +330,7 @@ Feature: Document 2
 
   Scenario: Update document (attribute and not contained)
     Given i access the resource url "/api/v1/documents/data-source-name/6?attribute=itemNotContained"
-    When i make a "PUT" request
+    When i make a form-data "PUT" request
     """
     {
       "name": "item_single",

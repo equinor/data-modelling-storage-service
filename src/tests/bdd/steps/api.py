@@ -15,26 +15,36 @@ def step_access_url(context, url):
 
 @when('i make a "{method}" request with "{number_of_files}" files')
 def step_make_file_request(context, method, number_of_files):
-    data = json.loads(context.text)
-    data["document"] = json.dumps(data["document"])
-    if method == "POST":
-        with open("tests/bdd/steps/test_pdf.pdf", "rb") as file:
-            files = []
-            for n in range(1, int(number_of_files) + 1):
-                files.append(("files", (f"file{n}", file)))
-            context.response = context.test_client.post(context.url, data=data, files=files)
+    # Parses the posted form-data. Converting everything to Dict[str, str]
+    form_data = {k: json.dumps(v) if isinstance(v, dict) else str(v) for k, v in json.loads(context.text).items()}
+    with open("tests/bdd/steps/test_pdf.pdf", "rb") as file:
+        files = []
+        for n in range(1, int(number_of_files) + 1):
+            files.append(("files", (f"file{n}", file)))
+        if method == "POST":
+            context.response = context.test_client.post(context.url, data=form_data, files=files)
+        if method == "PUT":
+            context.response = context.test_client.put(context.url, data=form_data, files=files)
+
+
+@when('i make a form-data "{method}" request')
+def step_make_request(context, method):
+    # These requests may contain files, so we use "multipart/form-data".
+    # JSON must then be sent in the 'data' key part of the form
+    if method == "PUT":
+        context.response = context.test_client.put(context.url, data={"data": context.text})
+    elif method == "POST":
+        context.response = context.test_client.put(context.url, data={"data": context.text})
+    else:
+        raise Exception("A 'form-data' request must be either 'PUT' or 'POST'")
 
 
 @when('i make a "{method}" request')
 def step_make_request(context, method):
-    data = {}
-    if "text" in context and context.text:
-        data = json.loads(context.text)
-
     if method == "PUT":
-        context.response = context.test_client.put(context.url, json=data)
+        context.response = context.test_client.put(context.url, json=json.loads(context.text))
     elif method == "POST":
-        context.response = context.test_client.post(context.url, json=data)
+        context.response = context.test_client.post(context.url, json=json.loads(context.text))
     elif method == "GET":
         context.response = context.test_client.get(context.url)
     elif method == "DELETE":

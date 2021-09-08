@@ -47,6 +47,7 @@ class SIMOS(Enum):
     BLUEPRINT_ATTRIBUTE = "system/SIMOS/BlueprintAttribute"
     APPLICATION = "system/SIMOS/Application"
     ATTRIBUTE_TYPES = "system/SIMOS/AttributeTypes"
+    BLOB = "system/SIMOS/Blob"
 
 
 class DMT(Enum):

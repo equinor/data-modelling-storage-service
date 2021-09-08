@@ -1,9 +1,11 @@
-from typing import Optional
+from typing import List, Optional
 
-from restful.response_object import ResponseSuccess
-from services.document_service import DocumentService
+from fastapi import File, UploadFile
+
 from restful.request_types.shared import DataSource
+from restful.response_object import ResponseSuccess
 from restful.use_case import UseCase
+from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 
 
@@ -11,6 +13,7 @@ class UpdateDocumentRequest(DataSource):
     document_id: str
     data: dict
     attribute: Optional[str] = None
+    files: Optional[List[UploadFile]] = File(None)
 
 
 class UpdateDocumentUseCase(UseCase):
@@ -24,6 +27,7 @@ class UpdateDocumentUseCase(UseCase):
             document_id=req.document_id,
             data=req.data,
             attribute_path=req.attribute,
+            files={f.filename: f.file for f in req.files} if req.files else None,
         )
         document_service.invalidate_cache()
         return ResponseSuccess(document)

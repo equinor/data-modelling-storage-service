@@ -1,9 +1,10 @@
 import pprint
 import zipfile
 from functools import lru_cache
-from tempfile import SpooledTemporaryFile
 from typing import Dict, List, Union
 from uuid import uuid4
+
+from fastapi import UploadFile
 
 from authentication.access_control import ACL
 from config import config
@@ -11,7 +12,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
 from domain_classes.tree_node import ListNode, Node
-from enums import BLOB_TYPES, DMT, SIMOS
+from enums import DMT, SIMOS
 from restful.request_types.shared import NamedEntity, Reference
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
@@ -53,20 +54,21 @@ class DocumentService:
         self.get_blueprint.cache_clear()
         self.blueprint_provider.invalidate_cache()
 
-    def save_blob_data(self, node, repository):
-        # If the file is created or updated, the blob_reference is a dict.
-        if isinstance(node.entity["blob_reference"], dict):
-            reference = node.entity["blob_reference"].get("_id")
-            file: SpooledTemporaryFile = node.entity["blob_reference"]["file"]
-            if not reference:
-                uid = str(uuid4())
-            reference = f"{repository.name}/{uid}"
-            repository.update_blob(uid, file)
-            node.entity["size"] = file.seek(0, 2)
-        else:
-            reference = node.entity["blob_reference"]
+    def save_blob_data(self, node, repository) -> dict:
+        """
+        Updates the posted blob and unlink the binary file from the Node.
+        Returns a system/SIMOS/Blob entity with the created id
+        """
+        if file := node.entity["_blob_"]:  # If a file was posted with the same name as this blob, save it
+            node.entity["size"] = file.seek(0, 2)  # Set the size of the blob
+            # Get or set the "_blob_id"
+            node.entity["_blob_id"] = node.entity["_blob_id"] if node.entity.get("_blob_id") else str(uuid4())
+            # Save it
+            repository.update_blob(node.entity["_blob_id"], file)
+            # Remove the temporary key containing the File
+            del node.entity["_blob_"]
 
-        return reference
+        return node.entity
 
     def save(self, node: Union[Node, ListNode], data_source_id: str, repository=None, path="") -> Dict:
         """
@@ -90,9 +92,8 @@ class DocumentService:
             else:
                 self.save(child, data_source_id, repository, path)
 
-        if node.type in BLOB_TYPES:
-            # Every blueprint of a 'blob_type', has the 'blob_reference' attribute
-            node.entity["blob_reference"] = self.save_blob_data(node, repository)
+        if node.type == SIMOS.BLOB.value:
+            node.entity = self.save_blob_data(node, repository)
 
         ref_dict = node.to_ref_dict()
 
@@ -175,7 +176,12 @@ class DocumentService:
         return {"uid": target_node.node_id}
 
     def update_document(
-        self, data_source_id: str, document_id: str, data: Union[dict, list], attribute_path: str = None
+        self,
+        data_source_id: str,
+        document_id: str,
+        data: Union[dict, list],
+        attribute_path: str = None,
+        files: dict = None,
     ):
         root: Node = self.get_by_uid(data_source_id, document_id)
         target_node = root
@@ -185,6 +191,8 @@ class DocumentService:
             target_node = root.get_by_path(attribute_path.split("."))
 
         target_node.update(data)
+        if files:
+            self._merge_entity_and_files(target_node, files)
         self.save(root, data_source_id)
 
         logger.info(f"Updated document '{target_node.node_id}''")
@@ -246,22 +254,18 @@ class DocumentService:
         delete_document(data_source, document_id)
 
     @staticmethod
-    def _merge_entity_and_files(node, files):
+    def _merge_entity_and_files(node: Node, files: Dict[str, UploadFile]):
         """
-        Recursively adds the matching posted file to the blob_reference in the node
+        Recursively adds the matching posted files to the system/SIMOS/Blob types in the node
         """
-        if node.type in BLOB_TYPES:
-            try:
-                node.entity["blob_reference"] = {"file": files[node.entity["blob_reference"]]}
-            except KeyError:
-                raise KeyError("File referenced in entity does not match any filename posted")
-        for node in node.traverse():
-            if node.entity:
-                for t in node.blueprint.get_blob_types():
-                    try:
-                        node.entity[t.name]["blob_reference"] = {"file": files[node.entity[t.name]["blob_reference"]]}
-                    except KeyError:
-                        raise KeyError("File referenced in entity does not match any filename posted")
+        for node in node.traverse():  # Traverse the entire Node tree
+            if not node.entity:  # Skipping empty nodes
+                continue
+            if node.type == SIMOS.BLOB.value:
+                try:  # For all Blob Nodes, add the posted file in the Node temporary '_blob_' attribute
+                    node.entity["_blob_"] = files[node.entity["name"]]
+                except KeyError:
+                    raise KeyError("File referenced in entity does not match any filename posted")
 
     # Add entity by path
     def add(self, data_source_id: str, path: str, document: NamedEntity, files: dict):
@@ -277,7 +281,8 @@ class DocumentService:
             self.get_blueprint,
             BlueprintAttribute(name=path.split("/")[-1], attribute_type=document.type),
         )
-        self._merge_entity_and_files(new_node, files)
+        if files:
+            self._merge_entity_and_files(new_node, files)
 
         if isinstance(target, ListNode):
             new_node.parent = target

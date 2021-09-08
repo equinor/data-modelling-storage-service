@@ -444,14 +444,21 @@ Feature: Explorer - Add file
           "name": "MyPDF1",
           "description": "",
           "type": "system/SIMOS/blob_types/PDF",
-          "blob_reference": "file1",
+          "blob": {
+            "name": "file1",
+            "type": "system/SIMOS/Blob"
+          },
           "author": "Stig Oskar"
         },
         "another_pdf": {
           "name": "MyPDF2",
           "description": "",
           "type": "system/SIMOS/blob_types/PDF",
-          "blob_reference": "file2",
+          "blob": {
+            "name": "file2",
+            "type": "system/SIMOS/Blob",
+            "_blob_id": ""
+          },
           "author": "Stig Oskar"
         },
         "pdf_container": {
@@ -462,14 +469,21 @@ Feature: Explorer - Add file
             "name": "MyPDF3",
             "description": "",
             "type": "system/SIMOS/blob_types/PDF",
-            "blob_reference": "file3",
+            "blob": {
+              "name": "file3",
+              "type": "system/SIMOS/Blob"
+            },
             "author": "Stig Oskar"
           },
           "another_pdf": {
             "name": "MyPDF4",
             "description": "",
             "type": "system/SIMOS/blob_types/PDF",
-            "blob_reference": "file4",
+            "blob": {
+              "name": "file4",
+              "type": "system/SIMOS/Blob",
+              "size": 0
+            },
             "author": "Stig Oskar"
           },
           "pdf_container": {}

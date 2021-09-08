@@ -156,7 +156,7 @@ Feature: Access Control
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
     Given I access the resource url "/api/v1/documents/test-DS/1"
-    When I make a "PUT" request
+    When i make a form-data "PUT" request
     """
     {
       "type": "system/SIMOS/Blueprint",
@@ -202,7 +202,7 @@ Feature: Access Control
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
     Given I access the resource url "/api/v1/documents/test-DS/1"
-    When I make a "PUT" request
+    When i make a form-data "PUT" request
     """
     {
       "type": "system/SIMOS/Blueprint",
