@@ -34,7 +34,7 @@ def step_make_request(context, method):
     if method == "PUT":
         context.response = context.test_client.put(context.url, data={"data": context.text})
     elif method == "POST":
-        context.response = context.test_client.put(context.url, data={"data": context.text})
+        context.response = context.test_client.post(context.url, data={"data": context.text})
     else:
         raise Exception("A 'form-data' request must be either 'PUT' or 'POST'")
 
