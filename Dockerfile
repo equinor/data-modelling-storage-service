@@ -2,7 +2,7 @@ FROM python:3.9-slim as base
 WORKDIR /code
 ENTRYPOINT ["/code/init.sh"]
 CMD ["api"]
-EXPOSE 8000
+EXPOSE 5000
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/code
