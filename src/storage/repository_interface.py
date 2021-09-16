@@ -32,5 +32,9 @@ class RepositoryInterface(ABC):
         """Update blob method to be implemented"""
 
     @abstractmethod
+    def delete_blob(self, uid: str):
+        """Delete blob method to be implemented"""
+
+    @abstractmethod
     def get_blob(self, uid: str) -> bytearray:
         """Get blob method to be implemented"""

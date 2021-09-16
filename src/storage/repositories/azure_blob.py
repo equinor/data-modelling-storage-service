@@ -35,6 +35,9 @@ class AzureBlobStorageClient(RepositoryInterface):
     def delete(self, uid: str) -> bool:
         self.blob_service_client.delete_blob(self.container, uid)
 
+    def delete_blob(self, uid: str) -> bool:
+        self.delete(uid)
+
     def find(self, filters: Dict) -> Optional[List[Dict]]:
         # TODO: implement efficient filter functionality by using the python azure src
         if self.blob_service_client.exists(self.container):

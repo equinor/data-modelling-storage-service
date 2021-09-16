@@ -37,5 +37,8 @@ class LocalFileRepository(RepositoryInterface):
     def get_blob(self, uid):
         raise NotImplementedError
 
+    def delete_blob(self, uid: str):
+        raise NotImplementedError
+
     def update_blob(self, uid: str, blob: bytearray):
         raise NotImplementedError

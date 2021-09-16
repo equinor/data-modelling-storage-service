@@ -1,6 +1,7 @@
 from typing import Union
 
 from domain_classes.dto import DTO
+from enums import SIMOS
 from storage.data_source_class import DataSource
 
 
@@ -18,6 +19,8 @@ def delete_dict_recursive(in_dict: dict, data_source: DataSource):
     in_dict: dict
     if in_dict.get("_id") and in_dict.get("contained") is True:  # It's a model contained reference
         delete_document(data_source, in_dict["_id"])
+    elif in_dict.get("type") == SIMOS.BLOB.value:
+        data_source.delete_blob(in_dict["_blob_id"])
     else:
         for value in in_dict.values():
             if isinstance(value, dict) or isinstance(value, list):  # Potentially complex

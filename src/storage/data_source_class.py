@@ -157,6 +157,17 @@ class DataSource:
         access_control(lookup.acl, AccessLevel.READ)
         return self.repositories[lookup.repository].get_blob(lookup.database_id)
 
+    def delete_blob(self, uid: str) -> None:
+        # If lookup not found, assume it's deleted
+        try:
+            lookup = self._lookup(uid)
+            access_control(lookup.acl, AccessLevel.WRITE)
+            self._remove_lookup(uid)
+            self.repositories[lookup.repository].delete_blob(uid)
+        except EntityNotFoundException:
+            logger.warning(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
+            pass
+
     def delete(self, uid: str) -> None:
         # If lookup not found, assume it's deleted
         try:

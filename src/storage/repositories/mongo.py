@@ -60,6 +60,9 @@ class MongoDBClient(RepositoryInterface):
     def update_blob(self, uid: str, blob: bytearray):
         return self.blob_handler.put(blob, _id=uid)
 
+    def delete_blob(self, uid: str):
+        return self.blob_handler.delete(uid)
+
     def get_blob(self, uid: str) -> bytearray:
         blob = self.blob_handler.get(uid)
         if not blob:
