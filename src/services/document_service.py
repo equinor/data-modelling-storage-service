@@ -265,7 +265,10 @@ class DocumentService:
                 try:  # For all Blob Nodes, add the posted file in the Node temporary '_blob_' attribute
                     node.entity["_blob_"] = files[node.entity["name"]]
                 except KeyError:
-                    raise KeyError("File referenced in entity does not match any filename posted")
+                    raise KeyError(
+                        "File referenced in entity does not match any ",
+                        f"filename posted. Posted files: {tuple(files.keys())}",
+                    )
 
     # Add entity by path
     def add(self, data_source_id: str, path: str, document: NamedEntity, files: dict):
