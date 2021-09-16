@@ -108,7 +108,7 @@ class DictExporter:
 class DictImporter:
     @classmethod
     def from_dict(cls, entity, uid, blueprint_provider, key="", node_attribute: BlueprintAttribute = None):
-        return cls._from_dict(entity, uid, key, blueprint_provider, node_attribute, parent=None)
+        return cls._from_dict(entity, uid, key, blueprint_provider, node_attribute)
 
     @classmethod
     def _from_dict(
@@ -119,7 +119,6 @@ class DictImporter:
         blueprint_provider,
         node_attribute: BlueprintAttribute = None,
         recursion_depth: int = 0,
-        parent=None,
     ):
 
         if recursion_depth >= config.MAX_ENTITY_RECURSION_DEPTH:
@@ -140,12 +139,7 @@ class DictImporter:
 
         try:
             node = Node(
-                key=key,
-                uid=uid,
-                entity=entity,
-                blueprint_provider=blueprint_provider,
-                attribute=node_attribute,
-                parent=parent,
+                key=key, uid=uid, entity=entity, blueprint_provider=blueprint_provider, attribute=node_attribute
             )
         except KeyError as error:
             logger.exception(error)
@@ -504,12 +498,16 @@ class Node(NodeBase):
                             f"'{REQUIRED_ATTRIBUTES}' are required"
                         )
                 child = self.get_by_path([key])
-                if not child:
+                if not child and not attribute.optional:
                     raise InvalidEntityException(
                         f"The type '{self.type}' has no complex attribute of type "
                         f"'{attribute.attribute_type}'. Valid attribute types are blueprint "
                         f"references, and primitive types {tuple(PRIMITIVES)}"
                     )
+                elif not child:  # A new optional child has been added
+                    child = DictImporter.from_dict(new_data, None, self.blueprint_provider, key, attribute)
+                    child.parent = self
+                    self.add_child(child)
                 # This means we are creating a new, non-contained document. Lists are always contained.
                 if not child.storage_contained and not child.uid and not child.is_array():
                     new_node = DictImporter.from_dict(

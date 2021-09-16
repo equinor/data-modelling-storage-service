@@ -2,13 +2,13 @@
   "name": "PDF",
   "type": "system/SIMOS/Blueprint",
   "extends": ["system/SIMOS/DefaultUiRecipes","system/SIMOS/NamedEntity"],
-  "description": "Contains metadata for a PDF, and a id for the PDF Blob",
+  "description": "Contains metadata for a PDF, and a Blob type for the blob data",
   "attributes": [
     {
       "type": "system/SIMOS/BlueprintAttribute",
-      "name": "blob_reference",
+      "name": "blob",
       "description": "id for the data blob",
-      "attributeType": "string",
+      "attributeType": "system/SIMOS/Blob",
       "contained": true
     }, {
       "type": "system/SIMOS/BlueprintAttribute",

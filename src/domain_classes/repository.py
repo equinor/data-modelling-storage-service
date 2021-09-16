@@ -21,6 +21,9 @@ class Repository(RepositoryInterface):
     def delete(self, uid: str) -> bool:
         return self.client.delete(uid)
 
+    def delete_blob(self, uid: str) -> bool:
+        return self.client.delete_blob(uid)
+
     def find(self, filters: Dict) -> Optional[List[Dict]]:
         return self.client.find(filters)
 

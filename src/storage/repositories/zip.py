@@ -37,6 +37,9 @@ class ZipFileClient(RepositoryInterface):
     def find_one(self, filters):
         return "Not implemented on ZipFile repository!"
 
+    def delete_blob(self, uid: str):
+        raise NotImplementedError
+
     def get_blob(self, uid: str) -> bytearray:
         raise NotImplementedError
 

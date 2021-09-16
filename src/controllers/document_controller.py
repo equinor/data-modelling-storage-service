@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import List, Optional
 
-from fastapi import APIRouter
-from pydantic import conint
+from fastapi import APIRouter, File, Form, UploadFile
+from pydantic import conint, Json
 from starlette.responses import JSONResponse
 
 from restful.status_codes import STATUS_CODES
@@ -53,9 +53,17 @@ def get_by_path(
 
 
 @router.put("/documents/{data_source_id}/{document_id}", operation_id="document_update")
-def update(data_source_id: str, document_id: str, data: dict, attribute: Optional[str] = None):
+def update(
+    data_source_id: str,
+    document_id: str,
+    data: Json = Form(...),
+    attribute: Optional[str] = Form(None),
+    files: Optional[List[UploadFile]] = File(None),
+):
     update_use_case = UpdateDocumentUseCase()
     response = update_use_case.execute(
-        UpdateDocumentRequest(data_source_id=data_source_id, data=data, document_id=document_id, attribute=attribute)
+        UpdateDocumentRequest(
+            data_source_id=data_source_id, data=data, document_id=document_id, attribute=attribute, files=files
+        )
     )
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])

@@ -152,3 +152,4 @@ mongodata/
 home/first-run-false
 
 /src/version.txt
+/log.txt
