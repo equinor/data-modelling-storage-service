@@ -15,5 +15,5 @@ def get_blueprint(type_ref: str):
     use_case = GetBlueprintUseCase()
     response = use_case.execute(type_ref)
     if not response.type == "SUCCESS":
-        return Response(response.value, status_code=STATUS_CODES[response.type])
+        return Response(response.message, status_code=STATUS_CODES[response.type])
     return response.value
