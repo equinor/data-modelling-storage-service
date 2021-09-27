@@ -32,7 +32,7 @@ API documentation can be found at [http://localhost:8000/api/v1/ui](http://local
 To refresh the database after first-time:
 
 ```
-docker-compose exec dmss reset-app
+docker-compose exec dmss reset-app -e AUTH_ENABLED=False
 ```
 
 ## Available client APIs
