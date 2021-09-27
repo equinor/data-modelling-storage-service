@@ -60,6 +60,7 @@ def add_to_path(
 
 @router.post("/explorer/{data_source_id}/add-package", operation_id="explorer_add_package")
 def add_package(data_source_id: str, name: EntityName):
+    """Add a RootPackage to the data source"""
     use_case = AddRootPackageUseCase()
     response = use_case.execute(AddRootPackageRequest(data_source_id=data_source_id, name=name.name))
 

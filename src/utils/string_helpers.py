@@ -4,11 +4,13 @@ from typing import Tuple, Union
 from enums import PrimitiveDataTypes
 
 
-def get_data_source_and_path(reference: str) -> Tuple[str, str]:
-    ref_elements = reference.split("/", 1)
-    if len(ref_elements) <= 1:
-        raise Exception(f"Invalid reference: {reference}")
-    return ref_elements[0], ref_elements[1]
+def split_absolute_ref(reference: str) -> Tuple[str, str, str]:
+    data_source, dotted_path = reference.split("/", 1)
+    attribute = ""
+    path = dotted_path
+    if "." in dotted_path:  # Dotted path has a attribute reference.
+        path, attribute = dotted_path.split(".", 1)
+    return data_source, path, attribute
 
 
 def get_package_and_path(reference: str) -> Tuple[str, Union[list, None]]:

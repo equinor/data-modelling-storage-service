@@ -33,7 +33,7 @@ from utils.get_blueprint import BlueprintProvider
 from utils.get_complete_document_by_id import get_complete_document
 from utils.logging import logger
 from utils.sort_entities_by_attribute import sort_dtos_by_attribute
-from utils.string_helpers import get_data_source_and_path, url_safe_name
+from utils.string_helpers import split_absolute_ref, url_safe_name
 
 pretty_printer = pprint.PrettyPrinter()
 
@@ -113,7 +113,7 @@ class DocumentService:
         return Node.from_dict(complete_document, complete_document.get("_id"), blueprint_provider=self.get_blueprint)
 
     def get_by_path(self, absolute_reference: str) -> Node:
-        data_source_id, path = get_data_source_and_path(absolute_reference)
+        data_source_id, path, attribute = split_absolute_ref(absolute_reference)
         document_repository = get_data_source(data_source_id)
         document_id = get_document_uid_by_path(path, document_repository)
         return self.get_by_uid(data_source_id, document_id)
@@ -277,15 +277,20 @@ class DocumentService:
             raise EntityNotFoundException(uid=path)
 
         new_node_id = str(uuid4()) if not target.storage_contained else ""
+        # If dotted attribute path, attribute is the last entry. Else content
+        new_node_attr = path.split(".")[-1] if "." in path else "content"
 
         new_node = Node.from_dict(
             {**document.dict()},
             new_node_id,
             self.get_blueprint,
-            BlueprintAttribute(name=path.split("/")[-1], attribute_type=document.type),
+            BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
         )
         if files:
             self._merge_entity_and_files(new_node, files)
+
+        if target.type == DMT.PACKAGE.value:
+            target = target.children[0]  # Set target to be the packages content
 
         if isinstance(target, ListNode):
             new_node.parent = target
