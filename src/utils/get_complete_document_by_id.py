@@ -2,7 +2,7 @@ from domain_classes.dto import DTO
 from storage.data_source_class import DataSource
 
 
-def resolve_reference_list(x: list, document_repository: DataSource) -> list:
+def resolve_reference_list(x: list, document_repository: DataSource, depth: int = 999, depth_count: int = 0) -> list:
     if not x:  # Return an empty list
         return x
     resolved = []
@@ -11,7 +11,7 @@ def resolve_reference_list(x: list, document_repository: DataSource) -> list:
         resolved = [resolve_reference_list(item, document_repository) for item in x]
     for value in x:
         if isinstance(value, dict) and value.get("_id"):  # It's a reference!
-            resolved.append(get_complete_document(value["_id"], document_repository))
+            resolved.append(get_complete_document(value["_id"], document_repository, depth, depth_count))
         else:
             resolved.append(value)
     return resolved
@@ -30,7 +30,7 @@ def get_complete_document(document_uid: str, data_source: DataSource, depth: int
             if not value:
                 continue
             if isinstance(value, list):  # If it's a list, resolve any references
-                entity[key] = resolve_reference_list(value, data_source)
+                entity[key] = resolve_reference_list(value, data_source, depth, depth_count)
             else:
                 value: dict
                 if ref_id := value.get("_id"):  # It's a reference
