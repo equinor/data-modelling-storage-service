@@ -1,6 +1,7 @@
 from typing import Dict, List, Union
 
 from pydantic import UUID4
+from utils.string_helpers import url_safe_name
 
 from authentication.access_control import access_control, AccessLevel, ACL, create_acl, DEFAULT_ACL
 from domain_classes.document_look_up import DocumentLookUp
@@ -9,7 +10,7 @@ from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
 from services.database import data_source_collection
-from utils.exceptions import EntityNotFoundException, MissingPrivilegeException
+from utils.exceptions import EntityNotFoundException, InvalidDocumentNameException, MissingPrivilegeException
 from utils.logging import logger
 
 
@@ -50,7 +51,11 @@ class DataSource:
 
     @staticmethod
     def _validate_dto(dto: DTO):
-        if not dto.name == dto.data["name"] or not dto.type == dto.data["type"] or not dto.uid == dto.data["_id"]:
+        if (
+            not dto.data["name"] == dto.data["name"]
+            or not dto.type == dto.data["type"]
+            or not dto.uid == dto.data["_id"]
+        ):
             raise ValueError("The metadata and tha 'data' object in the DTO does not match!")
 
     # TODO: Read default attribute from DataSource spec
@@ -119,6 +124,10 @@ class DataSource:
         :param parent_id: Needed when adding a new child document that should inherit ACL.
         :return: None
         """
+        if name := document.get("name"):
+            if not url_safe_name(name):
+                raise InvalidDocumentNameException(name)
+
         try:  # Get the documents lookup
             lookup = self._lookup(document.uid)
         except EntityNotFoundException:  # No lookup found --> Create a new document

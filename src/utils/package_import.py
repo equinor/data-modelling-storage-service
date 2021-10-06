@@ -19,10 +19,10 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
         with open(f"{path}/{file}") as json_file:
             data = json.load(json_file)
         document = DTO(data)
-        if not url_safe_name(document.name):
-            raise InvalidDocumentNameException(document.name)
+        if not url_safe_name(document["name"]):
+            raise InvalidDocumentNameException(document["name"])
         data_source.update(document)
-        docs.append({"_id": document.uid, "name": document.name, "type": document.type})
+        docs.append({"_id": document.uid, "name": document.get("name"), "type": document.type})
 
     return docs
 
@@ -55,5 +55,5 @@ def import_package(path, data_source: str, is_root: bool = False) -> Union[Dict]
 
     package = DTO(package)
     data_source.update(package)
-    logger.info(f"Imported package {package.name}")
-    return {"_id": package.uid, "name": package.name, "type": package.type}
+    logger.info(f"Imported package {package['name']}")
+    return {"_id": package.uid, "type": package.type, "name": package.get("name")}

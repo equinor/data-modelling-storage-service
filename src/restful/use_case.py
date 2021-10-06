@@ -2,6 +2,7 @@ from restful import response_object as res
 import traceback
 
 from utils.exceptions import (
+    BadRequestException,
     DataSourceAlreadyExistsException,
     DataSourceNotFoundException,
     EntityAlreadyExistsException,
@@ -33,7 +34,7 @@ class UseCase(object):
             return res.ResponseFailure.build_entity_error(e)
         except MissingPrivilegeException as e:
             return res.ResponseFailure.build_access_error(e)
-        except (DataSourceAlreadyExistsException, InvalidSortByAttributeException) as error:
+        except (DataSourceAlreadyExistsException, InvalidSortByAttributeException, BadRequestException) as error:
             return res.ResponseFailure.build_parameters_error(error)
         except Exception as exc:
             traceback.print_exc()

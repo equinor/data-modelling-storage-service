@@ -305,15 +305,13 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/2.content"
     When i make a "POST" request
     """
     {
       "_id": "3",
       "name": "new_document",
-      "parentId": "2",
-      "type": "system/SIMOS/Blueprint",
-      "attribute": "content"
+      "type": "system/SIMOS/Blueprint"
     }
     """
     Then the response status should be "OK"

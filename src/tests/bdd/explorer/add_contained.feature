@@ -93,14 +93,12 @@ Feature: Explorer - Add contained node
     """
 
   Scenario: Add nested contained node
-    Given i access the resource url "/api/v1/explorer/entities/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/entities/1.meAgain.1.meAgain"
     When i make a "POST" request
     """
     {
       "name": "level2",
-      "parentId": "1",
-      "type": "blueprints/root_package/RecursiveBlueprint",
-      "attribute": "meAgain.1.meAgain"
+      "type": "blueprints/root_package/RecursiveBlueprint"
     }
     """
     Then the response status should be "OK"
@@ -108,19 +106,3 @@ Feature: Explorer - Add contained node
     """
     {"uid": "1.meAgain.1.meAgain.0"}
     """
-    # Given I access the resource url "/api/v4/index/entities/1.meAgain.1/1.meAgain.1.meAgain"
-    # When I make a "GET" request
-    # Then the response status should be "OK"
-    # And the response should contain
-    # """
-    # {
-    #    "1.meAgain.1.meAgain": {
-    #       "parentId": "1.meAgain.1",
-    #       "title": "meAgain",
-    #       "id": "1.meAgain.1.meAgain",
-    #       "nodeType": "document-node",
-    #       "children": [ ],
-    #       "type": "blueprints/root_package/RecursiveBlueprint"
-    #    }
-    # }
-    # """

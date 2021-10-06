@@ -204,7 +204,6 @@ Feature: Get document
       | 5   | 2          | document_2    |             | system/SIMOS/Blueprint                  |
       | 6   | 3          | container_1   |             | test-source-name/TestData/TestContainer |
 
-
   Scenario: Get document by id
     Given I access the resource url "/api/v1/documents/data-source-name/1"
     When I make a "GET" request
@@ -241,7 +240,6 @@ Feature: Get document
     {
       "_id": "4",
       "name": "document_1",
-      "description": "",
       "type": "system/SIMOS/Package",
       "isRoot": false,
       "content": []

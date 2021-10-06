@@ -29,8 +29,7 @@ class Dimension:
                 if not type(self.type) is type:
                     # For fixed complex types, create the entity with default values. Set name from list index.
                     return [
-                        create_entity_class(blueprint_provider, self.type, "", str(n)).entity
-                        for n in range(int(dimensions[0]))
+                        create_entity_class(blueprint_provider, self.type).entity for n in range(int(dimensions[0]))
                     ]
                 if self.type is int:
                     return [0 for n in range(int(dimensions[0]))]

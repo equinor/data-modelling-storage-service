@@ -185,14 +185,12 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file - attribute for parentEntity
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/6.SomeChild"
     When i make a "POST" request
     """
     {
       "name": "baseChildInParentEntity",
-      "parentId": "6",
       "type": "test-DS/root_package/BaseChild",
-      "attribute": "SomeChild",
       "description": "base child in parent",
       "AValue": 0
     }
@@ -222,14 +220,12 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with wrong subtype to parent entity
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/6.SomeChild"
     When i make a "POST" request
     """
     {
       "name": "hobbynumber1",
-      "parentId": "6",
       "type": "test-DS/root_package/Hobby",
-      "attribute": "SomeChild",
       "description": "example hobby",
       "difficulty": "high"
     }
@@ -253,14 +249,12 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with an extended type to parent entity
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/6.SomeChild"
     When i make a "POST" request
     """
     {
       "name": "specialChild",
-      "parentId": "6",
       "type": "test-DS/root_package/SpecialChild",
-      "attribute": "SomeChild",
       "description": "specialized child",
       "AValue": 39,
       "AnExtraValue": "abc",
@@ -292,22 +286,20 @@ Feature: Explorer - Add file
             "name": "specialChild",
             "type": "test-DS/root_package/SpecialChild",
             "description": "specialized child",
-            "AValue": 0,
-            "AnExtraValue": ""
+            "AValue": 39,
+            "AnExtraValue": "abc"
           }
       }
     }
     """
 
   Scenario: Add file - not contained
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
     When i make a "POST" request
     """
     {
       "name": "new_document",
-      "parentId": "1",
-      "type": "system/SIMOS/Blueprint",
-      "attribute": "content"
+      "type": "system/SIMOS/Blueprint"
     }
     """
     Then the response status should be "OK"
@@ -352,25 +344,22 @@ Feature: Explorer - Add file
     }
     """
 
-  @skip
   Scenario: Add file with missing parameter name should fail
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
     When i make a "POST" request
     """
     {
-      "parentId": "1",
       "type": "system/SIMOS/Blueprint"
     }
     """
-    Then the response status should be "Bad Request"
-    And the response should equal
+    Then the response status should be "Unprocessable Entity"
+    And the response should contain
     """
-    {"type": "PARAMETERS_ERROR", "message": "name: is missing\nattribute: is missing"}
+    {"type": "UNPROCESSABLE_ENTITY"}
     """
 
-  @skip
   Scenario: Add file with missing parameters should fail
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/6.whatever"
     When i make a "POST" request
     """
     {}
@@ -380,19 +369,17 @@ Feature: Explorer - Add file
     """
     {
       "type": "PARAMETERS_ERROR",
-      "message": "parentId: is missing\nname: is missing\ntype: is missing\nattribute: is missing"
+      "message": "BadRequestException: Every entity must have a 'type' attribute"
     }
     """
 
   Scenario: Add file to parent that does not exists
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/-1.documents"
     When i make a "POST" request
     """
     {
       "name": "new_document",
-      "parentId": "-1",
-      "type": "system/SIMOS/Blueprint",
-      "attribute": "documents"
+      "type": "system/SIMOS/Blueprint"
     }
     """
     Then the response status should be "Not Found"
@@ -411,14 +398,12 @@ Feature: Explorer - Add file
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-parent"
+    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
     When i make a "POST" request
     """
     {
       "name": "new_document",
-      "parentId": "1",
-      "type": "system/SIMOS/Blueprint",
-      "attribute": "content"
+      "type": "system/SIMOS/Blueprint"
     }
     """
     Then the response status should be "Forbidden"
