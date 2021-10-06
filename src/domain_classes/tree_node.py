@@ -159,6 +159,12 @@ class DictImporter:
                 if child_attribute.is_array():
                     children = entity.get(child_attribute.name, [])
 
+                    if not isinstance(children, list):
+                        raise ValueError(
+                            f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
+                            + f"should be a list, but was '{str(type(children))}'"
+                        )
+
                     list_node = ListNode(
                         key=child_attribute.name,
                         uid="",
@@ -189,7 +195,11 @@ class DictImporter:
                     node.add_child(list_node)
                 else:
                     attribute_data = entity.get(child_attribute.name, {})
-
+                    if not isinstance(attribute_data, dict):
+                        raise ValueError(
+                            f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
+                            + f"should be a dict, but was '{str(type(attribute_data))}'"
+                        )
                     child_node = cls._from_dict(
                         # If the child is not contained, get or create it's _id
                         uid="" if child_contained or not attribute_data else attribute_data.get("_id", str(uuid4())),
