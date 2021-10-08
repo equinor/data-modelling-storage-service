@@ -48,7 +48,7 @@ def get_ui_recipe(recipes: List[Dict]):
 
 class Blueprint:
     def __init__(self, dto: DTO):
-        self.name = dto.name
+        self.name = dto.data["name"]
         self.description = dto.data.get("description", "")
         self.extends = dto.data.get("extends", [])
         self.type = dto.type

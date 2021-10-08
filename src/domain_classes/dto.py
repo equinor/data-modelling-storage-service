@@ -14,11 +14,9 @@ class DTO:
             raise ValueError("Can't create a DTO from empty dict. Data was 'None'")
         self._uid = uid if uid is not None else data.get("_id", str(uuid4()))
         try:
-            self._name = data["name"]
             self._type = data["type"]
         except KeyError:
-            raise KeyError(f"The dict {data} is invalid as a DTO. Missing ether 'type' and/or 'name'")
-        self._attribute_type = data.get("attribute_type", "")
+            raise KeyError(f"The dict {data} is invalid as a DTO. Missing 'type'")
         self.data = data
 
     def get(self, key, default=None):
@@ -27,10 +25,7 @@ class DTO:
         return self.data.get(key)
 
     def __getitem__(self, key):
-        try:
-            return self.data[key]
-        except KeyError:
-            raise KeyError(f"{self.name} has no key {key}")
+        return self.data[key]
 
     def __setitem__(self, key, value):
         if hasattr(self, key):
@@ -40,24 +35,8 @@ class DTO:
             self.data[key] = value
 
     @property
-    def name(self) -> str:
-        return self._name
-
-    def keys(self):
-        return self.data.keys()
-
-    @name.setter
-    def name(self, value: str):
-        self._name = value
-        self.data["name"] = value
-
-    @property
     def type(self) -> str:
         return self._type
-
-    @property
-    def attribute_type(self) -> str:
-        return self._attribute_type
 
     @type.setter
     def type(self, value: str):

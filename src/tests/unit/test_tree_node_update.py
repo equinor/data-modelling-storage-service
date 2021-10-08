@@ -202,7 +202,8 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=repository_provider
         )
         document_service.add_document(
-            "testing", "1", "blueprint_2", "new_entity", "This is my new entity", "im_optional"
+            "testing/1.im_optional",
+            data={"type": "blueprint_2", "name": "new_entity", "description": "This is my new entity"},
         )
 
         assert pretty_eq(doc_1_after, doc_storage["1"]) is None
@@ -281,7 +282,8 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=repository_provider
         )
         document_service.add_document(
-            "testing", "1", "blueprint_2", "new_entity", "This is my new entity", "nested_with_optional.im_optional"
+            "testing/1.nested_with_optional.im_optional",
+            {"name": "new_entity", "description": "This is my new entity", "type": "blueprint_2"},
         )
 
         assert pretty_eq(doc_1_after, doc_storage["1"]) is None
@@ -313,7 +315,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         with self.assertRaises(DuplicateFileNameException):
-            document_service.add_document("testing", "1", "blueprint_2", "duplicate", "This is my new entity", "")
+            document_service.add_document(
+                "testing/1.im_optional",
+                data={"type": "blueprint_2", "name": "duplicate", "description": "This is my new entity"},
+            )
 
     def test_add_valid_specialized_child_type(self):
         repository = mock.Mock()

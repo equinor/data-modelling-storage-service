@@ -34,5 +34,11 @@ class UncontainedEntity(EntityType, EntityName, EntityUUID, extra=Extra.allow):
         return {**values, "uid": values.get("_id")}
 
 
+# All entities must have the 'type' attribute
+class Entity(EntityType, extra=Extra.allow):
+    pass
+
+
+# A children and types that are to be stored 'model contained' must have a 'name' attribute
 class NamedEntity(EntityType, EntityName, extra=Extra.allow):
     pass

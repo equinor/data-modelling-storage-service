@@ -1,16 +1,182 @@
 import unittest
-from enum import Enum
 
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
+from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from utils.create_entity import CreateEntity
 
+file_repository_test = LocalFileRepository()
 
-class Types(Enum):
-    BLUEPRINT = "system/SIMOS/Blueprint"
-    BLUEPRINT_ATTRIBUTE = "system/SIMOS/BlueprintAttribute"
+
+class BlueprintProvider:
+    def get_blueprint(self, template_type: str):
+        if template_type == "test_data/complex/FuelPumpTest":
+            return Blueprint(
+                DTO(
+                    {
+                        "type": "system/SIMOS/Blueprint",
+                        "name": "FuelPumpTest",
+                        "description": "This describes a fuel pump",
+                        "attributes": [
+                            {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
+                            {
+                                "attributeType": "string",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "name": "description",
+                                "default": "A standard fuel pump",
+                            },
+                            {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
+                        ],
+                    }
+                )
+            )
+        if template_type == "test_data/complex/EngineTest":
+            return Blueprint(
+                DTO(
+                    {
+                        "type": "system/SIMOS/Blueprint",
+                        "name": "EngineTest",
+                        "description": "This describes an engine",
+                        "attributes": [
+                            {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
+                            {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
+                            {
+                                "attributeType": "string",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "name": "description",
+                            },
+                            {
+                                "attributeType": "integer",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "name": "power",
+                                "default": "120",
+                            },
+                            {
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "attributeType": "test_data/complex/FuelPumpTest",
+                                "name": "fuelPump",
+                                "default": '{"description":"A standard fuel pump","name":"fuelPump","type":"test_data/complex/FuelPumpTest"}',
+                            },
+                        ],
+                    }
+                )
+            )
+        if template_type == "test_data/complex/CarTest":
+            return Blueprint(
+                DTO(
+                    {
+                        "type": "system/SIMOS/Blueprint",
+                        "name": "CarTest",
+                        "attributes": [
+                            {
+                                "name": "name",
+                                "attributeType": "string",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "default": "CarTest",
+                            },
+                            {
+                                "name": "type",
+                                "attributeType": "string",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "default": "test_data/complex/CarTest",
+                            },
+                            {
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "name": "wheel",
+                                "attributeType": "test_data/complex/WheelTest",
+                            },
+                            {
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "name": "wheels",
+                                "attributeType": "test_data/complex/WheelTest",
+                                "dimensions": "*",
+                            },
+                            {
+                                "name": "seats",
+                                "attributeType": "integer",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "default": "2",
+                            },
+                            {
+                                "name": "is_sedan",
+                                "attributeType": "boolean",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "default": "true",
+                            },
+                            {
+                                "name": "floatValues",
+                                "attributeType": "number",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "dimensions": "*",
+                                "default": "[2.1,3.1,4.2]",
+                            },
+                            {
+                                "name": "intValues",
+                                "attributeType": "integer",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "dimensions": "*",
+                                "default": "[1,5,4,2]",
+                            },
+                            {
+                                "name": "boolValues",
+                                "attributeType": "boolean",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "dimensions": "*",
+                                "default": "[true, false, true]",
+                            },
+                            {
+                                "name": "stringValues",
+                                "attributeType": "string",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "dimensions": "*",
+                                "default": '["one", "two", "three"]',
+                            },
+                            {
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "name": "engine",
+                                "attributeType": "test_data/complex/EngineTest",
+                            },
+                            {
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "name": "engine2",
+                                "optional": True,
+                                "attributeType": "test_data/complex/EngineTest",
+                            },
+                        ],
+                    }
+                )
+            )
+        if template_type == "test_data/complex/WheelTest":
+            return Blueprint(
+                DTO(
+                    {
+                        "name": "WheelTest",
+                        "type": "system/SIMOS/Blueprint",
+                        "attributes": [
+                            {
+                                "name": "name",
+                                "attributeType": "string",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "default": "Wheel",
+                            },
+                            {"name": "type", "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute"},
+                            {
+                                "name": "power",
+                                "attributeType": "number",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                                "default": "0.0",
+                            },
+                        ],
+                    }
+                )
+            )
+        return Blueprint(DTO(file_repository_test.get(template_type)))
+
+
+document_service = DocumentService(repository_provider=None, blueprint_provider=BlueprintProvider())
+blueprint_provider = document_service.get_blueprint
 
 
 class CreateEntityTestCase(unittest.TestCase):
@@ -21,7 +187,7 @@ class CreateEntityTestCase(unittest.TestCase):
         expected_entity = {
             "engine2": {},
             "engine": {
-                "name": "engine",
+                "name": "",
                 "description": "",
                 "fuelPump": {
                     "name": "fuelPump",
@@ -32,11 +198,10 @@ class CreateEntityTestCase(unittest.TestCase):
                 "type": "test_data/complex/EngineTest",
             },
             "is_sedan": True,
-            "description": "crappy car",
-            "name": "Mercedes",
+            "name": "CarTest",
             "seats": 2,
             "type": "test_data/complex/CarTest",
-            "wheel": {"name": "wheel", "power": 0.0, "type": "test_data/complex/WheelTest"},
+            "wheel": {"name": "Wheel", "power": 0.0, "type": "test_data/complex/WheelTest"},
             "wheels": [],
             "floatValues": [2.1, 3.1, 4.2],
             "intValues": [1, 5, 4, 2],
@@ -44,16 +209,7 @@ class CreateEntityTestCase(unittest.TestCase):
             "stringValues": ["one", "two", "three"],
         }
 
-        file_repository_test = LocalFileRepository()
-
-        def get_blueprint(template_type: str):
-            return Blueprint(DTO(file_repository_test.get(template_type)))
-
-        type = "test_data/complex/CarTest"
-
-        entity = CreateEntity(
-            blueprint_provider=get_blueprint, type=type, description="crappy car", name="Mercedes"
-        ).entity
+        entity = CreateEntity(blueprint_provider=blueprint_provider, type="test_data/complex/CarTest").entity
 
         self.assertEqual(expected_entity, entity)
 

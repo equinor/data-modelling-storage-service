@@ -22,15 +22,13 @@ class InvalidDefaultValue(CreateEntityException):
 
 
 class CreateEntity:
-    def __init__(self, blueprint_provider: Callable, type: str, description: str, name: str):
-        self.name = name
-        self.description = description
+    def __init__(self, blueprint_provider: Callable, type: str):
         self.type = type
         self.blueprint_provider = blueprint_provider
         self.attribute_types = self.blueprint_provider(SIMOS.ATTRIBUTE_TYPES.value).to_dict()
         self.blueprint_attribute: Blueprint = self.blueprint_provider(SIMOS.BLUEPRINT_ATTRIBUTE.value)
         blueprint: Blueprint = self.blueprint_provider(type)
-        entity = {"name": name, "description": description, "type": type}
+        entity = {"type": type}
         self._entity = self._get_entity(blueprint=blueprint, entity=entity)
 
     @staticmethod
@@ -106,10 +104,8 @@ class CreateEntity:
                             entity[attr.name] = CreateEntity.parse_json(attr)
                         else:
                             entity[attr.name] = self._get_entity(
-                                blueprint=blueprint, entity={"name": attr.name, "type": attr.attribute_type}
+                                blueprint=blueprint, entity={"type": attr.attribute_type}
                             )
                     else:
-                        entity[attr.name] = self._get_entity(
-                            blueprint=blueprint, entity={"name": attr.name, "type": attr.attribute_type}
-                        )
+                        entity[attr.name] = self._get_entity(blueprint=blueprint, entity={"type": attr.attribute_type})
         return entity

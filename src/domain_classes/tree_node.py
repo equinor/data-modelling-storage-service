@@ -9,7 +9,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute
 from enums import DMT, PRIMITIVES, REQUIRED_ATTRIBUTES, StorageDataTypes
-from restful.request_types.shared import NamedEntity
+from restful.request_types.shared import Entity, NamedEntity
 from utils.exceptions import InvalidChildTypeException, InvalidEntityException
 from utils.logging import logger
 from utils.validators import valid_extended_type
@@ -48,7 +48,11 @@ class DictExporter:
                 data[node.key] = node.to_dict()
 
         try:  # Last sanity check on the produced dict
-            NamedEntity(**data)
+            if node.attribute.contained:
+                Entity(**data)
+            else:
+                NamedEntity(**data)  # Entities that are not contained in the parent must have a 'name' to
+                # be able to mimic a filesystem
         except ValidationError as e:
             logger.exception(data)
             raise InvalidEntityException(str(e))
@@ -107,7 +111,7 @@ class DictExporter:
 
 class DictImporter:
     @classmethod
-    def from_dict(cls, entity, uid, blueprint_provider, key="", node_attribute: BlueprintAttribute = None):
+    def from_dict(cls, entity, uid, blueprint_provider, key=None, node_attribute: BlueprintAttribute = None):
         return cls._from_dict(entity, uid, key, blueprint_provider, node_attribute)
 
     @classmethod
@@ -138,6 +142,7 @@ class DictImporter:
             node_attribute.attribute_type = entity["type"]
 
         try:
+            key = key if key else node_attribute.name
             node = Node(
                 key=key, uid=uid, entity=entity, blueprint_provider=blueprint_provider, attribute=node_attribute
             )

@@ -8,8 +8,7 @@ from restful.request_types.shared import EntityName
 from restful.status_codes import STATUS_CODES
 from storage.internal.data_source_repository import get_data_source
 from use_case.add_document_to_path_use_case import AddDocumentToPathRequest, AddDocumentToPathUseCase
-from use_case.add_document_use_case import AddDocumentRequest, AddDocumentUseCase
-from use_case.add_file_use_case import AddFileUseCase, AddToParentRequest
+from use_case.add_file_use_case import AddFileUseCase
 from use_case.add_raw import AddRawRequest, AddRawUseCase
 from use_case.add_root_package_use_case import AddRootPackageRequest, AddRootPackageUseCase
 from use_case.move_file_use_case import MoveFileUseCase, MoveRequest
@@ -18,27 +17,6 @@ from use_case.remove_use_case import RemoveRequest, RemoveUseCase
 from use_case.rename_file_use_case import RenameRequest, RenameUseCase
 
 router = APIRouter()
-
-
-@router.post("/explorer/{data_source_id}/add-document", operation_id="explorer_add_document")
-def add_document(data_source_id: str, document: dict):
-    """
-    Posted document must be a valid entity of the available blueprint (blueprint must exist).
-    """
-    use_case = AddDocumentUseCase()
-    response = use_case.execute(AddDocumentRequest(data_source_id=data_source_id, data=document))
-    return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
-
-
-@router.post("/explorer/{data_source_id}/add-to-parent", operation_id="explorer_add_to_parent")
-def add_to_parent(data_source_id: str, request_data: AddToParentRequest):
-    """
-    Add a new document into an existing one. Must match it's parents attribute type
-    """
-    use_case = AddFileUseCase()
-    request_data.data_source_id = data_source_id
-    response = use_case.execute(request_data)
-    return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
 @router.post("/explorer/{data_source_id}/add-to-path", operation_id="explorer_add_to_path")
@@ -110,4 +88,15 @@ def rename(data_source_id: str, request_data: RenameRequest):  # noqa: E501
     request_data.data_source_id = data_source_id
     use_case = RenameUseCase()
     response = use_case.execute(request_data)
+    return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
+
+
+@router.post("/explorer/{data_source_id}/{dotted_id}", operation_id="explorer_add")
+def add_by_parent_id(data_source_id: str, dotted_id: str, data: dict):
+    """
+    Add a new document into an existing one. Must match it's parents attribute type.
+    Select parent with format 'document-id.attribute.attribute'
+    """
+    use_case = AddFileUseCase()
+    response = use_case.execute({"absolute_ref": f"{data_source_id}/{dotted_id}", "data": data})
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])

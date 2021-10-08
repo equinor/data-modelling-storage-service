@@ -38,12 +38,8 @@ def generate_tree_from_rows(node: Node, rows):
         # Add children (only to packages)
         if row["parent_uid"] == node.uid:
             child_data = row.as_dict()
-            entity = CreateEntity(
-                blueprint_provider=document_service.get_blueprint,
-                type=child_data["type"],
-                description=child_data.get("description", ""),
-                name=child_data["name"],
-            ).entity
+            entity = CreateEntity(document_service.get_blueprint, child_data["type"]).entity
+            entity["name"] = child_data["name"]
             child_node = Node(
                 key="",
                 uid=child_data["uid"],

@@ -19,12 +19,11 @@ from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
 from storage.repositories.zip import ZipFileClient
 from utils.build_complex_search import build_mongo_query
-from utils.create_entity import CreateEntity
 from utils.delete_documents import delete_document
 from utils.exceptions import (
+    BadRequestException,
     DuplicateFileNameException,
     EntityNotFoundException,
-    InvalidDocumentNameException,
     InvalidEntityException,
     RepositoryException,
 )
@@ -33,7 +32,7 @@ from utils.get_blueprint import BlueprintProvider
 from utils.get_complete_document_by_id import get_complete_document
 from utils.logging import logger
 from utils.sort_entities_by_attribute import sort_dtos_by_attribute
-from utils.string_helpers import split_absolute_ref, url_safe_name
+from utils.string_helpers import split_absolute_ref
 
 pretty_printer = pprint.PrettyPrinter()
 
@@ -198,41 +197,49 @@ class DocumentService:
         logger.info(f"Updated document '{target_node.node_id}''")
         return {"data": target_node.to_dict()}
 
-    def add_document(
-        self, data_source_id: str, parent_id: str, type: str, name: str, description: str, attribute_path: str
-    ):
-        if not url_safe_name(name):
-            raise InvalidDocumentNameException(name)
+    def add_document(self, absolute_ref: str, data: dict = None):
+        data_source, parent_id, attribute = split_absolute_ref(absolute_ref)
+        if not attribute:
+            raise BadRequestException("Attribute not specified on parent")
+        if not data.get("type"):
+            raise BadRequestException("Every entity must have a 'type' attribute")
 
-        root: Node = self.get_by_uid(data_source_id, parent_id)
+        type = data["type"]
+        parent_attribute = attribute.split(".")[0:-1]
+        leaf_attribute = attribute.split(".")[-1]
+
+        root: Node = self.get_by_uid(data_source, parent_id)
         if not root:
             raise EntityNotFoundException(uid=parent_id)
-        parent: Node = root.get_by_path(attribute_path.split(".")) if attribute_path else root
+        parent: Node = root.get_by_path(parent_attribute)
 
-        # Check if a file/attribute with the same name already exists on the target
-        # if duplicate_filename(parent, name):
-        if parent.duplicate_attribute(name):
-            raise DuplicateFileNameException(data_source_id, f"{parent.name}/{name}")
+        # If the leaf attribute is a list. Set that as parent
+        if parent.get_by_path([leaf_attribute]).is_array():
+            parent = parent.get_by_path([leaf_attribute])
+        entity: dict = data
 
-        entity: Dict = CreateEntity(self.get_blueprint, name=name, type=type, description=description).entity
-
-        if type == SIMOS.BLUEPRINT.value:  # Extend default attributes and uiRecipes
+        if type == SIMOS.BLUEPRINT.value and not entity.get("extends"):  # Extend default attributes and uiRecipes
             entity["extends"] = ["system/SIMOS/DefaultUiRecipes", "system/SIMOS/NamedEntity"]
 
-        new_node_id = str(uuid4()) if not parent.storage_contained else ""
-        new_node_attribute = BlueprintAttribute(parent.key, type)
-        new_node = Node.from_dict(entity, new_node_id, self.get_blueprint, new_node_attribute)
+        new_node_attribute = BlueprintAttribute(leaf_attribute, type)
+        new_node = Node.from_dict(entity, None, self.get_blueprint, new_node_attribute)
+
+        # Check if a file/attribute with the same name already exists on the target
+        if parent.duplicate_attribute(new_node.name):
+            raise DuplicateFileNameException(data_source, f"{parent.name}/{new_node.name}")
+
+        new_node.parent = parent
+        new_node.set_uid()
 
         if isinstance(parent, ListNode):
-            new_node.key = str(len(parent.children)) if parent.is_array() else new_node.name
+            new_node.key = str(len(parent.children)) if parent.is_array() else new_node.attribute.name
             parent.add_child(new_node)
-        # This covers adding a new optional document (not appending to a list)
         else:
-            new_node.key = attribute_path.split(".")[-1]
-            root.replace(parent.node_id, new_node)
+            parent.replace(new_node.node_id, new_node)
         if new_node.parent.attribute.attribute_type != DMT.ENTITY.value:
             new_node.validate_type_on_parent()
-        self.save(root, data_source_id)
+
+        self.save(root, data_source)
 
         return {"uid": new_node.node_id}
 
@@ -348,10 +355,9 @@ class DocumentService:
                 f"The referenced entity should be of type '{attribute_node.type}'"
                 f", but was '{referenced_document.type}'"
             )
-        if reference.name != referenced_document.name or reference.type != referenced_document.type:
+        if reference.type != referenced_document.type:
             raise InvalidEntityException(
-                f"The 'name' and 'type' values of the reference does not match the referenced document."
-                f"'{reference.name}' --> '{referenced_document.name}',"
+                f"The 'type' value of the reference does not match the referenced document."
                 f"{reference.type} --> {referenced_document.type}"
             )
         # If the node to update is a list, append to end
@@ -370,8 +376,7 @@ class DocumentService:
         self.save(root, data_source_id)
 
         logger.info(
-            f"Inserted reference to '{referenced_document.name}'({referenced_document.uid})"
-            f" as '{attribute_path}' in '{root.name}'({root.uid})"
+            f"Inserted reference to '{referenced_document.uid}'" f" as '{attribute_path}' in '{root.name}'({root.uid})"
         )
 
         return root.to_dict()

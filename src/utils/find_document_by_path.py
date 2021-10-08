@@ -20,12 +20,14 @@ def _find_document_in_package_by_path(
         target = path_elements[0]
         file = next((f for f in package["content"] if f.get("name") == target), None)
         if not file:
-            raise FileNotFoundError(f"The document {target} could not be found in the package {package.name}")
+            raise FileNotFoundError(f"The document {target} could not be found in the package {package['name']}")
         return file["_id"]
     else:
         next_package_ref = next((p for p in package["content"] if p["name"] == path_elements[0]), None)
         if not next_package_ref:
-            raise FileNotFoundError(f"The package {path_elements[0]} could not be found in the package {package.name}")
+            raise FileNotFoundError(
+                f"The package {path_elements[0]} could not be found in the package {package['name']}"
+            )
         next_package: DTO = data_source.get(next_package_ref["_id"])
         if not next_package:
             raise FileNotFoundError(
