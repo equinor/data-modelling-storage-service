@@ -4,7 +4,6 @@ from fastapi import APIRouter, File, Form, UploadFile
 from pydantic import Json
 from starlette.responses import JSONResponse
 
-from restful.request_types.shared import EntityName
 from restful.status_codes import STATUS_CODES
 from storage.internal.data_source_repository import get_data_source
 from use_case.add_document_to_path_use_case import AddDocumentToPathRequest, AddDocumentToPathUseCase
@@ -37,10 +36,10 @@ def add_to_path(
 
 
 @router.post("/explorer/{data_source_id}/add-package", operation_id="explorer_add_package")
-def add_package(data_source_id: str, name: EntityName):
+def add_package(data_source_id: str, data: AddRootPackageRequest):
     """Add a RootPackage to the data source"""
     use_case = AddRootPackageUseCase()
-    response = use_case.execute(AddRootPackageRequest(data_source_id=data_source_id, name=name.name))
+    response = use_case.execute({"data_source_id": data_source_id, **data.dict()})
 
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 

@@ -1,3 +1,5 @@
+from pydantic import ValidationError
+
 from restful import response_object as res
 import traceback
 
@@ -29,7 +31,12 @@ class UseCase(object):
         ) as not_found:
             logger.warning(not_found)
             return res.ResponseFailure.build_resource_error(not_found)
-        except (EntityAlreadyExistsException, InvalidDocumentNameException, InvalidEntityException) as e:
+        except (
+            EntityAlreadyExistsException,
+            InvalidDocumentNameException,
+            InvalidEntityException,
+            ValidationError,
+        ) as e:
             logger.error(e)
             return res.ResponseFailure.build_entity_error(e)
         except MissingPrivilegeException as e:
