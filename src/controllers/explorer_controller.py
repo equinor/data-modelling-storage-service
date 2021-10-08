@@ -46,13 +46,14 @@ def add_package(data_source_id: str, name: EntityName):
 
 
 # TODO: Create test for this
-@router.post("/explorer/{data_source_id}/add-raw", operation_id="explorer_add_raw")
+@router.post("/explorer/{data_source_id}/add-raw", operation_id="explorer_add_simple")
 def add_raw(data_source_id: str, document: dict):
     """
-    NOTE: The 'add-document' operation is to be preferred.
+    Adds the document 'as-is' to the datasource.
+    NOTE: The 'explorer-add' operation is to be preferred.
     This is mainly for bootstrapping and imports.
-    Blueprint need not exist, and so there is no validation.
-    Posted document must be a valid Entity ('name' and 'type' required).
+    Blueprint need not exist, and so there is no validation or splitting of entities.
+    Posted document must be a valid Entity.
     """
     use_case = AddRawUseCase()
     response = use_case.execute(AddRawRequest(data_source_id=data_source_id, document=document))
