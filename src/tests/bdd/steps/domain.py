@@ -108,7 +108,7 @@ def step_impl(context, document_id, data_source):
 
     if actual_acl_as_json != acl.dict():
         raise Exception(
-            f"expected ACL not equal to actual ACL! \nExpected: {json.dumps(acl.dict())}\n\nActual: {json.dumps(actual_acl.dict())} "
+            f"expected ACL not equal to actual ACL! \nExpected: {json.dumps(acl.dict())}\n\nActual: {json.dumps(actual_acl_as_json)} "
         )
 
 

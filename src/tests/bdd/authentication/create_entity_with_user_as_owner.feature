@@ -33,7 +33,7 @@ Feature: Set logged in user as owner when creating an entity
       """
       {
           "owner": "johndoe",
-          "roles": {"johndoe": "WRITE"},
+          "roles": {"dmss-admin": "WRITE"},
           "users": {},
           "others": "WRITE"
       }
@@ -67,7 +67,7 @@ Feature: Set logged in user as owner when creating an entity
       """
       {
           "owner": "johndoe",
-          "roles": {"johndoe": "WRITE"},
+          "roles": {"dmss-admin": "WRITE"},
           "users": {},
           "others": "WRITE"
       }
