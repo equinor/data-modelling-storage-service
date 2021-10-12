@@ -74,3 +74,40 @@ Feature: Set logged in user as owner when creating an entity
       """
 
 
+    Scenario: create package with add_package endpoint
+      Given authentication is enabled
+      Given the logged in user is "johndoe" with roles "a"
+      Given there exist document with id "2" in data source "test-DS"
+      """
+      {
+          "name": "root_package",
+          "description": "",
+          "type": "system/SIMOS/Package",
+          "isRoot": true,
+          "content": []
+      }
+      """
+      Given i access the resource url "/api/v1/explorer/test-DS/add-package"
+      When i make a "POST" request
+      """
+      {
+          "_id": "3",
+          "name": "package_A",
+          "description": "",
+          "type": "system/SIMOS/Package",
+          "isRoot": false,
+          "content": []
+      }
+      """
+      Then the response status should be "OK"
+      And AccessControlList for document "3" in data-source "test-DS" should be
+      """
+      {
+          "owner": "johndoe",
+          "roles": {"dmss-admin": "WRITE"},
+          "users": {},
+          "others": "WRITE"
+      }
+      """
+
+
