@@ -3,7 +3,7 @@ from typing import Dict, List, Union
 from pydantic import UUID4
 from utils.string_helpers import url_safe_name
 
-from authentication.access_control import access_control, AccessLevel, ACL, create_acl, DEFAULT_ACL
+from authentication.access_control import access_control, AccessLevel, ACL, create_acl, DEFAULT_ACL, current_user
 from domain_classes.document_look_up import DocumentLookUp
 from domain_classes.dto import DTO
 from domain_classes.repository import Repository
@@ -32,6 +32,7 @@ class DataSource:
 
     @classmethod
     def from_dict(cls, a_dict):
+        # do i need to update this?
         return cls(
             a_dict["name"],
             ACL(**a_dict.get("acl", DEFAULT_ACL.dict())),
@@ -143,9 +144,13 @@ class DataSource:
             # Before inserting a new lookUp, check permissions on parent resource
             access_control(parent_acl, AccessLevel.WRITE)
             repo = self._get_repo_from_storage_attribute(storage_attribute)
-            lookup = DocumentLookUp(
-                lookup_id=document.uid, repository=repo.name, database_id=document.uid, acl=parent_acl
+            document_owner = current_user()
+            acl: ACL = ACL(
+                owner=document_owner.username,
+                roles={document_owner.username: AccessLevel.WRITE},
+                others=AccessLevel.WRITE,
             )
+            lookup = DocumentLookUp(lookup_id=document.uid, repository=repo.name, database_id=document.uid, acl=acl)
             self._update_lookup(lookup)
 
         repo = self.repositories[lookup.repository]

@@ -7,6 +7,9 @@ from enums import StorageDataTypes
 from services.document_service import DocumentService
 from storage.data_source_class import DataSource
 from tests.unit.mock_blueprint_provider import blueprint_provider
+from config import config
+
+config.AUTH_ENABLED = False
 
 
 class DataSourceTestCase(unittest.TestCase):
