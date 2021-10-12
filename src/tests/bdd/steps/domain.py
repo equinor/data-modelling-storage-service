@@ -10,6 +10,7 @@ from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 from storage.internal.data_source_repository import DataSourceRepository
 from utils.create_entity import CreateEntity
+from services.database import data_source_collection
 
 document_service = DocumentService(get_data_source)
 
@@ -93,6 +94,22 @@ def step_impl_documents(context, data_source_id: str, collection: str):
 def step_impl(context, document_id, data_source):
     acl = ACL(**json.loads(context.text))
     document_service.repository_provider(data_source).update_access_control(document_id, acl)
+
+
+@then('AccessControlList for document "{document_id}" in data-source "{data_source}" should be')
+def step_impl(context, document_id, data_source):
+    acl = ACL(**json.loads(context.text))
+    lookup_for_data_source: dict = {}
+
+    mongodb_cursor = data_source_collection.find({"_id": data_source})
+    for document in mongodb_cursor:
+        lookup_for_data_source = {"documentLookUp": document["documentLookUp"]}
+    actual_acl_as_json: dict = lookup_for_data_source["documentLookUp"][document_id]["acl"]
+
+    if actual_acl_as_json != acl.dict():
+        raise Exception(
+            f"expected ACL not equal to actual ACL! \nExpected: {json.dumps(acl.dict())}\n\nActual: {json.dumps(actual_acl.dict())} "
+        )
 
 
 @given('AccessControlList for data-source "{data_source}" is')

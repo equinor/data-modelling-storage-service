@@ -32,7 +32,6 @@ class DataSource:
 
     @classmethod
     def from_dict(cls, a_dict):
-        # do i need to update this?
         return cls(
             a_dict["name"],
             ACL(**a_dict.get("acl", DEFAULT_ACL.dict())),
