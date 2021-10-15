@@ -8,7 +8,7 @@ Feature: Set logged in user as owner when creating an entity
 
   Scenario: create entity with add_by_parent_id endpoint
       Given authentication is enabled
-      Given the logged in user is "johndoe" with roles "a"
+      Given the logged in user is "johndoe" with roles "dmss-admin"
       Given there exist document with id "2" in data source "test-DS"
       """
       {
@@ -35,14 +35,14 @@ Feature: Set logged in user as owner when creating an entity
           "owner": "johndoe",
           "roles": {"dmss-admin": "WRITE"},
           "users": {},
-          "others": "WRITE"
+          "others": "READ"
       }
       """
 
 
   Scenario: create entity with add_raw endpoint
       Given authentication is enabled
-      Given the logged in user is "johndoe" with roles "a"
+      Given the logged in user is "johndoe" with roles "dmss-admin"
       Given there exist document with id "2" in data source "test-DS"
       """
       {
@@ -69,14 +69,14 @@ Feature: Set logged in user as owner when creating an entity
           "owner": "johndoe",
           "roles": {"dmss-admin": "WRITE"},
           "users": {},
-          "others": "WRITE"
+          "others": "READ"
       }
       """
 
 
     Scenario: create package with add_package endpoint
       Given authentication is enabled
-      Given the logged in user is "johndoe" with roles "a"
+      Given the logged in user is "johndoe" with roles "dmss-admin"
       Given there exist document with id "2" in data source "test-DS"
       """
       {
@@ -106,7 +106,7 @@ Feature: Set logged in user as owner when creating an entity
           "owner": "johndoe",
           "roles": {"dmss-admin": "WRITE"},
           "users": {},
-          "others": "WRITE"
+          "others": "READ"
       }
       """
 

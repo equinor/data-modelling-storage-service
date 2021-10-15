@@ -24,8 +24,8 @@ class DataSource:
         self, name: str, acl: ACL = DEFAULT_ACL, repositories=None, data_source_collection=data_source_collection,
     ):
         self.name = name
-        # This ACL is used when there is no parent document to read ACL from. Controls who can create root-packages,
-        # and which ACL imported files will get.
+
+        # This ACL is used when there is no parent to inherit ACL from. Controls who can create root-packages.
         self.acl = acl
         self.repositories: Dict[str, Repository] = repositories
         self.data_source_collection = data_source_collection

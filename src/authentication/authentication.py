@@ -8,7 +8,6 @@ from jose import jwt, JWTError
 from pydantic import BaseModel
 from starlette import status
 
-from authentication.mock_users import fake_users_db
 from config import config
 from utils.logging import logger
 
@@ -52,7 +51,9 @@ def fetch_openid_configuration() -> dict:
 async def get_current_user(token: str = Security(oauth2_scheme) if config.AUTH_ENABLED else None) -> User:
     global user_context
     if not config.AUTH_ENABLED:
-        user_context = User(**fake_users_db["nologin"])
+        user_context = User(
+            **{"username": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"}
+        )
         return user_context
     oid_config = fetch_openid_configuration()
     try:

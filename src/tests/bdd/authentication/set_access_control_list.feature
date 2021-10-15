@@ -46,6 +46,7 @@ Feature: Set Access Control List
     "OK"
     """
     Then I access the resource url "/api/v1/acl/test-DS/1"
+    Given the logged in user is "johndoe" with roles "a,b"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -86,6 +87,7 @@ Feature: Set Access Control List
     }
     """
     Then I access the resource url "/api/v1/acl/test-DS/1"
+    Given the logged in user is "johndoe" with roles "a,b"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -106,6 +108,7 @@ Feature: Set Access Control List
     Given the logged in user is "johndoe" with roles "a,b"
     Given authentication is enabled
     Given I access the resource url "/api/v1/acl/test-DS/1"
+    Given the logged in user is "johndoe" with roles "a,b"
     When I make a "GET" request
     Then the response status should be "Forbidden"
     And the response should contain
