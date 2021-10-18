@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 from authentication import authentication
 from authentication.authentication import User
-from authentication.mock_users import fake_users_db
 from config import config
 from utils.exceptions import MissingPrivilegeException
 
@@ -15,7 +14,7 @@ def current_user() -> User:
         if not authentication.user_context:
             raise Exception("No current user in user_context")
         return authentication.user_context
-    return User(**fake_users_db["nologin"])
+    return User(**{"username": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})
 
 
 class AccessLevel(Enum):
@@ -67,6 +66,9 @@ class ACL(BaseModel):
 
 
 def access_control(acl: ACL, access_level_required: AccessLevel):
+    if not config.AUTH_ENABLED:
+        return True
+
     user = current_user()
 
     # Starting with the 'others' access level should reduce the amount of checks being done the most
@@ -90,8 +92,9 @@ def access_control(acl: ACL, access_level_required: AccessLevel):
 
 
 def create_acl() -> ACL:
+    """Used when there is no ACL to inherit. Sets the curent user as owner, and rest copies DEFAULT_ACL"""
     user = current_user()
     return ACL(owner=user.username, roles=DEFAULT_ACL.roles, others=DEFAULT_ACL.others)
 
 
-DEFAULT_ACL = ACL(owner=config.DMSS_ADMIN, roles={config.DMSS_ADMIN_ROLE: AccessLevel.WRITE}, others=AccessLevel.WRITE)
+DEFAULT_ACL = ACL(owner=config.DMSS_ADMIN, roles={config.DMSS_ADMIN_ROLE: AccessLevel.WRITE}, others=AccessLevel.READ)

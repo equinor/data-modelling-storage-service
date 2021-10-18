@@ -6,8 +6,8 @@ import uvicorn
 from fastapi import APIRouter, FastAPI, Security
 from starlette.requests import Request
 
-from authentication.authentication import get_current_user
-import authentication
+from authentication import authentication
+from authentication.authentication import get_current_user, User
 from config import config
 from controllers import (
     blob_controller,
@@ -124,6 +124,10 @@ def nuke_db():
 @cli.command()
 @click.pass_context
 def reset_app(context):
+    # Running commands locally sets the user_context to "DMSS_ADMIN"
+    authentication.user_context = User(
+        **{"username": config.DMSS_ADMIN, "full_name": "Local Admin", "email": "admin@example.com"}
+    )
     context.invoke(nuke_db)
     logger.info("CREATING SYSTEM DATA SOURCE")
     context.invoke(import_data_source, file="/code/home/system/data_sources/system.json")

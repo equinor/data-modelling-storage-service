@@ -24,6 +24,8 @@ def encrypt(message: str) -> str:
 
 
 def decrypt(token: str) -> str:
+    if not token:
+        return ""
     key_loaded()
     fernet = Fernet(config.SECRET_KEY)
     token_as_bytes = token.encode()
