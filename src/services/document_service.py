@@ -25,6 +25,7 @@ from utils.exceptions import (
     DuplicateFileNameException,
     EntityNotFoundException,
     InvalidEntityException,
+    MissingPrivilegeException,
     RepositoryException,
 )
 from utils.find_document_by_path import get_document_uid_by_path
@@ -328,9 +329,22 @@ class DocumentService:
 
         return result_list
 
-    def set_acl(self, data_source_id: str, document_id: str, acl: ACL):
+    def set_acl(self, data_source_id: str, document_id: str, acl: ACL, recursively: bool = True):
         data_source: DataSource = self.repository_provider(data_source_id)
-        data_source.update_access_control(document_id, acl)
+
+        if not recursively:  # Only update acl on the one document
+            data_source.update_access_control(document_id, acl)
+            return
+
+        root_node = self.get_by_uid(data_source_id, document_id)
+        data_source.update_access_control(root_node.node_id, acl)
+        for child in root_node.children:
+            for node in child.traverse():
+                if not node.storage_contained and not node.is_array():
+                    try:
+                        data_source.update_access_control(node.node_id, acl)
+                    except MissingPrivilegeException:  # The user might not have permission on a referenced document
+                        logger.warning(f"Failed to update ACL on {node.node_id}. Permission denied.")
 
     def get_acl(self, data_source_id, document_id) -> ACL:
         data_source: DataSource = self.repository_provider(data_source_id)

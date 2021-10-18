@@ -20,6 +20,44 @@ Feature: Set Access Control List
       ]
     }
     """
+  Given there exist document with id "2" in data source "test-DS"
+    """
+    {
+        "name": "root_package",
+        "type": "system/SIMOS/Package",
+        "isRoot": true,
+        "content": [
+            {
+                "_id": "3",
+                "name": "SubPack",
+                "type": "system/SIMOS/Package"
+            }
+        ]
+    }
+    """
+    Given there exist document with id "3" in data source "test-DS"
+    """
+    {
+        "name": "SubPack",
+        "type": "system/SIMOS/Package",
+        "content": [
+            {
+                "_id": "4",
+                "name": "SubSubPack",
+                "type": "system/SIMOS/Package"
+            }
+        ]
+    }
+    """
+    Given there exist document with id "4" in data source "test-DS"
+    """
+    {
+        "name": "SubSubPack",
+        "type": "system/SIMOS/Package",
+        "content": [
+        ]
+    }
+    """
 
   Scenario: Grant additional role write
     Given AccessControlList for document "1" in data-source "test-DS" is
@@ -46,6 +84,82 @@ Feature: Set Access Control List
     "OK"
     """
     Then I access the resource url "/api/v1/acl/test-DS/1"
+    Given the logged in user is "johndoe" with roles "a,b"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "owner": "johndoe",
+      "roles": {
+        "test": "WRITE"
+      }
+    }
+    """
+
+  Scenario: Grant additional role write recursively
+    Given AccessControlList for document "2" in data-source "test-DS" is
+    """
+    {
+      "owner": "johndoe"
+    }
+    """
+    Given AccessControlList for document "3" in data-source "test-DS" is
+    """
+    {
+      "owner": "johndoe"
+    }
+    """
+    Given AccessControlList for document "4" in data-source "test-DS" is
+    """
+    {
+      "owner": "johndoe"
+    }
+    """
+    Given authentication is enabled
+    Given I access the resource url "/api/v1/acl/test-DS/2"
+    Given the logged in user is "johndoe" with roles "a,b"
+    When I make a "PUT" request
+    """
+    {
+      "owner": "johndoe",
+      "roles": {
+        "test": "WRITE"
+      }
+    }
+    """
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    "OK"
+    """
+    Then I access the resource url "/api/v1/acl/test-DS/2"
+    Given the logged in user is "johndoe" with roles "a,b"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "owner": "johndoe",
+      "roles": {
+        "test": "WRITE"
+      }
+    }
+    """
+    Then I access the resource url "/api/v1/acl/test-DS/3"
+    Given the logged in user is "johndoe" with roles "a,b"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "owner": "johndoe",
+      "roles": {
+        "test": "WRITE"
+      }
+    }
+    """
+    Then I access the resource url "/api/v1/acl/test-DS/4"
     Given the logged in user is "johndoe" with roles "a,b"
     When I make a "GET" request
     Then the response status should be "OK"
@@ -107,7 +221,7 @@ Feature: Set Access Control List
     """
     Given the logged in user is "johndoe" with roles "a,b"
     Given authentication is enabled
-    Given I access the resource url "/api/v1/acl/test-DS/1"
+    Given I access the resource url "/api/v1/acl/test-DS/1?recursively=false"
     Given the logged in user is "johndoe" with roles "a,b"
     When I make a "GET" request
     Then the response status should be "Forbidden"

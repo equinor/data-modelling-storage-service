@@ -8,10 +8,13 @@ from services.document_service import DocumentService
 class SetACLRequest(DataSource):
     document_id: str
     acl: ACL
+    recursively: bool
 
 
 class SetACLUseCase(UseCase):
     def process_request(self, req: SetACLRequest):
         document_service = DocumentService()
-        document_service.set_acl(data_source_id=req.data_source_id, document_id=req.document_id, acl=req.acl)
+        document_service.set_acl(
+            data_source_id=req.data_source_id, document_id=req.document_id, acl=req.acl, recursively=req.recursively
+        )
         return ResponseSuccess("OK")
