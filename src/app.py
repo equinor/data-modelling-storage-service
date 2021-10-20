@@ -6,7 +6,6 @@ import uvicorn
 from fastapi import APIRouter, FastAPI, Security
 from starlette.requests import Request
 
-from authentication import authentication
 from authentication.authentication import get_current_user, User
 from config import config
 from controllers import (
@@ -70,14 +69,6 @@ async def add_process_time_header(request: Request, call_next):
     return response
 
 
-# TODO: Should probably look into other ways to handle user_context...
-@app.middleware("http")
-async def unset_user_context(request: Request, call_next):
-    response = await call_next(request)
-    authentication.user_context = None
-    return response
-
-
 @click.group()
 def cli():
     pass
@@ -102,7 +93,9 @@ def run():
 @cli.command()
 def init_application():
     logger.info("IMPORTING CORE DOCUMENTS")
-    import_package(f"{config.APPLICATION_HOME}/system/SIMOS", data_source=config.CORE_DATA_SOURCE, is_root=True)
+    # Running commands locally sets the user_context to "DMSS_ADMIN"
+    user = User(**{"username": config.DMSS_ADMIN, "full_name": "Local Admin", "email": "admin@example.com"})
+    import_package(f"{config.APPLICATION_HOME}/system/SIMOS", user, data_source=config.CORE_DATA_SOURCE, is_root=True)
     logger.debug("DONE")
 
 
@@ -111,7 +104,9 @@ def init_application():
 def import_data_source(file):
     with open(file) as json_file:
         document = json.load(json_file)
-        DataSourceRepository().create(document["name"], DataSourceRequest(**document))
+        # Running commands locally sets the user_context to "DMSS_ADMIN"
+        user = User(**{"username": config.DMSS_ADMIN, "full_name": "Local Admin", "email": "admin@example.com"})
+        DataSourceRepository(user).create(document["name"], DataSourceRequest(**document))
 
 
 @cli.command()
@@ -124,10 +119,6 @@ def nuke_db():
 @cli.command()
 @click.pass_context
 def reset_app(context):
-    # Running commands locally sets the user_context to "DMSS_ADMIN"
-    authentication.user_context = User(
-        **{"username": config.DMSS_ADMIN, "full_name": "Local Admin", "email": "admin@example.com"}
-    )
     context.invoke(nuke_db)
     logger.info("CREATING SYSTEM DATA SOURCE")
     context.invoke(import_data_source, file="/code/home/system/data_sources/system.json")
