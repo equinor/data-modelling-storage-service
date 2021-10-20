@@ -27,12 +27,11 @@ class DictExporter:
         if node.uid:
             data["_id"] = node.uid
 
-        # Always add 'name' and 'type'
+        # Always add 'type'
         try:
-            data["name"] = node.entity["name"]
             data["type"] = node.entity["type"]
         except KeyError:
-            raise InvalidEntityException(f"The node '{node.uid}' is missing the 'name' and/or 'type' attributes")
+            raise InvalidEntityException(f"The node '{node.uid}' is missing the 'type' attributes")
         # Primitive
         # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.
         if node.blueprint is not None:
@@ -71,12 +70,11 @@ class DictExporter:
         if node.uid:
             data = {"_id": node.uid}
 
-        # Always add 'name' and 'type', regardless of blueprint
+        # Always add 'type', regardless of blueprint
         try:
-            data["name"] = node.entity["name"]
             data["type"] = node.entity["type"]
         except KeyError:
-            raise InvalidEntityException(f"The node '{node.uid}' is missing the 'name' and/or 'type' attributes")
+            raise InvalidEntityException(f"The node '{node.uid}' is missing the 'type' attributes")
 
         # Primitive
         # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.
