@@ -1,4 +1,4 @@
-from typing import Optional, Union, List
+from typing import Optional, List
 
 import requests
 from cachetools import cached, TTLCache
@@ -27,7 +27,7 @@ class User(BaseModel):
     roles: List[str] = []
 
 
-user_context: Union[User, None] = None
+default_user: User = User(**{"username": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})
 
 
 @cached(cache=TTLCache(maxsize=32, ttl=86400))
@@ -49,12 +49,8 @@ def fetch_openid_configuration() -> dict:
 
 
 async def get_current_user(token: str = Security(oauth2_scheme) if config.AUTH_ENABLED else None) -> User:
-    global user_context
     if not config.AUTH_ENABLED:
-        user_context = User(
-            **{"username": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"}
-        )
-        return user_context
+        return default_user
     oid_config = fetch_openid_configuration()
     try:
         payload = jwt.decode(token, {"keys": oid_config["jwks"]}, algorithms=["RS256"], audience=config.AUTH_AUDIENCE)
@@ -65,5 +61,4 @@ async def get_current_user(token: str = Security(oauth2_scheme) if config.AUTH_E
 
     if user is None:
         raise credentials_exception
-    user_context = user
     return user
