@@ -8,7 +8,7 @@ from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute
-from enums import DMT, PRIMITIVES, REQUIRED_ATTRIBUTES, StorageDataTypes
+from enums import DMT, REQUIRED_ATTRIBUTES, StorageDataTypes
 from restful.request_types.shared import Entity, NamedEntity
 from utils.exceptions import InvalidChildTypeException, InvalidEntityException
 from utils.logging import logger
@@ -115,7 +115,7 @@ class DictImporter:
     @classmethod
     def _from_dict(
         cls,
-        entity: Dict,
+        entity: Union[dict, list],
         uid: str,
         key,
         blueprint_provider,
@@ -483,7 +483,7 @@ class Node(NodeBase):
         self.error_message = error_message
 
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
-    def update(self, data: Union[dict, list]):
+    def update(self, data: dict):
 
         self.set_uid(data.get("_id"))
         # Set self.type from posted type, and validate against parent blueprint
@@ -511,16 +511,11 @@ class Node(NodeBase):
                             f"'{REQUIRED_ATTRIBUTES}' are required"
                         )
                 child = self.get_by_path([key])
-                if not child and not attribute.optional:
-                    raise InvalidEntityException(
-                        f"The type '{self.type}' has no complex attribute of type "
-                        f"'{attribute.attribute_type}'. Valid attribute types are blueprint "
-                        f"references, and primitive types {tuple(PRIMITIVES)}"
-                    )
-                elif not child:  # A new optional child has been added
-                    child = DictImporter.from_dict(new_data, None, self.blueprint_provider, key, attribute)
-                    child.parent = self
-                    self.add_child(child)
+                if not child:  # A new child has been added
+                    if attribute.is_array():
+                        child = ListNode(attribute.name, attribute, None, new_data, self, self.blueprint_provider)
+                    else:
+                        child = Node(attribute.name, attribute, None, new_data, self, self.blueprint_provider)
                 # This means we are creating a new, non-contained document. Lists are always contained.
                 if not child.storage_contained and not child.uid and not child.is_array():
                     new_node = DictImporter.from_dict(
@@ -599,7 +594,7 @@ class ListNode(NodeBase):
     def blueprint(self):
         return self.parent.blueprint
 
-    def update(self, data: Union[Dict, List]):
+    def update(self, data: list):
         self.children = []
         for i, item in enumerate(data):
             # Set self.type from posted type, and validate against parent blueprint
