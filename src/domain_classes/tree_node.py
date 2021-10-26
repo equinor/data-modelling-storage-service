@@ -2,14 +2,12 @@ from copy import deepcopy
 from typing import Dict, List, Optional, Union
 from uuid import uuid4
 
-from pydantic import ValidationError
 
 from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute
 from enums import DMT, REQUIRED_ATTRIBUTES, StorageDataTypes
-from restful.request_types.shared import Entity, NamedEntity
 from utils.exceptions import InvalidChildTypeException, InvalidEntityException
 from utils.logging import logger
 from utils.validators import valid_extended_type
@@ -45,16 +43,6 @@ class DictExporter:
                 data[node.key] = [child.to_dict() for child in node.children]
             else:
                 data[node.key] = node.to_dict()
-
-        try:  # Last sanity check on the produced dict
-            if node.attribute.contained:
-                Entity(**data)
-            else:
-                NamedEntity(**data)  # Entities that are not contained in the parent must have a 'name' to
-                # be able to mimic a filesystem
-        except ValidationError as e:
-            logger.exception(data)
-            raise InvalidEntityException(str(e))
 
         return data
 
