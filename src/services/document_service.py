@@ -308,6 +308,11 @@ class DocumentService:
             self.get_blueprint,
             BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
         )
+
+        # raise error if the package already has an entity with the same name
+        packageContent = next((child for child in target.children if child.name == "content"), None)
+        if packageContent.duplicate_attribute(new_node.name):
+            raise DuplicateFileNameException(data_source_id, f"{target.name}/{new_node.name}")
         if files:
             self._merge_entity_and_files(new_node, files)
 
