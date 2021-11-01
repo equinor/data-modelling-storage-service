@@ -90,15 +90,17 @@ class DocumentService:
         if not repository:
             repository: DataSource = self.repository_provider(data_source_id, self.user)
 
-        # If the node is a package, we build the path string to be used by filesystem like repositories
+        # If the node is a package, we build the path string to be used by filesystem like repositories.
+        # Also, check for duplicate names in the package.
         if node.type == DMT.PACKAGE.value:
             path = f"{path}/{node.name}/" if path else f"{node.name}"
-            packageContent = node.children[0]
-            contentListNames = []
-            for child in packageContent.children:
-                if child.name in contentListNames:
-                    raise DuplicateFileNameException(data_source_id, f"{node.name}/{child.name}")
-                contentListNames.append(child.name)
+            if len(node.children) > 0:
+                packageContent = node.children[0]
+                contentListNames = []
+                for child in packageContent.children:
+                    if child.name in contentListNames:
+                        raise DuplicateFileNameException(data_source_id, f"{node.name}/{child.name}")
+                    contentListNames.append(child.name)
 
         if update_uncontained:  # If flag is set, dig down and save uncontained documents
             for child in node.children:
@@ -244,6 +246,10 @@ class DocumentService:
 
         new_node_attribute = BlueprintAttribute(leaf_attribute, type)
         new_node = Node.from_dict(entity, None, self.get_blueprint, new_node_attribute)
+
+        # Check if a file/attribute with the same name already exists on the target
+        if parent.duplicate_attribute(new_node.name):
+            raise DuplicateFileNameException(data_source, f"{parent.name}/{new_node.name}")
 
         new_node.parent = parent
         new_node.set_uid()
