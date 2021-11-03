@@ -98,7 +98,7 @@ class DocumentService:
                 packageContent = node.children[0]
                 contentListNames = []
                 for child in packageContent.children:
-                    if child.name in contentListNames:
+                    if "name" in child.entity and child.name in contentListNames:
                         raise DuplicateFileNameException(data_source_id, f"{node.name}/{child.name}")
                     contentListNames.append(child.name)
 
@@ -121,6 +121,8 @@ class DocumentService:
             if isinstance(repository, ZipFileClient):
                 dto.data["__path__"] = path
             parent_uid = node.parent.node_id if node.parent else None
+            if "name" not in node.entity and node.entity != {}:
+                node.set_name(node.entity["_id"][0:7])
             repository.update(dto, node.get_context_storage_attribute(), parent_id=parent_uid)
             return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
         return ref_dict
@@ -226,6 +228,12 @@ class DocumentService:
             raise BadRequestException("Attribute not specified on parent")
         if not data.get("type"):
             raise BadRequestException("Every entity must have a 'type' attribute")
+        if (
+            data["type"] == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES}/Blueprint"
+            or data["type"] == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES}/Package"
+        ):
+            if "name" not in data:
+                raise BadRequestException(f"An entity of type {data['type']} must have a name attribute!")
 
         type = data["type"]
         parent_attribute = attribute.split(".")[0:-1]
@@ -247,9 +255,10 @@ class DocumentService:
         new_node_attribute = BlueprintAttribute(leaf_attribute, type)
         new_node = Node.from_dict(entity, None, self.get_blueprint, new_node_attribute)
 
-        # Check if a file/attribute with the same name already exists on the target
-        if parent.duplicate_attribute(new_node.name):
-            raise DuplicateFileNameException(data_source, f"{parent.name}/{new_node.name}")
+        if "name" in new_node.entity:
+            # Check if a file/attribute with the same name already exists on the target
+            if parent.duplicate_attribute(new_node.name):
+                raise DuplicateFileNameException(data_source, f"{parent.name}/{new_node.name}")
 
         new_node.parent = parent
         new_node.set_uid()

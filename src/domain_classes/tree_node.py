@@ -561,6 +561,9 @@ class Node(NodeBase):
             self.uid = new_id if new_id else self.entity.get("_id", str(uuid4()))
             self.entity["_id"] = self.uid
 
+    def set_name(self, newName: str):
+        self.attribute.name = newName
+
 
 class ListNode(NodeBase):
     def __init__(

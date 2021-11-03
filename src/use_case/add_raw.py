@@ -22,6 +22,9 @@ class AddRawUseCase(UseCase):
         new_node_id = req.document.dict(by_alias=True).get("_id", str(uuid4()))
         document: DTO = DTO(uid=new_node_id, data=req.document.dict())
         document_repository = get_data_source(req.data_source_id, self.user)
+        dict = req.document.dict()
+        if dict["name"] == None:
+            dict.pop("name")
         document_repository.update(document)
         if document.type == SIMOS.BLUEPRINT.value:
             DocumentService(user=self.user).invalidate_cache()
