@@ -424,6 +424,166 @@ Feature: Explorer - Add file
     }
     """
 
+
+    Scenario: Add entity without a name attribute with add-raw endpoint
+    Given i access the resource url "/api/v1/explorer/test-DS/add-raw"
+    When i make a "POST" request
+    """
+    {
+        "_id": "429cb3da-ebbe-4ea6-80a6-b6bca0f67aaa",
+        "type": "test-DS/root_package/Parent",
+        "description": "parent entity with no name"
+    }
+    """
+    Then the response status should be "OK"
+
+  Scenario: Add blueprint without a name attribute with add-raw endpoint should fail
+    Given i access the resource url "/api/v1/explorer/test-DS/add-raw"
+    When i make a "POST" request
+    """
+    {
+        "_id": "429cb3da-ebbe-4ea6-80a6-b6bca0f67bbb",
+        "type":"system/SIMOS/Blueprint",
+        "description": "Blueprint with no name"
+    }
+    """
+    Then the response status should be "Bad Request"
+    And the response should equal
+    """
+    {
+      "type": "PARAMETERS_ERROR",
+      "message": "BadRequestException: An entity of type system/SIMOS/Blueprint must have a name attribute!"
+    }
+    """
+
+
+  Scenario: Add package without a name attribute with add-raw endpoint should fail
+    Given i access the resource url "/api/v1/explorer/test-DS/add-raw"
+    When i make a "POST" request
+    """
+    {
+        "_id": "429cb3da-ebbe-4ea6-80a6-b6bca0f67bbb",
+        "type":"system/SIMOS/Package",
+        "description": "Package with no name"
+    }
+    """
+    Then the response status should be "Bad Request"
+    And the response should equal
+      """
+      {
+        "type": "PARAMETERS_ERROR",
+        "message": "BadRequestException: An entity of type system/SIMOS/Package must have a name attribute!"
+      }
+      """
+
+  Scenario: Add entity without a name attribute with add-to-path endpoint
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    When i make a "POST" request with "1" files
+    """
+    {
+      "directory": "/root_package/",
+      "document":
+      {
+        "type": "test-DS/root_package/Parent",
+        "description": "parent entity with no name"
+      }
+    }
+    """
+    Then the response status should be "OK"
+
+  Scenario: Add blueprint without a name attribute with add-to-path endpoint should fail
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    When i make a "POST" request with "1" files
+    """
+    {
+      "directory": "/root_package/",
+      "document":
+      {
+        "type":"system/SIMOS/Blueprint",
+        "description": "Blueprint with no name"
+      }
+    }
+    """
+    Then the response status should be "Bad Request"
+    And the response should equal
+    """
+    {
+      "type": "PARAMETERS_ERROR",
+      "message": "BadRequestException: An entity of type system/SIMOS/Blueprint must have a name attribute!"
+    }
+    """
+
+  Scenario: Add package without a name attribute with add-to-path endpoint should fail
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    When i make a "POST" request with "1" files
+    """
+    {
+      "directory": "/root_package/",
+      "document":
+      {
+        "type":"system/SIMOS/Package",
+        "description": "Package with no name"
+      }
+    }
+    """
+    Then the response status should be "Bad Request"
+    And the response should equal
+    """
+    {
+      "type": "PARAMETERS_ERROR",
+      "message": "BadRequestException: An entity of type system/SIMOS/Package must have a name attribute!"
+    }
+    """
+
+
+
+  Scenario: Add entity without a name attribute with add_by_parent_id endpoint
+    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
+    When i make a "POST" request
+    """
+    {
+      "type": "test-DS/root_package/Parent",
+      "description": "parent entity with no name"
+    }
+    """
+    Then the response status should be "OK"
+
+    Scenario: Add blueprint without a name using add_by_parent_id endpoint should fail
+    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
+    When i make a "POST" request
+    """
+    {
+      "type":"system/SIMOS/Blueprint",
+      "description": "Blueprint with no name"
+    }
+    """
+    Then the response status should be "Bad Request"
+    And the response should equal
+    """
+    {
+      "type": "PARAMETERS_ERROR",
+      "message": "BadRequestException: An entity of type system/SIMOS/Blueprint must have a name attribute!"
+    }
+    """
+
+  Scenario: Add package without a name using add_by_parent_id endpoint should fail
+    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
+    When i make a "POST" request
+    """
+    {
+      "type":"system/SIMOS/Package",
+      "description": "Package with no name"
+    }
+    """
+    Then the response status should be "Bad Request"
+    And the response should equal
+    """
+    {
+      "type": "PARAMETERS_ERROR",
+      "message": "BadRequestException: An entity of type system/SIMOS/Package must have a name attribute!"
+    }
+    """
+
   Scenario: Add file with multiple PDFs
     Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
     When i make a "POST" request with "4" files
@@ -486,3 +646,5 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
+
+

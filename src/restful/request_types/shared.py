@@ -52,5 +52,5 @@ class Entity(EntityType, extra=Extra.allow):
 
 
 # A children and types that are to be stored 'model contained' must have a 'name' attribute
-class NamedEntity(EntityType, EntityName, extra=Extra.allow):
+class NamedEntity(EntityType, OptionalEntityName, extra=Extra.allow):
     pass

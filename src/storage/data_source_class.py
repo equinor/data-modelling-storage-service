@@ -1,6 +1,8 @@
 from typing import Dict, List, Union
 
 from pydantic import UUID4
+
+from config import config
 from utils.string_helpers import url_safe_name
 
 from authentication.access_control import access_control, AccessLevel, ACL, create_acl, DEFAULT_ACL
@@ -11,7 +13,12 @@ from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
 from services.database import data_source_collection
-from utils.exceptions import EntityNotFoundException, InvalidDocumentNameException, MissingPrivilegeException
+from utils.exceptions import (
+    EntityNotFoundException,
+    InvalidDocumentNameException,
+    MissingPrivilegeException,
+    BadRequestException,
+)
 from utils.logging import logger
 
 
@@ -134,6 +141,13 @@ class DataSource:
         if name := document.get("name"):
             if not url_safe_name(name):
                 raise InvalidDocumentNameException(name)
+        elif name is None:
+            if (
+                document.get("type") == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Package"
+                or document.get("type") == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Blueprint"
+            ):
+                raise BadRequestException(f"An entity of type {document.type} must have a name attribute!")
+            # todo can i move this raise someplace that is called by all 3 endpoints used in tests??
 
         try:  # Get the documents lookup
             lookup = self._lookup(document.uid)

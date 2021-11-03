@@ -122,7 +122,11 @@ class DocumentService:
                 dto.data["__path__"] = path
             parent_uid = node.parent.node_id if node.parent else None
             if "name" not in node.entity and node.entity != {}:
-                node.set_name(node.entity["_id"][0:7])
+                try:
+                    node.set_name(node.entity["_id"][0:8])
+                except KeyError as e:
+                    node.set_name("NoName")
+                    # todo  i got an error without this except, but i think the node should have an id when code reaches this line??
             repository.update(dto, node.get_context_storage_attribute(), parent_id=parent_uid)
             return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
         return ref_dict
@@ -229,8 +233,9 @@ class DocumentService:
         if not data.get("type"):
             raise BadRequestException("Every entity must have a 'type' attribute")
         if (
-            data["type"] == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES}/Blueprint"
-            or data["type"] == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES}/Package"
+            data["type"]
+            == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Blueprint"  # todo how to check the core packages list?
+            or data["type"] == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Package"
         ):
             if "name" not in data:
                 raise BadRequestException(f"An entity of type {data['type']} must have a name attribute!")
@@ -314,6 +319,13 @@ class DocumentService:
         target: Node = self.get_by_path(f"{data_source_id}/{path}")
         if not target:
             raise EntityNotFoundException(uid=path)
+        if (
+            document.type
+            == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Blueprint"  # todo how to check the core packages list?
+            or document.type == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Package"
+        ):
+            if "name" not in document:
+                raise BadRequestException(f"An entity of type {document.type} must have a name attribute!")
 
         new_node_id = str(uuid4()) if not target.storage_contained else ""
         # If dotted attribute path, attribute is the last entry. Else content

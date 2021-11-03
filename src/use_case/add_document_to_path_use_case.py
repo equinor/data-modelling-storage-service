@@ -28,10 +28,13 @@ class AddDocumentToPathUseCase(UseCase):
 
     def process_request(self, req: AddDocumentToPathRequest):
         document_service = DocumentService(repository_provider=self.repository_provider, user=self.user)
+        request_document: NamedEntity = req.document
+        if request_document.name is None:
+            del request_document.name
         document = document_service.add(
             data_source_id=req.data_source_id,
             path=req.directory,
-            document=req.document,
+            document=request_document,
             files={f.filename: f.file for f in req.files} if req.files else None,
         )
         return ResponseSuccess(document)

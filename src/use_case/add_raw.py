@@ -23,7 +23,7 @@ class AddRawUseCase(UseCase):
         document: DTO = DTO(uid=new_node_id, data=req.document.dict())
         document_repository = get_data_source(req.data_source_id, self.user)
         dict = req.document.dict()
-        if dict["name"] == None:
+        if dict["name"] is None:
             dict.pop("name")
         document_repository.update(document)
         if document.type == SIMOS.BLUEPRINT.value:
