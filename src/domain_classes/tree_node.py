@@ -124,7 +124,10 @@ class DictImporter:
         if not node_attribute:
             bp = blueprint_provider(entity["type"])
             node_attribute = BlueprintAttribute(bp.name, entity["type"], bp.description)
+
+        # If there is data in the entity, load attribute type from the entity
         if entity:
+            node_attribute = deepcopy(node_attribute)  # If you don't copy, we modify the blueprint in the BP Cache...
             node_attribute.attribute_type = entity["type"]
 
         try:
