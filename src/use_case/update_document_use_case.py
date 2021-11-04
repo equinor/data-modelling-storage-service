@@ -14,6 +14,7 @@ class UpdateDocumentRequest(DataSource):
     data: Union[dict, list]
     attribute: Optional[str] = None
     files: Optional[List[UploadFile]] = File(None)
+    update_uncontained: Optional[bool] = True
 
 
 class UpdateDocumentUseCase(UseCase):
@@ -28,6 +29,7 @@ class UpdateDocumentUseCase(UseCase):
             data=req.data,
             attribute_path=req.attribute,
             files={f.filename: f.file for f in req.files} if req.files else None,
+            update_uncontained=req.update_uncontained,
         )
         document_service.invalidate_cache()
         return ResponseSuccess(document)
