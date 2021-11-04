@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from fastapi import File, UploadFile
 
@@ -12,7 +12,7 @@ from storage.internal.data_source_repository import get_data_source
 
 class UpdateDocumentRequest(DataSource):
     document_id: str
-    data: dict
+    data: Union[dict, list]
     attribute: Optional[str] = None
     files: Optional[List[UploadFile]] = File(None)
 

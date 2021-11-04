@@ -344,20 +344,6 @@ Feature: Explorer - Add file
     }
     """
 
-  Scenario: Add file with missing parameter name should fail
-    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
-    When i make a "POST" request
-    """
-    {
-      "type": "system/SIMOS/Blueprint"
-    }
-    """
-    Then the response status should be "Unprocessable Entity"
-    And the response should contain
-    """
-    {"type": "UNPROCESSABLE_ENTITY"}
-    """
-
   Scenario: Add file with missing parameters should fail
     Given i access the resource url "/api/v1/explorer/test-DS/6.whatever"
     When i make a "POST" request

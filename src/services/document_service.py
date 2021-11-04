@@ -335,6 +335,11 @@ class DocumentService:
         return result_list
 
     def set_acl(self, data_source_id: str, document_id: str, acl: ACL, recursively: bool = True):
+        if "." in document_id:
+            raise Exception(
+                f"set_acl() function got document_id: {document_id}. "
+                f"The set_acl() function can only be used on root documents. You cannot use a dotted document id."
+            )
         data_source: DataSource = self.repository_provider(data_source_id, self.user)
 
         if not recursively:  # Only update acl on the one document
@@ -347,7 +352,7 @@ class DocumentService:
             for node in child.traverse():
                 if not node.storage_contained and not node.is_array():
                     try:
-                        data_source.update_access_control(node.node_id, acl)
+                        data_source.update_access_control(node.entity["_id"], acl)
                     except MissingPrivilegeException:  # The user might not have permission on a referenced document
                         logger.warning(f"Failed to update ACL on {node.node_id}. Permission denied.")
 

@@ -53,6 +53,23 @@ class MultiTypeBlueprintProvider:
                     }
                 )
             )
+        if type == "wrapps_parent_w_list":  # Wrapps a uncontained parent_w_list
+            return Blueprint(
+                DTO(
+                    {
+                        "name": "wrapps_parent_w_list",
+                        "type": "system/SIMOS/Blueprint",
+                        "extends": ["system/SIMOS/NamedEntity"],
+                        "attributes": [
+                            {
+                                "name": "Parent-w-list",
+                                "attributeType": "parent_w_list",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                            },
+                        ],
+                    }
+                )
+            )
         if type == "base_child":  # A very basic blueprint, extends from NamedEntity
             return Blueprint(
                 DTO(
@@ -457,3 +474,35 @@ class DocumentServiceTestCase(unittest.TestCase):
             )
         print(error.exception)
         assert doc_storage["1"]["SomeChild"] == []
+
+    def test_add_child_with_empty_list(self):
+        repository = mock.Mock()
+
+        doc_storage = {
+            "1": {"_id": "1", "name": "parent", "description": "", "type": "wrapps_parent_w_list", "Parent-w-list": {}}
+        }
+
+        def mock_get(document_id: str):
+            return DTO(doc_storage[document_id])
+
+        def mock_update(dto: DTO, *args, **kwargs):
+            doc_storage[dto.uid] = dto.data
+
+        repository.get = mock_get
+        repository.update = mock_update
+        document_service = DocumentService(
+            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x: repository
+        )
+
+        document_service.update_document(
+            data_source_id="testing",
+            document_id="1",
+            data={
+                "_id": "1",
+                "name": "parent",
+                "description": "",
+                "type": "wrapps_parent_w_list",
+                "Parent-w-list": {"name": "whatever", "type": "parent_w_list", "SomeChild": []},
+            },
+        )
+        assert doc_storage["1"]["Parent-w-list"]["SomeChild"] == []
