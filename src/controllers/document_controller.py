@@ -59,11 +59,17 @@ def update(
     data: Json = Form(...),
     attribute: Optional[str] = Form(None),
     files: Optional[List[UploadFile]] = File(None),
+    update_uncontained: Optional[bool] = True,
 ):
     update_use_case = UpdateDocumentUseCase()
     response = update_use_case.execute(
         UpdateDocumentRequest(
-            data_source_id=data_source_id, data=data, document_id=document_id, attribute=attribute, files=files
+            data_source_id=data_source_id,
+            data=data,
+            document_id=document_id,
+            attribute=attribute,
+            files=files,
+            update_uncontained=update_uncontained,
         )
     )
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
