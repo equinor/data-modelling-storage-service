@@ -3,6 +3,8 @@ from typing import List
 
 from pydantic import BaseSettings, Field
 
+from domain_classes.user import User
+
 
 class Config(BaseSettings):
     MONGO_USERNAME: str = Field("maf", env="MONGO_INITDB_ROOT_USERNAME")
@@ -22,6 +24,7 @@ class Config(BaseSettings):
     DMSS_ADMIN_ROLE = Field("dmss-admin", env="DMSS_ADMIN_ROLE")
     # Authentication
     AUTH_ENABLED: bool = Field(False, env="AUTH_ENABLED")
+    TEST_MODE: bool = Field(False, env="TEST_MODE")
     OAUTH_WELL_KNOWN: str = Field(None, env="OAUTH_WELL_KNOWN")
     OAUTH_TOKEN_ENDPOINT: str = Field("", env="OAUTH_TOKEN_ENDPOINT")
     OAUTH_AUTH_ENDPOINT: str = Field("", env="OAUTH_AUTH_ENDPOINT")
@@ -37,3 +40,4 @@ if config.AUTH_ENABLED:
             "Environment variable 'OAUTH_WELL_KNOWN', 'OAUTH_AUTH_ENDPOINT',"
             "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
         )
+default_user: User = User(**{"username": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})

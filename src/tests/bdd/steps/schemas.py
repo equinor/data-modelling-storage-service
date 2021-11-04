@@ -13,7 +13,7 @@ from utils.package_import import import_package
 @given('there exist document with id "{uid}" in data source "{data_source_id}"')
 def step_impl_2(context, uid: str, data_source_id: str):
     document: DTO = DTO(uid=uid, data=json.loads(context.text))
-    document_repository = get_data_source(data_source_id)
+    document_repository = get_data_source(data_source_id, context.user)
     document_repository.update(document)
 
 
@@ -37,9 +37,9 @@ def step_impl(context):
             }
         },
     }
-    DataSourceRepository().create(document["name"], DataSourceRequest(**document))
+    DataSourceRepository(context.user).create(document["name"], DataSourceRequest(**document))
 
     # Import SIMOS package
     logger.setLevel("ERROR")
-    import_package(f"{config.APPLICATION_HOME}/system/SIMOS", is_root=True, data_source="system")
+    import_package(f"{config.APPLICATION_HOME}/system/SIMOS", context.user, is_root=True, data_source="system")
     logger.setLevel("INFO")

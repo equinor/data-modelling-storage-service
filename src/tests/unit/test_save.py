@@ -1,6 +1,8 @@
 import unittest
 from unittest import mock
 
+from domain_classes.user import User
+
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
 from domain_classes.tree_node import Node
@@ -40,7 +42,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         node: Node = document_service.get_by_uid("testing", "1")
@@ -69,7 +71,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         node: Node = document_service.get_by_uid("testing", "1")
@@ -132,7 +134,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return repository
 
@@ -184,7 +186,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         node: Node = Node.from_dict(doc_storage["1"], "1", document_service.get_blueprint)

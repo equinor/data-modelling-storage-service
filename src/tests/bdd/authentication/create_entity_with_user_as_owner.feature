@@ -7,8 +7,6 @@ Feature: Set logged in user as owner when creating an entity
       | test-DS |
 
   Scenario: create entity with add_by_parent_id endpoint
-      Given authentication is enabled
-      Given the logged in user is "johndoe" with roles "dmss-admin"
       Given there exist document with id "2" in data source "test-DS"
       """
       {
@@ -19,6 +17,8 @@ Feature: Set logged in user as owner when creating an entity
           "content": []
       }
       """
+      Given the logged in user is "johndoe" with roles "dmss-admin"
+      Given authentication is enabled
       Given i access the resource url "/api/v1/explorer/test-DS/2.content"
       When i make a "POST" request
       """
@@ -41,8 +41,6 @@ Feature: Set logged in user as owner when creating an entity
 
 
   Scenario: create entity with add_raw endpoint
-      Given authentication is enabled
-      Given the logged in user is "johndoe" with roles "dmss-admin"
       Given there exist document with id "2" in data source "test-DS"
       """
       {
@@ -53,6 +51,8 @@ Feature: Set logged in user as owner when creating an entity
           "content": []
       }
       """
+      Given the logged in user is "johndoe" with roles "dmss-admin"
+      Given authentication is enabled
       Given i access the resource url "/api/v1/explorer/test-DS/add-raw"
       When i make a "POST" request
       """
@@ -75,8 +75,6 @@ Feature: Set logged in user as owner when creating an entity
 
 
     Scenario: create package with add_package endpoint
-      Given authentication is enabled
-      Given the logged in user is "johndoe" with roles "dmss-admin"
       Given there exist document with id "2" in data source "test-DS"
       """
       {
@@ -87,6 +85,8 @@ Feature: Set logged in user as owner when creating an entity
           "content": []
       }
       """
+      Given the logged in user is "johndoe" with roles "dmss-admin"
+      Given authentication is enabled
       Given i access the resource url "/api/v1/explorer/test-DS/add-package"
       When i make a "POST" request
       """

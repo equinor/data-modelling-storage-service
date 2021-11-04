@@ -116,9 +116,9 @@ Feature: Set Access Control List
       "owner": "johndoe"
     }
     """
+    Given the logged in user is "johndoe" with roles "a,b"
     Given authentication is enabled
     Given I access the resource url "/api/v1/acl/test-DS/2"
-    Given the logged in user is "johndoe" with roles "a,b"
     When I make a "PUT" request
     """
     {
@@ -222,7 +222,6 @@ Feature: Set Access Control List
     Given the logged in user is "johndoe" with roles "a,b"
     Given authentication is enabled
     Given I access the resource url "/api/v1/acl/test-DS/1?recursively=false"
-    Given the logged in user is "johndoe" with roles "a,b"
     When I make a "GET" request
     Then the response status should be "Forbidden"
     And the response should contain

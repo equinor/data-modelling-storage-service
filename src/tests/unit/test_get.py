@@ -41,7 +41,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
 
         document_service: DocumentService = DocumentService(
-            repository_provider=lambda x: document_repository, blueprint_provider=blueprint_provider
+            repository_provider=lambda x, y: document_repository, blueprint_provider=blueprint_provider
         )
         root = document_service.get_by_uid("datasource", "1").to_dict()
 

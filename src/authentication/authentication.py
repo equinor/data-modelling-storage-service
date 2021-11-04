@@ -1,14 +1,12 @@
-from typing import Optional, List
-
 import requests
 from cachetools import cached, TTLCache
 from fastapi import HTTPException, Security
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from jose import jwt, JWTError
-from pydantic import BaseModel
 from starlette import status
 
-from config import config
+from config import config, default_user
+from domain_classes.user import User
 from utils.logging import logger
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
@@ -18,16 +16,6 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED, detail="Token validation failed", headers={"WWW-Authenticate": "Bearer"}
 )
-
-
-class User(BaseModel):
-    username: str
-    email: Optional[str] = None
-    full_name: Optional[str] = None
-    roles: List[str] = []
-
-
-default_user: User = User(**{"username": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})
 
 
 @cached(cache=TTLCache(maxsize=32, ttl=86400))
@@ -48,12 +36,20 @@ def fetch_openid_configuration() -> dict:
         raise credentials_exception
 
 
-async def get_current_user(token: str = Security(oauth2_scheme) if config.AUTH_ENABLED else None) -> User:
+async def get_current_user(token: str = Security(oauth2_scheme)) -> User:
     if not config.AUTH_ENABLED:
         return default_user
+
     oid_config = fetch_openid_configuration()
     try:
-        payload = jwt.decode(token, {"keys": oid_config["jwks"]}, algorithms=["RS256"], audience=config.AUTH_AUDIENCE)
+        options = {}
+        if config.TEST_MODE:
+            # Required for running tests with spoofed JWT
+            options["verify_signature"] = False
+            options["verify_aud"] = False
+        payload = jwt.decode(
+            token, {"keys": oid_config["jwks"]}, algorithms=["RS256"], audience=config.AUTH_AUDIENCE, options=options
+        )
         user = User(username=payload["sub"], **payload)
     except JWTError as error:
         logger.warning(error)

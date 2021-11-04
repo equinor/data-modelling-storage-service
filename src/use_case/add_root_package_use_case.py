@@ -2,6 +2,7 @@ from uuid import uuid4
 
 from pydantic import Extra
 
+from domain_classes.user import User
 from domain_classes.dto import DTO
 from domain_classes.tree_node import Node
 from enums import DMT
@@ -20,9 +21,12 @@ class AddRootPackageRequest(EntityName, extra=Extra.allow):
 
 
 class AddRootPackageUseCase(UseCase):
+    def __init__(self, user: User):
+        self.user = user
+
     def process_request(self, req: dict):
         try:
-            find_by_name(req["data_source_id"], req["name"])
+            find_by_name(req["data_source_id"], req["name"], self.user)
         except FileNotFoundException:
             data = {
                 "_id": req.get("_id", str(uuid4())),
@@ -31,7 +35,7 @@ class AddRootPackageUseCase(UseCase):
                 "isRoot": True,
                 "content": [],
             }
-            document_service = DocumentService(repository_provider=get_data_source)
+            document_service = DocumentService(repository_provider=get_data_source, user=self.user)
             new_node = Node.from_dict(entity=data, uid=data["_id"], blueprint_provider=document_service.get_blueprint)
             document_service.save(node=new_node, data_source_id=req["data_source_id"])
 

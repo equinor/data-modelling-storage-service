@@ -66,6 +66,7 @@ def step_impl_equal_dot_path(context, dot_path):
 @then("the response should contain")
 def step_impl_contain(context):
     actual = context.response.json()
+    print(actual)
     data = context.text or context.data
     expected = json.loads(data)
     result = list(diff(actual, expected))

@@ -6,7 +6,7 @@ from storage.internal.data_source_repository import get_data_source
 
 @given('there exists a blob with id "{id}" in data source "{data_source}" loaded from "{path}"')
 def step_impl(context, id, data_source, path):
-    data_source: DataSource = get_data_source(data_source_id=data_source)
+    data_source: DataSource = get_data_source(data_source_id=data_source, user=context.user)
     try:
         with open(path, "rb") as blob_file:
             data_source.update_blob(id, blob_file)

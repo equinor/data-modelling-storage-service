@@ -56,9 +56,9 @@ def get_document_uid_by_path(path: str, repository) -> Union[str, None]:
     return uid
 
 
-def get_document_by_ref(type_ref) -> DTO:
+def get_document_by_ref(type_ref, user) -> DTO:
     data_source_id, path, attribute = split_absolute_ref(type_ref)
-    document_repository = get_data_source(data_source_id)
+    document_repository = get_data_source(data_source_id, user)
     type_id = get_document_uid_by_path(path, document_repository)
     if not type_id:
         raise EntityNotFoundException(uid=type_ref)

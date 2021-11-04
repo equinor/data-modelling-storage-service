@@ -1,6 +1,7 @@
 import unittest
 from unittest import mock
 
+from domain_classes.user import User
 from domain_classes.dto import DTO
 from domain_classes.tree_node import Node
 from enums import StorageDataTypes
@@ -10,6 +11,7 @@ from tests.unit.mock_blueprint_provider import blueprint_provider
 from config import config
 
 config.AUTH_ENABLED = False
+test_user = User(**{"username": "unit-test", "full_name": "Unit Test", "email": "unit-test@example.com"})
 
 
 class DataSourceTestCase(unittest.TestCase):
@@ -60,12 +62,13 @@ class DataSourceTestCase(unittest.TestCase):
 
         data_source = DataSource(
             name="testing",
+            user=test_user,
             repositories={"default": default_repo, "blob": blob_repo},
             data_source_collection=data_source_collection,
         )
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: data_source
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: data_source, user=test_user
         )
 
         node: Node = Node.from_dict(uncontained_doc, "1", document_service.get_blueprint)
@@ -117,12 +120,13 @@ class DataSourceTestCase(unittest.TestCase):
 
         data_source = DataSource(
             name="testing",
+            user=test_user,
             repositories={"default": default_repo, "blob": blob_repo},
             data_source_collection=data_source_collection,
         )
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: data_source
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: data_source, user=test_user
         )
 
         node: Node = Node.from_dict(blob_doc, "1", document_service.get_blueprint)
@@ -179,12 +183,13 @@ class DataSourceTestCase(unittest.TestCase):
 
         data_source = DataSource(
             name="testing",
+            user=test_user,
             repositories={"default": default_repo, "blob": blob_repo},
             data_source_collection=data_source_collection,
         )
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: data_source
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: data_source, user=test_user
         )
 
         node: Node = Node.from_dict(blob_doc, "1", document_service.get_blueprint)

@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from domain_classes.user import User
 from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.dto import DTO
@@ -9,11 +10,13 @@ from utils.logging import logger
 
 
 class BlueprintProvider:
-    @staticmethod
+    def __init__(self, user: User):
+        self.user = user
+
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)
-    def get_blueprint(type: str) -> Blueprint:
+    def get_blueprint(self, type: str) -> Blueprint:
         try:
-            document: DTO = get_document_by_ref(type)
+            document: DTO = get_document_by_ref(type, self.user)
             return Blueprint(document)
         except Exception as error:
             logger.exception(error)

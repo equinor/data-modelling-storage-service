@@ -1,6 +1,8 @@
 from typing import Optional
 
 from pydantic import conint, BaseModel
+
+from domain_classes.user import User
 from services.document_service import DocumentService
 from restful.request_types.shared import DataSource
 from restful.response_object import ResponseSuccess
@@ -22,9 +24,9 @@ class GetDocumentResponse(BaseModel):
 
 
 class GetDocumentUseCase(UseCase):
-    def __init__(self, repository_provider=get_data_source):
+    def __init__(self, user: User, repository_provider=get_data_source):
         self.repository_provider = repository_provider
-        self.document_service = DocumentService(repository_provider=self.repository_provider)
+        self.document_service = DocumentService(repository_provider=self.repository_provider, user=user)
 
     def process_request(self, req: GetDocumentRequest):
         document = self.document_service.get_by_uid(
