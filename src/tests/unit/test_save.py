@@ -240,7 +240,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         document_service.update_document(

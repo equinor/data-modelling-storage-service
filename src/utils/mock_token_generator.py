@@ -59,6 +59,10 @@ L8Ozb1A++6TFebf+xLnulwdAEnPsV0+uAjGx1d5WIJ0/j6erZ9juo18i19HQ
 
 
 def generate_token(user: User = default_user):
+    """
+    This function is for testing purposes only
+    Used for behave testing
+    """
     # https://docs.microsoft.com/en-us/azure/active-directory/develop/id-tokens#claims-in-an-id-token
     payload = {
         "name": user.full_name,

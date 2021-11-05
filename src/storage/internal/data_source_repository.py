@@ -80,8 +80,7 @@ class DataSourceRepository:
         data_source = data_source_collection.find_one(filter={"_id": id})
         if not data_source:
             raise DataSourceNotFoundException(id)
-        data_source["user"] = self.user
-        return DataSource.from_dict(data_source)
+        return DataSource.from_dict(data_source, user=self.user)
 
     def update_access_control(self, data_source_id: str, acl: ACL) -> None:
         data_source: DataSource = self.get(data_source_id)

@@ -24,7 +24,7 @@ class Config(BaseSettings):
     DMSS_ADMIN_ROLE = Field("dmss-admin", env="DMSS_ADMIN_ROLE")
     # Authentication
     AUTH_ENABLED: bool = Field(False, env="AUTH_ENABLED")
-    TEST_MODE: bool = Field(False, env="TEST_MODE")
+    VERIFY_TOKEN: bool = Field(True, env="VERIFY_TOKEN")
     OAUTH_WELL_KNOWN: str = Field(None, env="OAUTH_WELL_KNOWN")
     OAUTH_TOKEN_ENDPOINT: str = Field("", env="OAUTH_TOKEN_ENDPOINT")
     OAUTH_AUTH_ENDPOINT: str = Field("", env="OAUTH_AUTH_ENDPOINT")

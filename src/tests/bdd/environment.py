@@ -7,7 +7,7 @@ from auth_utils import test_user, generate_token
 def before_all(context):
     context.errors = []
     context.features = []
-    config.TEST_MODE = True
+    config.VERIFY_TOKEN = False
     wipe_db()
 
 

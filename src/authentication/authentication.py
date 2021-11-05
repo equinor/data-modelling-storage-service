@@ -40,13 +40,16 @@ async def get_current_user(token: str = Security(oauth2_scheme)) -> User:
     if not config.AUTH_ENABLED:
         return default_user
 
-    oid_config = fetch_openid_configuration()
     try:
         options = {}
-        if config.TEST_MODE:
+        if not config.VERIFY_TOKEN:
+            oid_config = {"keys": []}
             # Required for running tests with spoofed JWT
             options["verify_signature"] = False
             options["verify_aud"] = False
+        else:
+            oid_config = fetch_openid_configuration()
+
         payload = jwt.decode(
             token, {"keys": oid_config["jwks"]}, algorithms=["RS256"], audience=config.AUTH_AUDIENCE, options=options
         )

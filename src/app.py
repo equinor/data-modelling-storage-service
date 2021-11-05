@@ -16,7 +16,7 @@ from utils.encryption import generate_key
 from utils.logging import logger
 from utils.package_import import import_package
 from utils.wipe_db import wipe_db
-from utils.token_generator import generate_token
+from utils.mock_token_generator import generate_token
 
 server_root = "/api"
 version = "v1"

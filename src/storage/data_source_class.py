@@ -37,10 +37,10 @@ class DataSource:
         self.data_source_collection = data_source_collection
 
     @classmethod
-    def from_dict(cls, a_dict):
+    def from_dict(cls, a_dict, user: User):
         return cls(
             a_dict["name"],
-            a_dict["user"],
+            user,
             ACL(**a_dict.get("acl", DEFAULT_ACL.dict())),
             {key: Repository(name=key, **value) for key, value in a_dict["repositories"].items()},
         )
