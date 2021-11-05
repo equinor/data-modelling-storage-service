@@ -43,7 +43,7 @@ async def get_current_user(token: str = Security(oauth2_scheme)) -> User:
     try:
         options = {}
         if not config.VERIFY_TOKEN:
-            oid_config = {"jwks": []}
+            oid_config = {"keys": []}
             # Required for running tests with spoofed JWT
             options["verify_signature"] = False
             options["verify_aud"] = False
