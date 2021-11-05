@@ -71,7 +71,14 @@ class DocumentService:
 
         return node.entity
 
-    def save(self, node: Union[Node, ListNode], data_source_id: str, repository=None, path="") -> Dict:
+    def save(
+        self,
+        node: Union[Node, ListNode],
+        data_source_id: str,
+        repository=None,
+        path="",
+        update_uncontained: bool = True,
+    ) -> Dict:
         """
         Recursively saves a Node.
         Digs down to the leaf child, and based on storageContained,
@@ -87,11 +94,12 @@ class DocumentService:
         if node.type == DMT.PACKAGE.value:
             path = f"{path}/{node.name}/" if path else f"{node.name}"
 
-        for child in node.children:
-            if child.is_array():
-                [self.save(x, data_source_id, repository, path) for x in child.children]
-            else:
-                self.save(child, data_source_id, repository, path)
+        if update_uncontained:  # If flag is set, dig down and save uncontained documents
+            for child in node.children:
+                if child.is_array():
+                    [self.save(x, data_source_id, repository, path) for x in child.children]
+                else:
+                    self.save(child, data_source_id, repository, path)
 
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
@@ -187,6 +195,7 @@ class DocumentService:
         data: Union[dict, list],
         attribute_path: str = None,
         files: dict = None,
+        update_uncontained: bool = True,
     ):
         root: Node = self.get_by_uid(data_source_id, document_id)
         target_node = root
@@ -198,7 +207,7 @@ class DocumentService:
         target_node.update(data)
         if files:
             self._merge_entity_and_files(target_node, files)
-        self.save(root, data_source_id)
+        self.save(root, data_source_id, update_uncontained=update_uncontained)
 
         logger.info(f"Updated document '{target_node.node_id}''")
         return {"data": target_node.to_dict()}

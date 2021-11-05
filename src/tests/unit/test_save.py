@@ -203,3 +203,68 @@ class DocumentServiceTestCase(unittest.TestCase):
         target_node.update(doc_storage["3"])
         document_service.save(node, "testing")
         assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"]["_id"] == "3"
+
+    def test_save_no_overwrite_uncontained_document(self):
+        repository = mock.Mock()
+
+        doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "Root",
+                "description": "I'm the root document",
+                "type": "blueprint_with_second_level_nested_uncontained_attribute",
+                "i_have_a_uncontained_attribute": {
+                    "type": "uncontained_blueprint",
+                    "name": "first",
+                    "description": "I'm the first nested document, contained",
+                    "uncontained_in_every_way": {
+                        "_id": "2",
+                        "name": "im_a_uncontained_attribute",
+                        "type": "blueprint_2",
+                        "contained": False,
+                    },
+                },
+            },
+            "2": {
+                "_id": "2",
+                "name": "im_a_uncontained_attribute",
+                "type": "blueprint_2",
+                "description": "I'm the second nested document, uncontained",
+            },
+        }
+
+        def mock_update(dto: DTO, *args, **kwargs):
+            doc_storage[dto.uid] = dto.data
+
+        repository.get = lambda id: DTO(doc_storage[id])
+        repository.update = mock_update
+
+        document_service = DocumentService(
+            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+        )
+
+        document_service.update_document(
+            "test",
+            "1",
+            {
+                "_id": "1",
+                "name": "Root",
+                "description": "I'm the root document",
+                "type": "blueprint_with_second_level_nested_uncontained_attribute",
+                "i_have_a_uncontained_attribute": {
+                    "type": "uncontained_blueprint",
+                    "name": "first",
+                    "description": "This has changed!",
+                    "uncontained_in_every_way": {
+                        "_id": "2",
+                        "name": "im_a_uncontained_attribute",
+                        "type": "blueprint_2",
+                        "contained": False,
+                    },
+                },
+            },
+            update_uncontained=False,
+        )
+        # Test that the "2" document has not been overwritten
+        assert doc_storage["2"].get("description")
+        assert doc_storage["1"]["i_have_a_uncontained_attribute"]["description"] == "This has changed!"
