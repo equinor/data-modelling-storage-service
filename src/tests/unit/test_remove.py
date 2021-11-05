@@ -1,6 +1,8 @@
 import unittest
 from unittest import mock
 
+from domain_classes.user import User
+
 from domain_classes.dto import DTO
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider
@@ -16,7 +18,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = lambda id: DTO(data=document_1.copy())
 
         document_service = DocumentService(
-            repository_provider=lambda id: document_repository, blueprint_provider=blueprint_provider
+            repository_provider=lambda id, user: document_repository, blueprint_provider=blueprint_provider
         )
         document_service.remove_document(data_source_id="testing", document_id="1")
         document_repository.delete.assert_called_with("1")
@@ -31,7 +33,9 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = lambda doc_id: DTO(doc_storage[doc_id])
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
-        document_service = DocumentService(blueprint_provider=NoBlueprints(), repository_provider=lambda x: repository)
+        document_service = DocumentService(
+            blueprint_provider=NoBlueprints(), repository_provider=lambda x, y: repository
+        )
         document_service.remove_document(data_source_id="testing", document_id="1")
         assert doc_storage == {}
 
@@ -65,7 +69,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
         repository.delete = mock_delete
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return repository
 
@@ -92,7 +96,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda doc_id: DTO(doc_storage[doc_id])
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
-            repository_provider=lambda x: repository, blueprint_provider=blueprint_provider
+            repository_provider=lambda x, y: repository, blueprint_provider=blueprint_provider
         )
         document_service.remove_document(data_source_id="testing", document_id="1.nested")
         assert doc_storage["1"].get("nested") is None
@@ -119,7 +123,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda doc_id: DTO(doc_storage[doc_id])
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
-            repository_provider=lambda x: repository, blueprint_provider=blueprint_provider
+            repository_provider=lambda x, y: repository, blueprint_provider=blueprint_provider
         )
         document_service.remove_document(data_source_id="testing", document_id="1")
         assert doc_storage.get("1") is None
@@ -159,7 +163,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda doc_id: DTO(doc_storage[doc_id])
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
-            repository_provider=lambda x: repository, blueprint_provider=blueprint_provider
+            repository_provider=lambda x, y: repository, blueprint_provider=blueprint_provider
         )
         document_service.remove_document(data_source_id="testing", document_id="1")
         assert doc_storage.get("1") is None
@@ -182,7 +186,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         repository.get = lambda uid: DTO(doc_storage[uid])
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return repository
 
@@ -214,7 +218,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return repository
 

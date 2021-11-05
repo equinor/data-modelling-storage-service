@@ -1,14 +1,12 @@
-from typing import Optional, Union, List
-
 import requests
 from cachetools import cached, TTLCache
 from fastapi import HTTPException, Security
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from jose import jwt, JWTError
-from pydantic import BaseModel
 from starlette import status
 
-from config import config
+from config import config, default_user
+from domain_classes.user import User
 from utils.logging import logger
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
@@ -18,16 +16,6 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED, detail="Token validation failed", headers={"WWW-Authenticate": "Bearer"}
 )
-
-
-class User(BaseModel):
-    username: str
-    email: Optional[str] = None
-    full_name: Optional[str] = None
-    roles: List[str] = []
-
-
-user_context: Union[User, None] = None
 
 
 @cached(cache=TTLCache(maxsize=32, ttl=86400))
@@ -48,16 +36,23 @@ def fetch_openid_configuration() -> dict:
         raise credentials_exception
 
 
-async def get_current_user(token: str = Security(oauth2_scheme) if config.AUTH_ENABLED else None) -> User:
-    global user_context
+async def get_current_user(token: str = Security(oauth2_scheme)) -> User:
     if not config.AUTH_ENABLED:
-        user_context = User(
-            **{"username": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"}
-        )
-        return user_context
-    oid_config = fetch_openid_configuration()
+        return default_user
+
     try:
-        payload = jwt.decode(token, {"keys": oid_config["jwks"]}, algorithms=["RS256"], audience=config.AUTH_AUDIENCE)
+        options = {}
+        if not config.VERIFY_TOKEN:
+            oid_config = {"jwks": []}
+            # Required for running tests with spoofed JWT
+            options["verify_signature"] = False
+            options["verify_aud"] = False
+        else:
+            oid_config = fetch_openid_configuration()
+
+        payload = jwt.decode(
+            token, {"keys": oid_config["jwks"]}, algorithms=["RS256"], audience=config.AUTH_AUDIENCE, options=options
+        )
         user = User(username=payload["sub"], **payload)
     except JWTError as error:
         logger.warning(error)
@@ -65,5 +60,4 @@ async def get_current_user(token: str = Security(oauth2_scheme) if config.AUTH_E
 
     if user is None:
         raise credentials_exception
-    user_context = user
     return user

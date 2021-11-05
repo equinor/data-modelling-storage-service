@@ -3,18 +3,9 @@ from typing import Dict
 
 from pydantic import BaseModel
 
-from authentication import authentication
-from authentication.authentication import User
+from domain_classes.user import User
 from config import config
 from utils.exceptions import MissingPrivilegeException
-
-
-def current_user() -> User:
-    if config.AUTH_ENABLED:
-        if not authentication.user_context:
-            raise Exception("No current user in user_context")
-        return authentication.user_context
-    return User(**{"username": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})
 
 
 class AccessLevel(Enum):
@@ -65,11 +56,9 @@ class ACL(BaseModel):
         }
 
 
-def access_control(acl: ACL, access_level_required: AccessLevel):
+def access_control(acl: ACL, access_level_required: AccessLevel, user: User):
     if not config.AUTH_ENABLED:
         return True
-
-    user = current_user()
 
     # Starting with the 'others' access level should reduce the amount of checks being done the most
     if acl.others.check_privilege(access_level_required):
@@ -91,9 +80,8 @@ def access_control(acl: ACL, access_level_required: AccessLevel):
     raise MissingPrivilegeException(f"The requested operation requires '{access_level_required.name}' privileges")
 
 
-def create_acl() -> ACL:
-    """Used when there is no ACL to inherit. Sets the curent user as owner, and rest copies DEFAULT_ACL"""
-    user = current_user()
+def create_acl(user: User) -> ACL:
+    """Used when there is no ACL to inherit. Sets the current user as owner, and rest copies DEFAULT_ACL"""
     return ACL(owner=user.username, roles=DEFAULT_ACL.roles, others=DEFAULT_ACL.others)
 
 

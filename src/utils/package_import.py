@@ -2,6 +2,7 @@ import json
 import os
 from typing import Dict, List, Union
 
+from domain_classes.user import User
 from domain_classes.dto import DTO
 from enums import DMT
 from storage.data_source_class import DataSource
@@ -27,11 +28,11 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
     return docs
 
 
-def import_package(path, data_source: str, is_root: bool = False) -> Union[Dict]:
-    data_source: DataSource = get_data_source(data_source_id=data_source)
+def import_package(path, user: User, data_source: str, is_root: bool = False) -> Union[Dict]:
+    data_source: DataSource = get_data_source(data_source_id=data_source, user=user)
     package = {"name": os.path.basename(path), "type": DMT.PACKAGE.value, "isRoot": is_root}
     try:
-        if get_document_by_ref(f"{data_source.name}/{package['name']}"):
+        if get_document_by_ref(f"{data_source.name}/{package['name']}", user):
             raise EntityAlreadyExistsException(
                 message=(
                     f"A root package with name '{package['name']}' "
@@ -51,7 +52,9 @@ def import_package(path, data_source: str, is_root: bool = False) -> Union[Dict]
 
     package["content"] = _add_documents(path, files, data_source)
     for folder in directories:
-        package["content"].append(import_package(f"{path}/{folder}", is_root=False, data_source=data_source.name))
+        package["content"].append(
+            import_package(f"{path}/{folder}", user, is_root=False, data_source=data_source.name)
+        )
 
     package = DTO(package)
     data_source.update(package)

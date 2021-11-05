@@ -1,19 +1,13 @@
-from fastapi.testclient import TestClient
-
-from app import app
-from authentication.authentication import get_current_user
 from tests.bdd.results import print_overview_errors, print_overview_features
 from utils.wipe_db import wipe_db
 from config import config
-
-test_client = TestClient(app)
-# Overrides the JWT validation and user_context setter dependency for all endpoints
-app.dependency_overrides[get_current_user] = lambda: None
+from auth_utils import test_user, generate_token
 
 
 def before_all(context):
     context.errors = []
     context.features = []
+    config.VERIFY_TOKEN = False
     wipe_db()
 
 
@@ -34,7 +28,8 @@ def before_scenario(context, scenario):
     config.AUTH_ENABLED = False
     if "skip" in scenario.effective_tags:
         scenario.skip("Marked with @skip")
-    context.test_client = test_client
+    context.user = test_user
+    context.token = generate_token(context.user)
 
 
 def after_step(context, step):

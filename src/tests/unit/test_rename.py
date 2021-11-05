@@ -1,6 +1,8 @@
 import unittest
 from unittest import mock
 
+from domain_classes.user import User
+
 from domain_classes.dto import DTO
 from services.document_service import DocumentService
 
@@ -33,7 +35,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
         document_repository.update = mock_update
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return document_repository
 
@@ -72,7 +74,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
         document_repository.update = mock_update
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return document_repository
 
@@ -108,7 +110,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
         document_repository.update = mock_update
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return document_repository
 
@@ -146,7 +148,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
         document_repository.update = mock_update
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return document_repository
 

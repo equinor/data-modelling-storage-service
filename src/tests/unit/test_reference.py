@@ -37,7 +37,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.get = lambda x: DTO(doc_storage[str(x)])
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         document_service.insert_reference(
@@ -81,7 +81,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         with self.assertRaises(EntityNotFoundException):
@@ -120,7 +120,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.get = lambda x: DTO(doc_storage[str(x)])
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         with self.assertRaises(InvalidEntityException):
@@ -162,7 +162,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         document_service.insert_reference(
@@ -209,7 +209,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         with self.assertRaises(ValidationError):
@@ -246,7 +246,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.get = lambda id: DTO(doc_storage[id])
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         document_service.remove_reference(
@@ -285,7 +285,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.get = lambda id: DTO(doc_storage[id])
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         document_service.remove_reference(
@@ -325,7 +325,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.get = lambda x: DTO(doc_storage[str(x)])
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         document_service.remove_reference(
@@ -370,7 +370,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.get = lambda x: DTO(doc_storage[str(x)])
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
         document_service.insert_reference(
             "testing",

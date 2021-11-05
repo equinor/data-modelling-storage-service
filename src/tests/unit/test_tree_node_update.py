@@ -1,6 +1,8 @@
 import unittest
 from unittest import mock
 
+from domain_classes.user import User
+
 from domain_classes.blueprint import Blueprint
 from domain_classes.dto import DTO
 from domain_classes.tree_node import Node
@@ -157,7 +159,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             doc_storage[dto.uid] = dto.data
             return None
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return repository
 
@@ -209,7 +211,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             doc_storage[dto.uid] = dto.data
             return None
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return repository
 
@@ -240,7 +242,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x: repository
+            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
         )
         with self.assertRaises(InvalidChildTypeException):
             document_service.update_document(
@@ -289,7 +291,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             doc_storage[dto.uid] = dto.data
             return None
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return repository
 
@@ -328,7 +330,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         with self.assertRaises(DuplicateFileNameException):
@@ -351,7 +353,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x: repository
+            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
         )
         document_service.update_document(
             data_source_id="testing",
@@ -379,7 +381,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x: repository
+            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
         )
         document_service.update_document(
             data_source_id="testing",
@@ -415,7 +417,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x: repository
+            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
         )
         document_service.update_document(
             data_source_id="testing",
@@ -457,7 +459,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x: repository
+            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
         )
 
         with self.assertRaises(InvalidChildTypeException) as error:
@@ -489,7 +491,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x: repository
+            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
         )
 
         document_service.update_document(

@@ -2,6 +2,7 @@ from pathlib import Path
 
 from pydantic.main import BaseModel
 
+from domain_classes.user import User
 from domain_classes.dto import DTO
 from restful import response_object as res
 from restful.use_case import UseCase
@@ -17,7 +18,8 @@ class MoveRequest(BaseModel):
 
 
 class MoveFileUseCase(UseCase):
-    def __init__(self, get_repository):
+    def __init__(self, user: User, get_repository):
+        self.user = user
         self.get_repository = get_repository
 
     def process_request(self, req: MoveRequest):
@@ -28,25 +30,27 @@ class MoveFileUseCase(UseCase):
 
         # Check if the new destination package exists
         if different_parent := source.parent != destination.parent:
-            new_parent_document = get_document_by_ref(f"{destination_data_source_uid}/{str(destination.parent)}")
+            new_parent_document = get_document_by_ref(
+                f"{destination_data_source_uid}/{str(destination.parent)}", self.user
+            )
             if not new_parent_document:
                 raise EntityNotFoundException(req.destination)
 
         # Check if document already exists in destination
-        if get_document_by_ref(req.destination):
+        if get_document_by_ref(req.destination, self.user):
             raise EntityAlreadyExistsException(req.destination)
 
         # Remove source document
-        source_data_source = DataSource(uid=source_data_source_id)
-        source_document_repository: DataSource = self.get_repository(source_data_source)
-        source_document: DTO = get_document_by_ref(req.source)
+        source_data_source = DataSource(uid=source_data_source_id, user=self.user)
+        source_document_repository: DataSource = self.get_repository(source_data_source, user=self.user)
+        source_document: DTO = get_document_by_ref(req.source, self.user)
         if not source_document:
             raise EntityNotFoundException(uid=f"{str(source)}")
         source_document_repository.delete(source_document.uid)
         logger.info(f"Removed document '{source_document.uid}' from data source '{source_data_source_id}'")
 
         # Add destination
-        destination_data_source = DataSource(uid=destination_data_source_uid)
+        destination_data_source = DataSource(uid=destination_data_source_uid, user=self.user)
         destination_document_repository: DataSource = self.get_repository(destination_data_source)
         data = source_document.data
         data["name"] = destination.name
@@ -55,7 +59,7 @@ class MoveFileUseCase(UseCase):
         logger.info(f"Added document '{destination_document.uid}' to data source '{destination_data_source_uid}")
 
         # Update parent(s)
-        old_parent_document = get_document_by_ref(str(source.parent))
+        old_parent_document = get_document_by_ref(str(source.parent), self.user)
         reference = {"_id": source_document.uid, "name": destination.name, "type": source_document.type}
         # Remove old reference from parent
         old_parent_document.data["content"] = [

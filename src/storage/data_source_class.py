@@ -3,7 +3,8 @@ from typing import Dict, List, Union
 from pydantic import UUID4
 from utils.string_helpers import url_safe_name
 
-from authentication.access_control import access_control, AccessLevel, ACL, create_acl, DEFAULT_ACL, current_user
+from authentication.access_control import access_control, AccessLevel, ACL, create_acl, DEFAULT_ACL
+from domain_classes.user import User
 from domain_classes.document_look_up import DocumentLookUp
 from domain_classes.dto import DTO
 from domain_classes.repository import Repository
@@ -21,19 +22,25 @@ class DataSource:
     """
 
     def __init__(
-        self, name: str, acl: ACL = DEFAULT_ACL, repositories=None, data_source_collection=data_source_collection,
+        self,
+        name: str,
+        user: User,
+        acl: ACL = DEFAULT_ACL,
+        repositories=None,
+        data_source_collection=data_source_collection,
     ):
         self.name = name
-
+        self.user = user
         # This ACL is used when there is no parent to inherit ACL from. Controls who can create root-packages.
         self.acl = acl
         self.repositories: Dict[str, Repository] = repositories
         self.data_source_collection = data_source_collection
 
     @classmethod
-    def from_dict(cls, a_dict):
+    def from_dict(cls, a_dict, user: User):
         return cls(
             a_dict["name"],
+            user,
             ACL(**a_dict.get("acl", DEFAULT_ACL.dict())),
             {key: Repository(name=key, **value) for key, value in a_dict["repositories"].items()},
         )
@@ -81,13 +88,13 @@ class DataSource:
 
     def update_access_control(self, document_id: str, acl: ACL) -> None:
         old_lookup = self._lookup(document_id)
-        access_control(old_lookup.acl, AccessLevel.WRITE)
+        access_control(old_lookup.acl, AccessLevel.WRITE, self.user)
         old_lookup.acl = acl
         self._update_lookup(old_lookup)
 
     def get_access_control(self, document_id: str) -> DocumentLookUp:
         lookup = self._lookup(document_id)
-        access_control(lookup.acl, AccessLevel.READ)
+        access_control(lookup.acl, AccessLevel.READ, self.user)
         return lookup
 
     def _remove_lookup(self, lookup_id):
@@ -98,7 +105,7 @@ class DataSource:
     def get(self, uid: Union[str, UUID4]) -> DTO:
         uid = str(uid)
         lookup = self._lookup(uid)
-        access_control(lookup.acl, AccessLevel.READ)
+        access_control(lookup.acl, AccessLevel.READ, self.user)
         repo = self.repositories[lookup.repository]
         return DTO(repo.get(uid))
 
@@ -110,7 +117,7 @@ class DataSource:
         for dto in repo.find(filter):
             if lookup := self._lookup(dto.get("_id")):
                 try:
-                    access_control(lookup.acl, AccessLevel.READ)
+                    access_control(lookup.acl, AccessLevel.READ, self.user)
                     documents_with_access.append(DTO(dto))
                 except MissingPrivilegeException:
                     pass
@@ -141,9 +148,9 @@ class DataSource:
 
             parent_acl = parent_lookup.acl if parent_lookup else self.acl  # If no parentLookup, use DataSource default
             # Before inserting a new lookUp, check permissions on parent resource
-            access_control(parent_acl, AccessLevel.WRITE)
+            access_control(parent_acl, AccessLevel.WRITE, self.user)
             repo = self._get_repo_from_storage_attribute(storage_attribute)
-            document_owner = current_user()
+            document_owner = self.user
             acl: ACL = ACL(
                 owner=document_owner.username, roles=parent_acl.roles, users=parent_acl.users, others=parent_acl.others
             )
@@ -151,28 +158,28 @@ class DataSource:
             self._update_lookup(lookup)
 
         repo = self.repositories[lookup.repository]
-        access_control(lookup.acl, AccessLevel.WRITE)
+        access_control(lookup.acl, AccessLevel.WRITE, self.user)
         repo.update(document.uid, document.data)
 
     def update_blob(self, uid, file) -> None:
         repo = self._get_repo_from_storage_attribute(
             StorageAttribute("generic_blob", False, StorageDataTypes.BLOB.value), strict=True
         )
-        lookup = DocumentLookUp(lookup_id=uid, repository=repo.name, database_id=uid, acl=create_acl())
-        access_control(lookup.acl, AccessLevel.WRITE)
+        lookup = DocumentLookUp(lookup_id=uid, repository=repo.name, database_id=uid, acl=create_acl(self.user))
+        access_control(lookup.acl, AccessLevel.WRITE, self.user)
         self._update_lookup(lookup)
         repo.update_blob(uid, file.read())
 
     def get_blob(self, uid: str) -> bytes:
         lookup = self._lookup(uid)
-        access_control(lookup.acl, AccessLevel.READ)
+        access_control(lookup.acl, AccessLevel.READ, self.user)
         return self.repositories[lookup.repository].get_blob(lookup.database_id)
 
     def delete_blob(self, uid: str) -> None:
         # If lookup not found, assume it's deleted
         try:
             lookup = self._lookup(uid)
-            access_control(lookup.acl, AccessLevel.WRITE)
+            access_control(lookup.acl, AccessLevel.WRITE, self.user)
             self._remove_lookup(uid)
             self.repositories[lookup.repository].delete_blob(uid)
         except EntityNotFoundException:
@@ -183,7 +190,7 @@ class DataSource:
         # If lookup not found, assume it's deleted
         try:
             lookup = self._lookup(uid)
-            access_control(lookup.acl, AccessLevel.WRITE)
+            access_control(lookup.acl, AccessLevel.WRITE, self.user)
             self._remove_lookup(uid)
             self.repositories[lookup.repository].delete(uid)
         except EntityNotFoundException:

@@ -27,7 +27,7 @@ def create_repositories(context):
             "collection": row["collection"],
             "type": row["type"],
         }
-        DataSourceRepository.validate_repository(document)
+        DataSourceRepository(context.user).validate_repository(document)
         data_source_collection.update_one(
             {"_id": row["data-source"]}, {"$set": {f"repositories.{row['name']}": document}}
         )
@@ -55,4 +55,4 @@ def create_repositories(context):
             "type": "mongo-db",
         }
     document["repositories"] = repos
-    DataSourceRepository().create(document["name"], DataSourceRequest(**document))
+    DataSourceRepository(context.user).create(document["name"], DataSourceRequest(**document))

@@ -1,6 +1,8 @@
 import unittest
 from unittest import mock, skip
 
+from domain_classes.user import User
+
 from domain_classes.blueprint import Blueprint
 from domain_classes.dto import DTO
 from services.document_service import DocumentService
@@ -128,7 +130,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
         document_repository.update = mock_update
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return document_repository
 
@@ -277,7 +279,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
         document_repository.update = mock_update
 
-        def repository_provider(data_source_id):
+        def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return document_repository
 

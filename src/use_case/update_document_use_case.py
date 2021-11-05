@@ -2,6 +2,7 @@ from typing import List, Optional, Union
 
 from fastapi import File, UploadFile
 
+from domain_classes.user import User
 from restful.request_types.shared import DataSource
 from restful.response_object import ResponseSuccess
 from restful.use_case import UseCase
@@ -18,11 +19,12 @@ class UpdateDocumentRequest(DataSource):
 
 
 class UpdateDocumentUseCase(UseCase):
-    def __init__(self, repository_provider=get_data_source):
+    def __init__(self, user: User, repository_provider=get_data_source):
+        self.user = user
         self.repository_provider = repository_provider
 
     def process_request(self, req: UpdateDocumentRequest):
-        document_service = DocumentService(repository_provider=self.repository_provider)
+        document_service = DocumentService(repository_provider=self.repository_provider, user=self.user)
         document = document_service.update_document(
             data_source_id=req.data_source_id,
             document_id=req.document_id,

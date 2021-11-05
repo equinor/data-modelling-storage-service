@@ -7,7 +7,7 @@ from uuid import uuid4
 from fastapi import UploadFile
 
 from authentication.access_control import ACL
-from config import config
+from config import config, default_user
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
@@ -39,9 +39,10 @@ pretty_printer = pprint.PrettyPrinter()
 
 
 class DocumentService:
-    def __init__(self, repository_provider=get_data_source, blueprint_provider=BlueprintProvider()):
-        self.blueprint_provider = blueprint_provider
+    def __init__(self, repository_provider=get_data_source, blueprint_provider=None, user=default_user):
+        self.blueprint_provider = blueprint_provider or BlueprintProvider(user)
         self.repository_provider = repository_provider
+        self.user = user
 
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def get_blueprint(self, type: str) -> Blueprint:
@@ -87,7 +88,7 @@ class DocumentService:
             return {}
         # If not passed a custom repository to save into, use the DocumentService's storage
         if not repository:
-            repository: DataSource = self.repository_provider(data_source_id)
+            repository: DataSource = self.repository_provider(data_source_id, self.user)
 
         # If the node is a package, we build the path string to be used by filesystem like repositories
         if node.type == DMT.PACKAGE.value:
@@ -117,17 +118,21 @@ class DocumentService:
         return ref_dict
 
     def get_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
-        complete_document = get_complete_document(document_uid, self.repository_provider(data_source_id), depth)
+        complete_document = get_complete_document(
+            document_uid, self.repository_provider(data_source_id, self.user), depth
+        )
         return Node.from_dict(complete_document, complete_document.get("_id"), blueprint_provider=self.get_blueprint)
 
     def get_by_path(self, absolute_reference: str) -> Node:
         data_source_id, path, attribute = split_absolute_ref(absolute_reference)
-        document_repository = get_data_source(data_source_id)
+        document_repository = get_data_source(data_source_id, self.user)
         document_id = get_document_uid_by_path(path, document_repository)
         return self.get_by_uid(data_source_id, document_id)
 
     def get_root_packages(self, data_source_id: str):
-        result = self.repository_provider(data_source_id).find({"type": "system/SIMOS/Package", "isRoot": True})
+        result = self.repository_provider(data_source_id, self.user).find(
+            {"type": "system/SIMOS/Package", "isRoot": True}
+        )
         if not result:
             return []
 
@@ -139,7 +144,7 @@ class DocumentService:
         If document_id is a dotted attribute path, it will remove the reference in the parent.
         Does not use the Node class, as blueprints wont necessarily be available when deleting.
         """
-        repository = self.repository_provider(data_source_id)
+        repository = self.repository_provider(data_source_id, self.user)
         if "." in document_id:
             root_document: DTO = repository.get(document_id.split(".")[0])
             path_after_root = document_id.split(".")[1:]
@@ -255,7 +260,7 @@ class DocumentService:
 
     def remove_by_path(self, data_source_id: str, directory: str):
         directory = directory.rstrip("/").lstrip("/")
-        data_source = self.repository_provider(data_source_id)
+        data_source = self.repository_provider(data_source_id, self.user)
 
         if "/" in directory:
             parent_uid = get_document_uid_by_path(f"{'/'.join(directory.split('/')[0:-1])}", data_source)
@@ -321,7 +326,7 @@ class DocumentService:
         return {"uid": new_node.node_id}
 
     def search(self, data_source_id, search_data, dotted_attribute_path):
-        repository: DataSource = self.repository_provider(data_source_id)
+        repository: DataSource = self.repository_provider(data_source_id, self.user)
 
         if not isinstance(repository.get_default_repository().client, MongoDBClient):
             raise RepositoryException(
@@ -344,7 +349,7 @@ class DocumentService:
                 f"set_acl() function got document_id: {document_id}. "
                 f"The set_acl() function can only be used on root documents. You cannot use a dotted document id."
             )
-        data_source: DataSource = self.repository_provider(data_source_id)
+        data_source: DataSource = self.repository_provider(data_source_id, self.user)
 
         if not recursively:  # Only update acl on the one document
             data_source.update_access_control(document_id, acl)
@@ -361,7 +366,7 @@ class DocumentService:
                         logger.warning(f"Failed to update ACL on {node.node_id}. Permission denied.")
 
     def get_acl(self, data_source_id, document_id) -> ACL:
-        data_source: DataSource = self.repository_provider(data_source_id)
+        data_source: DataSource = self.repository_provider(data_source_id, self.user)
         lookup = data_source.get_access_control(document_id)
         return lookup.acl
 
@@ -375,7 +380,7 @@ class DocumentService:
 
         # Check that target exists and has correct values
         # The SIMOS/Entity type can reference any type (used by Package)
-        referenced_document: DTO = self.repository_provider(data_source_id).get(reference.uid)
+        referenced_document: DTO = self.repository_provider(data_source_id, self.user).get(reference.uid)
         if not referenced_document:
             raise EntityNotFoundException(uid=data_source_id + reference.uid)
         if DMT.ENTITY.value != attribute_node.type != referenced_document.type:

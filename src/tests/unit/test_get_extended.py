@@ -69,7 +69,7 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
         repository.get = lambda doc_id: DTO(doc_storage[doc_id])
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x: repository
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
         node: Node = document_service.get_by_uid("testing", "1")
