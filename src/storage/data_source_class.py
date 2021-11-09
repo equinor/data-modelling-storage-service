@@ -147,7 +147,6 @@ class DataSource:
                 or document.get("type") == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Blueprint"
             ):
                 raise BadRequestException(f"An entity of type {document.type} must have a name attribute!")
-            # todo can i move this raise someplace that is called by all 3 endpoints used in tests??
 
         try:  # Get the documents lookup
             lookup = self._lookup(document.uid)

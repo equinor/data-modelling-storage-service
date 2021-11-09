@@ -465,6 +465,9 @@ class Node(NodeBase):
     def name(self):
         return self.entity.get("name", self.attribute.name)
 
+    def set_name(self, new_name: str):
+        self.attribute.name = new_name
+
     @staticmethod
     def from_dict(entity, uid, blueprint_provider, node_attribute: BlueprintAttribute = None):
         return DictImporter.from_dict(entity, uid, blueprint_provider, "", node_attribute)
@@ -560,9 +563,6 @@ class Node(NodeBase):
         else:
             self.uid = new_id if new_id else self.entity.get("_id", str(uuid4()))
             self.entity["_id"] = self.uid
-
-    def set_name(self, newName: str):
-        self.attribute.name = newName
 
 
 class ListNode(NodeBase):

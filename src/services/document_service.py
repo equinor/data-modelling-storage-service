@@ -89,6 +89,12 @@ class DocumentService:
         # If not passed a custom repository to save into, use the DocumentService's storage
         if not repository:
             repository: DataSource = self.repository_provider(data_source_id, self.user)
+        if (
+            node.type == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Blueprint"
+            or node.type == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Package"
+        ):
+            if "name" not in node.entity:
+                raise BadRequestException(f"An entity of type {node.type} must have a name attribute!")
 
         # If the node is a package, we build the path string to be used by filesystem like repositories.
         # Also, check for duplicate names in the package.
@@ -124,9 +130,8 @@ class DocumentService:
             if "name" not in node.entity and node.entity != {}:
                 try:
                     node.set_name(node.entity["_id"][0:8])
-                except KeyError as e:
+                except KeyError:
                     node.set_name("NoName")
-                    # todo  i got an error without this except, but i think the node should have an id when code reaches this line??
             repository.update(dto, node.get_context_storage_attribute(), parent_id=parent_uid)
             return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
         return ref_dict
@@ -232,13 +237,6 @@ class DocumentService:
             raise BadRequestException("Attribute not specified on parent")
         if not data.get("type"):
             raise BadRequestException("Every entity must have a 'type' attribute")
-        if (
-            data["type"]
-            == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Blueprint"  # todo how to check the core packages list?
-            or data["type"] == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Package"
-        ):
-            if "name" not in data:
-                raise BadRequestException(f"An entity of type {data['type']} must have a name attribute!")
 
         type = data["type"]
         parent_attribute = attribute.split(".")[0:-1]
@@ -319,13 +317,6 @@ class DocumentService:
         target: Node = self.get_by_path(f"{data_source_id}/{path}")
         if not target:
             raise EntityNotFoundException(uid=path)
-        if (
-            document.type
-            == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Blueprint"  # todo how to check the core packages list?
-            or document.type == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Package"
-        ):
-            if "name" not in document:
-                raise BadRequestException(f"An entity of type {document.type} must have a name attribute!")
 
         new_node_id = str(uuid4()) if not target.storage_contained else ""
         # If dotted attribute path, attribute is the last entry. Else content
