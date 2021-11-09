@@ -401,6 +401,29 @@ Feature: Explorer - Add file
     }
     """
 
+  Scenario: Add file with duplicate name
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    When i make a "POST" request with "1" files
+    """
+      {
+        "directory": "/root_package/",
+        "document": {
+          "type": "test-DS/root_package/Parent",
+          "name": "parentEntity",
+          "description": "",
+          "SomeChild": {}
+        }
+      }
+    """
+    Then the response status should be "System Error"
+    And the response should equal
+    """
+    {
+      "message":"DuplicateFileNameException: 'test-DS/root_package/parentEntity' already exists",
+      "type":"SYSTEM_ERROR"
+    }
+    """
+
   Scenario: Add file with multiple PDFs
     Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
     When i make a "POST" request with "4" files
