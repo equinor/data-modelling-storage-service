@@ -220,7 +220,7 @@ class DocumentService:
         logger.info(f"Updated document '{target_node.node_id}''")
         return {"data": target_node.to_dict()}
 
-    def add_document(self, absolute_ref: str, data: dict = None):
+    def add_document(self, absolute_ref: str, data: dict = None, update_uncontained: bool = True):
         data_source, parent_id, attribute = split_absolute_ref(absolute_ref)
         if not attribute:
             raise BadRequestException("Attribute not specified on parent")
@@ -262,7 +262,7 @@ class DocumentService:
         if new_node.parent.attribute.attribute_type != DMT.ENTITY.value:
             new_node.validate_type_on_parent()
 
-        self.save(root, data_source)
+        self.save(root, data_source, update_uncontained=update_uncontained)
 
         return {"uid": new_node.node_id}
 

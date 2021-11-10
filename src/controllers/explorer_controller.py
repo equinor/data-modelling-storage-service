@@ -97,11 +97,19 @@ def rename(data_source_id: str, request_data: RenameRequest, user: User = Depend
 
 
 @router.post("/explorer/{data_source_id}/{dotted_id}", operation_id="explorer_add")
-def add_by_parent_id(data_source_id: str, dotted_id: str, data: dict, user: User = Depends(get_current_user)):
+def add_by_parent_id(
+    data_source_id: str,
+    dotted_id: str,
+    data: dict,
+    update_uncontained: Optional[bool] = True,
+    user: User = Depends(get_current_user),
+):
     """
     Add a new document into an existing one. Must match it's parents attribute type.
     Select parent with format 'document-id.attribute.attribute'
     """
     use_case = AddFileUseCase(user)
-    response = use_case.execute({"absolute_ref": f"{data_source_id}/{dotted_id}", "data": data})
+    response = use_case.execute(
+        {"absolute_ref": f"{data_source_id}/{dotted_id}", "data": data, "update_uncontained": update_uncontained}
+    )
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
