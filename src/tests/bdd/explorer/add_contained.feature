@@ -60,7 +60,8 @@ Feature: Explorer - Add contained node
           "attributeType": "blueprints/root_package/RecursiveBlueprint",
           "type": "system/SIMOS/BlueprintAttribute",
           "default": "[]",
-          "dimensions": "*"
+          "dimensions": "*",
+          "optional": true
         }
       ]
     }
@@ -98,7 +99,8 @@ Feature: Explorer - Add contained node
     """
     {
       "name": "level2",
-      "type": "blueprints/root_package/RecursiveBlueprint"
+      "type": "blueprints/root_package/RecursiveBlueprint",
+      "description": ""
     }
     """
     Then the response status should be "OK"

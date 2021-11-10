@@ -10,7 +10,7 @@ from domain_classes.storage_recipe import StorageAttribute
 from enums import DMT, REQUIRED_ATTRIBUTES, StorageDataTypes
 from utils.exceptions import InvalidChildTypeException, InvalidEntityException
 from utils.logging import logger
-from utils.validators import valid_extended_type
+from utils.validators import valid_extended_type, entity_has_all_required_attributes
 
 
 class DictExporter:
@@ -461,12 +461,15 @@ class Node(NodeBase):
     def to_ref_dict(self):
         return DictExporter.to_ref_dict(self)
 
+    def validate_entity(self):
+        # get required attributes, as defined in the blueprint
+        required_attributes = self.blueprint.get_required_attributes()
+        entity_has_all_required_attributes(entity=self.entity, required_attributes=required_attributes)
+        pass
+
     @property
     def name(self):
         return self.entity.get("name", self.attribute.name)
-
-    def set_name(self, new_name: str):
-        self.attribute.name = new_name
 
     @staticmethod
     def from_dict(entity, uid, blueprint_provider, node_attribute: BlueprintAttribute = None):

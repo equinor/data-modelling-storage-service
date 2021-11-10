@@ -2,8 +2,8 @@ from typing import Callable, List
 
 from pydantic import ValidationError
 
-from restful.request_types.shared import NamedEntity
-from utils.exceptions import InvalidEntityException
+from restful.request_types.shared import Entity
+from utils.exceptions import InvalidEntityException, ValidationException
 
 
 def valid_extended_type(type: str, extended_types: List[str], get_blueprint: Callable) -> bool:
@@ -19,6 +19,13 @@ def valid_extended_type(type: str, extended_types: List[str], get_blueprint: Cal
 
 def valid_named_entity(entity: dict) -> None:
     try:  # Minimal check that the child is a valid entity
-        NamedEntity(**entity)
+        Entity(**entity)
     except (ValidationError, TypeError):
         raise InvalidEntityException(f"'{entity}' is not a valid entity.") from None
+
+
+def entity_has_all_required_attributes(entity: dict, required_attributes: list):
+    for attribute in required_attributes:
+        if entity != {} and (attribute not in entity):
+            raise ValidationException(f"Required attribute '{attribute}' not found in the entity")
+    pass

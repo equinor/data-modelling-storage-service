@@ -23,7 +23,7 @@ Feature: Get a blueprint
           "label": "Name",
           "default": "",
           "dimensions": "",
-          "optional": true,
+          "optional": false,
           "contained": true,
           "enumType": ""
         }, {

@@ -38,6 +38,12 @@ class UncontainedEntity(EntityType, OptionalEntityName, EntityUUID, extra=Extra.
     def from_underscore_id_to_uid(cls, values):
         return {**values, "uid": values.get("_id")}
 
+    def to_dict(self):
+        if self.name is not None:
+            return self.dict()
+        else:
+            return self.dict(exclude={"name"})
+
 
 class BlueprintEntity(EntityType, EntityName, EntityUUID, extra=Extra.allow):
     # an entity that have type: system/SIMOS/Blueprint
@@ -46,11 +52,10 @@ class BlueprintEntity(EntityType, EntityName, EntityUUID, extra=Extra.allow):
         return {**values, "uid": values.get("_id")}
 
 
-# All entities must have the 'type' attribute
-class Entity(EntityType, extra=Extra.allow):
-    pass
-
-
-# A children and types that are to be stored 'model contained' must have a 'name' attribute
-class NamedEntity(EntityType, OptionalEntityName, extra=Extra.allow):
-    pass
+# An entity must have a type, but having a name is optional
+class Entity(EntityType, OptionalEntityName, extra=Extra.allow):
+    def to_dict(self):
+        if self.name is not None:
+            return self.dict()
+        else:
+            return self.dict(exclude={"name"})

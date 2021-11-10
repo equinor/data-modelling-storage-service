@@ -13,7 +13,7 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
 from domain_classes.tree_node import ListNode, Node
 from enums import DMT, SIMOS
-from restful.request_types.shared import NamedEntity, Reference
+from restful.request_types.shared import Entity, Reference
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
@@ -84,17 +84,12 @@ class DocumentService:
         Digs down to the leaf child, and based on storageContained,
         either saves the entity and returns the Reference, OR returns the entire entity.
         """
+
         if not node.entity:
             return {}
         # If not passed a custom repository to save into, use the DocumentService's storage
         if not repository:
             repository: DataSource = self.repository_provider(data_source_id, self.user)
-        if (
-            node.type == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Blueprint"
-            or node.type == f"{config.CORE_DATA_SOURCE}/{config.CORE_PACKAGES[0]}/Package"
-        ):
-            if "name" not in node.entity:
-                raise BadRequestException(f"An entity of type {node.type} must have a name attribute!")
 
         # If the node is a package, we build the path string to be used by filesystem like repositories.
         # Also, check for duplicate names in the package.
@@ -127,11 +122,6 @@ class DocumentService:
             if isinstance(repository, ZipFileClient):
                 dto.data["__path__"] = path
             parent_uid = node.parent.node_id if node.parent else None
-            if "name" not in node.entity and node.entity != {}:
-                try:
-                    node.set_name(node.entity["_id"][0:8])
-                except KeyError:
-                    node.set_name("NoName")
             repository.update(dto, node.get_context_storage_attribute(), parent_id=parent_uid)
             return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
         return ref_dict
@@ -258,10 +248,9 @@ class DocumentService:
         new_node_attribute = BlueprintAttribute(leaf_attribute, type)
         new_node = Node.from_dict(entity, None, self.get_blueprint, new_node_attribute)
 
-        if "name" in new_node.entity:
-            # Check if a file/attribute with the same name already exists on the target
-            if parent.duplicate_attribute(new_node.name):
-                raise DuplicateFileNameException(data_source, f"{parent.name}/{new_node.name}")
+        # Check if a file/attribute with the same name already exists on the target
+        if parent.duplicate_attribute(new_node.name):
+            raise DuplicateFileNameException(data_source, f"{parent.name}/{new_node.name}")
 
         new_node.parent = parent
         new_node.set_uid()
@@ -313,7 +302,7 @@ class DocumentService:
                     )
 
     # Add entity by path
-    def add(self, data_source_id: str, path: str, document: NamedEntity, files: dict):
+    def add(self, data_source_id: str, path: str, document: Entity, files: dict):
         target: Node = self.get_by_path(f"{data_source_id}/{path}")
         if not target:
             raise EntityNotFoundException(uid=path)
@@ -323,7 +312,7 @@ class DocumentService:
         new_node_attr = path.split(".")[-1] if "." in path else "content"
 
         new_node = Node.from_dict(
-            {**document.dict()},
+            {**document.to_dict()},
             new_node_id,
             self.get_blueprint,
             BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
@@ -343,7 +332,7 @@ class DocumentService:
             new_node.parent = target.parent
             target = new_node
             self.save(target, data_source_id)
-
+        new_node.validate_entity()
         return {"uid": new_node.node_id}
 
     def search(self, data_source_id, search_data, dotted_attribute_path):

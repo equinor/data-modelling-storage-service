@@ -114,7 +114,7 @@ class DefaultArrayTestCase(unittest.TestCase):
     def test_creation_of_default_array_complex_type(self):
         default_array = Dimension("1,1", "system/SIMOS/Package").create_default_array(blueprint_provider, CreateEntity)
 
-        assert default_array == [[{"type": "system/SIMOS/Package", "isRoot": False, "content": []}]]
+        assert default_array == [[{"name": "", "type": "system/SIMOS/Package", "isRoot": False, "content": []}]]
 
     def test_creation_of_default_array_unfixed_rank2(self):
         default_array = Dimension("*,*", "integer").create_default_array(blueprint_provider, CreateEntity)

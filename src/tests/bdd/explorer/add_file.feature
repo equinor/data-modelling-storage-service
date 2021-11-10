@@ -49,6 +49,11 @@ Feature: Explorer - Add file
                 "_id": "7",
                 "name": "Hobby",
                 "type": "system/SIMOS/Blueprint"
+            },
+            {
+                "_id": "8",
+                "name": "Comment",
+                "type": "system/SIMOS/Blueprint"
             }
         ]
     }
@@ -177,6 +182,22 @@ Feature: Explorer - Add file
       "attributes": [
         {
         "name": "difficulty",
+        "attributeType": "string",
+        "type": "system/SIMOS/BlueprintAttribute"
+        }
+      ]
+    }
+    """
+
+  Given there exist document with id "8" in data source "test-DS"
+    """
+    {
+      "type": "system/SIMOS/Blueprint",
+      "name": "Comment",
+      "description": "a comment blueprint, that does not require a name",
+      "attributes": [
+        {
+        "name": "text",
         "attributeType": "string",
         "type": "system/SIMOS/BlueprintAttribute"
         }
@@ -336,6 +357,9 @@ Feature: Explorer - Add file
               "name":"Hobby"
             },
             {
+              "name":"Comment"
+            },
+            {
               "name": "new_document"
             }
           ],
@@ -425,7 +449,7 @@ Feature: Explorer - Add file
     """
 
 
-    Scenario: Add entity without a name attribute with add-raw endpoint
+    Scenario: Add Parent entity without a name attribute with add-raw endpoint should fail
     Given i access the resource url "/api/v1/explorer/test-DS/add-raw"
     When i make a "POST" request
     """
@@ -433,6 +457,26 @@ Feature: Explorer - Add file
         "_id": "429cb3da-ebbe-4ea6-80a6-b6bca0f67aaa",
         "type": "test-DS/root_package/Parent",
         "description": "parent entity with no name"
+    }
+    """
+    Then the response status should be "System Error"
+    And the response should equal
+    """
+    {
+      "type": "SYSTEM_ERROR",
+      "message": "ValidationException: Required attribute 'name' not found in the entity"
+    }
+    """
+
+  Scenario: Add Comment entity without a name attribute with add-raw endpoint
+    Given i access the resource url "/api/v1/explorer/test-DS/add-raw"
+    When i make a "POST" request
+    """
+    {
+        "_id": "429cb3da-ebbe-4ea6-80a6-b6bca0f67aaa",
+        "type": "test-DS/root_package/Comment",
+        "description": "comment entity with no name",
+        "text": "example comment"
     }
     """
     Then the response status should be "OK"
@@ -447,12 +491,12 @@ Feature: Explorer - Add file
         "description": "Blueprint with no name"
     }
     """
-    Then the response status should be "Bad Request"
+    Then the response status should be "System Error"
     And the response should equal
     """
     {
-      "type": "PARAMETERS_ERROR",
-      "message": "BadRequestException: An entity of type system/SIMOS/Blueprint must have a name attribute!"
+      "type": "SYSTEM_ERROR",
+      "message": "ValidationException: Required attribute 'name' not found in the entity"
     }
     """
 
@@ -467,16 +511,16 @@ Feature: Explorer - Add file
         "description": "Package with no name"
     }
     """
-    Then the response status should be "Bad Request"
+    Then the response status should be "System Error"
     And the response should equal
-      """
-      {
-        "type": "PARAMETERS_ERROR",
-        "message": "BadRequestException: An entity of type system/SIMOS/Package must have a name attribute!"
-      }
-      """
+    """
+    {
+      "type": "SYSTEM_ERROR",
+      "message": "ValidationException: Required attribute 'name' not found in the entity"
+    }
+    """
 
-  Scenario: Add entity without a name attribute with add-to-path endpoint
+  Scenario: Add Parent entity without a name attribute with add-to-path endpoint
     Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
     When i make a "POST" request with "1" files
     """
@@ -486,6 +530,29 @@ Feature: Explorer - Add file
       {
         "type": "test-DS/root_package/Parent",
         "description": "parent entity with no name"
+      }
+    }
+    """
+    Then the response status should be "System Error"
+    And the response should equal
+    """
+    {
+      "type": "SYSTEM_ERROR",
+      "message": "ValidationException: Required attribute 'name' not found in the entity"
+    }
+    """
+
+  Scenario: Add Comment entity without a name attribute with add-to-path endpoint
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    When i make a "POST" request with "1" files
+    """
+    {
+      "directory": "/root_package/",
+      "document":
+      {
+        "type": "test-DS/root_package/Comment",
+        "description": "comment entity with no name",
+        "text": "example comment"
       }
     }
     """
@@ -504,12 +571,12 @@ Feature: Explorer - Add file
       }
     }
     """
-    Then the response status should be "Bad Request"
+    Then the response status should be "System Error"
     And the response should equal
     """
     {
-      "type": "PARAMETERS_ERROR",
-      "message": "BadRequestException: An entity of type system/SIMOS/Blueprint must have a name attribute!"
+      "type": "SYSTEM_ERROR",
+      "message": "ValidationException: Required attribute 'name' not found in the entity"
     }
     """
 
@@ -526,18 +593,18 @@ Feature: Explorer - Add file
       }
     }
     """
-    Then the response status should be "Bad Request"
+    Then the response status should be "System Error"
     And the response should equal
     """
     {
-      "type": "PARAMETERS_ERROR",
-      "message": "BadRequestException: An entity of type system/SIMOS/Package must have a name attribute!"
+      "type": "SYSTEM_ERROR",
+      "message": "ValidationException: Required attribute 'name' not found in the entity"
     }
     """
 
 
 
-  Scenario: Add entity without a name attribute with add_by_parent_id endpoint
+  Scenario: Add parent entity without a name attribute with add_by_parent_id endpoint
     Given i access the resource url "/api/v1/explorer/test-DS/1.content"
     When i make a "POST" request
     """
@@ -546,7 +613,27 @@ Feature: Explorer - Add file
       "description": "parent entity with no name"
     }
     """
+    Then the response status should be "System Error"
+    And the response should equal
+    """
+    {
+      "type": "SYSTEM_ERROR",
+      "message": "ValidationException: Required attribute 'name' not found in the entity"
+    }
+    """
+
+  Scenario: Add comment entity without a name attribute with add_by_parent_id endpoint
+    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
+    When i make a "POST" request
+    """
+    {
+      "type": "test-DS/root_package/Comment",
+      "description": "comment entity with no name",
+      "text": "example comment"
+    }
+    """
     Then the response status should be "OK"
+
 
     Scenario: Add blueprint without a name using add_by_parent_id endpoint should fail
     Given i access the resource url "/api/v1/explorer/test-DS/1.content"
@@ -557,12 +644,12 @@ Feature: Explorer - Add file
       "description": "Blueprint with no name"
     }
     """
-    Then the response status should be "Bad Request"
+    Then the response status should be "System Error"
     And the response should equal
     """
     {
-      "type": "PARAMETERS_ERROR",
-      "message": "BadRequestException: An entity of type system/SIMOS/Blueprint must have a name attribute!"
+      "type": "SYSTEM_ERROR",
+      "message": "ValidationException: Required attribute 'name' not found in the entity"
     }
     """
 
@@ -575,12 +662,12 @@ Feature: Explorer - Add file
       "description": "Package with no name"
     }
     """
-    Then the response status should be "Bad Request"
+    Then the response status should be "System Error"
     And the response should equal
     """
     {
-      "type": "PARAMETERS_ERROR",
-      "message": "BadRequestException: An entity of type system/SIMOS/Package must have a name attribute!"
+      "type": "SYSTEM_ERROR",
+      "message": "ValidationException: Required attribute 'name' not found in the entity"
     }
     """
 

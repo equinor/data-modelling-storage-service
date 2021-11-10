@@ -4,7 +4,7 @@ from fastapi import UploadFile
 from pydantic import validator
 
 from domain_classes.user import User
-from restful.request_types.shared import DataSource, NamedEntity
+from restful.request_types.shared import DataSource, Entity
 from restful.response_object import ResponseSuccess
 from restful.use_case import UseCase
 from services.document_service import DocumentService
@@ -12,7 +12,7 @@ from storage.internal.data_source_repository import get_data_source
 
 
 class AddDocumentToPathRequest(DataSource):
-    document: NamedEntity
+    document: Entity
     directory: str
     files: Optional[List[UploadFile]] = None
 
@@ -28,9 +28,7 @@ class AddDocumentToPathUseCase(UseCase):
 
     def process_request(self, req: AddDocumentToPathRequest):
         document_service = DocumentService(repository_provider=self.repository_provider, user=self.user)
-        request_document: NamedEntity = req.document
-        if request_document.name is None:
-            del request_document.name
+        request_document: Entity = req.document
         document = document_service.add(
             data_source_id=req.data_source_id,
             path=req.directory,
