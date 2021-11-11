@@ -217,7 +217,11 @@ blobContainer = {
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
-        {"attributeType": "blob", "type": "system/SIMOS/BlueprintAttribute", "name": "blob",},
+        {
+            "attributeType": "blob",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "blob",
+        },
     ],
     "storageRecipes": [
         {

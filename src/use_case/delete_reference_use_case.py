@@ -17,6 +17,8 @@ class DeleteReferenceUseCase(UseCase):
     def process_request(self, req: DeleteReferenceRequest):
         document_service = DocumentService(user=self.user)
         document = document_service.remove_reference(
-            data_source_id=req.data_source_id, document_id=req.document_id, attribute_path=req.attribute,
+            data_source_id=req.data_source_id,
+            document_id=req.document_id,
+            attribute_path=req.attribute,
         )
         return ResponseSuccess(document)

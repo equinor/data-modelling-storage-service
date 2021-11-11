@@ -13,9 +13,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: maf
       SECRET_KEY: sg9aeUM5i1JO4gNN8fQadokJa3_gXQMLBjSGGYcfscs= # Don't reuse this in production...
       AUTH_ENABLED: "False"
-      OAUTH_TOKEN_ENDPOINT: http://localhost:8080/auth/realms/dmss/protocol/openid-connect/token
-      OAUTH_AUTH_ENDPOINT: http://localhost:8080/auth/realms/dmss/protocol/openid-connect/auth
-      OAUTH_WELL_KNOWN: http://keycloak:8080/auth/realms/dmss/.well-known/openid-configuration
 
   db:
     environment:

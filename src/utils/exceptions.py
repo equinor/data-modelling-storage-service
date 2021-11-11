@@ -1,3 +1,7 @@
+from fastapi import HTTPException
+from starlette import status
+
+
 class RepositoryException(Exception):
     def __init__(self, message: str):
         super()
@@ -122,3 +126,8 @@ class InvalidDataSourceException(Exception):
 class MissingPrivilegeException(Exception):
     def __init__(self, message=None):
         self.message = message if message else "Missing privileges to perform operation on the resource"
+
+
+credentials_exception = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED, detail="Token validation failed", headers={"WWW-Authenticate": "Bearer"}
+)

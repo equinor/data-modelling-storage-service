@@ -3,62 +3,54 @@ from jose import jwt
 from domain_classes.user import User
 from config import default_user
 
-rsa_private_key = """
------BEGIN RSA PRIVATE KEY-----
-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
------END RSA PRIVATE KEY-----
+# Generated with: 'openssl req  -nodes -new -x509  -keyout server.key -out server.cert'
+mock_rsa_private_key = """
+-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDfsOW9ih/oBUwl
+LEH4t2C2GZeq3/dEXCkK54CNPZv979rir0nQQ5pLVcoohoVFe+QwC746xg8t7/YP
+cWHwcHXkRBgwRXHATJmD3MjXp/kCIoIUe2Qt8Or/j1BDhqpxkJcoBfiTt2kBecHc
+CgHmkQg5g0QGB0dTi+c3nUNk8HscxGU2jFSjFunlyVxHpujNfkA7m/hu5B12ggt6
+HclrOzdb2s/Lop017uEQ18+HJrja/b1+EVqdQfET0FFQu3cgr+b0PHjWYKHoUGA0
+0Whpw3YjCfyr7aBRVQwOdBDxwJgWcozxCVBs+srjqscikj2KEE4MtsLgtz/FqK/T
+ibwdhteDAgMBAAECggEAb19uI37AAA+TJ/bvKdxzpHb9krBMNpcEQE+fK7N/FWH0
+w2SvBaiDC/s82gyQElZq+JkAL9co+6A8DNhRARudNvfIa1BIIIyC6qpkvSr+yddQ
+mM4OxOjsuC0ss1I7TqvE9sJyT2nEOF3c7ad15sxTIf9/QNki5DAGASSlx34MbfdU
+VUvkmY6HDFFMSd5G9JedEpBNKnY2+ZPQk4SHpm8IDiJ1FxkDWu9kTxJFetTDpSZ6
+OEyvbwGSzNkWRkmprv6X9uF7JzQ/BE7PxDrWQPvbjMye63WN4/y/wuKDxMzCM2bl
+vWhQPQmEyYJt+DhobtiNQr+zY1rrtKHNtfxAHuY8wQKBgQD3yiIHfHoJWfRdOhkz
+Q6cdbuxm1B9vij4M95kGQmv39sNCyPeu860PQ8nmTuDyh7VmuXuuC0DaZiVfblod
+cU27y9EBSdFAI613t8VDqgJIj5ghoFmYuSYWbGJnNKK0xgecQwRyDhzCzCr5jjtV
+ydPHKv3WA6pKlOBULU7ZmN7wEQKBgQDnGllfGxItzW8H6MTrai/fI2JK1PCicEzD
+qGdlKYqsfF+gRFGA8IAujB6+Q8Gq8e8j3CVD6cm3XhFaC+5FrH5/yLVjLTnNDzOk
+YYlGsLS7FrMF3ZV+eURZMiRwrPdr10onDAYcaw+p8/MK3Rybl57ElaT7FkYImptu
+hwFMOFDiUwKBgFzsZ6CJFLbnDhXcENFBwKzwCSVyzSsmG6j/PVq0lArUdltYRFJO
+vYqo8FE3KXKqY+PXEUOuoq6EeeV028SI1g7kG0gxZ5B3ELmBqC981QhjGTkbCh6U
+6GymTqzHd3D1hqsaEtO26SBAMqmNpkDAxHO/cpvMmhMIC6xlpVlC0/ARAoGALwCD
+5rzpwJkEmPY1fq+1FsvqhM+0NUVjx3Nru/5r7tLI3B6o+PFxEIZ9BjNfozXbbk6q
+4Zod5YZjPw4oItGHVNPsWERtehA6b5dKxS7RQy/Fr062xedCCGYTVTtIgw1hTnm6
+kHMR133/E1mPJPH8X30T9eE80ykmrZ8Vm3vkr3MCgYEAjDtNvW/sZ/J1go5bDuzE
+SqNUf+yp+lcftsuzzx+AC9kyQA23LfZVcW9JLbAeWVxELF1s3unOBIwe98gk4LC9
+j9QyibKClixQO204dsxsNECCxHTnL2EUmV6zt/kmuLsRBico/85MF3aKcvljVuV7
+Ps2+z0zvD9eqCcQ4YrrqXGM=
+-----END PRIVATE KEY-----
+"""
+
+# Python-jose require public keys instead of x509 certs.
+# Convert cert to pub key with: 'openssl x509 -pubkey -noout < server.cert'
+mock_rsa_public_key = """
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA37DlvYof6AVMJSxB+Ldg
+thmXqt/3RFwpCueAjT2b/e/a4q9J0EOaS1XKKIaFRXvkMAu+OsYPLe/2D3Fh8HB1
+5EQYMEVxwEyZg9zI16f5AiKCFHtkLfDq/49QQ4aqcZCXKAX4k7dpAXnB3AoB5pEI
+OYNEBgdHU4vnN51DZPB7HMRlNoxUoxbp5clcR6bozX5AO5v4buQddoILeh3Jazs3
+W9rPy6KdNe7hENfPhya42v29fhFanUHxE9BRULt3IK/m9Dx41mCh6FBgNNFoacN2
+Iwn8q+2gUVUMDnQQ8cCYFnKM8QlQbPrK46rHIpI9ihBODLbC4Lc/xaiv04m8HYbX
+gwIDAQAB
+-----END PUBLIC KEY-----
 """
 
 
-def generate_token(user: User = default_user):
+def generate_mock_token(user: User = default_user):
     """
     This function is for testing purposes only
     Used for behave testing
@@ -70,6 +62,7 @@ def generate_token(user: User = default_user):
         "scp": "FoR_test_scope",
         "sub": user.username,
         "roles": user.roles,
+        "iss": "mock-auth-server",
     }
-    token = jwt.encode(payload, rsa_private_key, algorithm="RS256")
+    token = jwt.encode(payload, mock_rsa_private_key, algorithm="RS256")
     return token

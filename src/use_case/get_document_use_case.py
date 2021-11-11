@@ -30,7 +30,9 @@ class GetDocumentUseCase(UseCase):
 
     def process_request(self, req: GetDocumentRequest):
         document = self.document_service.get_by_uid(
-            data_source_id=req.data_source_id, document_uid=req.document_id, depth=req.depth,
+            data_source_id=req.data_source_id,
+            document_uid=req.document_id,
+            depth=req.depth,
         )
 
         attribute: str = req.attribute

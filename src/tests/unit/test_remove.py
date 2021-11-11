@@ -117,7 +117,12 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "nested": {"_id": "2", "name": "Parent", "contained": True, "type": "blueprint_1"},
                 },
             },
-            "2": {"_id": "2", "name": "Parent", "description": "", "type": "blueprint_1",},
+            "2": {
+                "_id": "2",
+                "name": "Parent",
+                "description": "",
+                "type": "blueprint_1",
+            },
         }
 
         repository.get = lambda doc_id: DTO(doc_storage[doc_id])
@@ -156,8 +161,18 @@ class DocumentServiceTestCase(unittest.TestCase):
                     ],
                 },
             },
-            "2": {"_id": "2", "name": "Parent", "description": "", "type": "blueprint_1",},
-            "3": {"_id": "3", "name": "Parent", "description": "", "type": "blueprint_1",},
+            "2": {
+                "_id": "2",
+                "name": "Parent",
+                "description": "",
+                "type": "blueprint_1",
+            },
+            "3": {
+                "_id": "3",
+                "name": "Parent",
+                "description": "",
+                "type": "blueprint_1",
+            },
         }
 
         repository.get = lambda doc_id: DTO(doc_storage[doc_id])

@@ -24,7 +24,8 @@ class Config(BaseSettings):
     DMSS_ADMIN_ROLE = Field("dmss-admin", env="DMSS_ADMIN_ROLE")
     # Authentication
     AUTH_ENABLED: bool = Field(False, env="AUTH_ENABLED")
-    VERIFY_TOKEN: bool = Field(True, env="VERIFY_TOKEN")
+    JWT_SELF_SIGNING_ISSUER: str = "dmss"  # Which value will be used to sign self-signed JWT's
+    TEST_TOKEN: bool = False  # This value should only be changed at runtime by test setup
     OAUTH_WELL_KNOWN: str = Field(None, env="OAUTH_WELL_KNOWN")
     OAUTH_TOKEN_ENDPOINT: str = Field("", env="OAUTH_TOKEN_ENDPOINT")
     OAUTH_AUTH_ENDPOINT: str = Field("", env="OAUTH_AUTH_ENDPOINT")
@@ -33,6 +34,16 @@ class Config(BaseSettings):
 
 
 config = Config()
+if not config.AUTH_ENABLED:
+    print("################ WARNING ################")
+    print("#       Authentication is disabled      #")
+    print("################ WARNING ################")
+
+if config.TEST_TOKEN:
+    print("########################### WARNING ################################")
+    print("#  Authentication is configured to use the mock test certificates  #")
+    print("########################### WARNING ################################")
+
 if config.AUTH_ENABLED:
     print("Authentication is enabled")
     if not config.OAUTH_WELL_KNOWN or not config.OAUTH_TOKEN_ENDPOINT or not config.OAUTH_AUTH_ENDPOINT:

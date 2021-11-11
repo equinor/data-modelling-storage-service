@@ -16,7 +16,7 @@ from utils.encryption import generate_key
 from utils.logging import logger
 from utils.package_import import import_package
 from utils.wipe_db import wipe_db
-from utils.mock_token_generator import generate_token
+from utils.mock_token_generator import generate_mock_token
 
 server_root = "/api"
 version = "v1"
@@ -37,6 +37,7 @@ def create_app():
         whoami_controller,
         healtcheck_controller,
         access_control_controller,
+        personal_access_token_controller,
     )
 
     public_routes = APIRouter()
@@ -55,6 +56,7 @@ def create_app():
     authenticated_routes.include_router(reference_controller.router)
     authenticated_routes.include_router(explorer_controller.router)
     authenticated_routes.include_router(access_control_controller.router)
+    authenticated_routes.include_router(personal_access_token_controller.router)
 
     app = FastAPI(
         title="Data Modelling Storage Service",
@@ -71,7 +73,7 @@ def create_app():
         if "Authorization" not in request.headers:
             if not config.AUTH_ENABLED:
                 headers = request.headers.mutablecopy()
-                headers.update({"Authorization": generate_token()})
+                headers.update({"Authorization": generate_mock_token()})
                 # Convert headers back to Immutable
                 request._headers = Headers(raw=headers.raw)
         response = await call_next(request)
