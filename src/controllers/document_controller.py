@@ -40,7 +40,9 @@ def get_by_id(
 
 
 @router.get(
-    "/documents-by-path/{data_source_id}", operation_id="document_get_by_path", response_model=dict,
+    "/documents-by-path/{data_source_id}",
+    operation_id="document_get_by_path",
+    response_model=dict,
 )
 def get_by_path(
     data_source_id: str,

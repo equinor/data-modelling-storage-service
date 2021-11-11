@@ -2,10 +2,10 @@ import json
 
 from fastapi.testclient import TestClient
 from behave import given, when, then
+from utils.mock_token_generator import generate_mock_token
 
 from domain_classes.user import User
 from config import config
-from auth_utils import generate_token
 
 
 @given('i access the resource url "{url}"')
@@ -68,9 +68,15 @@ def step_make_request(context, method):
 def step_set_access_token(context, username, roles):
     user = User(username=username, roles=roles.split(","))
     context.user = user
-    context.token = generate_token(user)
+    context.token = generate_mock_token(user)
 
 
 @given("authentication is enabled")
 def step_set_access_token(context):
     config.AUTH_ENABLED = True
+
+
+@step("the PAT is valid")
+def step_impl(context):
+    context.response = context.test_client.get("/api/v1/whoami", headers={"Authorization": f"Bearer {context.pat}"})
+    assert context.response.status_code == 200

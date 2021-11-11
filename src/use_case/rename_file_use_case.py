@@ -23,7 +23,10 @@ class RenameUseCase(UseCase):
 
         document_service = DocumentService(repository_provider=self.repository_provider, user=self.user)
         document = document_service.rename_document(
-            data_source_id=req.data_source_id, document_id=req.documentId, parent_uid=req.parentId, name=req.name,
+            data_source_id=req.data_source_id,
+            document_id=req.documentId,
+            parent_uid=req.parentId,
+            name=req.name,
         )
         document_service.invalidate_cache()
         return res.ResponseSuccess(document)

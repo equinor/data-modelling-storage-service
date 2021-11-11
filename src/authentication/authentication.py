@@ -1,20 +1,19 @@
 import requests
 from cachetools import cached, TTLCache
-from fastapi import HTTPException, Security
+from fastapi import Security
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from jose import jwt, JWTError
-from starlette import status
 
+from authentication.personal_access_token import validate_personal_access_token
 from config import config, default_user
 from domain_classes.user import User
+from utils.exceptions import credentials_exception
 from utils.logging import logger
+from utils.mock_token_generator import mock_rsa_public_key
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
-    authorizationUrl=config.OAUTH_AUTH_ENDPOINT, tokenUrl=config.OAUTH_TOKEN_ENDPOINT,
-)
-
-credentials_exception = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED, detail="Token validation failed", headers={"WWW-Authenticate": "Bearer"}
+    authorizationUrl=config.OAUTH_AUTH_ENDPOINT,
+    tokenUrl=config.OAUTH_TOKEN_ENDPOINT,
 )
 
 
@@ -40,19 +39,15 @@ async def get_current_user(token: str = Security(oauth2_scheme)) -> User:
     if not config.AUTH_ENABLED:
         return default_user
 
-    try:
-        options = {}
-        if not config.VERIFY_TOKEN:
-            oid_config = {"jwks": []}
-            # Required for running tests with spoofed JWT
-            options["verify_signature"] = False
-            options["verify_aud"] = False
-        else:
-            oid_config = fetch_openid_configuration()
+    # If token is issued by THIS API, it's a Personal Access Token with the issuer set to "dmss"
+    if jwt.get_unverified_claims(token).get("iss") == config.JWT_SELF_SIGNING_ISSUER:
+        return validate_personal_access_token(token)
 
-        payload = jwt.decode(
-            token, {"keys": oid_config["jwks"]}, algorithms=["RS256"], audience=config.AUTH_AUDIENCE, options=options
-        )
+    # If TEST_TOKEN is true, we are running tests. Use the self signed keys. If not, get keys from auth server.
+    key = mock_rsa_public_key if config.TEST_TOKEN else {"keys": fetch_openid_configuration()["jwks"]}
+
+    try:
+        payload = jwt.decode(token, key, algorithms=["RS256"], audience=config.AUTH_AUDIENCE)
         user = User(username=payload["sub"], **payload)
     except JWTError as error:
         logger.warning(error)

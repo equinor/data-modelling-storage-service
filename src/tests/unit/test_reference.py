@@ -236,7 +236,12 @@ class ReferenceTestCase(unittest.TestCase):
                     "type": "blueprint_2",
                 },
             },
-            "something": {"_id": "something", "name": "something", "description": "", "type": "blueprint_2",},
+            "something": {
+                "_id": "something",
+                "name": "something",
+                "description": "",
+                "type": "blueprint_2",
+            },
         }
 
         def mock_update(dto: DTO, *args, **kwargs):
@@ -250,7 +255,9 @@ class ReferenceTestCase(unittest.TestCase):
         )
 
         document_service.remove_reference(
-            "testing", document_id="1", attribute_path="uncontained_in_every_way",
+            "testing",
+            document_id="1",
+            attribute_path="uncontained_in_every_way",
         )
         assert doc_storage["1"]["uncontained_in_every_way"] == {}
 
@@ -275,7 +282,12 @@ class ReferenceTestCase(unittest.TestCase):
                     },
                 },
             },
-            "something": {"_id": "something", "name": "something", "description": "", "type": "blueprint_2",},
+            "something": {
+                "_id": "something",
+                "name": "something",
+                "description": "",
+                "type": "blueprint_2",
+            },
         }
 
         def mock_update(dto: DTO, *args, **kwargs):
@@ -289,7 +301,9 @@ class ReferenceTestCase(unittest.TestCase):
         )
 
         document_service.remove_reference(
-            "testing", document_id="1", attribute_path="i_have_a_uncontained_attribute.uncontained_in_every_way",
+            "testing",
+            document_id="1",
+            attribute_path="i_have_a_uncontained_attribute.uncontained_in_every_way",
         )
         assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"] == {}
 
@@ -303,8 +317,16 @@ class ReferenceTestCase(unittest.TestCase):
                 "description": "",
                 "type": "uncontained_list_blueprint",
                 "uncontained_in_every_way": [
-                    {"_id": "2d7c3249-985d-43d2-83cf-a887e440825a", "name": "something", "type": "blueprint_2",},
-                    {"_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a", "name": "something", "type": "blueprint_2",},
+                    {
+                        "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
+                        "name": "something",
+                        "type": "blueprint_2",
+                    },
+                    {
+                        "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
+                        "name": "something",
+                        "type": "blueprint_2",
+                    },
                 ],
             },
             "2d7c3249-985d-43d2-83cf-a887e440825a": {
@@ -329,7 +351,9 @@ class ReferenceTestCase(unittest.TestCase):
         )
 
         document_service.remove_reference(
-            "testing", document_id="1", attribute_path="uncontained_in_every_way.0",
+            "testing",
+            document_id="1",
+            attribute_path="uncontained_in_every_way.0",
         )
         assert len(doc_storage["1"]["uncontained_in_every_way"]) == 1
         assert doc_storage["1"]["uncontained_in_every_way"][0] == {
@@ -349,7 +373,11 @@ class ReferenceTestCase(unittest.TestCase):
                 "description": "",
                 "type": "uncontained_list_blueprint",
                 "uncontained_in_every_way": [
-                    {"_id": "2d7c3249-985d-43d2-83cf-a887e440825a", "name": "something", "type": "blueprint_2",}
+                    {
+                        "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
+                        "name": "something",
+                        "type": "blueprint_2",
+                    }
                 ],
             },
             "2d7c3249-985d-43d2-83cf-a887e440825a": {

@@ -17,7 +17,12 @@ def resolve_reference_list(x: list, document_repository: DataSource, depth: int 
     return resolved
 
 
-def get_complete_document(document_uid: str, data_source: DataSource, depth: int = 999, depth_count: int = 0,) -> dict:
+def get_complete_document(
+    document_uid: str,
+    data_source: DataSource,
+    depth: int = 999,
+    depth_count: int = 0,
+) -> dict:
     document: DTO = data_source.get(str(document_uid))
     if depth <= depth_count:
         if depth_count >= 999:

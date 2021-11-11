@@ -78,7 +78,11 @@ class MultiTypeBlueprintProvider:
                         "type": "system/SIMOS/Blueprint",
                         "extends": ["system/SIMOS/NamedEntity"],
                         "attributes": [
-                            {"name": "AValue", "attributeType": "integer", "type": "system/SIMOS/BlueprintAttribute",},
+                            {
+                                "name": "AValue",
+                                "attributeType": "integer",
+                                "type": "system/SIMOS/BlueprintAttribute",
+                            },
                         ],
                     }
                 )
@@ -230,7 +234,15 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_add_invalid_child_type(self):
         repository = mock.Mock()
 
-        doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "parent", "SomeChild": {},}}
+        doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "parent",
+                "description": "",
+                "type": "parent",
+                "SomeChild": {},
+            }
+        }
 
         def mock_get(document_id: str):
             return DTO(doc_storage[document_id])
@@ -316,7 +328,11 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "name": "Parent",
                 "description": "",
                 "type": "blueprint_with_optional_attr",
-                "im_optional": {"name": "duplicate", "description": "", "type": "blueprint_2",},
+                "im_optional": {
+                    "name": "duplicate",
+                    "description": "",
+                    "type": "blueprint_2",
+                },
             }
         }
 
@@ -424,7 +440,11 @@ class DocumentServiceTestCase(unittest.TestCase):
             document_id="1",
             attribute_path="SomeChild",
             data=[
-                {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!",},
+                {
+                    "name": "whatever",
+                    "type": "special_child",
+                    "AnExtraValue": "Hallo there!",
+                },
                 {
                     "name": "whatever",
                     "type": "extra_special_child",
@@ -434,7 +454,11 @@ class DocumentServiceTestCase(unittest.TestCase):
             ],
         )
         assert doc_storage["1"]["SomeChild"] == [
-            {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!",},
+            {
+                "name": "whatever",
+                "type": "special_child",
+                "AnExtraValue": "Hallo there!",
+            },
             {
                 "name": "whatever",
                 "type": "extra_special_child",
@@ -468,8 +492,16 @@ class DocumentServiceTestCase(unittest.TestCase):
                 document_id="1",
                 attribute_path="SomeChild",
                 data=[
-                    {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!",},
-                    {"name": "whatever", "type": "special_child_no_inherit", "AnExtraValue": "Hallo there!",},
+                    {
+                        "name": "whatever",
+                        "type": "special_child",
+                        "AnExtraValue": "Hallo there!",
+                    },
+                    {
+                        "name": "whatever",
+                        "type": "special_child_no_inherit",
+                        "AnExtraValue": "Hallo there!",
+                    },
                 ],
             )
         print(error.exception)
