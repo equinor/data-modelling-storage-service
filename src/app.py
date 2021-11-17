@@ -6,7 +6,8 @@ import uvicorn
 from domain_classes.user import User
 from fastapi import APIRouter, FastAPI, Security
 from starlette.requests import Request
-from starlette.datastructures import Headers
+from starlette.types import Scope, Receive, Send
+from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
 from authentication.authentication import get_current_user
 from config import config
@@ -21,6 +22,31 @@ from utils.mock_token_generator import generate_mock_token
 server_root = "/api"
 version = "v1"
 prefix = f"{server_root}/{version}"
+
+
+class AuthHeaderHTTPMiddleware(BaseHTTPMiddleware):
+    """
+    From https://github.com/tiangolo/fastapi/issues/3027#issuecomment-811724832
+    """
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send):
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+        auth_header_present = "authorization" in [value[0].decode() for value in scope["headers"]]
+        if not auth_header_present:
+            self.__add_auth_header(scope=scope)
+        request = Request(scope, receive=receive)
+        response = await self.dispatch_func(request, self.call_next)
+        await response(scope, receive, send)
+
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint):
+        return await call_next(request)
+
+    @classmethod
+    def __add_auth_header(cls, scope: Scope):
+        token = generate_mock_token()
+        scope["headers"].append((b"authorization", b"Bearer " + token.encode()))
 
 
 def create_app():
@@ -66,18 +92,7 @@ def create_app():
     app.include_router(authenticated_routes, prefix=prefix, dependencies=[Security(get_current_user)])
     app.include_router(public_routes, prefix=prefix)
 
-    @app.middleware("http")
-    async def add_token_auth_disabled(request: Request, call_next):
-        # Add missing Authorization header if AUTH_ENABLED=False
-        # Required in order to avoid a 401 Not authenticated from the Security dependency
-        if "Authorization" not in request.headers:
-            if not config.AUTH_ENABLED:
-                headers = request.headers.mutablecopy()
-                headers.update({"Authorization": generate_mock_token()})
-                # Convert headers back to Immutable
-                request._headers = Headers(raw=headers.raw)
-        response = await call_next(request)
-        return response
+    app.add_middleware(AuthHeaderHTTPMiddleware)
 
     @app.middleware("http")
     async def add_process_time_header(request: Request, call_next):
