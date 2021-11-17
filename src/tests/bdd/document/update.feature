@@ -21,22 +21,8 @@ Feature: Document 2
       "type": "system/SIMOS/Blueprint",
       "name": "ItemType",
       "description": "",
+      "extends": ["system/SIMOS/NamedEntity"],
       "attributes": [
-        {
-          "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute",
-          "name": "name"
-        },
-        {
-          "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute",
-          "optional": true,
-          "default": "",
-          "name": "description"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "type"
-        },
         {
           "attributeType": "string",
           "type": "system/SIMOS/BlueprintAttribute",
@@ -68,22 +54,8 @@ Feature: Document 2
       "type": "system/SIMOS/Blueprint",
       "name": "ItemTypeTwo",
       "description": "",
+      "extends": ["system/SIMOS/NamedEntity"],
       "attributes": [
-        {
-          "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute",
-          "name": "name"
-        },
-        {
-          "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute",
-          "optional": true,
-          "default": "",
-          "name": "description"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "type"
-        },
         {
           "attributeType": "string",
           "type": "system/SIMOS/BlueprintAttribute",
@@ -102,22 +74,8 @@ Feature: Document 2
       "type": "system/SIMOS/Blueprint",
       "name": "TestContainer",
       "description": "",
+      "extends": ["system/SIMOS/NamedEntity"],
       "attributes": [
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "name"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "type"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "description"
-        },
         {
           "attributeType": "test-source-name/TestData/ItemType",
           "type": "system/SIMOS/BlueprintAttribute",
@@ -134,7 +92,7 @@ Feature: Document 2
         {
           "attributeType": "test-source-name/TestData/ItemType",
           "type": "system/SIMOS/BlueprintAttribute",
-          "optional": false,
+          "optional": true,
           "name": "itemNotContained"
         },
         {
@@ -215,7 +173,8 @@ Feature: Document 2
     {
       "name": "package_1",
       "type": "system/SIMOS/Package",
-      "description": "new description"
+      "description": "new description",
+      "isRoot": true
     }
     """
     Then the response status should be "OK"
@@ -225,7 +184,8 @@ Feature: Document 2
       "data": {
         "name": "package_1",
         "type": "system/SIMOS/Package",
-        "description": "new description"
+        "description": "new description",
+        "isRoot": true
       }
     }
     """

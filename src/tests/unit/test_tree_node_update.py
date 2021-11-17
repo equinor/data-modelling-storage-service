@@ -375,12 +375,13 @@ class DocumentServiceTestCase(unittest.TestCase):
             data_source_id="testing",
             document_id="1",
             attribute_path="SomeChild",
-            data={"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!"},
+            data={"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
         )
         assert doc_storage["1"]["SomeChild"] == {
             "name": "whatever",
             "type": "special_child",
             "AnExtraValue": "Hallo there!",
+            "AValue": 13,
         }
 
     def test_add_valid_second_level_specialized_child_type(self):
@@ -408,6 +409,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "extra_special_child",
                 "AnExtraValue": "Hallo there!",
                 "AnotherExtraValue": True,
+                "AValue": 13,
             },
         )
         assert doc_storage["1"]["SomeChild"] == {
@@ -415,6 +417,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "type": "extra_special_child",
             "AnExtraValue": "Hallo there!",
             "AnotherExtraValue": True,
+            "AValue": 13,
         }
 
     def test_add_valid_second_level_specialized_child_type_to_list_attribute(self):
@@ -440,30 +443,24 @@ class DocumentServiceTestCase(unittest.TestCase):
             document_id="1",
             attribute_path="SomeChild",
             data=[
-                {
-                    "name": "whatever",
-                    "type": "special_child",
-                    "AnExtraValue": "Hallo there!",
-                },
+                {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
                 {
                     "name": "whatever",
                     "type": "extra_special_child",
                     "AnExtraValue": "Hallo there!",
                     "AnotherExtraValue": True,
+                    "AValue": 13,
                 },
             ],
         )
         assert doc_storage["1"]["SomeChild"] == [
-            {
-                "name": "whatever",
-                "type": "special_child",
-                "AnExtraValue": "Hallo there!",
-            },
+            {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
             {
                 "name": "whatever",
                 "type": "extra_special_child",
                 "AnExtraValue": "Hallo there!",
                 "AnotherExtraValue": True,
+                "AValue": 13,
             },
         ]
 
@@ -492,16 +489,8 @@ class DocumentServiceTestCase(unittest.TestCase):
                 document_id="1",
                 attribute_path="SomeChild",
                 data=[
-                    {
-                        "name": "whatever",
-                        "type": "special_child",
-                        "AnExtraValue": "Hallo there!",
-                    },
-                    {
-                        "name": "whatever",
-                        "type": "special_child_no_inherit",
-                        "AnExtraValue": "Hallo there!",
-                    },
+                    {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
+                    {"name": "whatever", "type": "special_child_no_inherit", "AnExtraValue": "Hallo there!",},
                 ],
             )
         print(error.exception)

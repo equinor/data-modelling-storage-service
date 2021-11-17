@@ -34,6 +34,7 @@ from utils.get_complete_document_by_id import get_complete_document
 from utils.logging import logger
 from utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from utils.string_helpers import split_absolute_ref
+from utils.validators import entity_has_all_required_attributes
 
 pretty_printer = pprint.PrettyPrinter()
 
@@ -84,7 +85,6 @@ class DocumentService:
         Digs down to the leaf child, and based on storageContained,
         either saves the entity and returns the Reference, OR returns the entire entity.
         """
-
         if not node.entity:
             return {}
         # If not passed a custom repository to save into, use the DocumentService's storage
@@ -109,11 +109,11 @@ class DocumentService:
                     [self.save(x, data_source_id, repository, path) for x in child.children]
                 else:
                     self.save(child, data_source_id, repository, path)
-
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
 
         ref_dict = node.to_ref_dict()
+        entity_has_all_required_attributes(ref_dict, node.blueprint.get_required_attributes())
 
         # If the node is not contained, and has data, save it!
         if not node.storage_contained and ref_dict:
@@ -323,7 +323,6 @@ class DocumentService:
 
         if target.type == DMT.PACKAGE.value:
             target = target.children[0]  # Set target to be the packages content
-
         if isinstance(target, ListNode):
             new_node.parent = target
             target.add_child(new_node)
@@ -332,7 +331,7 @@ class DocumentService:
             new_node.parent = target.parent
             target = new_node
             self.save(target, data_source_id)
-        new_node.validate_entity()
+
         return {"uid": new_node.node_id}
 
     def search(self, data_source_id, search_data, dotted_attribute_path):
@@ -416,7 +415,7 @@ class DocumentService:
         else:
             attribute_node.entity = {**reference.dict(by_alias=True), "_id": str(reference.uid)}
             attribute_node.uid = str(reference.uid)
-        self.save(root, data_source_id)
+        self.save(root, data_source_id, update_uncontained=False)
 
         logger.info(
             f"Inserted reference to '{referenced_document.uid}'" f" as '{attribute_path}' in '{root.name}'({root.uid})"

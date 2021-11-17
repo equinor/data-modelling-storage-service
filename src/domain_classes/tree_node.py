@@ -7,10 +7,10 @@ from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute
-from enums import DMT, REQUIRED_ATTRIBUTES, StorageDataTypes
+from enums import DMT, StorageDataTypes
 from utils.exceptions import InvalidChildTypeException, InvalidEntityException
 from utils.logging import logger
-from utils.validators import valid_extended_type, entity_has_all_required_attributes
+from utils.validators import valid_extended_type
 
 
 class DictExporter:
@@ -129,7 +129,6 @@ class DictImporter:
         if entity:
             node_attribute = deepcopy(node_attribute)  # If you don't copy, we modify the blueprint in the BP Cache...
             node_attribute.attribute_type = entity["type"]
-
         try:
             key = key if key else node_attribute.name
             node = Node(
@@ -461,12 +460,6 @@ class Node(NodeBase):
     def to_ref_dict(self):
         return DictExporter.to_ref_dict(self)
 
-    def validate_entity(self):
-        # get required attributes, as defined in the blueprint
-        required_attributes = self.blueprint.get_required_attributes()
-        entity_has_all_required_attributes(entity=self.entity, required_attributes=required_attributes)
-        pass
-
     @property
     def name(self):
         return self.entity.get("name", self.attribute.name)
@@ -501,12 +494,6 @@ class Node(NodeBase):
                 self.entity[key] = new_data
             # Add/Modify complex data
             else:
-                for attr in REQUIRED_ATTRIBUTES:
-                    if attr not in data.keys():
-                        raise InvalidEntityException(
-                            f"Tried to update with missing required attribute '{attr}'. "
-                            f"'{REQUIRED_ATTRIBUTES}' are required"
-                        )
                 child = self.get_by_path([key])
                 if not child:  # A new child has been added
                     if attribute.is_array():
@@ -527,11 +514,7 @@ class Node(NodeBase):
                     child.update(new_data)
 
         # Remove for every key in blueprint not in data or is a required attribute
-        removed_attributes = [
-            attr
-            for attr in self.blueprint.attributes
-            if attr.name not in data and attr.name not in REQUIRED_ATTRIBUTES
-        ]
+        removed_attributes = [attr for attr in self.blueprint.attributes if attr.name not in data]
         for attribute in removed_attributes:
             # Pop primitive data
             if attribute.is_primitive():

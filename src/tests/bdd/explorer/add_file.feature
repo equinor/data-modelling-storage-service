@@ -687,7 +687,8 @@ Feature: Explorer - Add file
           "type": "system/SIMOS/blob_types/PDF",
           "blob": {
             "name": "file1",
-            "type": "system/SIMOS/Blob"
+            "type": "system/SIMOS/Blob",
+            "_blob_id": ""
           },
           "author": "Stig Oskar"
         },
@@ -712,7 +713,8 @@ Feature: Explorer - Add file
             "type": "system/SIMOS/blob_types/PDF",
             "blob": {
               "name": "file3",
-              "type": "system/SIMOS/Blob"
+              "type": "system/SIMOS/Blob",
+              "_blob_id": ""
             },
             "author": "Stig Oskar"
           },
@@ -723,7 +725,8 @@ Feature: Explorer - Add file
             "blob": {
               "name": "file4",
               "type": "system/SIMOS/Blob",
-              "size": 0
+              "size": 0,
+              "_blob_id": ""
             },
             "author": "Stig Oskar"
           },
@@ -733,5 +736,3 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-
-

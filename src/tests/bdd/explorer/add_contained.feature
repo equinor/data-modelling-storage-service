@@ -35,33 +35,14 @@ Feature: Explorer - Add contained node
       "type": "system/SIMOS/Blueprint",
       "name": "RecursiveBlueprint",
       "description": "This describes a blueprint that has a list of itself",
+      "extends": ["system/SIMOS/NamedEntity"],
       "attributes": [
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "name",
-          "optional": false
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "description",
-          "optional": false
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "type",
-          "optional": false,
-          "default": "blueprints/root_package/RecursiveBlueprint"
-        },
         {
           "name": "meAgain",
           "attributeType": "blueprints/root_package/RecursiveBlueprint",
           "type": "system/SIMOS/BlueprintAttribute",
           "default": "[]",
-          "dimensions": "*",
-          "optional": true
+          "dimensions": "*"
         }
       ]
     }
@@ -99,8 +80,7 @@ Feature: Explorer - Add contained node
     """
     {
       "name": "level2",
-      "type": "blueprints/root_package/RecursiveBlueprint",
-      "description": ""
+      "type": "blueprints/root_package/RecursiveBlueprint"
     }
     """
     Then the response status should be "OK"

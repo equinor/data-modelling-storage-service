@@ -46,7 +46,8 @@ Feature: Set Access Control List
                 "name": "SubSubPack",
                 "type": "system/SIMOS/Package"
             }
-        ]
+        ],
+        "isRoot": false
     }
     """
     Given there exist document with id "4" in data source "test-DS"
@@ -55,7 +56,8 @@ Feature: Set Access Control List
         "name": "SubSubPack",
         "type": "system/SIMOS/Package",
         "content": [
-        ]
+        ],
+        "isRoot": false
     }
     """
 

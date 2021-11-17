@@ -62,22 +62,8 @@ Feature: Explorer - Remove file
       "type": "system/SIMOS/Blueprint",
       "name": "TestContainer",
       "description": "",
+      "extends": ["system/SIMOS/NamedEntity"],
       "attributes": [
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "name"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "description"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "type"
-        },
         {
           "type": "system/SIMOS/BlueprintAttribute",
           "attributeType": "data-source-name/TestData/ItemType",
@@ -108,22 +94,8 @@ Feature: Explorer - Remove file
       "type": "system/SIMOS/Blueprint",
       "name": "ItemType",
       "description": "",
+      "extends": ["system/SIMOS/NamedEntity"],
       "attributes": [
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "name"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "description"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "type"
-        },
         {
           "type": "system/SIMOS/BlueprintAttribute",
           "attributeType": "data-source-name/TestData/ItemTypeTwo",
@@ -141,22 +113,8 @@ Feature: Explorer - Remove file
       "type": "system/SIMOS/Blueprint",
       "name": "ItemTypeTwo",
       "description": "",
+      "extends": ["system/SIMOS/NamedEntity"],
       "attributes": [
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "name"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "description"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "type"
-        },
         {
           "type": "system/SIMOS/BlueprintAttribute",
           "attributeType": "data-source-name/TestData/ItemTypeThree",
@@ -187,23 +145,8 @@ Feature: Explorer - Remove file
       "type": "system/SIMOS/Blueprint",
       "name": "ItemTypeThree",
       "description": "",
-      "attributes": [
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "name"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "description"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "type"
-        }
-      ],
+      "extends": ["system/SIMOS/NamedEntity"],
+      "attributes": [],
       "storageRecipes": [],
       "uiRecipes": []
     }

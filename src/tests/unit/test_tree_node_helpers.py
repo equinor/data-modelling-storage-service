@@ -45,7 +45,12 @@ blueprint_2 = {
     "attributes": [
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "description",
+            "optional": True,
+        },
         {"attributeType": "blueprint_3", "type": "system/SIMOS/BlueprintAttribute", "name": "nested"},
     ],
     "storageRecipes": [],
@@ -59,7 +64,12 @@ blueprint_3 = {
     "attributes": [
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "description",
+            "optional": True,
+        },
         # This have to be optional, or else we will have an infinite loop caused by recursion
         {
             "attributeType": "blueprint_2",
@@ -80,7 +90,12 @@ blueprint_4 = {
     "attributes": [
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "description",
+            "optional": True,
+        },
         {
             "attributeType": "blueprint_4",
             "type": "system/SIMOS/BlueprintAttribute",
@@ -96,10 +111,8 @@ recursive_blueprint = {
     "type": "system/SIMOS/Blueprint",
     "name": "recursive",
     "description": "Second blueprint",
+    "extends": ["system/SIMOS/NamedEntity"],
     "attributes": [
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
         {"attributeType": "recursive_blueprint", "type": "system/SIMOS/BlueprintAttribute", "name": "im_me!"},
     ],
 }
@@ -512,6 +525,8 @@ class TreenodeTestCase(unittest.TestCase):
                     "type": "blueprint_3",
                     "reference": {"_id": "2", "name": "Reference", "description": "", "type": "blueprint_2"},
                 },
+                "reference": {},
+                "references": [],
             },
         }
 
@@ -571,6 +586,8 @@ class TreenodeTestCase(unittest.TestCase):
                     "reference": {"_id": "2", "name": "Reference", "description": "", "type": "blueprint_2"},
                 },
             },
+            "reference": {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
+            "references": [],
         }
 
         root = Node.from_dict(document_1, document_1.get("_id"), get_blueprint)
@@ -590,6 +607,8 @@ class TreenodeTestCase(unittest.TestCase):
                     "reference": {"_id": "2", "name": "Reference", "description": "", "type": "blueprint_2"},
                 },
             },
+            "reference": {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
+            "references": [],
         }
 
         root.update(update_0)
@@ -611,6 +630,8 @@ class TreenodeTestCase(unittest.TestCase):
                     "reference": {"_id": "2", "name": "Reference", "description": "", "type": "blueprint_2"},
                 },
             },
+            "reference": {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
+            "references": [],
         }
 
         root.update(update_1)
@@ -632,6 +653,8 @@ class TreenodeTestCase(unittest.TestCase):
                     "reference": {"_id": "2", "name": "New-name", "description": "", "type": "blueprint_2"},
                 },
             },
+            "reference": {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
+            "references": [],
         }
 
         root.update(update_2)
@@ -654,6 +677,8 @@ class TreenodeTestCase(unittest.TestCase):
                     "reference": {"_id": "2", "name": "New-name", "type": "blueprint_2", "description": ""},
                 },
             },
+            "reference": {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
+            "references": [],
         }
 
         # reference and nested.nested.reference has uid and id generated since the tree now includes

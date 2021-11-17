@@ -14,15 +14,8 @@ package_blueprint = {
     "type": "system/SIMOS/Blueprint",
     "name": "Package",
     "description": "This is a blueprint for a package that contains documents and other packages",
+    "extends": ["system/SIMOS/NamedEntity"],
     "attributes": [
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
-        {
-            "attributeType": "string",
-            "type": "system/SIMOS/BlueprintAttribute",
-            "name": "description",
-            "optional": True,
-        },
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
         {"attributeType": "boolean", "type": "system/SIMOS/BlueprintAttribute", "name": "isRoot"},
         {
             "attributeType": "system/SIMOS/Entity",
@@ -46,22 +39,16 @@ basic_blueprint = {
     "type": "system/SIMOS/Blueprint",
     "name": "A box",
     "description": "First blueprint",
-    "attributes": [
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
-        {"attributeType": "integer", "type": "system/SIMOS/BlueprintAttribute", "name": "length"},
-    ],
+    "extends": ["system/SIMOS/NamedEntity"],
+    "attributes": [{"attributeType": "integer", "type": "system/SIMOS/BlueprintAttribute", "name": "length"},],
 }
 
 higher_rank_array_blueprint = {
     "type": "system/SIMOS/Blueprint",
     "name": "Higher rank integer arrays",
     "description": "First blueprint",
+    "extends": ["system/SIMOS/NamedEntity"],
     "attributes": [
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
         {
             "attributeType": "integer",
             "type": "system/SIMOS/BlueprintAttribute",

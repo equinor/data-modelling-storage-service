@@ -1,9 +1,8 @@
 from typing import Callable, List
 
-from pydantic import ValidationError
-
-from restful.request_types.shared import Entity
-from utils.exceptions import InvalidEntityException, ValidationException
+from domain_classes.blueprint_attribute import BlueprintAttribute
+from utils.exceptions import ValidationException
+from utils.string_helpers import get_data_type_from_dmt_type
 
 
 def valid_extended_type(type: str, extended_types: List[str], get_blueprint: Callable) -> bool:
@@ -17,15 +16,23 @@ def valid_extended_type(type: str, extended_types: List[str], get_blueprint: Cal
             return True
 
 
-def valid_named_entity(entity: dict) -> None:
-    try:  # Minimal check that the child is a valid entity
-        Entity(**entity)
-    except (ValidationError, TypeError):
-        raise InvalidEntityException(f"'{entity}' is not a valid entity.") from None
-
-
-def entity_has_all_required_attributes(entity: dict, required_attributes: list):
+def entity_has_all_required_attributes(entity: dict, required_attributes: List[BlueprintAttribute]):
     for attribute in required_attributes:
-        if entity != {} and (attribute not in entity):
-            raise ValidationException(f"Required attribute '{attribute}' not found in the entity")
-    pass
+        if attribute.name not in entity:
+            raise ValidationException(f"Required attribute '{attribute.name}' not found in the entity")
+        if attribute.dimensions.dimensions[0] != "":
+            if type(entity[attribute.name]) != list:
+                raise ValidationException(
+                    f"The type of the required attribute '{attribute.name}' is not correct! It should be a list"
+                )
+        else:
+            if attribute.is_primitive() and type(entity[attribute.name]) != get_data_type_from_dmt_type(
+                attribute.attribute_type
+            ):
+                raise ValidationException(
+                    f"The type of the primitive required attribute '{attribute.name}' is not correct!"
+                )
+            if not attribute.is_primitive() and type(entity[attribute.name]) != dict:
+                raise ValidationException(
+                    f"The type of the non-primitive required attribute '{attribute.name}' is not correct!"
+                )
