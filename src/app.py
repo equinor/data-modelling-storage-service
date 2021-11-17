@@ -46,7 +46,7 @@ class AuthHeaderHTTPMiddleware(BaseHTTPMiddleware):
     @classmethod
     def __add_auth_header(cls, scope: Scope):
         token = generate_mock_token()
-        scope["headers"].append((b"authorization", b"Bearer " + token))
+        scope["headers"].append((b"authorization", b"Bearer " + token.encode()))
 
 
 def create_app():
