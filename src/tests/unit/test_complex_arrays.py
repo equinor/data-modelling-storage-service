@@ -40,7 +40,9 @@ basic_blueprint = {
     "name": "A box",
     "description": "First blueprint",
     "extends": ["system/SIMOS/NamedEntity"],
-    "attributes": [{"attributeType": "integer", "type": "system/SIMOS/BlueprintAttribute", "name": "length"},],
+    "attributes": [
+        {"attributeType": "integer", "type": "system/SIMOS/BlueprintAttribute", "name": "length"},
+    ],
 }
 
 higher_rank_array_blueprint = {

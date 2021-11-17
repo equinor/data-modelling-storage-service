@@ -490,7 +490,11 @@ class DocumentServiceTestCase(unittest.TestCase):
                 attribute_path="SomeChild",
                 data=[
                     {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
-                    {"name": "whatever", "type": "special_child_no_inherit", "AnExtraValue": "Hallo there!",},
+                    {
+                        "name": "whatever",
+                        "type": "special_child_no_inherit",
+                        "AnExtraValue": "Hallo there!",
+                    },
                 ],
             )
         print(error.exception)

@@ -198,7 +198,13 @@ blobContainer = {
     "name": "blobContainer",
     "description": "A basic blueprint that has a non-storageContained blob, none specified storageAffinity ",
     "extends": ["system/SIMOS/NamedEntity"],
-    "attributes": [{"attributeType": "blob", "type": "system/SIMOS/BlueprintAttribute", "name": "blob",},],
+    "attributes": [
+        {
+            "attributeType": "blob",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "blob",
+        },
+    ],
     "storageRecipes": [
         {
             "name": "default",
