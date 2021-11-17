@@ -449,25 +449,6 @@ Feature: Explorer - Add file
     """
 
 
-    Scenario: Add Parent entity without a name attribute with add-raw endpoint should fail
-    Given i access the resource url "/api/v1/explorer/test-DS/add-raw"
-    When i make a "POST" request
-    """
-    {
-        "_id": "429cb3da-ebbe-4ea6-80a6-b6bca0f67aaa",
-        "type": "test-DS/root_package/Parent",
-        "description": "parent entity with no name"
-    }
-    """
-    Then the response status should be "System Error"
-    And the response should equal
-    """
-    {
-      "type": "SYSTEM_ERROR",
-      "message": "ValidationException: Required attribute 'name' not found in the entity"
-    }
-    """
-
   Scenario: Add Comment entity without a name attribute with add-raw endpoint
     Given i access the resource url "/api/v1/explorer/test-DS/add-raw"
     When i make a "POST" request
@@ -481,44 +462,6 @@ Feature: Explorer - Add file
     """
     Then the response status should be "OK"
 
-  Scenario: Add blueprint without a name attribute with add-raw endpoint should fail
-    Given i access the resource url "/api/v1/explorer/test-DS/add-raw"
-    When i make a "POST" request
-    """
-    {
-        "_id": "429cb3da-ebbe-4ea6-80a6-b6bca0f67bbb",
-        "type":"system/SIMOS/Blueprint",
-        "description": "Blueprint with no name"
-    }
-    """
-    Then the response status should be "System Error"
-    And the response should equal
-    """
-    {
-      "type": "SYSTEM_ERROR",
-      "message": "ValidationException: Required attribute 'name' not found in the entity"
-    }
-    """
-
-
-  Scenario: Add package without a name attribute with add-raw endpoint should fail
-    Given i access the resource url "/api/v1/explorer/test-DS/add-raw"
-    When i make a "POST" request
-    """
-    {
-        "_id": "429cb3da-ebbe-4ea6-80a6-b6bca0f67bbb",
-        "type":"system/SIMOS/Package",
-        "description": "Package with no name"
-    }
-    """
-    Then the response status should be "System Error"
-    And the response should equal
-    """
-    {
-      "type": "SYSTEM_ERROR",
-      "message": "ValidationException: Required attribute 'name' not found in the entity"
-    }
-    """
 
   Scenario: Add Parent entity without a name attribute with add-to-path endpoint
     Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
