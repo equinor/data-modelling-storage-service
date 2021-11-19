@@ -1,9 +1,11 @@
 from typing import Callable, Dict, List
 
+from pydantic import ValidationError
+
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
 from domain_classes.storage_recipe import DefaultStorageRecipe, StorageRecipe
-from domain_classes.ui_recipe import DefaultRecipe, Recipe, RecipeAttribute
+from domain_classes.ui_recipe import DefaultRecipe, Recipe
 from enums import BLOB_TYPES, PRIMITIVES, StorageDataTypes
 
 
@@ -21,31 +23,6 @@ def get_storage_recipes(recipes: List[Dict], attributes: List[BlueprintAttribute
         ]
 
 
-def get_ui_recipe(recipes: List[Dict]):
-    # TODO: Add a from_dict() on Recipe class. This should not be duplicated.
-    return [
-        Recipe(
-            name=recipe["name"],
-            plugin=recipe.get("plugin", "Default"),
-            hide_tab=recipe.get("hideTab", False),
-            description=recipe.get("description", ""),
-            attributes=[
-                RecipeAttribute(
-                    name=attr["name"],
-                    is_contained=attr.get("contained", True),
-                    array_field=attr.get("arrayField", None),
-                    field=attr.get("field", None),
-                    collapsible=attr.get("collapsible", None),
-                    ui_recipe=attr.get("uiRecipe", None),
-                    mapping=attr.get("mapping", None),
-                )
-                for attr in recipe.get("attributes", [])
-            ],
-        )
-        for recipe in recipes
-    ]
-
-
 class Blueprint:
     def __init__(self, dto: DTO):
         self.name = dto.data["name"]
@@ -54,19 +31,22 @@ class Blueprint:
         self.type = dto.type
         self.dto = dto
         self.attributes: List[BlueprintAttribute] = [
-            BlueprintAttribute.from_dict(attribute) for attribute in dto.data.get("attributes", [])
+            BlueprintAttribute(**attribute) for attribute in dto.data.get("attributes", [])
         ]
         self.storage_recipes: List[StorageRecipe] = get_storage_recipes(
             dto.data.get("storageRecipes", []), self.attributes
         )
-        self.ui_recipes: List[Recipe] = get_ui_recipe(dto.data.get("uiRecipes", []))
+        try:
+            self.ui_recipes: List[Recipe] = [Recipe(**recipe_dict) for recipe_dict in dto.data.get("uiRecipes", [])]
+        except ValidationError as e:
+            print(e)
 
     @classmethod
     def from_dict(cls, adict):
         instance = cls(DTO(adict))
-        instance.attributes = [BlueprintAttribute.from_dict(attr) for attr in adict.get("attributes", [])]
+        instance.attributes = [BlueprintAttribute(**attr) for attr in adict.get("attributes", [])]
         instance.storage_recipes = get_storage_recipes(adict.get("storageRecipes", []), instance.attributes)
-        instance.ui_recipes = get_ui_recipe(adict.get("uiRecipes", []))
+        instance.ui_recipes = [Recipe.from_dict(recipe_dict) for recipe_dict in adict.get("uiRecipes", [])]
         return instance
 
     def get_required_attributes(self):
@@ -86,7 +66,7 @@ class Blueprint:
             "extends": self.extends,
             "attributes": [attribute.to_dict() for attribute in self.attributes],
             "storageRecipes": [recipe.to_dict() for recipe in self.storage_recipes],
-            "uiRecipes": [recipe.to_dict() for recipe in self.ui_recipes],
+            "uiRecipes": [recipe.dict() for recipe in self.ui_recipes],
         }
 
     def __eq__(self, other):

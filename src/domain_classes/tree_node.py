@@ -123,7 +123,7 @@ class DictImporter:
         # If no attribute, that means this was a "top-level" entity. We create an Attribute based on the Blueprint
         if not node_attribute:
             bp = blueprint_provider(entity["type"])
-            node_attribute = BlueprintAttribute(bp.name, entity["type"], bp.description)
+            node_attribute = BlueprintAttribute(name=bp.name, attributeType=entity["type"], description=bp.description)
 
         # If there is data in the entity, load attribute type from the entity
         if entity:
