@@ -57,7 +57,6 @@ def create_app():
         document_controller,
         explorer_controller,
         export_controller,
-        package_controller,
         reference_controller,
         search_controller,
         whoami_controller,
@@ -76,7 +75,6 @@ def create_app():
     authenticated_routes.include_router(datasource_controller.router)
     authenticated_routes.include_router(document_controller.router)
     authenticated_routes.include_router(export_controller.router)
-    authenticated_routes.include_router(package_controller.router)
     authenticated_routes.include_router(search_controller.router)
     authenticated_routes.include_router(blueprint_controller.router)
     authenticated_routes.include_router(reference_controller.router)
