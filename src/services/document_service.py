@@ -139,15 +139,6 @@ class DocumentService:
         document_id = get_document_uid_by_path(path, document_repository)
         return self.get_by_uid(data_source_id, document_id)
 
-    def get_root_packages(self, data_source_id: str):
-        result = self.repository_provider(data_source_id, self.user).find(
-            {"type": "system/SIMOS/Package", "isRoot": True}
-        )
-        if not result:
-            return []
-
-        return result
-
     def remove_document(self, data_source_id: str, document_id: str):
         """
         Delete a document, and any model contained children.
