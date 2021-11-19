@@ -27,7 +27,7 @@ def generate_tree_from_rows(node: Node, rows, document_service):
                 uid="",
                 entity=data,
                 blueprint_provider=document_service.get_blueprint,
-                attribute=BlueprintAttribute("content", DMT.ENTITY.value),
+                attribute=BlueprintAttribute(name="content", attribute_type=DMT.ENTITY.value),
             )
             node.add_child(content_node)
     else:
@@ -44,7 +44,7 @@ def generate_tree_from_rows(node: Node, rows, document_service):
                 uid=child_data["uid"],
                 entity=entity,
                 blueprint_provider=document_service.get_blueprint,
-                attribute=BlueprintAttribute("content", child_data["type"]),
+                attribute=BlueprintAttribute(name="content", attribute_type=child_data["type"]),
             )
 
             print(f"adding {child_node.node_id} to {node.node_id}")
@@ -59,7 +59,9 @@ def generate_tree_from_rows(node: Node, rows, document_service):
 
 def generate_tree(data_source_id: str, table, document_service):
     root = Node(
-        key=data_source_id, attribute=BlueprintAttribute(data_source_id, DMT.DATASOURCE.value), uid=data_source_id
+        key=data_source_id,
+        attribute=BlueprintAttribute(name=data_source_id, attribute_type=DMT.DATASOURCE.value),
+        uid=data_source_id,
     )
     root_package = list(filter(lambda row: row["parent_uid"] == "", table.rows))[0]
     if not root_package:
@@ -72,7 +74,7 @@ def generate_tree(data_source_id: str, table, document_service):
         entity=root_package_data,
         blueprint_provider=document_service.get_blueprint,
         parent=root,
-        attribute=BlueprintAttribute("root", DMT.PACKAGE.value),
+        attribute=BlueprintAttribute(name="root", attribute_type=DMT.PACKAGE.value),
     )
     rows = list(filter(lambda row: row["parent_uid"] != "", table.rows))
     generate_tree_from_rows(root_package_node, rows, document_service)

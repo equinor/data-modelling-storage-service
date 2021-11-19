@@ -237,7 +237,7 @@ class DocumentService:
         if type == SIMOS.BLUEPRINT.value and not entity.get("extends"):  # Extend default attributes and uiRecipes
             entity["extends"] = ["system/SIMOS/DefaultUiRecipes", "system/SIMOS/NamedEntity"]
 
-        new_node_attribute = BlueprintAttribute(leaf_attribute, type)
+        new_node_attribute = BlueprintAttribute(name=leaf_attribute, attribute_type=type)
         new_node = Node.from_dict(entity, None, self.get_blueprint, new_node_attribute)
 
         # Check if a file/attribute with the same name already exists on the target

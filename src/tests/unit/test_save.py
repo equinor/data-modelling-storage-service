@@ -90,7 +90,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 uid="2",
                 entity=doc_storage["2"],
                 blueprint_provider=document_service.get_blueprint,
-                attribute=BlueprintAttribute("references", "blueprint_2"),
+                attribute=BlueprintAttribute(name="references", attribute_type="blueprint_2"),
             )
         )
         document_service.save(node, "testing")
