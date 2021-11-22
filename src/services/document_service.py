@@ -240,8 +240,9 @@ class DocumentService:
         new_node_attribute = BlueprintAttribute(name=leaf_attribute, attribute_type=type)
         new_node = Node.from_dict(entity, None, self.get_blueprint, new_node_attribute)
 
-        # Check if a file/attribute with the same name already exists on the target
-        if parent.duplicate_attribute(new_node.name):
+        required_attribute_names = [attribute.name for attribute in new_node.blueprint.get_required_attributes()]
+        # If entity has a name, check if a file/attribute with the same name already exists on the target
+        if "name" in required_attribute_names and parent.duplicate_attribute(new_node.name):
             raise DuplicateFileNameException(data_source, f"{parent.name}/{new_node.name}")
 
         new_node.parent = parent
