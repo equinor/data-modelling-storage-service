@@ -68,7 +68,7 @@ def update(
     data: Json = Form(...),
     attribute: Optional[str] = Form(None),
     files: Optional[List[UploadFile]] = File(None),
-    update_uncontained: Optional[bool] = True,
+    update_uncontained: Optional[bool] = False,
     user: User = Depends(get_current_user),
 ):
     update_use_case = UpdateDocumentUseCase(user)

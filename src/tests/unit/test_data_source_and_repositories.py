@@ -73,7 +73,7 @@ class DataSourceTestCase(unittest.TestCase):
 
         node: Node = Node.from_dict(uncontained_doc, "1", document_service.get_blueprint)
 
-        document_service.save(node, "testing")
+        document_service.save(node, "testing", update_uncontained=True)
 
         # Test that both repos get's written into
         assert blob_doc_storage and default_doc_storage
@@ -194,7 +194,7 @@ class DataSourceTestCase(unittest.TestCase):
 
         node: Node = Node.from_dict(blob_doc, "1", document_service.get_blueprint)
 
-        document_service.save(node, "testing")
+        document_service.save(node, "testing", update_uncontained=True)
 
         # Test that both repos get's written into
         assert blob_doc_storage and default_doc_storage
