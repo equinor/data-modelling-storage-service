@@ -5,7 +5,7 @@ from domain_classes.user import User
 
 from domain_classes.dto import DTO
 from services.document_service import DocumentService
-
+from enums import DMT
 from tests.unit.mock_blueprint_provider import blueprint_provider
 from utils.data_structure.compare import pretty_eq
 
@@ -21,6 +21,8 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "description": "",
                 "type": "blueprint_1",
                 "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
+                "reference": {"name": "some reference", "description": "", "type": "blueprint_2"},
+                "references": [],
             }
         }
 
@@ -58,7 +60,8 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "RootPackage",
                 "description": "My root package",
-                "type": "blueprint_1",
+                "type": DMT.PACKAGE.value,
+                "isRoot": True,
                 "content": [],
             }
         }
@@ -96,6 +99,8 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "name": "Parent",
                 "description": "",
                 "type": "blueprint_1",
+                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
+                "references": [],
                 "reference": {"_id": "2", "name": "Reference", "type": "blueprint_2"},
             },
             "2": {"_id": "2", "name": "Reference", "description": "", "type": "blueprint_2"},
@@ -134,6 +139,8 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "name": "Parent",
                 "description": "",
                 "type": "blueprint_1",
+                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
+                "reference": {"_id": "2", "name": "Reference", "type": "blueprint_2"},
                 "references": [{"_id": "2", "name": "Reference", "type": "blueprint_2"}],
             },
             "2": {"_id": "2", "name": "Reference", "description": "", "type": "blueprint_2"},

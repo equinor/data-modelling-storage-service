@@ -106,7 +106,7 @@ def add_by_parent_id(
 ):
     """
     Add a new document into an existing one. Must match it's parents attribute type.
-    Select parent with format 'document-id.attribute.attribute'
+    Select parent with format 'document_id.attribute.attribute'
     """
     use_case = AddFileUseCase(user)
     response = use_case.execute(

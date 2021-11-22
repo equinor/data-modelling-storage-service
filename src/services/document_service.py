@@ -13,7 +13,7 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
 from domain_classes.tree_node import ListNode, Node
 from enums import DMT, SIMOS
-from restful.request_types.shared import NamedEntity, Reference
+from restful.request_types.shared import Entity, Reference
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
@@ -34,6 +34,7 @@ from utils.get_complete_document_by_id import get_complete_document
 from utils.logging import logger
 from utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from utils.string_helpers import split_absolute_ref
+from utils.validators import entity_has_all_required_attributes
 
 pretty_printer = pprint.PrettyPrinter()
 
@@ -98,7 +99,7 @@ class DocumentService:
                 packageContent = node.children[0]
                 contentListNames = []
                 for child in packageContent.children:
-                    if child.name in contentListNames:
+                    if "name" in child.entity and child.name in contentListNames:
                         raise DuplicateFileNameException(data_source_id, f"{node.name}/{child.name}")
                     contentListNames.append(child.name)
 
@@ -108,11 +109,11 @@ class DocumentService:
                     [self.save(x, data_source_id, repository, path) for x in child.children]
                 else:
                     self.save(child, data_source_id, repository, path)
-
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
 
         ref_dict = node.to_ref_dict()
+        entity_has_all_required_attributes(ref_dict, node.blueprint.get_required_attributes())
 
         # If the node is not contained, and has data, save it!
         if not node.storage_contained and ref_dict:
@@ -301,7 +302,7 @@ class DocumentService:
                     )
 
     # Add entity by path
-    def add(self, data_source_id: str, path: str, document: NamedEntity, files: dict):
+    def add(self, data_source_id: str, path: str, document: Entity, files: dict):
         target: Node = self.get_by_path(f"{data_source_id}/{path}")
         if not target:
             raise EntityNotFoundException(uid=path)
@@ -311,7 +312,7 @@ class DocumentService:
         new_node_attr = path.split(".")[-1] if "." in path else "content"
 
         new_node = Node.from_dict(
-            {**document.dict()},
+            {**document.to_dict()},
             new_node_id,
             self.get_blueprint,
             BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
@@ -322,7 +323,6 @@ class DocumentService:
 
         if target.type == DMT.PACKAGE.value:
             target = target.children[0]  # Set target to be the packages content
-
         if isinstance(target, ListNode):
             new_node.parent = target
             target.add_child(new_node)
@@ -415,7 +415,7 @@ class DocumentService:
         else:
             attribute_node.entity = {**reference.dict(by_alias=True), "_id": str(reference.uid)}
             attribute_node.uid = str(reference.uid)
-        self.save(root, data_source_id)
+        self.save(root, data_source_id, update_uncontained=False)
 
         logger.info(
             f"Inserted reference to '{referenced_document.uid}'" f" as '{attribute_path}' in '{root.name}'({root.uid})"

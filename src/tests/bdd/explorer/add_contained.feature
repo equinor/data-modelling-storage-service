@@ -35,26 +35,8 @@ Feature: Explorer - Add contained node
       "type": "system/SIMOS/Blueprint",
       "name": "RecursiveBlueprint",
       "description": "This describes a blueprint that has a list of itself",
+      "extends": ["system/SIMOS/NamedEntity"],
       "attributes": [
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "name",
-          "optional": false
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "description",
-          "optional": false
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "type",
-          "optional": false,
-          "default": "blueprints/root_package/RecursiveBlueprint"
-        },
         {
           "name": "meAgain",
           "attributeType": "blueprints/root_package/RecursiveBlueprint",

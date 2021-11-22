@@ -69,6 +69,9 @@ class Blueprint:
         instance.ui_recipes = get_ui_recipe(adict.get("uiRecipes", []))
         return instance
 
+    def get_required_attributes(self):
+        return [attribute for attribute in self.attributes if attribute.optional is False]
+
     def to_dict_raw(self):
         data = self.dto.data
         if "_id" in data:
@@ -104,6 +107,7 @@ class Blueprint:
         return blueprints
 
     def get_primitive_types(self) -> List[BlueprintAttribute]:
+        # TODO function does not return the primitive types from the blueprint that self extends from (self.extends)
         blueprints = [attribute for attribute in self.attributes if attribute.attribute_type in PRIMITIVES]
         return blueprints
 

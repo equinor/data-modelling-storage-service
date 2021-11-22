@@ -34,7 +34,8 @@
       "dimensions": "*",
       "name": "attributes",
       "default": "[{\"name\": \"name\", \"type\": \"string\"}, {\"name\": \"type\", \"type\": \"string\"}, {\"name\": \"description\", \"type\": \"string\"}]",
-      "contained": true
+      "contained": true,
+      "optional": true
     },
     {
       "type": "system/SIMOS/BlueprintAttribute",

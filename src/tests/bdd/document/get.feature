@@ -19,22 +19,8 @@ Feature: Get document
       "type": "system/SIMOS/Blueprint",
       "name": "ItemType",
       "description": "",
+      "extends": ["system/SIMOS/NamedEntity"],
       "attributes": [
-        {
-          "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute",
-          "name": "name"
-        },
-        {
-          "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute",
-          "optional": true,
-          "default": "",
-          "name": "description"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "type"
-        },
         {
           "attributeType": "string",
           "type": "system/SIMOS/BlueprintAttribute",
@@ -66,22 +52,8 @@ Feature: Get document
       "type": "system/SIMOS/Blueprint",
       "name": "ItemTypeTwo",
       "description": "",
+      "extends": ["system/SIMOS/NamedEntity"],
       "attributes": [
-        {
-          "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute",
-          "name": "name"
-        },
-        {
-          "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute",
-          "optional": true,
-          "default": "",
-          "name": "description"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "type"
-        },
         {
           "attributeType": "string",
           "type": "system/SIMOS/BlueprintAttribute",
@@ -100,22 +72,8 @@ Feature: Get document
       "type": "system/SIMOS/Blueprint",
       "name": "TestContainer",
       "description": "",
+      "extends": ["system/SIMOS/NamedEntity"],
       "attributes": [
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "name"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "type"
-        },
-        {
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "name": "description"
-        },
         {
           "attributeType": "test-source-name/TestData/ItemType",
           "type": "system/SIMOS/BlueprintAttribute",
@@ -132,7 +90,7 @@ Feature: Get document
         {
           "attributeType": "test-source-name/TestData/ItemType",
           "type": "system/SIMOS/BlueprintAttribute",
-          "optional": false,
+          "optional": true,
           "name": "itemNotContained"
         },
         {

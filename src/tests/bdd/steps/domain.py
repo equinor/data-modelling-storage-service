@@ -85,7 +85,6 @@ def step_impl_documents(context, data_source_id: str, collection: str):
     document_service = DocumentService(get_data_source, user=context.user)
     tree: Node = generate_tree(data_source_id, context.table, document_service)
     tree.show_tree()
-    document_service = DocumentService(repository_provider=get_data_source, user=context.user)
     document_service.save(node=tree, data_source_id=data_source_id)
 
 

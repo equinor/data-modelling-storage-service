@@ -131,3 +131,8 @@ class MissingPrivilegeException(Exception):
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED, detail="Token validation failed", headers={"WWW-Authenticate": "Bearer"}
 )
+
+
+class ValidationException(Exception):
+    def __init__(self, message):
+        self.message = message if message else "Could not validate the content"

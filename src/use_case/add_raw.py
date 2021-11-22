@@ -1,5 +1,4 @@
 from uuid import uuid4
-
 from domain_classes.user import User
 from domain_classes.dto import DTO
 from enums import SIMOS
@@ -20,7 +19,8 @@ class AddRawUseCase(UseCase):
 
     def process_request(self, req: AddRawRequest):
         new_node_id = req.document.dict(by_alias=True).get("_id", str(uuid4()))
-        document: DTO = DTO(uid=new_node_id, data=req.document.dict())
+        dict = req.document.to_dict()
+        document: DTO = DTO(uid=new_node_id, data=dict)
         document_repository = get_data_source(req.data_source_id, self.user)
         document_repository.update(document)
         if document.type == SIMOS.BLUEPRINT.value:

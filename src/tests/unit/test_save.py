@@ -56,7 +56,15 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository = mock.Mock()
 
         doc_storage = {
-            "1": {"_id": "1", "name": "Parent", "description": "", "type": "blueprint_1", "references": []},
+            "1": {
+                "_id": "1",
+                "name": "Parent",
+                "description": "",
+                "type": "blueprint_1",
+                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
+                "reference": {"name": "a_reference", "type": "blueprint_2"},
+                "references": [],
+            },
             "2": {"_id": "2", "name": "a_reference", "description": "", "type": "blueprint_2"},
         }
 
@@ -100,6 +108,8 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "name": "Parent",
                 "description": "",
                 "type": "blueprint_1",
+                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
+                "reference": {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
                 "references": [
                     {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
                     {"_id": "3", "name": "a_reference", "type": "blueprint_2"},
