@@ -78,7 +78,7 @@ class DocumentService:
         data_source_id: str,
         repository=None,
         path="",
-        update_uncontained: bool = True,
+        update_uncontained: bool = False,
     ) -> Dict:
         """
         Recursively saves a Node.
@@ -106,9 +106,10 @@ class DocumentService:
         if update_uncontained:  # If flag is set, dig down and save uncontained documents
             for child in node.children:
                 if child.is_array():
-                    [self.save(x, data_source_id, repository, path) for x in child.children]
+                    [self.save(x, data_source_id, repository, path, update_uncontained) for x in child.children]
                 else:
-                    self.save(child, data_source_id, repository, path)
+                    self.save(child, data_source_id, repository, path, update_uncontained)
+
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
 
@@ -221,7 +222,7 @@ class DocumentService:
         logger.info(f"Updated document '{target_node.node_id}''")
         return {"data": target_node.to_dict()}
 
-    def add_document(self, absolute_ref: str, data: dict = None, update_uncontained: bool = True):
+    def add_document(self, absolute_ref: str, data: dict = None, update_uncontained: bool = False):
         data_source, parent_id, attribute = split_absolute_ref(absolute_ref)
         if not attribute:
             raise BadRequestException("Attribute not specified on parent")
@@ -326,11 +327,11 @@ class DocumentService:
         if isinstance(target, ListNode):
             new_node.parent = target
             target.add_child(new_node)
-            self.save(target.parent, data_source_id)
+            self.save(target.parent, data_source_id, update_uncontained=True)
         else:
             new_node.parent = target.parent
             target = new_node
-            self.save(target, data_source_id)
+            self.save(target, data_source_id, update_uncontained=True)
 
         return {"uid": new_node.node_id}
 
@@ -447,5 +448,5 @@ class DocumentService:
         # TODO: Is this secure?
         with zipfile.ZipFile(archive_path, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=5) as zip_file:
             # Save the selected node, using custom ZipFile repository
-            self.save(document, data_source_id, ZipFileClient(zip_file))
+            self.save(document, data_source_id, ZipFileClient(zip_file), update_uncontained=True)
         return archive_path

@@ -200,7 +200,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         node: Node = Node.from_dict(doc_storage["1"], "1", document_service.get_blueprint)
-        document_service.save(node, "testing")
+        document_service.save(node, "testing", update_uncontained=True)
 
         assert doc_storage["2"]["description"] == "I'm the second nested document, uncontained"
         assert (

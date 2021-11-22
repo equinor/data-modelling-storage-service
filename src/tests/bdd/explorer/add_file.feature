@@ -315,7 +315,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file - not contained
-    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
+    Given i access the resource url "/api/v1/explorer/test-DS/1.content?update_uncontained=True"
     When i make a "POST" request
     """
     {
@@ -464,7 +464,7 @@ Feature: Explorer - Add file
 
 
   Scenario: Add Parent entity without a name attribute with add-to-path endpoint
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
@@ -486,7 +486,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add Comment entity without a name attribute with add-to-path endpoint
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
@@ -502,7 +502,7 @@ Feature: Explorer - Add file
     Then the response status should be "OK"
 
   Scenario: Add blueprint without a name attribute with add-to-path endpoint should fail
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
@@ -524,7 +524,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add package without a name attribute with add-to-path endpoint should fail
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
@@ -548,7 +548,7 @@ Feature: Explorer - Add file
 
 
   Scenario: Add parent entity without a name attribute with add_by_parent_id endpoint
-    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
+    Given i access the resource url "/api/v1/explorer/test-DS/1.content?update_uncontained=True"
     When i make a "POST" request
     """
     {
@@ -566,7 +566,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add comment entity without a name attribute with add_by_parent_id endpoint
-    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
+    Given i access the resource url "/api/v1/explorer/test-DS/1.content?update_uncontained=True"
     When i make a "POST" request
     """
     {
@@ -615,7 +615,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with multiple PDFs
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?update_uncontained=True"
     When i make a "POST" request with "4" files
     """
     {

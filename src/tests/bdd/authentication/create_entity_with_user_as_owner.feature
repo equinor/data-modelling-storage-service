@@ -19,7 +19,7 @@ Feature: Set logged in user as owner when creating an entity
       """
       Given the logged in user is "johndoe" with roles "dmss-admin"
       Given authentication is enabled
-      Given i access the resource url "/api/v1/explorer/test-DS/2.content"
+      Given i access the resource url "/api/v1/explorer/test-DS/2.content?update_uncontained=True"
       When i make a "POST" request
       """
       {
