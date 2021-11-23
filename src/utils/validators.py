@@ -26,20 +26,18 @@ def entity_has_all_required_attributes(entity: dict, required_attributes: List[B
                     f"The type of the required attribute '{attribute.name}' is not correct! It should be a list"
                 )
         else:
-            if attribute.is_primitive() and type(entity[attribute.name]) != get_data_type_from_dmt_type(
-                attribute.attribute_type
-            ):
+            attribute_type = get_data_type_from_dmt_type(attribute.attribute_type)
+            attribute_type_in_entity = type(entity[attribute.name])
+            if attribute.is_primitive() and attribute_type_in_entity != attribute_type:
                 # the validation will accept cases where the type in the blueprint is defined to be integer, but
                 # the value in the entity has zero in the decimal place.
-                if (
-                    get_data_type_from_dmt_type(attribute.attribute_type) == int
-                    and type(entity[attribute.name]) == float
-                ):
+                if attribute_type == int and attribute_type_in_entity == float:
                     if not entity[attribute.name].is_integer():
-
                         raise ValidationException(
                             f"The type of the required primitive attribute '{attribute.name}' is not correct!"
                         )
+                elif attribute_type == float and attribute_type_in_entity == int:
+                    return
                 else:
                     raise ValidationException(
                         f"The type of the required primitive attribute '{attribute.name}' is not correct!"
