@@ -26,13 +26,20 @@ def get_by_id(
     depth: conint(gt=-1, lt=1000) = 999,
     user: User = Depends(get_current_user),
 ):
+    # Allow specification of absolute document ref in document_id
+    id_list = document_id.split(".", 1)
+    if len(id_list) >= 2 and attribute:
+        raise ValueError(
+            "An attribute was specified in both the 'attribute' parameter and the 'document_id' parameter."
+            "Please provide a single attribute specification."
+        )
     use_case = GetDocumentUseCase(user)
     response: GetDocumentResponse = use_case.execute(
         GetDocumentRequest(
             data_source_id=data_source_id,
-            document_id=document_id,
+            document_id=id_list[0],
             ui_recipe=ui_recipe,
-            attribute=attribute,
+            attribute=attribute if len(id_list) == 1 else id_list[1],
             depth=depth,
         )
     )
