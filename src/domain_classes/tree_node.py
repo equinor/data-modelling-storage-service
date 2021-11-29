@@ -127,87 +127,76 @@ class DictImporter:
 
         # If there is data in the entity, load attribute type from the entity
         if entity:
+            if not entity.get("type"):
+                raise ValueError(f"Entity is missing required attribute 'type'.\n{key}\n{entity}")
             node_attribute = deepcopy(node_attribute)  # If you don't copy, we modify the blueprint in the BP Cache...
             node_attribute.attribute_type = entity["type"]
-        try:
-            key = key if key else node_attribute.name
-            node = Node(
-                key=key, uid=uid, entity=entity, blueprint_provider=blueprint_provider, attribute=node_attribute
-            )
-        except KeyError as error:
-            logger.exception(error)
-            error_node = Node(
-                key=entity["name"], uid="", entity={"name": entity["name"], "type": ""}, attribute=node_attribute
-            )
-            error_node.set_error("_blueprint is missing from dto")
-            return error_node
 
-        try:
-            for child_attribute in node.blueprint.get_none_primitive_types():
-                child_contained = node.blueprint.storage_recipes[0].is_contained(child_attribute.name)
-                # This will stop creation of recursive blueprints (only if they are optional)
-                if child_attribute.is_optional() and not entity:
-                    continue
+        key = key if key else node_attribute.name
+        node = Node(key=key, uid=uid, entity=entity, blueprint_provider=blueprint_provider, attribute=node_attribute)
 
-                if child_attribute.is_array():
-                    children = entity.get(child_attribute.name, [])
+        for child_attribute in node.blueprint.get_none_primitive_types():
+            child_contained = node.blueprint.storage_recipes[0].is_contained(child_attribute.name)
+            # This will stop creation of recursive blueprints (only if they are optional)
+            if child_attribute.is_optional() and not entity:
+                continue
 
-                    if not isinstance(children, list):
-                        raise ValueError(
-                            f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
-                            + f"should be a list, but was '{str(type(children))}'"
-                        )
+            if child_attribute.is_array():
+                children = entity.get(child_attribute.name, [])
 
-                    list_node = ListNode(
-                        key=child_attribute.name,
-                        uid="",
-                        entity=children,
-                        blueprint_provider=blueprint_provider,
-                        attribute=child_attribute,
+                if not isinstance(children, list):
+                    raise ValueError(
+                        f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
+                        + f"should be a list, but was '{str(type(children))}'"
                     )
 
-                    for i, child in enumerate(children):
-                        list_child_attribute = child_attribute
+                list_node = ListNode(
+                    key=child_attribute.name,
+                    uid="",
+                    entity=children,
+                    blueprint_provider=blueprint_provider,
+                    attribute=child_attribute,
+                )
 
-                        # If the node is of type DMT/Package, we need to override the attribute_type "Entity",
-                        # and get it from the child.
-                        if node.type == DMT.PACKAGE.value:
-                            content_attribute: BlueprintAttribute = deepcopy(child_attribute)
-                            content_attribute.attribute_type = child["type"]
-                            list_child_attribute = content_attribute
+                for i, child in enumerate(children):
+                    list_child_attribute = child_attribute
 
-                        list_child_node = cls._from_dict(
-                            uid=child.get("_id", ""),
-                            entity=child,
-                            key=str(i),
-                            blueprint_provider=blueprint_provider,
-                            node_attribute=list_child_attribute,
-                            recursion_depth=recursion_depth + 1,
-                        )
-                        list_node.add_child(list_child_node)
-                    node.add_child(list_node)
-                else:
-                    attribute_data = entity.get(child_attribute.name, {})
-                    if not isinstance(attribute_data, dict):
-                        raise ValueError(
-                            f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
-                            + f"should be a dict, but was '{str(type(attribute_data))}'"
-                        )
-                    child_node = cls._from_dict(
-                        # If the child is not contained, get or create it's _id
-                        uid="" if child_contained or not attribute_data else attribute_data.get("_id", str(uuid4())),
-                        entity=attribute_data,
-                        key=child_attribute.name,
+                    # If the node is of type DMT/Package, we need to override the attribute_type "Entity",
+                    # and get it from the child.
+                    if node.type == DMT.PACKAGE.value:
+                        content_attribute: BlueprintAttribute = deepcopy(child_attribute)
+                        content_attribute.attribute_type = child["type"]
+                        list_child_attribute = content_attribute
+
+                    list_child_node = cls._from_dict(
+                        uid=child.get("_id", ""),
+                        entity=child,
+                        key=str(i),
                         blueprint_provider=blueprint_provider,
-                        node_attribute=child_attribute,
+                        node_attribute=list_child_attribute,
                         recursion_depth=recursion_depth + 1,
                     )
-                    node.add_child(child_node)
+                    list_node.add_child(list_child_node)
+                node.add_child(list_node)
+            else:
+                attribute_data = entity.get(child_attribute.name, {})
+                if not isinstance(attribute_data, dict):
+                    raise ValueError(
+                        f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
+                        + f"should be a dict, but was '{str(type(attribute_data))}'"
+                    )
+                child_node = cls._from_dict(
+                    # If the child is not contained, get or create it's _id
+                    uid="" if child_contained or not attribute_data else attribute_data.get("_id", str(uuid4())),
+                    entity=attribute_data,
+                    key=child_attribute.name,
+                    blueprint_provider=blueprint_provider,
+                    node_attribute=child_attribute,
+                    recursion_depth=recursion_depth + 1,
+                )
+                node.add_child(child_node)
 
-            return node
-        except AttributeError as error:
-            logger.exception(error)
-            return Node(key=entity["name"], uid="", blueprint_provider=blueprint_provider, attribute=node_attribute)
+        return node
 
 
 class NodeBase:
