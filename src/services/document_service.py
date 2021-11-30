@@ -229,9 +229,19 @@ class DocumentService:
             raise EntityNotFoundException(uid=parent_id)
         parent: Node = root.get_by_path(parent_attribute)
 
+        leaf_parent = parent.get_by_path([leaf_attribute])
+        if not leaf_parent:
+            raise AttributeError(
+                (
+                    f"Invalid attribute given for type '{parent.type}'.\n"
+                    + f"Valid attributes are {parent.blueprint.get_attribute_names()}.\n"
+                    + f"Received '{leaf_attribute}'"
+                )
+            )
+
         # If the leaf attribute is a list. Set that as parent
-        if parent.get_by_path([leaf_attribute]).is_array():
-            parent = parent.get_by_path([leaf_attribute])
+        if leaf_parent.is_array():
+            parent = leaf_parent
         entity: dict = data
 
         if type == SIMOS.BLUEPRINT.value and not entity.get("extends"):  # Extend default attributes and uiRecipes
