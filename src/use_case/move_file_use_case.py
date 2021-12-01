@@ -8,7 +8,7 @@ from restful import response_object as res
 from restful.use_case import UseCase
 from storage.data_source_class import DataSource
 from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
-from utils.find_document_by_path import get_document_by_ref
+from utils.get_document_by_path import get_document_by_ref
 from utils.logging import logger
 
 

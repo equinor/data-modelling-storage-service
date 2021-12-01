@@ -137,8 +137,6 @@ Feature: Get correct data for subtypes
     And the response should contain
     """
     {
-      "document":
-      {
        "_id": "7",
        "name": "parentEntity",
        "type": "data-source-name/root_package/Parent",
@@ -151,7 +149,6 @@ Feature: Get correct data for subtypes
           "AValue": 222,
           "AnExtraValue": "extra value"
         }
-      }
     }
     """
 
@@ -163,8 +160,6 @@ Feature: Get correct data for subtypes
     And the response should contain
     """
     {
-      "document":
-      {
        "_id": "8",
        "name": "parentEntity2",
        "type": "data-source-name/root_package/Parent",
@@ -176,7 +171,6 @@ Feature: Get correct data for subtypes
           "description": "base child type",
           "AValue": 333
         }
-      }
     }
     """
 

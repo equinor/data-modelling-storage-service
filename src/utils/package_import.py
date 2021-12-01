@@ -8,7 +8,7 @@ from enums import DMT
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from utils.exceptions import EntityAlreadyExistsException, InvalidDocumentNameException, RootPackageNotFoundException
-from utils.find_document_by_path import get_document_by_ref
+from utils.get_document_by_path import get_document_by_ref
 from utils.logging import logger
 from utils.string_helpers import url_safe_name
 

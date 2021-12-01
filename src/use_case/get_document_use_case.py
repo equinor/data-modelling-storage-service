@@ -1,6 +1,6 @@
-from typing import Optional
+from typing import List, Optional, Union
 
-from pydantic import conint, BaseModel
+from pydantic import conint
 
 from domain_classes.user import User
 from services.document_service import DocumentService
@@ -8,7 +8,6 @@ from restful.request_types.shared import DataSource
 from restful.response_object import ResponseSuccess
 from restful.use_case import UseCase
 from storage.internal.data_source_repository import get_data_source
-from typing import Dict
 
 
 class GetDocumentRequest(DataSource):
@@ -18,9 +17,15 @@ class GetDocumentRequest(DataSource):
     depth: conint(gt=-1, lt=1000) = 999
 
 
-class GetDocumentResponse(BaseModel):
-    blueprint: Dict
-    document: Dict
+def get_nested_dict_attribute(entity: Union[dict, list], path_list: List[str]) -> Union[dict, list]:
+    try:
+        if isinstance(entity, list):
+            path_list[0] = int(path_list[0])
+        if len(path_list) == 1:
+            return entity[path_list[0]]
+        return get_nested_dict_attribute(entity[path_list[0]], path_list[1:])
+    except (KeyError, IndexError):
+        raise KeyError(f"Attribute/Item '{path_list[0]}' does not exists in '{entity}'")
 
 
 class GetDocumentUseCase(UseCase):
@@ -29,7 +34,7 @@ class GetDocumentUseCase(UseCase):
         self.document_service = DocumentService(repository_provider=self.repository_provider, user=user)
 
     def process_request(self, req: GetDocumentRequest):
-        document = self.document_service.get_by_uid(
+        document = self.document_service.get_document_by_uid(
             data_source_id=req.data_source_id,
             document_uid=req.document_id,
             depth=req.depth,
@@ -37,6 +42,6 @@ class GetDocumentUseCase(UseCase):
 
         attribute: str = req.attribute
         if attribute:
-            document = document.get_by_path(attribute.split("."))
+            document = get_nested_dict_attribute(document, attribute.split("."))
 
-        return ResponseSuccess({"blueprint": document.blueprint.to_dict(), "document": document.to_dict()})
+        return ResponseSuccess(document)

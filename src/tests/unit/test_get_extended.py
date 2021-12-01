@@ -72,7 +72,7 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
-        node: Node = document_service.get_by_uid("testing", "1")
+        node: Node = document_service.get_node_by_uid("testing", "1")
         node.update(doc_1_after)
         document_service.save(node, "testing")
 

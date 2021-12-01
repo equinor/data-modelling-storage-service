@@ -199,7 +199,6 @@ Feature: Explorer - Remove file
     Then the response should contain
   """
   {
-    "document": {
       "type": "system/SIMOS/Blueprint",
       "name": "TestContainer",
       "description": "",
@@ -219,7 +218,6 @@ Feature: Explorer - Remove file
           "attributes": []
         }
       ]
-    }
   }
   """
 
@@ -239,13 +237,11 @@ Feature: Explorer - Remove file
     Then the response should contain
   """
   {
-    "document": {
       "type": "data-source-name/TestData/TestContainer",
       "name": "container",
       "description": "",
       "item": {
         "name": "NewName"
       }
-    }
   }
   """

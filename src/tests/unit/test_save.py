@@ -45,7 +45,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
-        node: Node = document_service.get_by_uid("testing", "1")
+        node: Node = document_service.get_node_by_uid("testing", "1")
         contained_node: Node = node.get_by_path("references.1".split("."))
         contained_node.update({"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "blueprint_2"})
         document_service.save(node, "testing")
@@ -82,7 +82,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
-        node: Node = document_service.get_by_uid("testing", "1")
+        node: Node = document_service.get_node_by_uid("testing", "1")
         contained_node: Node = node.search("1.references")
         contained_node.children.append(
             Node(
@@ -152,7 +152,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=repository_provider
         )
 
-        node: Node = document_service.get_by_uid("testing", "1")
+        node: Node = document_service.get_node_by_uid("testing", "1")
         contained_node: Node = node.search("1.references")
         contained_node.remove_by_path(["1"])
         document_service.save(node, "testing")
@@ -208,7 +208,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         # Testing updating the reference
-        node: Node = document_service.get_by_uid("testing", "1")
+        node: Node = document_service.get_node_by_uid("testing", "1")
         target_node = node.get_by_path(["i_have_a_uncontained_attribute", "uncontained_in_every_way"])
         target_node.update(doc_storage["3"])
         document_service.save(node, "testing")

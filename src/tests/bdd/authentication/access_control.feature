@@ -40,7 +40,6 @@ Feature: Access Control
     And the response should contain
     """
     {
-    "document":{
       "type": "system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
@@ -50,7 +49,6 @@ Feature: Access Control
           "name": "Something"
         }
       ]
-      }
     }
     """
 
@@ -95,7 +93,6 @@ Feature: Access Control
     And the response should contain
     """
     {
-    "document":{
       "type": "system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
@@ -105,7 +102,6 @@ Feature: Access Control
           "name": "Something"
         }
       ]
-      }
     }
     """
 
@@ -132,7 +128,6 @@ Feature: Access Control
     And the response should contain
     """
     {
-    "document":{
       "type": "system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
@@ -142,7 +137,6 @@ Feature: Access Control
           "name": "Something"
         }
       ]
-      }
     }
     """
 
