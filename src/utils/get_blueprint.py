@@ -5,7 +5,7 @@ from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.dto import DTO
 from utils.exceptions import EntityNotFoundException
-from utils.find_document_by_path import get_document_by_ref
+from utils.get_document_by_path import get_document_by_ref
 from utils.logging import logger
 
 

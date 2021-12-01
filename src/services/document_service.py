@@ -28,9 +28,10 @@ from utils.exceptions import (
     MissingPrivilegeException,
     RepositoryException,
 )
-from utils.find_document_by_path import get_document_uid_by_path
 from utils.get_blueprint import BlueprintProvider
-from utils.get_complete_document_by_id import get_complete_document
+from utils.get_resolved_document_by_id import get_complete_document
+
+from utils.get_document_by_path import get_document_uid_by_path
 from utils.logging import logger
 from utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from utils.string_helpers import split_absolute_ref
@@ -127,7 +128,10 @@ class DocumentService:
             return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
         return ref_dict
 
-    def get_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
+    def get_document_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> dict:
+        return get_complete_document(document_uid, self.repository_provider(data_source_id, self.user), depth)
+
+    def get_node_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
         complete_document = get_complete_document(
             document_uid, self.repository_provider(data_source_id, self.user), depth
         )
@@ -137,7 +141,7 @@ class DocumentService:
         data_source_id, path, attribute = split_absolute_ref(absolute_reference)
         document_repository = get_data_source(data_source_id, self.user)
         document_id = get_document_uid_by_path(path, document_repository)
-        return self.get_by_uid(data_source_id, document_id)
+        return self.get_node_by_uid(data_source_id, document_id)
 
     def remove_document(self, data_source_id: str, document_id: str):
         """
@@ -171,12 +175,12 @@ class DocumentService:
     def rename_document(self, data_source_id: str, document_id: str, name: str, parent_uid: str = None):
         # Only root-packages have no parent_id
         if not parent_uid:
-            root_node: Node = self.get_by_uid(data_source_id, document_id)
+            root_node: Node = self.get_node_by_uid(data_source_id, document_id)
             target_node = root_node
 
         # Grab the parent, and set target based on dotted document_id
         else:
-            root_node: Node = self.get_by_uid(data_source_id, parent_uid)
+            root_node: Node = self.get_node_by_uid(data_source_id, parent_uid)
             target_node = root_node.search(document_id)
 
             if not target_node:
@@ -198,7 +202,7 @@ class DocumentService:
         files: dict = None,
         update_uncontained: bool = True,
     ):
-        root: Node = self.get_by_uid(data_source_id, document_id)
+        root: Node = self.get_node_by_uid(data_source_id, document_id)
         target_node = root
 
         # If it's a contained nested node, set the modify target based on dotted-path
@@ -224,7 +228,7 @@ class DocumentService:
         parent_attribute = attribute.split(".")[0:-1]
         leaf_attribute = attribute.split(".")[-1]
 
-        root: Node = self.get_by_uid(data_source, parent_id)
+        root: Node = self.get_node_by_uid(data_source, parent_id)
         if not root:
             raise EntityNotFoundException(uid=parent_id)
         parent: Node = root.get_by_path(parent_attribute)
@@ -277,7 +281,7 @@ class DocumentService:
         if "/" in directory:
             parent_uid = get_document_uid_by_path(f"{'/'.join(directory.split('/')[0:-1])}", data_source)
             child_uid = get_document_uid_by_path(directory, data_source)
-            parent_node = self.get_by_uid(data_source_id, parent_uid)
+            parent_node = self.get_node_by_uid(data_source_id, parent_uid)
             parent_node.children[0].remove_by_child_id(child_uid)  # The first child of a directory is always 'content'
             self.save(parent_node, data_source_id)
             delete_document(data_source, document_id=child_uid)
@@ -367,7 +371,7 @@ class DocumentService:
             data_source.update_access_control(document_id, acl)
             return
 
-        root_node = self.get_by_uid(data_source_id, document_id)
+        root_node = self.get_node_by_uid(data_source_id, document_id)
         data_source.update_access_control(root_node.node_id, acl)
         for child in root_node.children:
             for node in child.traverse():
@@ -385,7 +389,7 @@ class DocumentService:
     def insert_reference(
         self, data_source_id: str, document_id: str, reference: Reference, attribute_path: str
     ) -> dict:
-        root: Node = self.get_by_uid(data_source_id, document_id)
+        root: Node = self.get_node_by_uid(data_source_id, document_id)
         attribute_node = root.search(f"{document_id}.{attribute_path}")
         if not attribute_node:
             raise EntityNotFoundException(uid=document_id + attribute_path)
@@ -427,7 +431,7 @@ class DocumentService:
         return root.to_dict()
 
     def remove_reference(self, data_source_id: str, document_id: str, attribute_path: str) -> dict:
-        root: Node = self.get_by_uid(data_source_id, document_id)
+        root: Node = self.get_node_by_uid(data_source_id, document_id)
         attribute_node = root.get_by_path(attribute_path.split("."))
         if not attribute_node:
             raise Exception(f"Could not find the '{attribute_path}' Node on '{document_id}'")
@@ -446,7 +450,7 @@ class DocumentService:
         # TODO: This is not SAFE. See; https://security.openstack.org/guidelines/dg_using-temporary-files-securely.html
         archive_path = "/tmp/temp_zip_archive.zip"  # nosec
         data_source_id, document_uid = absolute_document_ref.split("/", 1)
-        document: Node = self.get_by_uid(data_source_id, document_uid)
+        document: Node = self.get_node_by_uid(data_source_id, document_uid)
         # TODO: Is this secure?
         with zipfile.ZipFile(archive_path, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=5) as zip_file:
             # Save the selected node, using custom ZipFile repository

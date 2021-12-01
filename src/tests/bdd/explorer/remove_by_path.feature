@@ -55,7 +55,7 @@ Feature: Explorer - Remove by path
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/1"
     When I make a "GET" request
-    Then the array at document.content should be of length 1
+    Then the array at content should be of length 1
 
     Given I access the resource url "/api/v1/documents/data-source-name/2"
     When I make a "GET" request

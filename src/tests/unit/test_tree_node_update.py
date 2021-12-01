@@ -173,7 +173,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=repository_provider
         )
 
-        node: Node = document_service.get_by_uid("testing", "1")
+        node: Node = document_service.get_node_by_uid("testing", "1")
         node.update(
             {
                 "_id": "1",

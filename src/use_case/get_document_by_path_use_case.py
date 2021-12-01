@@ -6,7 +6,7 @@ from restful import use_case as uc
 from restful.request_types.shared import DataSource
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
-from utils.find_document_by_path import get_document_by_ref
+from utils.get_document_by_path import get_document_by_ref
 
 
 class GetDocumentByPathRequest(DataSource):
@@ -24,7 +24,7 @@ class GetDocumentByPathUseCase(uc.UseCase):
     def process_request(self, req: GetDocumentByPathRequest):
         data_source_id: str = req.data_source_id
         root_doc = get_document_by_ref(f"{data_source_id}/{req.path}", self.user)
-        document = self.document_service.get_by_uid(data_source_id=req.data_source_id, document_uid=root_doc.uid)
+        document = self.document_service.get_node_by_uid(data_source_id=req.data_source_id, document_uid=root_doc.uid)
 
         if req.attribute:
             document = document.get_by_path(req.attribute.split("."))

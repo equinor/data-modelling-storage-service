@@ -43,7 +43,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service: DocumentService = DocumentService(
             repository_provider=lambda x, y: document_repository, blueprint_provider=blueprint_provider
         )
-        root = document_service.get_by_uid("datasource", "1").to_dict()
+        root = document_service.get_node_by_uid("datasource", "1").to_dict()
 
         assert isinstance(root, dict)
 

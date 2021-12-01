@@ -223,8 +223,6 @@ Feature: Explorer - Add file
     And the response should contain
     """
     {
-    "document":
-      {
           "_id": "6",
           "name": "parentEntity",
           "type": "test-DS/root_package/Parent",
@@ -236,7 +234,6 @@ Feature: Explorer - Add file
             "description": "base child in parent",
             "AValue": 0
           }
-      }
     }
     """
 
@@ -258,14 +255,11 @@ Feature: Explorer - Add file
     And the response should contain
     """
     {
-    "document":
-      {
           "_id": "6",
           "name": "parentEntity",
           "type": "test-DS/root_package/Parent",
           "description": "",
           "SomeChild": {}
-      }
     }
     """
 
@@ -296,8 +290,6 @@ Feature: Explorer - Add file
     And the response should contain
     """
     {
-    "document":
-      {
           "_id": "6",
           "name": "parentEntity",
           "type": "test-DS/root_package/Parent",
@@ -310,7 +302,6 @@ Feature: Explorer - Add file
             "AValue": 39,
             "AnExtraValue": "abc"
           }
-      }
     }
     """
 
@@ -330,11 +321,6 @@ Feature: Explorer - Add file
     And the response should contain
     """
     {
-       "blueprint":{
-          "name":"Package",
-          "type":"system/SIMOS/Blueprint"
-       },
-       "document":{
           "name":"root_package",
           "type":"system/SIMOS/Package",
           "content":[
@@ -364,7 +350,6 @@ Feature: Explorer - Add file
             }
           ],
           "isRoot":true
-       }
     }
     """
 

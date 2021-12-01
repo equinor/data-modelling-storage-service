@@ -9,15 +9,12 @@ from domain_classes.user import User
 from restful.status_codes import STATUS_CODES
 from use_case.get_document_by_path_use_case import GetDocumentByPathRequest, GetDocumentByPathUseCase
 from use_case.get_document_use_case import GetDocumentRequest, GetDocumentUseCase
-from use_case.get_document_use_case import GetDocumentResponse
 from use_case.update_document_use_case import UpdateDocumentRequest, UpdateDocumentUseCase
 
 router = APIRouter()
 
 
-@router.get(
-    "/documents/{data_source_id}/{document_id}", operation_id="document_get_by_id", response_model=GetDocumentResponse
-)
+@router.get("/documents/{data_source_id}/{document_id}", operation_id="document_get_by_id", response_model=dict)
 def get_by_id(
     data_source_id: str,
     document_id: str,
@@ -34,7 +31,7 @@ def get_by_id(
             "Please provide a single attribute specification."
         )
     use_case = GetDocumentUseCase(user)
-    response: GetDocumentResponse = use_case.execute(
+    response: dict = use_case.execute(
         GetDocumentRequest(
             data_source_id=data_source_id,
             document_id=id_list[0],

@@ -169,23 +169,17 @@ Feature: Get document
     And the response should contain
     """
     {
-       "blueprint":{
-          "name":"Package",
-          "type":"system/SIMOS/Blueprint"
-       },
-       "document":{
-          "name":"package_1",
-          "type":"system/SIMOS/Package",
-          "content":[
-             {
-                "name":"sub_package_1"
-             },
-             {
-                "name":"sub_package_2"
-             }
-          ],
-          "isRoot":true
-       }
+      "name":"package_1",
+      "type":"system/SIMOS/Package",
+      "content":[
+         {
+            "name":"sub_package_1"
+         },
+         {
+            "name":"sub_package_2"
+         }
+      ],
+      "isRoot":true
     }
     """
 
@@ -211,13 +205,7 @@ Feature: Get document
     And the response should contain
     """
     {
-       "blueprint":{
-          "name":"Blueprint",
-          "type":"system/SIMOS/Blueprint"
-       },
-       "document":{
-          "type": "system/SIMOS/Blueprint",
-          "name": "TestContainer"
-       }
+      "type": "system/SIMOS/Blueprint",
+      "name": "TestContainer"
     }
     """
