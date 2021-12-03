@@ -14,7 +14,7 @@ class RecipePlugin(Enum):
 
 class RecipeAttribute(BaseModel):
     name: str
-    is_contained: bool = True
+    contained: bool = True
     field: str = None
     array_field: str = None
     collapsible: bool = None
@@ -27,7 +27,7 @@ class Recipe(BaseModel):
     attributes: List[RecipeAttribute] = []
     description: str = ""
     plugin: str = "Default"
-    hide_tab: bool = False
+    hideTab: bool = False
 
     def get_attribute_by_name(self, key):
         return next((attr for attr in self.attributes if attr.name == key), None)
@@ -44,7 +44,7 @@ class Recipe(BaseModel):
 
         ui_attribute = self.get_attribute_by_name(attribute.name)
         if ui_attribute:
-            return ui_attribute.is_contained
+            return ui_attribute.contained
 
         if attribute.attribute_type in PRIMITIVES:
             return primitive_contained
@@ -57,5 +57,5 @@ class Recipe(BaseModel):
 
 class DefaultRecipe(Recipe):
     def __init__(self, attributes: List[BlueprintAttribute]):
-        recipe_attributes = [RecipeAttribute(name=attr.name, is_contained=True) for attr in attributes]
+        recipe_attributes = [RecipeAttribute(name=attr.name, contained=True) for attr in attributes]
         super().__init__("Default", attributes=recipe_attributes)
