@@ -6,8 +6,9 @@ from utils.logging import logger
 
 def key_loaded():
     if not config.SECRET_KEY:
-        logger.error("The encryption module was loaded without supplying the 'SECRET_KEY' environment variable")
-        exit(1)
+        raise EnvironmentError(
+            "The encryption/decryption was attempted without supplying the 'SECRET_KEY' environment variable"
+        )
 
 
 def generate_key():
@@ -27,6 +28,8 @@ def decrypt(token: str) -> str:
     if not token:
         return ""
     key_loaded()
+    logger.debug("TOKEN: " + token)
+    logger.debug("SECRET: " + config.SECRET_KEY)
     fernet = Fernet(config.SECRET_KEY)
     token_as_bytes = token.encode()
     message_as_bytes = fernet.decrypt(token_as_bytes)
