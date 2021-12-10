@@ -1,7 +1,6 @@
 from cryptography.fernet import Fernet
 
 from config import config
-from utils.logging import logger
 
 
 def key_loaded():
@@ -28,8 +27,6 @@ def decrypt(token: str) -> str:
     if not token:
         return ""
     key_loaded()
-    logger.debug("TOKEN: " + token)
-    logger.debug("SECRET: " + config.SECRET_KEY)
     fernet = Fernet(config.SECRET_KEY)
     token_as_bytes = token.encode()
     message_as_bytes = fernet.decrypt(token_as_bytes)
