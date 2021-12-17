@@ -63,11 +63,11 @@ class DocumentService:
         Returns a system/SIMOS/Blob entity with the created id
         """
         if file := node.entity.get("_blob_"):  # If a file was posted with the same name as this blob, save it
-            node.entity["size"] = file.seek(0, 2)  # Set the size of the blob
             # Get or set the "_blob_id"
             node.entity["_blob_id"] = node.entity["_blob_id"] if node.entity.get("_blob_id") else str(uuid4())
             # Save it
             repository.update_blob(node.entity["_blob_id"], file)
+            node.entity["size"] = file.seek(0, 2)  # Set the size of the blob
             # Remove the temporary key containing the File
             del node.entity["_blob_"]
 
