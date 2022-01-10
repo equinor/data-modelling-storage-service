@@ -309,7 +309,7 @@ class DocumentService:
                     )
 
     # Add entity by path
-    def add(self, data_source_id: str, path: str, document: Entity, files: dict):
+    def add(self, data_source_id: str, path: str, document: Entity, files: dict, update_uncontained: bool = True):
         target: Node = self.get_by_path(f"{data_source_id}/{path}")
         if not target:
             raise EntityNotFoundException(uid=path)
@@ -333,11 +333,11 @@ class DocumentService:
         if isinstance(target, ListNode):
             new_node.parent = target
             target.add_child(new_node)
-            self.save(target.parent, data_source_id, update_uncontained=True)
+            self.save(target.parent, data_source_id, update_uncontained=update_uncontained)
         else:
             new_node.parent = target.parent
             target = new_node
-            self.save(target, data_source_id, update_uncontained=True)
+            self.save(target, data_source_id, update_uncontained=update_uncontained)
 
         return {"uid": new_node.node_id}
 

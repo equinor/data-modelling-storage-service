@@ -25,6 +25,7 @@ def add_to_path(
     data_source_id: str,
     document: Json = Form(...),
     directory: str = Form(...),
+    update_uncontained: bool = Form(...),
     files: Optional[List[UploadFile]] = File(None),
     user: User = Depends(get_current_user),
 ):
@@ -33,7 +34,13 @@ def add_to_path(
     """
     use_case = AddDocumentToPathUseCase(user)
     response = use_case.execute(
-        AddDocumentToPathRequest(data_source_id=data_source_id, document=document, directory=directory, files=files)
+        AddDocumentToPathRequest(
+            data_source_id=data_source_id,
+            document=document,
+            directory=directory,
+            files=files,
+            update_uncontained=update_uncontained,
+        )
     )
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 

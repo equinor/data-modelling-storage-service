@@ -15,6 +15,7 @@ class AddDocumentToPathRequest(DataSource):
     document: Entity
     directory: str
     files: Optional[List[UploadFile]] = None
+    update_uncontained: bool
 
     @validator("directory", always=True)
     def validate_directory(cls, value):
@@ -34,5 +35,6 @@ class AddDocumentToPathUseCase(UseCase):
             path=req.directory,
             document=request_document,
             files={f.filename: f.file for f in req.files} if req.files else None,
+            update_uncontained=req.update_uncontained,
         )
         return ResponseSuccess(document)
