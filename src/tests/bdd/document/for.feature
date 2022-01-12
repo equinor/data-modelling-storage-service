@@ -30,11 +30,6 @@ Feature: Add document with document_service
                   "type": "system/SIMOS/Blueprint"
               },
               {
-                  "_id": "4",
-                  "name": "SimulationConfig",
-                  "type": "system/SIMOS/Blueprint"
-              },
-              {
                   "_id": "6",
                   "name": "VariableRun",
                   "type": "system/SIMOS/Blueprint"
@@ -121,26 +116,6 @@ Feature: Add document with document_service
         "description": "A phase belonging to an Operation",
         "attributes": [
           {
-            "name": "simulationConfigs",
-            "type": "system/SIMOS/BlueprintAttribute",
-            "attributeType": "data-source-name/root_package/SimulationConfig",
-            "optional": true,
-            "contained": true,
-            "dimensions": "*"
-          }
-        ]
-      }
-      """
-
-    Given there exist document with id "4" in data source "data-source-name"
-      """
-      {
-        "name": "SimulationConfig",
-        "type": "system/SIMOS/Blueprint",
-        "extends": ["system/SIMOS/DefaultUiRecipes", "system/SIMOS/NamedEntity"],
-        "description": "",
-        "attributes": [
-          {
             "name": "results",
             "type": "system/SIMOS/BlueprintAttribute",
             "attributeType": "data-source-name/root_package/ResultFile",
@@ -206,19 +181,12 @@ Feature: Add document with document_service
             {
               "name": "the-first_phase",
               "type": "data-source-name/root_package/Phase",
-              "simulationConfigs": [
-                {
-                  "name": "test1",
-                  "published": true,
-                  "type": "data-source-name/root_package/SimulationConfig",
-                  "results": [
+               "results": [
                     {
                       "type": "data-source-name/root_package/ResultFile",
                       "_id": "99",
                       "name": "result_weather_data"
                     }
-                  ]
-                }
               ]
             }
           ]
