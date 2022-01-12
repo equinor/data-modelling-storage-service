@@ -50,11 +50,6 @@ Feature: Add document with document_service
                   "type": "system/SIMOS/Blueprint"
               },
               {
-                  "_id": "8",
-                  "name": "Variable",
-                  "type": "system/SIMOS/Blueprint"
-              },
-              {
                   "_id": "9",
                   "name": "Timeseries",
                   "type": "system/SIMOS/Blueprint"
@@ -117,7 +112,7 @@ Feature: Add document with document_service
           {
             "name": "phases",
             "type": "system/SIMOS/BlueprintAttribute",
-            "attributeType": "/Blueprints/Phase",
+            "attributeType": "data-source-name/root_package/Phase",
             "contained": true,
             "dimensions": "*"
           }
@@ -138,7 +133,7 @@ Feature: Add document with document_service
           {
             "name": "simulationConfigs",
             "type": "system/SIMOS/BlueprintAttribute",
-            "attributeType": "/SimulationConfig",
+            "attributeType": "data-source-name/root_package/SimulationConfig",
             "optional": true,
             "contained": true,
             "dimensions": "*"
@@ -158,7 +153,7 @@ Feature: Add document with document_service
           {
             "name": "results",
             "type": "system/SIMOS/BlueprintAttribute",
-            "attributeType": "ForecastDS/FoR-BP/Blueprints/ResultFile",
+            "attributeType": "data-source-name/root_package/ResultFile",
             "optional": true,
             "contained": false,
             "dimensions": "*"
@@ -178,7 +173,7 @@ Feature: Add document with document_service
             {
               "name": "variableRuns",
               "type": "system/SIMOS/BlueprintAttribute",
-              "attributeType": "/Blueprints/VariableRun",
+              "attributeType": "data-source-name/root_package/VariableRun",
               "dimensions": "*",
               "contained": true,
               "optional": false,
@@ -200,18 +195,11 @@ Feature: Add document with document_service
             {
               "name": "responses",
               "type": "system/SIMOS/BlueprintAttribute",
-              "attributeType": "/Blueprints/Response",
+              "attributeType": "data-source-name/root_package/Response",
               "dimensions": "*",
               "contained": true,
               "optional": false,
               "description": "a list of responses, where each response can have a number of timeseries which relate to its statistics e.g. mean response, max response etc..."
-            }, {
-              "name": "variables",
-              "type": "system/SIMOS/BlueprintAttribute",
-              "attributeType": "/Blueprints/Variable",
-              "dimensions": "*",
-              "contained": true,
-              "optional": false
             }
           ]
         }
@@ -228,7 +216,7 @@ Feature: Add document with document_service
             {
               "name": "statistics",
               "type": "system/SIMOS/BlueprintAttribute",
-              "attributeType": "/Blueprints/Timeseries",
+              "attributeType": "data-source-name/root_package/Timeseries",
               "dimensions": "*",
               "contained": true,
               "optional": false
@@ -237,29 +225,6 @@ Feature: Add document with document_service
         }
       """
 
-    Given there exist document with id "8" in data source "data-source-name"
-      """
-        {
-          "name": "Variable",
-          "type": "system/SIMOS/Blueprint",
-          "extends": ["system/SIMOS/NamedEntity"],
-          "attributes": [
-            {
-              "name": "value",
-              "type": "system/SIMOS/BlueprintAttribute",
-              "attributeType": "string"
-            }, {
-              "name": "valueType",
-              "type": "system/SIMOS/BlueprintAttribute",
-              "attributeType": "string"
-            }, {
-              "name": "unit",
-              "type": "system/SIMOS/BlueprintAttribute",
-              "attributeType": "string"
-            }
-          ]
-        }
-      """
 
     Given there exist document with id "9" in data source "data-source-name"
       """
@@ -291,7 +256,7 @@ Feature: Add document with document_service
           }, {
             "name": "threshold",
             "type": "system/SIMOS/BlueprintAttribute",
-            "attributeType": "/Blueprints/Threshold",
+            "attributeType": "/Threshold",
             "contained": true,
             "optional": true,
             "description": "Optional threshold"
@@ -354,12 +319,12 @@ Feature: Add document with document_service
             "name": "VariableRun1",
             "responses": [
               {
-                "type": "ForecastDS/FoR-BP/Blueprints/Response",
+                "type": "data-source-name/root_package/Response",
                 "name": "+ offset",
                 "description": "+ offset response of plaform",
                 "statistics": [
                   {
-                    "type": "ForecastDS/FoR-BP/Blueprints/Timeseries",
+                    "type": "data-source-name/root_package/Timeseries",
                     "name": "Expected",
                     "description": "Expected extreme",
                     "datetimes": [
@@ -373,7 +338,7 @@ Feature: Add document with document_service
                     "plotType": "line"
                   },
                   {
-                    "type": "ForecastDS/FoR-BP/Blueprints/Timeseries",
+                    "type": "data-source-name/root_package/Timeseries",
                     "name": "80% C.I.",
                     "description": "80% Confidence Interval",
                     "datetimes": [
@@ -389,90 +354,6 @@ Feature: Add document with document_service
                     "plotType": "shaded"
                   }
                 ]
-              },
-              {
-                "type": "ForecastDS/FoR-BP/Blueprints/Response",
-                "name": "+ heave",
-                "description": "+ heave response of plaform",
-                "statistics": [
-                  {
-                    "type": "ForecastDS/FoR-BP/Blueprints/Timeseries",
-                    "name": "Expected",
-                    "description": "Expected extreme",
-                    "datetimes": [
-                      "01/Sep/2019, 00:00:00",
-                      "01/Sep/2019, 03:00:00"
-                    ],
-                    "values": [
-                      3.15987250795791, 3.3370207552911904, 3.230304232471385
-                    ],
-                    "unit": "m",
-                    "plotType": "line"
-                  }
-                ]
-              }
-            ],
-            "variables": [
-              {
-                "type": "ForecastDS/FoR-BP/Blueprints/Variable",
-                "name": "timestamp",
-                "description": "Timestamp for metocean file (to be deprecated when Metocean API comes)",
-                "value": "2019090100",
-                "valueType": "string",
-                "unit": "-"
-              },
-              {
-                "type": "ForecastDS/FoR-BP/Blueprints/Variable",
-                "name": "simulationLength",
-                "description": "duration of simulation in hours (excluding transient)",
-                "value": "3.0",
-                "valueType": "number",
-                "unit": "hr"
-              }
-            ]
-          },
-          {
-            "type": "ForecastDS/FoR-BP/Blueprints/VariableRun",
-            "name": "VariableRun2",
-            "responses": [
-              {
-                "type": "ForecastDS/FoR-BP/Blueprints/Response",
-                "name": "+ offset",
-                "description": "+ offset response of plaform",
-                "statistics": [
-                  {
-                    "type": "ForecastDS/FoR-BP/Blueprints/Timeseries",
-                    "name": "Expected",
-                    "description": "Expected extreme",
-                    "datetimes": [
-                      "01/Sep/2019, 00:00:00",
-                      "01/Sep/2019, 03:00:00"
-                    ],
-                    "values": [
-                      7.062187193053438, 7.538325128987874, 7.472483029492444
-                    ],
-                    "unit": "m",
-                    "plotType": "line"
-                  }
-                ]
-              }
-            ],
-            "variables": [
-              {
-                "type": "ForecastDS/FoR-BP/Blueprints/Variable",
-                "name": "timestamp",
-                "description": "Timestamp for metocean file (to be deprecated when Metocean API comes)",
-                "value": "2019090100",
-                "valueType": "string",
-                "unit": "-"
-              },
-              {
-                "type": "ForecastDS/FoR-BP/Blueprints/Variable",
-                "name": "simulationLength",
-                "description": "duration of simulation in hours (excluding transient)",
-                "value": "3.0",
-                "valueType": "number",
-                "unit": "hr"
               }
             ]
           }
