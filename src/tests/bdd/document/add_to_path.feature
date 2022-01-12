@@ -31,7 +31,7 @@ Feature: Add document with document_service
               },
               {
                   "_id": "6",
-                  "name": "VariableRun",
+                  "name": "ResponseContainer",
                   "type": "system/SIMOS/Blueprint"
               },
               {
@@ -64,7 +64,7 @@ Feature: Add document with document_service
             {
                   "_id": "99",
                   "type": "data-source-name/root_package/Operation",
-                  "name": "VisundEnsembleResults_2019090100"
+                  "name": "result1"
             }
           ]
       }
@@ -73,7 +73,7 @@ Feature: Add document with document_service
     Given there exist document with id "102" in data source "data-source-name"
       """
       {
-          "name": "EntityPackage",
+          "name": "OperationPackage",
           "description": "",
           "type": "system/SIMOS/Package",
           "isRoot": false,
@@ -81,7 +81,7 @@ Feature: Add document with document_service
               {
                   "_id": "11",
                   "type": "data-source-name/root_package/Operation",
-                  "name": "SverdrupAnchorReplace2021"
+                  "name": "operation1"
               }
           ]
       }
@@ -92,7 +92,7 @@ Feature: Add document with document_service
       {
         "type": "system/SIMOS/Blueprint",
         "name": "Operation",
-          "extends": ["system/SIMOS/DefaultUiRecipes", "system/SIMOS/NamedEntity"],
+        "extends": ["system/SIMOS/NamedEntity"],
         "attributes": [
           {
             "name": "phases",
@@ -112,8 +112,7 @@ Feature: Add document with document_service
       {
         "name": "Phase",
         "type": "system/SIMOS/Blueprint",
-        "extends": ["system/SIMOS/DefaultUiRecipes", "system/SIMOS/NamedEntity"],
-        "description": "A phase belonging to an Operation",
+        "extends": ["system/SIMOS/NamedEntity"],
         "attributes": [
           {
             "name": "results",
@@ -136,13 +135,11 @@ Feature: Add document with document_service
           "extends": ["system/SIMOS/NamedEntity"],
           "attributes": [
             {
-              "name": "variableRuns",
+              "name": "responseContainer",
               "type": "system/SIMOS/BlueprintAttribute",
-              "attributeType": "data-source-name/root_package/VariableRun",
-              "dimensions": "*",
+              "attributeType": "data-source-name/root_package/ResponseContainer",
               "contained": true,
-              "optional": false,
-              "description": "Results relating to a set of variables"
+              "optional": false
             }
           ]
         }
@@ -152,9 +149,8 @@ Feature: Add document with document_service
     Given there exist document with id "6" in data source "data-source-name"
       """
         {
-          "name": "VariableRun",
+          "name": "ResponseContainer",
           "type": "system/SIMOS/Blueprint",
-          "description": "Results from a simulation corresponding to a set of key:value variables (\"no variations\")",
           "extends": ["system/SIMOS/NamedEntity"],
           "attributes": [
             {
@@ -174,9 +170,8 @@ Feature: Add document with document_service
       """
         {
           "_id": "11",
-          "name": "SverdrupAnchorReplace2021",
+          "name": "operation1",
           "type": "data-source-name/root_package/Operation",
-          "description": "Bridge forecast",
           "phases": [
             {
               "name": "the-first_phase",
@@ -198,20 +193,18 @@ Feature: Add document with document_service
       {
         "_id": "99",
         "type": "data-source-name/root_package/ResultFile",
-        "name": "VisundEnsembleResults_2019090100",
+        "name": "result1",
         "description": "Results",
-        "variableRuns": [
+        "responseContainer":
           {
-            "type": "data-source-name/root_package/VariableRun",
-            "name": "VariableRun1",
+            "type": "data-source-name/root_package/ResponseContainer",
+            "name": "response_container",
             "responses": [
-              "a", "b", "c"
+              "responseA", "responseB", "responseC"
             ]
           }
-        ]
       }
       """
-
 
 
   Scenario: Add test
@@ -223,47 +216,31 @@ Feature: Add document with document_service
       "document":
       {
         "type": "data-source-name/root_package/Operation",
-        "name": "op",
+        "name": "operation2",
         "description": "",
         "phases": []
       }
     }
     """
     Then the response status should be "OK"
-#    And the response should equal
-#    """
-#    {
-#      "type": "OK"
-#    }
-#    """
-
-
-#    bug happens when:
-#    i have an entity A that has a ref to anothe rentity B
-#    when i use add() function to add an entity C, then B should NOT be updated-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    Given i access the resource url "/api/v1/documents/data-source-name/99"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should equal
+    """
+      {
+        "_id": "99",
+        "type": "data-source-name/root_package/ResultFile",
+        "name": "result1",
+        "description": "Results",
+        "responseContainer":
+          {
+            "type": "data-source-name/root_package/ResponseContainer",
+            "name": "response_container",
+            "responses": [
+              "responseA", "responseB", "responseC"
+            ]
+          }
+      }
+    """
 
