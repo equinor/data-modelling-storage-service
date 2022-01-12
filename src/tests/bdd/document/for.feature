@@ -40,18 +40,8 @@ Feature: Add document with document_service
                   "type": "system/SIMOS/Blueprint"
               },
               {
-                  "_id": "7",
-                  "name": "Response",
-                  "type": "system/SIMOS/Blueprint"
-              },
-              {
                   "_id": "5",
                   "name": "ResultFile",
-                  "type": "system/SIMOS/Blueprint"
-              },
-              {
-                  "_id": "9",
-                  "name": "Timeseries",
                   "type": "system/SIMOS/Blueprint"
               },
               {
@@ -195,28 +185,7 @@ Feature: Add document with document_service
             {
               "name": "responses",
               "type": "system/SIMOS/BlueprintAttribute",
-              "attributeType": "data-source-name/root_package/Response",
-              "dimensions": "*",
-              "contained": true,
-              "optional": false,
-              "description": "a list of responses, where each response can have a number of timeseries which relate to its statistics e.g. mean response, max response etc..."
-            }
-          ]
-        }
-      """
-
-    Given there exist document with id "7" in data source "data-source-name"
-      """
-        {
-          "name": "Response",
-          "type": "system/SIMOS/Blueprint",
-          "abstract": false,
-          "extends": ["system/SIMOS/NamedEntity"],
-          "attributes": [
-            {
-              "name": "statistics",
-              "type": "system/SIMOS/BlueprintAttribute",
-              "attributeType": "data-source-name/root_package/Timeseries",
+              "attributeType": "string",
               "dimensions": "*",
               "contained": true,
               "optional": false
@@ -224,56 +193,6 @@ Feature: Add document with document_service
           ]
         }
       """
-
-
-    Given there exist document with id "9" in data source "data-source-name"
-      """
-        {
-        "name": "Timeseries",
-        "type": "system/SIMOS/Blueprint",
-        "description": "Storage for a single response time series e.g. Significant wave height vs time",
-        "abstract": false,
-        "extends": ["system/SIMOS/NamedEntity"],
-        "attributes": [
-          {
-            "name": "datetimes",
-            "type": "system/SIMOS/BlueprintAttribute",
-            "attributeType": "string",
-            "description": "datetimes from Unix epoch \r\n(Jan 1st 1970 at 00:00:00 UTC)",
-            "dimensions": "*"
-          }, {
-            "name": "values",
-            "type": "system/SIMOS/BlueprintAttribute",
-            "attributeType": "number",
-            "description": "The value array corresponding to the datetimes",
-            "dimensions": "*",
-            "default": "0.0"
-          }, {
-            "name": "unit",
-            "type": "system/SIMOS/BlueprintAttribute",
-            "attributeType": "string",
-            "description": "The unit of the values"
-          }, {
-            "name": "threshold",
-            "type": "system/SIMOS/BlueprintAttribute",
-            "attributeType": "/Threshold",
-            "contained": true,
-            "optional": true,
-            "description": "Optional threshold"
-          },
-          {
-            "name": "plotType",
-            "type": "system/SIMOS/BlueprintAttribute",
-            "attributeType": "string",
-            "description": "shaded or line"
-          }
-        ],
-        "storageRecipes": [],
-        "uiRecipes": []
-      }
-      """
-
-
 
 
     Given there exist document with id "11" in data source "data-source-name"
@@ -318,52 +237,12 @@ Feature: Add document with document_service
             "type": "data-source-name/root_package/VariableRun",
             "name": "VariableRun1",
             "responses": [
-              {
-                "type": "data-source-name/root_package/Response",
-                "name": "+ offset",
-                "description": "+ offset response of plaform",
-                "statistics": [
-                  {
-                    "type": "data-source-name/root_package/Timeseries",
-                    "name": "Expected",
-                    "description": "Expected extreme",
-                    "datetimes": [
-                      "01/Sep/2019, 00:00:00",
-                      "01/Sep/2019, 03:00:00"
-                    ],
-                    "values": [
-                      6.417742799539584, 6.789986092789259, 6.770189696855955
-                    ],
-                    "unit": "m",
-                    "plotType": "line"
-                  },
-                  {
-                    "type": "data-source-name/root_package/Timeseries",
-                    "name": "80% C.I.",
-                    "description": "80% Confidence Interval",
-                    "datetimes": [
-                      "01/Sep/2019, 00:00:00",
-                      "01/Sep/2019, 03:00:00",
-                      "01/Sep/2019, 06:00:00"
-                    ],
-                    "values": [
-                      5.876925161801572, 6.166649355668352, 6.179770036474876,
-                      6.174929531340336, 8.64142226560707, 12.510345988177368
-                    ],
-                    "unit": "m",
-                    "plotType": "shaded"
-                  }
-                ]
-              }
+              "a", "b", "c"
             ]
           }
         ]
       }
       """
-
-
-
-
 
 
 
