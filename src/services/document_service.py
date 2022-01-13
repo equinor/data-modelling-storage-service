@@ -328,16 +328,18 @@ class DocumentService:
         if files:
             self._merge_entity_and_files(new_node, files)
 
+        self.save(new_node, data_source_id, update_uncontained=True)
+
         if target.type == DMT.PACKAGE.value:
             target = target.children[0]  # Set target to be the packages content
         if isinstance(target, ListNode):
             new_node.parent = target
             target.add_child(new_node)
-            self.save(target.parent, data_source_id, update_uncontained=True)
+            self.save(target.parent, data_source_id, update_uncontained=False)
         else:
             new_node.parent = target.parent
             target = new_node
-            self.save(target, data_source_id, update_uncontained=True)
+            self.save(target, data_source_id, update_uncontained=False)
 
         return {"uid": new_node.node_id}
 
