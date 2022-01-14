@@ -237,6 +237,19 @@ Feature: Explorer - Add file
     }
     """
 
+  Scenario: Add file (rootPackage) to root of data_source
+    Given i access the resource url "/api/v1/explorer/test-DS"
+    When i make a "POST" request
+    """
+    {
+      "name": "newRootPackage",
+      "type": "system/SIMOS/Package",
+      "isRoot": true,
+      "content": []
+    }
+    """
+    Then the response status should be "OK"
+
   Scenario: Add file with wrong subtype to parent entity
     Given i access the resource url "/api/v1/explorer/test-DS/6.SomeChild"
     When i make a "POST" request

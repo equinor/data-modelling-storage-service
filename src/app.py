@@ -98,7 +98,7 @@ def create_app():
         response = await call_next(request)
         process_time = time.time() - start_time
         milliseconds = int(round(process_time * 1000))
-        logger.debug(f"Took {milliseconds}ms to process {request.method} request '{request.url.path}'")
+        logger.debug(f"{request.method} {request.url.path} - {milliseconds}ms - {response.status_code}")
         response.headers["X-Process-Time"] = str(process_time)
         return response
 
