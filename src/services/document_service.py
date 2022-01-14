@@ -219,10 +219,13 @@ class DocumentService:
 
     def add_document(self, absolute_ref: str, data: dict = None, update_uncontained: bool = False):
         data_source, parent_id, attribute = split_absolute_ref(absolute_ref)
-        if not attribute:
+        if parent_id and not attribute:
             raise BadRequestException("Attribute not specified on parent")
         if not data.get("type"):
             raise BadRequestException("Every entity must have a 'type' attribute")
+
+        if not parent_id:  # No parent_id in reference. Just add the document to the root of the data_source
+            return self._add_document_with_no_parent(data_source, data, update_uncontained)
 
         type = data["type"]
         parent_attribute = attribute.split(".")[0:-1]
@@ -271,6 +274,24 @@ class DocumentService:
             new_node.validate_type_on_parent()
 
         self.save(root, data_source, update_uncontained=update_uncontained)
+
+        return {"uid": new_node.node_id}
+
+    def _add_document_with_no_parent(self, data_source: str, data: dict = None, update_uncontained: bool = False):
+        if data.get("type") != DMT.PACKAGE.value and not data.get("isRoot"):
+            raise BadRequestException("Only root packages may be added without a parent.")
+
+        new_node = Node.from_dict(data, None, self.get_blueprint)
+
+        exisiting_root_package = get_data_source(data_source, self.user).find(
+            {"type": DMT.PACKAGE.value, "isRoot": True, "name": data["name"]}
+        )
+        if exisiting_root_package:
+            raise DuplicateFileNameException(data_source, new_node.name)
+
+        new_node.set_uid()
+
+        self.save(new_node, data_source, update_uncontained=update_uncontained)
 
         return {"uid": new_node.node_id}
 

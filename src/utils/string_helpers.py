@@ -5,6 +5,9 @@ from enums import PrimitiveDataTypes
 
 
 def split_absolute_ref(reference: str) -> Tuple[str, str, str]:
+    reference = reference.strip("/. ")  # Remove leading and trailing stuff
+    if "/" not in reference:  # It's reference to the data_source itself
+        return reference, None, None
     data_source, dotted_path = reference.split("/", 1)
     attribute = ""
     path = dotted_path

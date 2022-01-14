@@ -1,9 +1,8 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, File, Form, UploadFile, Depends
+from fastapi import APIRouter, Depends, File, Form, UploadFile
 from pydantic import Json
 from starlette.responses import JSONResponse
-from use_case.add_root_package_use_case import AddRootPackageRequest, AddRootPackageUseCase
 
 from authentication.authentication import get_current_user
 from domain_classes.user import User
@@ -35,15 +34,6 @@ def add_to_path(
     response = use_case.execute(
         AddDocumentToPathRequest(data_source_id=data_source_id, document=document, directory=directory, files=files)
     )
-    return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
-
-
-@router.post("/explorer/{data_source_id}/add-package", operation_id="explorer_add_package")
-def add_package(data_source_id: str, data: AddRootPackageRequest, user: User = Depends(get_current_user)):
-    """Add a RootPackage to the data source"""
-    use_case = AddRootPackageUseCase(user)
-    response = use_case.execute({"data_source_id": data_source_id, **data.dict()})
-
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
@@ -96,20 +86,20 @@ def rename(data_source_id: str, request_data: RenameRequest, user: User = Depend
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
-@router.post("/explorer/{data_source_id}/{dotted_id}", operation_id="explorer_add")
+@router.post("/explorer/{absolute_ref:path}", operation_id="explorer_add")
 def add_by_parent_id(
-    data_source_id: str,
-    dotted_id: str,
+    absolute_ref: str,
     data: dict,
     update_uncontained: Optional[bool] = True,
     user: User = Depends(get_current_user),
 ):
     """
-    Add a new document into an existing one. Must match it's parents attribute type.
-    Select parent with format 'document_id.attribute.attribute'
+    Add a new document to absolute ref (root of data source, or another document).
+    If added to another document, a valid attribute type check is done.
+    Select parent with format 'data_source/document_id.attribute.index.attribute'
     """
     use_case = AddFileUseCase(user)
     response = use_case.execute(
-        {"absolute_ref": f"{data_source_id}/{dotted_id}", "data": data, "update_uncontained": update_uncontained}
+        {"absolute_ref": f"{absolute_ref}", "data": data, "update_uncontained": update_uncontained}
     )
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
