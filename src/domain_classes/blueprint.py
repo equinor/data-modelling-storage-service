@@ -27,6 +27,7 @@ class Blueprint:
     def __init__(self, dto: DTO):
         self.name = dto.data["name"]
         self.description = dto.data.get("description", "")
+        self.abstract = dto.data.get("abstract", False)
         self.extends = dto.data.get("extends", [])
         self.type = dto.type
         self.dto = dto
@@ -63,6 +64,7 @@ class Blueprint:
             "name": self.name,
             "description": self.description,
             "type": self.type,
+            "abstract": self.abstract,
             "extends": self.extends,
             "attributes": [attribute.to_dict() for attribute in self.attributes],
             "storageRecipes": [recipe.to_dict() for recipe in self.storage_recipes],
