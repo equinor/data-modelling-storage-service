@@ -3,8 +3,8 @@ from typing import Dict, List, Union
 from pydantic import UUID4
 from utils.string_helpers import url_safe_name
 
-from authentication.access_control import access_control, AccessLevel, ACL, create_acl, DEFAULT_ACL
-from domain_classes.user import User
+from authentication.access_control import access_control, create_acl, DEFAULT_ACL
+from authentication.models import AccessLevel, ACL, User
 from domain_classes.document_look_up import DocumentLookUp
 from domain_classes.dto import DTO
 from domain_classes.repository import Repository

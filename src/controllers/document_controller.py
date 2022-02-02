@@ -4,8 +4,8 @@ from fastapi import APIRouter, File, Form, UploadFile, Depends
 from pydantic import conint, Json
 from starlette.responses import JSONResponse
 
-from authentication.authentication import get_current_user
-from domain_classes.user import User
+from authentication.authentication import auth_w_jwt_or_pat
+from authentication.models import User
 from restful.status_codes import STATUS_CODES
 from use_case.get_document_by_path_use_case import GetDocumentByPathRequest, GetDocumentByPathUseCase
 from use_case.get_document_use_case import GetDocumentRequest, GetDocumentUseCase
@@ -21,7 +21,7 @@ def get_by_id(
     ui_recipe: Optional[str] = None,
     attribute: Optional[str] = None,
     depth: conint(gt=-1, lt=1000) = 999,
-    user: User = Depends(get_current_user),
+    user: User = Depends(auth_w_jwt_or_pat),
 ):
     # Allow specification of absolute document ref in document_id
     id_list = document_id.split(".", 1)
@@ -53,7 +53,7 @@ def get_by_path(
     ui_recipe: Optional[str] = None,
     attribute: Optional[str] = None,
     path: Optional[str] = None,
-    user: User = Depends(get_current_user),
+    user: User = Depends(auth_w_jwt_or_pat),
 ):
     """
     Get a document by it's path in the form "{dataSource}/{rootPackage}/{subPackage(s)?/{name}
@@ -73,7 +73,7 @@ def update(
     attribute: Optional[str] = Form(None),
     files: Optional[List[UploadFile]] = File(None),
     update_uncontained: Optional[bool] = False,
-    user: User = Depends(get_current_user),
+    user: User = Depends(auth_w_jwt_or_pat),
 ):
     update_use_case = UpdateDocumentUseCase(user)
     response = update_use_case.execute(

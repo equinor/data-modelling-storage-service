@@ -3,7 +3,7 @@ from typing import List, Optional
 from fastapi import UploadFile
 from pydantic import validator
 
-from domain_classes.user import User
+from authentication.models import User
 from restful.request_types.shared import DataSource, Entity
 from restful.response_object import ResponseSuccess
 from restful.use_case import UseCase

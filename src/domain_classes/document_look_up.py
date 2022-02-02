@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from authentication.access_control import ACL
+from authentication.models import ACL
 
 
 class DocumentLookUp(BaseModel):

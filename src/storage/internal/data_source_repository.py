@@ -2,8 +2,8 @@ from typing import List, Dict
 
 from pymongo.errors import DuplicateKeyError
 
-from authentication.access_control import access_control, AccessLevel, ACL, DEFAULT_ACL
-from domain_classes.user import User
+from authentication.access_control import access_control, DEFAULT_ACL
+from authentication.models import AccessLevel, ACL, User
 from enums import RepositoryType
 from services.database import data_source_collection
 from restful.request_types.create_data_source import DataSourceRequest
@@ -16,7 +16,7 @@ from utils.exceptions import (
 )
 from utils.logging import logger
 
-RESERVED_MONGO_DATABASES = ("admin", "local", "data-source-database")
+RESERVED_MONGO_DATABASES = ("admin", "local", "dmss-internal")
 
 
 class DataSourceRepository:

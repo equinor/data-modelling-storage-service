@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 
 from fastapi import File, UploadFile
 
-from domain_classes.user import User
+from authentication.models import User
 from restful.request_types.shared import DataSource
 from restful.response_object import ResponseSuccess
 from restful.use_case import UseCase

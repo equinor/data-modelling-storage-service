@@ -2,7 +2,7 @@ import json
 import os
 from typing import Dict, List, Union
 
-from domain_classes.user import User
+from authentication.models import User
 from domain_classes.dto import DTO
 from enums import DMT
 from storage.data_source_class import DataSource

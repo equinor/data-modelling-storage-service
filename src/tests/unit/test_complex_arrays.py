@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock, skip
 
-from domain_classes.user import User
+from authentication.models import User
 
 from domain_classes.blueprint import Blueprint
 from domain_classes.dto import DTO

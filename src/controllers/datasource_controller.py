@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from starlette.responses import JSONResponse
 
-from authentication.authentication import get_current_user
-from domain_classes.user import User
+from authentication.authentication import auth_w_jwt_or_pat
+from authentication.models import User
 from restful.request_types.shared import DataSource
 from storage.internal.data_source_repository import DataSourceRepository
 from use_case.create_data_source_use_case import CreateDataSourceRequest, CreateDataSourceUseCase
@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 @router.get("/data-sources/{data_source_id}", operation_id="data_source_get")
-def get(data_source_id: str, user: User = Depends(get_current_user)):
+def get(data_source_id: str, user: User = Depends(auth_w_jwt_or_pat)):
     data_source_repository = DataSourceRepository(user)
     use_case = GetDataSourceUseCase(data_source_repository)
     response = use_case.execute(DataSource(data_source_id=data_source_id, user=user))
@@ -25,7 +25,7 @@ def get(data_source_id: str, user: User = Depends(get_current_user)):
 
 
 @router.post("/data-sources/{data_source_id}", operation_id="data_source_save")
-def save(data_source_id: str, new_data_source: DataSourceRequest, user: User = Depends(get_current_user)):
+def save(data_source_id: str, new_data_source: DataSourceRequest, user: User = Depends(auth_w_jwt_or_pat)):
     """
     Create or update a data source configuration
     """
@@ -38,7 +38,7 @@ def save(data_source_id: str, new_data_source: DataSourceRequest, user: User = D
 
 
 @router.get("/data-sources", operation_id="data_source_get_all")
-def get_all(user: User = Depends(get_current_user)):
+def get_all(user: User = Depends(auth_w_jwt_or_pat)):
     data_source_repository = DataSourceRepository(user)
     use_case = GetDataSourcesUseCase(data_source_repository)
     response = use_case.execute()

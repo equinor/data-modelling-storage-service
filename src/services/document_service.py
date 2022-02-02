@@ -6,7 +6,7 @@ from uuid import uuid4
 
 from fastapi import UploadFile
 
-from authentication.access_control import ACL
+from authentication.models import ACL
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute

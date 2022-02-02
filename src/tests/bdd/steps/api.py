@@ -1,23 +1,22 @@
 import json
+from time import sleep
 
 from fastapi.testclient import TestClient
 from behave import given, when, then, step
 from utils.mock_token_generator import generate_mock_token
 
-from domain_classes.user import User
+from authentication.models import User
 from config import config
 
 
-@given('i access the resource url "{url}"')
-@then('i access the resource url "{url}"')
+@step('i access the resource url "{url}"')
 def step_access_url(context, url):
     from app import create_app
 
     context.url = str(url)
     context.test_client = TestClient(create_app())
-    context.headers = {}
-    if context.token:
-        context.headers["Authorization"] = f"Bearer {context.token}"
+    if not (getattr(context, "headers", None)):
+        context.headers = None
 
 
 @when('i make a "{method}" request with "{number_of_files}" files')
@@ -55,9 +54,8 @@ def step_make_request(context, method):
     if method == "PUT":
         context.response = context.test_client.put(context.url, json=json.loads(context.text), headers=context.headers)
     elif method == "POST":
-        context.response = context.test_client.post(
-            context.url, json=json.loads(context.text), headers=context.headers
-        )
+        json_data = json.loads(context.text) if context.text else None
+        context.response = context.test_client.post(context.url, json=json_data, headers=context.headers)
     elif method == "GET":
         context.response = context.test_client.get(context.url, headers=context.headers)
     elif method == "DELETE":
@@ -68,7 +66,26 @@ def step_make_request(context, method):
 def step_set_access_token(context, username, roles):
     user = User(username=username, roles=roles.split(","))
     context.user = user
-    context.token = generate_mock_token(user)
+    context.headers = {"Authorization": f"Bearer {generate_mock_token(user)}"}
+
+
+@then("the PAT is added to context")
+def step_impl_contain(context):
+    context.pat = context.response.text.strip('"')
+
+
+@then("the PAT is added to headers")
+def step_impl_contain(context):
+    context.headers = {"Access-Key": context.pat}
+
+
+@step("the user logout")
+def step_user_logout(context):
+    context.user = None
+    context.headers.pop("Access-Key")
+    context.headers.pop("Authorization")
+    context.token = None
+    context.pat = None
 
 
 @given("authentication is enabled")
@@ -76,7 +93,15 @@ def step_set_access_token(context):
     config.AUTH_ENABLED = True
 
 
-@step("the PAT is valid")
+@then("the PAT is expired")
 def step_impl(context):
-    context.response = context.test_client.get("/api/v1/whoami", headers={"Authorization": f"Bearer {context.pat}"})
-    assert context.response.status_code == 200
+    sleep(2)  # Give the PAT some time to expire
+    context.response = context.test_client.get("/api/v1/whoami", headers=context.headers)
+    assert context.response.status_code == 401
+
+
+@step("the PAT is revoked")
+def step_impl(context):
+    context.response = context.test_client.delete(
+        f"api/v1/token/{context.response.json()[0]['uuid']}", headers=context.headers
+    )

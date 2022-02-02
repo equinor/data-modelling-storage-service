@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic.main import BaseModel
 
-from domain_classes.user import User
+from authentication.models import User
 from services.document_service import DocumentService
 from restful import response_object as res
 from restful.use_case import UseCase

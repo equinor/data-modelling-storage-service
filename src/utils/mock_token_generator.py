@@ -1,6 +1,6 @@
 from jose import jwt
 
-from domain_classes.user import User
+from authentication.models import User
 from config import default_user
 
 # Generated with: 'openssl req  -nodes -new -x509  -keyout server.key -out server.cert'

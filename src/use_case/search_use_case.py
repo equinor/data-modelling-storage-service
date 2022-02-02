@@ -1,4 +1,4 @@
-from domain_classes.user import User
+from authentication.models import User
 from restful import response_object as res
 from restful.request_types.shared import DataSource
 from restful.use_case import UseCase

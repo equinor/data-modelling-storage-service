@@ -1,6 +1,4 @@
-from utils.mock_token_generator import generate_mock_token
-
-from authentication.authentication import User
+from authentication.models import User
 
 from tests.bdd.results import print_overview_errors, print_overview_features
 from utils.wipe_db import wipe_db
@@ -34,7 +32,6 @@ def before_scenario(context, scenario):
     if "skip" in scenario.effective_tags:
         scenario.skip("Marked with @skip")
     context.user = test_user
-    context.token = generate_mock_token(context.user)
 
 
 def after_step(context, step):
