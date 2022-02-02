@@ -4,6 +4,13 @@
   "description": "This describes a blueprint",
   "attributes": [
     {
+      "attributeType": "boolean",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "abstract",
+      "default": false,
+      "optional": true
+    },
+    {
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
       "name": "name"
@@ -135,6 +142,11 @@
           "contained": true
         }
       ]
+    },
+    {
+      "name": "Diagram",
+      "type": "system/SIMOS/UiRecipe",
+      "plugin": "mermaid"
     }
   ]
 }
