@@ -1,6 +1,17 @@
+import hashlib
+
 from cryptography.fernet import Fernet
 
 from config import config
+
+
+def scrypt(value: str, salt: str = config.SECRET_KEY) -> str:
+    digest = hashlib.scrypt(value.encode(), salt=salt.encode(), n=16, r=8, p=1)  # OWASP recommended minimum
+    return digest.hex()
+
+
+def sha256(value: str) -> str:
+    return hashlib.sha256(value.encode()).hexdigest()
 
 
 def key_loaded():

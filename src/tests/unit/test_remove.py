@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from domain_classes.user import User
+from authentication.models import User
 
 from domain_classes.dto import DTO
 from services.document_service import DocumentService

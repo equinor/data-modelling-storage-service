@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from starlette.responses import FileResponse, JSONResponse
 
-from authentication.authentication import get_current_user
-from domain_classes.user import User
+from authentication.authentication import auth_w_jwt_or_pat
+from authentication.models import User
 from restful.status_codes import STATUS_CODES
 from use_case.export_use_case import ExportUseCase
 
@@ -13,7 +13,7 @@ responses = {200: {"content": {"application/zip": {}}}}
 @router.get(
     "/export/{absolute_document_ref:path}", operation_id="export", response_class=FileResponse, responses=responses
 )
-def export(absolute_document_ref: str, user: User = Depends(get_current_user)):
+def export(absolute_document_ref: str, user: User = Depends(auth_w_jwt_or_pat)):
     """
     Download a zip-folder of the requested root package
     """

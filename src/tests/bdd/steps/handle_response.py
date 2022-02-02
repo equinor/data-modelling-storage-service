@@ -3,8 +3,6 @@ import json
 from deepdiff import DeepDiff
 import pprint
 
-from jose import jwt
-
 from utils.data_structure.compare import pretty_eq, print_pygments
 from utils.data_structure.find import find
 from dictdiffer import diff
@@ -116,12 +114,3 @@ def step_impl(context):
 def step_impl(context):
     response = context.response
     assert response.headers["content-type"] == "application/zip" and len(response.content) > 200
-
-
-@then("the JWT response should contain")
-def step_impl_contain(context):
-    token = context.response.text.strip('"')
-    decoded_jwt = jwt.get_unverified_claims(token)
-    pretty_print_should_contain_diff(json.loads(context.text), decoded_jwt)
-
-    context.pat = token

@@ -2,7 +2,7 @@ import json
 
 from behave import given, then
 
-from authentication.access_control import ACL
+from authentication.models import ACL
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from enums import DMT, SIMOS

@@ -3,7 +3,7 @@ from typing import List
 
 from pydantic import BaseSettings, Field
 
-from domain_classes.user import User
+from authentication.models import User
 
 
 class Config(BaseSettings):

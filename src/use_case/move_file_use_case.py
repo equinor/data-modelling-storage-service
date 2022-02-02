@@ -2,7 +2,7 @@ from pathlib import Path
 
 from pydantic.main import BaseModel
 
-from domain_classes.user import User
+from authentication.models import User
 from domain_classes.dto import DTO
 from restful import response_object as res
 from restful.use_case import UseCase

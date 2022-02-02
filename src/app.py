@@ -3,13 +3,11 @@ import time
 
 import click
 import uvicorn
-from domain_classes.user import User
+from authentication.models import User
 from fastapi import APIRouter, FastAPI, Security
 from starlette.requests import Request
-from starlette.types import Scope, Receive, Send
-from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
-from authentication.authentication import get_current_user
+from authentication.authentication import auth_w_jwt_or_pat, auth_with_jwt
 from config import config
 from restful.request_types.create_data_source import DataSourceRequest
 from storage.internal.data_source_repository import DataSourceRepository
@@ -17,36 +15,10 @@ from utils.encryption import generate_key
 from utils.logging import logger
 from utils.package_import import import_package
 from utils.wipe_db import wipe_db
-from utils.mock_token_generator import generate_mock_token
 
 server_root = "/api"
 version = "v1"
 prefix = f"{server_root}/{version}"
-
-
-class AuthHeaderHTTPMiddleware(BaseHTTPMiddleware):
-    """
-    From https://github.com/tiangolo/fastapi/issues/3027#issuecomment-811724832
-    """
-
-    async def __call__(self, scope: Scope, receive: Receive, send: Send):
-        if scope["type"] != "http":
-            await self.app(scope, receive, send)
-            return
-        auth_header_present = "authorization" in [value[0].decode() for value in scope["headers"]]
-        if not auth_header_present:
-            self.__add_auth_header(scope=scope)
-        request = Request(scope, receive=receive)
-        response = await self.dispatch_func(request, self.call_next)
-        await response(scope, receive, send)
-
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint):
-        return await call_next(request)
-
-    @classmethod
-    def __add_auth_header(cls, scope: Scope):
-        token = generate_mock_token()
-        scope["headers"].append((b"authorization", b"Bearer " + token.encode()))
 
 
 def create_app():
@@ -67,6 +39,8 @@ def create_app():
 
     public_routes = APIRouter()
     authenticated_routes = APIRouter()
+    # Some routes a PAT can not be used to authenticate. For example, to get new access tokens. That would be bad...
+    jwt_only_routes = APIRouter()
 
     public_routes.include_router(healtcheck_controller.router)
 
@@ -80,17 +54,17 @@ def create_app():
     authenticated_routes.include_router(reference_controller.router)
     authenticated_routes.include_router(explorer_controller.router)
     authenticated_routes.include_router(access_control_controller.router)
-    authenticated_routes.include_router(personal_access_token_controller.router)
+
+    jwt_only_routes.include_router(personal_access_token_controller.router)
 
     app = FastAPI(
         title="Data Modelling Storage Service",
         description="API for basic data modelling interaction",
         swagger_ui_init_oauth={"usePkceWithAuthorizationCodeGrant": True, "clientId": config.OAUTH_CLIENT_ID},
     )
-    app.include_router(authenticated_routes, prefix=prefix, dependencies=[Security(get_current_user)])
+    app.include_router(authenticated_routes, prefix=prefix, dependencies=[Security(auth_w_jwt_or_pat)])
+    app.include_router(jwt_only_routes, prefix=prefix, dependencies=[Security(auth_with_jwt)])
     app.include_router(public_routes, prefix=prefix)
-
-    app.add_middleware(AuthHeaderHTTPMiddleware)
 
     @app.middleware("http")
     async def add_process_time_header(request: Request, call_next):

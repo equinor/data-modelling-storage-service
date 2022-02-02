@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from domain_classes.user import User
+from authentication.models import User
 from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.dto import DTO

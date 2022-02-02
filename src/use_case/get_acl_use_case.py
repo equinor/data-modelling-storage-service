@@ -1,5 +1,4 @@
-from authentication.access_control import ACL
-from domain_classes.user import User
+from authentication.models import ACL, User
 from restful.request_types.shared import DataSource
 from restful.response_object import ResponseSuccess
 from restful.use_case import UseCase

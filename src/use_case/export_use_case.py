@@ -1,4 +1,4 @@
-from domain_classes.user import User
+from authentication.models import User
 from restful import response_object as res
 from restful import use_case as uc
 from services.document_service import DocumentService

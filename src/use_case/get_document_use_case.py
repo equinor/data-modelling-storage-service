@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 
 from pydantic import conint
 
-from domain_classes.user import User
+from authentication.models import User
 from services.document_service import DocumentService
 from restful.request_types.shared import DataSource
 from restful.response_object import ResponseSuccess

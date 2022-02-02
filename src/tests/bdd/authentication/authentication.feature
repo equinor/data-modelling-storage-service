@@ -15,7 +15,8 @@ Feature: Authentication
     "username": "johndoe",
     "full_name": null,
     "email": null,
-    "roles": ["a"]
+    "roles": ["a"],
+    "scope": 2
     }
     """
 

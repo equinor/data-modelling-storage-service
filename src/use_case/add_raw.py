@@ -1,5 +1,5 @@
 from uuid import uuid4
-from domain_classes.user import User
+from authentication.models import User
 from domain_classes.dto import DTO
 from enums import SIMOS
 from restful import response_object as res
