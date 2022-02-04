@@ -4,16 +4,19 @@ from typing import Tuple, Union
 from enums import PrimitiveDataTypes
 
 
-def split_absolute_ref(reference: str) -> Tuple[str, str, str]:
+def split_absolute_ref(reference: str) -> Tuple[str, Union[str, None], Union[str, None]]:
     reference = reference.strip("/. ")  # Remove leading and trailing stuff
     if "/" not in reference:  # It's reference to the data_source itself
         return reference, None, None
-    data_source, dotted_path = reference.split("/", 1)
-    attribute = ""
-    path = dotted_path
-    if "." in dotted_path:  # Dotted path has a attribute reference.
-        path, attribute = dotted_path.split(".", 1)
-    return data_source, path, attribute
+    data_source, dotted_id = reference.split("/", 1)
+    document_id, attributes = split_dotted_id(dotted_id)
+    return data_source, document_id, attributes
+
+
+def split_dotted_id(dotted_id: str) -> Tuple[str, Union[str, None]]:
+    if "." not in dotted_id:  # No attribute path in the id
+        return dotted_id, None
+    return dotted_id.split(".", 1)
 
 
 def get_package_and_path(reference: str) -> Tuple[str, Union[list, None]]:

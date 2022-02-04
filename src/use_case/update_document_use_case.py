@@ -25,11 +25,17 @@ class UpdateDocumentUseCase(UseCase):
 
     def process_request(self, req: UpdateDocumentRequest):
         document_service = DocumentService(repository_provider=self.repository_provider, user=self.user)
+        if req.attribute and "." in req.document_id:
+            raise ValueError(
+                "Attribute may only be specified in ether dotted path on "
+                + "documentId or the 'attribute' query parameter"
+            )
+        attribute = req.attribute if req.attribute else ""
+        dotted_id = req.document_id + attribute
         document = document_service.update_document(
             data_source_id=req.data_source_id,
-            document_id=req.document_id,
+            dotted_id=dotted_id,
             data=req.data,
-            attribute_path=req.attribute,
             files={f.filename: f.file for f in req.files} if req.files else None,
             update_uncontained=req.update_uncontained,
         )
