@@ -259,8 +259,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         with self.assertRaises(InvalidChildTypeException):
             document_service.update_document(
                 data_source_id="testing",
-                document_id="1",
-                attribute_path="SomeChild",
+                dotted_id="1.SomeChild",
                 data={"name": "whatever", "type": "special_child_no_inherit", "AnExtraValue": "Hallo there!"},
             )
         assert not doc_storage["1"]["SomeChild"]
@@ -373,8 +372,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         document_service.update_document(
             data_source_id="testing",
-            document_id="1",
-            attribute_path="SomeChild",
+            dotted_id="1.SomeChild",
             data={"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
         )
         assert doc_storage["1"]["SomeChild"] == {
@@ -402,8 +400,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         document_service.update_document(
             data_source_id="testing",
-            document_id="1",
-            attribute_path="SomeChild",
+            dotted_id="1.SomeChild",
             data={
                 "name": "whatever",
                 "type": "extra_special_child",
@@ -440,8 +437,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         document_service.update_document(
             data_source_id="testing",
-            document_id="1",
-            attribute_path="SomeChild",
+            dotted_id="1.SomeChild",
             data=[
                 {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
                 {
@@ -486,8 +482,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         with self.assertRaises(InvalidChildTypeException) as error:
             document_service.update_document(
                 data_source_id="testing",
-                document_id="1",
-                attribute_path="SomeChild",
+                dotted_id="1.SomeChild",
                 data=[
                     {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
                     {
@@ -521,7 +516,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_service.update_document(
             data_source_id="testing",
-            document_id="1",
+            dotted_id="1",
             data={
                 "_id": "1",
                 "name": "parent",

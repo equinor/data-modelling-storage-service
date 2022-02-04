@@ -34,7 +34,7 @@ from utils.get_resolved_document_by_id import get_complete_document
 from utils.get_document_by_path import get_document_uid_by_path
 from utils.logging import logger
 from utils.sort_entities_by_attribute import sort_dtos_by_attribute
-from utils.string_helpers import split_absolute_ref
+from utils.string_helpers import split_absolute_ref, split_dotted_id
 from utils.validators import entity_has_all_required_attributes
 
 pretty_printer = pprint.PrettyPrinter()
@@ -196,18 +196,18 @@ class DocumentService:
     def update_document(
         self,
         data_source_id: str,
-        document_id: str,
+        dotted_id: str,
         data: Union[dict, list],
-        attribute_path: str = None,
         files: dict = None,
         update_uncontained: bool = True,
     ):
+        document_id, attribute = split_dotted_id(dotted_id)
         root: Node = self.get_node_by_uid(data_source_id, document_id)
         target_node = root
 
         # If it's a contained nested node, set the modify target based on dotted-path
-        if attribute_path:
-            target_node = root.get_by_path(attribute_path.split("."))
+        if attribute:
+            target_node = root.get_by_path(attribute.split("."))
 
         target_node.update(data)
         if files:
