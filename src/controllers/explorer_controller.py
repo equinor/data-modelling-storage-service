@@ -1,7 +1,8 @@
+import json
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, File, Form, UploadFile
-from pydantic import Json
+from pydantic import Json, ValidationError
 from starlette.responses import JSONResponse
 
 from authentication.authentication import auth_w_jwt_or_pat
@@ -31,9 +32,14 @@ def add_to_path(
     Same as 'add_to_parent', but reference parent by path instead of ID. Also supports files.
     """
     use_case = AddDocumentToPathUseCase(user)
-    response = use_case.execute(
-        AddDocumentToPathRequest(data_source_id=data_source_id, document=document, directory=directory, files=files)
-    )
+    try:
+        response = use_case.execute(
+            AddDocumentToPathRequest(
+                data_source_id=data_source_id, document=document, directory=directory, files=files
+            )
+        )
+    except ValidationError as error:
+        return JSONResponse(json.loads(error.json()), status_code=422)
     return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
