@@ -31,6 +31,7 @@ class Config(BaseSettings):
     OAUTH_AUTH_ENDPOINT: str = Field("", env="OAUTH_AUTH_ENDPOINT")
     OAUTH_CLIENT_ID = Field("dmss", env="OAUTH_CLIENT_ID")
     AUTH_AUDIENCE: str = Field("dmss", env="OAUTH_AUDIENCE")
+    MICROSOFT_AUTH_PROVIDER: str = "login.microsoftonline.com"
 
 
 config = Config()
@@ -51,4 +52,4 @@ if config.AUTH_ENABLED:
             "Environment variable 'OAUTH_WELL_KNOWN', 'OAUTH_AUTH_ENDPOINT',"
             "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
         )
-default_user: User = User(**{"username": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})
+default_user: User = User(**{"username_id": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})
