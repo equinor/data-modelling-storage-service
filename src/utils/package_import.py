@@ -4,7 +4,7 @@ from typing import Dict, List, Union
 
 from authentication.models import User
 from domain_classes.dto import DTO
-from enums import DMT
+from enums import SIMOS
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from utils.exceptions import (
@@ -35,7 +35,7 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
 
 def import_package(path, user: User, data_source: str, is_root: bool = False) -> Union[Dict]:
     data_source: DataSource = get_data_source(data_source_id=data_source, user=user)
-    package = {"name": os.path.basename(path), "type": DMT.PACKAGE.value, "isRoot": is_root}
+    package = {"name": os.path.basename(path), "type": SIMOS.PACKAGE.value, "isRoot": is_root}
     try:
         if get_document_by_ref(f"{data_source.name}/{package['name']}", user):
             raise EntityAlreadyExistsException(

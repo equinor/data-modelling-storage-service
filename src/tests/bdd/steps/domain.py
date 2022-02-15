@@ -5,7 +5,7 @@ from behave import given, then
 from authentication.models import ACL
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
-from enums import DMT, SIMOS
+from enums import SIMOS, SIMOS
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 from storage.internal.data_source_repository import DataSourceRepository
@@ -17,17 +17,17 @@ def generate_tree_from_rows(node: Node, rows, document_service):
     if len(rows) == 0:
         return node
 
-    if node.type == DMT.PACKAGE.value:
+    if node.type == SIMOS.PACKAGE.value:
         content_node = node.search(f"{node.node_id}.content")
         # Create content not if not exists
         if not content_node:
-            data = {"name": "content", "type": DMT.PACKAGE.value, "attributeType": SIMOS.BLUEPRINT_ATTRIBUTE.value}
+            data = {"name": "content", "type": SIMOS.PACKAGE.value, "attributeType": SIMOS.BLUEPRINT_ATTRIBUTE.value}
             content_node = ListNode(
                 key="content",
                 uid="",
                 entity=data,
                 blueprint_provider=document_service.get_blueprint,
-                attribute=BlueprintAttribute(name="content", attribute_type=DMT.ENTITY.value),
+                attribute=BlueprintAttribute(name="content", attribute_type=SIMOS.ENTITY.value),
             )
             node.add_child(content_node)
     else:
@@ -50,7 +50,7 @@ def generate_tree_from_rows(node: Node, rows, document_service):
             print(f"adding {child_node.node_id} to {node.node_id}")
             content_node.add_child(child_node)
 
-            if child_node.type == DMT.PACKAGE.value:
+            if child_node.type == SIMOS.PACKAGE.value:
                 filtered = list(filter(lambda i: i["uid"] != node.uid, rows))
                 generate_tree_from_rows(child_node, filtered, document_service)
 
@@ -60,7 +60,7 @@ def generate_tree_from_rows(node: Node, rows, document_service):
 def generate_tree(data_source_id: str, table, document_service):
     root = Node(
         key=data_source_id,
-        attribute=BlueprintAttribute(name=data_source_id, attribute_type=DMT.DATASOURCE.value),
+        attribute=BlueprintAttribute(name=data_source_id, attribute_type=SIMOS.DATASOURCE.value),
         uid=data_source_id,
     )
     root_package = list(filter(lambda row: row["parent_uid"] == "", table.rows))[0]
@@ -74,7 +74,7 @@ def generate_tree(data_source_id: str, table, document_service):
         entity=root_package_data,
         blueprint_provider=document_service.get_blueprint,
         parent=root,
-        attribute=BlueprintAttribute(name="root", attribute_type=DMT.PACKAGE.value),
+        attribute=BlueprintAttribute(name="root", attribute_type=SIMOS.PACKAGE.value),
     )
     rows = list(filter(lambda row: row["parent_uid"] != "", table.rows))
     generate_tree_from_rows(root_package_node, rows, document_service)
