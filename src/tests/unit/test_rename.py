@@ -5,7 +5,7 @@ from authentication.models import User
 
 from domain_classes.dto import DTO
 from services.document_service import DocumentService
-from enums import DMT
+from enums import SIMOS
 from tests.unit.mock_blueprint_provider import blueprint_provider
 from utils.data_structure.compare import pretty_eq
 
@@ -60,7 +60,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "RootPackage",
                 "description": "My root package",
-                "type": DMT.PACKAGE.value,
+                "type": SIMOS.PACKAGE.value,
                 "isRoot": True,
                 "content": [],
             }

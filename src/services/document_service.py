@@ -12,7 +12,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
 from domain_classes.tree_node import ListNode, Node
-from enums import DMT, SIMOS
+from enums import SIMOS
 from restful.request_types.shared import Entity, Reference
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
@@ -94,7 +94,7 @@ class DocumentService:
 
         # If the node is a package, we build the path string to be used by filesystem like repositories.
         # Also, check for duplicate names in the package.
-        if node.type == DMT.PACKAGE.value:
+        if node.type == SIMOS.PACKAGE.value:
             path = f"{path}/{node.name}/" if path else f"{node.name}"
             if len(node.children) > 0:
                 packageContent = node.children[0]
@@ -270,7 +270,7 @@ class DocumentService:
             parent.add_child(new_node)
         else:
             parent.replace(new_node.node_id, new_node)
-        if new_node.parent.attribute.attribute_type != DMT.ENTITY.value:
+        if new_node.parent.attribute.attribute_type != SIMOS.ENTITY.value:
             new_node.validate_type_on_parent()
 
         self.save(root, data_source, update_uncontained=update_uncontained)
@@ -278,13 +278,13 @@ class DocumentService:
         return {"uid": new_node.node_id}
 
     def _add_document_with_no_parent(self, data_source: str, data: dict = None, update_uncontained: bool = False):
-        if data.get("type") != DMT.PACKAGE.value and not data.get("isRoot"):
+        if data.get("type") != SIMOS.PACKAGE.value and not data.get("isRoot"):
             raise BadRequestException("Only root packages may be added without a parent.")
 
         new_node = Node.from_dict(data, None, self.get_blueprint)
 
         exisiting_root_package = get_data_source(data_source, self.user).find(
-            {"type": DMT.PACKAGE.value, "isRoot": True, "name": data["name"]}
+            {"type": SIMOS.PACKAGE.value, "isRoot": True, "name": data["name"]}
         )
         if exisiting_root_package:
             raise DuplicateFileNameException(data_source, new_node.name)
@@ -330,7 +330,7 @@ class DocumentService:
                     )
 
     # Add entity by path
-    def add(self, data_source_id: str, path: str, document: Entity, files: dict):
+    def add(self, data_source_id: str, path: str, document: Entity, files: dict, update_uncontained=False):
         target: Node = self.get_by_path(f"{data_source_id}/{path}")
         if not target:
             raise EntityNotFoundException(uid=path)
@@ -349,9 +349,9 @@ class DocumentService:
         if files:
             self._merge_entity_and_files(new_node, files)
 
-        self.save(new_node, data_source_id, update_uncontained=True)
+        self.save(new_node, data_source_id, update_uncontained=update_uncontained)
 
-        if target.type == DMT.PACKAGE.value:
+        if target.type == SIMOS.PACKAGE.value:
             target = target.children[0]  # Set target to be the packages content
         if isinstance(target, ListNode):
             new_node.parent = target
@@ -422,7 +422,7 @@ class DocumentService:
         referenced_document: DTO = self.repository_provider(data_source_id, self.user).get(reference.uid)
         if not referenced_document:
             raise EntityNotFoundException(uid=data_source_id + reference.uid)
-        if DMT.ENTITY.value != attribute_node.type != referenced_document.type:
+        if SIMOS.ENTITY.value != attribute_node.type != referenced_document.type:
             raise InvalidEntityException(
                 f"The referenced entity should be of type '{attribute_node.type}'"
                 f", but was '{referenced_document.type}'"
@@ -445,6 +445,7 @@ class DocumentService:
         else:
             attribute_node.entity = {**reference.dict(by_alias=True), "_id": str(reference.uid)}
             attribute_node.uid = str(reference.uid)
+            attribute_node.type = reference.type
         self.save(root, data_source_id, update_uncontained=False)
 
         logger.info(

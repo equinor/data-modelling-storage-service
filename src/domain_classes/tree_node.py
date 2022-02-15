@@ -7,7 +7,7 @@ from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute
-from enums import DMT, StorageDataTypes
+from enums import SIMOS, StorageDataTypes
 from utils.exceptions import InvalidChildTypeException, InvalidEntityException
 from utils.logging import logger
 from utils.validators import valid_extended_type
@@ -163,7 +163,7 @@ class DictImporter:
 
                     # If the node is of type DMT/Package, we need to override the attribute_type "Entity",
                     # and get it from the child.
-                    if node.type == DMT.PACKAGE.value:
+                    if node.type == SIMOS.PACKAGE.value:
                         content_attribute: BlueprintAttribute = deepcopy(child_attribute)
                         content_attribute.attribute_type = child["type"]
                         list_child_attribute = content_attribute
@@ -252,7 +252,7 @@ class NodeBase:
 
     @property
     def storage_contained(self):
-        if not self.parent or self.parent.type == DMT.DATASOURCE.value:
+        if not self.parent or self.parent.type == SIMOS.DATASOURCE.value:
             return False
         return self.parent.blueprint.storage_recipes[0].is_contained(self.attribute.name)
 
@@ -267,7 +267,7 @@ class NodeBase:
         only contained attributes with none-contained storage return UUID,
         the rest return dotted path
         """
-        if self.type == DMT.DATASOURCE.value:
+        if self.type == SIMOS.DATASOURCE.value:
             return self.uid
         if not self.parent:
             return self.uid
@@ -514,9 +514,11 @@ class Node(NodeBase):
 
     def get_context_storage_attribute(self):
         # TODO: How to decide which storage_recipe?
-        if self.parent and self.parent.type != DMT.DATASOURCE.value:
+        if self.parent and self.parent.type != SIMOS.DATASOURCE.value:
             # The 'node.attribute.name' will be invalid for Package.content. Set it explicitly
-            nodes_attribute_on_parent = self.attribute.name if not self.parent.type == DMT.ENTITY.value else "content"
+            nodes_attribute_on_parent = (
+                self.attribute.name if not self.parent.type == SIMOS.ENTITY.value else "content"
+            )
             storage_attribute = self.parent.blueprint.storage_recipes[0].storage_attributes[nodes_attribute_on_parent]
 
             # If the attribute has default StorageAffinity in the parent, get it from the nodes own storageRecipe

@@ -8,7 +8,7 @@ from domain_classes.dto import DTO
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from utils.data_structure.compare import pretty_eq
-from enums import DMT
+from enums import SIMOS
 
 package_blueprint = {
     "type": "system/SIMOS/Blueprint",
@@ -104,7 +104,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Package",
                 "description": "My package",
-                "type": DMT.PACKAGE.value,
+                "type": SIMOS.PACKAGE.value,
                 "content": [],
             }
         }

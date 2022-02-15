@@ -2,7 +2,7 @@ import json
 from zipfile import ZipFile
 
 from domain_classes.dto import DTO
-from enums import DMT
+from enums import SIMOS
 from storage.repository_interface import RepositoryInterface
 from utils.logging import logger
 
@@ -19,7 +19,7 @@ class ZipFileClient(RepositoryInterface):
         json_data = json.dumps(dto.data)
         binary_data = json_data.encode()
         logger.debug(f"Writing: {dto.type} to {write_to}")
-        if dto.type != DMT.PACKAGE.value:
+        if dto.type != SIMOS.PACKAGE.value:
             self.zip_file.writestr(write_to, binary_data)
 
     def get(self, uid: str):

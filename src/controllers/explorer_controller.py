@@ -26,6 +26,7 @@ def add_to_path(
     document: Json = Form(...),
     directory: str = Form(...),
     files: Optional[List[UploadFile]] = File(None),
+    update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """
@@ -35,7 +36,11 @@ def add_to_path(
     try:
         response = use_case.execute(
             AddDocumentToPathRequest(
-                data_source_id=data_source_id, document=document, directory=directory, files=files
+                data_source_id=data_source_id,
+                document=document,
+                directory=directory,
+                files=files,
+                update_uncontained=update_uncontained,
             )
         )
     except ValidationError as error:
