@@ -20,7 +20,7 @@ def create_repositories(context):
             "data_types": row.get("dataTypes", "").split(","),
             "host": row["host"],
             "port": int(row["port"]),
-            "username_id": row["username_id"],
+            "username": row["username"],
             "password": encrypt(row["password"]),
             "tls": row["tls"],
             "database": row["database"],

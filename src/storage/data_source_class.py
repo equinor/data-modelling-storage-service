@@ -152,7 +152,10 @@ class DataSource:
             repo = self._get_repo_from_storage_attribute(storage_attribute)
             document_owner = self.user
             acl: ACL = ACL(
-                owner=document_owner.username_id, roles=parent_acl.roles, users=parent_acl.users, others=parent_acl.others
+                owner=document_owner.username_id,
+                roles=parent_acl.roles,
+                users=parent_acl.users,
+                others=parent_acl.others,
             )
             lookup = DocumentLookUp(lookup_id=document.uid, repository=repo.name, database_id=document.uid, acl=acl)
             self._update_lookup(lookup)

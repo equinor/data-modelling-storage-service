@@ -30,7 +30,7 @@ def create_personal_access_token(
     expire_datetime = now + datetime.timedelta(seconds=ttl)
     pat = f"DMSS_{generate_key()}"  # Generate a random string, this will be the actual token.
     pat_data = PATData(  # Create a PAT object with parameters, and the hash of the token.
-        pat_hash=scrypt(pat), username=user.username, roles=user.roles, scope=scope, expire=expire_datetime
+        pat_hash=scrypt(pat), username_id=user.username_id, roles=user.roles, scope=scope, expire=expire_datetime
     )
     insert_pat(pat_data)  # Save the PAT Object to the database
     return pat  # Return the secret

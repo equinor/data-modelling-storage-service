@@ -21,10 +21,12 @@ def get_users_pats(user: User) -> list[PATData]:
     # Filter out the hashed "_id" attribute
     pat_list = [
         pat
-        for pat in personal_access_token_collection.find(filter={"username": user.username}, projection={"_id": False})
+        for pat in personal_access_token_collection.find(
+            filter={"username_id": user.username_id}, projection={"_id": False}
+        )
     ]
     return pat_list
 
 
 def delete_pat(pat_id: str, user: User) -> None:
-    personal_access_token_collection.delete_one(filter={"uuid": pat_id, "username": user.username}).acknowledged
+    personal_access_token_collection.delete_one(filter={"uuid": pat_id, "username_id": user.username_id}).acknowledged
