@@ -1,6 +1,8 @@
+from starlette.responses import JSONResponse
+
 from authentication.models import User
 from restful.request_types.shared import DataSource
-from restful.response_object import ResponseSuccess
+
 from restful.use_case import UseCase
 from services.document_service import DocumentService
 
@@ -21,4 +23,4 @@ class DeleteReferenceUseCase(UseCase):
             document_id=req.document_id,
             attribute_path=req.attribute,
         )
-        return ResponseSuccess(document)
+        return JSONResponse(document)

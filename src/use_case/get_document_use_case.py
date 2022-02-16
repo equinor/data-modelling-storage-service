@@ -1,11 +1,12 @@
 from typing import List, Optional, Union
 
 from pydantic import conint
+from starlette.responses import JSONResponse
 
 from authentication.models import User
 from services.document_service import DocumentService
 from restful.request_types.shared import DataSource
-from restful.response_object import ResponseSuccess
+
 from restful.use_case import UseCase
 from storage.internal.data_source_repository import get_data_source
 
@@ -44,4 +45,4 @@ class GetDocumentUseCase(UseCase):
         if attribute:
             document = get_nested_dict_attribute(document, attribute.split("."))
 
-        return ResponseSuccess(document)
+        return JSONResponse(document)

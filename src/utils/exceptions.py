@@ -95,19 +95,17 @@ class DuplicateFileNameException(Exception):
     def __init__(self, data_source_id=None, path=None):
         self.data_source_id = data_source_id if data_source_id else None
         self.path = path if path else None
-
-    def __str__(self):
         if self.data_source_id and self.path:
-            return f"'{self.data_source_id}/{self.path}' already exists"
+            self.message = f"'{self.data_source_id}/{self.path}' already exists"
         else:
-            return (
+            self.message = (
                 "Can't create the requested document, one with the same name within the same package already exists."
             )
 
 
 class InvalidChildTypeException(Exception):
     def __init__(self, invalid_type, key, valid_type):
-        super().__init__(
+        self.message = (
             f"The type '{invalid_type}' is not a valid type for the "
             f"'{key}' attribute. The type should be of type '{valid_type} (or extending from it)'"
         )

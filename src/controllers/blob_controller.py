@@ -1,9 +1,8 @@
-from fastapi import APIRouter, File, UploadFile, Depends
-from starlette.responses import FileResponse, JSONResponse, Response
+from fastapi import APIRouter, Depends, File, UploadFile
+from starlette.responses import FileResponse, PlainTextResponse
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
-from restful.status_codes import STATUS_CODES
 from storage.internal.data_source_repository import get_data_source
 from use_case.get_blob_use_case import GetBlobRequest, GetBlobUseCase
 
@@ -21,11 +20,7 @@ responses = {200: {"content": {"application/octet-stream": {"schema": {"type": "
 )
 def get_by_id(data_source_id: str, blob_id: str, user: User = Depends(auth_w_jwt_or_pat)):
     use_case = GetBlobUseCase(user)
-    response = use_case.execute(GetBlobRequest(data_source_id=data_source_id, blob_id=blob_id))
-    if not response.type == "SUCCESS":
-        return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
-    # Response is string encoded 'bytes'
-    return Response(response.value)
+    return use_case.execute(GetBlobRequest(data_source_id=data_source_id, blob_id=blob_id))
 
 
 # For the OpenAPI generation, we specify response and response class.
@@ -33,4 +28,4 @@ def get_by_id(data_source_id: str, blob_id: str, user: User = Depends(auth_w_jwt
 def upload(data_source_id: str, blob_id: str, file: UploadFile = File(...), user: User = Depends(auth_w_jwt_or_pat)):
     data_source = get_data_source(data_source_id, user)
     data_source.update_blob(blob_id, file.file)
-    return Response("OK")
+    return PlainTextResponse("OK")

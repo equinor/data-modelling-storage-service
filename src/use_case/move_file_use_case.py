@@ -1,10 +1,10 @@
 from pathlib import Path
 
 from pydantic.main import BaseModel
+from starlette.responses import JSONResponse
 
 from authentication.models import User
 from domain_classes.dto import DTO
-from restful import response_object as res
 from restful.use_case import UseCase
 from storage.data_source_class import DataSource
 from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
@@ -73,4 +73,4 @@ class MoveFileUseCase(UseCase):
             old_parent_document.data["content"].append(reference)
             source_document_repository.update(old_parent_document)
 
-        return res.ResponseSuccess(destination_document)
+        return JSONResponse(destination_document)

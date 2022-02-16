@@ -1,8 +1,10 @@
 from uuid import uuid4
+
+from starlette.responses import PlainTextResponse
+
 from authentication.models import User
 from domain_classes.dto import DTO
 from enums import SIMOS
-from restful import response_object as res
 from restful.request_types.shared import DataSource, UncontainedEntity
 from restful.use_case import UseCase
 from services.document_service import DocumentService
@@ -25,4 +27,4 @@ class AddRawUseCase(UseCase):
         document_repository.update(document)
         if document.type == SIMOS.BLUEPRINT.value:
             DocumentService(user=self.user).invalidate_cache()
-        return res.ResponseSuccess(new_node_id)
+        return PlainTextResponse(new_node_id)

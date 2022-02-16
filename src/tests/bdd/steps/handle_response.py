@@ -100,9 +100,14 @@ def step_impl_array_length(context, dot_path, length):
 
 @then("the response should be")
 def step_impl_should_be(context):
-    actual = context.response.json()
-    data = context.text or context.data
-    pretty_eq(data, actual)
+    if "text/plain" in context.response.headers["content-type"]:
+        actual = context.response.text
+        data = context.text
+        assert actual == data
+    else:
+        actual = context.response.json()
+        data = context.text or context.data
+        pretty_eq(data, actual)
 
 
 @then("the length of the response should not be zero")

@@ -1,8 +1,10 @@
+from starlette.responses import JSONResponse
+
 from authentication.models import User
 from services.document_service import DocumentService
-from restful import response_object as res
 from restful.use_case import UseCase
 from storage.internal.data_source_repository import get_data_source
+from utils.string_helpers import split_absolute_ref
 
 
 class AddFileUseCase(UseCase):
@@ -16,4 +18,5 @@ class AddFileUseCase(UseCase):
             absolute_ref=req["absolute_ref"], data=req["data"], update_uncontained=req["update_uncontained"]
         )
         document_service.invalidate_cache()
-        return res.ResponseSuccess(document)
+        data_source, _, _ = split_absolute_ref(req["absolute_ref"])
+        return JSONResponse(document)

@@ -81,9 +81,9 @@ Feature: Set Access Control List
     }
     """
     Then the response status should be "OK"
-    And the response should contain
+    And the response should be
     """
-    "OK"
+    OK
     """
     Then I access the resource url "/api/v1/acl/test-DS/1"
     Given the logged in user is "johndoe" with roles "a,b"
@@ -131,9 +131,9 @@ Feature: Set Access Control List
     }
     """
     Then the response status should be "OK"
-    And the response should contain
+    And the response should be
     """
-    "OK"
+    OK
     """
     Then I access the resource url "/api/v1/acl/test-DS/2"
     Given the logged in user is "johndoe" with roles "a,b"
