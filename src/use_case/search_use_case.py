@@ -1,5 +1,6 @@
+from starlette.responses import JSONResponse
+
 from authentication.models import User
-from restful import response_object as res
 from restful.request_types.shared import DataSource
 from restful.use_case import UseCase
 from services.document_service import DocumentService
@@ -21,4 +22,4 @@ class SearchUseCase(UseCase):
         search_results = document_service.search(
             data_source_id=req.data_source_id, search_data=req.data, dotted_attribute_path=req.dotted_attribute_path
         )
-        return res.ResponseSuccess(search_results)
+        return JSONResponse(search_results)

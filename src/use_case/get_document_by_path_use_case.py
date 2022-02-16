@@ -1,7 +1,8 @@
 from typing import Optional
 
+from starlette.responses import JSONResponse
+
 from authentication.models import User
-from restful import response_object as res
 from restful import use_case as uc
 from restful.request_types.shared import DataSource
 from services.document_service import DocumentService
@@ -29,4 +30,4 @@ class GetDocumentByPathUseCase(uc.UseCase):
         if req.attribute:
             document = document.get_by_path(req.attribute.split("."))
 
-        return res.ResponseSuccess(document.to_dict())
+        return JSONResponse(document.to_dict())

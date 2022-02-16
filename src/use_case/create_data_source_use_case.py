@@ -1,4 +1,6 @@
-from restful import response_object, use_case
+from starlette.responses import JSONResponse
+
+from restful import use_case
 from restful.request_types.create_data_source import DataSourceRequest
 from restful.request_types.shared import DataSource
 
@@ -13,4 +15,4 @@ class CreateDataSourceUseCase(use_case.UseCase):
 
     def process_request(self, req: CreateDataSourceRequest):
         response = self.data_source_repository.create(req.data_source_id, req.new_data_source)
-        return response_object.ResponseSuccess(response)
+        return JSONResponse(response)

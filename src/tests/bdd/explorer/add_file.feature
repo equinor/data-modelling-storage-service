@@ -261,7 +261,7 @@ Feature: Explorer - Add file
       "difficulty": "high"
     }
     """
-    Then the response status should be "System Error"
+    Then the response status should be "Bad Request"
     Given I access the resource url "/api/v1/documents/test-DS/6"
     When I make a "GET" request
     Then the response status should be "OK"
@@ -437,12 +437,12 @@ Feature: Explorer - Add file
         }
       }
     """
-    Then the response status should be "System Error"
+    Then the response status should be "Bad Request"
     And the response should equal
     """
     {
       "message":"DuplicateFileNameException: 'test-DS/root_package/parentEntity' already exists",
-      "type":"SYSTEM_ERROR"
+      "type":"PARAMETERS_ERROR"
     }
     """
 
@@ -474,11 +474,11 @@ Feature: Explorer - Add file
       }
     }
     """
-    Then the response status should be "System Error"
+    Then the response status should be "Unprocessable Entity"
     And the response should equal
     """
     {
-      "type": "SYSTEM_ERROR",
+      "type": "UNPROCESSABLE_ENTITY",
       "message": "ValidationException: Required attribute 'name' not found in the entity"
     }
     """
@@ -512,11 +512,11 @@ Feature: Explorer - Add file
       }
     }
     """
-    Then the response status should be "System Error"
+    Then the response status should be "Unprocessable Entity"
     And the response should equal
     """
     {
-      "type": "SYSTEM_ERROR",
+      "type": "UNPROCESSABLE_ENTITY",
       "message": "ValidationException: Required attribute 'name' not found in the entity"
     }
     """
@@ -534,16 +534,14 @@ Feature: Explorer - Add file
       }
     }
     """
-    Then the response status should be "System Error"
+    Then the response status should be "Unprocessable Entity"
     And the response should equal
     """
     {
-      "type": "SYSTEM_ERROR",
+      "type": "UNPROCESSABLE_ENTITY",
       "message": "ValidationException: Required attribute 'name' not found in the entity"
     }
     """
-
-
 
   Scenario: Add parent entity without a name attribute with add_by_parent_id endpoint
     Given i access the resource url "/api/v1/explorer/test-DS/1.content?update_uncontained=True"
@@ -554,11 +552,11 @@ Feature: Explorer - Add file
       "description": "parent entity with no name"
     }
     """
-    Then the response status should be "System Error"
+    Then the response status should be "Unprocessable Entity"
     And the response should equal
     """
     {
-      "type": "SYSTEM_ERROR",
+      "type": "UNPROCESSABLE_ENTITY",
       "message": "ValidationException: Required attribute 'name' not found in the entity"
     }
     """
@@ -575,8 +573,7 @@ Feature: Explorer - Add file
     """
     Then the response status should be "OK"
 
-
-    Scenario: Add blueprint without a name using add_by_parent_id endpoint should fail
+  Scenario: Add blueprint without a name using add_by_parent_id endpoint should fail
     Given i access the resource url "/api/v1/explorer/test-DS/1.content"
     When i make a "POST" request
     """
@@ -585,11 +582,11 @@ Feature: Explorer - Add file
       "description": "Blueprint with no name"
     }
     """
-    Then the response status should be "System Error"
+    Then the response status should be "Unprocessable Entity"
     And the response should equal
     """
     {
-      "type": "SYSTEM_ERROR",
+      "type": "UNPROCESSABLE_ENTITY",
       "message": "ValidationException: Required attribute 'name' not found in the entity"
     }
     """
@@ -603,11 +600,11 @@ Feature: Explorer - Add file
       "description": "Package with no name"
     }
     """
-    Then the response status should be "System Error"
+    Then the response status should be "Unprocessable Entity"
     And the response should equal
     """
     {
-      "type": "SYSTEM_ERROR",
+      "type": "UNPROCESSABLE_ENTITY",
       "message": "ValidationException: Required attribute 'name' not found in the entity"
     }
     """

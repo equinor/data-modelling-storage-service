@@ -1,8 +1,9 @@
 from typing import Optional
 
+from starlette.responses import JSONResponse
+
 from authentication.models import User
 from services.document_service import DocumentService
-from restful import response_object as res
 from restful.request_types.shared import EntityName
 from restful.use_case import UseCase
 from storage.internal.data_source_repository import get_data_source
@@ -29,4 +30,4 @@ class RenameUseCase(UseCase):
             name=req.name,
         )
         document_service.invalidate_cache()
-        return res.ResponseSuccess(document)
+        return JSONResponse(document)

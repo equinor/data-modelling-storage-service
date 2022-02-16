@@ -1,10 +1,8 @@
 from fastapi import APIRouter, Depends
-from starlette.responses import JSONResponse
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from restful.request_types.shared import Reference
-from restful.status_codes import STATUS_CODES
 from use_case.delete_reference_use_case import DeleteReferenceRequest, DeleteReferenceUseCase
 from use_case.insert_reference_use_case import InsertReferenceRequest, InsertReferenceUseCase
 
@@ -17,12 +15,11 @@ def insert_reference(
 ):
     use_case = InsertReferenceUseCase(user)
     document_id, attribute = document_dotted_id.split(".", 1)
-    response = use_case.execute(
+    return use_case.execute(
         InsertReferenceRequest(
             data_source_id=data_source_id, document_id=document_id, reference=reference, attribute=attribute
         )
     )
-    return JSONResponse(response.value, status_code=STATUS_CODES[response.type])
 
 
 @router.delete(
@@ -31,7 +28,6 @@ def insert_reference(
 def delete_reference(data_source_id: str, document_dotted_id: str, user: User = Depends(auth_w_jwt_or_pat)):
     use_case = DeleteReferenceUseCase(user)
     document_id, attribute = document_dotted_id.split(".", 1)
-    response = use_case.execute(
+    return use_case.execute(
         DeleteReferenceRequest(data_source_id=data_source_id, document_id=document_id, attribute=attribute)
     )
-    return JSONResponse(response.value, status_code=STATUS_CODES[response.type])

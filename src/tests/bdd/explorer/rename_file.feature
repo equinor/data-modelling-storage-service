@@ -90,7 +90,7 @@ Feature: Explorer - Add file
       "name": "document_1"
     }
     """
-    Then the response status should be "System Error"
+    Then the response should be "Unprocessable Entity"
     And the response should equal
     """
     {

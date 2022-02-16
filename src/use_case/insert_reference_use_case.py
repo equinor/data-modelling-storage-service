@@ -1,6 +1,8 @@
+from starlette.responses import JSONResponse
+
 from authentication.models import User
 from restful.request_types.shared import DataSource, Reference
-from restful.response_object import ResponseSuccess
+
 from restful.use_case import UseCase
 from services.document_service import DocumentService
 
@@ -23,4 +25,4 @@ class InsertReferenceUseCase(UseCase):
             reference=req.reference,
             attribute_path=req.attribute,
         )
-        return ResponseSuccess(document)
+        return JSONResponse(document)
