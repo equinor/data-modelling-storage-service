@@ -26,9 +26,7 @@ def save(data_source_id: str, new_data_source: DataSourceRequest, user: User = D
     """
     data_source_repository = DataSourceRepository(user)
     use_case = CreateDataSourceUseCase(data_source_repository=data_source_repository)
-    return use_case.execute(
-        CreateDataSourceRequest(data_source_id=data_source_id, new_data_source=new_data_source)
-    )
+    return use_case.execute(CreateDataSourceRequest(data_source_id=data_source_id, new_data_source=new_data_source))
 
 
 @router.get("/data-sources", operation_id="data_source_get_all")

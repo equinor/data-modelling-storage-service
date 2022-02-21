@@ -60,7 +60,7 @@ def generate_mock_token(user: User = default_user):
         "name": user.full_name,
         "preferred_username": user.email,
         "scp": "FoR_test_scope",
-        "sub": user.username,
+        "sub": user.user_id,
         "roles": user.roles,
         "iss": "mock-auth-server",
     }

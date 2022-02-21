@@ -48,7 +48,11 @@ def auth_with_jwt(jwt_token: str = Security(oauth2_scheme)) -> User:
 
     try:
         payload = jwt.decode(jwt_token, key, algorithms=["RS256"], audience=config.AUTH_AUDIENCE)
-        user = User(username=payload["sub"], **payload)
+        if config.MICROSOFT_AUTH_PROVIDER in payload["iss"]:
+            # Azure AD uses an oid string to uniquely identify users. Each user has a unique oid value.
+            user = User(user_id=payload["oid"], **payload)
+        else:
+            user = User(user_id=payload["sub"], **payload)
     except JWTError as error:
         logger.warning(error)
         raise credentials_exception

@@ -12,7 +12,7 @@ Feature: Authentication
     And the response should equal
     """
     {
-    "username": "johndoe",
+    "user_id": "johndoe",
     "full_name": null,
     "email": null,
     "roles": ["a"],

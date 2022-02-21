@@ -29,7 +29,8 @@ class AccessLevel(Enum):
 
 
 class User(BaseModel):
-    username: str
+    user_id: str  # If using azure AD authentication, user_id is the oid field from the access token.
+    # If using another oauth provider, user_id will be from the "sub" attribute in the access token.
     email: Optional[str] = None
     full_name: Optional[str] = None
     roles: List[str] = []
@@ -39,11 +40,11 @@ class User(BaseModel):
 class ACL(BaseModel):
     """
     acl:
-      owner: 'username'
+      owner: 'user_id'
       roles:
         'role': WRITE
       users:
-        'username': WRITE
+        'user_id': WRITE
       others: READ
     """
 
@@ -64,7 +65,7 @@ class ACL(BaseModel):
 class PATData(BaseModel):
     pat_hash: str = None
     uuid: UUID4 = str(uuid4())
-    username: str
+    user_id: str
     # TODO: Roles should be checked on every request, as they mey be updated after the PAT has been created
     roles: List[str] = []
     scope: AccessLevel
@@ -75,7 +76,7 @@ class PATData(BaseModel):
         return {
             "_id": self.pat_hash,  # Use the actual hash as the indexed '_id' value, as this is looked up most often.
             "uuid": self.uuid,  # Another uuid is used to identify pat, which can safely be returned to user.
-            "username": self.username,
+            "user_id": self.user_id,
             "roles": self.roles,
             "scope": self.scope.name,
             "expire": str(self.expire),
