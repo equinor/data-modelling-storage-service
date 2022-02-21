@@ -11,7 +11,7 @@ from tests.unit.mock_blueprint_provider import blueprint_provider
 from config import config
 
 config.AUTH_ENABLED = False
-test_user = User(**{"username_id": "unit-test", "full_name": "Unit Test", "email": "unit-test@example.com"})
+test_user = User(**{"user_id": "unit-test", "full_name": "Unit Test", "email": "unit-test@example.com"})
 
 
 class DataSourceTestCase(unittest.TestCase):

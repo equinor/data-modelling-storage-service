@@ -52,6 +52,4 @@ if config.AUTH_ENABLED:
             "Environment variable 'OAUTH_WELL_KNOWN', 'OAUTH_AUTH_ENDPOINT',"
             "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
         )
-default_user: User = User(
-    **{"username_id": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"}
-)
+default_user: User = User(**{"user_id": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})

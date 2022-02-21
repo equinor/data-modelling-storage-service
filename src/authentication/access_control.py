@@ -20,7 +20,7 @@ def access_control(acl: ACL, access_level_required: AccessLevel, user: User):
     if acl.others.check_privilege(access_level_required):
         return True
     # The owner always has full access
-    if acl.owner == user.username_id:
+    if acl.owner == user.user_id:
         return True
 
     for role in user.roles:
@@ -28,7 +28,7 @@ def access_control(acl: ACL, access_level_required: AccessLevel, user: User):
             if role_access.check_privilege(access_level_required):
                 return True
 
-    if direct_user_access := acl.users.get(user.username_id):
+    if direct_user_access := acl.users.get(user.user_id):
         if direct_user_access.check_privilege(access_level_required):
             return True
 
@@ -38,7 +38,7 @@ def access_control(acl: ACL, access_level_required: AccessLevel, user: User):
 
 def create_acl(user: User) -> ACL:
     """Used when there is no ACL to inherit. Sets the current user as owner, and rest copies DEFAULT_ACL"""
-    return ACL(owner=user.username_id, roles=DEFAULT_ACL.roles, others=DEFAULT_ACL.others)
+    return ACL(owner=user.user_id, roles=DEFAULT_ACL.roles, others=DEFAULT_ACL.others)
 
 
 DEFAULT_ACL = ACL(owner=config.DMSS_ADMIN, roles={config.DMSS_ADMIN_ROLE: AccessLevel.WRITE}, others=AccessLevel.READ)

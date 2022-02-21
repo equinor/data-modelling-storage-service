@@ -62,9 +62,9 @@ def step_make_request(context, method):
         context.response = context.test_client.delete(context.url, headers=context.headers)
 
 
-@given('the logged in user is "{username_id}" with roles "{roles}"')
-def step_set_access_token(context, username_id, roles):
-    user = User(username_id=username_id, roles=roles.split(","))
+@given('the logged in user is "{user_id}" with roles "{roles}"')
+def step_set_access_token(context, user_id, roles):
+    user = User(user_id=user_id, roles=roles.split(","))
     context.user = user
     context.headers = {"Authorization": f"Bearer {generate_mock_token(user)}"}
 

@@ -4,7 +4,7 @@ from tests.bdd.results import print_overview_errors, print_overview_features
 from utils.wipe_db import wipe_db
 from config import config
 
-test_user = User(**{"username_id": "behave-test", "full_name": "Behave Test", "email": "behave-test@example.com"})
+test_user = User(**{"user_id": "behave-test", "full_name": "Behave Test", "email": "behave-test@example.com"})
 
 
 def before_all(context):
