@@ -3,14 +3,16 @@ Feature: Explorer - Search entity
   Background: There are data sources in the system
     Given the system data source and SIMOS core package are available
     Given there are data sources
-      | name       |
-      | entities   |
-      | blueprints |
+      | name         |
+      | entities     |
+      | moreEntities |
+      | blueprints   |
 
     Given there are repositories in the data sources
       | data-source    | host | port  | username | password | tls   | name      | database | collection | type     | dataTypes |
-      | entities       | db   | 27017 | maf      | maf      | false | repo1     |  bdd-test    | entities   | mongo-db | default   |
-      | blueprints     | db   | 27017 | maf      | maf      | false | blob-repo |  bdd-test    | blueprints | mongo-db | default   |
+      | entities       | db   | 27017 | maf      | maf      | false | repo1     |  bdd-test    | entities     | mongo-db | default   |
+      | moreEntities   | db   | 27017 | maf      | maf      | false | repo2     |  bdd-test    | moreEntities | mongo-db | default   |
+      | blueprints     | db   | 27017 | maf      | maf      | false | blob-repo |  bdd-test    | blueprints   | mongo-db | default   |
 
     Given there exist document with id "1" in data source "blueprints"
     """
@@ -167,6 +169,18 @@ Feature: Explorer - Search entity
     }
     """
 
+    Given there exist document with id "99" in data source "moreEntities"
+    """
+    {
+      "name": "primitive_more",
+      "description": "",
+      "type": "blueprints/root_package/ValuesBlueprint",
+      "a_number": 10.0,
+      "an_integer": 10,
+      "a_string": "def"
+    }
+    """
+
     Given there exist document with id "2" in data source "entities"
     """
     {
@@ -232,8 +246,10 @@ Feature: Explorer - Search entity
     }
     """
 
+    #todo test searching multiple data sources
+
   Scenario: Search with primitive filter, all hit
-    Given i access the resource url "/api/v1/search/entities"
+    Given i access the resource url "/api/v1/search/?data_sources=entities"
     When i make a "POST" request
     """
     {
@@ -268,7 +284,7 @@ Feature: Explorer - Search entity
     }
     """
   Scenario: Search with primitive filter, 1 hit
-    Given i access the resource url "/api/v1/search/entities"
+    Given i access the resource url "/api/v1/search/?data_sources=entities"
     When i make a "POST" request
     """
     {
@@ -296,7 +312,7 @@ Feature: Explorer - Search entity
     """
 
   Scenario: Search with sorting by attribute, top level attribute
-    Given i access the resource url "/api/v1/search/entities?sort_by_attribute=a_number"
+    Given i access the resource url "/api/v1/search/?data_sources=entities&sort_by_attribute=a_number"
     When i make a "POST" request
     """
     {
@@ -329,7 +345,7 @@ Feature: Explorer - Search entity
     """
 
   Scenario: Search with sorting by default sort_by_attribute, name
-    Given i access the resource url "/api/v1/search/entities"
+    Given i access the resource url "/api/v1/search/?data_sources=entities"
     When i make a "POST" request
     """
     {
@@ -368,7 +384,7 @@ Feature: Explorer - Search entity
     """
 
   Scenario: Search with sorting by attribute, nested attribute, i.e. sub-attribute
-    Given i access the resource url "/api/v1/search/entities?sort_by_attribute=Vectors.height"
+    Given i access the resource url "/api/v1/search/?data_sources=entities&sort_by_attribute=Vectors.height"
     When i make a "POST" request
     """
     {
@@ -407,7 +423,7 @@ Feature: Explorer - Search entity
     """
 
   Scenario: Search with sorting by attribute, nested attribute from list by index
-    Given i access the resource url "/api/v1/search/entities?sort_by_attribute=VectorList.0.width"
+    Given i access the resource url "/api/v1/search/?data_sources=entities&sort_by_attribute=VectorList.0.width"
     When i make a "POST" request
     """
     {
@@ -437,6 +453,92 @@ Feature: Explorer - Search entity
             "width": 123.4
           }
         ]
+      }
+    }
+    """
+
+
+    todo there is a bug here...
+    Scenario: Search two data sources for document of type ValuesBlueprint
+    Given i access the resource url "/api/v1/search/?data_sources=entities&moreEntities"
+    When i make a "POST" request
+    """
+    {
+      "type": "blueprints/root_package/ValuesBlueprint"
+    }
+    """
+    Then the response status should be "OK"
+    And the response should equal
+    """
+    {
+      "1":     {
+      "_id": "1",
+      "name": "primitive_1",
+      "description": "",
+      "type": "blueprints/root_package/ValuesBlueprint",
+      "a_number": 120.0,
+      "an_integer": 5,
+      "a_string": "abc"
+    },
+    "2":     {
+      "_id": "2",
+      "name": "primitive_2",
+      "description": "",
+      "type": "blueprints/root_package/ValuesBlueprint",
+      "a_number": 150.1,
+      "an_integer": 10,
+      "a_string": "def"
+    },
+    "99": {
+      "_id": "99",
+      "name": "primitive_more",
+      "description": "",
+      "type": "blueprints/root_package/ValuesBlueprint",
+      "a_number": 10.0,
+      "an_integer": 10,
+      "a_string": "def"
+      }
+    }
+    """
+
+  Scenario: Search all data sources for document of type ValuesBlueprint
+    Given i access the resource url "/api/v1/search/"
+    When i make a "POST" request
+    """
+    {
+      "type": "blueprints/root_package/ValuesBlueprint"
+    }
+    """
+    Then the response status should be "OK"
+    And the response should equal
+    """
+    {
+      "1":     {
+      "_id": "1",
+      "name": "primitive_1",
+      "description": "",
+      "type": "blueprints/root_package/ValuesBlueprint",
+      "a_number": 120.0,
+      "an_integer": 5,
+      "a_string": "abc"
+    },
+    "2":     {
+      "_id": "2",
+      "name": "primitive_2",
+      "description": "",
+      "type": "blueprints/root_package/ValuesBlueprint",
+      "a_number": 150.1,
+      "an_integer": 10,
+      "a_string": "def"
+    },
+    "99": {
+      "_id": "99",
+      "name": "primitive_more",
+      "description": "",
+      "type": "blueprints/root_package/ValuesBlueprint",
+      "a_number": 10.0,
+      "an_integer": 10,
+      "a_string": "def"
       }
     }
     """
