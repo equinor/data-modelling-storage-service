@@ -5,7 +5,7 @@ from behave import given, then
 from authentication.models import ACL
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
-from enums import SIMOS, SIMOS
+from enums import BuiltinDataTypes, SIMOS
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 from storage.internal.data_source_repository import DataSourceRepository
@@ -27,7 +27,7 @@ def generate_tree_from_rows(node: Node, rows, document_service):
                 uid="",
                 entity=data,
                 blueprint_provider=document_service.get_blueprint,
-                attribute=BlueprintAttribute(name="content", attribute_type=SIMOS.ENTITY.value),
+                attribute=BlueprintAttribute(name="content", attribute_type=BuiltinDataTypes.OBJECT.value),
             )
             node.add_child(content_node)
     else:

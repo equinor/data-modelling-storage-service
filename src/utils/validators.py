@@ -1,13 +1,13 @@
 from typing import Callable, List
 
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from enums import SIMOS
+from enums import BuiltinDataTypes
 from utils.exceptions import ValidationException
 from utils.string_helpers import get_data_type_from_dmt_type
 
 
 def valid_extended_type(type: str, extended_types: List[str], get_blueprint: Callable) -> bool:
-    if type == SIMOS.ENTITY.value:
+    if type == BuiltinDataTypes.OBJECT.value:
         return True
     if type in extended_types:
         return True

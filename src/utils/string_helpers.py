@@ -1,7 +1,7 @@
 import re
 from typing import Tuple, Union
 
-from enums import PrimitiveDataTypes
+from enums import BuiltinDataTypes
 
 
 def split_absolute_ref(reference: str) -> Tuple[str, Union[str, None], Union[str, None]]:
@@ -30,7 +30,7 @@ def get_package_and_path(reference: str) -> Tuple[str, Union[list, None]]:
 # Convert dmt attribute_types to python types. If complex, return type as string.
 def get_data_type_from_dmt_type(attribute_type: str):
     try:
-        type_enum = PrimitiveDataTypes(attribute_type)
+        type_enum = BuiltinDataTypes(attribute_type)
         return type_enum.to_py_type()
     except ValueError:
         return attribute_type

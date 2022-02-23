@@ -18,7 +18,7 @@ package_blueprint = {
     "attributes": [
         {"attributeType": "boolean", "type": "system/SIMOS/BlueprintAttribute", "name": "isRoot"},
         {
-            "attributeType": "system/SIMOS/Entity",
+            "attributeType": "object",
             "type": "system/SIMOS/BlueprintAttribute",
             "name": "content",
             "dimensions": "*",
@@ -30,7 +30,7 @@ package_blueprint = {
             "type": "system/SIMOS/StorageRecipe",
             "name": "DefaultStorageRecipe",
             "description": "",
-            "attributes": [{"name": "content", "type": "system/SIMOS/Entity", "contained": False}],
+            "attributes": [{"name": "content", "type": "object", "contained": False}],
         }
     ],
 }
