@@ -12,7 +12,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
 from domain_classes.tree_node import ListNode, Node
-from enums import SIMOS
+from enums import BuiltinDataTypes, SIMOS
 from restful.request_types.shared import Entity, Reference
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
@@ -270,8 +270,8 @@ class DocumentService:
             parent.add_child(new_node)
         else:
             parent.replace(new_node.node_id, new_node)
-        if new_node.parent.attribute.attribute_type != SIMOS.ENTITY.value:
-            new_node.validate_type_on_parent()
+
+        new_node.validate_type_on_parent()
 
         self.save(root, data_source, update_uncontained=update_uncontained)
 
@@ -422,7 +422,7 @@ class DocumentService:
         referenced_document: DTO = self.repository_provider(data_source_id, self.user).get(reference.uid)
         if not referenced_document:
             raise EntityNotFoundException(uid=data_source_id + reference.uid)
-        if SIMOS.ENTITY.value != attribute_node.type != referenced_document.type:
+        if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document.type:
             raise InvalidEntityException(
                 f"The referenced entity should be of type '{attribute_node.type}'"
                 f", but was '{referenced_document.type}'"
@@ -446,6 +446,7 @@ class DocumentService:
             attribute_node.entity = {**reference.dict(by_alias=True), "_id": str(reference.uid)}
             attribute_node.uid = str(reference.uid)
             attribute_node.type = reference.type
+
         self.save(root, data_source_id, update_uncontained=False)
 
         logger.info(

@@ -10,7 +10,7 @@
       "name": "isRoot"
     },
     {
-      "attributeType": "system/SIMOS/Entity",
+      "attributeType": "object",
       "type": "system/SIMOS/BlueprintAttribute",
       "name": "content",
       "dimensions": "*",
@@ -25,7 +25,7 @@
       "attributes": [
         {
           "name": "content",
-          "type": "system/SIMOS/Entity",
+          "type": "object",
           "contained": false
         }
       ]

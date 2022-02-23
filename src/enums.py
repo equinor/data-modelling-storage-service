@@ -1,24 +1,26 @@
 from enum import Enum
 
 PRIMITIVES = {"string", "number", "integer", "boolean"}
-BLOB_TYPES = ("system/SIMOS/blob_types/PDF",)
 
 
-class PrimitiveDataTypes(Enum):
+class BuiltinDataTypes(Enum):
     STR = "string"
     NUM = "number"
     INT = "integer"
     BOOL = "boolean"
+    OBJECT = "object"  # Any complex type (i.e. any blueprint type)
 
     def to_py_type(self):
-        if self is PrimitiveDataTypes.BOOL:
+        if self is BuiltinDataTypes.BOOL:
             return bool
-        elif self is PrimitiveDataTypes.INT:
+        elif self is BuiltinDataTypes.INT:
             return int
-        elif self is PrimitiveDataTypes.NUM:
+        elif self is BuiltinDataTypes.NUM:
             return float
-        elif self is PrimitiveDataTypes.STR:
+        elif self is BuiltinDataTypes.STR:
             return str
+        elif self is BuiltinDataTypes.OBJECT:
+            return dict
 
 
 class RepositoryType(Enum):

@@ -4,7 +4,7 @@ from typing import Callable
 
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from enums import SIMOS, PRIMITIVES
+from enums import BuiltinDataTypes, SIMOS, PRIMITIVES
 
 
 class CreateEntityException(Exception):
@@ -23,6 +23,8 @@ class InvalidDefaultValue(CreateEntityException):
 
 class CreateEntity:
     def __init__(self, blueprint_provider: Callable, type: str):
+        if type == BuiltinDataTypes.OBJECT.value:
+            type = SIMOS.ENTITY.value
         self.type = type
         self.blueprint_provider = blueprint_provider
         self.attribute_types = self.blueprint_provider(SIMOS.ATTRIBUTE_TYPES.value).to_dict()
@@ -91,7 +93,11 @@ class CreateEntity:
                 if not attr.is_optional() and attr.name not in entity:
                     entity[attr.name] = CreateEntity.parse_value(attr=attr, blueprint_provider=self.blueprint_provider)
             else:
-                blueprint = self.blueprint_provider(attr.attribute_type)
+                blueprint = (
+                    self.blueprint_provider(attr.attribute_type)
+                    if attr.attribute_type != BuiltinDataTypes.OBJECT.value
+                    else SIMOS.ENTITY.value
+                )
                 if attr.is_array():
                     entity[attr.name] = attr.dimensions.create_default_array(self.blueprint_provider, CreateEntity)
                 else:

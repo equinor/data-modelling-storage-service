@@ -7,7 +7,7 @@ from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute
-from enums import SIMOS, StorageDataTypes
+from enums import BuiltinDataTypes, SIMOS, StorageDataTypes
 from utils.exceptions import InvalidChildTypeException, InvalidEntityException
 from utils.logging import logger
 from utils.validators import valid_extended_type
@@ -517,7 +517,7 @@ class Node(NodeBase):
         if self.parent and self.parent.type != SIMOS.DATASOURCE.value:
             # The 'node.attribute.name' will be invalid for Package.content. Set it explicitly
             nodes_attribute_on_parent = (
-                self.attribute.name if not self.parent.type == SIMOS.ENTITY.value else "content"
+                self.attribute.name if not self.parent.type == BuiltinDataTypes.OBJECT.value else "content"
             )
             storage_attribute = self.parent.blueprint.storage_recipes[0].storage_attributes[nodes_attribute_on_parent]
 
