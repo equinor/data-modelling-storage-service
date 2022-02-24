@@ -25,6 +25,7 @@ def resolve_path_to_document(data_source: str, document_id: str, user) -> str:
     package = find_package_with_document(data_source, document_id, user)
     blueprint_name = next((c["name"] for c in package["content"] if c["_id"] == document_id))
     path_elements.append(blueprint_name)
+    path_elements.append(package["name"])
     next_document_id = package["_id"]
     while not root_package_found:
         package = find_package_with_document(data_source, next_document_id, user)
