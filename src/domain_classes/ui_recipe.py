@@ -27,6 +27,7 @@ class Recipe(BaseModel):
     attributes: List[RecipeAttribute] = []
     description: str = ""
     plugin: str = "Default"
+    category: str = ""
     hideTab: bool = False
 
     def get_attribute_by_name(self, key):

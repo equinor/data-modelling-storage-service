@@ -12,6 +12,13 @@
       "default": ""
     },
     {
+      "name": "category",
+      "attributeType": "string",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "optional": true,
+      "default": ""
+    },
+    {
       "name": "field",
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
