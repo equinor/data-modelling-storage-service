@@ -233,6 +233,8 @@ class NodeBase:
 
     @property
     def blueprint(self) -> Optional[Blueprint]:
+        if self.type == BuiltinDataTypes.OBJECT.value:
+            return self.blueprint_provider(SIMOS.ENTITY.value)
         if self.type != "datasource":
             return self.blueprint_provider(self.type)
 
