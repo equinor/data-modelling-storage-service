@@ -42,7 +42,7 @@ class SearchUseCase(UseCase):
         manager = Manager()
         search_results: dict = manager.dict()
 
-        pool = Pool(processes=os.cpu_count() - 1)
+        pool = Pool(processes=os.cpu_count())
 
         if not len(req.data_sources):
             # search all data sources when data_sources list in request is empty.
