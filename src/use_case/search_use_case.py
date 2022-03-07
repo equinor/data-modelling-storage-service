@@ -41,7 +41,8 @@ class SearchUseCase(UseCase):
         all_data_source_names: list = [ds["id"] for ds in all_data_sources]
         manager = Manager()
         search_results: dict = manager.dict()
-        pool = Pool(processes=os.cpu_count() - 4)
+
+        pool = Pool(processes=os.cpu_count() - 1)
 
         if not len(req.data_sources):
             # search all data sources when data_sources list in request is empty.
