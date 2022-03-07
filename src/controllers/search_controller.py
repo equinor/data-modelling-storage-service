@@ -7,15 +7,6 @@ from use_case.search_use_case import SearchRequest, SearchUseCase
 router = APIRouter()
 
 
-# remove data source id from url and use a list as query param.
-# should take in a list of data sources instead of a single. If list is empty, search all datasources.
-# searching multiple mongo repositories should happen in paralel if possible
-
-
-
-# https://fastapi.tiangolo.com/tutorial/query-params-str-validations/#query-parameter-list-multiple-values
-
-
 @router.post("/search/", operation_id="search", response_model=dict)
 def search(
     request: dict,

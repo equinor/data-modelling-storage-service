@@ -246,7 +246,6 @@ Feature: Explorer - Search entity
     }
     """
 
-    #todo test searching multiple data sources
 
   Scenario: Search with primitive filter, all hit
     Given i access the resource url "/api/v1/search/?data_sources=entities"
@@ -458,9 +457,8 @@ Feature: Explorer - Search entity
     """
 
 
-    todo there is a bug here...
     Scenario: Search two data sources for document of type ValuesBlueprint
-    Given i access the resource url "/api/v1/search/?data_sources=entities&moreEntities"
+    Given i access the resource url "/api/v1/search/?data_sources=entities&?&data_sources=moreEntities"
     When i make a "POST" request
     """
     {
@@ -500,6 +498,24 @@ Feature: Explorer - Search entity
       }
     }
     """
+
+  Scenario: Search when one data source does not exist
+    Given i access the resource url "/api/v1/search/?data_sources=entities&?&data_sources=DOESNOTEXIST"
+    When i make a "POST" request
+    """
+    {
+      "type": "blueprints/root_package/ValuesBlueprint"
+    }
+    """
+    Then the response status should be "Bad Request"
+    And the response should equal
+    """
+    {
+      "type": "PARAMETERS_ERROR",
+      "message": "BadRequestException: Data source DOESNOTEXIST not found"
+    }
+    """
+
 
   Scenario: Search all data sources for document of type ValuesBlueprint
     Given i access the resource url "/api/v1/search/"
