@@ -7,16 +7,14 @@ from storage.internal.data_source_repository import DataSourceRepository
 from restful.use_case import UseCase
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
-from pydantic import constr, BaseModel
-from restful.request_types.shared import name_regex
+from restful.request_types.shared import DataSourceList
 from multiprocessing import Manager, Pool
 import os
 
 
-class SearchRequest(BaseModel):
+class SearchRequest(DataSourceList):
     data: dict
     dotted_attribute_path: str
-    data_sources: list[constr(min_length=3, max_length=128, regex=name_regex, strip_whitespace=True)]
 
 
 def get_search_result(output_dict: dict, data_source_id: str, document_service: DocumentService, req: SearchRequest):
@@ -38,22 +36,22 @@ class SearchUseCase(UseCase):
             repository_provider=self.repository_provider, user=self.user
         )
         all_data_sources = DataSourceRepository(self.user).list()
-        all_data_source_names: list = [ds["id"] for ds in all_data_sources]
+
         manager = Manager()
         search_results: dict = manager.dict()
-
         pool = Pool(processes=os.cpu_count())
 
         if not len(req.data_sources):
             # search all data sources when data_sources list in request is empty.
-            for i in range(len(all_data_sources)):
-                data_source_id = all_data_sources[i]["id"]
+            for index, data_source in enumerate(all_data_sources):
+                data_source_id = data_source["id"]
                 pool.apply_async(get_search_result, [search_results, data_source_id, document_service, req])
         else:
-            for i in range(len(req.data_sources)):
-                if req.data_sources[i] not in all_data_source_names:
-                    raise BadRequestException(f"Data source {req.data_sources[i]} not found")
-                pool.apply_async(get_search_result, [search_results, req.data_sources[i], document_service, req])
+            all_data_source_ids: list = [ds["id"] for ds in all_data_sources]
+            for data_source in req.data_sources:
+                if data_source not in all_data_source_ids:
+                    raise BadRequestException(f"Data source {data_source} not found")
+                pool.apply_async(get_search_result, [search_results, data_source, document_service, req])
         pool.close()
         pool.join()
         return JSONResponse(json.loads(json.dumps(search_results.copy())))
