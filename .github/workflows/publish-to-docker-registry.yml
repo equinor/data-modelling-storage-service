@@ -9,7 +9,9 @@ on:
 
 
 env:
-  DOCKER_IMAGE: mariner.azurecr.io/dmss
+  DOCKER_IMAGE: datamodelingtool.azurecr.io/dmss
+  IMAGE_REGISTRY: datamodelingtool.azurecr.io
+  REGISTRY_USER: datamodelingtool
 
 jobs:
   build-n-publish:
@@ -24,7 +26,7 @@ jobs:
         run: docker build --tag ${DOCKER_IMAGE}:latest .
       - name: "Docker Login"
         if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
-        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login mariner.azurecr.io --password-stdin --username ${{ secrets.DOCKER_USERNAME }}
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login ${{ env.IMAGE_REGISTRY }} --password-stdin --username ${{ env.REGISTRY_USER }}
       - name: "Push Docker image (latest)"
         if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
         run: docker push ${DOCKER_IMAGE}:latest
@@ -49,7 +51,7 @@ jobs:
       - uses: actions/checkout@master
       - name: pull latest DMSS image
         run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login mariner.azurecr.io --password-stdin --username ${{ secrets.DOCKER_USERNAME }}
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ${{ env.IMAGE_REGISTRY }} --password-stdin --username ${{ env.REGISTRY_USER }}
           docker pull $DOCKER_IMAGE:latest
       
       - name: save docker images
