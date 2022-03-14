@@ -28,7 +28,8 @@ class Recipe(BaseModel):
     description: str = ""
     plugin: str = "Default"
     category: str = ""
-    hideTab: bool = False
+    config: dict = None
+    label: str = ""
 
     def get_attribute_by_name(self, key):
         return next((attr for attr in self.attributes if attr.name == key), None)
