@@ -23,6 +23,10 @@ class DataSource(BaseModel):
     data_source_id: constr(min_length=3, max_length=128, regex=name_regex, strip_whitespace=True)
 
 
+class DataSourceList(BaseModel):
+    data_sources: list[constr(min_length=3, max_length=128, regex=name_regex, strip_whitespace=True)]
+
+
 class EntityUUID(BaseModel):
     uid: UUID4 = Field(..., alias="_id")
 
