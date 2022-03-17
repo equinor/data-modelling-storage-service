@@ -8,8 +8,6 @@ from restful.use_case import UseCase
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 from restful.request_types.shared import DataSourceList
-from multiprocessing import Manager, Pool
-import os
 
 
 class SearchRequest(DataSourceList):
@@ -37,21 +35,17 @@ class SearchUseCase(UseCase):
         )
         all_data_sources = DataSourceRepository(self.user).list()
 
-        manager = Manager()
-        search_results: dict = manager.dict()
-        pool = Pool(processes=os.cpu_count())
+        search_results: dict = {}
 
         if not len(req.data_sources):
             # search all data sources when data_sources list in request is empty.
             for index, data_source in enumerate(all_data_sources):
                 data_source_id = data_source["id"]
-                pool.apply_async(get_search_result, [search_results, data_source_id, document_service, req])
+                get_search_result(search_results, data_source_id, document_service, req)
         else:
             all_data_source_ids: list = [ds["id"] for ds in all_data_sources]
             for data_source in req.data_sources:
                 if data_source not in all_data_source_ids:
                     raise BadRequestException(f"Data source {data_source} not found")
-                pool.apply_async(get_search_result, [search_results, data_source, document_service, req])
-        pool.close()
-        pool.join()
+                get_search_result(search_results, data_source, document_service, req)
         return JSONResponse(json.loads(json.dumps(search_results.copy())))
