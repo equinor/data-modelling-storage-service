@@ -68,15 +68,9 @@ class InvalidAttributeException(RepositoryException):
 
 
 class RootPackageNotFoundException(Exception):
-    def __init__(self, data_source_id=None, file=None):
-        self.data_source_id = data_source_id if data_source_id else None
-        self.file = file if file else None
+    def __init__(self, data_source_id, file):
+        self.message =f"No root package with name '{data_source_id}', in data source '{file}' could be found."
 
-    def __str__(self):
-        if self.data_source_id and self.file:
-            return f"No root package with name '{self.file}', in data source '{self.data_source_id}' could be found."
-        else:
-            return "The root package could not be found"
 
 
 class FileNotFoundException(Exception):
