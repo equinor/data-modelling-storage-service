@@ -72,7 +72,6 @@ class RootPackageNotFoundException(Exception):
         self.message = f"No root package with name '{data_source_id}', in data source '{file}' could be found."
 
 
-
 class FileNotFoundException(Exception):
     def __init__(self, data_source_id=None, file=None):
         self.data_source_id = data_source_id if data_source_id else None
