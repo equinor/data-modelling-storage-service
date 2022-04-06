@@ -13,11 +13,11 @@ stringcase = "^1.2"
 jinja2 = "^3.1.1"
 wasmer = "0.3.0"
 toml = "0.10.2"
-azure-storage-blob = "^12.11.0"
+azure-storage-blob = "2.1.0"
 fastapi = "^0.75.1"
 python-multipart = "^0.0.5"
 uvicorn = {extras = ["standard"], version = "^0.15.0"}
-click = "^7.1.2"
+click = "8.0.0"
 aiofiles = "^0.7.0"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 cachetools = "^4.2.2"
