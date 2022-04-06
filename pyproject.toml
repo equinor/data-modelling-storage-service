@@ -38,7 +38,7 @@ flake8 = "^3.8.2"
 bandit = "^1.6.2"
 pytest = "^6.2.3"
 dictdiffer = "^0.8.1"
-black = "^21.10b0"
+black = "^22.3.0"
 
 [tool.pytest]
 addopts = ["--ignore gen"]
@@ -50,7 +50,7 @@ exclude = '''
 /(
     \.git
   | \.venv
-  | \gen
+  | gen
 )/
 '''
 
