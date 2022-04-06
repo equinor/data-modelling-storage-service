@@ -22,7 +22,7 @@ services:
       - "8000:5000"
 
   db:
-    image: mongo:4.4
+    image: mongo:3.4
     command: --quiet
     environment:
       MONGO_INITDB_ROOT_USERNAME: maf
