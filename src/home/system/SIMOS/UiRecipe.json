@@ -47,6 +47,13 @@
       "dimensions": "*",
       "optional": true,
       "contained": true
+    },
+    {
+      "name": "config",
+      "type": "object",
+      "attributeType": "system/SIMOS/UiAttributeOption",
+      "contained": true,
+      "optional": true
     }
   ],
   "uiRecipes": [
