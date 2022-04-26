@@ -8,16 +8,16 @@ license = "TBD"
 [tool.poetry.dependencies]
 python = "3.9.*"
 pymongo = "^3.8"
-jsonschema = "^3.0"
+jsonschema = "^4.4.0"
 stringcase = "^1.2"
-jinja2 = "^2.11.1"
+jinja2 = "^3.1.1"
 wasmer = "0.3.0"
-toml = "0.10.0"
+toml = "0.10.2"
 azure-storage-blob = "2.1.0"
-fastapi = "^0.65.1"
+fastapi = "^0.75.1"
 python-multipart = "^0.0.5"
 uvicorn = {extras = ["standard"], version = "^0.15.0"}
-click = "^7.1.2"
+click = "8.0.0"
 aiofiles = "^0.7.0"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 cachetools = "^4.2.2"
@@ -25,10 +25,10 @@ requests = "^2.26.0"
 gunicorn = "^20.1.0"
 
 [tool.poetry.dev-dependencies]
-pydevd = "^1.6"
+pydevd = "^2.8.0"
 behave = "1.2.6"
 colorclass = "1.0.1"
-terminaltables = "3.1.0"
+terminaltables = "^3.1.10"
 snapshottest = "0.5.1"
 deepdiff = "4.0.7"
 pre-commit = "^2.15.0"
@@ -38,7 +38,7 @@ flake8 = "^3.8.2"
 bandit = "^1.6.2"
 pytest = "^6.2.3"
 dictdiffer = "^0.8.1"
-black = "^21.10b0"
+black = "^22.3.0"
 
 [tool.pytest]
 addopts = ["--ignore gen"]
@@ -50,7 +50,7 @@ exclude = '''
 /(
     \.git
   | \.venv
-  | \gen
+  | gen
 )/
 '''
 
