@@ -3,7 +3,6 @@ from copy import deepcopy
 from unittest import mock
 
 from authentication.models import User
-
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dto import DTO
 from domain_classes.tree_node import Node
@@ -20,17 +19,17 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
-                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
-                "reference": {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
+                "type": "all_contained_cases_blueprint",
+                "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
+                "reference": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
                 "references": [
-                    {"_id": "3", "name": "ref1", "type": "blueprint_2"},
-                    {"_id": "4", "name": "ref2", "type": "blueprint_2"},
+                    {"_id": "3", "name": "ref1", "type": "basic_blueprint"},
+                    {"_id": "4", "name": "ref2", "type": "basic_blueprint"},
                 ],
             },
-            "2": {"_id": "2", "name": "a_reference", "description": "", "type": "blueprint_2"},
-            "3": {"_id": "3", "name": "ref1", "description": "", "type": "blueprint_2"},
-            "4": {"_id": "4", "name": "ref2", "description": "TEST", "type": "blueprint_2"},
+            "2": {"_id": "2", "name": "a_reference", "description": "", "type": "basic_blueprint"},
+            "3": {"_id": "3", "name": "ref1", "description": "", "type": "basic_blueprint"},
+            "4": {"_id": "4", "name": "ref2", "description": "TEST", "type": "basic_blueprint"},
         }
 
         def mock_get(document_id: str):
@@ -48,10 +47,15 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         node: Node = document_service.get_node_by_uid("testing", "1")
         contained_node: Node = node.get_by_path("references.1".split("."))
-        contained_node.update({"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "blueprint_2"})
+        contained_node.update({"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "basic_blueprint"})
         document_service.save(node, "testing")
 
-        assert doc_storage["4"] == {"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "blueprint_2"}
+        assert doc_storage["4"] == {
+            "_id": "4",
+            "name": "ref2",
+            "description": "TEST_MODIFY",
+            "type": "basic_blueprint",
+        }
 
     def test_save_append(self):
         repository = mock.Mock()
@@ -61,12 +65,12 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
-                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
-                "reference": {"name": "a_reference", "type": "blueprint_2"},
+                "type": "all_contained_cases_blueprint",
+                "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
+                "reference": {"name": "a_reference", "type": "basic_blueprint"},
                 "references": [],
             },
-            "2": {"_id": "2", "name": "a_reference", "description": "", "type": "blueprint_2"},
+            "2": {"_id": "2", "name": "a_reference", "description": "", "type": "basic_blueprint"},
         }
 
         def mock_get(document_id: str):
@@ -91,13 +95,13 @@ class DocumentServiceTestCase(unittest.TestCase):
                 uid="2",
                 entity=doc_storage["2"],
                 blueprint_provider=document_service.get_blueprint,
-                attribute=BlueprintAttribute(name="references", attribute_type="blueprint_2"),
+                attribute=BlueprintAttribute(name="references", attribute_type="basic_blueprint"),
             )
         )
         document_service.save(node, "testing")
 
         assert doc_storage["1"]["references"] == [
-            {"name": "a_reference", "type": "blueprint_2", "_id": "2", "contained": True}
+            {"name": "a_reference", "type": "basic_blueprint", "_id": "2", "contained": True}
         ]
 
     def test_save_delete(self):
@@ -108,30 +112,30 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
-                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
-                "reference": {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
+                "type": "all_contained_cases_blueprint",
+                "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
+                "reference": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
                 "references": [
-                    {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
-                    {"_id": "3", "name": "a_reference", "type": "blueprint_2"},
-                    {"_id": "4", "name": "a_reference", "type": "blueprint_2"},
+                    {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
+                    {"_id": "3", "name": "a_reference", "type": "basic_blueprint"},
+                    {"_id": "4", "name": "a_reference", "type": "basic_blueprint"},
                 ],
             },
-            "2": {"_id": "2", "name": "a_reference", "description": "Index 1", "type": "blueprint_2"},
-            "3": {"_id": "3", "name": "a_reference", "description": "Index 2", "type": "blueprint_2"},
-            "4": {"_id": "4", "name": "a_reference", "description": "Index 3", "type": "blueprint_2"},
+            "2": {"_id": "2", "name": "a_reference", "description": "Index 1", "type": "basic_blueprint"},
+            "3": {"_id": "3", "name": "a_reference", "description": "Index 2", "type": "basic_blueprint"},
+            "4": {"_id": "4", "name": "a_reference", "description": "Index 3", "type": "basic_blueprint"},
         }
 
         doc_1_after = {
             "name": "Parent",
             "_id": "1",
             "description": "",
-            "type": "blueprint_1",
+            "type": "all_contained_cases_blueprint",
             "nested": {},
             "reference": {},
             "references": [
-                {"_id": "2", "name": "a_reference", "type": "blueprint_2", "contained": True},
-                {"_id": "4", "name": "a_reference", "type": "blueprint_2", "contained": True},
+                {"_id": "2", "name": "a_reference", "type": "basic_blueprint", "contained": True},
+                {"_id": "4", "name": "a_reference", "type": "basic_blueprint", "contained": True},
             ],
         }
 
@@ -177,7 +181,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "uncontained_in_every_way": {
                         "_id": "2",
                         "name": "im_a_uncontained_attribute",
-                        "type": "blueprint_2",
+                        "type": "basic_blueprint",
                         "description": "I'm the second nested document, uncontained",
                     },
                 },
@@ -185,7 +189,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "3": {
                 "_id": "3",
                 "name": "ASelfContainedEntity",
-                "type": "blueprint_2",
+                "type": "basic_blueprint",
                 "description": "ASelfContainedEntity",
             },
         }
@@ -231,7 +235,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "uncontained_in_every_way": {
                         "_id": "2",
                         "name": "im_a_uncontained_attribute",
-                        "type": "blueprint_2",
+                        "type": "basic_blueprint",
                         "contained": False,
                     },
                 },
@@ -239,7 +243,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {
                 "_id": "2",
                 "name": "im_a_uncontained_attribute",
-                "type": "blueprint_2",
+                "type": "basic_blueprint",
                 "description": "I'm the second nested document, uncontained",
             },
         }
@@ -269,7 +273,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "uncontained_in_every_way": {
                         "_id": "2",
                         "name": "im_a_uncontained_attribute",
-                        "type": "blueprint_2",
+                        "type": "basic_blueprint",
                         "contained": False,
                     },
                 },
@@ -279,3 +283,57 @@ class DocumentServiceTestCase(unittest.TestCase):
         # Test that the "2" document has not been overwritten
         assert doc_storage["2"].get("description") == "I'm the second nested document, uncontained"
         assert doc_storage["1"]["i_have_a_uncontained_attribute"]["description"] == "This has changed!"
+
+    """
+    This test tests that we can update a contained attribute, and all it's children (contained or not), without
+    modifying the "root" document.     
+    """
+
+    def test_save_update_children_of_contained_attribute(self):
+        repository = mock.Mock()
+
+        doc_storage = {
+            "1": {
+                "_id": "1",
+                "type": "two_contained_deep_attributes",
+                "name": "Root",
+                "a": {
+                    "type": "all_contained_cases_blueprint",
+                    "reference": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
+                },
+                "b": {},
+            },
+            "2": {"_id": "2", "name": "a_reference", "description": "", "type": "basic_blueprint"},
+            "3": {"_id": "3", "description": " This is malformed, with missing type"},
+        }
+
+        def mock_get(document_id: str):
+            return DTO(doc_storage[document_id])
+
+        def mock_update(dto: DTO, *args, **kwargs):
+            doc_storage[dto.uid] = dto.data
+            return None
+
+        repository.get = mock_get
+        repository.update = mock_update
+        document_service = DocumentService(
+            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
+        )
+        new_data = {
+            "name": "A-contained_attribute",
+            "type": "all_contained_cases_blueprint",
+            "description": "SOME DESCRIPTION",
+            "reference": {
+                "_id": "2",
+                "name": "a_reference",
+                "type": "basic_blueprint",
+                "description": "A NEW DESCRIPTION HERE",
+            },
+            "nested": {},
+            "references": [],
+        }
+        document_service.update_document("testing", "1.a", new_data, update_uncontained=True)
+
+        assert doc_storage["1"]["a"]["description"] == "SOME DESCRIPTION"
+        assert doc_storage["1"]["a"]["reference"]["description"] == "A NEW DESCRIPTION HERE"
+        assert doc_storage["1"]["b"] == {}

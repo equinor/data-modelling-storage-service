@@ -19,9 +19,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
-                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
-                "reference": {"name": "some reference", "description": "", "type": "blueprint_2"},
+                "type": "all_contained_cases_blueprint",
+                "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
+                "reference": {"name": "some reference", "description": "", "type": "basic_blueprint"},
                 "references": [],
             }
         }
@@ -48,7 +48,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             data_source_id="testing", parent_uid="1", document_id="1.nested", name="New_name"
         )
 
-        actual = {"name": "New_name", "description": "", "type": "blueprint_2"}
+        actual = {"name": "New_name", "description": "", "type": "basic_blueprint"}
 
         assert pretty_eq(actual, doc_storage["1"]["nested"]) is None
 
@@ -98,12 +98,12 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
-                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
+                "type": "all_contained_cases_blueprint",
+                "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
                 "references": [],
-                "reference": {"_id": "2", "name": "Reference", "type": "blueprint_2"},
+                "reference": {"_id": "2", "name": "Reference", "type": "basic_blueprint"},
             },
-            "2": {"_id": "2", "name": "Reference", "description": "", "type": "blueprint_2"},
+            "2": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
         }
 
         def mock_get(document_id: str):
@@ -124,8 +124,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New_name")
 
-        actual = {"_id": "1", "reference": {"_id": "2", "name": "New_name", "type": "blueprint_2"}}
-        actual2 = {"_id": "2", "name": "New_name", "type": "blueprint_2"}
+        actual = {"_id": "1", "reference": {"_id": "2", "name": "New_name", "type": "basic_blueprint"}}
+        actual2 = {"_id": "2", "name": "New_name", "type": "basic_blueprint"}
 
         assert pretty_eq(actual, doc_storage["1"]) is None
         assert pretty_eq(actual2, doc_storage["2"]) is None
@@ -138,12 +138,12 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
-                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
-                "reference": {"_id": "2", "name": "Reference", "type": "blueprint_2"},
-                "references": [{"_id": "2", "name": "Reference", "type": "blueprint_2"}],
+                "type": "all_contained_cases_blueprint",
+                "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
+                "reference": {"_id": "2", "name": "Reference", "type": "basic_blueprint"},
+                "references": [{"_id": "2", "name": "Reference", "type": "basic_blueprint"}],
             },
-            "2": {"_id": "2", "name": "Reference", "description": "", "type": "blueprint_2"},
+            "2": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
         }
 
         def mock_get(document_id: str):
@@ -164,8 +164,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New_name")
 
-        actual = {"_id": "1", "references": [{"_id": "2", "name": "New_name", "type": "blueprint_2"}]}
-        actual2 = {"_id": "2", "name": "New_name", "type": "blueprint_2"}
+        actual = {"_id": "1", "references": [{"_id": "2", "name": "New_name", "type": "basic_blueprint"}]}
+        actual2 = {"_id": "2", "name": "New_name", "type": "basic_blueprint"}
 
         assert pretty_eq(actual, doc_storage["1"]) is None
         assert pretty_eq(actual2, doc_storage["2"]) is None

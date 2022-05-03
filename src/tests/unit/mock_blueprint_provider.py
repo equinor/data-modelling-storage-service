@@ -15,16 +15,16 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.dto import DTO
 from storage.repositories.file import LocalFileRepository
 
-blueprint_1 = {
+all_contained_cases_blueprint = {
     "type": "system/SIMOS/Blueprint",
     "name": "Blueprint 1",
     "description": "First blueprint",
     "extends": ["system/SIMOS/NamedEntity"],
     "attributes": [
-        {"attributeType": "blueprint_2", "type": "system/SIMOS/BlueprintAttribute", "name": "nested"},
-        {"attributeType": "blueprint_2", "type": "system/SIMOS/BlueprintAttribute", "name": "reference"},
+        {"attributeType": "basic_blueprint", "type": "system/SIMOS/BlueprintAttribute", "name": "nested"},
+        {"attributeType": "basic_blueprint", "type": "system/SIMOS/BlueprintAttribute", "name": "reference"},
         {
-            "attributeType": "blueprint_2",
+            "attributeType": "basic_blueprint",
             "type": "system/SIMOS/BlueprintAttribute",
             "name": "references",
             "dimensions": "*",
@@ -50,14 +50,24 @@ blueprint_with_second_level_reference = {
     "extends": ["system/SIMOS/NamedEntity"],
     "attributes": [
         {
-            "attributeType": "blueprint_1",
+            "attributeType": "all_contained_cases_blueprint",
             "type": "system/SIMOS/BlueprintAttribute",
             "name": "contained_with_child_references",
         },
     ],
 }
 
-blueprint_2 = {
+two_contained_deep_attributes = {
+    "type": "system/SIMOS/Blueprint",
+    "name": "two_contained_deep_attributes",
+    "description": "Two contained deeply nested attributes",
+    "attributes": [
+        {"attributeType": "all_contained_cases_blueprint", "type": "system/SIMOS/BlueprintAttribute", "name": "a"},
+        {"attributeType": "all_contained_cases_blueprint", "type": "system/SIMOS/BlueprintAttribute", "name": "b"},
+    ],
+}
+
+basic_blueprint = {
     "type": "system/SIMOS/Blueprint",
     "name": "Blueprint 2",
     "description": "Second blueprint",
@@ -69,7 +79,7 @@ blueprint_2 = {
 
 extended_blueprint = {
     "type": "system/SIMOS/Blueprint",
-    "extends": ["blueprint_2"],
+    "extends": ["basic_blueprint"],
     "name": "ExtendedBlueprint",
     "description": "This Blueprint extends blueprint 2",
     "attributes": [{"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "another_value"}],
@@ -105,7 +115,7 @@ uncontained_blueprint = {
     "extends": ["system/SIMOS/NamedEntity"],
     "attributes": [
         {
-            "attributeType": "blueprint_2",
+            "attributeType": "basic_blueprint",
             "type": "system/SIMOS/BlueprintAttribute",
             "name": "uncontained_in_every_way",
             "contained": False,
@@ -135,7 +145,7 @@ uncontained_list_blueprint = {
     "extends": ["system/SIMOS/NamedEntity"],
     "attributes": [
         {
-            "attributeType": "blueprint_2",
+            "attributeType": "basic_blueprint",
             "type": "system/SIMOS/BlueprintAttribute",
             "name": "uncontained_in_every_way",
             "contained": False,
@@ -165,7 +175,7 @@ blueprint_with_optional_attr = {
     "extends": ["system/SIMOS/NamedEntity"],
     "attributes": [
         {
-            "attributeType": "blueprint_2",
+            "attributeType": "basic_blueprint",
             "type": "system/SIMOS/BlueprintAttribute",
             "name": "im_optional",
             "optional": True,
@@ -235,12 +245,14 @@ file_repository_test = LocalFileRepository()
 class BlueprintProvider:
     @staticmethod
     def get_blueprint(type: str):
-        if type == "blueprint_1":
-            return Blueprint(DTO(blueprint_1))
+        if type == "all_contained_cases_blueprint":
+            return Blueprint(DTO(all_contained_cases_blueprint))
+        if type == "basic_blueprint":
+            return Blueprint(DTO(basic_blueprint))
         if type == "blueprint_with_second_level_reference":
             return Blueprint(DTO(blueprint_with_second_level_reference))
-        if type == "blueprint_2":
-            return Blueprint(DTO(blueprint_2))
+        if type == "two_contained_deep_attributes":
+            return Blueprint(DTO(two_contained_deep_attributes))
         if type == "ExtendedBlueprint":
             return Blueprint(DTO(extended_blueprint))
         if type == "SecondLevelExtendedBlueprint":

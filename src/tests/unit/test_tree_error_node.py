@@ -5,7 +5,7 @@ from domain_classes.dto import DTO
 from domain_classes.tree_node import Node
 
 
-blueprint_1 = {
+all_contained_cases_blueprint = {
     "type": "system/SIMOS/Blueprint",
     "name": "Blueprint1",
     "description": "First blueprint",
@@ -13,7 +13,7 @@ blueprint_1 = {
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
-        {"attributeType": "blueprint_2", "type": "system/SIMOS/BlueprintAttribute", "name": "nested"},
+        {"attributeType": "basic_blueprint", "type": "system/SIMOS/BlueprintAttribute", "name": "nested"},
     ],
     "storageRecipes": [],
     "uiRecipes": [],
@@ -30,10 +30,10 @@ class ErrorTreenodeTestCase(unittest.TestCase):
             "uid": "1",
             "name": "Parent",
             "description": "",
-            "type": "blueprint_1",
+            "type": "all_contained_cases_blueprint",
             # renamed nested to nested2
-            "nested2": {"name": "Nested 1", "description": "", "type": "blueprint_2"},
-            "_blueprint": blueprint_1,
+            "nested2": {"name": "Nested 1", "description": "", "type": "basic_blueprint"},
+            "_blueprint": all_contained_cases_blueprint,
         }
 
         class BlueprintProvider:

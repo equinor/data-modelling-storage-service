@@ -13,7 +13,7 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_remove_document(self):
         document_repository = mock.Mock()
 
-        document_1 = {"_id": "1", "name": "Parent", "description": "", "type": "blueprint_1"}
+        document_1 = {"_id": "1", "name": "Parent", "description": "", "type": "all_contained_cases_blueprint"}
 
         document_repository.get = lambda id: DTO(data=document_1.copy())
 
@@ -25,7 +25,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
     def test_remove_document_wo_existing_blueprint(self):
         repository = mock.Mock()
-        doc_storage = {"1": {"_id": "1", "name": "Parent", "description": "", "type": "blueprint_1"}}
+        doc_storage = {"1": {"_id": "1", "name": "Parent", "description": "", "type": "all_contained_cases_blueprint"}}
 
         class NoBlueprints:
             def get_blueprint(self, type):
@@ -48,9 +48,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "name": "Parent",
                 "description": "",
                 "type": "uncontained_blueprint",
-                "uncontained_in_every_way": {"_id": "2", "name": "a_reference", "type": "blueprint_2"},
+                "uncontained_in_every_way": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
             },
-            "2": {"uid": "2", "_id": "2", "name": "a_reference", "description": "", "type": "blueprint_2"},
+            "2": {"uid": "2", "_id": "2", "name": "a_reference", "description": "", "type": "basic_blueprint"},
         }
 
         def mock_get(document_id: str):
@@ -77,7 +77,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=repository_provider
         )
         document_service.remove_document(data_source_id="testing", document_id="1")
-        expected = {"2": {"uid": "2", "_id": "2", "name": "a_reference", "description": "", "type": "blueprint_2"}}
+        expected = {"2": {"uid": "2", "_id": "2", "name": "a_reference", "description": "", "type": "basic_blueprint"}}
         assert pretty_eq(expected, doc_storage) is None
 
     def test_remove_nested(self):
@@ -88,8 +88,8 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
-                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
+                "type": "all_contained_cases_blueprint",
+                "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
             }
         }
 
@@ -109,19 +109,24 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
+                "type": "all_contained_cases_blueprint",
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "blueprint_1",
-                    "nested": {"_id": "2", "name": "Parent", "contained": True, "type": "blueprint_1"},
+                    "type": "all_contained_cases_blueprint",
+                    "nested": {
+                        "_id": "2",
+                        "name": "Parent",
+                        "contained": True,
+                        "type": "all_contained_cases_blueprint",
+                    },
                 },
             },
             "2": {
                 "_id": "2",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
+                "type": "all_contained_cases_blueprint",
             },
         }
 
@@ -142,21 +147,35 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
+                "type": "all_contained_cases_blueprint",
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "blueprint_1",
+                    "type": "all_contained_cases_blueprint",
                     "nested": [
                         {
                             "name": "Parent",
-                            "type": "blueprint_1",
-                            "nested": [{"_id": "2", "name": "Parent", "contained": True, "type": "blueprint_1"}],
+                            "type": "all_contained_cases_blueprint",
+                            "nested": [
+                                {
+                                    "_id": "2",
+                                    "name": "Parent",
+                                    "contained": True,
+                                    "type": "all_contained_cases_blueprint",
+                                }
+                            ],
                         },
                         {
                             "name": "Parent",
-                            "type": "blueprint_1",
-                            "nested": [{"_id": "3", "name": "Parent", "contained": True, "type": "blueprint_1"}],
+                            "type": "all_contained_cases_blueprint",
+                            "nested": [
+                                {
+                                    "_id": "3",
+                                    "name": "Parent",
+                                    "contained": True,
+                                    "type": "all_contained_cases_blueprint",
+                                }
+                            ],
                         },
                     ],
                 },
@@ -165,13 +184,13 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "2",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
+                "type": "all_contained_cases_blueprint",
             },
             "3": {
                 "_id": "3",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
+                "type": "all_contained_cases_blueprint",
             },
         }
 
@@ -193,10 +212,10 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_1",
-                "reference": {"_id": "2", "name": "Reference", "type": "blueprint_2", "contained": False},
+                "type": "all_contained_cases_blueprint",
+                "reference": {"_id": "2", "name": "Reference", "type": "basic_blueprint", "contained": False},
             },
-            "2": {"_id": "2", "name": "Reference", "description": "", "type": "blueprint_2"},
+            "2": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
         }
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         repository.get = lambda uid: DTO(doc_storage[uid])
@@ -213,7 +232,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "_id": "1",
             "name": "Parent",
             "description": "",
-            "type": "blueprint_1",
+            "type": "all_contained_cases_blueprint",
         }
         assert doc_storage.get("2")
 
@@ -226,7 +245,11 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "name": "Parent",
                 "description": "",
                 "type": "blueprint_with_optional_attr",
-                "im_optional": {"name": "old_entity", "type": "blueprint_2", "description": "This is my old entity"},
+                "im_optional": {
+                    "name": "old_entity",
+                    "type": "basic_blueprint",
+                    "description": "This is my old entity",
+                },
             }
         }
 

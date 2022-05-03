@@ -1,9 +1,9 @@
 [tool.poetry]
-name = "api"
+name = "Data Modeling Storage Service"
 version = "0.1.0"
-description = "API for data-modelling-tool"
+description = "A model based storage service"
 authors = ["Stig Ofstad <stoo@equinor.com>","Christoffer","Eirik"]
-license = "TBD"
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "3.9.*"
@@ -17,7 +17,7 @@ azure-storage-blob = "2.1.0"
 fastapi = "^0.75.1"
 python-multipart = "^0.0.5"
 uvicorn = {extras = ["standard"], version = "^0.15.0"}
-click = "8.0.0"
+click = "^8.0.0"
 aiofiles = "^0.7.0"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 cachetools = "^4.2.2"

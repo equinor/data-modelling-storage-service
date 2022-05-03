@@ -26,7 +26,7 @@ class ReferenceTestCase(unittest.TestCase):
                 "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
                 "name": "something",
                 "description": "",
-                "type": "blueprint_2",
+                "type": "basic_blueprint",
             },
         }
 
@@ -44,7 +44,7 @@ class ReferenceTestCase(unittest.TestCase):
             "testing",
             document_id="1",
             reference=Reference.parse_obj(
-                {"_id": "2d7c3249-985d-43d2-83cf-a887e440825a", "name": "something", "type": "blueprint_2"}
+                {"_id": "2d7c3249-985d-43d2-83cf-a887e440825a", "name": "something", "type": "basic_blueprint"}
             ),
             attribute_path="uncontained_in_every_way",
         )
@@ -52,7 +52,7 @@ class ReferenceTestCase(unittest.TestCase):
             "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
             "name": "something",
             "contained": False,
-            "type": "blueprint_2",
+            "type": "basic_blueprint",
         }
 
     def test_insert_reference_target_does_not_exist(self):
@@ -148,7 +148,7 @@ class ReferenceTestCase(unittest.TestCase):
                 "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
                 "name": "something",
                 "description": "",
-                "type": "blueprint_2",
+                "type": "basic_blueprint",
             },
         }
 
@@ -172,7 +172,7 @@ class ReferenceTestCase(unittest.TestCase):
                 {
                     "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
                     "name": "something",
-                    "type": "blueprint_2",
+                    "type": "basic_blueprint",
                     "description": "hallO",
                     "something": "something",
                 }
@@ -182,7 +182,7 @@ class ReferenceTestCase(unittest.TestCase):
         assert doc_storage["1"]["uncontained_in_every_way"] == {
             "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
             "name": "something",
-            "type": "blueprint_2",
+            "type": "basic_blueprint",
             "contained": False,
         }
 
@@ -233,14 +233,14 @@ class ReferenceTestCase(unittest.TestCase):
                     "_id": "something",
                     "name": "something",
                     "description": "",
-                    "type": "blueprint_2",
+                    "type": "basic_blueprint",
                 },
             },
             "something": {
                 "_id": "something",
                 "name": "something",
                 "description": "",
-                "type": "blueprint_2",
+                "type": "basic_blueprint",
             },
         }
 
@@ -278,7 +278,7 @@ class ReferenceTestCase(unittest.TestCase):
                         "_id": "something",
                         "name": "something",
                         "description": "",
-                        "type": "blueprint_2",
+                        "type": "basic_blueprint",
                     },
                 },
             },
@@ -286,7 +286,7 @@ class ReferenceTestCase(unittest.TestCase):
                 "_id": "something",
                 "name": "something",
                 "description": "",
-                "type": "blueprint_2",
+                "type": "basic_blueprint",
             },
         }
 
@@ -320,24 +320,24 @@ class ReferenceTestCase(unittest.TestCase):
                     {
                         "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
                         "name": "something",
-                        "type": "blueprint_2",
+                        "type": "basic_blueprint",
                     },
                     {
                         "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
                         "name": "something",
-                        "type": "blueprint_2",
+                        "type": "basic_blueprint",
                     },
                 ],
             },
             "2d7c3249-985d-43d2-83cf-a887e440825a": {
                 "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
                 "name": "something",
-                "type": "blueprint_2",
+                "type": "basic_blueprint",
             },
             "42dbe4a5-0eb0-4ee2-826c-695172c3c35a": {
                 "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
                 "name": "something",
-                "type": "blueprint_2",
+                "type": "basic_blueprint",
             },
         }
 
@@ -359,7 +359,7 @@ class ReferenceTestCase(unittest.TestCase):
         assert doc_storage["1"]["uncontained_in_every_way"][0] == {
             "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
             "name": "something",
-            "type": "blueprint_2",
+            "type": "basic_blueprint",
             "contained": False,
         }
 
@@ -376,19 +376,19 @@ class ReferenceTestCase(unittest.TestCase):
                     {
                         "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
                         "name": "something",
-                        "type": "blueprint_2",
+                        "type": "basic_blueprint",
                     }
                 ],
             },
             "2d7c3249-985d-43d2-83cf-a887e440825a": {
                 "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
                 "name": "something",
-                "type": "blueprint_2",
+                "type": "basic_blueprint",
             },
             "42dbe4a5-0eb0-4ee2-826c-695172c3c35a": {
                 "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
                 "name": "something",
-                "type": "blueprint_2",
+                "type": "basic_blueprint",
             },
         }
 
@@ -404,7 +404,7 @@ class ReferenceTestCase(unittest.TestCase):
             "testing",
             document_id="1",
             reference=Reference(
-                **{"_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a", "name": "something", "type": "blueprint_2"}
+                **{"_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a", "name": "something", "type": "basic_blueprint"}
             ),
             attribute_path="uncontained_in_every_way",
         )
@@ -412,6 +412,6 @@ class ReferenceTestCase(unittest.TestCase):
         assert doc_storage["1"]["uncontained_in_every_way"][1] == {
             "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
             "name": "something",
-            "type": "blueprint_2",
+            "type": "basic_blueprint",
             "contained": False,
         }

@@ -28,12 +28,12 @@ def create_error_response(
     status: int,
 ) -> JSONResponse:
     types = {
-        404: "RESOURCE_ERROR",
         400: "PARAMETERS_ERROR",
-        422: "UNPROCESSABLE_ENTITY",
-        500: "SYSTEM_ERROR",
         401: "UNAUTHORIZED",
         403: "FORBIDDEN",
+        404: "RESOURCE_ERROR",
+        422: "UNPROCESSABLE_ENTITY",
+        500: "SYSTEM_ERROR",
     }
 
     return JSONResponse({"type": types[status], "message": f"{error.__class__.__name__}: {error.message}"}, status)
@@ -58,9 +58,10 @@ class UseCase:
             ValidationError,
             ValidationException,
         ) as e:
-            logger.error(e)
+            logger.warning(e.message)
             return create_error_response(e, status.HTTP_422_UNPROCESSABLE_ENTITY)
         except MissingPrivilegeException as e:
+            logger.warning(e.message)
             return create_error_response(e, status.HTTP_403_FORBIDDEN)
         except (
             DataSourceAlreadyExistsException,
@@ -69,6 +70,7 @@ class UseCase:
             DuplicateFileNameException,
             InvalidChildTypeException,
         ) as e:
+            logger.warning(e.message)
             return create_error_response(e, status.HTTP_400_BAD_REQUEST)
         except Exception:
             traceback.print_exc()
