@@ -3,6 +3,7 @@ from typing import Callable, List
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import BuiltinDataTypes
 from utils.exceptions import ValidationException
+from utils.logging import logger
 from utils.string_helpers import get_data_type_from_dmt_type
 
 
@@ -22,6 +23,7 @@ def valid_extended_type(type: str, extended_types: List[str], get_blueprint: Cal
 def entity_has_all_required_attributes(entity: dict, required_attributes: List[BlueprintAttribute]):
     for attribute in required_attributes:
         if attribute.name not in entity:
+            logger.warning(entity)
             raise ValidationException(f"Required attribute '{attribute.name}' not found in the entity")
         if attribute.dimensions.dimensions[0] != "":
             if type(entity[attribute.name]) != list:
