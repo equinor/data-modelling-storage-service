@@ -13,18 +13,18 @@ class DocumentServiceTestCase(unittest.TestCase):
             "_id": "1",
             "name": "Parent",
             "description": "",
-            "type": "blueprint_1",
-            "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
-            "reference": {"_id": "2", "name": "Reference", "type": "blueprint_2"},
+            "type": "all_contained_cases_blueprint",
+            "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
+            "reference": {"_id": "2", "name": "Reference", "type": "basic_blueprint"},
             "references": [
-                {"_id": "3", "name": "Reference1", "type": "blueprint_2"},
-                {"_id": "4", "name": "Reference2", "type": "blueprint_2"},
+                {"_id": "3", "name": "Reference1", "type": "basic_blueprint"},
+                {"_id": "4", "name": "Reference2", "type": "basic_blueprint"},
             ],
         }
 
-        document_2 = {"_id": "2", "name": "Reference", "description": "", "type": "blueprint_2"}
-        document_3 = {"_id": "3", "name": "Reference1", "description": "", "type": "blueprint_2"}
-        document_4 = {"_id": "4", "name": "Reference2", "description": "", "type": "blueprint_2"}
+        document_2 = {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"}
+        document_3 = {"_id": "3", "name": "Reference1", "description": "", "type": "basic_blueprint"}
+        document_4 = {"_id": "4", "name": "Reference2", "description": "", "type": "basic_blueprint"}
 
         def mock_get(document_id: str):
             if document_id == "1":
@@ -51,8 +51,8 @@ class DocumentServiceTestCase(unittest.TestCase):
             "_id": "1",
             "name": "Parent",
             "description": "",
-            "type": "blueprint_1",
-            "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
+            "type": "all_contained_cases_blueprint",
+            "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
             "reference": document_2,
             "references": [document_3, document_4],
         }
@@ -68,19 +68,19 @@ class DocumentServiceTestCase(unittest.TestCase):
             "contained_with_child_references": {
                 "name": "First child",
                 "description": "",
-                "type": "blueprint_1",
-                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
-                "reference": {"_id": "2", "name": "Reference", "type": "blueprint_2"},
+                "type": "all_contained_cases_blueprint",
+                "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
+                "reference": {"_id": "2", "name": "Reference", "type": "basic_blueprint"},
                 "references": [
-                    {"_id": "3", "name": "Reference1", "type": "blueprint_2"},
-                    {"_id": "4", "name": "Reference2", "type": "blueprint_2"},
+                    {"_id": "3", "name": "Reference1", "type": "basic_blueprint"},
+                    {"_id": "4", "name": "Reference2", "type": "basic_blueprint"},
                 ],
             },
         }
 
-        document_2 = {"_id": "2", "name": "Reference", "description": "", "type": "blueprint_2"}
-        document_3 = {"_id": "3", "name": "Reference1", "description": "", "type": "blueprint_2"}
-        document_4 = {"_id": "4", "name": "Reference2", "description": "", "type": "blueprint_2"}
+        document_2 = {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"}
+        document_3 = {"_id": "3", "name": "Reference1", "description": "", "type": "basic_blueprint"}
+        document_4 = {"_id": "4", "name": "Reference2", "description": "", "type": "basic_blueprint"}
 
         def mock_get(document_id: str):
             if document_id == "1":
@@ -111,8 +111,8 @@ class DocumentServiceTestCase(unittest.TestCase):
             "contained_with_child_references": {
                 "name": "First child",
                 "description": "",
-                "type": "blueprint_1",
-                "nested": {"name": "Nested", "description": "", "type": "blueprint_2"},
+                "type": "all_contained_cases_blueprint",
+                "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
                 "reference": document_2,
                 "references": [document_3, document_4],
             },

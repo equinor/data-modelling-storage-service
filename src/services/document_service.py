@@ -202,7 +202,10 @@ class DocumentService:
         update_uncontained: bool = True,
     ):
         document_id, attribute = split_dotted_id(dotted_id)
-        root: Node = self.get_node_by_uid(data_source_id, document_id)
+        # TODO: Since we are only fetching 1 lvl here, any updates on nested uncontained attributes by dott reference
+        # TODO: will fail, as they are not a node on the root node. For example; '123-456.contAttr.someUncontainedAttr'
+        # TODO: We should update 'node.get_by_path()' do fetch documents as needed
+        root: Node = self.get_node_by_uid(data_source_id, document_id, depth=0)
         target_node = root
 
         # If it's a contained nested node, set the modify target based on dotted-path
@@ -212,7 +215,12 @@ class DocumentService:
         target_node.update(data)
         if files:
             self._merge_entity_and_files(target_node, files)
-        self.save(root, data_source_id, update_uncontained=update_uncontained)
+
+        self.save(target_node, data_source_id, update_uncontained=update_uncontained)
+
+        # If the target was a contained child of root, update root as well with any contained attributes
+        if attribute and target_node.storage_contained:
+            self.save(root, data_source_id, update_uncontained=False)
 
         logger.info(f"Updated document '{target_node.node_id}''")
         return {"data": target_node.to_dict()}

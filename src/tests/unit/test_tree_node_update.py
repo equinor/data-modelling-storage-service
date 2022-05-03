@@ -205,7 +205,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "name": "Parent",
             "description": "",
             "type": "blueprint_with_optional_attr",
-            "im_optional": {"name": "new_entity", "type": "blueprint_2", "description": "This is my new entity"},
+            "im_optional": {"name": "new_entity", "type": "basic_blueprint", "description": "This is my new entity"},
         }
 
         def mock_get(document_id: str):
@@ -226,7 +226,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         document_service.add_document(
             "testing/1.im_optional",
-            data={"type": "blueprint_2", "name": "new_entity", "description": "This is my new entity"},
+            data={"type": "basic_blueprint", "name": "new_entity", "description": "This is my new entity"},
         )
 
         assert pretty_eq(doc_1_after, doc_storage["1"]) is None
@@ -291,7 +291,11 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "name": "Parent",
                 "description": "",
                 "type": "blueprint_with_optional_attr",
-                "im_optional": {"name": "new_entity", "type": "blueprint_2", "description": "This is my new entity"},
+                "im_optional": {
+                    "name": "new_entity",
+                    "type": "basic_blueprint",
+                    "description": "This is my new entity",
+                },
             },
         }
 
@@ -313,7 +317,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         document_service.add_document(
             "testing/1.nested_with_optional.im_optional",
-            {"name": "new_entity", "description": "This is my new entity", "type": "blueprint_2"},
+            {"name": "new_entity", "description": "This is my new entity", "type": "basic_blueprint"},
         )
 
         assert pretty_eq(doc_1_after, doc_storage["1"]) is None
@@ -330,7 +334,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "im_optional": {
                     "name": "duplicate",
                     "description": "",
-                    "type": "blueprint_2",
+                    "type": "basic_blueprint",
                 },
             }
         }
@@ -351,7 +355,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         with self.assertRaises(DuplicateFileNameException):
             document_service.add_document(
                 "testing/1.im_optional",
-                data={"type": "blueprint_2", "name": "duplicate", "description": "This is my new entity"},
+                data={"type": "basic_blueprint", "name": "duplicate", "description": "This is my new entity"},
             )
 
     def test_add_valid_specialized_child_type(self):

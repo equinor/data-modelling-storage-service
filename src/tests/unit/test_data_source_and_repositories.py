@@ -20,7 +20,7 @@ class DataSourceTestCase(unittest.TestCase):
             "name": "Parent",
             "description": "",
             "type": "uncontained_blueprint",
-            "uncontained_in_every_way": {"name": "a_reference", "type": "blueprint_2"},
+            "uncontained_in_every_way": {"name": "a_reference", "type": "basic_blueprint"},
         }
 
         default_doc_storage = {}
