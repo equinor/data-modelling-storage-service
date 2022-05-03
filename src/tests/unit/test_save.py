@@ -193,7 +193,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         def mock_update(dto: DTO, *args, **kwargs):
             doc_storage[dto.uid] = dto.data
 
-        repository.get = lambda id: DTO((doc_storage[id]))
+        repository.get = lambda id: DTO(doc_storage[id])
         repository.update = mock_update
 
         document_service = DocumentService(
