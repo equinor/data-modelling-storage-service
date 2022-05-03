@@ -43,6 +43,20 @@ blueprint_1 = {
     ],
 }
 
+blueprint_with_second_level_reference = {
+    "type": "system/SIMOS/Blueprint",
+    "name": "Blueprint with second level reference",
+    "description": "Blueprint with second level reference",
+    "extends": ["system/SIMOS/NamedEntity"],
+    "attributes": [
+        {
+            "attributeType": "blueprint_1",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "contained_with_child_references",
+        },
+    ],
+}
+
 blueprint_2 = {
     "type": "system/SIMOS/Blueprint",
     "name": "Blueprint 2",
@@ -223,6 +237,8 @@ class BlueprintProvider:
     def get_blueprint(type: str):
         if type == "blueprint_1":
             return Blueprint(DTO(blueprint_1))
+        if type == "blueprint_with_second_level_reference":
+            return Blueprint(DTO(blueprint_with_second_level_reference))
         if type == "blueprint_2":
             return Blueprint(DTO(blueprint_2))
         if type == "ExtendedBlueprint":

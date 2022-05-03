@@ -1,4 +1,5 @@
 import unittest
+from copy import deepcopy
 from unittest import mock
 
 from authentication.models import User
@@ -276,5 +277,5 @@ class DocumentServiceTestCase(unittest.TestCase):
             update_uncontained=False,
         )
         # Test that the "2" document has not been overwritten
-        assert doc_storage["2"].get("description")
+        assert doc_storage["2"].get("description") == "I'm the second nested document, uncontained"
         assert doc_storage["1"]["i_have_a_uncontained_attribute"]["description"] == "This has changed!"
