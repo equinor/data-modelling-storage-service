@@ -1,11 +1,11 @@
 from datetime import datetime
-from enum import Enum
-from typing import Dict, List, Optional
+from enum import IntEnum
+from typing import Any, Dict, List, Optional
 from uuid import uuid4
 from pydantic import BaseModel, UUID4
 
 
-class AccessLevel(Enum):
+class AccessLevel(IntEnum):
     WRITE = 2
     READ = 1
     NONE = 0
@@ -26,6 +26,10 @@ class AccessLevel(Enum):
             return cls[v]
         except KeyError:
             raise ValueError("invalid AccessLevel enum value ")
+
+    @classmethod
+    def __modify_schema__(cls, schema: Dict[str, Any]):
+        schema["x-enum-varnames"] = [choice.name for choice in cls]
 
 
 class User(BaseModel):
