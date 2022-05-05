@@ -1,8 +1,9 @@
+from time import sleep
 from typing import Dict, List, Optional
 
 import gridfs
 from pymongo import MongoClient
-from pymongo.errors import DuplicateKeyError
+from pymongo.errors import DuplicateKeyError, WriteError
 from utils.encryption import decrypt
 
 from storage.repository_interface import RepositoryInterface
@@ -58,7 +59,16 @@ class MongoDBClient(RepositoryInterface):
         return self.handler[self.collection].find_one(filter=filters)
 
     def update_blob(self, uid: str, blob: bytearray):
-        return self.blob_handler.put(blob, _id=uid)
+        attempts = 0
+        while True:
+            try:
+                attempts += 1
+                response = self.blob_handler.put(blob, _id=uid)
+                return response
+            except WriteError as error:  # Likely caused by MongoDB rate limiting.
+                sleep(2)
+                if attempts > 2:
+                    raise error
 
     def delete_blob(self, uid: str):
         return self.blob_handler.delete(uid)
