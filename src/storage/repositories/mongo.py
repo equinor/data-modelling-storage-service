@@ -8,6 +8,7 @@ from utils.encryption import decrypt
 
 from storage.repository_interface import RepositoryInterface
 from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
+from utils.logging import logger
 
 
 class MongoDBClient(RepositoryInterface):
@@ -66,6 +67,7 @@ class MongoDBClient(RepositoryInterface):
                 response = self.blob_handler.put(blob, _id=uid)
                 return response
             except WriteError as error:  # Likely caused by MongoDB rate limiting.
+                logger.warning(f"Failed to upload blob (attempt: {attempts}), will retry:\n\t{error}")
                 sleep(2)
                 if attempts > 2:
                     raise error
