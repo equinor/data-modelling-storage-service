@@ -2,7 +2,10 @@ import json
 import time
 
 import click
+import gridfs
 import uvicorn
+from services.database import mongo_client
+
 from authentication.models import User
 from fastapi import APIRouter, FastAPI, Security
 from starlette.requests import Request
@@ -14,7 +17,6 @@ from storage.internal.data_source_repository import DataSourceRepository
 from utils.encryption import generate_key
 from utils.logging import logger
 from utils.package_import import import_package
-from utils.wipe_db import wipe_db
 
 server_root = "/api"
 version = "v1"
@@ -116,8 +118,20 @@ def import_data_source(file):
 
 @cli.command()
 def nuke_db():
-    logger.info("PURGING DATABASE")
-    wipe_db()
+    logger.info("EMPTYING DATABASES")
+    databases = mongo_client.list_database_names()
+    # Don't touch the mongo admin or local database
+    databases = [databasename for databasename in databases if databasename not in ("admin", "local")]
+    logger.warning(f"Emptying databases {databases}")
+    for db_name in databases:
+        print(db_name)
+        logger.debug(f"Deleting all documents from database '{db_name}' from the DMSS system MongoDB server")
+        for collection in mongo_client[db_name].list_collection_names():
+            mongo_client[db_name][collection].delete_many({})
+        blob_handler = gridfs.GridFS(mongo_client[db_name])
+        for filename in blob_handler.list():
+            print(filename)
+            blob_handler.delete(filename)
     logger.debug("DONE")
 
 

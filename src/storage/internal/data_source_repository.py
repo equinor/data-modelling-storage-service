@@ -68,13 +68,13 @@ class DataSourceRepository:
         document["_id"] = id
         try:
             self.validate_data_source(document)
-            result = data_source_collection.insert_one(document)
+            result = data_source_collection.replace_one({"_id": id}, document, upsert=True)
         except InvalidEntityException:
             raise InvalidEntityException(f"Failed to create data source '{id}'. The posted entity is invalid...")
         except DuplicateKeyError:
             logger.warning(f"Tried to create a datasource that already exists ('{id}')")
             raise DataSourceAlreadyExistsException(id)
-        return str(result.inserted_id)
+        return str(result.upserted_id)
 
     def get(self, id: str) -> DataSource:
         data_source = data_source_collection.find_one(filter={"_id": id})
