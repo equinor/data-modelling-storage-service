@@ -1,11 +1,11 @@
 from datetime import datetime
-from enum import Enum
-from typing import Dict, List, Optional
+from enum import IntEnum
+from typing import Any, Dict, List, Optional
 from uuid import uuid4
 from pydantic import BaseModel, UUID4
 
 
-class AccessLevel(Enum):
+class AccessLevel(IntEnum):
     WRITE = 2
     READ = 1
     NONE = 0
@@ -26,6 +26,18 @@ class AccessLevel(Enum):
             return cls[v]
         except KeyError:
             raise ValueError("invalid AccessLevel enum value ")
+
+    @classmethod
+    def __modify_schema__(cls, schema: Dict[str, Any]):
+        """
+        Add a custom field type to the class representing the Enum's field names
+        Ref: https://pydantic-docs.helpmanual.io/usage/schema/#modifying-schema-in-custom-fields
+
+        The specific key 'x-enum-varnames' is interpreted by the openapi-generator-cli
+        to provide names for the Enum values.
+        Ref: https://openapi-generator.tech/docs/templating/#enum
+        """
+        schema["x-enum-varnames"] = [choice.name for choice in cls]
 
 
 class User(BaseModel):
