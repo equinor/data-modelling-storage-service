@@ -2,6 +2,8 @@ from services.database import mongo_client
 from utils.logging import logger
 
 
+# Should only be called on local test databases.
+# As databases in test and production environments have some configuration we would like to persist
 def wipe_db():
     databases = mongo_client.list_database_names()
     databases = [
