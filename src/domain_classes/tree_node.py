@@ -60,7 +60,7 @@ class DictExporter:
 
         # Always add 'type', regardless of blueprint
         try:
-            data["type"] = node.entity["type"]
+            data["type"] = node.type
         except KeyError:
             raise InvalidEntityException(f"The node '{node.uid}' is missing the 'type' attributes")
 
