@@ -11,6 +11,7 @@ from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundExcepti
 from utils.logging import logger
 from utils.cosmos_rate_limit_handler import rate_limit_handler
 from config import config
+from utils.cosmos_rate_limit_handler import rate_limit_handler
 
 
 class MongoDBClient(RepositoryInterface):
