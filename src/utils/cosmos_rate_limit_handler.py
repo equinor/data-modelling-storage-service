@@ -22,7 +22,7 @@ def get_retry_after(error: OperationFailure) -> int:
                     "Failed to parse 'RetryAfterMs' from the CosmosDB error details. Falling back to default timeout."
                 )
         logger.warn(
-            "Received 429 TooManyRequests (Rate-Limited) response from CosmosDB."
+            "Received 429 TooManyRequests (Rate-Limited) response from CosmosDB. "
             f"Sleeping for {retry_after}ms before retrying."
         )
         return retry_after / 1000
