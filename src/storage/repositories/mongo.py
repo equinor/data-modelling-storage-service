@@ -9,6 +9,7 @@ from utils.encryption import decrypt
 from storage.repository_interface import RepositoryInterface
 from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from utils.logging import logger
+from utils.cosmos_rate_limit_handler import rate_limit_handler
 
 
 class MongoDBClient(RepositoryInterface):
@@ -36,10 +37,12 @@ class MongoDBClient(RepositoryInterface):
         self.blob_handler = gridfs.GridFS(self.handler)
         self.collection = collection
 
+    @rate_limit_handler
     def get(self, uid: str) -> Dict:
         result = self.handler[self.collection].find_one(filter={"_id": uid})
         return result
 
+    @rate_limit_handler
     def add(self, uid: str, document: Dict) -> bool:
         document["_id"] = uid
         try:
@@ -47,18 +50,23 @@ class MongoDBClient(RepositoryInterface):
         except DuplicateKeyError:
             raise EntityAlreadyExistsException
 
+    @rate_limit_handler
     def update(self, uid: str, document: Dict) -> bool:
         return self.handler[self.collection].replace_one({"_id": uid}, document, upsert=True).acknowledged
 
+    @rate_limit_handler
     def delete(self, uid: str) -> bool:
         return self.handler[self.collection].delete_one(filter={"_id": uid}).acknowledged
 
+    @rate_limit_handler
     def find(self, filters: Dict) -> Optional[List[Dict]]:
         return self.handler[self.collection].find(filter=filters)
 
+    @rate_limit_handler
     def find_one(self, filters: Dict) -> Optional[Dict]:
         return self.handler[self.collection].find_one(filter=filters)
 
+    @rate_limit_handler
     def update_blob(self, uid: str, blob: bytearray):
         attempts = 0
         while True:
@@ -72,9 +80,11 @@ class MongoDBClient(RepositoryInterface):
                 if attempts > 2:
                     raise error
 
+    @rate_limit_handler
     def delete_blob(self, uid: str):
         return self.blob_handler.delete(uid)
 
+    @rate_limit_handler
     def get_blob(self, uid: str) -> bytearray:
         blob = self.blob_handler.get(uid)
         if not blob:
