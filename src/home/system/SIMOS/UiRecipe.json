@@ -19,34 +19,11 @@
       "default": ""
     },
     {
-      "name": "field",
+      "name": "roles",
       "attributeType": "string",
       "type": "system/SIMOS/BlueprintAttribute",
       "optional": true,
-      "default": ""
-    },
-    {
-      "name": "hideTab",
-      "attributeType": "boolean",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "optional": true,
-      "default": "false"
-    },
-    {
-      "name": "options",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "system/SIMOS/UiAttributeOption",
-      "dimensions": "*",
-      "contained": true,
-      "optional": true
-    },
-    {
-      "name": "attributes",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "system/SIMOS/UiAttribute",
-      "dimensions": "*",
-      "optional": true,
-      "contained": true
+      "dimensions": "*"
     },
     {
       "name": "config",
@@ -57,26 +34,6 @@
     }
   ],
   "uiRecipes": [
-    {
-      "type": "system/SIMOS/UiRecipe",
-      "name": "INDEX",
-      "description": "",
-      "plugin": "INDEX",
-      "attributes": [
-        {
-          "name": "attributes",
-          "type": "system/SIMOS/UiAttribute",
-          "dimensions": "*",
-          "contained": false
-        },
-        {
-          "name": "options",
-          "type": "system/SIMOS/UiAttribute",
-          "dimensions": "*",
-          "contained": false
-        }
-      ]
-    },
     {
       "name": "Edit",
       "type": "system/SIMOS/UiRecipe",
@@ -101,28 +58,11 @@
           "description": "PREVIEW | EDIT_PLUGIN | INDEX"
         },
         {
-          "name": "options",
-          "type": "system/SIMOS/UiAttributeOption",
-          "dimensions": "*",
-          "field": "hidden"
-        },
-        {
-          "name": "field",
-          "type": "system/SIMOS/UiAttribute",
-          "widget": "hidden"
-        },
-        {
           "name": "description",
           "type": "system/SIMOS/UiAttribute",
           "widget": "textarea"
-        },
-        {
-          "name": "field",
-          "type": "system/SIMOS/UiAttribute",
-          "description": "Supported: \"attribute\" | \"hidden\" (also arrays)"
         }
       ]
     }
-  ],
-  "storageRecipes": []
+  ]
 }
