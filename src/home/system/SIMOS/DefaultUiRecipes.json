@@ -7,7 +7,8 @@
     {
       "name": "Yaml",
       "type": "system/SIMOS/UiRecipe",
-      "plugin": "yaml-view"
+      "plugin": "yaml-view",
+      "roles": ["dmss-admin"]
     },
     {
       "name": "Edit",

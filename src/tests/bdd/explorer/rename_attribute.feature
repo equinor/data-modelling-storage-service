@@ -208,14 +208,12 @@ Feature: Explorer - Remove file
         {
           "type": "system/SIMOS/UiRecipe",
           "name": "EDIT",
-          "description": "",
-          "attributes": []
+          "description": ""
         },
         {
           "type": "system/SIMOS/UiRecipe",
           "name": "NewName",
-          "description": "",
-          "attributes": []
+          "description": ""
         }
       ]
   }

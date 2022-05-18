@@ -28,6 +28,7 @@ class Recipe(BaseModel):
     description: str = ""
     plugin: str = "Default"
     category: str = ""
+    roles: List[str] = None
     config: dict = None
     label: str = ""
 
