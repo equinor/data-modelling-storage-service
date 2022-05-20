@@ -187,7 +187,7 @@ class DictImporter:
                     )
                 child_node = cls._from_dict(
                     # If the child is not contained, get or create it's _id
-                    uid="" if child_contained or not attribute_data else attribute_data.get("_id", str(uuid4())),
+                    uid="" if child_contained or not attribute_data else attribute_data.get("_id", ""),
                     entity=attribute_data,
                     key=child_attribute.name,
                     blueprint_provider=blueprint_provider,
@@ -491,18 +491,7 @@ class Node(NodeBase):
                         child = ListNode(attribute.name, attribute, None, new_data, self, self.blueprint_provider)
                     else:
                         child = Node(attribute.name, attribute, None, new_data, self, self.blueprint_provider)
-                # This means we are creating a new, non-contained document. Lists are always contained.
-                if not child.storage_contained and not child.uid and not child.is_array():
-                    new_node = DictImporter.from_dict(
-                        entity=new_data,
-                        uid=str(uuid4()),
-                        key=key,
-                        blueprint_provider=self.blueprint_provider,
-                        node_attribute=attribute,
-                    )
-                    self.children.append(new_node)
-                else:
-                    child.update(new_data)
+                child.update(new_data)
 
         # Remove for every key in blueprint not in data or is a required attribute
         removed_attributes = [attr for attr in self.blueprint.attributes if attr.name not in data]
