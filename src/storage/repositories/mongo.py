@@ -9,6 +9,7 @@ from utils.encryption import decrypt
 from storage.repository_interface import RepositoryInterface
 from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from utils.logging import logger
+from utils.tls_utils import get_tls_ca_cert_path
 
 
 class MongoDBClient(RepositoryInterface):
@@ -29,6 +30,7 @@ class MongoDBClient(RepositoryInterface):
             username=username,
             password=decrypt(password),
             tls=tls,
+            tlsCAFile=get_tls_ca_cert_path(),
             connectTimeoutMS=5000,
             serverSelectionTimeoutMS=5000,
             retryWrites=False,

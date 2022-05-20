@@ -1,11 +1,15 @@
 from pymongo import MongoClient
 from config import config
+from utils.tls_utils import get_tls_ca_cert_path
+
+tls_ca_cert_path = get_tls_ca_cert_path()
+tls_args = {"tls": True if tls_ca_cert_path else False, "tlsCAFile": tls_ca_cert_path}
 
 mongo_client = None
 if config.MONGO_URI:
-    mongo_client = MongoClient(config.MONGO_URI, connect=False)
+    mongo_client = MongoClient(config.MONGO_URI, connect=False, **tls_args)
 elif config.MONGO_USERNAME and config.MONGO_PASSWORD:
-    mongo_client = MongoClient("db", username=config.MONGO_USERNAME, password=config.MONGO_PASSWORD)
+    mongo_client = MongoClient("db", username=config.MONGO_USERNAME, password=config.MONGO_PASSWORD, **tls_args)
 
 else:
     raise ValueError("Missing credentials for the DataSource database")

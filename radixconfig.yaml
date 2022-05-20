@@ -18,7 +18,7 @@ spec:
           port: 80
       publicPort: flask
       secrets:
-        - MONGO_AZURE_URI
+        - MONGO_URI
       environmentConfig:
         - environment: dev
           variables:
