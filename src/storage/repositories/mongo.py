@@ -9,7 +9,7 @@ from utils.encryption import decrypt
 from storage.repository_interface import RepositoryInterface
 from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from utils.logging import logger
-from utils.tls_utils import get_tls_ca_cert_path
+from config import config
 
 
 class MongoDBClient(RepositoryInterface):
@@ -29,8 +29,8 @@ class MongoDBClient(RepositoryInterface):
             port=port,
             username=username,
             password=decrypt(password),
-            tls=tls,
-            tlsCAFile=get_tls_ca_cert_path(),
+            tls=tls if tls or config.MONGO_SELF_SIGN_CA_PEM else False,
+            tlsCAFile=config.MONGO_SELF_SIGN_CA_PATH if config.MONGO_SELF_SIGN_CA_PEM else None,
             connectTimeoutMS=5000,
             serverSelectionTimeoutMS=5000,
             retryWrites=False,

@@ -1,9 +1,10 @@
 from pymongo import MongoClient
 from config import config
-from utils.tls_utils import get_tls_ca_cert_path
 
-tls_ca_cert_path = get_tls_ca_cert_path()
-tls_args = {"tls": True if tls_ca_cert_path else False, "tlsCAFile": tls_ca_cert_path}
+tls_args = {
+    "tls": True if config.MONGO_SELF_SIGN_CA_PEM else False,
+    "tlsCAFile": config.MONGO_SELF_SIGN_CA_PATH if config.MONGO_SELF_SIGN_CA_PEM else None,
+}
 
 mongo_client = None
 if config.MONGO_URI:
