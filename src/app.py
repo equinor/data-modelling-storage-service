@@ -126,7 +126,10 @@ def nuke_db():
     for db_name in databases:
         print(db_name)
         logger.debug(f"Deleting all documents from database '{db_name}' from the DMSS system MongoDB server")
-        for collection in mongo_client[db_name].list_collection_names():
+        collections = mongo_client[db_name].list_collection_names()
+        # Don't touch system.sessions
+        collections = [collectionname for collectionname in collections if collectionname not in ("system.sessions")]
+        for collection in collections:
             mongo_client[db_name][collection].delete_many({})
         blob_handler = gridfs.GridFS(mongo_client[db_name])
         for filename in blob_handler.list():
