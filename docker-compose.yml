@@ -12,6 +12,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: maf
       AUTH_ENABLED: "True"
       SECRET_KEY: ${SECRET_KEY}
+      MONGO_SELF_SIGN_CA_CRT: ""
     depends_on:
       - db
   db:

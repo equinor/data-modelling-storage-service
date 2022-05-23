@@ -10,6 +10,7 @@ from storage.repository_interface import RepositoryInterface
 from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from utils.logging import logger
 from utils.cosmos_rate_limit_handler import rate_limit_handler
+from config import config
 
 
 class MongoDBClient(RepositoryInterface):
@@ -29,7 +30,8 @@ class MongoDBClient(RepositoryInterface):
             port=port,
             username=username,
             password=decrypt(password),
-            tls=tls,
+            tls=tls if tls or config.MONGO_SELF_SIGN_CA_CRT else False,
+            tlsCAFile=config.MONGO_SELF_SIGN_CA_PATH if config.MONGO_SELF_SIGN_CA_CRT else None,
             connectTimeoutMS=5000,
             serverSelectionTimeoutMS=5000,
             retryWrites=False,
