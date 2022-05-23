@@ -2,8 +2,8 @@ from pymongo import MongoClient
 from config import config
 
 tls_args = {
-    "tls": True if config.MONGO_SELF_SIGN_CA_PEM else False,
-    "tlsCAFile": config.MONGO_SELF_SIGN_CA_PATH if config.MONGO_SELF_SIGN_CA_PEM else None,
+    "tls": True if config.MONGO_SELF_SIGN_CA_CRT else False,
+    "tlsCAFile": config.MONGO_SELF_SIGN_CA_PATH if config.MONGO_SELF_SIGN_CA_CRT else None,
 }
 
 mongo_client = None

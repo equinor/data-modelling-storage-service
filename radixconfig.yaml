@@ -19,9 +19,8 @@ spec:
       publicPort: flask
       secrets:
         - MONGO_URI
-        - MONGO_SELF_SIGN_CA_PEM
       variables:
-        MONGO_SELF_SIGN_CA_PEM: |
+        MONGO_SELF_SIGN_CA_CRT: |
           -----BEGIN CERTIFICATE-----
           MIIDJzCCAg+gAwIBAgIUUWTa1ePaavivdscS2LG8WlPexDAwDQYJKoZIhvcNAQEL
           BQAwIzELMAkGA1UEBhMCTk8xFDASBgNVBAMMC0RNVC1Sb290LUNBMB4XDTIyMDUx
