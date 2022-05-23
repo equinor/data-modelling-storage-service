@@ -19,6 +19,7 @@ spec:
       publicPort: flask
       secrets:
         - MONGO_URI
+        - MONGO_SELF_SIGN_CA_PEM
       environmentConfig:
         - environment: dev
           variables:
