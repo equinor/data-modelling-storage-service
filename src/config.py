@@ -13,7 +13,7 @@ class Config(BaseSettings):
     MONGO_SELF_SIGN_CA_CRT: str = Field(
         None, env="MONGO_SELF_SIGN_CA_CRT", description="The contents of the Root CA CRT used for the database."
     )
-    MONGO_SELF_SIGN_CA_PATH: str = Field("DMTDBRootCA.pem", env="MONGO_SELF_SIGN_CA_PATH")
+    MONGO_SELF_SIGN_CA_PATH: str = Field("/tmp/DMTDBRootCA.crt", env="MONGO_SELF_SIGN_CA_PATH")  # nosec
     ENVIRONMENT: str = Field("local", env="ENVIRONMENT")
     SECRET_KEY: str = Field(None, env="SECRET_KEY")
     LOGGER_LEVEL: str = Field("INFO", env="LOGGING_LEVEL", to_lower=True)
