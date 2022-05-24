@@ -481,7 +481,7 @@ class Node(NodeBase):
                 continue
 
             # Add/Modify primitive data
-            if attribute.is_primitive():
+            if attribute.is_primitive(): #the "object" attribute is not primitive
                 self.entity[key] = new_data
             # Add/Modify complex data
             else:
@@ -525,6 +525,8 @@ class Node(NodeBase):
         """
         Based on storage contained, sets, or removes the documents uid. Creates new if missing.
         """
+        if not self.entity:
+            return
         if self.storage_contained:
             self.uid = None
             self.entity.pop("_id", None)
