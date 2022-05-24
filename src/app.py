@@ -121,15 +121,12 @@ def nuke_db():
     logger.info("EMPTYING DATABASES")
     databases = mongo_client.list_database_names()
     # Don't touch the mongo admin or local database
-    databases = [databasename for databasename in databases if databasename not in ("admin", "local")]
+    databases = [databasename for databasename in databases if databasename not in ("admin", "local", "config")]
     logger.warning(f"Emptying databases {databases}")
     for db_name in databases:
         print(db_name)
         logger.debug(f"Deleting all documents from database '{db_name}' from the DMSS system MongoDB server")
-        collections = mongo_client[db_name].list_collection_names()
-        # Don't touch system.sessions
-        collections = [collectionname for collectionname in collections if collectionname not in ("system.sessions")]
-        for collection in collections:
+        for collection in mongo_client[db_name].list_collection_names():
             mongo_client[db_name][collection].delete_many({})
         blob_handler = gridfs.GridFS(mongo_client[db_name])
         for filename in blob_handler.list():
