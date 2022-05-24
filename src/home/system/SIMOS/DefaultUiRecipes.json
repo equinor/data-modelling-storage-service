@@ -8,12 +8,14 @@
       "name": "Yaml",
       "type": "system/SIMOS/UiRecipe",
       "plugin": "yaml-view",
-      "roles": ["dmss-admin"]
+      "roles": ["dmss-admin"],
+      "category": "view"
     },
     {
       "name": "Edit",
       "type": "system/SIMOS/UiRecipe",
-      "plugin": "default-form"
+      "plugin": "form",
+      "category": "edit"
     }
   ]
 }

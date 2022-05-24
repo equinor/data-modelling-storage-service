@@ -33,30 +33,5 @@
       "name": "method",
       "description": "What method to call inside runnable.tsx"
     }
-  ],
-  "storageRecipes": [],
-  "uiRecipes": [
-    {
-      "type": "system/SIMOS/UiRecipe",
-      "name": "Edit",
-      "plugin": "default-form",
-      "attributes": [
-        {
-          "name": "type",
-          "type": "system/SIMOS/UiAttribute",
-          "disabled": true
-        },
-        {
-          "name": "input",
-          "type": "system/SIMOS/UiAttribute",
-          "field": "blueprint"
-        },
-        {
-          "name": "output",
-          "type": "system/SIMOS/UiAttribute",
-          "field": "blueprint"
-        }
-      ]
-    }
   ]
 }

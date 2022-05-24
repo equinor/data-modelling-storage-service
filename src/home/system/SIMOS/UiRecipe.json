@@ -32,37 +32,5 @@
       "contained": true,
       "optional": true
     }
-  ],
-  "uiRecipes": [
-    {
-      "name": "Edit",
-      "type": "system/SIMOS/UiRecipe",
-      "plugin": "default-form",
-      "attributes": [
-        {
-          "name": "name",
-          "type": "system/SIMOS/UiAttribute",
-          "required": true,
-          "description": "Name of ui view (tab). Override or create new tab. \"Preview\" | \"Edit\""
-        },
-        {
-          "name": "type",
-          "type": "system/SIMOS/UiAttribute",
-          "description": "system/SIMOS/UiRecipe",
-          "required": true,
-          "disabled": true
-        },
-        {
-          "name": "plugin",
-          "type": "system/SIMOS/UiAttribute",
-          "description": "PREVIEW | EDIT_PLUGIN | INDEX"
-        },
-        {
-          "name": "description",
-          "type": "system/SIMOS/UiAttribute",
-          "widget": "textarea"
-        }
-      ]
-    }
   ]
 }

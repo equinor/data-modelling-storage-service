@@ -44,34 +44,5 @@
       "optional": true,
       "description": "Description for the StoreAttribute"
     }
-  ],
-  "storageRecipes": [],
-  "uiRecipes": [
-    {
-      "plugin": "default-form",
-      "name": "Edit",
-      "type": "system/SIMOS/UiRecipe",
-      "attributes": [
-        {
-          "name": "type",
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "required": true,
-          "disabled": true
-        },
-        {
-          "name": "name",
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "required": true
-        },
-        {
-          "name": "label",
-          "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "field": "hidden"
-        }
-      ]
-    }
   ]
 }
