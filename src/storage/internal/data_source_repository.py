@@ -16,7 +16,7 @@ from utils.exceptions import (
 )
 from utils.logging import logger
 
-RESERVED_MONGO_DATABASES = ("admin", "local", "dmss-internal")
+RESERVED_MONGO_DATABASES = ("admin", "local", "config", "dmss-internal")
 
 
 class DataSourceRepository:
