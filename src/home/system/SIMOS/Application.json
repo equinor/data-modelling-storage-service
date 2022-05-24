@@ -35,36 +35,5 @@
       "description": "Runnable actions",
       "dimensions": "*"
     }
-  ],
-  "storageRecipes": [],
-  "uiRecipes": [
-    {
-      "name": "INDEX",
-      "plugin": "INDEX",
-      "type": "system/SIMOS/UiRecipe",
-      "attributes": []
-    },
-    {
-      "type": "system/SIMOS/UiRecipe",
-      "name": "Edit",
-      "plugin": "default-form",
-      "attributes": [
-        {
-          "name": "packages",
-          "type": "system/SIMOS/UiAttribute",
-          "arrayField": "packages"
-        },
-        {
-          "name": "entities",
-          "type": "system/SIMOS/UiAttribute",
-          "arrayField": "packages"
-        },
-        {
-          "name": "models",
-          "type": "system/SIMOS/UiAttribute",
-          "arrayField": "blueprints"
-        }
-      ]
-    }
   ]
 }
