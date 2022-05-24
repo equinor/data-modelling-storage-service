@@ -26,24 +26,5 @@
       "dimensions": "*",
       "contained": true
     }
-  ],
-  "uiRecipes": [
-    {
-      "name": "Edit",
-      "type": "system/SIMOS/UiRecipe",
-      "plugin": "default-form",
-      "attributes": [
-        {
-          "name": "description",
-          "type": "system/SIMOS/UiAttribute",
-          "field": "hidden"
-        },
-        {
-          "name": "type",
-          "type": "system/SIMOS/UiAttribute",
-          "disabled": true
-        }
-      ]
-    }
   ]
 }
