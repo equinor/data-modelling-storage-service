@@ -121,7 +121,7 @@ def nuke_db():
     logger.info("EMPTYING DATABASES")
     databases = mongo_client.list_database_names()
     # Don't touch the mongo admin or local database
-    databases = [databasename for databasename in databases if databasename not in ("admin", "local")]
+    databases = [databasename for databasename in databases if databasename not in ("admin", "local", "config")]
     logger.warning(f"Emptying databases {databases}")
     for db_name in databases:
         print(db_name)
