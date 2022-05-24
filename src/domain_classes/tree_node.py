@@ -481,7 +481,7 @@ class Node(NodeBase):
                 continue
 
             # Add/Modify primitive data
-            if attribute.is_primitive(): #the "object" attribute is not primitive
+            if attribute.is_primitive():
                 self.entity[key] = new_data
             # Add/Modify complex data
             else:
