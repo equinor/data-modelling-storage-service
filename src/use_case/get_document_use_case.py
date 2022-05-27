@@ -35,13 +35,15 @@ class GetDocumentUseCase(UseCase):
         self.document_service = DocumentService(repository_provider=self.repository_provider, user=user)
 
     def process_request(self, req: GetDocumentRequest):
+        attribute: str = req.attribute
+        attribute_depth = len(attribute.split(".")) if attribute else 0
         document = self.document_service.get_document_by_uid(
             data_source_id=req.data_source_id,
             document_uid=req.document_id,
-            depth=req.depth,
+            depth=req.depth + attribute_depth,
         )
 
-        attribute: str = req.attribute
+        # TODO: Pass attribute to DocumentService.get_document_by_uid and only cound depth from the attribute leaf node
         if attribute:
             document = get_nested_dict_attribute(document, attribute.split("."))
 

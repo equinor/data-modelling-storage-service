@@ -212,6 +212,9 @@ class DocumentService:
         if attribute:
             target_node = root.get_by_path(attribute.split("."))
 
+        if not target_node:
+            raise EntityNotFoundException(dotted_id)
+
         target_node.update(data)
         if files:
             self._merge_entity_and_files(target_node, files)

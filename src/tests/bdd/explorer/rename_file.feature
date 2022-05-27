@@ -60,7 +60,7 @@ Feature: Explorer - Add file
     Then the response status should be "Not Found"
     And the response should equal
     """
-    {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: The entity, with id 10 is not found"}
+    {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: The entity, with id 10 could not be found"}
     """
 
   Scenario: Try to rename a document with a parent that does not exists

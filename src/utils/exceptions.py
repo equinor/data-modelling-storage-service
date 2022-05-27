@@ -21,12 +21,12 @@ class EntityNotFoundException(RepositoryException):
         if message:
             super().__init__(message=message)
         else:
-            super().__init__(message=f"The entity, with id {uid} is not found")
+            super().__init__(message=f"The entity, with id {uid} could not be found")
 
 
 class DataSourceNotFoundException(RepositoryException):
     def __init__(self, uid):
-        super().__init__(message=f"The data source, with id '{uid}' is not found")
+        super().__init__(message=f"The data source, with id '{uid}' could not be found")
 
 
 class DataSourceAlreadyExistsException(RepositoryException):
