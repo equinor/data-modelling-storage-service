@@ -525,7 +525,7 @@ class Node(NodeBase):
         """
         Based on storage contained, sets, or removes the documents uid. Creates new if missing.
         """
-        if not self.entity:
+        if not self.entity and not new_id:
             return
         if self.storage_contained:
             self.uid = None
