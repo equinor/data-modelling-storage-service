@@ -12,6 +12,8 @@ def resolve_reference_list(x: list, document_repository: DataSource, depth: int 
     for value in x:
         if isinstance(value, dict) and value.get("_id"):  # It's a reference!
             resolved.append(get_complete_document(value["_id"], document_repository, depth, depth_count))
+        elif isinstance(value, dict):
+            resolved.append(resolve_contained_dict(value, document_repository, depth, depth_count))
         else:
             resolved.append(value)
     return resolved
