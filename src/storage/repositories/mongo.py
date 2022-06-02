@@ -12,29 +12,15 @@ from utils.logging import logger
 from config import config
 
 
+
 class MongoDBClient(RepositoryInterface):
     def __init__(
         self,
-        username: str,
-        password: str,
-        host: str = "localhost",
+        handler,
         database: str = "data_modelling",
         collection: str = "data_modelling",
-        tls: bool = False,
-        port: int = 27001,
-        **kwargs,
     ):
-        self.handler = MongoClient(
-            host=host,
-            port=port,
-            username=username,
-            password=decrypt(password),
-            tls=tls if tls or config.MONGO_SELF_SIGN_CA_CRT else False,
-            tlsCAFile=config.MONGO_SELF_SIGN_CA_PATH if config.MONGO_SELF_SIGN_CA_CRT else None,
-            connectTimeoutMS=5000,
-            serverSelectionTimeoutMS=5000,
-            retryWrites=False,
-        )[database]
+        self.handler = handler[database]
         self.blob_handler = gridfs.GridFS(self.handler)
         self.collection = collection
 
