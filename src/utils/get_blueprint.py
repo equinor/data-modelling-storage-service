@@ -9,6 +9,10 @@ from utils.get_document_by_path import get_document_by_ref
 from utils.logging import logger
 
 
+@lru_cache(maxsize=config.CACHE_MAX_SIZE)
+def get_blueprint_provider(user):
+    return BlueprintProvider(user)
+
 class BlueprintProvider:
     def __init__(self, user: User):
         self.user = user

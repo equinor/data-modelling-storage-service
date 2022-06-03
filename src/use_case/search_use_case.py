@@ -8,6 +8,7 @@ from restful.use_case import UseCase
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 from restful.request_types.shared import DataSourceList
+from utils.get_blueprint import get_blueprint_provider
 
 
 class SearchRequest(DataSourceList):
@@ -30,7 +31,9 @@ class SearchUseCase(UseCase):
         self.repository_provider = repository_provider
 
     def process_request(self, req: SearchRequest):
+        blueprint_provider = get_blueprint_provider(self.user)
         document_service: DocumentService = DocumentService(
+            blueprint_provider=blueprint_provider,
             repository_provider=self.repository_provider, user=self.user
         )
         all_data_sources = DataSourceRepository(self.user).list()
