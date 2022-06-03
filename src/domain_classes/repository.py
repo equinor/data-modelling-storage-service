@@ -1,5 +1,9 @@
 from typing import Dict, List, Optional
 
+from functools import lru_cache
+
+from config import config
+
 from enums import RepositoryType, StorageDataTypes
 from storage.repositories.azure_blob import AzureBlobStorageClient
 from storage.repositories.mongo import MongoDBClient
@@ -40,6 +44,7 @@ class Repository(RepositoryInterface):
         return self.client.get_blob(uid)
 
     @staticmethod
+    @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def _get_client(**kwargs):
 
         if kwargs["type"] == RepositoryType.MONGO.value:
