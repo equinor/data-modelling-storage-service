@@ -262,7 +262,7 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "2": {
+      "entities/2": {
         "_id": "2",
         "name": "primitive_2",
         "description": "",
@@ -271,7 +271,7 @@ Feature: Explorer - Search entity
         "an_integer": 10,
         "a_string": "def"
       },
-      "1": {
+      "entities/1": {
         "_id": "1",
         "name": "primitive_1",
         "description": "",
@@ -298,7 +298,7 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "2": {
+      "entities/2": {
         "_id": "2",
         "name": "primitive_2",
         "description": "",
@@ -322,7 +322,7 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "1": {
+      "entities/1": {
         "_id": "1",
         "name": "primitive_1",
         "description": "",
@@ -331,7 +331,7 @@ Feature: Explorer - Search entity
         "an_integer": 5,
         "a_string": "abc"
       },
-      "2": {
+      "entities/2": {
         "_id": "2",
         "name": "primitive_2",
         "description": "",
@@ -355,7 +355,7 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "3": {
+      "entities/3": {
         "_id": "3",
         "name": "nestedVectors_1",
         "description": "Some nested vectors",
@@ -367,7 +367,7 @@ Feature: Explorer - Search entity
           "width": 133.7
         }
       },
-      "4": {
+      "entities/4": {
         "_id": "4",
         "name": "nestedVectors_2",
         "description": "Some other nested vectors",
@@ -394,7 +394,7 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "4": {
+      "entities/4": {
         "_id": "4",
         "name": "nestedVectors_2",
         "description": "Some other nested vectors",
@@ -406,7 +406,7 @@ Feature: Explorer - Search entity
           "width": 512.1
         }
       },
-      "3": {
+      "entities/3": {
         "_id": "3",
         "name": "nestedVectors_1",
         "description": "Some nested vectors",
@@ -433,7 +433,7 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "5": {
+      "entities/5": {
         "_id": "5",
         "name": "myNestedListEntity_1",
         "description": "Some entity with a list of items",
@@ -469,7 +469,7 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "1":     {
+      "entities/1":     {
       "_id": "1",
       "name": "primitive_1",
       "description": "",
@@ -478,7 +478,7 @@ Feature: Explorer - Search entity
       "an_integer": 5,
       "a_string": "abc"
     },
-    "2":     {
+    "entities/2":     {
       "_id": "2",
       "name": "primitive_2",
       "description": "",
@@ -487,7 +487,7 @@ Feature: Explorer - Search entity
       "an_integer": 10,
       "a_string": "def"
     },
-    "99": {
+    "moreEntities/99": {
       "_id": "99",
       "name": "primitive_more",
       "description": "",
@@ -529,7 +529,7 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "1":     {
+      "entities/1":     {
       "_id": "1",
       "name": "primitive_1",
       "description": "",
@@ -538,7 +538,7 @@ Feature: Explorer - Search entity
       "an_integer": 5,
       "a_string": "abc"
     },
-    "2":     {
+    "entities/2":     {
       "_id": "2",
       "name": "primitive_2",
       "description": "",
@@ -547,7 +547,7 @@ Feature: Explorer - Search entity
       "an_integer": 10,
       "a_string": "def"
     },
-    "99": {
+    "moreEntities/99": {
       "_id": "99",
       "name": "primitive_more",
       "description": "",

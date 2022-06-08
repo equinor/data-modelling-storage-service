@@ -6,6 +6,7 @@ from starlette.responses import JSONResponse, PlainTextResponse
 
 from utils.exceptions import (
     BadRequestException,
+    BadSearchParametersException,
     DataSourceAlreadyExistsException,
     DataSourceNotFoundException,
     DuplicateFileNameException,
@@ -69,6 +70,7 @@ class UseCase:
             BadRequestException,
             DuplicateFileNameException,
             InvalidChildTypeException,
+            BadSearchParametersException,
         ) as e:
             logger.warning(e.message)
             return create_error_response(e, status.HTTP_400_BAD_REQUEST)

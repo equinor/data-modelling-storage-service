@@ -39,6 +39,11 @@ class InvalidSortByAttributeException(RepositoryException):
         super().__init__(message=f"'{sort_by_attribute}' is not a valid attribute in the '{type}'")
 
 
+class BadSearchParametersException(RepositoryException):
+    def __init__(self, message=None):
+        super().__init__(message=message if message else "Failed to build search query")
+
+
 class BadRequestException(Exception):
     def __init__(self, message):
         self.message = message

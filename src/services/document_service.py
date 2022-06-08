@@ -22,6 +22,7 @@ from utils.build_complex_search import build_mongo_query
 from utils.delete_documents import delete_document
 from utils.exceptions import (
     BadRequestException,
+    BadSearchParametersException,
     DuplicateFileNameException,
     EntityNotFoundException,
     InvalidEntityException,
@@ -383,13 +384,16 @@ class DocumentService:
                 f"Search is not supported on this repository type; {type(repository.repository).__name__}"
             )
 
-        process_search_data = build_mongo_query(self.get_blueprint, search_data)
-
+        try:
+            process_search_data = build_mongo_query(self.get_blueprint, search_data)
+        except ValueError as error:
+            logger.warning(f"Failed to build mongo query; {error}")
+            raise BadSearchParametersException
         result: List[DTO] = repository.find(process_search_data)
         result_sorted: List[DTO] = sort_dtos_by_attribute(result, dotted_attribute_path)
         result_list = {}
         for doc in result_sorted:
-            result_list[doc.uid] = doc.data
+            result_list[f"{data_source_id}/{doc.uid}"] = doc.data
 
         return result_list
 
