@@ -2,7 +2,7 @@ from typing import Callable, Dict, List
 
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from utils.exceptions import InvalidAttributeException
+from utils.exceptions import BadSearchParametersException, InvalidAttributeException
 
 
 def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: Dict, key: str, get_blueprint: Callable):
@@ -45,7 +45,10 @@ def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: Dict, 
 
 
 def build_mongo_query(get_blueprint: Callable, search_data: Dict) -> Dict:
-    type = search_data.pop("type")
+    try:
+        type = search_data.pop("type")
+    except KeyError:
+        raise BadSearchParametersException("Search must specify a type")
     blueprint: Blueprint = get_blueprint(type)
     # Raise error if posted attribute not in blueprint
     if invalid_type := next((key for key in search_data.keys() if key not in blueprint.get_attribute_names()), None):
