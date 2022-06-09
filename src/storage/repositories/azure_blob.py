@@ -1,4 +1,4 @@
-from azure.storage.blob.blockblobservice import BlockBlobService
+from azure.storage.blob import BlobServiceClient
 from typing import Dict, List, Optional
 import json
 
@@ -8,7 +8,7 @@ from utils.encryption import decrypt
 
 class AzureBlobStorageClient(RepositoryInterface):
     def __init__(self, account_name: str, account_key: str, container: str, **kwargs):
-        blob_service_client = BlockBlobService(account_name=account_name, account_key=decrypt(account_key))
+        blob_service_client = BlobServiceClient(account_name=account_name, account_key=decrypt(account_key))
         self.blob_service_client = blob_service_client
         self.container = container
 

@@ -6,38 +6,31 @@ authors = ["Stig Ofstad <stoo@equinor.com>","Christoffer","Eirik"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "3.9.*"
-pymongo = "^3.8"
-jsonschema = "^4.4.0"
-stringcase = "^1.2"
-jinja2 = "^3.1.1"
-wasmer = "0.3.0"
-toml = "0.10.2"
-azure-storage-blob = "2.1.0"
+python = "3.10.4"
+pymongo = "3.12.3" # Newer versions is not compatible with MongoDB > 3.6
+azure-storage-blob = "^12.12.0"
 fastapi = "^0.78.0"
 python-multipart = "^0.0.5"
-uvicorn = {extras = ["standard"], version = "^0.15.0"}
+uvicorn = {extras = ["standard"], version = "^0.17.6"}
 click = "^8.0.0"
 aiofiles = "^0.7.0"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
-cachetools = "^4.2.2"
-requests = "^2.26.0"
+cachetools = "^5.2.0"
+requests = "^2.27.1"
 gunicorn = "^20.1.0"
 
 [tool.poetry.dev-dependencies]
 pydevd = "^2.8.0"
-behave = "1.2.6"
-colorclass = "1.0.1"
+behave = "^1.2.6"
 terminaltables = "^3.1.10"
-snapshottest = "0.5.1"
-deepdiff = "4.0.7"
+deepdiff = "^5.8.1"
 pre-commit = "^2.15.0"
-pygments = "2.7.4"
-safety = "^1.8.7"
-flake8 = "^3.8.2"
-bandit = "^1.6.2"
-pytest = "^6.2.3"
-dictdiffer = "^0.8.1"
+pygments = "^2.12.0"
+safety = "^1.10.3"
+flake8 = "^4.0.1"
+bandit = "^1.7.4"
+pytest = "^7.1.2"
+dictdiffer = "^0.9.0"
 black = "^22.3.0"
 
 [tool.pytest]

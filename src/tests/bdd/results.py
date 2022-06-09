@@ -1,14 +1,23 @@
 from terminaltables import AsciiTable
-from colorclass import Color
+
+
+BLUE = "\033[94m"
+CYAN = "\033[96m"
+GREEN = "\033[92m"
+ORANGE = "\033[93m"
+RED = "\033[91m"
+BOLD = "\033[1m"
+UNDERLINE = "\033[4m"
+ENDCOLOR = "\033[0m"
 
 
 def colored_status(status, text):
     if status == "passed":
-        return Color("{autogreen}%s{/autogreen}" % text)
+        return f"{GREEN}{text}{ENDCOLOR}"
     elif status == "skipped":
-        return Color("{autocyan}%s{/autocyan}" % text)
+        return f"{BLUE}{text}{ENDCOLOR}"
     else:
-        return Color("{autored}%s{/autored}" % text)
+        return f"{RED}{text}{ENDCOLOR}"
 
 
 def two_decimals(number):
