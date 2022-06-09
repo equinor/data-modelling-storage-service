@@ -1,6 +1,8 @@
 import unittest
 from unittest import mock
 
+from enums import SIMOS
+
 from authentication.models import User
 
 from domain_classes.dto import DTO
@@ -272,3 +274,33 @@ class DocumentServiceTestCase(unittest.TestCase):
             "description": "",
             "type": "blueprint_with_optional_attr",
         } == doc_storage["1"]
+
+    def test_remove_blob(self):
+        repository = mock.Mock()
+
+        doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "Parent",
+                "description": "",
+                "type": "blueprint_with_blob",
+                "blob": {"type": SIMOS.BLOB.value, "_blob_id": "blob_object"},
+            },
+            "blob_object": "someData",
+        }
+
+        def mock_get(document_id: str):
+            return DTO(doc_storage[document_id])
+
+        def repository_provider(data_source_id, user: User):
+            if data_source_id == "testing":
+                return repository
+
+        repository.get = mock_get
+        repository.delete = lambda doc_id: doc_storage.pop(doc_id)
+        repository.delete_blob = lambda doc_id: doc_storage.pop(doc_id)
+        document_service = DocumentService(
+            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+        )
+        document_service.remove_document("testing", "1")
+        assert doc_storage.get("blob_object") is None

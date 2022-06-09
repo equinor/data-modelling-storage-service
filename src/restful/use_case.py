@@ -53,8 +53,6 @@ class UseCase:
             logger.warning(e)
             return create_error_response(e, status.HTTP_404_NOT_FOUND)
         except (
-            EntityAlreadyExistsException,
-            InvalidDocumentNameException,
             InvalidEntityException,
             ValidationError,
             ValidationException,
@@ -65,7 +63,9 @@ class UseCase:
             logger.warning(e.message)
             return create_error_response(e, status.HTTP_403_FORBIDDEN)
         except (
+            InvalidDocumentNameException,
             DataSourceAlreadyExistsException,
+            EntityAlreadyExistsException,
             InvalidSortByAttributeException,
             BadRequestException,
             DuplicateFileNameException,

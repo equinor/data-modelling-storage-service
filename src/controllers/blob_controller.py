@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, File, UploadFile
-from starlette.responses import FileResponse, PlainTextResponse
+from starlette.responses import FileResponse
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
-from storage.internal.data_source_repository import get_data_source
 from use_case.get_blob_use_case import GetBlobRequest, GetBlobUseCase
+from use_case.put_blob_use_case import PutBlobRequest, PutBlobUseCase
 
 router = APIRouter()
 
@@ -26,6 +26,5 @@ def get_by_id(data_source_id: str, blob_id: str, user: User = Depends(auth_w_jwt
 # For the OpenAPI generation, we specify response and response class.
 @router.put("/blobs/{data_source_id}/{blob_id}", operation_id="blob_upload")
 def upload(data_source_id: str, blob_id: str, file: UploadFile = File(...), user: User = Depends(auth_w_jwt_or_pat)):
-    data_source = get_data_source(data_source_id, user)
-    data_source.update_blob(blob_id, file.file)
-    return PlainTextResponse("OK")
+    use_case = PutBlobUseCase(user)
+    return use_case.execute(PutBlobRequest(data_source_id=data_source_id, blob_id=blob_id, file=file))

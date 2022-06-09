@@ -1,4 +1,7 @@
 # https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys
+from enums import SIMOS
+
+
 def flatten_dict(dd, separator="_", prefix=""):
     return (
         {
@@ -184,6 +187,20 @@ blueprint_with_optional_attr = {
     ],
 }
 
+blueprint_with_blob = {
+    "type": "system/SIMOS/Blueprint",
+    "name": "Blueprint_with_blob",
+    "description": "",
+    "extends": ["system/SIMOS/NamedEntity"],
+    "attributes": [
+        {
+            "attributeType": SIMOS.BLOB.value,
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "blob",
+        },
+    ],
+}
+
 blueprint_with_nested_optional_attr = {
     "type": "system/SIMOS/Blueprint",
     "name": "blueprint_with_nested_optional_attr",
@@ -271,6 +288,8 @@ class BlueprintProvider:
             return Blueprint(DTO(blueprint_with_storageAffinity_in_root))
         if type == "blobContainer":
             return Blueprint(DTO(blobContainer))
+        if type == "blueprint_with_blob":
+            return Blueprint(DTO(blueprint_with_blob))
         else:
             return Blueprint(DTO(file_repository_test.get(type)))
 

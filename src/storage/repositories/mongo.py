@@ -73,6 +73,10 @@ class MongoDBClient(RepositoryInterface):
                 sleep(2)
                 if attempts > 2:
                     raise error
+            except gridfs.errors.FileExists:
+                message = f"Blob file with id '{uid}' already exists"
+                logger.warning(message)
+                raise EntityAlreadyExistsException(message=message)
 
     def delete_blob(self, uid: str):
         return self.blob_handler.delete(uid)

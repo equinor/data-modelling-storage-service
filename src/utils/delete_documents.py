@@ -16,7 +16,6 @@ def delete_list_recursive(value: Union[list, dict], data_source: DataSource):
 
 
 def delete_dict_recursive(in_dict: dict, data_source: DataSource):
-    in_dict: dict
     if in_dict.get("_id") and in_dict.get("contained") is True:  # It's a model contained reference
         delete_document(data_source, in_dict["_id"])
     elif in_dict.get("type") == SIMOS.BLOB.value:
