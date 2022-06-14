@@ -115,19 +115,20 @@ class DocumentService:
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
 
-        ref_dict = node.to_ref_dict()
-        entity_has_all_required_attributes(ref_dict, node.blueprint.get_required_attributes())
+        if isinstance(node, Node):
+            ref_dict = node.to_ref_dict()
+            entity_has_all_required_attributes(ref_dict, node.blueprint.get_required_attributes())
 
-        # If the node is not contained, and has data, save it!
-        if not node.storage_contained and ref_dict:
-            dto = DTO(ref_dict)
-            # Expand this when adding new repositories requiring PATH
-            if isinstance(repository, ZipFileClient):
-                dto.data["__path__"] = path
-            parent_uid = node.parent.node_id if node.parent else None
-            repository.update(dto, node.get_context_storage_attribute(), parent_id=parent_uid)
-            return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
-        return ref_dict
+            # If the node is not contained, and has data, save it!
+            if not node.storage_contained and ref_dict:
+                dto = DTO(ref_dict)
+                # Expand this when adding new repositories requiring PATH
+                if isinstance(repository, ZipFileClient):
+                    dto.data["__path__"] = path
+                parent_uid = node.parent.node_id if node.parent else None
+                repository.update(dto, node.get_context_storage_attribute(), parent_id=parent_uid)
+                return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
+            return ref_dict
 
     def get_document_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> dict:
         return get_complete_document(document_uid, self.repository_provider(data_source_id, self.user), depth)

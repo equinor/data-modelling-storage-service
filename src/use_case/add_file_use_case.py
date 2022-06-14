@@ -19,7 +19,7 @@ class AddFileUseCase(UseCase):
             absolute_ref=req["absolute_ref"], data=req["data"], update_uncontained=req["update_uncontained"]
         )
         # Do not invalidate the blueprint cache if it was not a blueprint that was changed
-        if req["data"]["type"] == SIMOS.BLUEPRINT.value:
+        if isinstance(req["data"], dict) and req["data"]["type"] == SIMOS.BLUEPRINT.value:
             document_service.invalidate_cache()
 
         data_source, _, _ = split_absolute_ref(req["absolute_ref"])

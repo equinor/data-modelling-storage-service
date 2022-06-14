@@ -41,7 +41,8 @@ class UpdateDocumentUseCase(UseCase):
             files={f.filename: f.file for f in req.files} if req.files else None,
             update_uncontained=req.update_uncontained,
         )
+
         # Do not invalidate the blueprint cache if it was not a blueprint that was changed
-        if document["data"]["type"] == SIMOS.BLUEPRINT.value:
+        if isinstance(document["data"], dict) and document["data"]["type"] == SIMOS.BLUEPRINT.value:
             document_service.invalidate_cache()
         return JSONResponse(document)
