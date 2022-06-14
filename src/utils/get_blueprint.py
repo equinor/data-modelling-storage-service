@@ -15,6 +15,7 @@ class BlueprintProvider:
 
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def get_blueprint(self, type: str) -> Blueprint:
+        logger.debug(f"Cache miss! Fetching blueprint '{type}'")
         try:
             document: DTO = get_document_by_ref(type, self.user)
             return Blueprint(document)
@@ -28,3 +29,8 @@ class BlueprintProvider:
             self.get_blueprint.cache_clear()
         except Exception as error:
             logger.warning("function is not instance of lru cache.", error)
+
+
+@lru_cache(maxsize=config.CACHE_MAX_SIZE)
+def get_blueprint_provider(user):
+    return BlueprintProvider(user)

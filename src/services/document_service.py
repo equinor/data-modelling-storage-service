@@ -29,7 +29,7 @@ from utils.exceptions import (
     MissingPrivilegeException,
     RepositoryException,
 )
-from utils.get_blueprint import BlueprintProvider
+from utils.get_blueprint import get_blueprint_provider
 from utils.get_resolved_document_by_id import get_complete_document
 
 from utils.get_document_by_path import get_document_uid_by_path
@@ -43,7 +43,7 @@ pretty_printer = pprint.PrettyPrinter()
 
 class DocumentService:
     def __init__(self, repository_provider=get_data_source, blueprint_provider=None, user=default_user):
-        self.blueprint_provider = blueprint_provider or BlueprintProvider(user)
+        self.blueprint_provider = blueprint_provider or get_blueprint_provider(user)
         self.repository_provider = repository_provider
         self.user = user
 

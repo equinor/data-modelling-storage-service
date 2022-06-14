@@ -48,6 +48,9 @@ class User(BaseModel):
     roles: List[str] = []
     scope: AccessLevel = AccessLevel.WRITE
 
+    def __hash__(self):
+        return hash(self.user_id)
+
 
 class ACL(BaseModel):
     """

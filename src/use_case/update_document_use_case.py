@@ -1,5 +1,6 @@
 from typing import List, Optional, Union
 
+from enums import SIMOS
 from fastapi import File, UploadFile
 from starlette.responses import JSONResponse
 
@@ -40,5 +41,7 @@ class UpdateDocumentUseCase(UseCase):
             files={f.filename: f.file for f in req.files} if req.files else None,
             update_uncontained=req.update_uncontained,
         )
-        document_service.invalidate_cache()
+        # Do not invalidate the blueprint cache if it was not a blueprint that was changed
+        if document["data"]["type"] == SIMOS.BLUEPRINT.value:
+            document_service.invalidate_cache()
         return JSONResponse(document)
