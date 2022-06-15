@@ -10,10 +10,6 @@ class Config(BaseSettings):
     MONGO_USERNAME: str = Field("maf", env="MONGO_INITDB_ROOT_USERNAME")
     MONGO_PASSWORD: str = Field("maf", env="MONGO_INITDB_ROOT_PASSWORD")
     MONGO_URI: str = Field(None, env="MONGO_URI")
-    MONGO_SELF_SIGN_CA_CRT: str = Field(
-        None, env="MONGO_SELF_SIGN_CA_CRT", description="The contents of the Root CA CRT used for the database."
-    )
-    MONGO_SELF_SIGN_CA_PATH: str = Field("/tmp/DMTDBRootCA.crt", env="MONGO_SELF_SIGN_CA_PATH")  # nosec
     ENVIRONMENT: str = Field("local", env="ENVIRONMENT")
     SECRET_KEY: str = Field(None, env="SECRET_KEY")
     LOGGER_LEVEL: str = Field("INFO", env="LOGGING_LEVEL", to_lower=True)
@@ -56,8 +52,4 @@ if config.AUTH_ENABLED:
             "Environment variable 'OAUTH_WELL_KNOWN', 'OAUTH_AUTH_ENDPOINT',"
             "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
         )
-if config.MONGO_SELF_SIGN_CA_CRT:
-    with open(config.MONGO_SELF_SIGN_CA_PATH, "w") as f:
-        f.write(config.MONGO_SELF_SIGN_CA_CRT)
-    print(f"Wrote Root Certificate Authority certificate to '{config.MONGO_SELF_SIGN_CA_PATH}'.")
 default_user: User = User(**{"user_id": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})
