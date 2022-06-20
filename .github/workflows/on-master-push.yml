@@ -1,0 +1,28 @@
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  checks:
+    uses: ./.github/workflows/checks.yml
+
+  run-tests:
+    uses: ./.github/workflows/testing.yml
+
+  publish-latest-docker-image:
+    needs: [checks, run-tests]
+    uses: ./.github/workflows/publish.yml
+    with:
+      image-tag: latest
+
+  publish-new-pypi-package:
+    needs: [checks, run-tests]
+    uses: ./.github/workflows/publish-to-pypi.yml
+
+  deploy-to-radix:
+    needs: publish-latest-docker-image
+    uses: ./.github/workflows/radix-deploy.yml
+    with:
+      radix-environment: dev

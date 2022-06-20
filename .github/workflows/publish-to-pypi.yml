@@ -1,14 +1,11 @@
-name: Publish DMSS API to PyPI
-
 on:
-  push:
-    tags:
-      - "v**"
+  workflow_dispatch:
+  workflow_call:  # Workflow is meant to be called from another workflow, with the image tag as input
 
 jobs:
   build-n-publish:
     name: Publish DMSS API package to PyPI
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
       - uses: actions/setup-python@v1
