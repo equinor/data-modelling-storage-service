@@ -19,10 +19,8 @@ jobs:
     secrets:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-  deploy-to-radix:
-    needs: publish-docker-image
-    uses: ./.github/workflows/radix-deploy.yml
-    with:
-      radix-environment: prod
+  publish-new-pypi-package:
+    needs: [checks, run-tests]
+    uses: ./.github/workflows/publish-to-pypi.yml
     secrets:
-      APP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.APP_SERVICE_ACCOUNT_TOKEN }}
+      PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
