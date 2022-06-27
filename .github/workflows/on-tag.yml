@@ -17,7 +17,7 @@ jobs:
     with:
       image-tag: production
     secrets:
-      ${{ secrets.DOCKER_PASSWORD }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   deploy-to-radix:
     needs: publish-docker-image
