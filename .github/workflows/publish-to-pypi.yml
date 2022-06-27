@@ -1,6 +1,9 @@
 on:
   workflow_dispatch:
   workflow_call:  # Workflow is meant to be called from another workflow, with the image tag as input
+    secrets:
+      PYPI_PASSWORD:
+        required: true
 
 jobs:
   build-n-publish:
@@ -24,5 +27,5 @@ jobs:
         working-directory: './gen/dmss_api'
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.pypi_password }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: python -m twine upload dist/*

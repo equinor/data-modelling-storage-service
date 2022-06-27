@@ -7,6 +7,9 @@ on:
         default: 'latest'
         required: true
         type: string
+    secrets:
+      DOCKER_PASSWORD:
+        required: true
 
 
 
