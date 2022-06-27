@@ -1,11 +1,17 @@
-name: Publish DMSS API to docker registry
-
 on:
-  push:
-    branches:
-      - "master"
-    tags:
-      - "v**"
+  workflow_dispatch:
+  workflow_call:  # Workflow is meant to be called from another workflow, with the image tag as input
+    inputs:
+      image-tag:
+        description: 'Which tag to set for the produced docker images'
+        default: 'latest'
+        required: true
+        type: string
+    secrets:
+      DOCKER_PASSWORD:
+        required: true
+
+
 
 env:
   DOCKER_IMAGE: datamodelingtool.azurecr.io/dmss
@@ -13,22 +19,22 @@ env:
   REGISTRY_USER: datamodelingtool
 
 jobs:
-  build-n-publish:
-    name: Build and deploy
-    runs-on: ubuntu-20.04
+  build-and-push:
+    name: Build and push
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@master
       - name: "Write version file"
         run: echo $(git log -n 1 --format=format:'%C(yellow)%h% %C(blue)%>(12) %cs %C(green)%>(12,mtrunc)%aN%C(auto,reset)  %s%C(auto) %D') > src/version.txt
       - name: "Build Docker image"
-        run: docker build --tag ${DOCKER_IMAGE}:latest .
+        run: docker build --tag ${DOCKER_IMAGE}:${{ inputs.image-tag }} .
       - name: "Docker Login"
         if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login ${{ env.IMAGE_REGISTRY }} --password-stdin --username ${{ env.REGISTRY_USER }}
-      - name: "Push Docker image (latest)"
+      - name: "Push Docker image"
         if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
-        run: docker push ${DOCKER_IMAGE}:latest
+        run: docker push ${DOCKER_IMAGE}:${{ inputs.image-tag }}
       - name: "Determine tag"
         if: "startsWith(github.ref, 'refs/tags/')"
         id: "determine-tag"

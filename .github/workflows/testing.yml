@@ -1,11 +1,11 @@
-name: Testing
-
-on: [push]
+on:
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
   testing:
     name: Run tests
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
       - name: "Build Docker Images"

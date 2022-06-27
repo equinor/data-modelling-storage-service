@@ -1,11 +1,11 @@
-name: Checks
-
-on: [push]
+on:
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
-  cheking:
+  checking:
     name: Run checks
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
       - name: "Dev image"

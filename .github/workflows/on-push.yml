@@ -1,0 +1,15 @@
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore:
+      - master
+    tags-ignore:
+      - v*
+
+
+jobs:
+  checks:
+    uses: ./.github/workflows/checks.yml
+
+  run-tests:
+    uses: ./.github/workflows/testing.yml
