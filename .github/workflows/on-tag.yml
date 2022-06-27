@@ -16,7 +16,8 @@ jobs:
     uses: ./.github/workflows/publish.yml
     with:
       image-tag: production
-    secrets: ${{ secrets.DOCKER_PASSWORD }}
+    secrets:
+      ${{ secrets.DOCKER_PASSWORD }}
 
   deploy-to-radix:
     needs: publish-docker-image

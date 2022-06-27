@@ -16,13 +16,15 @@ jobs:
     uses: ./.github/workflows/publish.yml
     with:
       image-tag: latest
-    secrets: ${{ secrets.DOCKER_PASSWORD }}
+    secrets:
+      ${{ secrets.DOCKER_PASSWORD }}
 
 
   publish-new-pypi-package:
     needs: [checks, run-tests]
     uses: ./.github/workflows/publish-to-pypi.yml
-    secrets: ${{ secrets.PYPI_PASSWORD }}
+    secrets:
+      ${{ secrets.PYPI_PASSWORD }}
 
   deploy-to-radix:
     needs: publish-latest-docker-image
