@@ -84,8 +84,7 @@ Feature: Data Sources
         },
         "myAzureRepo": {
           "type": "azure-blob-storage",
-          "account_name": "dmssfilestorage",
-          "account_key": "a-long-key",
+          "account_url": "an-azure-blob-storage-url-with-sas-token",
           "name": "myAzureRepo",
           "collection": "dmss",
           "documentType": "blueprints"

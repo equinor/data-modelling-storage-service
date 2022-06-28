@@ -7,8 +7,8 @@ from utils.encryption import decrypt
 
 
 class AzureBlobStorageClient(RepositoryInterface):
-    def __init__(self, account_name: str, account_key: str, container: str, **kwargs):
-        blob_service_client = BlobServiceClient(account_name=account_name, account_key=decrypt(account_key))
+    def __init__(self, account_url: str, container: str, **kwargs):
+        blob_service_client = BlobServiceClient(account_url=decrypt(account_url))
         self.blob_service_client = blob_service_client
         self.container = container
 

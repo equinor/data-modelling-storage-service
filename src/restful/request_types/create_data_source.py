@@ -15,8 +15,7 @@ class Repository(BaseModel, use_enum_values=True):
     password: Optional[str] = None
     database: Optional[str] = None
     collection: Optional[str] = None
-    account_name: Optional[str] = None
-    account_key: Optional[str] = None
+    account_url: Optional[str] = None  # URL to blob storage account, with SAS token included as a query parameter
     container: Optional[str] = None
     tls: Optional[bool] = True
 
@@ -24,7 +23,7 @@ class Repository(BaseModel, use_enum_values=True):
         return {
             **{k: v for k, v in self},
             "password": encrypt(self.password) if self.password else None,
-            "account_key": encrypt(self.account_key) if self.account_key else None,
+            "account_url": encrypt(self.account_url) if self.account_url else None,
         }
 
 
