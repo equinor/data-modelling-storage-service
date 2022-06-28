@@ -12,11 +12,3 @@ jobs:
 
   run-tests:
     uses: ./.github/workflows/testing.yml
-
-    #TODO REMOVE!
-  radix-deploy:
-    uses: ./.github/workflows/radix-deploy.yml
-    with:
-      radix-environment: 'dev'
-    secrets:
-      APP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.APP_SERVICE_ACCOUNT_TOKEN }}
