@@ -24,3 +24,11 @@ jobs:
     uses: ./.github/workflows/publish-to-pypi.yml
     secrets:
       PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+
+  radix-deploy:
+    needs: publish-docker-image
+    uses: ./.github/workflows/radix-deploy.yml
+    with:
+      radix-environment: 'prod'
+    secrets:
+      APP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.APP_SERVICE_ACCOUNT_TOKEN }}

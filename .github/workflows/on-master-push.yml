@@ -19,4 +19,11 @@ jobs:
     secrets:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
+  radix-deploy:
+    needs: publish-latest
+    uses: ./.github/workflows/radix-deploy.yml
+    with:
+      radix-environment: 'dev'
+    secrets:
+      APP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.APP_SERVICE_ACCOUNT_TOKEN }}
 
