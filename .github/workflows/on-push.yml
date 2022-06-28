@@ -6,7 +6,6 @@ on:
     tags-ignore:
       - v*
 
-
 jobs:
   checks:
     uses: ./.github/workflows/checks.yml
