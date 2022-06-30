@@ -90,6 +90,8 @@ def graph_request(request: GraphRequest):
     try:
         url = f"{GRAPH_API_URL}/{request.path}"
         headers = request.headers
+        if not config.OAUTH_CLIENT_ID or not config.OAUTH_CLIENT_SECRET:
+            raise EnvironmentError("Environment variables 'OAUTH_CLIENT_ID' and 'OAUTH_CLIENT_SECRET' are required.")
         access_token = get_graph_api_access_token(
             CredentialRequest(client_id=config.OAUTH_CLIENT_ID, client_secret=config.OAUTH_CLIENT_SECRET)
         )
