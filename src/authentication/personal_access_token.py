@@ -19,21 +19,19 @@ MAX_TOKEN_TTL = datetime.timedelta(days=365).total_seconds()
 
 def get_pat_roles_still_assigned(pat_data: PATData) -> List[str]:
     try:
-        if config.ROLE_CHECK_SUPPORTED_AUTH_PROVIDER:
-            match config.ROLE_CHECK_SUPPORTED_AUTH_PROVIDER:
-                case RoleCheckSupportedAuthProvider.AZURE_ACTIVE_DIRECTORY:
-                    role_assignments: Dict[str, Set[str]] = pat_role_checker.get_app_role_assignments_azure_ad()
-                    still_assigned_pat_roles: Set[str] = role_assignments[pat_data.user_id]
-                case other:  # noqa: F841
-                    logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
-                    return pat_data.roles
-            if not isinstance(still_assigned_pat_roles, set):
-                still_assigned_pat_roles = set(still_assigned_pat_roles)
-            pat_roles: Set[str] = set(pat_data.roles)
-            return list(pat_roles.intersection(still_assigned_pat_roles))
-        else:
+        if not config.ROLE_CHECK_SUPPORTED_AUTH_PROVIDER:
             logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
             return pat_data.roles
+
+        match config.ROLE_CHECK_SUPPORTED_AUTH_PROVIDER:
+            case RoleCheckSupportedAuthProvider.AZURE_ACTIVE_DIRECTORY:
+                aad_role_assignments: Dict[str, Set[str]] = pat_role_checker.get_app_role_assignments_azure_ad()
+                still_assigned_pat_roles: Set[str] = aad_role_assignments[pat_data.user_id]
+            case other:  # noqa: F841
+                logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
+                return pat_data.roles
+        pat_roles: Set[str] = set(pat_data.roles)
+        return list(pat_roles.intersection(still_assigned_pat_roles))
     except EnvironmentError as env_err:
         logger.warn("PAT role assignment validation skipped due to missing environment variables.")
         logger.error(env_err)
