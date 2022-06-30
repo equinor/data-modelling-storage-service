@@ -53,5 +53,5 @@ class SIMOS(Enum):
     DATASOURCE = "datasource"
 
 
-class RoleCheckSupportedAuthProvider(str, Enum):
+class AuthProviderForRoleCheck(str, Enum):
     AZURE_ACTIVE_DIRECTORY = "AAD"

@@ -1,7 +1,6 @@
 from requests import HTTPError, post, Request, Session
 from pydantic import BaseModel
 from typing import List, Optional
-from enum import Enum
 from cachetools import cached, TTLCache
 
 from utils.logging import logger
@@ -10,19 +9,9 @@ from config import config
 GRAPH_API_URL = "https://graph.microsoft.com/v1.0"
 
 
-class RequestMethod(str, Enum):
-    GET = "GET"
-    POST = "POST"
-    PUT = "PUT"
-    PATCH = "PATCH"
-    DELETE = "DELETE"
-    HEAD = "HEAD"
-    OPTIONS = "OPTIONS"
-
-
 class GraphRequest(BaseModel):
     path: str
-    method: RequestMethod = RequestMethod.GET
+    method: str = "GET"
     data: Optional[dict] = {}
     params: Optional[dict] = {}
     headers: Optional[dict] = {}
@@ -90,8 +79,6 @@ def graph_request(request: GraphRequest):
     try:
         url = f"{GRAPH_API_URL}/{request.path}"
         headers = request.headers
-        if not config.OAUTH_CLIENT_ID or not config.OAUTH_CLIENT_SECRET:
-            raise EnvironmentError("Environment variables 'OAUTH_CLIENT_ID' and 'OAUTH_CLIENT_SECRET' are required.")
         access_token = get_graph_api_access_token(
             CredentialRequest(client_id=config.OAUTH_CLIENT_ID, client_secret=config.OAUTH_CLIENT_SECRET)
         )
@@ -99,7 +86,7 @@ def graph_request(request: GraphRequest):
 
         _req = Request(
             url=url,
-            method=request.method.value,
+            method=request.method,
             data=request.data,
             headers=headers,
             params=request.params,
@@ -114,9 +101,6 @@ def graph_request(request: GraphRequest):
         if http_err.response:
             logger.error(http_err.response.json())
         raise
-    except Exception as err:
-        logger.error(err)
-        raise
 
 
 @cached(cache=TTLCache(maxsize=32, ttl=3600))
@@ -125,8 +109,6 @@ def get_app_roles() -> List[AppRole]:
     https://docs.microsoft.com/en-us/graph/api/resources/approle
     The roles exposed by the application which this service principal represents.
     """
-    if not config.AAD_ENTERPRISE_APP_OID:
-        raise EnvironmentError("Missing required environment variable 'AAD_ENTERPRISE_APP_OID'")
     path = f"servicePrincipals/{config.AAD_ENTERPRISE_APP_OID}/appRoles"
     response = graph_request(GraphRequest(path=path))
     app_roles_response = AppRolesResponse(**response)
@@ -141,8 +123,6 @@ def get_app_roles_assigned_to() -> List[AppRoleAssignment]:
     Retrieve a list of appRoleAssignment that users, groups, or client service principals
     have been granted for the given resource service principal.
     """
-    if not config.AAD_ENTERPRISE_APP_OID:
-        raise EnvironmentError("Missing required environment variable 'AAD_ENTERPRISE_APP_OID'")
     path = f"servicePrincipals/{config.AAD_ENTERPRISE_APP_OID}/appRoleAssignedTo"
     response = graph_request(GraphRequest(path=path))
     app_roles_assigned_response = AppRolesAssignedResponse(**response)

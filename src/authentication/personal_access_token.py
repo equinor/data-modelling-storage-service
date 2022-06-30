@@ -11,33 +11,22 @@ from utils.exceptions import credentials_exception
 from utils.logging import logger
 from authentication import pat_role_checker
 from config import config
-from enums import RoleCheckSupportedAuthProvider
+from enums import AuthProviderForRoleCheck
 
 
 MAX_TOKEN_TTL = datetime.timedelta(days=365).total_seconds()
 
 
 def get_pat_roles_still_assigned(pat_data: PATData) -> List[str]:
-    try:
-        if not config.ROLE_CHECK_SUPPORTED_AUTH_PROVIDER:
+    match config.AUTH_PROVIDER_FOR_ROLE_CHECK:
+        case AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY:
+            aad_role_assignments: Dict[str, Set[str]] = pat_role_checker.get_app_role_assignments_azure_ad()
+            still_assigned_pat_roles: Set[str] = aad_role_assignments[pat_data.user_id]
+        case other:  # noqa: F841
             logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
             return pat_data.roles
-
-        match config.ROLE_CHECK_SUPPORTED_AUTH_PROVIDER:
-            case RoleCheckSupportedAuthProvider.AZURE_ACTIVE_DIRECTORY:
-                aad_role_assignments: Dict[str, Set[str]] = pat_role_checker.get_app_role_assignments_azure_ad()
-                still_assigned_pat_roles: Set[str] = aad_role_assignments[pat_data.user_id]
-            case other:  # noqa: F841
-                logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
-                return pat_data.roles
-        pat_roles: Set[str] = set(pat_data.roles)
-        return list(pat_roles.intersection(still_assigned_pat_roles))
-    except EnvironmentError as env_err:
-        logger.warn("PAT role assignment validation skipped due to missing environment variables.")
-        logger.error(env_err)
-        return pat_data.roles
-    except Exception:
-        return pat_data.roles
+    pat_roles: Set[str] = set(pat_data.roles)
+    return list(pat_roles.intersection(still_assigned_pat_roles))
 
 
 def create_personal_access_token(
