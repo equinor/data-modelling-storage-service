@@ -4,6 +4,7 @@ from typing import List
 from pydantic import BaseSettings, Field
 
 from authentication.models import User
+from enums import RoleCheckSupportedAuthProvider
 
 
 class Config(BaseSettings):
@@ -20,8 +21,8 @@ class Config(BaseSettings):
     CACHE_MAX_SIZE: int = 200
     APPLICATION_HOME: str = Field(f"{str(Path(__file__).parent)}/home", env="APPLICATION_HOME")
     # Access Control
-    DMSS_ADMIN = Field("dmss-admin", env="DMSS_ADMIN")
-    DMSS_ADMIN_ROLE = Field("dmss-admin", env="DMSS_ADMIN_ROLE")
+    DMSS_ADMIN: str = Field("dmss-admin", env="DMSS_ADMIN")
+    DMSS_ADMIN_ROLE: str = Field("dmss-admin", env="DMSS_ADMIN_ROLE")
     # Authentication
     AUTH_ENABLED: bool = Field(False, env="AUTH_ENABLED")
     JWT_SELF_SIGNING_ISSUER: str = "dmss"  # Which value will be used to sign self-signed JWT's
@@ -29,9 +30,16 @@ class Config(BaseSettings):
     OAUTH_WELL_KNOWN: str = Field(None, env="OAUTH_WELL_KNOWN")
     OAUTH_TOKEN_ENDPOINT: str = Field("", env="OAUTH_TOKEN_ENDPOINT")
     OAUTH_AUTH_ENDPOINT: str = Field("", env="OAUTH_AUTH_ENDPOINT")
-    OAUTH_CLIENT_ID = Field("dmss", env="OAUTH_CLIENT_ID")
+    OAUTH_CLIENT_ID: str = Field("dmss", env="OAUTH_CLIENT_ID")
+    OAUTH_CLIENT_SECRET: str = Field("", env="OAUTH_CLIENT_SECRET")
     AUTH_AUDIENCE: str = Field("dmss", env="OAUTH_AUDIENCE")
     MICROSOFT_AUTH_PROVIDER: str = "login.microsoftonline.com"
+    ROLE_CHECK_SUPPORTED_AUTH_PROVIDER: RoleCheckSupportedAuthProvider = Field(
+        None, env="ROLE_CHECK_SUPPORTED_AUTH_PROVIDER"
+    )
+    AAD_ENTERPRISE_APP_OID: str = Field(
+        "", env="AAD_ENTERPRISE_APP_OID", description="The ObjectId of the Azure AD Enterprise Application"
+    )
 
 
 config = Config()

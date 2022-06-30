@@ -51,3 +51,7 @@ class SIMOS(Enum):
     ATTRIBUTE_TYPES = "system/SIMOS/AttributeTypes"
     BLOB = "system/SIMOS/Blob"
     DATASOURCE = "datasource"
+
+
+class RoleCheckSupportedAuthProvider(str, Enum):
+    AZURE_ACTIVE_DIRECTORY = "AAD"
