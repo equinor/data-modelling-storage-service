@@ -38,7 +38,7 @@ addopts = ["--ignore gen"]
 
 [tool.black]
 line-length = 119
-target-version = ['py38']
+target-version = ['py310']
 exclude = '''
 /(
     \.git
