@@ -44,7 +44,7 @@ class UncontainedEntity(EntityType, OptionalEntityName, EntityUUID, extra=Extra.
 
     def to_dict(self):
         if self.name is not None:
-            return self.dict()
+            return self.dict(by_alias=True)
         else:
             return self.dict(exclude={"name"})
 
@@ -60,6 +60,6 @@ class BlueprintEntity(EntityType, EntityName, EntityUUID, extra=Extra.allow):
 class Entity(EntityType, OptionalEntityName, extra=Extra.allow):
     def to_dict(self):
         if self.name is not None:
-            return self.dict()
+            return self.dict(by_alias=True)
         else:
             return self.dict(exclude={"name"})
