@@ -1,4 +1,5 @@
 import datetime
+from typing import Dict, List, Set
 
 from fastapi import HTTPException
 from starlette import status
@@ -7,8 +8,37 @@ from authentication.models import AccessLevel, PATData, User
 from storage.internal.personal_access_tokens import get_pat, insert_pat
 from utils.encryption import generate_key, scrypt
 from utils.exceptions import credentials_exception
+from utils.logging import logger
+from authentication import pat_role_checker
+from config import config
+from enums import RoleCheckSupportedAuthProvider
+
 
 MAX_TOKEN_TTL = datetime.timedelta(days=365).total_seconds()
+
+
+def get_pat_roles_still_assigned(pat_data: PATData) -> List[str]:
+    if config.ROLE_CHECK_SUPPORTED_AUTH_PROVIDER:
+        match config.ROLE_CHECK_SUPPORTED_AUTH_PROVIDER:
+            case RoleCheckSupportedAuthProvider.AZURE_ACTIVE_DIRECTORY:
+                role_assignments: Dict[str, Set[str]] = pat_role_checker.get_app_role_assignments_azure_ad()
+                still_assigned_pat_roles: Set[str] = role_assignments[pat_data.user_id]
+            case other:  # noqa: F841
+                logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
+                return pat_data.roles
+        if not isinstance(still_assigned_pat_roles, set):
+            logger.error(
+                ValueError(
+                    "Variable 'still_assigned_pat_roles' in "
+                    + "function 'get_pat_roles_still_assigned()' must be of type 'set'."
+                )
+            )
+            raise Exception("An internal error occurred. Please check the logs for details.")
+        pat_roles: Set[str] = set(pat_data.roles)
+        return list(pat_roles.intersection(still_assigned_pat_roles))
+    else:
+        logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
+        return pat_data.roles
 
 
 def create_personal_access_token(
@@ -46,5 +76,6 @@ def get_user_from_pat(pat: str) -> User:
             detail="Personal Access Token expired",
             headers={"WWW-Authenticate": "Access-Key"},
         )
+    pat_data.roles = get_pat_roles_still_assigned(pat_data)
     user = User(**pat_data.dict())
     return user
