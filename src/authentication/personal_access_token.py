@@ -18,26 +18,27 @@ MAX_TOKEN_TTL = datetime.timedelta(days=365).total_seconds()
 
 
 def get_pat_roles_still_assigned(pat_data: PATData) -> List[str]:
-    if config.ROLE_CHECK_SUPPORTED_AUTH_PROVIDER:
-        match config.ROLE_CHECK_SUPPORTED_AUTH_PROVIDER:
-            case RoleCheckSupportedAuthProvider.AZURE_ACTIVE_DIRECTORY:
-                role_assignments: Dict[str, Set[str]] = pat_role_checker.get_app_role_assignments_azure_ad()
-                still_assigned_pat_roles: Set[str] = role_assignments[pat_data.user_id]
-            case other:  # noqa: F841
-                logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
-                return pat_data.roles
-        if not isinstance(still_assigned_pat_roles, set):
-            logger.error(
-                ValueError(
-                    "Variable 'still_assigned_pat_roles' in "
-                    + "function 'get_pat_roles_still_assigned()' must be of type 'set'."
-                )
-            )
-            raise Exception("An internal error occurred. Please check the logs for details.")
-        pat_roles: Set[str] = set(pat_data.roles)
-        return list(pat_roles.intersection(still_assigned_pat_roles))
-    else:
-        logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
+    try:
+        if config.ROLE_CHECK_SUPPORTED_AUTH_PROVIDER:
+            match config.ROLE_CHECK_SUPPORTED_AUTH_PROVIDER:
+                case RoleCheckSupportedAuthProvider.AZURE_ACTIVE_DIRECTORY:
+                    role_assignments: Dict[str, Set[str]] = pat_role_checker.get_app_role_assignments_azure_ad()
+                    still_assigned_pat_roles: Set[str] = role_assignments[pat_data.user_id]
+                case other:  # noqa: F841
+                    logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
+                    return pat_data.roles
+            if not isinstance(still_assigned_pat_roles, set):
+                still_assigned_pat_roles = set(still_assigned_pat_roles)
+            pat_roles: Set[str] = set(pat_data.roles)
+            return list(pat_roles.intersection(still_assigned_pat_roles))
+        else:
+            logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
+            return pat_data.roles
+    except EnvironmentError as env_err:
+        logger.warn("PAT role assignment validation skipped due to missing environment variables.")
+        logger.error(env_err)
+        return pat_data.roles
+    except Exception:
         return pat_data.roles
 
 
