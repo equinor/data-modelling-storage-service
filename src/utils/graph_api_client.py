@@ -66,9 +66,6 @@ def get_graph_api_access_token(credentials: CredentialRequest):
         if http_err.response:
             logger.error(http_err.response.json())
         raise
-    except Exception as err:
-        logger.error(err)
-        raise
 
 
 def graph_request(request: GraphRequest):
