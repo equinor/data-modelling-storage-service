@@ -58,10 +58,13 @@ if config.AUTH_ENABLED:
             "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
         )
 
-if config.AUTH_PROVIDER_FOR_ROLE_CHECK == AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY:
+if config.AUTH_PROVIDER_FOR_ROLE_CHECK:
     if not config.OAUTH_CLIENT_ID or not config.OAUTH_CLIENT_SECRET:
         raise EnvironmentError("Environment variables 'OAUTH_CLIENT_ID' and 'OAUTH_CLIENT_SECRET' are required.")
-    if not config.AAD_ENTERPRISE_APP_OID:
+    if (
+        config.AUTH_PROVIDER_FOR_ROLE_CHECK == AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY
+        and not config.AAD_ENTERPRISE_APP_OID
+    ):
         raise EnvironmentError("Missing required environment variable 'AAD_ENTERPRISE_APP_OID'")
 
 default_user: User = User(**{"user_id": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})

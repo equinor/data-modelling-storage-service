@@ -1,7 +1,6 @@
 from requests import HTTPError, post, Request, Session
 from pydantic import BaseModel
 from typing import List, Optional
-from cachetools import cached, TTLCache
 
 from utils.logging import logger
 from config import config
@@ -100,7 +99,6 @@ def graph_request(request: GraphRequest):
         raise
 
 
-@cached(cache=TTLCache(maxsize=32, ttl=3600))
 def get_app_roles() -> List[AppRole]:
     """
     https://docs.microsoft.com/en-us/graph/api/resources/approle
@@ -113,7 +111,6 @@ def get_app_roles() -> List[AppRole]:
     return app_roles_response.value
 
 
-@cached(cache=TTLCache(maxsize=32, ttl=3600))
 def get_app_roles_assigned_to() -> List[AppRoleAssignment]:
     """
     https://docs.microsoft.com/en-us/graph/api/serviceprincipal-list-approleassignedto
