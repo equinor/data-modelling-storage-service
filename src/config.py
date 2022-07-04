@@ -4,6 +4,7 @@ from typing import List
 from pydantic import BaseSettings, Field
 
 from authentication.models import User
+from enums import AuthProviderForRoleCheck
 
 
 class Config(BaseSettings):
@@ -20,18 +21,22 @@ class Config(BaseSettings):
     CACHE_MAX_SIZE: int = 200
     APPLICATION_HOME: str = Field(f"{str(Path(__file__).parent)}/home", env="APPLICATION_HOME")
     # Access Control
-    DMSS_ADMIN = Field("dmss-admin", env="DMSS_ADMIN")
-    DMSS_ADMIN_ROLE = Field("dmss-admin", env="DMSS_ADMIN_ROLE")
+    DMSS_ADMIN: str = Field("dmss-admin", env="DMSS_ADMIN")
+    DMSS_ADMIN_ROLE: str = Field("dmss-admin", env="DMSS_ADMIN_ROLE")
     # Authentication
     AUTH_ENABLED: bool = Field(False, env="AUTH_ENABLED")
-    JWT_SELF_SIGNING_ISSUER: str = "dmss"  # Which value will be used to sign self-signed JWT's
     TEST_TOKEN: bool = False  # This value should only be changed at runtime by test setup
     OAUTH_WELL_KNOWN: str = Field(None, env="OAUTH_WELL_KNOWN")
     OAUTH_TOKEN_ENDPOINT: str = Field("", env="OAUTH_TOKEN_ENDPOINT")
     OAUTH_AUTH_ENDPOINT: str = Field("", env="OAUTH_AUTH_ENDPOINT")
-    OAUTH_CLIENT_ID = Field("dmss", env="OAUTH_CLIENT_ID")
+    OAUTH_CLIENT_ID: str = Field("dmss", env="OAUTH_CLIENT_ID")
+    OAUTH_CLIENT_SECRET: str = Field("", env="OAUTH_CLIENT_SECRET")
     AUTH_AUDIENCE: str = Field("dmss", env="OAUTH_AUDIENCE")
     MICROSOFT_AUTH_PROVIDER: str = "login.microsoftonline.com"
+    AUTH_PROVIDER_FOR_ROLE_CHECK: AuthProviderForRoleCheck = Field(None, env="AUTH_PROVIDER_FOR_ROLE_CHECK")
+    AAD_ENTERPRISE_APP_OID: str = Field(
+        "", env="AAD_ENTERPRISE_APP_OID", description="The ObjectId of the Azure AD Enterprise Application"
+    )
 
 
 config = Config()
@@ -52,4 +57,14 @@ if config.AUTH_ENABLED:
             "Environment variable 'OAUTH_WELL_KNOWN', 'OAUTH_AUTH_ENDPOINT',"
             "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
         )
+
+if config.AUTH_PROVIDER_FOR_ROLE_CHECK:
+    if not config.OAUTH_CLIENT_ID or not config.OAUTH_CLIENT_SECRET:
+        raise EnvironmentError("Environment variables 'OAUTH_CLIENT_ID' and 'OAUTH_CLIENT_SECRET' are required.")
+    if (
+        config.AUTH_PROVIDER_FOR_ROLE_CHECK == AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY
+        and not config.AAD_ENTERPRISE_APP_OID
+    ):
+        raise EnvironmentError("Missing required environment variable 'AAD_ENTERPRISE_APP_OID'")
+
 default_user: User = User(**{"user_id": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})

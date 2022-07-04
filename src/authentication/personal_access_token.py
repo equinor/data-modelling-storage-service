@@ -1,4 +1,6 @@
 import datetime
+from typing import Dict, Set
+from cachetools import cached, TTLCache
 
 from fastapi import HTTPException
 from starlette import status
@@ -7,8 +9,20 @@ from authentication.models import AccessLevel, PATData, User
 from storage.internal.personal_access_tokens import get_pat, insert_pat
 from utils.encryption import generate_key, scrypt
 from utils.exceptions import credentials_exception
+from utils.logging import logger
+from authentication import pat_role_checker
+from config import config
+from enums import AuthProviderForRoleCheck
+
 
 MAX_TOKEN_TTL = datetime.timedelta(days=365).total_seconds()
+
+
+@cached(cache=TTLCache(maxsize=32, ttl=600))
+def get_active_roles() -> Dict[str, Set[str]]:
+    match config.AUTH_PROVIDER_FOR_ROLE_CHECK:
+        case AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY:
+            return pat_role_checker.get_app_role_assignments_azure_ad()
 
 
 def create_personal_access_token(
@@ -46,5 +60,10 @@ def get_user_from_pat(pat: str) -> User:
             detail="Personal Access Token expired",
             headers={"WWW-Authenticate": "Access-Key"},
         )
+    if not config.AUTH_PROVIDER_FOR_ROLE_CHECK:
+        logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
+    else:
+        pat_roles: Set[str] = set(pat_data.roles)
+        pat_data.roles = list(pat_roles.intersection(get_active_roles()[pat_data.user_id]))
     user = User(**pat_data.dict())
     return user
