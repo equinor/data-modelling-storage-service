@@ -18,7 +18,7 @@ from enums import AuthProviderForRoleCheck
 MAX_TOKEN_TTL = datetime.timedelta(days=365).total_seconds()
 
 
-@cached(cache=TTLCache(maxsize=32, ttl=3600))
+@cached(cache=TTLCache(maxsize=32, ttl=600))
 def get_active_roles() -> Dict[str, Set[str]]:
     match config.AUTH_PROVIDER_FOR_ROLE_CHECK:
         case AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY:
