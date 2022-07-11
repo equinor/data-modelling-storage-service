@@ -25,7 +25,9 @@ class GetDocumentByPathUseCase(uc.UseCase):
     def process_request(self, req: GetDocumentByPathRequest):
         data_source_id: str = req.data_source_id
         root_doc = get_document_by_ref(f"{data_source_id}/{req.path}", self.user)
-        document = self.document_service.get_node_by_uid(data_source_id=req.data_source_id, document_uid=root_doc.uid)
+        document = self.document_service.get_node_by_uid(
+            data_source_id=req.data_source_id, document_uid=root_doc["_id"]
+        )
 
         if req.attribute:
             document = document.get_by_path(req.attribute.split("."))

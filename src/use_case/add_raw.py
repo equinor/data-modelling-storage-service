@@ -3,7 +3,7 @@ from uuid import uuid4
 from starlette.responses import PlainTextResponse
 
 from authentication.models import User
-from domain_classes.dto import DTO
+
 from enums import SIMOS
 from restful.request_types.shared import DataSource, UncontainedEntity
 from restful.use_case import UseCase
@@ -21,10 +21,10 @@ class AddRawUseCase(UseCase):
 
     def process_request(self, req: AddRawRequest):
         new_node_id = req.document.dict(by_alias=True).get("_id", str(uuid4()))
-        dict = req.document.to_dict()
-        document: DTO = DTO(uid=new_node_id, data=dict)
+        document = req.document.to_dict()
+        document["_id"] = new_node_id
         document_repository = get_data_source(req.data_source_id, self.user)
         document_repository.update(document)
-        if document.type == SIMOS.BLUEPRINT.value:
+        if document["type"] == SIMOS.BLUEPRINT.value:
             DocumentService(user=self.user).invalidate_cache()
         return PlainTextResponse(new_node_id)

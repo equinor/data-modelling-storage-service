@@ -10,7 +10,6 @@ from authentication.models import ACL
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from domain_classes.dto import DTO
 from domain_classes.tree_node import ListNode, Node
 from enums import BuiltinDataTypes, SIMOS
 from restful.request_types.shared import Entity, Reference
@@ -115,17 +114,18 @@ class DocumentService:
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
 
+        node.set_uid()  # Ensure the node has a _id
         ref_dict = node.to_ref_dict()
+
         entity_has_all_required_attributes(ref_dict, node.blueprint.get_required_attributes())
 
         # If the node is not contained, and has data, save it!
         if not node.storage_contained and ref_dict:
-            dto = DTO(ref_dict)
             # Expand this when adding new repositories requiring PATH
             if isinstance(repository, ZipFileClient):
-                dto.data["__path__"] = path
+                ref_dict["__path__"] = path
             parent_uid = node.parent.node_id if node.parent else None
-            repository.update(dto, node.get_context_storage_attribute(), parent_id=parent_uid)
+            repository.update(ref_dict, node.get_context_storage_attribute(), parent_id=parent_uid)
             return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
         return ref_dict
 
@@ -148,26 +148,25 @@ class DocumentService:
         """
         Delete a document, and any model contained children.
         If document_id is a dotted attribute path, it will remove the reference in the parent.
-        Does not use the Node class, as blueprints wont necessarily be available when deleting.
+        Does not use the Node class, as blueprints won't necessarily be available when deleting.
         """
         repository = self.repository_provider(data_source_id, self.user)
         if "." in document_id:
-            root_document: DTO = repository.get(document_id.split(".")[0])
+            root_document: dict = repository.get(document_id.split(".")[0])
             path_after_root = document_id.split(".")[1:]
-
-            attr_value = root_document.data
+            nested_doc = root_document
             for index, attr in enumerate(path_after_root):
                 if index + 1 == len(path_after_root):
-                    if isinstance(attr_value, list):
+                    if isinstance(nested_doc, list):
                         attr = int(attr)
-                    potential_reference = attr_value.pop(attr)
+                    potential_reference = nested_doc.pop(attr)
                     if potential_reference.get("_id") and potential_reference.get("contained") is True:
                         delete_document(repository, potential_reference["_id"])
                     break
-                if isinstance(attr_value, list):
-                    attr_value = attr_value[int(attr)]
+                if isinstance(nested_doc, list):
+                    nested_doc = nested_doc[int(attr)]
                 else:
-                    attr_value = attr_value[attr]
+                    nested_doc = nested_doc[attr]
             repository.update(root_document)
             return
         else:
@@ -389,11 +388,11 @@ class DocumentService:
         except ValueError as error:
             logger.warning(f"Failed to build mongo query; {error}")
             raise BadSearchParametersException
-        result: List[DTO] = repository.find(process_search_data)
-        result_sorted: List[DTO] = sort_dtos_by_attribute(result, dotted_attribute_path)
+        result: List[dict] = repository.find(process_search_data)
+        result_sorted: List[dict] = sort_dtos_by_attribute(result, dotted_attribute_path)
         result_list = {}
         for doc in result_sorted:
-            result_list[f"{data_source_id}/{doc.uid}"] = doc.data
+            result_list[f"{data_source_id}/{doc['_id']}"] = doc
 
         return result_list
 
@@ -428,24 +427,24 @@ class DocumentService:
         self, data_source_id: str, document_id: str, reference: Reference, attribute_path: str
     ) -> dict:
         root: Node = self.get_node_by_uid(data_source_id, document_id)
-        attribute_node = root.search(f"{document_id}.{attribute_path}")
+        attribute_node: Node = root.search(f"{document_id}.{attribute_path}")
         if not attribute_node:
             raise EntityNotFoundException(uid=document_id + attribute_path)
 
         # Check that target exists and has correct values
         # The SIMOS/Entity type can reference any type (used by Package)
-        referenced_document: DTO = self.repository_provider(data_source_id, self.user).get(reference.uid)
+        referenced_document: dict = self.repository_provider(data_source_id, self.user).get(reference.uid)
         if not referenced_document:
-            raise EntityNotFoundException(uid=data_source_id + reference.uid)
-        if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document.type:
+            raise EntityNotFoundException(uid=f"{data_source_id}/{reference.uid}")
+        if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document["type"]:
             raise InvalidEntityException(
                 f"The referenced entity should be of type '{attribute_node.type}'"
-                f", but was '{referenced_document.type}'"
+                f", but was '{referenced_document['type']}'"
             )
-        if reference.type != referenced_document.type:
+        if reference.type != referenced_document["type"]:
             raise InvalidEntityException(
                 f"The 'type' value of the reference does not match the referenced document."
-                f"{reference.type} --> {referenced_document.type}"
+                f"{reference.type} --> {referenced_document['type']}"
             )
         # If the node to update is a list, append to end
         if attribute_node.is_array():
@@ -465,7 +464,8 @@ class DocumentService:
         self.save(root, data_source_id, update_uncontained=False)
 
         logger.info(
-            f"Inserted reference to '{referenced_document.uid}'" f" as '{attribute_path}' in '{root.name}'({root.uid})"
+            f"Inserted reference to '{referenced_document['_id']}'"
+            f" as '{attribute_path}' in '{root.name}'({root.uid})"
         )
 
         return root.to_dict()

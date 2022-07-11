@@ -1,7 +1,7 @@
 import unittest
 from unittest import skip
 
-from domain_classes.dto import DTO
+
 from domain_classes.tree_node import Node
 
 
@@ -40,6 +40,6 @@ class ErrorTreenodeTestCase(unittest.TestCase):
             def get_blueprint(type: str):
                 raise Exception("fix me")
 
-        root = Node.from_dict(DTO(document_1), BlueprintProvider())
+        root = Node.from_dict(document_1, BlueprintProvider())
         error_msg = root.children[0].error_message
         assert error_msg is not None

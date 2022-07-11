@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from functools import lru_cache
 
@@ -16,10 +16,10 @@ class Repository(RepositoryInterface):
         self.data_types = [StorageDataTypes(d) for d in data_types] if data_types else []
         self.client = self._get_client(**kwargs)
 
-    def update(self, uid: str, document: Dict) -> bool:
+    def update(self, uid: str, document: dict) -> bool:
         return self.client.update(uid, document)
 
-    def get(self, uid: str) -> Dict:
+    def get(self, uid: str) -> dict:
         return self.client.get(uid)
 
     def delete(self, uid: str) -> bool:
@@ -28,13 +28,13 @@ class Repository(RepositoryInterface):
     def delete_blob(self, uid: str) -> bool:
         return self.client.delete_blob(uid)
 
-    def find(self, filters: Dict) -> Optional[List[Dict]]:
+    def find(self, filters: dict) -> Optional[List[dict]]:
         return self.client.find(filters)
 
-    def find_one(self, filters: Dict) -> Dict:
+    def find_one(self, filters: dict) -> dict:
         return self.client.find_one(filters)
 
-    def add(self, uid: str, document: Dict) -> bool:
+    def add(self, uid: str, document: dict) -> bool:
         return self.client.add(uid, document)
 
     def update_blob(self, uid: str, blob: bytes) -> bool:

@@ -1,7 +1,7 @@
 import unittest
 
 from domain_classes.blueprint import Blueprint
-from domain_classes.dto import DTO
+
 from utils.build_complex_search import build_mongo_query
 
 basic_blueprint = {
@@ -50,11 +50,11 @@ nested_blueprint_w_list = {
 class BlueprintProvider:
     def get_blueprint(self, template_type: str):
         if template_type == "basic_blueprint":
-            return Blueprint(DTO(basic_blueprint))
+            return Blueprint(basic_blueprint)
         elif template_type == "test/Nested":
-            return Blueprint(DTO(nested_blueprint))
+            return Blueprint(nested_blueprint)
         elif template_type == "NestedList":
-            return Blueprint(DTO(nested_blueprint_w_list))
+            return Blueprint(nested_blueprint_w_list)
 
 
 blueprint_provider = BlueprintProvider()

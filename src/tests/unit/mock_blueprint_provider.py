@@ -15,7 +15,6 @@ def flatten_dict(dd, separator="_", prefix=""):
 
 
 from domain_classes.blueprint import Blueprint
-from domain_classes.dto import DTO
 from storage.repositories.file import LocalFileRepository
 
 all_contained_cases_blueprint = {
@@ -263,35 +262,35 @@ class BlueprintProvider:
     @staticmethod
     def get_blueprint(type: str):
         if type == "all_contained_cases_blueprint":
-            return Blueprint(DTO(all_contained_cases_blueprint))
+            return Blueprint(all_contained_cases_blueprint)
         if type == "basic_blueprint":
-            return Blueprint(DTO(basic_blueprint))
+            return Blueprint(basic_blueprint)
         if type == "blueprint_with_second_level_reference":
-            return Blueprint(DTO(blueprint_with_second_level_reference))
+            return Blueprint(blueprint_with_second_level_reference)
         if type == "two_contained_deep_attributes":
-            return Blueprint(DTO(two_contained_deep_attributes))
+            return Blueprint(two_contained_deep_attributes)
         if type == "ExtendedBlueprint":
-            return Blueprint(DTO(extended_blueprint))
+            return Blueprint(extended_blueprint)
         if type == "SecondLevelExtendedBlueprint":
-            return Blueprint(DTO(second_level_extended_blueprint))
+            return Blueprint(second_level_extended_blueprint)
         if type == "uncontained_blueprint":
-            return Blueprint(DTO(uncontained_blueprint))
+            return Blueprint(uncontained_blueprint)
         if type == "uncontained_list_blueprint":
-            return Blueprint(DTO(uncontained_list_blueprint))
+            return Blueprint(uncontained_list_blueprint)
         if type == "blueprint_with_second_level_nested_uncontained_attribute":
-            return Blueprint(DTO(blueprint_with_second_level_nested_uncontained_attribute))
+            return Blueprint(blueprint_with_second_level_nested_uncontained_attribute)
         if type == "blueprint_with_optional_attr":
-            return Blueprint(DTO(blueprint_with_optional_attr))
+            return Blueprint(blueprint_with_optional_attr)
         if type == "blueprint_with_nested_optional_attr":
-            return Blueprint(DTO(blueprint_with_nested_optional_attr))
+            return Blueprint(blueprint_with_nested_optional_attr)
         if type == "blob":
-            return Blueprint(DTO(blueprint_with_storageAffinity_in_root))
+            return Blueprint(blueprint_with_storageAffinity_in_root)
         if type == "blobContainer":
-            return Blueprint(DTO(blobContainer))
+            return Blueprint(blobContainer)
         if type == "blueprint_with_blob":
-            return Blueprint(DTO(blueprint_with_blob))
+            return Blueprint(blueprint_with_blob)
         else:
-            return Blueprint(DTO(file_repository_test.get(type)))
+            return Blueprint(file_repository_test.get(type))
 
 
 blueprint_provider = BlueprintProvider()

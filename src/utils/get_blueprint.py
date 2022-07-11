@@ -3,7 +3,7 @@ from functools import lru_cache
 from authentication.models import User
 from config import config
 from domain_classes.blueprint import Blueprint
-from domain_classes.dto import DTO
+
 from utils.exceptions import EntityNotFoundException
 from utils.get_document_by_path import get_document_by_ref
 from utils.logging import logger
@@ -17,7 +17,7 @@ class BlueprintProvider:
     def get_blueprint(self, type: str) -> Blueprint:
         logger.debug(f"Cache miss! Fetching blueprint '{type}'")
         try:
-            document: DTO = get_document_by_ref(type, self.user)
+            document: dict = get_document_by_ref(type, self.user)
             return Blueprint(document)
         except Exception as error:
             logger.exception(error)

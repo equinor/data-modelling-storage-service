@@ -4,7 +4,7 @@ from unittest import mock
 
 from authentication.models import User
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from domain_classes.dto import DTO
+
 from domain_classes.tree_node import Node
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider, flatten_dict
@@ -33,10 +33,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
         repository.get = mock_get
@@ -74,10 +74,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
         repository.get = mock_get
@@ -140,10 +140,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
         repository.get = mock_get
@@ -194,10 +194,10 @@ class DocumentServiceTestCase(unittest.TestCase):
             },
         }
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
-        repository.get = lambda id: DTO(doc_storage[id])
+        repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
 
         document_service = DocumentService(
@@ -248,10 +248,10 @@ class DocumentServiceTestCase(unittest.TestCase):
             },
         }
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
-        repository.get = lambda id: DTO(deepcopy(doc_storage[id]))
+        repository.get = lambda id: deepcopy(doc_storage[id])
         repository.update = mock_update
 
         document_service = DocumentService(
@@ -308,10 +308,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
         repository.get = mock_get
