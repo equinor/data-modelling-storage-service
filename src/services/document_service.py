@@ -391,8 +391,8 @@ class DocumentService:
         result: List[dict] = repository.find(process_search_data)
         result_sorted: List[dict] = sort_dtos_by_attribute(result, dotted_attribute_path)
         result_list = {}
-        for doc in result_sorted:
-            result_list[f"{data_source_id}/{doc['_id']}"] = doc
+        for document in result_sorted:
+            result_list[f"{data_source_id}/{document['_id']}"] = document
 
         return result_list
 
