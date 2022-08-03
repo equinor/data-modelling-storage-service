@@ -19,7 +19,7 @@ from storage.repositories.mongo import MongoDBClient
 from storage.repositories.zip import ZipFileClient
 from utils.build_complex_search import build_mongo_query
 from utils.delete_documents import delete_document
-from utils.exceptions import (
+from common.exceptions import (
     BadRequestException,
     BadSearchParametersException,
     DuplicateFileNameException,

@@ -2,7 +2,7 @@ from starlette.responses import JSONResponse
 from copy import deepcopy
 from authentication.models import User
 import json
-from utils.exceptions import BadRequestException
+from common.exceptions import BadRequestException
 from storage.internal.data_source_repository import DataSourceRepository
 from restful.use_case import UseCase
 from services.document_service import DocumentService

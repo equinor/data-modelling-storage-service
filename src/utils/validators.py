@@ -2,7 +2,7 @@ from typing import Callable, List
 
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import BuiltinDataTypes
-from utils.exceptions import ValidationException
+from common.exceptions import ValidationException
 from utils.logging import logger
 from utils.string_helpers import get_data_type_from_dmt_type
 

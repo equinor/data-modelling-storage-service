@@ -2,7 +2,7 @@ from typing import List, Union
 
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
-from utils.exceptions import EntityNotFoundException, RootPackageNotFoundException
+from common.exceptions import EntityNotFoundException, RootPackageNotFoundException
 from utils.string_helpers import split_absolute_ref, get_package_and_path
 
 

@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from starlette import status
 from starlette.responses import JSONResponse, PlainTextResponse
 
-from utils.exceptions import (
+from common.exceptions import (
     BadRequestException,
     BadSearchParametersException,
     DataSourceAlreadyExistsException,

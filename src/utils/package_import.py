@@ -8,7 +8,7 @@ from authentication.models import User
 from enums import SIMOS
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
-from utils.exceptions import (
+from common.exceptions import (
     EntityAlreadyExistsException,
     EntityNotFoundException,
     InvalidDocumentNameException,

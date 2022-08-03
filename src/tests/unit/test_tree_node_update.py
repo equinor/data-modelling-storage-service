@@ -9,7 +9,7 @@ from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_blueprint_provider import blueprint_provider
 from utils.data_structure.compare import pretty_eq
-from utils.exceptions import DuplicateFileNameException, InvalidChildTypeException
+from common.exceptions import DuplicateFileNameException, InvalidChildTypeException
 
 
 class MultiTypeBlueprintProvider:

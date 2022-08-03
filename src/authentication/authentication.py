@@ -9,7 +9,7 @@ from starlette.exceptions import HTTPException
 
 from authentication.models import User
 from config import config, default_user
-from utils.exceptions import credentials_exception
+from common.exceptions import credentials_exception
 from utils.logging import logger
 from utils.mock_token_generator import mock_rsa_public_key
 

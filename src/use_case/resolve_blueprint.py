@@ -5,7 +5,7 @@ from authentication.models import User
 from enums import SIMOS
 from restful import use_case as uc
 from storage.internal.data_source_repository import get_data_source
-from utils.exceptions import EntityNotFoundException
+from common.exceptions import EntityNotFoundException
 from utils.string_helpers import split_absolute_ref
 
 

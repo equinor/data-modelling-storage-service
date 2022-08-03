@@ -2,7 +2,7 @@ from typing import Callable, Dict, List
 
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from utils.exceptions import BadSearchParametersException, InvalidAttributeException
+from common.exceptions import BadSearchParametersException, InvalidAttributeException
 
 
 def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: Dict, key: str, get_blueprint: Callable):

@@ -7,7 +7,7 @@ from pymongo.errors import DuplicateKeyError, WriteError
 from utils.encryption import decrypt
 
 from storage.repository_interface import RepositoryInterface
-from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
+from common.exceptions import EntityAlreadyExistsException, EntityNotFoundException
 from utils.logging import logger
 
 

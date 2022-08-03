@@ -1,6 +1,6 @@
 from typing import List
 
-from utils.exceptions import InvalidSortByAttributeException
+from common.exceptions import InvalidSortByAttributeException
 
 
 def get_value_from_attribute_spec(document: dict, attribute_path_elements: List[str]):

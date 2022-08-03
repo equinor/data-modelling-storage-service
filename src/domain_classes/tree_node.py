@@ -8,7 +8,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute
 from enums import BuiltinDataTypes, SIMOS, StorageDataTypes
-from utils.exceptions import InvalidChildTypeException, InvalidEntityException
+from common.exceptions import InvalidChildTypeException, InvalidEntityException
 from utils.logging import logger
 from utils.validators import valid_extended_type
 

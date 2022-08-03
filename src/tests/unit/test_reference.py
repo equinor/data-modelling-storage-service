@@ -6,7 +6,7 @@ from pydantic import ValidationError
 from restful.request_types.shared import Reference
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider
-from utils.exceptions import EntityNotFoundException, InvalidEntityException
+from common.exceptions import EntityNotFoundException, InvalidEntityException
 
 
 class ReferenceTestCase(unittest.TestCase):

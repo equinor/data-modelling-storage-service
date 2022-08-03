@@ -11,7 +11,7 @@ from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
 from services.database import data_source_collection
-from utils.exceptions import EntityNotFoundException, InvalidDocumentNameException, MissingPrivilegeException
+from common.exceptions import EntityNotFoundException, InvalidDocumentNameException, MissingPrivilegeException
 from utils.logging import logger
 
 
