@@ -1,5 +1,5 @@
-from utils.data_structure.dot_notation import to_dot_notation
-from utils.data_structure.find import find
+from common.utils.data_structure.dot_notation import to_dot_notation
+from common.utils.data_structure.find import find
 
 
 def traverse(obj, path=None, callback=None):

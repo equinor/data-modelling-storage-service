@@ -3,8 +3,8 @@ from typing import Callable, List
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import BuiltinDataTypes
 from common.exceptions import ValidationException
-from utils.logging import logger
-from utils.string_helpers import get_data_type_from_dmt_type
+from common.utils.logging import logger
+from common.utils.string_helpers import get_data_type_from_dmt_type
 
 
 def valid_extended_type(type: str, extended_types: List[str], get_blueprint: Callable) -> bool:

@@ -7,7 +7,7 @@ from restful import use_case as uc
 from restful.request_types.shared import DataSource
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
-from utils.get_document_by_path import get_document_by_ref
+from common.utils.get_document_by_path import get_document_by_ref
 
 
 class GetDocumentByPathRequest(DataSource):

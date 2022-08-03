@@ -14,9 +14,9 @@ from common.exceptions import (
     InvalidDocumentNameException,
     RootPackageNotFoundException,
 )
-from utils.get_document_by_path import get_document_by_ref
-from utils.logging import logger
-from utils.string_helpers import url_safe_name
+from common.utils.get_document_by_path import get_document_by_ref
+from common.utils.logging import logger
+from common.utils.string_helpers import url_safe_name
 
 
 def _add_documents(path, documents, data_source) -> List[Dict]:

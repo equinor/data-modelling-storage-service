@@ -14,9 +14,9 @@ from authentication.authentication import auth_w_jwt_or_pat, auth_with_jwt
 from config import config
 from restful.request_types.create_data_source import DataSourceRequest
 from storage.internal.data_source_repository import DataSourceRepository
-from utils.encryption import generate_key
-from utils.logging import logger
-from utils.package_import import import_package
+from common.utils.encryption import generate_key
+from common.utils.logging import logger
+from common.utils.package_import import import_package
 
 server_root = "/api"
 version = "v1"

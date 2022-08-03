@@ -2,7 +2,7 @@ from typing import Optional
 
 from authentication.models import PATData, User
 from services.database import personal_access_token_collection
-from utils.encryption import scrypt
+from common.utils.encryption import scrypt
 
 
 def insert_pat(pat: PATData) -> None:

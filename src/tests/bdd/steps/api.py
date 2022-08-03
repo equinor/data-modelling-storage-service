@@ -3,7 +3,7 @@ from time import sleep
 
 from fastapi.testclient import TestClient
 from behave import given, when, then, step
-from utils.mock_token_generator import generate_mock_token
+from common.utils.mock_token_generator import generate_mock_token
 
 from authentication.models import User
 from config import config

@@ -5,7 +5,7 @@ from authentication.models import User
 from services.document_service import DocumentService
 from restful.use_case import UseCase
 from storage.internal.data_source_repository import get_data_source
-from utils.string_helpers import split_absolute_ref
+from common.utils.string_helpers import split_absolute_ref
 
 
 class AddFileUseCase(UseCase):

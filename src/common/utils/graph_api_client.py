@@ -2,7 +2,7 @@ from requests import HTTPError, post, Request, Session
 from pydantic import BaseModel
 from typing import List, Optional
 
-from utils.logging import logger
+from common.utils.logging import logger
 from config import config
 
 GRAPH_API_URL = "https://graph.microsoft.com/v1.0"

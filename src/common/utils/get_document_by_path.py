@@ -3,7 +3,7 @@ from typing import List, Union
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from common.exceptions import EntityNotFoundException, RootPackageNotFoundException
-from utils.string_helpers import split_absolute_ref, get_package_and_path
+from common.utils.string_helpers import split_absolute_ref, get_package_and_path
 
 
 def _find_document_in_package_by_path(

@@ -8,7 +8,7 @@ from domain_classes.ui_recipe import Recipe
 from enums import StorageDataTypes
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider
-from utils.data_structure.compare import pretty_eq
+from common.utils.data_structure.compare import pretty_eq
 
 
 class GetExtendedBlueprintTestCase(unittest.TestCase):

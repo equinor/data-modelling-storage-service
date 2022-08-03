@@ -6,7 +6,7 @@ from enums import SIMOS
 from restful import use_case as uc
 from storage.internal.data_source_repository import get_data_source
 from common.exceptions import EntityNotFoundException
-from utils.string_helpers import split_absolute_ref
+from common.utils.string_helpers import split_absolute_ref
 
 
 def find_package_with_document(data_source: str, document_id: str, user) -> dict:

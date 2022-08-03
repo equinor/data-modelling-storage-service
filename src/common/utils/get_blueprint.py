@@ -5,8 +5,8 @@ from config import config
 from domain_classes.blueprint import Blueprint
 
 from common.exceptions import EntityNotFoundException
-from utils.get_document_by_path import get_document_by_ref
-from utils.logging import logger
+from common.utils.get_document_by_path import get_document_by_ref
+from common.utils.logging import logger
 
 
 class BlueprintProvider:

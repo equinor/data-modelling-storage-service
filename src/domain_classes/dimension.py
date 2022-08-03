@@ -1,6 +1,6 @@
 from typing import List
 
-from utils.string_helpers import get_data_type_from_dmt_type
+from common.utils.string_helpers import get_data_type_from_dmt_type
 
 
 class Dimension:

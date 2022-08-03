@@ -21,7 +21,7 @@ from common.exceptions import (
     RootPackageNotFoundException,
     ValidationException,
 )
-from utils.logging import logger
+from common.utils.logging import logger
 
 
 def create_error_response(

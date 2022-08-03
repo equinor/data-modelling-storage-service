@@ -3,7 +3,7 @@ from typing import Dict, List, Optional
 import json
 
 from storage.repository_interface import RepositoryInterface
-from utils.encryption import decrypt
+from common.utils.encryption import decrypt
 
 
 class AzureBlobStorageClient(RepositoryInterface):

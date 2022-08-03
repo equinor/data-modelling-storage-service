@@ -4,7 +4,7 @@ import json
 from pygments.formatters.terminal import TerminalFormatter
 from pygments.lexers.data import JsonLexer
 
-from utils.data_structure.traverse import traverse_compare
+from common.utils.data_structure.traverse import traverse_compare
 
 
 def print_pygments(json_object):

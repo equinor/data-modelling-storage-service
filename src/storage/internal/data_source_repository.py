@@ -14,7 +14,7 @@ from common.exceptions import (
     InvalidDataSourceException,
     InvalidEntityException,
 )
-from utils.logging import logger
+from common.utils.logging import logger
 
 RESERVED_MONGO_DATABASES = ("admin", "local", "config", "dmss-internal")
 

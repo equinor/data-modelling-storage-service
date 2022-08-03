@@ -1,6 +1,6 @@
 import re
 
-from utils.data_structure.find import find
+from common.utils.data_structure.find import find
 
 
 def to_dot_notation(path):
