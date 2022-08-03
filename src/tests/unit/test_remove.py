@@ -5,7 +5,6 @@ from enums import SIMOS
 
 from authentication.models import User
 
-from domain_classes.dto import DTO
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider
 from utils.data_structure.compare import pretty_eq
@@ -17,7 +16,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_1 = {"_id": "1", "name": "Parent", "description": "", "type": "all_contained_cases_blueprint"}
 
-        document_repository.get = lambda id: DTO(data=document_1.copy())
+        document_repository.get = lambda id: document_1.copy()
 
         document_service = DocumentService(
             repository_provider=lambda id, user: document_repository, blueprint_provider=blueprint_provider
@@ -33,7 +32,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             def get_blueprint(self, type):
                 raise FileNotFoundError
 
-        repository.get = lambda doc_id: DTO(doc_storage[doc_id])
+        repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
             blueprint_provider=NoBlueprints(), repository_provider=lambda x, y: repository
@@ -56,10 +55,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
         def mock_delete(document_id: str):
             try:
@@ -95,7 +94,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             }
         }
 
-        repository.get = lambda doc_id: DTO(doc_storage[doc_id])
+        repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
             repository_provider=lambda x, y: repository, blueprint_provider=blueprint_provider
@@ -132,7 +131,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             },
         }
 
-        repository.get = lambda doc_id: DTO(doc_storage[doc_id])
+        repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
             repository_provider=lambda x, y: repository, blueprint_provider=blueprint_provider
@@ -196,7 +195,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             },
         }
 
-        repository.get = lambda doc_id: DTO(doc_storage[doc_id])
+        repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
             repository_provider=lambda x, y: repository, blueprint_provider=blueprint_provider
@@ -220,7 +219,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
         }
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
-        repository.get = lambda uid: DTO(doc_storage[uid])
+        repository.get = lambda uid: doc_storage[uid]
 
         def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
@@ -256,7 +255,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
         def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
@@ -290,7 +289,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
         def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":

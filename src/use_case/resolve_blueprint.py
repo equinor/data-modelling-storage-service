@@ -1,7 +1,7 @@
 from typing import List
 
 from authentication.models import User
-from domain_classes.dto import DTO
+
 from enums import SIMOS
 from restful import use_case as uc
 from storage.internal.data_source_repository import get_data_source
@@ -11,7 +11,7 @@ from utils.string_helpers import split_absolute_ref
 
 def find_package_with_document(data_source: str, document_id: str, user) -> dict:
     repository = get_data_source(data_source, user)
-    packages: List[DTO] = repository.find(
+    packages: List[dict] = repository.find(
         {"type": SIMOS.PACKAGE.value, "content": {"$elemMatch": {"_id": document_id}}}
     )
     if not packages:

@@ -2,7 +2,6 @@ import unittest
 from unittest import mock
 
 from authentication.models import User
-from domain_classes.dto import DTO
 from domain_classes.tree_node import Node
 from enums import StorageDataTypes
 from services.document_service import DocumentService
@@ -26,7 +25,7 @@ class DataSourceTestCase(unittest.TestCase):
         default_doc_storage = {}
 
         def default_get(document_id: str):
-            return DTO(default_doc_storage[document_id])
+            return default_doc_storage[document_id]
 
         def default_update(uid, data):
             default_doc_storage[uid] = data
@@ -35,7 +34,7 @@ class DataSourceTestCase(unittest.TestCase):
         blob_doc_storage = {}
 
         def blob_get(document_id: str):
-            return DTO(blob_doc_storage[document_id])
+            return blob_doc_storage[document_id]
 
         def blob_update(uid, data):
             blob_doc_storage[uid] = data
@@ -84,7 +83,7 @@ class DataSourceTestCase(unittest.TestCase):
         default_doc_storage = {}
 
         def default_get(document_id: str):
-            return DTO(default_doc_storage[document_id])
+            return default_doc_storage[document_id]
 
         def default_update(uid, data):
             default_doc_storage[uid] = data
@@ -93,7 +92,7 @@ class DataSourceTestCase(unittest.TestCase):
         blob_doc_storage = {}
 
         def blob_get(document_id: str):
-            return DTO(blob_doc_storage[document_id])
+            return blob_doc_storage[document_id]
 
         def blob_update(uid, data):
             blob_doc_storage[uid] = data
@@ -147,7 +146,7 @@ class DataSourceTestCase(unittest.TestCase):
         default_doc_storage = {}
 
         def default_get(document_id: str):
-            return DTO(default_doc_storage[document_id])
+            return default_doc_storage[document_id]
 
         def default_update(uid, data):
             default_doc_storage[uid] = data
@@ -156,7 +155,7 @@ class DataSourceTestCase(unittest.TestCase):
         blob_doc_storage = {}
 
         def blob_get(document_id: str):
-            return DTO(blob_doc_storage[document_id])
+            return blob_doc_storage[document_id]
 
         def blob_update(uid, data):
             blob_doc_storage[uid] = data

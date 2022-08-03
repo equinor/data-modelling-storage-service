@@ -527,12 +527,15 @@ class Node(NodeBase):
         """
         if not self.entity and not new_id:
             return
+
         if self.storage_contained:
             self.uid = None
             self.entity.pop("_id", None)
-        else:
-            self.uid = new_id if new_id else self.entity.get("_id", str(uuid4()))
-            self.entity["_id"] = self.uid
+            return
+
+        current_id = new_id if new_id else self.entity.get("_id", self.uid if self.uid else str(uuid4()))
+        self.uid = current_id
+        self.entity["_id"] = self.uid
 
 
 class ListNode(NodeBase):

@@ -2,7 +2,6 @@ import unittest
 from unittest import mock
 
 from domain_classes.blueprint import Blueprint
-from domain_classes.dto import DTO
 from domain_classes.storage_recipe import StorageRecipe
 from domain_classes.tree_node import Node
 from domain_classes.ui_recipe import Recipe
@@ -63,10 +62,10 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
             "a_third_value": "amanothastring",
         }
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
-        repository.get = lambda doc_id: DTO(doc_storage[doc_id])
+        repository.get = lambda doc_id: doc_storage[doc_id]
         repository.update = mock_update
         document_service = DocumentService(
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository

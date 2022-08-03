@@ -1,7 +1,6 @@
 import unittest
 from unittest import mock
 
-from domain_classes.dto import DTO
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider
 from utils.data_structure.compare import pretty_eq
@@ -28,13 +27,13 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         def mock_get(document_id: str):
             if document_id == "1":
-                return DTO(data=document_1.copy())
+                return document_1.copy()
             if document_id == "2":
-                return DTO(data=document_2.copy())
+                return document_2.copy()
             if document_id == "3":
-                return DTO(data=document_3.copy())
+                return document_3.copy()
             if document_id == "4":
-                return DTO(data=document_4.copy())
+                return document_4.copy()
             return None
 
         document_repository = mock.Mock()
@@ -84,13 +83,13 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         def mock_get(document_id: str):
             if document_id == "1":
-                return DTO(data=document_1.copy())
+                return document_1.copy()
             if document_id == "2":
-                return DTO(data=document_2.copy())
+                return document_2.copy()
             if document_id == "3":
-                return DTO(data=document_3.copy())
+                return document_3.copy()
             if document_id == "4":
-                return DTO(data=document_4.copy())
+                return document_4.copy()
             return None
 
         document_repository = mock.Mock()

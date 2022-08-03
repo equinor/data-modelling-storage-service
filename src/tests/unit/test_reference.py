@@ -3,7 +3,6 @@ from unittest import mock
 
 from pydantic import ValidationError
 
-from domain_classes.dto import DTO
 from restful.request_types.shared import Reference
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider
@@ -30,11 +29,11 @@ class ReferenceTestCase(unittest.TestCase):
             },
         }
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
-        repository.get = lambda x: DTO(doc_storage[str(x)])
+        repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
         document_service = DocumentService(
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
@@ -70,12 +69,12 @@ class ReferenceTestCase(unittest.TestCase):
 
         def mock_get(document_id: str):
             try:
-                return DTO(doc_storage[str(document_id)])
+                return doc_storage[str(document_id)]
             except KeyError:
                 raise EntityNotFoundException(f"{document_id} was not found in the 'test' data-sources lookupTable")
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
         repository.get = mock_get
@@ -114,10 +113,10 @@ class ReferenceTestCase(unittest.TestCase):
             },
         }
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
-        repository.get = lambda x: DTO(doc_storage[str(x)])
+        repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
         document_service = DocumentService(
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
@@ -153,10 +152,10 @@ class ReferenceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[str(document_id)])
+            return doc_storage[str(document_id)]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
         repository.get = mock_get
@@ -200,10 +199,10 @@ class ReferenceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
         repository.get = mock_get
@@ -244,11 +243,11 @@ class ReferenceTestCase(unittest.TestCase):
             },
         }
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
-        repository.get = lambda id: DTO(doc_storage[id])
+        repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
         document_service = DocumentService(
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
@@ -290,11 +289,11 @@ class ReferenceTestCase(unittest.TestCase):
             },
         }
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
-        repository.get = lambda id: DTO(doc_storage[id])
+        repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
         document_service = DocumentService(
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
@@ -341,10 +340,10 @@ class ReferenceTestCase(unittest.TestCase):
             },
         }
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
-        repository.get = lambda x: DTO(doc_storage[str(x)])
+        repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
         document_service = DocumentService(
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
@@ -392,10 +391,10 @@ class ReferenceTestCase(unittest.TestCase):
             },
         }
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
-        repository.get = lambda x: DTO(doc_storage[str(x)])
+        repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
         document_service = DocumentService(
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository

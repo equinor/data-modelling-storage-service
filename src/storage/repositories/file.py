@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 from typing import Dict, Optional, Union
 
-from domain_classes.dto import DTO
 from storage.repository_interface import RepositoryInterface
 
 
@@ -19,19 +18,19 @@ class LocalFileRepository(RepositoryInterface):
         except FileNotFoundError:
             raise FileNotFoundError(f"'{doc_ref}' not found. Are DMSS core blueprints available at '{self.path}'?")
 
-    def find(self, filter: dict, single=None, raw=None) -> DTO:
+    def find(self, filter: dict, single=None, raw=None) -> dict:
         return self.get(filter["type"])
 
     def find_one(self, filters: Dict) -> Dict:
         raise NotImplementedError
 
-    def add(self, document: DTO) -> None:
+    def add(self, document: dict) -> None:
         raise NotImplementedError
 
-    def delete(self, document: DTO) -> None:
+    def delete(self, document: dict) -> None:
         raise NotImplementedError
 
-    def update(self, document: DTO) -> None:
+    def update(self, document: dict) -> None:
         raise NotImplementedError
 
     def get_blob(self, uid):

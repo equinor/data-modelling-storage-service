@@ -1,4 +1,3 @@
-from domain_classes.dto import DTO
 from storage.data_source_class import DataSource
 
 
@@ -25,15 +24,14 @@ def get_complete_document(
     depth: int = 999,
     depth_count: int = 0,
 ) -> dict:
-    document: DTO = data_source.get(str(document_uid))
+    document: dict = data_source.get(str(document_uid))
     if depth <= depth_count:
         if depth_count >= 999:
             raise RecursionError("Reached max-nested-depth (999). Most likely some recursive entities")
-        return document.data
+        return document
     depth_count += 1
-    entity: dict = document.data
 
-    return resolve_complete_document(entity, data_source, depth, depth_count)
+    return resolve_complete_document(document, data_source, depth, depth_count)
 
 
 def resolve_contained_dict(

@@ -3,7 +3,6 @@ import json
 from behave import given
 
 from config import config
-from domain_classes.dto import DTO
 from restful.request_types.create_data_source import DataSourceRequest
 from storage.internal.data_source_repository import DataSourceRepository, get_data_source
 from utils.logging import logger
@@ -12,7 +11,8 @@ from utils.package_import import import_package
 
 @given('there exist document with id "{uid}" in data source "{data_source_id}"')
 def step_impl_2(context, uid: str, data_source_id: str):
-    document: DTO = DTO(uid=uid, data=json.loads(context.text))
+    document: dict = json.loads(context.text)
+    document["_id"] = uid
     document_repository = get_data_source(data_source_id, context.user)
     document_repository.update(document)
 

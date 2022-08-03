@@ -1,7 +1,6 @@
 import json
 from zipfile import ZipFile
 
-from domain_classes.dto import DTO
 from enums import SIMOS
 from storage.repository_interface import RepositoryInterface
 from utils.logging import logger
@@ -11,15 +10,15 @@ class ZipFileClient(RepositoryInterface):
     def __init__(self, zip_file: ZipFile):
         self.zip_file = zip_file
 
-    def update(self, dto: DTO, storage_recipe=None, **kwargs):
-        dto.data.pop("_id", None)
-        dto.data.pop("uid", None)
-        write_to = f"{dto.data['__path__']}/{dto.data['name']}.json"
-        dto.data.pop("__path__")
-        json_data = json.dumps(dto.data)
+    def update(self, entity: dict, storage_recipe=None, **kwargs):
+        entity.pop("_id", None)
+        entity.pop("uid", None)
+        write_to = f"{entity['__path__']}/{entity['name']}.json"
+        entity.pop("__path__")
+        json_data = json.dumps(entity)
         binary_data = json_data.encode()
-        logger.debug(f"Writing: {dto.type} to {write_to}")
-        if dto.type != SIMOS.PACKAGE.value:
+        logger.debug(f"Writing: {entity['type']} to {write_to}")
+        if entity["type"] != SIMOS.PACKAGE.value:
             self.zip_file.writestr(write_to, binary_data)
 
     def get(self, uid: str):

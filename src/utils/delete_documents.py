@@ -1,6 +1,6 @@
 from typing import Union
 
-from domain_classes.dto import DTO
+
 from enums import SIMOS
 from storage.data_source_class import DataSource
 
@@ -35,6 +35,6 @@ def delete_document(data_source: DataSource, document_id: str):
     """
     Delete a document, and any model contained children.
     """
-    document: DTO = data_source.get(document_id)
-    delete_dict_recursive(document.data, data_source)
+    document: dict = data_source.get(document_id)
+    delete_dict_recursive(document, data_source)
     data_source.delete(document_id)

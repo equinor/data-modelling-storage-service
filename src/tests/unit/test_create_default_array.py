@@ -2,7 +2,6 @@ import unittest
 
 from domain_classes.blueprint import Blueprint
 from domain_classes.dimension import Dimension
-from domain_classes.dto import DTO
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from utils.create_entity import CreateEntity
@@ -92,13 +91,13 @@ file_repository_test = LocalFileRepository()
 class BlueprintProvider:
     def get_blueprint(self, template_type: str):
         if template_type == "higher_rank_array":
-            return Blueprint(DTO(higher_rank_array_blueprint))
+            return Blueprint(higher_rank_array_blueprint)
         elif template_type == "package_blueprint":
-            return Blueprint(DTO(package_blueprint))
+            return Blueprint(package_blueprint)
         elif template_type == "basic_blueprint":
-            return Blueprint(DTO(basic_blueprint))
+            return Blueprint(basic_blueprint)
         else:
-            return Blueprint(DTO(file_repository_test.get(template_type)))
+            return Blueprint(file_repository_test.get(template_type))
 
 
 document_service = DocumentService(repository_provider=None, blueprint_provider=BlueprintProvider())

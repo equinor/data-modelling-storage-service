@@ -3,7 +3,6 @@ from typing import Callable, Dict, List
 from pydantic import ValidationError
 
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from domain_classes.dto import DTO
 from domain_classes.storage_recipe import DefaultStorageRecipe, StorageRecipe
 from domain_classes.ui_recipe import DefaultRecipe, Recipe
 from enums import PRIMITIVES, StorageDataTypes
@@ -24,27 +23,27 @@ def get_storage_recipes(recipes: List[Dict], attributes: List[BlueprintAttribute
 
 
 class Blueprint:
-    def __init__(self, dto: DTO):
-        self.name = dto.data["name"]
-        self.description = dto.data.get("description", "")
-        self.abstract = dto.data.get("abstract", False)
-        self.extends = dto.data.get("extends", [])
-        self.type = dto.type
-        self.dto = dto
+    def __init__(self, entity: dict):
+        self.name = entity["name"]
+        self.description = entity.get("description", "")
+        self.abstract = entity.get("abstract", False)
+        self.extends = entity.get("extends", [])
+        self.type = entity["type"]
+        self.entity = entity
         self.attributes: List[BlueprintAttribute] = [
-            BlueprintAttribute(**attribute) for attribute in dto.data.get("attributes", [])
+            BlueprintAttribute(**attribute) for attribute in entity.get("attributes", [])
         ]
         self.storage_recipes: List[StorageRecipe] = get_storage_recipes(
-            dto.data.get("storageRecipes", []), self.attributes
+            entity.get("storageRecipes", []), self.attributes
         )
         try:
-            self.ui_recipes: List[Recipe] = [Recipe(**recipe_dict) for recipe_dict in dto.data.get("uiRecipes", [])]
+            self.ui_recipes: List[Recipe] = [Recipe(**recipe_dict) for recipe_dict in entity.get("uiRecipes", [])]
         except ValidationError as e:
             print(e)
 
     @classmethod
     def from_dict(cls, adict):
-        instance = cls(DTO(adict))
+        instance = cls(adict)
         instance.attributes = [BlueprintAttribute(**attr) for attr in adict.get("attributes", [])]
         instance.storage_recipes = get_storage_recipes(adict.get("storageRecipes", []), instance.attributes)
         instance.ui_recipes = [Recipe.from_dict(recipe_dict) for recipe_dict in adict.get("uiRecipes", [])]
@@ -52,12 +51,6 @@ class Blueprint:
 
     def get_required_attributes(self):
         return [attribute for attribute in self.attributes if attribute.optional is False]
-
-    def to_dict_raw(self):
-        data = self.dto.data
-        if "_id" in data:
-            data.pop("_id")
-        return data
 
     def to_dict(self):
         return {

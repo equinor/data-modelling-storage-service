@@ -2,7 +2,7 @@ import unittest
 
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from domain_classes.dto import DTO
+
 from domain_classes.tree_node import DictExporter, DictImporter, ListNode, Node
 from tests.unit.mock_blueprint_provider import flatten_dict
 from utils.data_structure.compare import pretty_eq
@@ -120,15 +120,15 @@ recursive_blueprint = {
 
 def get_blueprint(type: str):
     if type == "all_contained_cases_blueprint":
-        return Blueprint(DTO(data=all_contained_cases_blueprint))
+        return Blueprint(all_contained_cases_blueprint)
     if type == "basic_blueprint":
-        return Blueprint(DTO(data=basic_blueprint))
+        return Blueprint(basic_blueprint)
     if type == "blueprint_3":
-        return Blueprint(DTO(data=blueprint_3))
+        return Blueprint(blueprint_3)
     if type == "blueprint_4":
-        return Blueprint(DTO(data=blueprint_4))
+        return Blueprint(blueprint_4)
     if type == "recursive_blueprint":
-        return Blueprint(DTO(data=recursive_blueprint))
+        return Blueprint(recursive_blueprint)
     return None
 
 

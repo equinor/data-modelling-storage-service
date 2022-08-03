@@ -4,7 +4,6 @@ from unittest import mock
 from authentication.models import User
 
 from domain_classes.blueprint import Blueprint
-from domain_classes.dto import DTO
 from domain_classes.tree_node import Node
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
@@ -18,128 +17,114 @@ class MultiTypeBlueprintProvider:
     def get_blueprint(type: str):
         if type == "parent":  # Just a container
             return Blueprint(
-                DTO(
-                    {
-                        "name": "Parent",
-                        "type": "system/SIMOS/Blueprint",
-                        "extends": ["system/SIMOS/NamedEntity"],
-                        "attributes": [
-                            {
-                                "name": "SomeChild",
-                                "attributeType": "base_child",
-                                "type": "system/SIMOS/BlueprintAttribute",
-                                "optional": True,
-                            },
-                        ],
-                    }
-                )
+                {
+                    "name": "Parent",
+                    "type": "system/SIMOS/Blueprint",
+                    "extends": ["system/SIMOS/NamedEntity"],
+                    "attributes": [
+                        {
+                            "name": "SomeChild",
+                            "attributeType": "base_child",
+                            "type": "system/SIMOS/BlueprintAttribute",
+                            "optional": True,
+                        },
+                    ],
+                }
             )
         if type == "parent_w_list":  # Just a container with a list
             return Blueprint(
-                DTO(
-                    {
-                        "name": "Parent",
-                        "type": "system/SIMOS/Blueprint",
-                        "extends": ["system/SIMOS/NamedEntity"],
-                        "attributes": [
-                            {
-                                "name": "SomeChild",
-                                "attributeType": "base_child",
-                                "type": "system/SIMOS/BlueprintAttribute",
-                                "optional": True,
-                                "dimensions": "*",
-                            },
-                        ],
-                    }
-                )
+                {
+                    "name": "Parent",
+                    "type": "system/SIMOS/Blueprint",
+                    "extends": ["system/SIMOS/NamedEntity"],
+                    "attributes": [
+                        {
+                            "name": "SomeChild",
+                            "attributeType": "base_child",
+                            "type": "system/SIMOS/BlueprintAttribute",
+                            "optional": True,
+                            "dimensions": "*",
+                        },
+                    ],
+                }
             )
         if type == "wrapps_parent_w_list":  # Wrapps a uncontained parent_w_list
             return Blueprint(
-                DTO(
-                    {
-                        "name": "wrapps_parent_w_list",
-                        "type": "system/SIMOS/Blueprint",
-                        "extends": ["system/SIMOS/NamedEntity"],
-                        "attributes": [
-                            {
-                                "name": "Parent-w-list",
-                                "attributeType": "parent_w_list",
-                                "type": "system/SIMOS/BlueprintAttribute",
-                            },
-                        ],
-                    }
-                )
+                {
+                    "name": "wrapps_parent_w_list",
+                    "type": "system/SIMOS/Blueprint",
+                    "extends": ["system/SIMOS/NamedEntity"],
+                    "attributes": [
+                        {
+                            "name": "Parent-w-list",
+                            "attributeType": "parent_w_list",
+                            "type": "system/SIMOS/BlueprintAttribute",
+                        },
+                    ],
+                }
             )
         if type == "base_child":  # A very basic blueprint, extends from NamedEntity
             return Blueprint(
-                DTO(
-                    {
-                        "name": "BaseChild",
-                        "type": "system/SIMOS/Blueprint",
-                        "extends": ["system/SIMOS/NamedEntity"],
-                        "attributes": [
-                            {
-                                "name": "AValue",
-                                "attributeType": "integer",
-                                "type": "system/SIMOS/BlueprintAttribute",
-                            },
-                        ],
-                    }
-                )
+                {
+                    "name": "BaseChild",
+                    "type": "system/SIMOS/Blueprint",
+                    "extends": ["system/SIMOS/NamedEntity"],
+                    "attributes": [
+                        {
+                            "name": "AValue",
+                            "attributeType": "integer",
+                            "type": "system/SIMOS/BlueprintAttribute",
+                        },
+                    ],
+                }
             )
         if type == "special_child":  # A blueprint that extends from 'base_child', and adds an extra attribute
             return Blueprint(
-                DTO(
-                    {
-                        "name": "SpecialChild",
-                        "type": "system/SIMOS/Blueprint",
-                        "extends": ["base_child"],
-                        "attributes": [
-                            {
-                                "name": "AnExtraValue",
-                                "attributeType": "string",
-                                "type": "system/SIMOS/BlueprintAttribute",
-                            },
-                        ],
-                    }
-                )
+                {
+                    "name": "SpecialChild",
+                    "type": "system/SIMOS/Blueprint",
+                    "extends": ["base_child"],
+                    "attributes": [
+                        {
+                            "name": "AnExtraValue",
+                            "attributeType": "string",
+                            "type": "system/SIMOS/BlueprintAttribute",
+                        },
+                    ],
+                }
             )
         if type == "extra_special_child":  # A blueprint that extends from 'base_child', and adds an extra attribute
             return Blueprint(
-                DTO(
-                    {
-                        "name": "ExtraSpecialChild",
-                        "type": "system/SIMOS/Blueprint",
-                        "extends": ["system/SIMOS/NamedEntity", "special_child"],
-                        "attributes": [
-                            {
-                                "name": "AnotherExtraValue",
-                                "attributeType": "boolean",
-                                "type": "system/SIMOS/BlueprintAttribute",
-                            },
-                        ],
-                    }
-                )
+                {
+                    "name": "ExtraSpecialChild",
+                    "type": "system/SIMOS/Blueprint",
+                    "extends": ["system/SIMOS/NamedEntity", "special_child"],
+                    "attributes": [
+                        {
+                            "name": "AnotherExtraValue",
+                            "attributeType": "boolean",
+                            "type": "system/SIMOS/BlueprintAttribute",
+                        },
+                    ],
+                }
             )
         if type == "special_child_no_inherit":  # A duplicate of the 'special_child', but does not extends 'base_child'
             return Blueprint(
-                DTO(
-                    {
-                        "name": "SpecialChild",
-                        "type": "system/SIMOS/Blueprint",
-                        "extends": ["system/SIMOS/NamedEntity"],
-                        "attributes": [
-                            {
-                                "name": "AnExtraValue",
-                                "attributeType": "string",
-                                "type": "system/SIMOS/BlueprintAttribute",
-                            },
-                        ],
-                    }
-                )
+                {
+                    "name": "SpecialChild",
+                    "type": "system/SIMOS/Blueprint",
+                    "extends": ["system/SIMOS/NamedEntity"],
+                    "attributes": [
+                        {
+                            "name": "AnExtraValue",
+                            "attributeType": "string",
+                            "type": "system/SIMOS/BlueprintAttribute",
+                        },
+                    ],
+                }
             )
         else:
-            return Blueprint(DTO(LocalFileRepository().get(type)))
+            return Blueprint(LocalFileRepository().get(type))
 
 
 class DocumentServiceTestCase(unittest.TestCase):
@@ -157,10 +142,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
         def repository_provider(data_source_id, user: User):
@@ -209,10 +194,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
         def repository_provider(data_source_id, user: User):
@@ -245,10 +230,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
         repository.get = mock_get
@@ -300,10 +285,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
         def repository_provider(data_source_id, user: User):
@@ -340,10 +325,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
             return None
 
         repository.get = mock_get
@@ -364,10 +349,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "parent", "SomeChild": {}}}
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
         repository.get = mock_get
         repository.update = mock_update
@@ -392,10 +377,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "parent", "SomeChild": {}}}
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
         repository.get = mock_get
         repository.update = mock_update
@@ -429,10 +414,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
         repository.get = mock_get
         repository.update = mock_update
@@ -472,10 +457,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
         repository.get = mock_get
         repository.update = mock_update
@@ -507,10 +492,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
         repository.get = mock_get
         repository.update = mock_update

@@ -4,7 +4,6 @@ from unittest import mock, skip
 from authentication.models import User
 
 from domain_classes.blueprint import Blueprint
-from domain_classes.dto import DTO
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from utils.data_structure.compare import pretty_eq
@@ -84,13 +83,13 @@ file_repository_test = LocalFileRepository()
 class BlueprintProvider:
     def get_blueprint(self, template_type: str):
         if template_type == "higher_rank_array":
-            return Blueprint(DTO(higher_rank_array_blueprint))
+            return Blueprint(higher_rank_array_blueprint)
         elif template_type == "package_blueprint":
-            return Blueprint(DTO(package_blueprint))
+            return Blueprint(package_blueprint)
         elif template_type == "basic_blueprint":
-            return Blueprint(DTO(basic_blueprint))
+            return Blueprint(basic_blueprint)
         else:
-            return Blueprint(DTO(file_repository_test.get(template_type)))
+            return Blueprint(file_repository_test.get(template_type))
 
 
 blueprint_provider = BlueprintProvider()
@@ -110,10 +109,10 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
         document_repository = mock.Mock()
         document_repository.get = mock_get
@@ -259,10 +258,10 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         # fmt: on
 
         def mock_get(document_id: str):
-            return DTO(doc_storage[document_id])
+            return doc_storage[document_id]
 
-        def mock_update(dto: DTO, *args, **kwargs):
-            doc_storage[dto.uid] = dto.data
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
 
         document_repository = mock.Mock()
         document_repository.get = mock_get

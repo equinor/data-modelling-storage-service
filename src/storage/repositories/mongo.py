@@ -36,7 +36,7 @@ class MongoDBClient(RepositoryInterface):
         self.blob_handler = gridfs.GridFS(self.handler)
         self.collection = collection
 
-    def get(self, uid: str) -> Dict:
+    def get(self, uid: str) -> dict:
         result = self.handler[self.collection].find_one(filter={"_id": uid})
         return result
 

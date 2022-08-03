@@ -1,4 +1,5 @@
 from typing import Dict, List, Union
+from uuid import uuid4
 
 from pydantic import UUID4
 from utils.string_helpers import url_safe_name
@@ -6,7 +7,6 @@ from utils.string_helpers import url_safe_name
 from authentication.access_control import access_control, create_acl, DEFAULT_ACL
 from authentication.models import AccessLevel, ACL, User
 from domain_classes.document_look_up import DocumentLookUp
-from domain_classes.dto import DTO
 from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
@@ -56,15 +56,6 @@ class DataSource:
             raise ValueError(f"No repository for '{storage_attribute.storage_type_affinity}' data configured")
         return self.get_default_repository()
 
-    @staticmethod
-    def _validate_dto(dto: DTO):
-        if (
-            not dto.data["name"] == dto.data["name"]
-            or not dto.type == dto.data["type"]
-            or not dto.uid == dto.data["_id"]
-        ):
-            raise ValueError("The metadata and tha 'data' object in the DTO does not match!")
-
     # TODO: Read default attribute from DataSource spec
     def get_default_repository(self) -> Repository:
         # Now just returns the first repo in the ordered_dict
@@ -102,31 +93,31 @@ class DataSource:
             filter={"_id": self.name}, update={"$unset": {f"documentLookUp.{lookup_id}": ""}}
         )
 
-    def get(self, uid: Union[str, UUID4]) -> DTO:
+    def get(self, uid: Union[str, UUID4]) -> dict:
         uid = str(uid)
         lookup = self._lookup(uid)
         access_control(lookup.acl, AccessLevel.READ, self.user)
         repo = self.repositories[lookup.repository]
-        return DTO(repo.get(uid))
+        return repo.get(uid)
 
     # TODO: Implement find across repositories
-    def find(self, filter: dict) -> Union[DTO, List[DTO]]:
+    def find(self, filter: dict) -> Union[dict, List[dict]]:
         repo = self.get_default_repository()
 
-        documents_with_access: List[DTO] = []
-        for dto in repo.find(filter):
-            if lookup := self._lookup(dto.get("_id")):
+        documents_with_access: List[dict] = []
+        for entity in repo.find(filter):
+            if lookup := self._lookup(entity.get("_id")):
                 try:
                     access_control(lookup.acl, AccessLevel.READ, self.user)
-                    documents_with_access.append(DTO(dto))
+                    documents_with_access.append(entity)
                 except MissingPrivilegeException:
                     pass
         return documents_with_access
 
-    def update(self, document: DTO, storage_attribute: StorageAttribute = None, parent_id: str = None) -> None:
+    def update(self, document: dict, storage_attribute: StorageAttribute = None, parent_id: str = None) -> None:
         """
         Create or update a document.
-        :param document: A DTO of the document to create or update.
+        :param document: A dict of the document to create or update.
         :param storage_attribute: Used to decide on repository when creating new document
         :param parent_id: Needed when adding a new child document that should inherit ACL.
         :return: None
@@ -135,8 +126,10 @@ class DataSource:
             if not url_safe_name(name):
                 raise InvalidDocumentNameException(name)
 
+        document["_id"] = document.get("_id", str(uuid4()))  # Create _id if not yet created
+
         try:  # Get the documents lookup
-            lookup = self._lookup(document.uid)
+            lookup = self._lookup(document["_id"])
         except EntityNotFoundException:  # No lookup found --> Create a new document
             parent_lookup = None
 
@@ -157,12 +150,14 @@ class DataSource:
                 users=parent_acl.users,
                 others=parent_acl.others,
             )
-            lookup = DocumentLookUp(lookup_id=document.uid, repository=repo.name, database_id=document.uid, acl=acl)
+            lookup = DocumentLookUp(
+                lookup_id=document["_id"], repository=repo.name, database_id=document["_id"], acl=acl
+            )
             self._update_lookup(lookup)
 
         repo = self.repositories[lookup.repository]
         access_control(lookup.acl, AccessLevel.WRITE, self.user)
-        repo.update(document.uid, document.data)
+        repo.update(document["_id"], document)
 
     def update_blob(self, uid, file) -> None:
         repo = self._get_repo_from_storage_attribute(
