@@ -1,5 +1,3 @@
-from starlette.responses import JSONResponse
-
 from authentication.models import ACL, User
 from restful.request_types.shared import DataSource
 
@@ -18,4 +16,4 @@ class GetACLUseCase(UseCase):
     def process_request(self, req: GetACLRequest):
         document_service = DocumentService(user=self.user)
         acl: ACL = document_service.get_acl(data_source_id=req.data_source_id, document_id=req.document_id)
-        return JSONResponse(acl.dict())
+        return acl

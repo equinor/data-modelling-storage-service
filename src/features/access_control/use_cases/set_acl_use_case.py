@@ -1,5 +1,3 @@
-from starlette.responses import PlainTextResponse
-
 from authentication.models import ACL, User
 from restful.request_types.shared import DataSource
 
@@ -22,4 +20,4 @@ class SetACLUseCase(UseCase):
         document_service.set_acl(
             data_source_id=req.data_source_id, document_id=req.document_id, acl=req.acl, recursively=req.recursively
         )
-        return PlainTextResponse("OK")
+        return "OK"
