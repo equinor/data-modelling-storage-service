@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from starlette import status
 
 
-class RepositoryException(Exception):
+class ApplicationException(Exception):
     def __init__(self, message: str):
         super()
         self.message = message
@@ -11,12 +11,12 @@ class RepositoryException(Exception):
         return self.message
 
 
-class EntityAlreadyExistsException(RepositoryException):
+class EntityAlreadyExistsException(ApplicationException):
     def __init__(self, document_id=None, message: str = None):
         super().__init__(message=f"The document with id '{document_id}' already exists" if not message else message)
 
 
-class EntityNotFoundException(RepositoryException):
+class EntityNotFoundException(ApplicationException):
     def __init__(self, uid, message: str = None):
         if message:
             super().__init__(message=message)
@@ -24,22 +24,22 @@ class EntityNotFoundException(RepositoryException):
             super().__init__(message=f"The entity, with id {uid} could not be found")
 
 
-class DataSourceNotFoundException(RepositoryException):
+class DataSourceNotFoundException(ApplicationException):
     def __init__(self, uid):
         super().__init__(message=f"The data source, with id '{uid}' could not be found")
 
 
-class DataSourceAlreadyExistsException(RepositoryException):
+class DataSourceAlreadyExistsException(ApplicationException):
     def __init__(self, uid):
         super().__init__(message=f"The data source, with id '{uid}' already exists")
 
 
-class InvalidSortByAttributeException(RepositoryException):
+class InvalidSortByAttributeException(ApplicationException):
     def __init__(self, sort_by_attribute, type):
         super().__init__(message=f"'{sort_by_attribute}' is not a valid attribute in the '{type}'")
 
 
-class BadSearchParametersException(RepositoryException):
+class BadSearchParametersException(ApplicationException):
     def __init__(self, message=None):
         super().__init__(message=message if message else "Failed to build search query")
 
@@ -49,7 +49,7 @@ class BadRequestException(Exception):
         self.message = message
 
 
-class InvalidEntityException(RepositoryException):
+class InvalidEntityException(ApplicationException):
     def __init__(self, message):
         super().__init__(message=message)
 
@@ -59,7 +59,7 @@ class InvalidBlueprintException(Exception):
         super().__init__(message)
 
 
-class InvalidDocumentNameException(RepositoryException):
+class InvalidDocumentNameException(ApplicationException):
     def __init__(self, name):
         super().__init__(
             message=f"'{name}' is a invalid document name. "
@@ -67,7 +67,7 @@ class InvalidDocumentNameException(RepositoryException):
         )
 
 
-class InvalidAttributeException(RepositoryException):
+class InvalidAttributeException(ApplicationException):
     def __init__(self, attribute_name, type):
         super().__init__(message=f"'{attribute_name}' is not a valid attribute in the '{type}'")
 

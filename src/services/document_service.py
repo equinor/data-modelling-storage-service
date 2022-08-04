@@ -26,7 +26,7 @@ from common.exceptions import (
     EntityNotFoundException,
     InvalidEntityException,
     MissingPrivilegeException,
-    RepositoryException,
+    ApplicationException,
 )
 from common.utils.get_blueprint import get_blueprint_provider
 from common.utils.get_resolved_document_by_id import get_complete_document
@@ -379,7 +379,7 @@ class DocumentService:
         repository: DataSource = self.repository_provider(data_source_id, self.user)
 
         if not isinstance(repository.get_default_repository().client, MongoDBClient):
-            raise RepositoryException(
+            raise ApplicationException(
                 f"Search is not supported on this repository type; {type(repository.repository).__name__}"
             )
 
