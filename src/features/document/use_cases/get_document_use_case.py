@@ -1,7 +1,6 @@
 from typing import List, Optional, Union
 
 from pydantic import conint
-from starlette.responses import JSONResponse
 
 from authentication.models import User
 from services.document_service import DocumentService
@@ -47,4 +46,4 @@ class GetDocumentUseCase(UseCase):
         if attribute:
             document = get_nested_dict_attribute(document, attribute.split("."))
 
-        return JSONResponse(document)
+        return document

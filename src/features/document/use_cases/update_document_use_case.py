@@ -2,7 +2,6 @@ from typing import List, Optional, Union
 
 from enums import SIMOS
 from fastapi import File, UploadFile
-from starlette.responses import JSONResponse
 
 from authentication.models import User
 from restful.request_types.shared import DataSource
@@ -44,4 +43,4 @@ class UpdateDocumentUseCase(UseCase):
         # Do not invalidate the blueprint cache if it was not a blueprint that was changed
         if document["data"]["type"] == SIMOS.BLUEPRINT.value:
             document_service.invalidate_cache()
-        return JSONResponse(document)
+        return document

@@ -65,12 +65,9 @@ Feature: Access Control
     Given I access the resource url "/api/v1/documents/test-DS/1"
     When I make a "GET" request
     Then the response status should be "Forbidden"
-    And the response should contain
+    And the response should be
     """
-    {
-    "type": "FORBIDDEN",
-    "message": "MissingPrivilegeException: The requested operation requires 'READ' privileges"
-    }
+    MissingPrivilegeException: The requested operation requires 'READ' privileges
     """
 
   Scenario: Get document with read access from role
@@ -211,12 +208,9 @@ Feature: Access Control
     }
     """
     Then the response status should be "Forbidden"
-    And the response should contain
+    And the response should be
     """
-    {
-    "type": "FORBIDDEN",
-    "message": "MissingPrivilegeException: The requested operation requires 'WRITE' privileges"
-    }
+    MissingPrivilegeException: The requested operation requires 'WRITE' privileges
     """
 
   Scenario: Delete document with only READ access

@@ -1,9 +1,7 @@
 from typing import Optional
 
-from starlette.responses import JSONResponse
-
 from authentication.models import User
-from restful import use_case as uc
+from restful.use_case import UseCase
 from restful.request_types.shared import DataSource
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
@@ -16,7 +14,7 @@ class GetDocumentByPathRequest(DataSource):
     path: Optional[str] = None
 
 
-class GetDocumentByPathUseCase(uc.UseCase):
+class GetDocumentByPathUseCase(UseCase):
     def __init__(self, user: User, repository_provider=get_data_source):
         self.user = user
         self.repository_provider = repository_provider
@@ -32,4 +30,4 @@ class GetDocumentByPathUseCase(uc.UseCase):
         if req.attribute:
             document = document.get_by_path(req.attribute.split("."))
 
-        return JSONResponse(document.to_dict())
+        return document.to_dict()

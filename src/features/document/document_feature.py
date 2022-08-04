@@ -1,18 +1,22 @@
 from typing import List, Optional
-
 from fastapi import APIRouter, Depends, File, Form, UploadFile
+from fastapi.responses import JSONResponse
 from pydantic import conint, Json
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
-from use_case.get_document_by_path_use_case import GetDocumentByPathRequest, GetDocumentByPathUseCase
-from use_case.get_document_use_case import GetDocumentRequest, GetDocumentUseCase
-from use_case.update_document_use_case import UpdateDocumentRequest, UpdateDocumentUseCase
 
-router = APIRouter()
+from common.responses import create_response
+
+from .use_cases.get_document_by_path_use_case import GetDocumentByPathRequest, GetDocumentByPathUseCase
+from .use_cases.get_document_use_case import GetDocumentRequest, GetDocumentUseCase
+from .use_cases.update_document_use_case import UpdateDocumentRequest, UpdateDocumentUseCase
+
+router = APIRouter(tags=["document"], prefix="/documents")
 
 
-@router.get("/documents/{data_source_id}/{document_id}", operation_id="document_get_by_id", response_model=dict)
+@router.get("/{data_source_id}/{document_id}", operation_id="document_get_by_id", response_model=dict)
+@create_response(JSONResponse)
 def get_by_id(
     data_source_id: str,
     document_id: str,
@@ -37,14 +41,15 @@ def get_by_id(
             attribute=attribute if len(id_list) == 1 else id_list[1],
             depth=depth,
         )
-    )
+    ).dict()
 
 
 @router.get(
-    "/documents-by-path/{data_source_id}",
+    "-by-path/{data_source_id}",
     operation_id="document_get_by_path",
     response_model=dict,
 )
+@create_response(JSONResponse)
 def get_by_path(
     data_source_id: str,
     ui_recipe: Optional[str] = None,
@@ -61,7 +66,8 @@ def get_by_path(
     )
 
 
-@router.put("/documents/{data_source_id}/{document_id}", operation_id="document_update")
+@router.put("/{data_source_id}/{document_id}", operation_id="document_update")
+@create_response(JSONResponse)
 def update(
     data_source_id: str,
     document_id: str,
