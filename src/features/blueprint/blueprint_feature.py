@@ -8,7 +8,7 @@ from authentication.models import User
 from .use_cases.get_blueprint_use_case import GetBlueprintUseCase
 from .use_cases.resolve_blueprint_use_case import ResolveBlueprintUseCase
 
-router = APIRouter(tags=["blueprint"])
+router = APIRouter(tags=["default", "blueprint"])
 
 
 @router.get("/blueprint/{type_ref:path}", operation_id="blueprint_get", response_model=dict)

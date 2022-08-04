@@ -17,7 +17,7 @@ from .use_cases.remove_by_path_use_case import RemoveByPathRequest, RemoveByPath
 from .use_cases.remove_use_case import RemoveRequest, RemoveUseCase
 from .use_cases.rename_file_use_case import RenameRequest, RenameUseCase
 
-router = APIRouter(tags=["explorer"], prefix="/explorer")
+router = APIRouter(tags=["default", "explorer"], prefix="/explorer")
 
 
 @router.post("/{data_source_id}/add-to-path", operation_id="explorer_add_to_path", response_model=dict)

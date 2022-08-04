@@ -9,7 +9,7 @@ from common.responses import create_response
 
 from .use_cases.search_use_case import SearchRequest, SearchUseCase
 
-router = APIRouter(tags=["search"], prefix="/search")
+router = APIRouter(tags=["default", "search"], prefix="/search")
 
 
 @router.post("", operation_id="search", response_model=dict)

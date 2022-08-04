@@ -12,7 +12,7 @@ from .use_cases.get_document_by_path_use_case import GetDocumentByPathRequest, G
 from .use_cases.get_document_use_case import GetDocumentRequest, GetDocumentUseCase
 from .use_cases.update_document_use_case import UpdateDocumentRequest, UpdateDocumentUseCase
 
-router = APIRouter(tags=["document"], prefix="/documents")
+router = APIRouter(tags=["default", "document"], prefix="/documents")
 
 
 @router.get("/{data_source_id}/{document_id}", operation_id="document_get_by_id", response_model=dict)

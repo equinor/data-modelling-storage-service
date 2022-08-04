@@ -9,7 +9,7 @@ from common.responses import create_response
 from .use_cases.get_acl_use_case import GetACLRequest, GetACLUseCase
 from .use_cases.set_acl_use_case import SetACLRequest, SetACLUseCase
 
-router = APIRouter(tags=["access_control"], prefix="/acl")
+router = APIRouter(tags=["default", "access_control"], prefix="/acl")
 
 
 @router.put("/{data_source_id}/{document_id}", operation_id="set_acl", response_model=str)

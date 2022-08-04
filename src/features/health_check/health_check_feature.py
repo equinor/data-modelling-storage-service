@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 from fastapi.responses import PlainTextResponse
 
-router = APIRouter(tags=["health_check"], prefix="/healthcheck")
+router = APIRouter(tags=["default", "health_check"], prefix="/healthcheck")
 
 
 @router.get(

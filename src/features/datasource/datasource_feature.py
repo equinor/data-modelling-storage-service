@@ -13,7 +13,7 @@ from .use_cases.create_data_source_use_case import CreateDataSourceRequest, Crea
 from .use_cases.get_data_source_use_case import GetDataSourceUseCase
 from .use_cases.get_data_sources_use_case import GetDataSourcesUseCase
 
-router = APIRouter(tags=["datasource"], prefix="/data-sources")
+router = APIRouter(tags=["default", "datasource"], prefix="/data-sources")
 
 
 @router.get("/{data_source_id}", operation_id="data_source_get", response_model=dict)

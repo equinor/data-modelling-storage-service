@@ -8,7 +8,7 @@ from authentication.models import User
 from .use_cases.get_blob_use_case import GetBlobRequest, GetBlobUseCase
 from .use_cases.put_blob_use_case import PutBlobRequest, PutBlobUseCase
 
-router = APIRouter(tags=["blob"], prefix="/blobs")
+router = APIRouter(tags=["default", "blob"], prefix="/blobs")
 
 responses = {200: {"content": {"application/octet-stream": {"schema": {"type": "string", "format": "binary"}}}}}
 

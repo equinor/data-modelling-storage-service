@@ -9,7 +9,7 @@ from restful.request_types.shared import Reference
 from .use_cases.delete_reference_use_case import DeleteReferenceRequest, DeleteReferenceUseCase
 from .use_cases.insert_reference_use_case import InsertReferenceRequest, InsertReferenceUseCase
 
-router = APIRouter(tags=["reference"], prefix="/reference")
+router = APIRouter(tags=["default", "reference"], prefix="/reference")
 
 
 @router.put("/{data_source_id}/{document_dotted_id}", operation_id="reference_insert", response_model=dict)

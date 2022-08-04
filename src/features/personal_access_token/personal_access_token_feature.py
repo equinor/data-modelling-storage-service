@@ -10,7 +10,7 @@ from authentication.models import PATData, User
 from authentication.personal_access_token import create_personal_access_token
 from storage.internal.personal_access_tokens import delete_pat, get_users_pats
 
-router = APIRouter(tags=["personal_access_token"], prefix="/token")
+router = APIRouter(tags=["default", "personal_access_token"], prefix="/token")
 
 
 @router.post("", operation_id="token_create", response_model=str)

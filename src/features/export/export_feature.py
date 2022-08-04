@@ -5,7 +5,7 @@ from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from .use_cases.export_use_case import ExportUseCase
 
-router = APIRouter(tags=["export"], prefix="/export")
+router = APIRouter(tags=["default", "export"], prefix="/export")
 responses = {200: {"content": {"application/zip": {}}}}
 
 
