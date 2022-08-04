@@ -41,7 +41,7 @@ def get_by_id(
             attribute=attribute if len(id_list) == 1 else id_list[1],
             depth=depth,
         )
-    ).dict()
+    )
 
 
 @router.get(
