@@ -1,5 +1,3 @@
-from starlette.responses import JSONResponse
-
 from restful.use_case import UseCase
 
 
@@ -8,4 +6,4 @@ class GetDataSourcesUseCase(UseCase):
         self.data_source_repository = data_source_repository
 
     def process_request(self, request_object=None):
-        return JSONResponse(self.data_source_repository.list())
+        return self.data_source_repository.list()
