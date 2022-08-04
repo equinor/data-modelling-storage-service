@@ -1,6 +1,7 @@
 import functools
 import traceback
 from typing import Callable, Type, TypeVar
+from inspect import iscoroutinefunction
 
 from pydantic import ValidationError
 from requests import HTTPError
@@ -34,7 +35,12 @@ def create_response(response_class: Type[TResponse]) -> Callable[..., Callable[.
         @functools.wraps(func)
         async def wrapper_decorator(*args, **kwargs) -> TResponse | PlainTextResponse:
             try:
-                result = await func(*args, **kwargs)
+                # Await function if needed
+                if not iscoroutinefunction(func):
+                    result = func(*args, **kwargs)
+                else:
+                    result = await func(*args, **kwargs)
+
                 return response_class(result, status_code=200)
             except HTTPError as e:
                 logger.error(e)
