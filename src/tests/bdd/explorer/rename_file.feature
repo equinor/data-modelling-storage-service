@@ -58,9 +58,9 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Not Found"
-    And the response should equal
+    And the response should be
     """
-    {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: The entity, with id 10 could not be found"}
+    EntityNotFoundException: The entity, with id 10 could not be found
     """
 
   Scenario: Try to rename a document with a parent that does not exists
@@ -74,9 +74,9 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Not Found"
-    And the response should equal
+    And the response should be
     """
-    {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '10' was not found in the 'test-DS' data-source"}
+    EntityNotFoundException: Document with id '10' was not found in the 'test-DS' data-source
     """
 
     @skip
