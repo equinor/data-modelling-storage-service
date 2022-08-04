@@ -32,9 +32,9 @@ TResponse = TypeVar("TResponse", bound=Response)
 def create_response(response_class: Type[TResponse]) -> Callable[..., Callable[..., TResponse | PlainTextResponse]]:
     def func_wrapper(func) -> Callable[..., TResponse | PlainTextResponse]:
         @functools.wraps(func)
-        def wrapper_decorator(*args, **kwargs) -> TResponse | PlainTextResponse:
+        async def wrapper_decorator(*args, **kwargs) -> TResponse | PlainTextResponse:
             try:
-                result = func(*args, **kwargs)
+                result = await func(*args, **kwargs)
                 return response_class(result, status_code=200)
             except HTTPError as e:
                 logger.error(e)

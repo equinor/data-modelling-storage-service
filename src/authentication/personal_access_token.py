@@ -62,6 +62,8 @@ def get_user_from_pat(pat: str) -> User:
         )
     if not config.AUTH_PROVIDER_FOR_ROLE_CHECK:
         logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
+    elif config.TEST_TOKEN:
+        logger.warn("PAT role assignment validation skipped due to 'TEST_TOKEN=True'")
     else:
         pat_roles: Set[str] = set(pat_data.roles)
         pat_data.roles = list(pat_roles.intersection(get_active_roles()[pat_data.user_id]))

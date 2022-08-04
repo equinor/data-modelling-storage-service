@@ -31,13 +31,13 @@ def create_app() -> FastAPI:
     from features.document import document_feature
     from features.explorer import explorer_feature
     from features.health_check import health_check_feature
+    from features.personal_access_token import personal_access_token_feature
     from features.search import search_feature
     from features.whoami import whoami_feature
     from controllers import (
         datasource_controller,
         export_controller,
         reference_controller,
-        personal_access_token_controller,
     )
 
     public_routes = APIRouter()
@@ -57,7 +57,7 @@ def create_app() -> FastAPI:
 
     # Some routes a PAT can not be used to authenticate. For example, to get new access tokens. That would be bad...
     jwt_only_routes = APIRouter()
-    jwt_only_routes.include_router(personal_access_token_controller.router)
+    jwt_only_routes.include_router(personal_access_token_feature.router)
 
     app = FastAPI(
         title="Data Modelling Storage Service",
