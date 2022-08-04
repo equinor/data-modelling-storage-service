@@ -225,12 +225,9 @@ Feature: Access Control
     Given i access the resource url "/api/v1/explorer/test-DS/1"
     When i make a "DELETE" request
     Then the response status should be "Forbidden"
-    And the response should contain
+    And the response should be
     """
-    {
-    "type": "FORBIDDEN",
-    "message": "MissingPrivilegeException: The requested operation requires 'WRITE' privileges"
-    }
+    MissingPrivilegeException: The requested operation requires 'WRITE' privileges
     """
 
   Scenario: Delete owned document

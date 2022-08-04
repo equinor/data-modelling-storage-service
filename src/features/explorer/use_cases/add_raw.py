@@ -1,7 +1,5 @@
 from uuid import uuid4
 
-from starlette.responses import PlainTextResponse
-
 from authentication.models import User
 
 from enums import SIMOS
@@ -27,4 +25,4 @@ class AddRawUseCase(UseCase):
         document_repository.update(document)
         if document["type"] == SIMOS.BLUEPRINT.value:
             DocumentService(user=self.user).invalidate_cache()
-        return PlainTextResponse(new_node_id)
+        return new_node_id

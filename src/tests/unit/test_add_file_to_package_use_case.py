@@ -1,7 +1,7 @@
 from unittest import mock, skip
 from uuid import uuid4
 
-from use_case.add_file_use_case import AddFileUseCase
+from features.explorer.use_cases.add_file_use_case import AddFileUseCase
 
 
 @skip("not working")

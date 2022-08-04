@@ -1,5 +1,4 @@
 from enums import SIMOS
-from starlette.responses import JSONResponse
 
 from authentication.models import User
 from services.document_service import DocumentService
@@ -23,4 +22,4 @@ class AddFileUseCase(UseCase):
             document_service.invalidate_cache()
 
         data_source, _, _ = split_absolute_ref(req["absolute_ref"])
-        return JSONResponse(document)
+        return document

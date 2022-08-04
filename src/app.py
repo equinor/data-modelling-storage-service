@@ -27,6 +27,7 @@ prefix = f"{server_root}/{version}"
 def create_app() -> FastAPI:
     from features.access_control import access_control_feature
     from features.document import document_feature
+    from features.explorer import explorer_feature
     from features.health_check import health_check_feature
     from features.search import search_feature
     from features.whoami import whoami_feature
@@ -34,7 +35,6 @@ def create_app() -> FastAPI:
         blob_controller,
         blueprint_controller,
         datasource_controller,
-        explorer_controller,
         export_controller,
         reference_controller,
         personal_access_token_controller,
@@ -46,6 +46,7 @@ def create_app() -> FastAPI:
     authenticated_routes = APIRouter()
     authenticated_routes.include_router(access_control_feature.router)
     authenticated_routes.include_router(document_feature.router)
+    authenticated_routes.include_router(explorer_feature.router)
     authenticated_routes.include_router(whoami_feature.router)
     authenticated_routes.include_router(search_feature.router)
     authenticated_routes.include_router(blob_controller.router)
@@ -53,7 +54,6 @@ def create_app() -> FastAPI:
     authenticated_routes.include_router(export_controller.router)
     authenticated_routes.include_router(blueprint_controller.router)
     authenticated_routes.include_router(reference_controller.router)
-    authenticated_routes.include_router(explorer_controller.router)
 
     # Some routes a PAT can not be used to authenticate. For example, to get new access tokens. That would be bad...
     jwt_only_routes = APIRouter()

@@ -2,7 +2,6 @@ from typing import List, Optional
 
 from fastapi import UploadFile
 from pydantic import validator
-from starlette.responses import JSONResponse
 
 from authentication.models import User
 from restful.request_types.shared import DataSource, Entity
@@ -38,4 +37,4 @@ class AddDocumentToPathUseCase(UseCase):
             files={f.filename: f.file for f in req.files} if req.files else None,
             update_uncontained=req.update_uncontained,
         )
-        return JSONResponse(document)
+        return document
