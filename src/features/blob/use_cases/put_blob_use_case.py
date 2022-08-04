@@ -1,5 +1,4 @@
 from fastapi import UploadFile
-from starlette.responses import PlainTextResponse
 
 from authentication.models import User
 from restful import use_case as uc
@@ -19,4 +18,4 @@ class PutBlobUseCase(uc.UseCase):
     def process_request(self, req: PutBlobRequest):
         data_source = get_data_source(req.data_source_id, self.user)
         data_source.update_blob(req.blob_id, req.file.file)
-        return PlainTextResponse("Ok")
+        return "OK"

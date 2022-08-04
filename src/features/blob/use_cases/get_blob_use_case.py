@@ -1,5 +1,3 @@
-from starlette.responses import PlainTextResponse
-
 from authentication.models import User
 from restful import use_case as uc
 from restful.request_types.shared import DataSource
@@ -17,4 +15,4 @@ class GetBlobUseCase(uc.UseCase):
     def process_request(self, req: GetBlobRequest):
         data_source = get_data_source(req.data_source_id, self.user)
         blob = data_source.get_blob(req.blob_id)
-        return PlainTextResponse(blob)
+        return blob

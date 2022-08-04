@@ -260,12 +260,9 @@ Feature: Access Control
     Given i access the resource url "/api/v1/blobs/test-DS/1234"
     When i make a "GET" request
     Then the response status should be "Forbidden"
-    And the response should contain
+    And the response should be
     """
-    {
-    "type": "FORBIDDEN",
-    "message": "MissingPrivilegeException: The requested operation requires 'READ' privileges"
-    }
+    MissingPrivilegeException: The requested operation requires 'READ' privileges
     """
 
   Scenario: Add file - not contained - inherit ACL
