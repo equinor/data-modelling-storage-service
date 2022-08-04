@@ -1,13 +1,19 @@
 from fastapi import APIRouter, Depends, Query
+from starlette.responses import JSONResponse
 from typing import List
+
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
-from use_case.search_use_case import SearchRequest, SearchUseCase
 
-router = APIRouter()
+from common.responses import create_response
+
+from .use_cases.search_use_case import SearchRequest, SearchUseCase
+
+router = APIRouter(tags=["search"], prefix="/search")
 
 
-@router.post("/search/", operation_id="search", response_model=dict)
+@router.post("", operation_id="search", response_model=dict)
+@create_response(JSONResponse)
 def search(
     request: dict,
     data_sources: List[str] = Query([]),

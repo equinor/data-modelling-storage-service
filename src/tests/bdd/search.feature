@@ -248,7 +248,7 @@ Feature: Explorer - Search entity
 
 
   Scenario: Search with primitive filter, all hit
-    Given i access the resource url "/api/v1/search/?data_sources=entities"
+    Given i access the resource url "/api/v1/search?data_sources=entities"
     When i make a "POST" request
     """
     {
@@ -283,7 +283,7 @@ Feature: Explorer - Search entity
     }
     """
   Scenario: Search with primitive filter, 1 hit
-    Given i access the resource url "/api/v1/search/?data_sources=entities"
+    Given i access the resource url "/api/v1/search?data_sources=entities"
     When i make a "POST" request
     """
     {
@@ -311,7 +311,7 @@ Feature: Explorer - Search entity
     """
 
   Scenario: Search with sorting by attribute, top level attribute
-    Given i access the resource url "/api/v1/search/?data_sources=entities&sort_by_attribute=a_number"
+    Given i access the resource url "/api/v1/search?data_sources=entities&sort_by_attribute=a_number"
     When i make a "POST" request
     """
     {
@@ -344,7 +344,7 @@ Feature: Explorer - Search entity
     """
 
   Scenario: Search with sorting by default sort_by_attribute, name
-    Given i access the resource url "/api/v1/search/?data_sources=entities"
+    Given i access the resource url "/api/v1/search?data_sources=entities"
     When i make a "POST" request
     """
     {
@@ -383,7 +383,7 @@ Feature: Explorer - Search entity
     """
 
   Scenario: Search with sorting by attribute, nested attribute, i.e. sub-attribute
-    Given i access the resource url "/api/v1/search/?data_sources=entities&sort_by_attribute=Vectors.height"
+    Given i access the resource url "/api/v1/search?data_sources=entities&sort_by_attribute=Vectors.height"
     When i make a "POST" request
     """
     {
@@ -422,7 +422,7 @@ Feature: Explorer - Search entity
     """
 
   Scenario: Search with sorting by attribute, nested attribute from list by index
-    Given i access the resource url "/api/v1/search/?data_sources=entities&sort_by_attribute=VectorList.0.width"
+    Given i access the resource url "/api/v1/search?data_sources=entities&sort_by_attribute=VectorList.0.width"
     When i make a "POST" request
     """
     {
@@ -458,7 +458,7 @@ Feature: Explorer - Search entity
 
 
     Scenario: Search two data sources for document of type ValuesBlueprint
-    Given i access the resource url "/api/v1/search/?data_sources=entities&?&data_sources=moreEntities"
+    Given i access the resource url "/api/v1/search?data_sources=entities&?&data_sources=moreEntities"
     When i make a "POST" request
     """
     {
@@ -500,7 +500,7 @@ Feature: Explorer - Search entity
     """
 
   Scenario: Search when one data source does not exist
-    Given i access the resource url "/api/v1/search/?data_sources=entities&?&data_sources=DOESNOTEXIST"
+    Given i access the resource url "/api/v1/search?data_sources=entities&?&data_sources=DOESNOTEXIST"
     When i make a "POST" request
     """
     {
@@ -508,17 +508,14 @@ Feature: Explorer - Search entity
     }
     """
     Then the response status should be "Bad Request"
-    And the response should equal
+    And the response should be
     """
-    {
-      "type": "PARAMETERS_ERROR",
-      "message": "BadRequestException: Data source DOESNOTEXIST not found"
-    }
+    BadRequestException: Data source DOESNOTEXIST not found
     """
 
 
   Scenario: Search all data sources for document of type ValuesBlueprint
-    Given i access the resource url "/api/v1/search/"
+    Given i access the resource url "/api/v1/search"
     When i make a "POST" request
     """
     {

@@ -27,6 +27,7 @@ prefix = f"{server_root}/{version}"
 def create_app() -> FastAPI:
     from features.access_control import access_control_feature
     from features.health_check import health_check_feature
+    from features.search import search_feature
     from features.whoami import whoami_feature
     from controllers import (
         blob_controller,
@@ -36,7 +37,6 @@ def create_app() -> FastAPI:
         explorer_controller,
         export_controller,
         reference_controller,
-        search_controller,
         personal_access_token_controller,
     )
 
@@ -50,7 +50,7 @@ def create_app() -> FastAPI:
     authenticated_routes.include_router(datasource_controller.router)
     authenticated_routes.include_router(document_controller.router)
     authenticated_routes.include_router(export_controller.router)
-    authenticated_routes.include_router(search_controller.router)
+    authenticated_routes.include_router(search_feature.router)
     authenticated_routes.include_router(blueprint_controller.router)
     authenticated_routes.include_router(reference_controller.router)
     authenticated_routes.include_router(explorer_controller.router)

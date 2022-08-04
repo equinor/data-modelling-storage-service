@@ -1,7 +1,5 @@
-from starlette.responses import JSONResponse
 from copy import deepcopy
 from authentication.models import User
-import json
 from common.exceptions import BadRequestException
 from storage.internal.data_source_repository import DataSourceRepository
 from restful.use_case import UseCase
@@ -48,4 +46,4 @@ class SearchUseCase(UseCase):
                 if data_source not in all_data_source_ids:
                     raise BadRequestException(f"Data source {data_source} not found")
                 get_search_result(search_results, data_source, document_service, req)
-        return JSONResponse(json.loads(json.dumps(search_results.copy())))
+        return search_results
