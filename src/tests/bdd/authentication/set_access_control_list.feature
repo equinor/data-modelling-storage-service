@@ -223,10 +223,7 @@ Feature: Set Access Control List
     Given I access the resource url "/api/v1/acl/test-DS/1?recursively=false"
     When I make a "GET" request
     Then the response status should be "Forbidden"
-    And the response should contain
+    And the response should be
     """
-    {
-    "type": "FORBIDDEN",
-    "message": "MissingPrivilegeException: The requested operation requires 'READ' privileges"
-    }
+    MissingPrivilegeException: The requested operation requires 'READ' privileges
     """
