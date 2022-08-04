@@ -31,12 +31,12 @@ def create_app() -> FastAPI:
     from features.datasource import datasource_feature
     from features.document import document_feature
     from features.explorer import explorer_feature
+    from features.export import export_feature
     from features.health_check import health_check_feature
     from features.personal_access_token import personal_access_token_feature
     from features.search import search_feature
     from features.whoami import whoami_feature
     from controllers import (
-        export_controller,
         reference_controller,
     )
 
@@ -50,9 +50,9 @@ def create_app() -> FastAPI:
     authenticated_routes.include_router(datasource_feature.router)
     authenticated_routes.include_router(document_feature.router)
     authenticated_routes.include_router(explorer_feature.router)
+    authenticated_routes.include_router(export_feature.router)
     authenticated_routes.include_router(whoami_feature.router)
     authenticated_routes.include_router(search_feature.router)
-    authenticated_routes.include_router(export_controller.router)
     authenticated_routes.include_router(reference_controller.router)
 
     # Some routes a PAT can not be used to authenticate. For example, to get new access tokens. That would be bad...
