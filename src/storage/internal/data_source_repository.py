@@ -8,13 +8,13 @@ from enums import RepositoryType
 from services.database import data_source_collection
 from restful.request_types.create_data_source import DataSourceRequest
 from storage.data_source_class import DataSource
-from utils.exceptions import (
+from common.exceptions import (
     DataSourceAlreadyExistsException,
     DataSourceNotFoundException,
     InvalidDataSourceException,
     InvalidEntityException,
 )
-from utils.logging import logger
+from common.utils.logging import logger
 
 RESERVED_MONGO_DATABASES = ("admin", "local", "config", "dmss-internal")
 

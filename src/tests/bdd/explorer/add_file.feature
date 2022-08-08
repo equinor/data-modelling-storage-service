@@ -373,12 +373,9 @@ Feature: Explorer - Add file
     {}
     """
     Then the response status should be "Bad Request"
-    And the response should equal
+    And the response should be
     """
-    {
-      "type": "PARAMETERS_ERROR",
-      "message": "BadRequestException: Every entity must have a 'type' attribute"
-    }
+    BadRequestException: Every entity must have a 'type' attribute
     """
 
   Scenario: Add file to parent that does not exists
@@ -391,9 +388,9 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Not Found"
-    And the response should equal
+    And the response should be
     """
-    {"type": "RESOURCE_ERROR", "message": "EntityNotFoundException: Document with id '-1' was not found in the 'test-DS' data-source"}
+    EntityNotFoundException: Document with id '-1' was not found in the 'test-DS' data-source
     """
 
   Scenario: Add file to parent with missing permissions on parent
@@ -415,12 +412,9 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Forbidden"
-    And the response should equal
+    And the response should be
     """
-    {
-    "type": "FORBIDDEN",
-    "message": "MissingPrivilegeException: The requested operation requires 'WRITE' privileges"
-    }
+    MissingPrivilegeException: The requested operation requires 'WRITE' privileges
     """
 
   Scenario: Add file with duplicate name
@@ -438,12 +432,9 @@ Feature: Explorer - Add file
       }
     """
     Then the response status should be "Bad Request"
-    And the response should equal
+    And the response should be
     """
-    {
-      "message":"DuplicateFileNameException: 'test-DS/root_package/parentEntity' already exists",
-      "type":"PARAMETERS_ERROR"
-    }
+    DuplicateFileNameException: 'test-DS/root_package/parentEntity' already exists
     """
 
 
@@ -475,12 +466,9 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Unprocessable Entity"
-    And the response should equal
+    And the response should be
     """
-    {
-      "type": "UNPROCESSABLE_ENTITY",
-      "message": "ValidationException: Required attribute 'name' not found in the entity"
-    }
+    ValidationException: Required attribute 'name' not found in the entity
     """
 
   Scenario: Add Comment entity without a name attribute with add-to-path endpoint
@@ -513,12 +501,9 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Unprocessable Entity"
-    And the response should equal
+    And the response should be
     """
-    {
-      "type": "UNPROCESSABLE_ENTITY",
-      "message": "ValidationException: Required attribute 'name' not found in the entity"
-    }
+    ValidationException: Required attribute 'name' not found in the entity
     """
 
   Scenario: Add package without a name attribute with add-to-path endpoint should fail
@@ -535,12 +520,9 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Unprocessable Entity"
-    And the response should equal
+    And the response should be
     """
-    {
-      "type": "UNPROCESSABLE_ENTITY",
-      "message": "ValidationException: Required attribute 'name' not found in the entity"
-    }
+    ValidationException: Required attribute 'name' not found in the entity
     """
 
   Scenario: Add parent entity without a name attribute with add_by_parent_id endpoint
@@ -553,12 +535,9 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Unprocessable Entity"
-    And the response should equal
+    And the response should be
     """
-    {
-      "type": "UNPROCESSABLE_ENTITY",
-      "message": "ValidationException: Required attribute 'name' not found in the entity"
-    }
+    ValidationException: Required attribute 'name' not found in the entity
     """
 
   Scenario: Add comment entity without a name attribute with add_by_parent_id endpoint
@@ -583,12 +562,9 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Unprocessable Entity"
-    And the response should equal
+    And the response should be
     """
-    {
-      "type": "UNPROCESSABLE_ENTITY",
-      "message": "ValidationException: Required attribute 'name' not found in the entity"
-    }
+    ValidationException: Required attribute 'name' not found in the entity
     """
 
   Scenario: Add package without a name using add_by_parent_id endpoint should fail
@@ -601,12 +577,9 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Unprocessable Entity"
-    And the response should equal
+    And the response should be
     """
-    {
-      "type": "UNPROCESSABLE_ENTITY",
-      "message": "ValidationException: Required attribute 'name' not found in the entity"
-    }
+    ValidationException: Required attribute 'name' not found in the entity
     """
 
   Scenario: Add file with multiple PDFs

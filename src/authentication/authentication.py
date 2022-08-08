@@ -9,9 +9,9 @@ from starlette.exceptions import HTTPException
 
 from authentication.models import User
 from config import config, default_user
-from utils.exceptions import credentials_exception
-from utils.logging import logger
-from utils.mock_token_generator import mock_rsa_public_key
+from common.exceptions import credentials_exception
+from common.utils.logging import logger
+from common.utils.mock_token_generator import mock_rsa_public_key
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
     authorizationUrl=config.OAUTH_AUTH_ENDPOINT, tokenUrl=config.OAUTH_TOKEN_ENDPOINT

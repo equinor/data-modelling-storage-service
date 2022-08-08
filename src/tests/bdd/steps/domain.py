@@ -9,7 +9,7 @@ from enums import BuiltinDataTypes, SIMOS
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 from storage.internal.data_source_repository import DataSourceRepository
-from utils.create_entity import CreateEntity
+from common.utils.create_entity import CreateEntity
 from services.database import data_source_collection
 
 

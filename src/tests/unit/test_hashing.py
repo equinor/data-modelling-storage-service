@@ -1,6 +1,6 @@
 import unittest
 
-from utils.encryption import scrypt
+from common.utils.encryption import scrypt
 
 
 class HasingTestCase(unittest.TestCase):

@@ -17,25 +17,25 @@ from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
 from storage.repositories.zip import ZipFileClient
-from utils.build_complex_search import build_mongo_query
-from utils.delete_documents import delete_document
-from utils.exceptions import (
+from common.utils.build_complex_search import build_mongo_query
+from common.utils.delete_documents import delete_document
+from common.exceptions import (
     BadRequestException,
     BadSearchParametersException,
     DuplicateFileNameException,
     EntityNotFoundException,
     InvalidEntityException,
     MissingPrivilegeException,
-    RepositoryException,
+    ApplicationException,
 )
-from utils.get_blueprint import get_blueprint_provider
-from utils.get_resolved_document_by_id import get_complete_document
+from common.utils.get_blueprint import get_blueprint_provider
+from common.utils.get_resolved_document_by_id import get_complete_document
 
-from utils.get_document_by_path import get_document_uid_by_path
-from utils.logging import logger
-from utils.sort_entities_by_attribute import sort_dtos_by_attribute
-from utils.string_helpers import split_absolute_ref, split_dotted_id
-from utils.validators import entity_has_all_required_attributes
+from common.utils.get_document_by_path import get_document_uid_by_path
+from common.utils.logging import logger
+from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
+from common.utils.string_helpers import split_absolute_ref, split_dotted_id
+from common.utils.validators import entity_has_all_required_attributes
 
 pretty_printer = pprint.PrettyPrinter()
 
@@ -379,7 +379,7 @@ class DocumentService:
         repository: DataSource = self.repository_provider(data_source_id, self.user)
 
         if not isinstance(repository.get_default_repository().client, MongoDBClient):
-            raise RepositoryException(
+            raise ApplicationException(
                 f"Search is not supported on this repository type; {type(repository.repository).__name__}"
             )
 

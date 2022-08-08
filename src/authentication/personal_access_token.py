@@ -7,9 +7,9 @@ from starlette import status
 
 from authentication.models import AccessLevel, PATData, User
 from storage.internal.personal_access_tokens import get_pat, insert_pat
-from utils.encryption import generate_key, scrypt
-from utils.exceptions import credentials_exception
-from utils.logging import logger
+from common.utils.encryption import generate_key, scrypt
+from common.exceptions import credentials_exception
+from common.utils.logging import logger
 from authentication import pat_role_checker
 from config import config
 from enums import AuthProviderForRoleCheck
@@ -62,6 +62,8 @@ def get_user_from_pat(pat: str) -> User:
         )
     if not config.AUTH_PROVIDER_FOR_ROLE_CHECK:
         logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
+    elif config.TEST_TOKEN:
+        logger.warn("PAT role assignment validation skipped due to 'TEST_TOKEN=True'")
     else:
         pat_roles: Set[str] = set(pat_data.roles)
         pat_data.roles = list(pat_roles.intersection(get_active_roles()[pat_data.user_id]))

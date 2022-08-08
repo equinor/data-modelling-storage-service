@@ -1,6 +1,6 @@
 from typing import Dict, List, Set
 
-from utils.graph_api_client import get_app_roles, get_app_roles_assigned_to, AppRoleAssignment
+from common.utils.graph_api_client import get_app_roles, get_app_roles_assigned_to, AppRoleAssignment
 
 
 def get_app_role_assignments_azure_ad() -> Dict[str, Set[str]]:

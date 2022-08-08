@@ -7,7 +7,7 @@ from authentication.models import User
 from services.document_service import DocumentService
 from enums import SIMOS
 from tests.unit.mock_blueprint_provider import blueprint_provider
-from utils.data_structure.compare import pretty_eq
+from common.utils.data_structure.compare import pretty_eq
 
 
 class DocumentServiceTestCase(unittest.TestCase):

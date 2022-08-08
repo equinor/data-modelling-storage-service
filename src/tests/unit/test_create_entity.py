@@ -4,7 +4,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
-from utils.create_entity import CreateEntity
+from common.utils.create_entity import CreateEntity
 
 file_repository_test = LocalFileRepository()
 

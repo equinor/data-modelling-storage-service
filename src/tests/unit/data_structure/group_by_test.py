@@ -1,6 +1,6 @@
 import unittest
 
-from utils.data_structure.group_by import group_by
+from common.utils.data_structure.group_by import group_by
 
 
 class GroupByTestCase(unittest.TestCase):

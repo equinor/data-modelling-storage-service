@@ -4,11 +4,11 @@ from typing import Dict, List, Optional
 import gridfs
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError, WriteError
-from utils.encryption import decrypt
+from common.utils.encryption import decrypt
 
 from storage.repository_interface import RepositoryInterface
-from utils.exceptions import EntityAlreadyExistsException, EntityNotFoundException
-from utils.logging import logger
+from common.exceptions import EntityAlreadyExistsException, EntityNotFoundException
+from common.utils.logging import logger
 
 
 class MongoDBClient(RepositoryInterface):

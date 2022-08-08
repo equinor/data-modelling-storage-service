@@ -3,7 +3,7 @@ from zipfile import ZipFile
 
 from enums import SIMOS
 from storage.repository_interface import RepositoryInterface
-from utils.logging import logger
+from common.utils.logging import logger
 
 
 class ZipFileClient(RepositoryInterface):

@@ -1,63 +1,61 @@
 import json
 import time
+from typing import Callable
 
 import click
 import gridfs
 import uvicorn
-from services.database import mongo_client
-
-from authentication.models import User
 from fastapi import APIRouter, FastAPI, Security
 from starlette.requests import Request
+from starlette.responses import Response
 
 from authentication.authentication import auth_w_jwt_or_pat, auth_with_jwt
+from authentication.models import User
+from services.database import mongo_client
 from config import config
 from restful.request_types.create_data_source import DataSourceRequest
 from storage.internal.data_source_repository import DataSourceRepository
-from utils.encryption import generate_key
-from utils.logging import logger
-from utils.package_import import import_package
+from common.utils.encryption import generate_key
+from common.utils.logging import logger
+from common.utils.package_import import import_package
 
 server_root = "/api"
 version = "v1"
 prefix = f"{server_root}/{version}"
 
 
-def create_app():
-    from controllers import (
-        blob_controller,
-        blueprint_controller,
-        datasource_controller,
-        document_controller,
-        explorer_controller,
-        export_controller,
-        reference_controller,
-        search_controller,
-        whoami_controller,
-        healtcheck_controller,
-        access_control_controller,
-        personal_access_token_controller,
-    )
+def create_app() -> FastAPI:
+    from features.access_control import access_control_feature
+    from features.blob import blob_feature
+    from features.blueprint import blueprint_feature
+    from features.datasource import datasource_feature
+    from features.document import document_feature
+    from features.explorer import explorer_feature
+    from features.export import export_feature
+    from features.health_check import health_check_feature
+    from features.personal_access_token import personal_access_token_feature
+    from features.reference import reference_feature
+    from features.search import search_feature
+    from features.whoami import whoami_feature
 
     public_routes = APIRouter()
+    public_routes.include_router(health_check_feature.router)
+
     authenticated_routes = APIRouter()
+    authenticated_routes.include_router(access_control_feature.router)
+    authenticated_routes.include_router(blob_feature.router)
+    authenticated_routes.include_router(blueprint_feature.router)
+    authenticated_routes.include_router(datasource_feature.router)
+    authenticated_routes.include_router(document_feature.router)
+    authenticated_routes.include_router(explorer_feature.router)
+    authenticated_routes.include_router(export_feature.router)
+    authenticated_routes.include_router(reference_feature.router)
+    authenticated_routes.include_router(search_feature.router)
+    authenticated_routes.include_router(whoami_feature.router)
+
     # Some routes a PAT can not be used to authenticate. For example, to get new access tokens. That would be bad...
     jwt_only_routes = APIRouter()
-
-    public_routes.include_router(healtcheck_controller.router)
-
-    authenticated_routes.include_router(whoami_controller.router)
-    authenticated_routes.include_router(blob_controller.router)
-    authenticated_routes.include_router(datasource_controller.router)
-    authenticated_routes.include_router(document_controller.router)
-    authenticated_routes.include_router(export_controller.router)
-    authenticated_routes.include_router(search_controller.router)
-    authenticated_routes.include_router(blueprint_controller.router)
-    authenticated_routes.include_router(reference_controller.router)
-    authenticated_routes.include_router(explorer_controller.router)
-    authenticated_routes.include_router(access_control_controller.router)
-
-    jwt_only_routes.include_router(personal_access_token_controller.router)
+    jwt_only_routes.include_router(personal_access_token_feature.router)
 
     app = FastAPI(
         title="Data Modelling Storage Service",
@@ -69,7 +67,7 @@ def create_app():
     app.include_router(public_routes, prefix=prefix)
 
     @app.middleware("http")
-    async def add_process_time_header(request: Request, call_next):
+    async def add_process_time_header(request: Request, call_next: Callable) -> Response:
         start_time = time.time()
         response = await call_next(request)
         process_time = time.time() - start_time

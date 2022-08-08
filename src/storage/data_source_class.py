@@ -2,7 +2,7 @@ from typing import Dict, List, Union
 from uuid import uuid4
 
 from pydantic import UUID4
-from utils.string_helpers import url_safe_name
+from common.utils.string_helpers import url_safe_name
 
 from authentication.access_control import access_control, create_acl, DEFAULT_ACL
 from authentication.models import AccessLevel, ACL, User
@@ -11,8 +11,8 @@ from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
 from services.database import data_source_collection
-from utils.exceptions import EntityNotFoundException, InvalidDocumentNameException, MissingPrivilegeException
-from utils.logging import logger
+from common.exceptions import EntityNotFoundException, InvalidDocumentNameException, MissingPrivilegeException
+from common.utils.logging import logger
 
 
 class DataSource:

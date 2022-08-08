@@ -1,5 +1,5 @@
 from behave import given
-from utils.encryption import encrypt
+from common.utils.encryption import encrypt
 
 from restful.request_types.create_data_source import DataSourceRequest
 from services.database import data_source_collection
