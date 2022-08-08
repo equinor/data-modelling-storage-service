@@ -20,7 +20,7 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   radix-deploy:
-    needs: publish-latest
+    needs: publish-latest-docker-image
     uses: ./.github/workflows/radix-deploy.yml
     with:
       radix-environment: 'dev'
