@@ -162,26 +162,7 @@ Feature: Get document
       | 5   | 2          | document_2    |             | system/SIMOS/Blueprint                  |
       | 6   | 3          | container_1   |             | test-source-name/TestData/TestContainer |
 
-  Scenario: Get document by id
-    Given I access the resource url "/api/v1/documents/data-source-name/1"
-    When I make a "GET" request
-    Then the response status should be "OK"
-    And the response should contain
-    """
-    {
-      "name":"package_1",
-      "type":"system/SIMOS/Package",
-      "content":[
-         {
-            "name":"sub_package_1"
-         },
-         {
-            "name":"sub_package_2"
-         }
-      ],
-      "isRoot":true
-    }
-    """
+
 
   Scenario: Get document by path
     Given I access the resource url "/api/v1/documents-by-path/data-source-name?path=package_1/sub_package_1/document_1"
@@ -198,14 +179,3 @@ Feature: Get document
     }
     """
 
-  Scenario: Get attribute
-    Given I access the resource url "/api/v1/documents/test-source-name/1?attribute=content.0"
-    When I make a "GET" request
-    Then the response status should be "OK"
-    And the response should contain
-    """
-    {
-      "type": "system/SIMOS/Blueprint",
-      "name": "TestContainer"
-    }
-    """
