@@ -1,14 +1,10 @@
 from authentication.models import User
-from restful import use_case as uc
+
 from restful.request_types.shared import EntityType
 from services.document_service import DocumentService
 
 
-class GetBlueprintUseCase(uc.UseCase):
-    def __init__(self, user: User):
-        self.user = user
-
-    def process_request(self, type: EntityType):
-        document_service = DocumentService(user=self.user)
-        blueprint = document_service.get_blueprint(type)
-        return blueprint.to_dict()
+def get_blueprint_use_case(user: User, entity_type: EntityType):
+    document_service = DocumentService(user=user)
+    blueprint = document_service.get_blueprint(entity_type)
+    return blueprint.to_dict()

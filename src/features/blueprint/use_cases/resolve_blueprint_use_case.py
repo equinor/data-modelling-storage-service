@@ -3,7 +3,7 @@ from typing import List
 from authentication.models import User
 
 from enums import SIMOS
-from restful import use_case as uc
+
 from storage.internal.data_source_repository import get_data_source
 from common.exceptions import EntityNotFoundException
 from common.utils.string_helpers import split_absolute_ref
@@ -19,7 +19,8 @@ def find_package_with_document(data_source: str, document_id: str, user) -> dict
     return packages[0].data
 
 
-def resolve_path_to_document(data_source: str, document_id: str, user) -> str:
+def resolve_blueprint_use_case(user: User, absolute_id: str):
+    data_source, document_id, attr = split_absolute_ref(absolute_id)
     root_package_found = False
     path_elements = []
     package = find_package_with_document(data_source, document_id, user)
@@ -34,12 +35,3 @@ def resolve_path_to_document(data_source: str, document_id: str, user) -> str:
         next_document_id = package["_id"]
     path_elements.reverse()
     return data_source + "/" + "/".join(path_elements)
-
-
-class ResolveBlueprintUseCase(uc.UseCase):
-    def __init__(self, user: User):
-        self.user = user
-
-    def process_request(self, absolute_id):
-        data_source, document_id, attr = split_absolute_ref(absolute_id)
-        return resolve_path_to_document(data_source, document_id, self.user)
