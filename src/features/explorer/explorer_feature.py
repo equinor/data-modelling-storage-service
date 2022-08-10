@@ -8,14 +8,12 @@ from common.responses import create_response
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
-from storage.internal.data_source_repository import get_data_source
-from .use_cases.add_document_to_path_use_case import AddDocumentToPathRequest, AddDocumentToPathUseCase
-from .use_cases.add_file_use_case import AddFileUseCase
-from .use_cases.add_raw import AddRawRequest, AddRawUseCase
-from .use_cases.move_file_use_case import MoveFileUseCase, MoveRequest
-from .use_cases.remove_by_path_use_case import RemoveByPathRequest, RemoveByPathUseCase
-from .use_cases.remove_use_case import RemoveRequest, RemoveUseCase
-from .use_cases.rename_file_use_case import RenameRequest, RenameUseCase
+from .use_cases.add_document_to_path_use_case import add_document_to_path_use_case
+from .use_cases.add_file_use_case import add_file_use_case
+from .use_cases.add_raw import add_raw_use_case
+from .use_cases.remove_by_path_use_case import remove_by_path_use_case
+from .use_cases.remove_use_case import remove_use_case
+from .use_cases.rename_file_use_case import rename_use_case
 
 router = APIRouter(tags=["default", "explorer"], prefix="/explorer")
 
@@ -33,15 +31,13 @@ def add_to_path(
     """
     Same as 'add_to_parent', but reference parent by path instead of ID. Also supports files.
     """
-    use_case = AddDocumentToPathUseCase(user)
-    return use_case.execute(
-        AddDocumentToPathRequest(
-            data_source_id=data_source_id,
-            document=document,
-            directory=directory,
-            files=files,
-            update_uncontained=update_uncontained,
-        )
+    return add_document_to_path_use_case(
+        user=user,
+        data_source_id=data_source_id,
+        document=document,
+        directory=directory,
+        files=files,
+        update_uncontained=update_uncontained,
     )
 
 
@@ -56,42 +52,35 @@ def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt
     Blueprint need not exist, and so there is no validation or splitting of entities.
     Posted document must be a valid Entity.
     """
-    use_case = AddRawUseCase(user)
-    return use_case.execute(AddRawRequest(data_source_id=data_source_id, document=document))
+    return add_raw_use_case(user=user, document=document, data_source_id=data_source_id)
 
 
 # TODO: Create test for this
 # TODO: DataSource is not needed in the path, as it's contained in the source and dest parameters
 @router.post("/{data_source_id}/move", operation_id="explorer_move", response_model=str)
 @create_response(PlainTextResponse)
-def move(data_source_id: str, request_data: MoveRequest, user: User = Depends(auth_w_jwt_or_pat)):  # noqa: E501
-    use_case = MoveFileUseCase(user=user, get_repository=get_data_source)
-    return use_case.execute(request_data)
+def move(data_source_id: str, request_data, user: User = Depends(auth_w_jwt_or_pat)):  # noqa: E501
+    raise NotImplementedError
 
 
 @router.delete("/{data_source_id}/{dotted_id}", operation_id="explorer_remove", response_model=str)
 @create_response(PlainTextResponse)
 def remove(data_source_id: str, dotted_id: str, user: User = Depends(auth_w_jwt_or_pat)):
-    use_case = RemoveUseCase(user)
-    return use_case.execute(RemoveRequest(data_source_id=data_source_id, documentId=dotted_id))
+    return remove_use_case(user=user, data_source_id=data_source_id, document_id=dotted_id)
 
 
 @router.post("/{data_source_id}/remove-by-path", operation_id="explorer_remove_by_path", response_model=str)
 @create_response(PlainTextResponse)
-def remove_by_path(
-    data_source_id: str, request: RemoveByPathRequest, user: User = Depends(auth_w_jwt_or_pat)
-):  # noqa: E501
-    request.data_source_id = data_source_id
-    use_case = RemoveByPathUseCase(user)
-    return use_case.execute(request)
+def remove_by_path(data_source_id: str, directory: str, user: User = Depends(auth_w_jwt_or_pat)):
+    return remove_by_path_use_case(user=user, data_source_id=data_source_id, directory=directory)
 
 
 @router.put("/{data_source_id}/rename", operation_id="explorer_rename", response_model=dict)
 @create_response(JSONResponse)
-def rename(data_source_id: str, request_data: RenameRequest, user: User = Depends(auth_w_jwt_or_pat)):  # noqa: E501
-    request_data.data_source_id = data_source_id
-    use_case = RenameUseCase(user)
-    return use_case.execute(request_data)
+def rename(
+    data_source_id: str, document_id: str, parent_id: str, user: User = Depends(auth_w_jwt_or_pat)
+):  # noqa: E501
+    return rename_use_case(user=user, data_source_id=data_source_id, document_id=document_id, parent_id=parent_id)
 
 
 @router.post("/{absolute_ref:path}", operation_id="explorer_add", response_model=dict)
@@ -107,7 +96,4 @@ def add_by_parent_id(
     If added to another document, a valid attribute type check is done.
     Select parent with format 'data_source/document_id.attribute.index.attribute'
     """
-    use_case = AddFileUseCase(user)
-    return use_case.execute(
-        {"absolute_ref": f"{absolute_ref}", "data": data, "update_uncontained": update_uncontained}
-    )
+    return add_file_use_case(user=user, absolute_ref=absolute_ref, data=data, update_uncontained=update_uncontained)

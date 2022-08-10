@@ -1,40 +1,29 @@
 from typing import List, Optional
 
 from fastapi import UploadFile
-from pydantic import validator
-
 from authentication.models import User
-from restful.request_types.shared import DataSource, Entity
-
-from restful.use_case import UseCase
+from restful.request_types.shared import Entity
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 
 
-class AddDocumentToPathRequest(DataSource):
-    document: Entity
-    directory: str
-    files: Optional[List[UploadFile]] = None
-    update_uncontained: Optional[bool] = (False,)
-
-    @validator("directory", always=True)
-    def validate_directory(cls, value):
-        return value.removeprefix("/").removesuffix("/")
-
-
-class AddDocumentToPathUseCase(UseCase):
-    def __init__(self, user: User, repository_provider=get_data_source):
-        self.user = user
-        self.repository_provider = repository_provider
-
-    def process_request(self, req: AddDocumentToPathRequest):
-        document_service = DocumentService(repository_provider=self.repository_provider, user=self.user)
-        request_document: Entity = req.document
-        document = document_service.add(
-            data_source_id=req.data_source_id,
-            path=req.directory,
-            document=request_document,
-            files={f.filename: f.file for f in req.files} if req.files else None,
-            update_uncontained=req.update_uncontained,
-        )
-        return document
+# todo data_source_id requirements
+def add_document_to_path_use_case(
+    user: User,
+    document: Entity,
+    data_source_id: str,
+    directory: str,
+    files: Optional[List[UploadFile]] = None,
+    update_uncontained: Optional[bool] = False,
+    repository_provider=get_data_source,
+):
+    document_service = DocumentService(repository_provider=repository_provider, user=user)
+    request_document: Entity = document
+    document = document_service.add(
+        data_source_id=data_source_id,
+        path=directory,
+        document=request_document,
+        files={f.filename: f.file for f in files} if files else None,
+        update_uncontained=update_uncontained,
+    )
+    return document
