@@ -1,5 +1,5 @@
-from typing import List, Optional
-
+from typing import List, Optional, Union
+from pydantic import Json
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse
 from restful.request_types.shared import UncontainedEntity
@@ -15,29 +15,6 @@ from .use_cases.remove_use_case import remove_use_case
 from .use_cases.rename_file_use_case import rename_use_case
 
 router = APIRouter(tags=["default", "explorer"], prefix="/explorer")
-
-
-@router.post("/{data_source_id}/add-to-path", operation_id="explorer_add_to_path", response_model=dict)
-@create_response(JSONResponse)
-def add_to_path(
-    data_source_id: str,
-    document: Entity = Form(...),
-    directory: str = Form(...),
-    files: Optional[List[UploadFile]] = File(None),
-    update_uncontained: Optional[bool] = False,
-    user: User = Depends(auth_w_jwt_or_pat),
-):
-    """
-    Same as 'add_to_parent', but reference parent by path instead of ID. Also supports files.
-    """
-    return add_document_to_path_use_case(
-        user=user,
-        data_source_id=data_source_id,
-        document=document,
-        directory=directory,
-        files=files,
-        update_uncontained=update_uncontained,
-    )
 
 
 # TODO: Create test for this
@@ -80,6 +57,29 @@ def rename(
     data_source_id: str, document_id: str, parent_id: str, user: User = Depends(auth_w_jwt_or_pat)
 ):  # noqa: E501
     return rename_use_case(user=user, data_source_id=data_source_id, document_id=document_id, parent_id=parent_id)
+
+
+@router.post("/{data_source_id}/add-to-path", operation_id="explorer_add_to_path", response_model=dict)
+@create_response(JSONResponse)
+def add_to_path(
+    data_source_id: str,
+    directory: str,
+    document: Json = Form(...),
+    files: Optional[List[UploadFile]] = File(None),
+    update_uncontained: Optional[bool] = False,
+    user: User = Depends(auth_w_jwt_or_pat),
+):
+    """
+    Same as 'add_to_parent', but reference parent by path instead of ID. Also supports files.
+    """
+    return add_document_to_path_use_case(
+        user=user,
+        data_source_id=data_source_id,
+        document=document,
+        directory=directory,
+        files=files,
+        update_uncontained=update_uncontained,
+    )
 
 
 @router.post("/{absolute_ref:path}", operation_id="explorer_add", response_model=dict)

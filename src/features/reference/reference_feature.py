@@ -28,4 +28,6 @@ def insert_reference(
 def delete_reference(data_source_id: str, document_dotted_id: str, user: User = Depends(auth_w_jwt_or_pat)):
 
     document_id, attribute = document_dotted_id.split(".", 1)
-    return delete_reference_use_case(user=user, document_id=document_id, data_source_id=data_source_id)
+    return delete_reference_use_case(
+        user=user, document_id=document_id, data_source_id=data_source_id, attribute=attribute
+    )

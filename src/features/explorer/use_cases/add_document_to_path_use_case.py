@@ -10,7 +10,7 @@ from storage.internal.data_source_repository import get_data_source
 # todo data_source_id requirements
 def add_document_to_path_use_case(
     user: User,
-    document: Entity,
+    document: dict,
     data_source_id: str,
     directory: str,
     files: Optional[List[UploadFile]] = None,
@@ -18,7 +18,7 @@ def add_document_to_path_use_case(
     repository_provider=get_data_source,
 ):
     document_service = DocumentService(repository_provider=repository_provider, user=user)
-    request_document: Entity = document
+    request_document: Entity = Entity(**document)
     document = document_service.add(
         data_source_id=data_source_id,
         path=directory,
