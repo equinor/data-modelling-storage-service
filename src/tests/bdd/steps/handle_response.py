@@ -88,16 +88,9 @@ def step_impl_contain(context):
 
 
 @then("the response should have valid uid")
-def step_impl_contain(context):
-    def is_valid_uuid(val):
-        try:
-            uuid.UUID(str(val))
-            return True
-        except ValueError:
-            return False
-
+def step_impl_valid_uid(context):
     response = context.response.json()
-    assert is_valid_uuid(response["uid"])
+    uuid.UUID(str(response["uid"]))
 
 
 @then("the array at {dot_path} should be of length {length}")
