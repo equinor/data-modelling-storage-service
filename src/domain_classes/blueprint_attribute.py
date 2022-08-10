@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field, validator
+from typing import Union
 
 from domain_classes.dimension import Dimension
 from enums import PRIMITIVES, SIMOS
@@ -10,7 +11,7 @@ class BlueprintAttribute(BaseModel):
     type: str = SIMOS.BLUEPRINT_ATTRIBUTE.value
     description: str = ""
     label: str = ""
-    default: str = ""
+    default: Union[str, list] = ""
     dimensions: Dimension = None
     optional: bool = False
     contained: bool = True
