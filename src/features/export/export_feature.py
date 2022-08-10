@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends
 from starlette.responses import FileResponse
-
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from .use_cases.export_use_case import export_user_case
 
+
 router = APIRouter(tags=["default", "export"], prefix="/export")
 responses = {200: {"content": {"application/zip": {}}}}
+
 
 # TODO use create_response declarator. Must be able to handle FileResponse.
 @router.get("/{absolute_document_ref:path}", operation_id="export", response_class=FileResponse, responses=responses)

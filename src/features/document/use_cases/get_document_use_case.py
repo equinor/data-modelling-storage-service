@@ -1,11 +1,8 @@
 from typing import List, Optional, Union
-
 from pydantic import conint
-
 from authentication.models import User
 from services.document_service import DocumentService
 from restful.request_types.shared import DataSource
-
 from storage.internal.data_source_repository import get_data_source
 
 
@@ -20,7 +17,8 @@ def get_nested_dict_attribute(entity: Union[dict, list], path_list: List[str]) -
         raise KeyError(f"Attribute/Item '{path_list[0]}' does not exists in '{entity}'")
 
 
-# TODO im not sure if data_source_id type is DataSource. It is probably string, but i have to put the string check in DataSource somewhere else.
+# TODO im not sure if data_source_id type is DataSource. It is probably string, but i have to put the string
+#  check in DataSource somewhere else.
 def get_document_use_case(
     user: User,
     document_id: str,
