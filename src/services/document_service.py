@@ -342,7 +342,9 @@ class DocumentService:
 
     # Add entity by path
     def add(self, data_source_id: str, path: str, document: Entity, files: dict, update_uncontained=False):
-        target: Node = self.get_by_path(f"{data_source_id}/{path}")
+        if not path.startswith("/"):
+            raise ValueError("path parameter have to start with a forward slash")
+        target: Node = self.get_by_path(f"{data_source_id}{path}")
         if not target:
             raise EntityNotFoundException(uid=path)
 

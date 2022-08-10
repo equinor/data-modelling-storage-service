@@ -2,10 +2,9 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse
-from pydantic import Json
-
+from restful.request_types.shared import UncontainedEntity
 from common.responses import create_response
-
+from restful.request_types.shared import Entity
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from .use_cases.add_document_to_path_use_case import add_document_to_path_use_case
@@ -22,7 +21,7 @@ router = APIRouter(tags=["default", "explorer"], prefix="/explorer")
 @create_response(JSONResponse)
 def add_to_path(
     data_source_id: str,
-    document: Json = Form(...),
+    document: Entity = Form(...),
     directory: str = Form(...),
     files: Optional[List[UploadFile]] = File(None),
     update_uncontained: Optional[bool] = False,
@@ -44,7 +43,7 @@ def add_to_path(
 # TODO: Create test for this
 @router.post("/{data_source_id}/add-raw", operation_id="explorer_add_simple", response_model=str)
 @create_response(PlainTextResponse)
-def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt_or_pat)):
+def add_raw(data_source_id: str, document: UncontainedEntity, user: User = Depends(auth_w_jwt_or_pat)):
     """
     Adds the document 'as-is' to the datasource.
     NOTE: The 'explorer-add' operation is to be preferred.

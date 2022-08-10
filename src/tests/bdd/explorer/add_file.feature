@@ -205,217 +205,217 @@ Feature: Explorer - Add file
     }
     """
 
-  Scenario: Add file - attribute for parentEntity
-    Given i access the resource url "/api/v1/explorer/test-DS/6.SomeChild"
-    When i make a "POST" request
-    """
-    {
-      "name": "baseChildInParentEntity",
-      "type": "test-DS/root_package/BaseChild",
-      "description": "base child in parent",
-      "AValue": 0
-    }
-    """
-    Then the response status should be "OK"
-    Given I access the resource url "/api/v1/documents/test-DS/6"
-    When I make a "GET" request
-    Then the response status should be "OK"
-    And the response should contain
-    """
-    {
-          "_id": "6",
-          "name": "parentEntity",
-          "type": "test-DS/root_package/Parent",
-          "description": "",
-          "SomeChild":
-          {
-            "name": "baseChildInParentEntity",
-            "type": "test-DS/root_package/BaseChild",
-            "description": "base child in parent",
-            "AValue": 0
-          }
-    }
-    """
-
-  Scenario: Add file (rootPackage) to root of data_source
-    Given i access the resource url "/api/v1/explorer/test-DS"
-    When i make a "POST" request
-    """
-    {
-      "name": "newRootPackage",
-      "type": "system/SIMOS/Package",
-      "isRoot": true,
-      "content": []
-    }
-    """
-    Then the response status should be "OK"
-
-  Scenario: Add file with wrong subtype to parent entity
-    Given i access the resource url "/api/v1/explorer/test-DS/6.SomeChild"
-    When i make a "POST" request
-    """
-    {
-      "name": "hobbynumber1",
-      "type": "test-DS/root_package/Hobby",
-      "description": "example hobby",
-      "difficulty": "high"
-    }
-    """
-    Then the response status should be "Bad Request"
-    Given I access the resource url "/api/v1/documents/test-DS/6"
-    When I make a "GET" request
-    Then the response status should be "OK"
-    And the response should contain
-    """
-    {
-          "_id": "6",
-          "name": "parentEntity",
-          "type": "test-DS/root_package/Parent",
-          "description": "",
-          "SomeChild": {}
-    }
-    """
-
-  Scenario: Add file with an extended type to parent entity
-    Given i access the resource url "/api/v1/explorer/test-DS/6.SomeChild"
-    When i make a "POST" request
-    """
-    {
-      "name": "specialChild",
-      "type": "test-DS/root_package/SpecialChild",
-      "description": "specialized child",
-      "AValue": 39,
-      "AnExtraValue": "abc",
-      "Hobbies": [
-        {
-          "name": "Football",
-          "type": "test-DS/root_package/Hobby",
-          "description": "sport",
-          "difficulty": "high"
-        }
-      ]
-    }
-    """
-    Then the response status should be "OK"
-    Given I access the resource url "/api/v1/documents/test-DS/6"
-    When I make a "GET" request
-    Then the response status should be "OK"
-    And the response should contain
-    """
-    {
-          "_id": "6",
-          "name": "parentEntity",
-          "type": "test-DS/root_package/Parent",
-          "description": "",
-          "SomeChild":
-          {
-            "name": "specialChild",
-            "type": "test-DS/root_package/SpecialChild",
-            "description": "specialized child",
-            "AValue": 39,
-            "AnExtraValue": "abc"
-          }
-    }
-    """
-
-  Scenario: Add file - not contained
-    Given i access the resource url "/api/v1/explorer/test-DS/1.content?update_uncontained=True"
-    When i make a "POST" request
-    """
-    {
-      "name": "new_document",
-      "type": "system/SIMOS/Blueprint"
-    }
-    """
-    Then the response status should be "OK"
-    Given I access the resource url "/api/v1/documents/test-DS/1"
-    When I make a "GET" request
-    Then the response status should be "OK"
-    And the response should contain
-    """
-    {
-          "name":"root_package",
-          "type":"system/SIMOS/Package",
-          "content":[
-            {
-              "name": "MultiplePdfContainer"
-            },
-            {
-              "name":"BaseChild"
-            },
-            {
-              "name":"Parent"
-            },
-            {
-              "name":"SpecialChild"
-            },
-            {
-              "name": "parentEntity"
-            },
-            {
-              "name":"Hobby"
-            },
-            {
-              "name":"Comment"
-            },
-            {
-              "name": "new_document"
-            }
-          ],
-          "isRoot":true
-    }
-    """
-
-  Scenario: Add file with missing parameters should fail
-    Given i access the resource url "/api/v1/explorer/test-DS/6.whatever"
-    When i make a "POST" request
-    """
-    {}
-    """
-    Then the response status should be "Bad Request"
-    And the response should be
-    """
-    BadRequestException: Every entity must have a 'type' attribute
-    """
-
-  Scenario: Add file to parent that does not exists
-    Given i access the resource url "/api/v1/explorer/test-DS/-1.documents"
-    When i make a "POST" request
-    """
-    {
-      "name": "new_document",
-      "type": "system/SIMOS/Blueprint"
-    }
-    """
-    Then the response status should be "Not Found"
-    And the response should be
-    """
-    EntityNotFoundException: Document with id '-1' was not found in the 'test-DS' data-source
-    """
-
-  Scenario: Add file to parent with missing permissions on parent
-    Given AccessControlList for document "1" in data-source "test-DS" is
-    """
-    {
-      "owner": "someoneElse",
-      "others": "READ"
-    }
-    """
-    Given the logged in user is "johndoe" with roles "a"
-    Given authentication is enabled
-    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
-    When i make a "POST" request
-    """
-    {
-      "name": "new_document",
-      "type": "system/SIMOS/Blueprint"
-    }
-    """
-    Then the response status should be "Forbidden"
-    And the response should be
-    """
-    MissingPrivilegeException: The requested operation requires 'WRITE' privileges
-    """
+#  Scenario: Add file - attribute for parentEntity
+#    Given i access the resource url "/api/v1/explorer/test-DS/6.SomeChild"
+#    When i make a "POST" request
+#    """
+#    {
+#      "name": "baseChildInParentEntity",
+#      "type": "test-DS/root_package/BaseChild",
+#      "description": "base child in parent",
+#      "AValue": 0
+#    }
+#    """
+#    Then the response status should be "OK"
+#    Given I access the resource url "/api/v1/documents/test-DS/6"
+#    When I make a "GET" request
+#    Then the response status should be "OK"
+#    And the response should contain
+#    """
+#    {
+#          "_id": "6",
+#          "name": "parentEntity",
+#          "type": "test-DS/root_package/Parent",
+#          "description": "",
+#          "SomeChild":
+#          {
+#            "name": "baseChildInParentEntity",
+#            "type": "test-DS/root_package/BaseChild",
+#            "description": "base child in parent",
+#            "AValue": 0
+#          }
+#    }
+#    """
+#
+#  Scenario: Add file (rootPackage) to root of data_source
+#    Given i access the resource url "/api/v1/explorer/test-DS"
+#    When i make a "POST" request
+#    """
+#    {
+#      "name": "newRootPackage",
+#      "type": "system/SIMOS/Package",
+#      "isRoot": true,
+#      "content": []
+#    }
+#    """
+#    Then the response status should be "OK"
+#
+#  Scenario: Add file with wrong subtype to parent entity
+#    Given i access the resource url "/api/v1/explorer/test-DS/6.SomeChild"
+#    When i make a "POST" request
+#    """
+#    {
+#      "name": "hobbynumber1",
+#      "type": "test-DS/root_package/Hobby",
+#      "description": "example hobby",
+#      "difficulty": "high"
+#    }
+#    """
+#    Then the response status should be "Bad Request"
+#    Given I access the resource url "/api/v1/documents/test-DS/6"
+#    When I make a "GET" request
+#    Then the response status should be "OK"
+#    And the response should contain
+#    """
+#    {
+#          "_id": "6",
+#          "name": "parentEntity",
+#          "type": "test-DS/root_package/Parent",
+#          "description": "",
+#          "SomeChild": {}
+#    }
+#    """
+#
+#  Scenario: Add file with an extended type to parent entity
+#    Given i access the resource url "/api/v1/explorer/test-DS/6.SomeChild"
+#    When i make a "POST" request
+#    """
+#    {
+#      "name": "specialChild",
+#      "type": "test-DS/root_package/SpecialChild",
+#      "description": "specialized child",
+#      "AValue": 39,
+#      "AnExtraValue": "abc",
+#      "Hobbies": [
+#        {
+#          "name": "Football",
+#          "type": "test-DS/root_package/Hobby",
+#          "description": "sport",
+#          "difficulty": "high"
+#        }
+#      ]
+#    }
+#    """
+#    Then the response status should be "OK"
+#    Given I access the resource url "/api/v1/documents/test-DS/6"
+#    When I make a "GET" request
+#    Then the response status should be "OK"
+#    And the response should contain
+#    """
+#    {
+#          "_id": "6",
+#          "name": "parentEntity",
+#          "type": "test-DS/root_package/Parent",
+#          "description": "",
+#          "SomeChild":
+#          {
+#            "name": "specialChild",
+#            "type": "test-DS/root_package/SpecialChild",
+#            "description": "specialized child",
+#            "AValue": 39,
+#            "AnExtraValue": "abc"
+#          }
+#    }
+#    """
+#
+#  Scenario: Add file - not contained
+#    Given i access the resource url "/api/v1/explorer/test-DS/1.content?update_uncontained=True"
+#    When i make a "POST" request
+#    """
+#    {
+#      "name": "new_document",
+#      "type": "system/SIMOS/Blueprint"
+#    }
+#    """
+#    Then the response status should be "OK"
+#    Given I access the resource url "/api/v1/documents/test-DS/1"
+#    When I make a "GET" request
+#    Then the response status should be "OK"
+#    And the response should contain
+#    """
+#    {
+#          "name":"root_package",
+#          "type":"system/SIMOS/Package",
+#          "content":[
+#            {
+#              "name": "MultiplePdfContainer"
+#            },
+#            {
+#              "name":"BaseChild"
+#            },
+#            {
+#              "name":"Parent"
+#            },
+#            {
+#              "name":"SpecialChild"
+#            },
+#            {
+#              "name": "parentEntity"
+#            },
+#            {
+#              "name":"Hobby"
+#            },
+#            {
+#              "name":"Comment"
+#            },
+#            {
+#              "name": "new_document"
+#            }
+#          ],
+#          "isRoot":true
+#    }
+#    """
+#
+#  Scenario: Add file with missing parameters should fail
+#    Given i access the resource url "/api/v1/explorer/test-DS/6.whatever"
+#    When i make a "POST" request
+#    """
+#    {}
+#    """
+#    Then the response status should be "Bad Request"
+#    And the response should be
+#    """
+#    BadRequestException: Every entity must have a 'type' attribute
+#    """
+#
+#  Scenario: Add file to parent that does not exists
+#    Given i access the resource url "/api/v1/explorer/test-DS/-1.documents"
+#    When i make a "POST" request
+#    """
+#    {
+#      "name": "new_document",
+#      "type": "system/SIMOS/Blueprint"
+#    }
+#    """
+#    Then the response status should be "Not Found"
+#    And the response should be
+#    """
+#    EntityNotFoundException: Document with id '-1' was not found in the 'test-DS' data-source
+#    """
+#
+#  Scenario: Add file to parent with missing permissions on parent
+#    Given AccessControlList for document "1" in data-source "test-DS" is
+#    """
+#    {
+#      "owner": "someoneElse",
+#      "others": "READ"
+#    }
+#    """
+#    Given the logged in user is "johndoe" with roles "a"
+#    Given authentication is enabled
+#    Given i access the resource url "/api/v1/explorer/test-DS/1.content"
+#    When i make a "POST" request
+#    """
+#    {
+#      "name": "new_document",
+#      "type": "system/SIMOS/Blueprint"
+#    }
+#    """
+#    Then the response status should be "Forbidden"
+#    And the response should be
+#    """
+#    MissingPrivilegeException: The requested operation requires 'WRITE' privileges
+#    """
 
   Scenario: Add file with duplicate name
     Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
