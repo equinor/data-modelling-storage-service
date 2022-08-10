@@ -1,16 +1,10 @@
-from restful import use_case
 from restful.request_types.create_data_source import DataSourceRequest
 from restful.request_types.shared import DataSource
+from storage.internal.data_source_repository import DataSourceRepository
 
 
-class CreateDataSourceRequest(DataSource):
-    new_data_source: DataSourceRequest
-
-
-class CreateDataSourceUseCase(use_case.UseCase):
-    def __init__(self, data_source_repository):
-        self.data_source_repository = data_source_repository
-
-    def process_request(self, req: CreateDataSourceRequest):
-        response = self.data_source_repository.create(req.data_source_id, req.new_data_source)
-        return response
+def create_data_source_use_case(
+    data_source_repository: DataSourceRepository, data_source_id: DataSource, new_data_source: DataSourceRequest
+):
+    response = data_source_repository.create(data_source_id, new_data_source)
+    return response
