@@ -347,6 +347,8 @@ class DocumentService:
             raise EntityNotFoundException(uid=path)
 
         new_node_id = str(uuid4()) if not target.storage_contained else ""
+        if document._id == "":
+            document._id = new_node_id
         # If dotted attribute path, attribute is the last entry. Else content
         new_node_attr = path.split(".")[-1] if "." in path else "content"
 
