@@ -17,7 +17,7 @@ services:
       - db
   db:
     image: mongo:5.0.9
-    command: --quiet
+    command: mongod --quiet
     environment:
       MONGO_INITDB_ROOT_USERNAME: maf
       MONGO_INITDB_ROOT_PASSWORD: maf
