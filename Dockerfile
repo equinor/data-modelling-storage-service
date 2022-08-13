@@ -1,4 +1,4 @@
-FROM python:3.10.4-slim as base
+FROM python:3.11.0b5-slim as base
 WORKDIR /code
 ENTRYPOINT ["/code/init.sh"]
 CMD ["api"]
