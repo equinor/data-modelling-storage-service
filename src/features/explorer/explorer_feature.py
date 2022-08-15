@@ -1,10 +1,10 @@
-from typing import List, Optional, Union
+from typing import List, Optional
 from pydantic import Json
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse
 from restful.request_types.shared import UncontainedEntity
 from common.responses import create_response
-from restful.request_types.shared import Entity
+
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from .use_cases.add_document_to_path_use_case import add_document_to_path_use_case
