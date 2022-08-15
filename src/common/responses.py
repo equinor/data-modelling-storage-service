@@ -51,7 +51,7 @@ def create_response(
             except (ValidationError, InvalidEntityException, ValidationException) as e:
                 logger.error(e)
                 return PlainTextResponse(
-                    f"{e.__class__.__name__}: {e.message}", status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+                    f"{e.__class__.__name__}: {e}", status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
                 )
             except (
                 EntityNotFoundException,
