@@ -17,12 +17,10 @@ def get_nested_dict_attribute(entity: Union[dict, list], path_list: List[str]) -
         raise KeyError(f"Attribute/Item '{path_list[0]}' does not exists in '{entity}'")
 
 
-# TODO im not sure if data_source_id type is DataSource. It is probably string, but i have to put the string
-#  check in DataSource somewhere else.
 def get_document_use_case(
     user: User,
     document_id: str,
-    data_source_id: DataSource,
+    data_source_id: str,
     attribute: Optional[str] = None,
     depth: conint(gt=-1, lt=1000) = 999,
     repository_provider=get_data_source,

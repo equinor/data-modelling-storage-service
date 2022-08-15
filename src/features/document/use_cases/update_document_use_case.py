@@ -6,7 +6,6 @@ from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 
 
-# todo requirements on data_source_id string
 def update_document_use_case(
     user: User,
     document_id: str,

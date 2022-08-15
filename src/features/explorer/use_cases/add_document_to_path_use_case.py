@@ -7,7 +7,6 @@ from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 
 
-# todo data_source_id requirements
 def add_document_to_path_use_case(
     user: User,
     document: dict,

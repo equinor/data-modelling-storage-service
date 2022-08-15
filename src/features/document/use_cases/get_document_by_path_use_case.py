@@ -9,7 +9,7 @@ from common.utils.get_document_by_path import get_document_by_ref
 
 def get_document_by_path_use_case(
     user: User,
-    data_source_id: DataSource,
+    data_source_id: str,
     path: Optional[str] = None,
     attribute: Optional[str] = None,
     repository_provider=get_data_source,
