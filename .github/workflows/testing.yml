@@ -11,6 +11,6 @@ jobs:
       - name: "Build Docker Images"
         run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml build
       - name: "BDD Tests"
-        run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml run dmss behave
+        run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml run dmss behave -e OAUTH_CLIENT_SECRET=123
       - name: "Unit Tests"
-        run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml run dmss pytest
+        run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml run dmss pytest -e OAUTH_CLIENT_SECRET=123
