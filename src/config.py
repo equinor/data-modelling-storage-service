@@ -60,7 +60,8 @@ if config.AUTH_ENABLED:
 
 if config.AUTH_PROVIDER_FOR_ROLE_CHECK:
     if not config.OAUTH_CLIENT_ID or not config.OAUTH_CLIENT_SECRET:
-        raise EnvironmentError("Environment variables 'OAUTH_CLIENT_ID' and 'OAUTH_CLIENT_SECRET' are required.")
+        raise EnvironmentError("Environment variables 'OAUTH_CLIENT_ID' and 'OAUTH_CLIENT_SECRET' are required if " +
+                               "live role checks are enabled with 'AUTH_PROVIDER_FOR_ROLE_CHECK'")
     if (
         config.AUTH_PROVIDER_FOR_ROLE_CHECK == AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY
         and not config.AAD_ENTERPRISE_APP_OID

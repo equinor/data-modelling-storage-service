@@ -16,7 +16,7 @@ def find_package_with_document(data_source: str, document_id: str, user) -> dict
     )
     if not packages:
         raise EntityNotFoundException(document_id, "Failed to find package")
-    return packages[0].data
+    return packages[0]
 
 
 def resolve_blueprint_use_case(user: User, absolute_id: str):

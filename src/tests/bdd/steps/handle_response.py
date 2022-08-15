@@ -2,7 +2,7 @@ from behave import then
 import json
 from deepdiff import DeepDiff
 import pprint
-
+import uuid
 from common.utils.data_structure.compare import pretty_eq, print_pygments
 from common.utils.data_structure.find import find
 from dictdiffer import diff
@@ -85,6 +85,12 @@ def step_impl_contain(context):
     data = context.text or context.data
     expected = json.loads(data)
     pretty_print_should_contain_diff(expected, actual)
+
+
+@then("the response should have valid uid")
+def step_impl_valid_uid(context):
+    response = context.response.json()
+    uuid.UUID(str(response["uid"]))
 
 
 @then("the array at {dot_path} should be of length {length}")

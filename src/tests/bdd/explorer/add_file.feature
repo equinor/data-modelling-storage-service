@@ -469,6 +469,41 @@ Feature: Explorer - Add file
     ValidationException: Required attribute 'name' not found in the entity
     """
 
+  Scenario: Adding file with id set to empty string should generate new uid
+    Given I access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    When i make a "POST" request with "1" files
+    """
+    {
+      "document": {
+        "_id": "",
+        "type":"system/SIMOS/Blueprint",
+        "name": "new_bp",
+        "description": "Blueprint with no name"
+      },
+      "directory": "/root_package/"
+    }
+    """
+    Then the response status should be "OK"
+    And the response should have valid uid
+
+  Scenario: Adding file with id
+    Given I access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    When i make a "POST" request with "1" files
+    """
+    {
+      "document": {
+        "_id": "2283c9b0-d509-46c9-a153-94c79f4d7b7b",
+        "type":"system/SIMOS/Blueprint",
+        "name": "new_bp",
+        "description": "Blueprint with no name"
+      },
+      "directory": "/root_package/"
+    }
+    """
+    Then the response status should be "OK"
+    And the response should have valid uid
+
+
   Scenario: Add Comment entity without a name attribute with add-to-path endpoint
     Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?directory=/root_package/&update_uncontained=True"
     When i make a "POST" request with "1" files

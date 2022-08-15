@@ -532,8 +532,9 @@ class Node(NodeBase):
             self.uid = None
             self.entity.pop("_id", None)
             return
+        entity_id = self.entity.get("_id", None)
 
-        current_id = new_id if new_id else self.entity.get("_id", self.uid if self.uid else str(uuid4()))
+        current_id = new_id if new_id else (entity_id if entity_id else self.uid if self.uid else str(uuid4()))
         self.uid = current_id
         self.entity["_id"] = self.uid
 
