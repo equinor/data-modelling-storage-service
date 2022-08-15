@@ -2,7 +2,6 @@ from typing import List, Optional
 from pydantic import Json
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse
-from restful.request_types.shared import UncontainedEntity
 from common.responses import create_response
 
 from authentication.authentication import auth_w_jwt_or_pat
@@ -20,7 +19,7 @@ router = APIRouter(tags=["default", "explorer"], prefix="/explorer")
 # TODO: Create test for this
 @router.post("/{data_source_id}/add-raw", operation_id="explorer_add_simple", response_model=str)
 @create_response(PlainTextResponse)
-def add_raw(data_source_id: str, document: UncontainedEntity, user: User = Depends(auth_w_jwt_or_pat)):
+def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt_or_pat)):
     """
     Adds the document 'as-is' to the datasource.
     NOTE: The 'explorer-add' operation is to be preferred.
@@ -86,7 +85,7 @@ def add_to_path(
 @create_response(JSONResponse)
 def add_by_parent_id(
     absolute_ref: str,
-    data: dict,
+    document: dict,
     update_uncontained: Optional[bool] = True,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
@@ -95,4 +94,4 @@ def add_by_parent_id(
     If added to another document, a valid attribute type check is done.
     Select parent with format 'data_source/document_id.attribute.index.attribute'
     """
-    return add_file_use_case(user=user, absolute_ref=absolute_ref, data=data, update_uncontained=update_uncontained)
+    return add_file_use_case(user=user, absolute_ref=absolute_ref, data=document, update_uncontained=update_uncontained)
