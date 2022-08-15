@@ -470,7 +470,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Adding file with id set to empty string should generate new uid
-    Given I access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    Given I access the resource url "/api/v1/explorer/test-DS/add-to-path?directory=/root_package/"
     When i make a "POST" request with "1" files
     """
     {
@@ -479,15 +479,14 @@ Feature: Explorer - Add file
         "type":"system/SIMOS/Blueprint",
         "name": "new_bp",
         "description": "Blueprint with no name"
-      },
-      "directory": "/root_package/"
+      }
     }
     """
     Then the response status should be "OK"
     And the response should have valid uid
 
   Scenario: Adding file with id
-    Given I access the resource url "/api/v1/explorer/test-DS/add-to-path"
+    Given I access the resource url "/api/v1/explorer/test-DS/add-to-path?directory=/root_package/"
     When i make a "POST" request with "1" files
     """
     {
@@ -497,7 +496,6 @@ Feature: Explorer - Add file
         "name": "new_bp",
         "description": "Blueprint with no name"
       },
-      "directory": "/root_package/"
     }
     """
     Then the response status should be "OK"
