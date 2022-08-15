@@ -11,6 +11,7 @@ from common.responses import create_response
 from .use_cases.get_document_by_path_use_case import get_document_by_path_use_case
 from .use_cases.get_document_use_case import get_document_use_case
 from .use_cases.update_document_use_case import update_document_use_case
+from restful.request_types.shared import data_source_id_query
 
 router = APIRouter(tags=["default", "document"], prefix="/documents")
 
@@ -18,8 +19,8 @@ router = APIRouter(tags=["default", "document"], prefix="/documents")
 @router.get("/{data_source_id}/{document_id}", operation_id="document_get_by_id", response_model=dict)
 @create_response(JSONResponse)
 def get_by_id(
-    data_source_id: str,
     document_id: str,
+    data_source_id: str = data_source_id_query,
     attribute: Optional[str] = None,
     depth: conint(gt=-1, lt=1000) = 999,
     user: User = Depends(auth_w_jwt_or_pat),
@@ -47,7 +48,7 @@ def get_by_id(
 )
 @create_response(JSONResponse)
 def get_by_path(
-    data_source_id: str,
+    data_source_id: str = data_source_id_query,
     attribute: Optional[str] = None,
     path: Optional[str] = None,
     user: User = Depends(auth_w_jwt_or_pat),
@@ -61,9 +62,9 @@ def get_by_path(
 @router.put("/{data_source_id}/{document_id}", operation_id="document_update")
 @create_response(JSONResponse)
 def update(
-    data_source_id: str,
     document_id: str,
     data: Json = Form(...),
+    data_source_id: str = data_source_id_query,
     attribute: Optional[str] = Form(None),
     files: Optional[List[UploadFile]] = File(None),
     update_uncontained: Optional[bool] = False,

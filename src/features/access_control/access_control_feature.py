@@ -14,7 +14,12 @@ router = APIRouter(tags=["default", "access_control"], prefix="/acl")
 @router.put("/{data_source_id}/{document_id}", operation_id="set_acl", response_model=str)
 @create_response(PlainTextResponse)
 def set_acl(
-    document_id: str, acl: ACL, recursively: bool = True, user: User = Depends(auth_w_jwt_or_pat), data_source_id: str = data_source_id_query):
+    document_id: str,
+    acl: ACL,
+    recursively: bool = True,
+    user: User = Depends(auth_w_jwt_or_pat),
+    data_source_id: str = data_source_id_query,
+):
     return set_acl_use_case(
         user=user, data_source_id=data_source_id, document_id=document_id, acl=acl, recursively=recursively
     )

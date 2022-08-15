@@ -12,6 +12,7 @@ from .use_cases.add_raw import add_raw_use_case
 from .use_cases.remove_by_path_use_case import remove_by_path_use_case
 from .use_cases.remove_use_case import remove_use_case
 from .use_cases.rename_file_use_case import rename_use_case
+from restful.request_types.shared import data_source_id_query
 
 router = APIRouter(tags=["default", "explorer"], prefix="/explorer")
 
@@ -19,7 +20,7 @@ router = APIRouter(tags=["default", "explorer"], prefix="/explorer")
 # TODO: Create test for this
 @router.post("/{data_source_id}/add-raw", operation_id="explorer_add_simple", response_model=str)
 @create_response(PlainTextResponse)
-def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt_or_pat)):
+def add_raw(document: dict, data_source_id: str = data_source_id_query, user: User = Depends(auth_w_jwt_or_pat)):
     """
     Adds the document 'as-is' to the datasource.
     NOTE: The 'explorer-add' operation is to be preferred.
@@ -34,26 +35,33 @@ def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt
 # TODO: DataSource is not needed in the path, as it's contained in the source and dest parameters
 @router.post("/{data_source_id}/move", operation_id="explorer_move", response_model=str)
 @create_response(PlainTextResponse)
-def move(data_source_id: str, request_data, user: User = Depends(auth_w_jwt_or_pat)):  # noqa: E501
+def move(
+    request_data, data_source_id: str = data_source_id_query, user: User = Depends(auth_w_jwt_or_pat)
+):  # noqa: E501
     raise NotImplementedError
 
 
 @router.delete("/{data_source_id}/{dotted_id}", operation_id="explorer_remove", response_model=str)
 @create_response(PlainTextResponse)
-def remove(data_source_id: str, dotted_id: str, user: User = Depends(auth_w_jwt_or_pat)):
+def remove(dotted_id: str, data_source_id: str = data_source_id_query, user: User = Depends(auth_w_jwt_or_pat)):
     return remove_use_case(user=user, data_source_id=data_source_id, document_id=dotted_id)
 
 
 @router.post("/{data_source_id}/remove-by-path", operation_id="explorer_remove_by_path", response_model=str)
 @create_response(PlainTextResponse)
-def remove_by_path(data_source_id: str, directory: str, user: User = Depends(auth_w_jwt_or_pat)):
+def remove_by_path(
+    directory: str, data_source_id: str = data_source_id_query, user: User = Depends(auth_w_jwt_or_pat)
+):
     return remove_by_path_use_case(user=user, data_source_id=data_source_id, directory=directory)
 
 
 @router.put("/{data_source_id}/rename", operation_id="explorer_rename", response_model=dict)
 @create_response(JSONResponse)
 def rename(
-    data_source_id: str, document_id: str, parent_id: str, user: User = Depends(auth_w_jwt_or_pat)
+    document_id: str,
+    parent_id: str,
+    data_source_id: str = data_source_id_query,
+    user: User = Depends(auth_w_jwt_or_pat),
 ):  # noqa: E501
     return rename_use_case(user=user, data_source_id=data_source_id, document_id=document_id, parent_id=parent_id)
 
@@ -61,9 +69,9 @@ def rename(
 @router.post("/{data_source_id}/add-to-path", operation_id="explorer_add_to_path", response_model=dict)
 @create_response(JSONResponse)
 def add_to_path(
-    data_source_id: str,
     directory: str,
     document: Json = Form(...),
+    data_source_id: str = data_source_id_query,
     files: Optional[List[UploadFile]] = File(None),
     update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
