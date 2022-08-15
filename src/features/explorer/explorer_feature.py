@@ -94,4 +94,6 @@ def add_by_parent_id(
     If added to another document, a valid attribute type check is done.
     Select parent with format 'data_source/document_id.attribute.index.attribute'
     """
-    return add_file_use_case(user=user, absolute_ref=absolute_ref, data=document, update_uncontained=update_uncontained)
+    return add_file_use_case(
+        user=user, absolute_ref=absolute_ref, data=document, update_uncontained=update_uncontained
+    )
