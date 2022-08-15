@@ -495,7 +495,7 @@ Feature: Explorer - Add file
         "type":"system/SIMOS/Blueprint",
         "name": "new_bp",
         "description": "Blueprint with no name"
-      },
+      }
     }
     """
     Then the response status should be "OK"
