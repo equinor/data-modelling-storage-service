@@ -1,7 +1,6 @@
 from typing import Optional
 
 from authentication.models import User
-from restful.request_types.shared import DataSource
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 from common.utils.get_document_by_path import get_document_by_ref
