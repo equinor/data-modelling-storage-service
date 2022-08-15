@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, File, UploadFile, Query
+from fastapi import APIRouter, Depends, File, UploadFile
 from starlette.responses import FileResponse, PlainTextResponse
 
 from common.responses import create_response

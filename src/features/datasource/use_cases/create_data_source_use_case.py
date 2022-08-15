@@ -1,5 +1,4 @@
 from restful.request_types.create_data_source import DataSourceRequest
-from restful.request_types.shared import DataSource
 from storage.internal.data_source_repository import DataSourceRepository
 
 
