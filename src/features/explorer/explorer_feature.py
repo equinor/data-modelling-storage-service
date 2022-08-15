@@ -58,7 +58,7 @@ def rename(
     return rename_use_case(user=user, data_source_id=data_source_id, document_id=document_id, parent_id=parent_id)
 
 
-@router.post("/{data_source_id}/add-to-path", operation_id="explorer_add_to_path", response_model=dict)
+@router.post("/{data_source_id}/add-to-path{directory:path}", operation_id="explorer_add_to_path", response_model=dict)
 @create_response(JSONResponse)
 def add_to_path(
     data_source_id: str,
