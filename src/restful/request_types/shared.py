@@ -1,7 +1,6 @@
 from pydantic import constr, Field, root_validator, UUID4
 from pydantic.main import BaseModel, Extra
 from typing import Optional
-from fastapi import Query
 
 # Only allow characters a-9 and '_' + '-'
 name_regex = "^[A-Za-z0-9_-]*$"
@@ -65,6 +64,3 @@ class Entity(EntityType, OptionalEntityName, extra=Extra.allow):
             return self.dict(by_alias=True)
         else:
             return self.dict(exclude={"name"})
-
-
-data_source_id_query = Query(default=None, min_length=3, max_length=128, regex=name_regex)

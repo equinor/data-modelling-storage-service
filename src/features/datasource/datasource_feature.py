@@ -9,14 +9,13 @@ from storage.internal.data_source_repository import DataSourceRepository
 from .use_cases.create_data_source_use_case import create_data_source_use_case
 from .use_cases.get_data_source_use_case import get_data_source_use_case
 from .use_cases.get_data_sources_use_case import get_data_sources_use_case
-from restful.request_types.shared import data_source_id_query
 
 router = APIRouter(tags=["default", "datasource"], prefix="/data-sources")
 
 
 @router.get("/{data_source_id}", operation_id="data_source_get", response_model=dict)
 @create_response(JSONResponse)
-def get(data_source_id: str = data_source_id_query, user: User = Depends(auth_w_jwt_or_pat)):
+def get(data_source_id: str, user: User = Depends(auth_w_jwt_or_pat)):
     data_source_repository = DataSourceRepository(user)
     return get_data_source_use_case(
         data_source_repository=data_source_repository, data_source=DataSource(data_source_id=data_source_id)
@@ -26,8 +25,8 @@ def get(data_source_id: str = data_source_id_query, user: User = Depends(auth_w_
 @router.post("/{data_source_id}", operation_id="data_source_save", response_model=str)
 @create_response(PlainTextResponse)
 def save(
+    data_source_id: str,
     new_data_source: DataSourceRequest,
-    data_source_id: str = data_source_id_query,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """
