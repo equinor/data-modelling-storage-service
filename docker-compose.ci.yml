@@ -13,6 +13,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: maf
       SECRET_KEY: sg9aeUM5i1JO4gNN8fQadokJa3_gXQMLBjSGGYcfscs= # Don't reuse this in production...
       AUTH_ENABLED: "False"
+      OAUTH_CLIENT_SECRET: "None"
+      AAD_ENTERPRISE_APP_OID: "None"
 
   db:
     environment:
