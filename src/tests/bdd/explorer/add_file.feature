@@ -418,10 +418,11 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with duplicate name
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?directory=/root_package/"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path"
     When i make a "POST" request with "1" files
     """
       {
+        "directory": "/root_package/",
         "document": {
           "type": "test-DS/root_package/Parent",
           "name": "parentEntity",
@@ -452,10 +453,11 @@ Feature: Explorer - Add file
 
 
   Scenario: Add Parent entity without a name attribute with add-to-path endpoint
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?directory=/root_package/&update_uncontained=True"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
+      "directory": "/root_package/",
       "document":
       {
         "type": "test-DS/root_package/Parent",
@@ -470,7 +472,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Adding file with id set to empty string should generate new uid
-    Given I access the resource url "/api/v1/explorer/test-DS/add-to-path?directory=/root_package/"
+    Given I access the resource url "/api/v1/explorer/test-DS/add-to-path"
     When i make a "POST" request with "1" files
     """
     {
@@ -479,14 +481,15 @@ Feature: Explorer - Add file
         "type":"system/SIMOS/Blueprint",
         "name": "new_bp",
         "description": "Blueprint with no name"
-      }
+      },
+      "directory": "/root_package/"
     }
     """
     Then the response status should be "OK"
     And the response should have valid uid
 
   Scenario: Adding file with id
-    Given I access the resource url "/api/v1/explorer/test-DS/add-to-path?directory=/root_package/"
+    Given I access the resource url "/api/v1/explorer/test-DS/add-to-path"
     When i make a "POST" request with "1" files
     """
     {
@@ -495,7 +498,8 @@ Feature: Explorer - Add file
         "type":"system/SIMOS/Blueprint",
         "name": "new_bp",
         "description": "Blueprint with no name"
-      }
+      },
+      "directory": "/root_package/"
     }
     """
     Then the response status should be "OK"
@@ -503,10 +507,11 @@ Feature: Explorer - Add file
 
 
   Scenario: Add Comment entity without a name attribute with add-to-path endpoint
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?directory=/root_package/&update_uncontained=True"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
+      "directory": "/root_package/",
       "document":
       {
         "type": "test-DS/root_package/Comment",
@@ -518,10 +523,11 @@ Feature: Explorer - Add file
     Then the response status should be "OK"
 
   Scenario: Add blueprint without a name attribute with add-to-path endpoint should fail
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?directory=/root_package/&update_uncontained=True"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
+      "directory": "/root_package/",
       "document":
       {
         "type":"system/SIMOS/Blueprint",
@@ -536,10 +542,11 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add package without a name attribute with add-to-path endpoint should fail
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?directory=/root_package/&update_uncontained=True"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
+      "directory": "/root_package/",
       "document":
       {
         "type":"system/SIMOS/Package",
@@ -611,10 +618,11 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with multiple PDFs
-    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?directory=/root_package/&update_uncontained=True"
+    Given i access the resource url "/api/v1/explorer/test-DS/add-to-path?update_uncontained=True"
     When i make a "POST" request with "4" files
     """
     {
+      "directory": "/root_package/",
       "document": {
         "name": "new_pdf_container",
         "type": "test-DS/root_package/MultiplePdfContainer",

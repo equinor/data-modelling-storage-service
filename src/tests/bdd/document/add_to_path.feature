@@ -208,10 +208,11 @@ Feature: Add document with document_service
 
 
   Scenario: Add test
-    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-path?directory=/root_package/EntityPackage"
+    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-path"
     When i make a "POST" request with "1" files
     """
     {
+      "directory": "/root_package/EntityPackage",
       "document":
       {
         "type": "data-source-name/root_package/Operation",

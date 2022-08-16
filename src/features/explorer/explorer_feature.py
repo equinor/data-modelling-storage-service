@@ -65,8 +65,8 @@ def rename(
 @create_response(JSONResponse)
 def add_to_path(
     data_source_id: str,
-    directory: str,
     document: Json = Form(...),
+    directory: str = Form(...),
     files: Optional[List[UploadFile]] = File(None),
     update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
