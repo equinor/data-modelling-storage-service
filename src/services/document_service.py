@@ -346,16 +346,16 @@ class DocumentService:
         if not target:
             raise EntityNotFoundException(uid=path)
 
-        new_node_id = str(uuid4()) if not target.storage_contained else ""
         # If dotted attribute path, attribute is the last entry. Else content
         new_node_attr = path.split(".")[-1] if "." in path else "content"
 
         new_node = Node.from_dict(
             {**document.to_dict()},
-            new_node_id,
+            None,
             self.get_blueprint,
             BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
         )
+        new_node.set_uid()
 
         if files:
             self._merge_entity_and_files(new_node, files)
