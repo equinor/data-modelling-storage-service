@@ -19,7 +19,6 @@ class EntityType(BaseModel):
     type: constr(min_length=3, max_length=128, regex=r"^[A-Za-z0-9_\/-]*$", strip_whitespace=True)  # noqa
 
 
-# x
 class DataSource(BaseModel):
     data_source_id: constr(min_length=3, max_length=128, regex=name_regex, strip_whitespace=True)
 
