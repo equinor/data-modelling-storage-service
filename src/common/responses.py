@@ -26,17 +26,16 @@ from common.exceptions import (
     BadSearchParametersException,
 )
 from common.utils.logging import logger
-from typing import Union
 
 TResponse = TypeVar("TResponse", bound=Response)
 
 
 def create_response(
     response_class: Type[TResponse],
-) -> Callable[..., Callable[..., Union[TResponse, PlainTextResponse]]]:
-    def func_wrapper(func) -> Callable[..., Union[TResponse, PlainTextResponse]]:
+) -> Callable[..., Callable[..., TResponse | PlainTextResponse]]:
+    def func_wrapper(func) -> Callable[..., TResponse | PlainTextResponse]:
         @functools.wraps(func)
-        async def wrapper_decorator(*args, **kwargs) -> Union[TResponse, PlainTextResponse]:
+        async def wrapper_decorator(*args, **kwargs) -> TResponse | PlainTextResponse:
             try:
                 # Await function if needed
                 if not iscoroutinefunction(func):
