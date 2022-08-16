@@ -44,7 +44,7 @@ def remove(data_source_id: str, dotted_id: str, user: User = Depends(auth_w_jwt_
     return remove_use_case(user=user, data_source_id=data_source_id, document_id=dotted_id)
 
 
-@router.post("/{data_source_id}/remove-by-path", operation_id="explorer_remove_by_path", response_model=str)
+@router.post("/{data_source_id}/remove-by-path", operation_id="explorer_remove_by_path")
 @create_response(PlainTextResponse)
 def remove_by_path(data_source_id: str, directory: str, user: User = Depends(auth_w_jwt_or_pat)):
     return remove_by_path_use_case(user=user, data_source_id=data_source_id, directory=directory)
