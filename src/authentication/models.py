@@ -1,17 +1,25 @@
 from datetime import datetime
-from enum import IntEnum
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
 from pydantic import BaseModel, UUID4
+from enum import Enum
 
 
-class AccessLevel(IntEnum):
-    WRITE = 2
-    READ = 1
-    NONE = 0
+class AccessLevel(str, Enum):
+    WRITE = "WRITE"
+    READ = "READ"
+    NONE = "NONE"
+
+    def access_level_to_number(self):
+        if self.value == AccessLevel.WRITE:
+            return 2
+        elif self.value == AccessLevel.READ:
+            return 1
+        elif self.value == AccessLevel.NONE:
+            return 0
 
     def check_privilege(self, required_level: "AccessLevel") -> bool:
-        if self.value >= required_level.value:
+        if self.access_level_to_number() >= required_level.access_level_to_number():
             return True
 
     @classmethod
