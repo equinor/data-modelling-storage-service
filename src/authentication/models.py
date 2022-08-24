@@ -6,20 +6,15 @@ from enum import Enum
 
 
 class AccessLevel(str, Enum):
+    class Config:
+        use_enum_values: True
+
     WRITE = "WRITE"
     READ = "READ"
     NONE = "NONE"
 
-    def access_level_to_number(self):
-        if self.value == AccessLevel.WRITE:
-            return 2
-        elif self.value == AccessLevel.READ:
-            return 1
-        elif self.value == AccessLevel.NONE:
-            return 0
-
     def check_privilege(self, required_level: "AccessLevel") -> bool:
-        if self.access_level_to_number() >= required_level.access_level_to_number():
+        if self.value >= required_level.value:
             return True
 
     @classmethod
