@@ -67,7 +67,13 @@ Feature: Access Control
     Then the response status should be "Forbidden"
     And the response should be
     """
-    MissingPrivilegeException: The requested operation requires 'READ' privileges
+    {
+    "status": 403,
+    "type": "MissingPrivilegeException",
+    "message": "The requested operation requires 'READ' privileges",
+    "debug": "Action denied because of insufficient permissions",
+    "data": null
+    }
     """
 
   Scenario: Get document with read access from role
@@ -210,7 +216,13 @@ Feature: Access Control
     Then the response status should be "Forbidden"
     And the response should be
     """
-    MissingPrivilegeException: The requested operation requires 'WRITE' privileges
+    {
+    "status": 403,
+    "type": "MissingPrivilegeException",
+    "message": "The requested operation requires 'WRITE' privileges",
+    "debug": "Action denied because of insufficient permissions",
+    "data": null
+    }
     """
 
   Scenario: Delete document with only READ access
@@ -227,7 +239,13 @@ Feature: Access Control
     Then the response status should be "Forbidden"
     And the response should be
     """
-    MissingPrivilegeException: The requested operation requires 'WRITE' privileges
+    {
+    "status": 403,
+    "type": "MissingPrivilegeException",
+    "message": "The requested operation requires 'WRITE' privileges",
+    "debug": "Action denied because of insufficient permissions",
+    "data": null
+    }
     """
 
   Scenario: Delete owned document
@@ -262,7 +280,13 @@ Feature: Access Control
     Then the response status should be "Forbidden"
     And the response should be
     """
-    MissingPrivilegeException: The requested operation requires 'READ' privileges
+    {
+    "status": 403,
+    "type": "MissingPrivilegeException",
+    "message": "The requested operation requires 'READ' privileges",
+    "debug": "Action denied because of insufficient permissions",
+    "data": null
+    }
     """
 
   Scenario: Add file - not contained - inherit ACL

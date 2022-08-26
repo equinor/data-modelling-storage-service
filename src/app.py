@@ -6,11 +6,15 @@ import click
 import gridfs
 import uvicorn
 from fastapi import APIRouter, FastAPI, Security
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
+from starlette import status
 from starlette.requests import Request
-from starlette.responses import Response
+from starlette.responses import Response, JSONResponse
 
 from authentication.authentication import auth_w_jwt_or_pat, auth_with_jwt
 from authentication.models import User
+from common.exceptions import ErrorResponse
 from services.database import mongo_client
 from config import config
 from restful.request_types.create_data_source import DataSourceRequest
@@ -65,6 +69,19 @@ def create_app() -> FastAPI:
     app.include_router(authenticated_routes, prefix=prefix, dependencies=[Security(auth_w_jwt_or_pat)])
     app.include_router(jwt_only_routes, prefix=prefix, dependencies=[Security(auth_with_jwt)])
     app.include_router(public_routes, prefix=prefix)
+
+    # Intercept FastAPI builtin validation errors, so they can be returned on our standardized format.
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(request: Request, exc: RequestValidationError):
+        return JSONResponse(ErrorResponse(
+            status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            type="RequestValidationError",
+            message="The received values are invalid",
+            debug="The received values are invalid according to the endpoints model definition",
+            data=jsonable_encoder({"detail": exc.errors(), "body": exc.body})
+        ).dict(),
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        )
 
     @app.middleware("http")
     async def add_process_time_header(request: Request, call_next: Callable) -> Response:

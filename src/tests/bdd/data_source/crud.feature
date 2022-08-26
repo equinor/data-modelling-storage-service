@@ -93,3 +93,32 @@ Feature: Data Sources
     }
     """
     Then the response status should be "OK"
+
+  Scenario: Try to create a new data source but with an invalid request body
+    Given i access the resource url "/api/v1/data-sources/myTest-DataSource"
+    When i make a form-data "POST" request
+    """
+    this is not valid json
+    """
+    Then the response status should be "Unprocessable Entity"
+    And the response should contain
+    """
+    {
+    "status": 422,
+    "type": "RequestValidationError",
+    "message": "The received values are invalid",
+    "debug": "The received values are invalid according to the endpoints model definition",
+    "data": {
+      "body": "data=this+is+not+valid+json",
+      "detail": [
+          {
+            "loc": [
+              "body"
+            ],
+            "msg": "value is not a valid dict",
+            "type": "type_error.dict"
+          }
+        ]
+      }
+    }
+    """

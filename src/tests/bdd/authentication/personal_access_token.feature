@@ -105,7 +105,13 @@ Feature: Personal Access Token
     Then the response status should be "Forbidden"
     And the response should be
     """
-    MissingPrivilegeException: The requested operation requires 'WRITE' privileges
+    {
+    "status": 403,
+    "type": "MissingPrivilegeException",
+    "message": "The requested operation requires 'WRITE' privileges",
+    "debug": "Action denied because of insufficient permissions",
+    "data": null
+    }
     """
 
   Scenario: List all users PAT's

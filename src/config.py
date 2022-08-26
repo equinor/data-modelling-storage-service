@@ -50,16 +50,14 @@ if config.TEST_TOKEN:
     print("#  Authentication is configured to use the mock test certificates  #")
     print("########################### WARNING ################################")
 
-if config.AUTH_ENABLED:
-    print("Authentication is enabled")
-    if not config.OAUTH_WELL_KNOWN or not config.OAUTH_TOKEN_ENDPOINT or not config.OAUTH_AUTH_ENDPOINT:
-        raise ValueError(
-            "Environment variable 'OAUTH_WELL_KNOWN', 'OAUTH_AUTH_ENDPOINT',"
-            "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
-        )
+if config.AUTH_ENABLED and not all((config.OAUTH_WELL_KNOWN, config.OAUTH_TOKEN_ENDPOINT, config.OAUTH_AUTH_ENDPOINT)):
+    raise ValueError(
+        "Environment variable 'OAUTH_WELL_KNOWN', 'OAUTH_AUTH_ENDPOINT',"
+        "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
+    )
 
 if config.AUTH_PROVIDER_FOR_ROLE_CHECK:
-    if not config.OAUTH_CLIENT_ID or not config.OAUTH_CLIENT_SECRET:
+    if not all((config.OAUTH_CLIENT_ID, config.OAUTH_CLIENT_SECRET)):
         raise EnvironmentError(
             "Environment variables 'OAUTH_CLIENT_ID' and 'OAUTH_CLIENT_SECRET' are required if "
             + "live role checks are enabled with 'AUTH_PROVIDER_FOR_ROLE_CHECK'"

@@ -197,7 +197,13 @@ Feature: Set Access Control List
     Then the response status should be "Forbidden"
     And the response should be
     """
-    MissingPrivilegeException: The requested operation requires 'WRITE' privileges
+    {
+    "status": 403,
+    "type": "MissingPrivilegeException",
+    "message": "The requested operation requires 'WRITE' privileges",
+    "debug": "Action denied because of insufficient permissions",
+    "data": null
+    }
     """
     Then I access the resource url "/api/v1/acl/test-DS/1"
     Given the logged in user is "johndoe" with roles "a,b"
@@ -225,5 +231,11 @@ Feature: Set Access Control List
     Then the response status should be "Forbidden"
     And the response should be
     """
-    MissingPrivilegeException: The requested operation requires 'READ' privileges
+    {
+    "status": 403,
+    "type": "MissingPrivilegeException",
+    "message": "The requested operation requires 'READ' privileges",
+    "debug": "Action denied because of insufficient permissions",
+    "data": null
+    }
     """

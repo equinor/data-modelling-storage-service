@@ -2,7 +2,7 @@ from typing import List, Union
 
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
-from common.exceptions import EntityNotFoundException, RootPackageNotFoundException
+from common.exceptions import NotFoundException, NotFoundException
 from common.utils.string_helpers import split_absolute_ref, get_package_and_path
 
 
@@ -40,7 +40,7 @@ def get_document_uid_by_path(path: str, repository) -> Union[str, None]:
     root_package_name, path_elements = get_package_and_path(path)
     root_package: [dict] = repository.find({"name": root_package_name, "isRoot": True})
     if not root_package:
-        raise RootPackageNotFoundException(repository.name, root_package_name)
+        raise NotFoundException(f"No root package with name '{root_package_name}', in data source '{repository.name}' could be found.")
     if len(root_package) > 2:
         Exception(
             f"More than 1 root package with name '{root_package_name}' ",
@@ -51,7 +51,7 @@ def get_document_uid_by_path(path: str, repository) -> Union[str, None]:
         return root_package[0]["_id"]
     uid = _find_document_in_package_by_path(root_package[0], path_elements, repository)
     if not uid:
-        raise EntityNotFoundException(path)
+        raise NotFoundException(path)
     return uid
 
 
@@ -60,5 +60,5 @@ def get_document_by_ref(type_ref, user) -> dict:
     document_repository = get_data_source(data_source_id, user)
     type_id = get_document_uid_by_path(path, document_repository)
     if not type_id:
-        raise EntityNotFoundException(uid=type_ref)
+        raise NotFoundException(uid=type_ref)
     return document_repository.get(uid=type_id)
