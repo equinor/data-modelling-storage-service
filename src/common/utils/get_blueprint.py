@@ -4,7 +4,7 @@ from authentication.models import User
 from config import config
 from domain_classes.blueprint import Blueprint
 
-from common.exceptions import EntityNotFoundException
+from common.exceptions import NotFoundException
 from common.utils.get_document_by_path import get_document_by_ref
 from common.utils.logging import logger
 
@@ -21,7 +21,7 @@ class BlueprintProvider:
             return Blueprint(document)
         except Exception as error:
             logger.exception(error)
-            raise EntityNotFoundException(uid=type, message=f"The blueprint '{type}' could not be found")
+            raise NotFoundException(uid=type, message=f"The blueprint '{type}' could not be found")
 
     def invalidate_cache(self):
         try:

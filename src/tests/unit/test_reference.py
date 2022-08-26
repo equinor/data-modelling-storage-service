@@ -6,7 +6,7 @@ from pydantic import ValidationError
 from restful.request_types.shared import Reference
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider
-from common.exceptions import EntityNotFoundException, InvalidEntityException
+from common.exceptions import NotFoundException, BadRequestException
 
 
 class ReferenceTestCase(unittest.TestCase):
@@ -71,7 +71,7 @@ class ReferenceTestCase(unittest.TestCase):
             try:
                 return doc_storage[str(document_id)]
             except KeyError:
-                raise EntityNotFoundException(f"{document_id} was not found in the 'test' data-sources lookupTable")
+                raise NotFoundException(f"{document_id} was not found in the 'test' data-sources lookupTable")
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -83,7 +83,7 @@ class ReferenceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
-        with self.assertRaises(EntityNotFoundException):
+        with self.assertRaises(NotFoundException):
             document_service.insert_reference(
                 "testing",
                 document_id="1",
@@ -122,7 +122,7 @@ class ReferenceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
-        with self.assertRaises(InvalidEntityException):
+        with self.assertRaises(BadRequestException):
             document_service.insert_reference(
                 "testing",
                 document_id="1",

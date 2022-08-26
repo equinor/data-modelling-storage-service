@@ -8,7 +8,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute
 from enums import BuiltinDataTypes, SIMOS, StorageDataTypes
-from common.exceptions import InvalidChildTypeException, InvalidEntityException
+from common.exceptions import BadRequestException, BadRequestException
 from common.utils.logging import logger
 from common.utils.validators import valid_extended_type
 
@@ -29,7 +29,7 @@ class DictExporter:
         try:
             data["type"] = node.entity["type"]
         except KeyError:
-            raise InvalidEntityException(f"The node '{node.uid}' is missing the 'type' attributes")
+            raise BadRequestException(f"The node '{node.uid}' is missing the 'type' attributes")
         # Primitive
         # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.
         if node.blueprint is not None:
@@ -62,7 +62,7 @@ class DictExporter:
         try:
             data["type"] = node.type
         except KeyError:
-            raise InvalidEntityException(f"The node '{node.uid}' is missing the 'type' attributes")
+            raise BadRequestException(f"The node '{node.uid}' is missing the 'type' attributes")
 
         # Primitive
         # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.
@@ -426,7 +426,8 @@ class NodeBase:
         if not valid_extended_type(
             valid_type, [self.type] + self.blueprint.extends, self.blueprint_provider
         ):  # Resolve extends
-            raise InvalidChildTypeException(self.type, key, valid_type)
+            raise BadRequestException((f"The type '{self.type}' is not a valid type for the "
+                        f"'{key}' attribute. The type should be of type '{valid_type} (or extending from it)'"))
 
 
 class Node(NodeBase):

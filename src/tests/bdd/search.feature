@@ -510,7 +510,13 @@ Feature: Explorer - Search entity
     Then the response status should be "Bad Request"
     And the response should be
     """
-    BadRequestException: Data source DOESNOTEXIST not found
+    {
+    "data": null,
+    "debug": "Unable to complete the requested operation with the given input values.",
+    "message": "Data source DOESNOTEXIST not found",
+    "status": 400,
+    "type": "BadRequestException"
+    }
     """
 
 

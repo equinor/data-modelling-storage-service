@@ -9,10 +9,8 @@ from services.database import data_source_collection
 from restful.request_types.create_data_source import DataSourceRequest
 from storage.data_source_class import DataSource
 from common.exceptions import (
-    DataSourceAlreadyExistsException,
-    DataSourceNotFoundException,
-    InvalidDataSourceException,
-    InvalidEntityException,
+    BadRequestException,
+    BadRequestException, NotFoundException, BadRequestException,
 )
 from common.utils.logging import logger
 
@@ -28,31 +26,31 @@ class DataSourceRepository:
         try:
             for repo in document["repositories"].values():
                 if repo.get("name"):
-                    raise InvalidDataSourceException("A repository specification may not have the 'name' key.")
+                    raise BadRequestException("A repository specification may not have the 'name' key.")
                 if repo["type"] == RepositoryType.MONGO.value:
                     if repo["database"] in RESERVED_MONGO_DATABASES:
-                        raise InvalidDataSourceException(
+                        raise BadRequestException(
                             f"The database named '{repo['database']}' " "is a system reserved database name."
                         )
         except KeyError as e:
             raise KeyError(e)
         except Exception as error:
-            raise InvalidDataSourceException(error)
+            raise BadRequestException(error)
 
     @staticmethod
     def validate_repository(repo: dict):
         try:
             if repo.get("name"):
-                raise InvalidDataSourceException("A repository specification may not have the 'name' key.")
+                raise BadRequestException("A repository specification may not have the 'name' key.")
             if repo["type"] == RepositoryType.MONGO.value:
                 if repo["database"] in RESERVED_MONGO_DATABASES:
-                    raise InvalidDataSourceException(
+                    raise BadRequestException(
                         f"The database named '{repo['database']}' " "is a system reserved database name."
                     )
         except KeyError as e:
             raise KeyError(e)
         except Exception as error:
-            raise InvalidDataSourceException(error)
+            raise BadRequestException(error)
 
     def list(self) -> List[Dict]:
         all_sources = []
@@ -69,17 +67,23 @@ class DataSourceRepository:
         try:
             self.validate_data_source(document)
             result = data_source_collection.replace_one({"_id": id}, document, upsert=True)
-        except InvalidEntityException:
-            raise InvalidEntityException(f"Failed to create data source '{id}'. The posted entity is invalid...")
+        except BadRequestException:
+            raise BadRequestException(
+                message=f"Failed to create data source '{id}'. The posted entity is invalid...",
+                data=document
+            )
         except DuplicateKeyError:
             logger.warning(f"Tried to create a datasource that already exists ('{id}')")
-            raise DataSourceAlreadyExistsException(id)
+            raise BadRequestException(f"Tried to create a datasource that already exists ('{id}')")
         return str(result.upserted_id)
 
     def get(self, id: str) -> DataSource:
         data_source = data_source_collection.find_one(filter={"_id": id})
         if not data_source:
-            raise DataSourceNotFoundException(id)
+            raise NotFoundException(
+                message=f"The data source, with id '{id}' could not be found",
+                debug=f"No data source with id '{id}' could be found in the internal DS repository"
+            )
         return DataSource.from_dict(data_source, user=self.user)
 
     def update_access_control(self, data_source_id: str, acl: ACL) -> None:

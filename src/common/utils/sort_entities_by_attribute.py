@@ -1,6 +1,6 @@
 from typing import List
 
-from common.exceptions import InvalidSortByAttributeException
+from common.exceptions import BadRequestException
 
 
 def get_value_from_attribute_spec(document: dict, attribute_path_elements: List[str]):
@@ -12,7 +12,7 @@ def get_value_from_attribute_spec(document: dict, attribute_path_elements: List[
                     attr_key = int(attr_key)
             val = document[attr_key]
         except KeyError:
-            raise InvalidSortByAttributeException(attr_key, document["type"])
+            raise BadRequestException(f"'{attr_key}' is not a valid attribute in the '{document['type']}'")
 
         # Return value if its type is comparable
         if type(val) in [str, int, float, bool]:

@@ -62,7 +62,12 @@ Feature: Explorer - Add file
     Then the response status should be "Not Found"
     And the response should be
     """
-    EntityNotFoundException: The entity, with id 10 could not be found
+    {
+    "status": 404,
+    "type": "NotFoundException",
+    "message": "Document with id '10' in data source 'test-DS' could not be found",
+    "debug": "The requested resource could not be found", "data": null
+    }
     """
 
   @skip
@@ -79,7 +84,13 @@ Feature: Explorer - Add file
     Then the response status should be "Not Found"
     And the response should be
     """
-    EntityNotFoundException: Document with id '10' was not found in the 'test-DS' data-source
+    {
+    "status": 404,
+    "type": "NotFoundException",
+    "message": "Document with id '10' was not found in the 'test-DS' data-source",
+    "debug": "The requested resource could not be found",
+    "data": null
+    }
     """
 
   @skip
