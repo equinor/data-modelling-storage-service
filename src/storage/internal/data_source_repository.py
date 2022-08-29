@@ -1,7 +1,7 @@
-from typing import List, Dict
+from typing import List
 
 from pymongo.errors import DuplicateKeyError
-
+from pydantic import BaseModel
 from authentication.access_control import access_control, DEFAULT_ACL
 from authentication.models import AccessLevel, ACL, User
 from enums import RepositoryType
@@ -15,8 +15,15 @@ from common.exceptions import (
     InvalidEntityException,
 )
 from common.utils.logging import logger
-
+from typing import Optional
 RESERVED_MONGO_DATABASES = ("admin", "local", "config", "dmss-internal")
+
+
+class DataSourceInformation(BaseModel):
+    _id: str
+    name: str
+    host: Optional[str]
+    type: Optional[str]
 
 
 class DataSourceRepository:
@@ -54,11 +61,11 @@ class DataSourceRepository:
         except Exception as error:
             raise InvalidDataSourceException(error)
 
-    def list(self) -> List[Dict]:
+    def list(self) -> List[DataSourceInformation]:
         all_sources = []
         for data_source in data_source_collection.find(projection={"name"}):
             data_source["id"] = data_source.pop("_id")
-            all_sources.append({"id": data_source["id"], "name": data_source["name"]})
+            all_sources.append(DataSourceInformation(**{"id": data_source["id"], "name": data_source["name"]}))
 
         return all_sources
 
