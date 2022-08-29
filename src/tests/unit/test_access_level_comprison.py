@@ -3,7 +3,7 @@ from authentication.models import AccessLevel
 
 
 class DataSourceTestCase(unittest.TestCase):
-    def test_save_into_multiple_repositories(self):
+    def test_access_level_comparison(self):
         write = AccessLevel.WRITE
         read = AccessLevel.READ
         none = AccessLevel.NONE
