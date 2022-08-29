@@ -1,6 +1,6 @@
-from pygments import highlight
 import json
 
+from pygments import highlight
 from pygments.formatters.terminal import TerminalFormatter
 from pygments.lexers.data import JsonLexer
 

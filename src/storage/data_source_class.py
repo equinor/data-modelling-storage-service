@@ -2,17 +2,19 @@ from typing import Dict, List, Union
 from uuid import uuid4
 
 from pydantic import UUID4
-from common.utils.string_helpers import url_safe_name
 
-from authentication.access_control import access_control, create_acl, DEFAULT_ACL
-from authentication.models import AccessLevel, ACL, User
+from authentication.access_control import (DEFAULT_ACL, access_control,
+                                           create_acl)
+from authentication.models import ACL, AccessLevel, User
+from common.exceptions import (BadRequestException, MissingPrivilegeException,
+                               NotFoundException)
+from common.utils.logging import logger
+from common.utils.string_helpers import url_safe_name
 from domain_classes.document_look_up import DocumentLookUp
 from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
 from services.database import data_source_collection
-from common.exceptions import NotFoundException, BadRequestException, MissingPrivilegeException,  NotFoundException
-from common.utils.logging import logger
 
 
 class DataSource:
@@ -68,7 +70,9 @@ class DataSource:
         ):
             return DocumentLookUp(**res["documentLookUp"][document_id])
 
-        raise NotFoundException(message=f"Document with id '{document_id}' was not found in the '{self.name}' data-source")
+        raise NotFoundException(
+            message=f"Document with id '{document_id}' was not found in the '{self.name}' data-source"
+        )
 
     def _update_lookup(self, lookup: DocumentLookUp):
         return self.data_source_collection.update_one(
@@ -123,7 +127,9 @@ class DataSource:
         if name := document.get("name"):
             if not url_safe_name(name):
                 raise BadRequestException(
-                    f"'{name}' is a invalid document name. Only alphanumeric, underscore, and dash are allowed characters")
+                    f"'{name}' is a invalid document name. Only alphanumeric,"
+                    + " underscore, and dash are allowed characters"
+                )
 
         document["_id"] = document.get("_id", str(uuid4()))  # Create _id if not yet created
 

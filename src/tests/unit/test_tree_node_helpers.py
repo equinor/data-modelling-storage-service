@@ -1,11 +1,10 @@
 import unittest
 
+from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
-
 from domain_classes.tree_node import DictExporter, DictImporter, ListNode, Node
 from tests.unit.mock_blueprint_provider import flatten_dict
-from common.utils.data_structure.compare import pretty_eq
 
 all_contained_cases_blueprint = {
     "type": "system/SIMOS/Blueprint",

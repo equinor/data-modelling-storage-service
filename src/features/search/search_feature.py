@@ -1,10 +1,10 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, Query
 from starlette.responses import JSONResponse
-from typing import List
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
-
 from common.responses import create_response
 
 from .use_cases.search_use_case import SearchRequest, search_use_case

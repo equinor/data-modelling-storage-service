@@ -1,9 +1,10 @@
 from typing import List, Union
 
+from common.exceptions import NotFoundException
+from common.utils.string_helpers import (get_package_and_path,
+                                         split_absolute_ref)
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
-from common.exceptions import NotFoundException, NotFoundException
-from common.utils.string_helpers import split_absolute_ref, get_package_and_path
 
 
 def _find_document_in_package_by_path(
@@ -40,7 +41,9 @@ def get_document_uid_by_path(path: str, repository) -> Union[str, None]:
     root_package_name, path_elements = get_package_and_path(path)
     root_package: [dict] = repository.find({"name": root_package_name, "isRoot": True})
     if not root_package:
-        raise NotFoundException(f"No root package with name '{root_package_name}', in data source '{repository.name}' could be found.")
+        raise NotFoundException(
+            f"No root package with name '{root_package_name}', in data source '{repository.name}' could be found."
+        )
     if len(root_package) > 2:
         Exception(
             f"More than 1 root package with name '{root_package_name}' ",

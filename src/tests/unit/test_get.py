@@ -1,9 +1,9 @@
 import unittest
 from unittest import mock
 
+from common.utils.data_structure.compare import pretty_eq
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider
-from common.utils.data_structure.compare import pretty_eq
 
 
 class DocumentServiceTestCase(unittest.TestCase):

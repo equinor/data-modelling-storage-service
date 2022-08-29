@@ -1,6 +1,5 @@
 from typing import Union
 
-
 from enums import SIMOS
 from storage.data_source_class import DataSource
 

@@ -1,20 +1,16 @@
 import functools
 import traceback
-from typing import Callable, Type, TypeVar
 from inspect import iscoroutinefunction
+from typing import Callable, Type, TypeVar
 
 from pydantic import ValidationError
 from requests import HTTPError
 from starlette import status
-from starlette.responses import Response, JSONResponse
+from starlette.responses import JSONResponse, Response
 
-from common.exceptions import (
-    MissingPrivilegeException,
-    ValidationException,
-    NotFoundException,
-    BadRequestException,
-    ErrorResponse,
-)
+from common.exceptions import (BadRequestException, ErrorResponse,
+                               MissingPrivilegeException, NotFoundException,
+                               ValidationException)
 from common.utils.logging import logger
 
 TResponse = TypeVar("TResponse", bound=Response)
@@ -41,13 +37,13 @@ def create_response(response_class: Type[TResponse]) -> Callable[..., Callable[.
                 error_response = ErrorResponse(
                     status=http_error.response.status,
                     userMessage="Failed to fetch an external resource",
-                    developerMessage=http_error.response
+                    developerMessage=http_error.response,
                 )
                 logger.error(error_response)
                 return JSONResponse(error_response.dict(), status_code=error_response.status)
             except (ValidationError, ValidationException) as e:
                 logger.error(e)
-                return JSONResponse(e.dict(),  status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                return JSONResponse(e.dict(), status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
             except NotFoundException as e:
                 logger.error(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_404_NOT_FOUND)
@@ -57,7 +53,7 @@ def create_response(response_class: Type[TResponse]) -> Callable[..., Callable[.
                 return JSONResponse(e.dict(), status_code=status.HTTP_400_BAD_REQUEST)
             except MissingPrivilegeException as e:
                 logger.warning(e)
-                return JSONResponse(e.dict(),  status_code=status.HTTP_403_FORBIDDEN)
+                return JSONResponse(e.dict(), status_code=status.HTTP_403_FORBIDDEN)
             except Exception as e:
                 traceback.print_exc()
                 logger.error(f"Unexpected unhandled exception: {e}")

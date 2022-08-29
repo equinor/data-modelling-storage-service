@@ -1,12 +1,11 @@
 from functools import lru_cache
 
 from authentication.models import User
-from config import config
-from domain_classes.blueprint import Blueprint
-
 from common.exceptions import NotFoundException
 from common.utils.get_document_by_path import get_document_by_ref
 from common.utils.logging import logger
+from config import config
+from domain_classes.blueprint import Blueprint
 
 
 class BlueprintProvider:

@@ -1,6 +1,7 @@
-from pydantic import constr, Field, root_validator, UUID4
-from pydantic.main import BaseModel, Extra
 from typing import Optional
+
+from pydantic import UUID4, Field, constr, root_validator
+from pydantic.main import BaseModel, Extra
 
 # Only allow characters a-9 and '_' + '-'
 name_regex = "^[A-Za-z0-9_-]*$"

@@ -1,17 +1,17 @@
 import requests
-from authentication.personal_access_token import get_user_from_pat
-from cachetools import cached, TTLCache
+from cachetools import TTLCache, cached
 from fastapi import Security
 from fastapi.security import APIKeyHeader, OAuth2AuthorizationCodeBearer
-from jose import jwt, JWTError
+from jose import JWTError, jwt
 from starlette import status
 from starlette.exceptions import HTTPException
 
 from authentication.models import User
-from config import config, default_user
+from authentication.personal_access_token import get_user_from_pat
 from common.exceptions import credentials_exception
 from common.utils.logging import logger
 from common.utils.mock_token_generator import mock_rsa_public_key
+from config import config, default_user
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
     authorizationUrl=config.OAUTH_AUTH_ENDPOINT, tokenUrl=config.OAUTH_TOKEN_ENDPOINT

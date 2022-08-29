@@ -2,12 +2,11 @@ import unittest
 from unittest import mock, skip
 
 from authentication.models import User
-
+from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
+from enums import SIMOS
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
-from common.utils.data_structure.compare import pretty_eq
-from enums import SIMOS
 
 package_blueprint = {
     "type": "system/SIMOS/Blueprint",

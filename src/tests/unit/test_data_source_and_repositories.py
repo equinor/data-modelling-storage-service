@@ -2,12 +2,12 @@ import unittest
 from unittest import mock
 
 from authentication.models import User
+from config import config
 from domain_classes.tree_node import Node
 from enums import StorageDataTypes
 from services.document_service import DocumentService
 from storage.data_source_class import DataSource
 from tests.unit.mock_blueprint_provider import blueprint_provider
-from config import config
 
 config.AUTH_ENABLED = False
 test_user = User(**{"user_id": "unit-test", "full_name": "Unit Test", "email": "unit-test@example.com"})

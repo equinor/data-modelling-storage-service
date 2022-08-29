@@ -4,6 +4,8 @@ from uuid import uuid4
 from pydantic import BaseModel, UUID4
 from enum import Enum
 
+from pydantic import UUID4, BaseModel
+
 
 class AccessLevel(str, Enum):
     class Config:

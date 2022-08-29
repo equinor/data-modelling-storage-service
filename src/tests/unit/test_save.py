@@ -4,7 +4,6 @@ from unittest import mock
 
 from authentication.models import User
 from domain_classes.blueprint_attribute import BlueprintAttribute
-
 from domain_classes.tree_node import Node
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider, flatten_dict

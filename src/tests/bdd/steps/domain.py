@@ -3,14 +3,14 @@ import json
 from behave import given, then
 
 from authentication.models import ACL
+from common.utils.create_entity import CreateEntity
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
-from enums import BuiltinDataTypes, SIMOS
-from services.document_service import DocumentService
-from storage.internal.data_source_repository import get_data_source
-from storage.internal.data_source_repository import DataSourceRepository
-from common.utils.create_entity import CreateEntity
+from enums import SIMOS, BuiltinDataTypes
 from services.database import data_source_collection
+from services.document_service import DocumentService
+from storage.internal.data_source_repository import (DataSourceRepository,
+                                                     get_data_source)
 
 
 def generate_tree_from_rows(node: Node, rows, document_service):

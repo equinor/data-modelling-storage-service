@@ -1,9 +1,7 @@
 import unittest
 from unittest import skip
 
-
 from domain_classes.tree_node import Node
-
 
 all_contained_cases_blueprint = {
     "type": "system/SIMOS/Blueprint",
