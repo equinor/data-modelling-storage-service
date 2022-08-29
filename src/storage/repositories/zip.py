@@ -1,9 +1,9 @@
 import json
 from zipfile import ZipFile
 
+from common.utils.logging import logger
 from enums import SIMOS
 from storage.repository_interface import RepositoryInterface
-from common.utils.logging import logger
 
 
 class ZipFileClient(RepositoryInterface):

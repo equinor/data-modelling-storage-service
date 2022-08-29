@@ -3,10 +3,10 @@ from unittest import mock
 
 from pydantic import ValidationError
 
+from common.exceptions import BadRequestException, NotFoundException
 from restful.request_types.shared import Reference
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider
-from common.exceptions import NotFoundException, BadRequestException
 
 
 class ReferenceTestCase(unittest.TestCase):

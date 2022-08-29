@@ -2,14 +2,13 @@ import unittest
 from unittest import mock
 
 from authentication.models import User
-
+from common.exceptions import BadRequestException
+from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_blueprint_provider import blueprint_provider
-from common.utils.data_structure.compare import pretty_eq
-from common.exceptions import BadRequestException, BadRequestException
 
 
 class MultiTypeBlueprintProvider:

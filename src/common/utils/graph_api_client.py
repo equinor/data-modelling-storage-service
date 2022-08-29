@@ -1,6 +1,7 @@
-from requests import HTTPError, post, Request, Session
-from pydantic import BaseModel
 from typing import List, Optional
+
+from pydantic import BaseModel
+from requests import HTTPError, Request, Session, post
 
 from common.utils.logging import logger
 from config import config

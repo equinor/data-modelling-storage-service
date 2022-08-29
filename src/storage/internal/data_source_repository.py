@@ -1,18 +1,15 @@
-from typing import List, Dict
+from typing import Dict, List
 
 from pymongo.errors import DuplicateKeyError
 
-from authentication.access_control import access_control, DEFAULT_ACL
-from authentication.models import AccessLevel, ACL, User
-from enums import RepositoryType
-from services.database import data_source_collection
-from restful.request_types.create_data_source import DataSourceRequest
-from storage.data_source_class import DataSource
-from common.exceptions import (
-    BadRequestException,
-    BadRequestException, NotFoundException, BadRequestException,
-)
+from authentication.access_control import DEFAULT_ACL, access_control
+from authentication.models import ACL, AccessLevel, User
+from common.exceptions import BadRequestException, NotFoundException
 from common.utils.logging import logger
+from enums import RepositoryType
+from restful.request_types.create_data_source import DataSourceRequest
+from services.database import data_source_collection
+from storage.data_source_class import DataSource
 
 RESERVED_MONGO_DATABASES = ("admin", "local", "config", "dmss-internal")
 
@@ -69,8 +66,7 @@ class DataSourceRepository:
             result = data_source_collection.replace_one({"_id": id}, document, upsert=True)
         except BadRequestException:
             raise BadRequestException(
-                message=f"Failed to create data source '{id}'. The posted entity is invalid...",
-                data=document
+                message=f"Failed to create data source '{id}'. The posted entity is invalid...", data=document
             )
         except DuplicateKeyError:
             logger.warning(f"Tried to create a datasource that already exists ('{id}')")
@@ -82,7 +78,7 @@ class DataSourceRepository:
         if not data_source:
             raise NotFoundException(
                 message=f"The data source, with id '{id}' could not be found",
-                debug=f"No data source with id '{id}' could be found in the internal DS repository"
+                debug=f"No data source with id '{id}' could be found in the internal DS repository",
             )
         return DataSource.from_dict(data_source, user=self.user)
 

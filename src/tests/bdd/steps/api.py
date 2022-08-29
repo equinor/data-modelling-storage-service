@@ -1,11 +1,11 @@
 import json
 from time import sleep
 
+from behave import given, step, then, when
 from fastapi.testclient import TestClient
-from behave import given, when, then, step
-from common.utils.mock_token_generator import generate_mock_token
 
 from authentication.models import User
+from common.utils.mock_token_generator import generate_mock_token
 from config import config
 
 

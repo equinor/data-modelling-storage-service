@@ -1,4 +1,5 @@
 import logging
+
 from config import config
 
 uvicorn_logger = logging.getLogger("uvicorn")

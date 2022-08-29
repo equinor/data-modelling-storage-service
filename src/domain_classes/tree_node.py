@@ -2,15 +2,14 @@ from copy import deepcopy
 from typing import Dict, List, Optional, Union
 from uuid import uuid4
 
-
+from common.exceptions import BadRequestException
+from common.utils.logging import logger
+from common.utils.validators import valid_extended_type
 from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute
-from enums import BuiltinDataTypes, SIMOS, StorageDataTypes
-from common.exceptions import BadRequestException, BadRequestException
-from common.utils.logging import logger
-from common.utils.validators import valid_extended_type
+from enums import SIMOS, BuiltinDataTypes, StorageDataTypes
 
 
 class DictExporter:
@@ -426,8 +425,12 @@ class NodeBase:
         if not valid_extended_type(
             valid_type, [self.type] + self.blueprint.extends, self.blueprint_provider
         ):  # Resolve extends
-            raise BadRequestException((f"The type '{self.type}' is not a valid type for the "
-                        f"'{key}' attribute. The type should be of type '{valid_type} (or extending from it)'"))
+            raise BadRequestException(
+                (
+                    f"The type '{self.type}' is not a valid type for the "
+                    f"'{key}' attribute. The type should be of type '{valid_type} (or extending from it)'"
+                )
+            )
 
 
 class Node(NodeBase):

@@ -1,7 +1,6 @@
 from typing import Callable, Dict, List
 
 from common.exceptions import BadRequestException
-
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 
