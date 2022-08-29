@@ -1,5 +1,4 @@
 from authentication.models import User
-
 from restful.request_types.shared import EntityType
 from services.document_service import DocumentService
 

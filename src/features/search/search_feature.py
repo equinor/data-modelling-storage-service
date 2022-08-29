@@ -5,14 +5,14 @@ from starlette.responses import JSONResponse
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
-from common.responses import create_response
+from common.responses import create_response, responses
 
 from .use_cases.search_use_case import SearchRequest, search_use_case
 
 router = APIRouter(tags=["default", "search"], prefix="/search")
 
 
-@router.post("", operation_id="search", response_model=dict)
+@router.post("", operation_id="search", response_model=dict, responses=responses)
 @create_response(JSONResponse)
 def search(
     data: dict,

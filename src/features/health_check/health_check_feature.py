@@ -1,13 +1,14 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter
 from fastapi.responses import PlainTextResponse
+
+from common.responses import responses
 
 router = APIRouter(tags=["default", "health_check"], prefix="/healthcheck")
 
 
 @router.get(
     "",
-    status_code=status.HTTP_200_OK,
-    responses={status.HTTP_200_OK: {"model": str, "content": {"text/plain": {"example": "OK"}}}},
+    responses={**responses, 200: {"model": str, "content": {"text/plain": {"example": "OK"}}}},
     response_class=PlainTextResponse,
 )
 async def get():

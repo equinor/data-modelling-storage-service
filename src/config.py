@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import List
 
 from pydantic import BaseSettings, Field
 
@@ -15,9 +14,7 @@ class Config(BaseSettings):
     SECRET_KEY: str = Field(None, env="SECRET_KEY")
     LOGGER_LEVEL: str = Field("INFO", env="LOGGING_LEVEL", to_lower=True)
     MAX_ENTITY_RECURSION_DEPTH: int = Field(50, env="MAX_ENTITY_RECURSION_DEPTH")
-    DATA_SOURCES_COLLECTION: str = "data_sources"
     CORE_DATA_SOURCE: str = "system"
-    CORE_PACKAGES: List[str] = ["SIMOS"]
     CACHE_MAX_SIZE: int = 200
     APPLICATION_HOME: str = Field(f"{str(Path(__file__).parent)}/home", env="APPLICATION_HOME")
     # Access Control
@@ -44,6 +41,8 @@ if not config.AUTH_ENABLED:
     print("################ WARNING ################")
     print("#       Authentication is disabled      #")
     print("################ WARNING ################")
+else:
+    print(f"Authentication is enabled. Admin user is: {config.DMSS_ADMIN}, admin role is: {config.DMSS_ADMIN_ROLE}")
 
 if config.TEST_TOKEN:
     print("########################### WARNING ################################")

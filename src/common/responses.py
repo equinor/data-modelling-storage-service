@@ -8,10 +8,33 @@ from requests import HTTPError
 from starlette import status
 from starlette.responses import JSONResponse, Response
 
-from common.exceptions import (BadRequestException, ErrorResponse,
-                               MissingPrivilegeException, NotFoundException,
-                               ValidationException)
+from common.exceptions import (
+    ApplicationException,
+    BadRequestException,
+    ErrorResponse,
+    MissingPrivilegeException,
+    NotFoundException,
+    ValidationException,
+)
 from common.utils.logging import logger
+
+responses = {
+    400: {"model": ErrorResponse, "content": {"application/json": {"example": BadRequestException().dict()}}},
+    401: {
+        "model": ErrorResponse,
+        "content": {
+            "application/json": {
+                "example": ErrorResponse(
+                    status=401, type="UnauthorizedException", message="Token validation failed"
+                ).dict()
+            }
+        },
+    },
+    403: {"model": ErrorResponse, "content": {"application/json": {"example": MissingPrivilegeException().dict()}}},
+    404: {"model": ErrorResponse, "content": {"application/json": {"example": NotFoundException().dict()}}},
+    422: {"model": ErrorResponse, "content": {"application/json": {"example": ValidationException().dict()}}},
+    500: {"model": ErrorResponse, "content": {"application/json": {"example": ApplicationException().dict()}}},
+}
 
 TResponse = TypeVar("TResponse", bound=Response)
 
@@ -35,9 +58,10 @@ def create_response(response_class: Type[TResponse]) -> Callable[..., Callable[.
                 return response_class(result, status_code=200)
             except HTTPError as http_error:
                 error_response = ErrorResponse(
+                    type="ExternalFetchException",
                     status=http_error.response.status,
-                    userMessage="Failed to fetch an external resource",
-                    developerMessage=http_error.response,
+                    message="Failed to fetch an external resource",
+                    debug=http_error.response,
                 )
                 logger.error(error_response)
                 return JSONResponse(error_response.dict(), status_code=error_response.status)
