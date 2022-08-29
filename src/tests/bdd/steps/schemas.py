@@ -6,8 +6,10 @@ from common.utils.logging import logger
 from common.utils.package_import import import_package
 from config import config
 from restful.request_types.create_data_source import DataSourceRequest
-from storage.internal.data_source_repository import (DataSourceRepository,
-                                                     get_data_source)
+from storage.internal.data_source_repository import (
+    DataSourceRepository,
+    get_data_source,
+)
 
 
 @given('there exist document with id "{uid}" in data source "{data_source_id}"')

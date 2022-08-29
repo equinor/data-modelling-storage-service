@@ -3,11 +3,13 @@ from uuid import uuid4
 
 from pydantic import UUID4
 
-from authentication.access_control import (DEFAULT_ACL, access_control,
-                                           create_acl)
+from authentication.access_control import DEFAULT_ACL, access_control, create_acl
 from authentication.models import ACL, AccessLevel, User
-from common.exceptions import (BadRequestException, MissingPrivilegeException,
-                               NotFoundException)
+from common.exceptions import (
+    BadRequestException,
+    MissingPrivilegeException,
+    NotFoundException,
+)
 from common.utils.logging import logger
 from common.utils.string_helpers import url_safe_name
 from domain_classes.document_look_up import DocumentLookUp

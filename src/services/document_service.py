@@ -7,8 +7,12 @@ from uuid import uuid4
 from fastapi import UploadFile
 
 from authentication.models import ACL
-from common.exceptions import (ApplicationException, BadRequestException,
-                               MissingPrivilegeException, NotFoundException)
+from common.exceptions import (
+    ApplicationException,
+    BadRequestException,
+    MissingPrivilegeException,
+    NotFoundException,
+)
 from common.utils.build_complex_search import build_mongo_query
 from common.utils.delete_documents import delete_document
 from common.utils.get_blueprint import get_blueprint_provider
