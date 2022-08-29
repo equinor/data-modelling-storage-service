@@ -20,10 +20,10 @@ RESERVED_MONGO_DATABASES = ("admin", "local", "config", "dmss-internal")
 
 
 class DataSourceInformation(BaseModel):
-    _id: str
+    id: str
     name: str
-    host: Optional[str]
-    type: Optional[str]
+    host: Optional[str] = None
+    type: Optional[str] = None
 
 
 class DataSourceRepository:
@@ -61,11 +61,11 @@ class DataSourceRepository:
         except Exception as error:
             raise InvalidDataSourceException(error)
 
-    def list(self) -> List[DataSourceInformation]:
+    def list(self) -> List[dict]:
         all_sources = []
         for data_source in data_source_collection.find(projection={"name"}):
             data_source["id"] = data_source.pop("_id")
-            all_sources.append(DataSourceInformation(**{"id": data_source["id"], "name": data_source["name"]}))
+            all_sources.append(data_source)
 
         return all_sources
 
