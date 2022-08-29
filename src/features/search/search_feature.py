@@ -7,7 +7,7 @@ from authentication.models import User
 
 from common.responses import create_response
 
-from .use_cases.search_use_case import SearchRequest, SearchUseCase
+from .use_cases.search_use_case import SearchRequest, search_use_case
 
 router = APIRouter(tags=["default", "search"], prefix="/search")
 
@@ -15,7 +15,7 @@ router = APIRouter(tags=["default", "search"], prefix="/search")
 @router.post("", operation_id="search", response_model=dict)
 @create_response(JSONResponse)
 def search(
-    request: dict,
+    data: dict,
     data_sources: List[str] = Query([]),
     sort_by_attribute: str = "name",
     user: User = Depends(auth_w_jwt_or_pat),
@@ -24,7 +24,6 @@ def search(
     Takes a list of data source id's as a query parameter, and search all data sources for the posted dictionary.
     If data source list is empty, search all databases.
     """
-    use_case = SearchUseCase(user)
-    return use_case.execute(
-        SearchRequest(data_sources=data_sources, data=request, dotted_attribute_path=sort_by_attribute)
+    return search_use_case(
+        user=user, request=SearchRequest(data_sources=data_sources, data=data, dotted_attribute_path=sort_by_attribute)
     )

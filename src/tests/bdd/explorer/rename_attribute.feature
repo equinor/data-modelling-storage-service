@@ -182,7 +182,7 @@ Feature: Explorer - Remove file
        "description":""
     }
     """
-
+  @skip
   Scenario: Rename attribute - the index ui recipe
     Given i access the resource url "/api/v1/explorer/data-source-name/rename"
     When i make a "PUT" request
@@ -219,6 +219,7 @@ Feature: Explorer - Remove file
   }
   """
 
+  @skip
   Scenario: Rename attribute - the item
     Given i access the resource url "/api/v1/explorer/data-source-name/rename"
     When i make a "PUT" request

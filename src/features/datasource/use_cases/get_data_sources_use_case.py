@@ -1,9 +1,5 @@
-from restful.use_case import UseCase
+from storage.internal.data_source_repository import DataSourceRepository
 
 
-class GetDataSourcesUseCase(UseCase):
-    def __init__(self, data_source_repository):
-        self.data_source_repository = data_source_repository
-
-    def process_request(self, request_object=None):
-        return self.data_source_repository.list()
+def get_data_sources_use_case(data_source_repository: DataSourceRepository):
+    return data_source_repository.list()

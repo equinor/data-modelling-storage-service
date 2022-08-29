@@ -1,7 +1,7 @@
 from unittest import mock, skip
 from uuid import uuid4
-
-from features.explorer.use_cases.add_file_use_case import AddFileUseCase
+from authentication.models import User
+from features.explorer.use_cases.add_file_use_case import add_file_use_case
 
 
 @skip("not working")
@@ -18,15 +18,15 @@ def test_without_parameters():
 
     document_repository.add.return_value = mock_add
     document_repository.get.return_value = parent
-
-    use_case = AddFileUseCase(document_repository=document_repository)
+    user = User()
     data = {"parentId": parent_id, "filename": "new_file", "templateRef": ""}
-    request_object = AddFileRequestObject.from_dict(data)
-    response_object = use_case.execute(request_object)
+    use_case_result = add_file_use_case(
+        user=user, absolute_ref="", data=data, update_uncontained=False, repository_provider=document_repository
+    )
 
-    assert bool(response_object) is True
+    assert bool(use_case_result) is True
     document_repository.get.assert_called_with(parent_id)
 
-    result = response_object.value.to_dict()
+    result = use_case_result.value.to_dict()
 
     assert result["filename"] == data["filename"]

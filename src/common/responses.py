@@ -30,7 +30,9 @@ from common.utils.logging import logger
 TResponse = TypeVar("TResponse", bound=Response)
 
 
-def create_response(response_class: Type[TResponse]) -> Callable[..., Callable[..., TResponse | PlainTextResponse]]:
+def create_response(
+    response_class: Type[TResponse],
+) -> Callable[..., Callable[..., TResponse | PlainTextResponse]]:
     def func_wrapper(func) -> Callable[..., TResponse | PlainTextResponse]:
         @functools.wraps(func)
         async def wrapper_decorator(*args, **kwargs) -> TResponse | PlainTextResponse:
@@ -48,7 +50,7 @@ def create_response(response_class: Type[TResponse]) -> Callable[..., Callable[.
             except (ValidationError, InvalidEntityException, ValidationException) as e:
                 logger.error(e)
                 return PlainTextResponse(
-                    f"{e.__class__.__name__}: {e.message}", status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+                    f"{e.__class__.__name__}: {e}", status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
                 )
             except (
                 EntityNotFoundException,
