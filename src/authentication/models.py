@@ -7,9 +7,6 @@ from pydantic import UUID4, BaseModel
 
 
 class AccessLevel(str, Enum):
-    class Config:
-        use_enum_values: True
-
     WRITE = "WRITE"
     READ = "READ"
     NONE = "NONE"
