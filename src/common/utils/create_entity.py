@@ -4,7 +4,7 @@ from typing import Callable
 
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from enums import BuiltinDataTypes, SIMOS, PRIMITIVES
+from enums import PRIMITIVES, SIMOS, BuiltinDataTypes
 
 
 class CreateEntityException(Exception):

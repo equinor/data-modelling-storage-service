@@ -28,21 +28,39 @@ Feature: Explorer - Remove
     Then the response status should be "Not Found"
     And the response should be
   """
-  EntityNotFoundException: Document with id '1' was not found in the 'data-source-name' data-source
+  {
+  "status": 404,
+  "type": "NotFoundException",
+  "message": "Document with id '1' was not found in the 'data-source-name' data-source",
+  "debug": "The requested resource could not be found",
+  "data": null
+  }
   """
     Given I access the resource url "/api/v1/documents/data-source-name/2"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should be
   """
-  EntityNotFoundException: Document with id '2' was not found in the 'data-source-name' data-source
+  {
+  "status": 404,
+  "type": "NotFoundException",
+  "message": "Document with id '2' was not found in the 'data-source-name' data-source",
+  "debug": "The requested resource could not be found",
+  "data": null
+  }
   """
     Given I access the resource url "/api/v1/documents/data-source-name/3"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should be
   """
-  EntityNotFoundException: Document with id '3' was not found in the 'data-source-name' data-source
+  {
+  "status": 404,
+  "type": "NotFoundException",
+  "message": "Document with id '3' was not found in the 'data-source-name' data-source",
+  "debug": "The requested resource could not be found",
+  "data": null
+  }
   """
 
   Scenario: Remove file with no children
@@ -58,7 +76,13 @@ Feature: Explorer - Remove
     Then the response status should be "Not Found"
     And the response should be
     """
-    EntityNotFoundException: Document with id '2' was not found in the 'data-source-name' data-source
+    {
+    "status": 404,
+    "type": "NotFoundException",
+    "message": "Document with id '2' was not found in the 'data-source-name' data-source",
+    "debug": "The requested resource could not be found",
+    "data": null
+    }
     """
 
   Scenario: Remove another file with no children
@@ -70,7 +94,13 @@ Feature: Explorer - Remove
     Then the response status should be "Not Found"
     And the response should be
     """
-    EntityNotFoundException: Document with id '3' was not found in the 'data-source-name' data-source
+    {
+    "status": 404,
+    "type": "NotFoundException",
+    "message": "Document with id '3' was not found in the 'data-source-name' data-source",
+    "debug": "The requested resource could not be found",
+    "data": null
+    }
     """
 
   Scenario: Remove file with children
@@ -82,13 +112,25 @@ Feature: Explorer - Remove
     Then the response status should be "Not Found"
     And the response should be
   """
-  EntityNotFoundException: Document with id '2' was not found in the 'data-source-name' data-source
+  {
+  "status": 404,
+  "type": "NotFoundException",
+  "message": "Document with id '2' was not found in the 'data-source-name' data-source",
+  "debug": "The requested resource could not be found",
+  "data": null
+  }
   """
     Given I access the resource url "/api/v1/documents/data-source-name/3"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should be
   """
-  EntityNotFoundException: Document with id '3' was not found in the 'data-source-name' data-source
+  {
+  "status": 404,
+  "type": "NotFoundException",
+  "message": "Document with id '3' was not found in the 'data-source-name' data-source",
+  "debug": "The requested resource could not be found",
+  "data": null
+  }
   """
 

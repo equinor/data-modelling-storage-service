@@ -1,5 +1,5 @@
-from services.database import mongo_client
 from common.utils.logging import logger
+from services.database import mongo_client
 
 
 # Should only be called on local test databases.

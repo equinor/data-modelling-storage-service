@@ -1,6 +1,10 @@
 import unittest
 
-from common.utils.data_structure.dot_notation import get_by_dot, to_dot_notation, to_path
+from common.utils.data_structure.dot_notation import (
+    get_by_dot,
+    to_dot_notation,
+    to_path,
+)
 
 
 class DotNotationTestCase(unittest.TestCase):

@@ -2,12 +2,10 @@ import unittest
 from unittest import mock
 
 from authentication.models import User
-
-
-from services.document_service import DocumentService
-from enums import SIMOS
-from tests.unit.mock_blueprint_provider import blueprint_provider
 from common.utils.data_structure.compare import pretty_eq
+from enums import SIMOS
+from services.document_service import DocumentService
+from tests.unit.mock_blueprint_provider import blueprint_provider
 
 
 class DocumentServiceTestCase(unittest.TestCase):

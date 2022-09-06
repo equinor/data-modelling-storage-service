@@ -16,7 +16,7 @@ Feature: Authentication
     "full_name": null,
     "email": null,
     "roles": ["a"],
-    "scope": 2
+    "scope": "WRITE"
     }
     """
 

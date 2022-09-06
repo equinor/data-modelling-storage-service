@@ -7,35 +7,31 @@ from uuid import uuid4
 from fastapi import UploadFile
 
 from authentication.models import ACL
+from common.exceptions import (
+    ApplicationException,
+    BadRequestException,
+    MissingPrivilegeException,
+    NotFoundException,
+)
+from common.utils.build_complex_search import build_mongo_query
+from common.utils.delete_documents import delete_document
+from common.utils.get_blueprint import get_blueprint_provider
+from common.utils.get_document_by_path import get_document_uid_by_path
+from common.utils.get_resolved_document_by_id import get_complete_document
+from common.utils.logging import logger
+from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
+from common.utils.string_helpers import split_absolute_ref, split_dotted_id
+from common.utils.validators import entity_has_all_required_attributes
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
-from enums import BuiltinDataTypes, SIMOS
+from enums import SIMOS, BuiltinDataTypes
 from restful.request_types.shared import Entity, Reference
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
 from storage.repositories.zip import ZipFileClient
-from common.utils.build_complex_search import build_mongo_query
-from common.utils.delete_documents import delete_document
-from common.exceptions import (
-    BadRequestException,
-    BadSearchParametersException,
-    DuplicateFileNameException,
-    EntityNotFoundException,
-    InvalidEntityException,
-    MissingPrivilegeException,
-    ApplicationException,
-)
-from common.utils.get_blueprint import get_blueprint_provider
-from common.utils.get_resolved_document_by_id import get_complete_document
-
-from common.utils.get_document_by_path import get_document_uid_by_path
-from common.utils.logging import logger
-from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
-from common.utils.string_helpers import split_absolute_ref, split_dotted_id
-from common.utils.validators import entity_has_all_required_attributes
 
 pretty_printer = pprint.PrettyPrinter()
 
@@ -101,7 +97,9 @@ class DocumentService:
                 contentListNames = []
                 for child in packageContent.children:
                     if "name" in child.entity and child.name in contentListNames:
-                        raise DuplicateFileNameException(data_source_id, f"{node.name}/{child.name}")
+                        raise BadRequestException(
+                            f"The document '{data_source_id}/{node.name}/{child.name}' already exists"
+                        )
                     contentListNames.append(child.name)
 
         if update_uncontained:  # If flag is set, dig down and save uncontained documents
@@ -184,7 +182,9 @@ class DocumentService:
             target_node = root_node.search(document_id)
 
             if not target_node:
-                raise EntityNotFoundException(uid=document_id)
+                raise NotFoundException(
+                    message=f"Document with id '{document_id}' in data source '{data_source_id}' could not be found"
+                )
 
         target_node.entity["name"] = name
         self.save(root_node, data_source_id)
@@ -213,7 +213,7 @@ class DocumentService:
             target_node = root.get_by_path(attribute.split("."))
 
         if not target_node:
-            raise EntityNotFoundException(dotted_id)
+            raise NotFoundException(dotted_id)
 
         target_node.update(data)
         if files:
@@ -244,7 +244,7 @@ class DocumentService:
 
         root: Node = self.get_node_by_uid(data_source, parent_id)
         if not root:
-            raise EntityNotFoundException(uid=parent_id)
+            raise NotFoundException(uid=parent_id)
         parent: Node = root.get_by_path(parent_attribute)
 
         leaf_parent = parent.get_by_path([leaf_attribute])
@@ -271,7 +271,7 @@ class DocumentService:
         required_attribute_names = [attribute.name for attribute in new_node.blueprint.get_required_attributes()]
         # If entity has a name, check if a file/attribute with the same name already exists on the target
         if "name" in required_attribute_names and parent.duplicate_attribute(new_node.name):
-            raise DuplicateFileNameException(data_source, f"{parent.name}/{new_node.name}")
+            raise BadRequestException(f"The document '{data_source}/{parent.name}/{new_node.name}' already exists")
 
         new_node.parent = parent
         new_node.set_uid()
@@ -298,7 +298,7 @@ class DocumentService:
             {"type": SIMOS.PACKAGE.value, "isRoot": True, "name": data["name"]}
         )
         if exisiting_root_package:
-            raise DuplicateFileNameException(data_source, new_node.name)
+            raise BadRequestException(f"The document '{data_source}/{new_node.name}' already exists")
 
         new_node.set_uid()
 
@@ -346,7 +346,7 @@ class DocumentService:
             raise ValueError("path parameter have to start with a forward slash")
         target: Node = self.get_by_path(f"{data_source_id}{path}")
         if not target:
-            raise EntityNotFoundException(uid=path)
+            raise NotFoundException(uid=path)
 
         # If dotted attribute path, attribute is the last entry. Else content
         new_node_attr = path.split(".")[-1] if "." in path else "content"
@@ -389,7 +389,7 @@ class DocumentService:
             process_search_data = build_mongo_query(self.get_blueprint, search_data)
         except ValueError as error:
             logger.warning(f"Failed to build mongo query; {error}")
-            raise BadSearchParametersException
+            raise BadRequestException("Failed to build mongo query")
         result: List[dict] = repository.find(process_search_data)
         result_sorted: List[dict] = sort_dtos_by_attribute(result, dotted_attribute_path)
         result_list = {}
@@ -431,20 +431,20 @@ class DocumentService:
         root: Node = self.get_node_by_uid(data_source_id, document_id)
         attribute_node: Node = root.search(f"{document_id}.{attribute_path}")
         if not attribute_node:
-            raise EntityNotFoundException(uid=document_id + attribute_path)
+            raise NotFoundException(uid=document_id + attribute_path)
 
         # Check that target exists and has correct values
         # The SIMOS/Entity type can reference any type (used by Package)
         referenced_document: dict = self.repository_provider(data_source_id, self.user).get(reference.uid)
         if not referenced_document:
-            raise EntityNotFoundException(uid=f"{data_source_id}/{reference.uid}")
+            raise NotFoundException(uid=f"{data_source_id}/{reference.uid}")
         if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document["type"]:
-            raise InvalidEntityException(
+            raise BadRequestException(
                 f"The referenced entity should be of type '{attribute_node.type}'"
                 f", but was '{referenced_document['type']}'"
             )
         if reference.type != referenced_document["type"]:
-            raise InvalidEntityException(
+            raise BadRequestException(
                 f"The 'type' value of the reference does not match the referenced document."
                 f"{reference.type} --> {referenced_document['type']}"
             )

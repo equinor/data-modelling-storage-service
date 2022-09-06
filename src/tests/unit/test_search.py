@@ -1,8 +1,7 @@
 import unittest
 
-from domain_classes.blueprint import Blueprint
-
 from common.utils.build_complex_search import build_mongo_query
+from domain_classes.blueprint import Blueprint
 
 basic_blueprint = {
     "type": "system/SIMOS/Blueprint",

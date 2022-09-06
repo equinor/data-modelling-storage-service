@@ -1,9 +1,7 @@
+from functools import lru_cache
 from typing import List, Optional
 
-from functools import lru_cache
-
 from config import config
-
 from enums import RepositoryType, StorageDataTypes
 from storage.repositories.azure_blob import AzureBlobStorageClient
 from storage.repositories.mongo import MongoDBClient

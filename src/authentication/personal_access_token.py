@@ -1,19 +1,18 @@
 import datetime
 from typing import Dict, Set
-from cachetools import cached, TTLCache
 
+from cachetools import TTLCache, cached
 from fastapi import HTTPException
 from starlette import status
 
-from authentication.models import AccessLevel, PATData, User
-from storage.internal.personal_access_tokens import get_pat, insert_pat
-from common.utils.encryption import generate_key, scrypt
-from common.exceptions import credentials_exception
-from common.utils.logging import logger
 from authentication import pat_role_checker
+from authentication.models import AccessLevel, PATData, User
+from common.exceptions import credentials_exception
+from common.utils.encryption import generate_key, scrypt
+from common.utils.logging import logger
 from config import config
 from enums import AuthProviderForRoleCheck
-
+from storage.internal.personal_access_tokens import get_pat, insert_pat
 
 MAX_TOKEN_TTL = datetime.timedelta(days=365).total_seconds()
 

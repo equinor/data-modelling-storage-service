@@ -1,12 +1,12 @@
 from typing import List, Optional
+
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import JSONResponse
-from pydantic import conint, Json
+from pydantic import Json, conint
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
-
-from common.responses import create_response
+from common.responses import create_response, responses
 
 from .use_cases.get_document_by_path_use_case import get_document_by_path_use_case
 from .use_cases.get_document_use_case import get_document_use_case
@@ -15,7 +15,9 @@ from .use_cases.update_document_use_case import update_document_use_case
 router = APIRouter(tags=["default", "document"], prefix="/documents")
 
 
-@router.get("/{data_source_id}/{document_id}", operation_id="document_get_by_id", response_model=dict)
+@router.get(
+    "/{data_source_id}/{document_id}", operation_id="document_get_by_id", response_model=dict, responses=responses
+)
 @create_response(JSONResponse)
 def get_by_id(
     data_source_id: str,
@@ -40,11 +42,7 @@ def get_by_id(
     )
 
 
-@router.get(
-    "-by-path/{data_source_id}",
-    operation_id="document_get_by_path",
-    response_model=dict,
-)
+@router.get("-by-path/{data_source_id}", operation_id="document_get_by_path", response_model=dict, responses=responses)
 @create_response(JSONResponse)
 def get_by_path(
     data_source_id: str,
@@ -58,7 +56,7 @@ def get_by_path(
     return get_document_by_path_use_case(user=user, data_source_id=data_source_id, path=path, attribute=attribute)
 
 
-@router.put("/{data_source_id}/{document_id}", operation_id="document_update")
+@router.put("/{data_source_id}/{document_id}", operation_id="document_update", responses=responses)
 @create_response(JSONResponse)
 def update(
     data_source_id: str,

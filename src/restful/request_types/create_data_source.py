@@ -2,8 +2,8 @@ from typing import Dict, List, Optional
 
 from pydantic.main import BaseModel
 
-from enums import RepositoryType, StorageDataTypes
 from common.utils.encryption import encrypt
+from enums import RepositoryType, StorageDataTypes
 
 
 class Repository(BaseModel, use_enum_values=True):

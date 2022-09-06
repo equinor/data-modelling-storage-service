@@ -4,11 +4,11 @@ from typing import Dict, List, Optional
 import gridfs
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError, WriteError
-from common.utils.encryption import decrypt
 
-from storage.repository_interface import RepositoryInterface
-from common.exceptions import EntityAlreadyExistsException, EntityNotFoundException
+from common.exceptions import BadRequestException, NotFoundException
+from common.utils.encryption import decrypt
 from common.utils.logging import logger
+from storage.repository_interface import RepositoryInterface
 
 
 class MongoDBClient(RepositoryInterface):
@@ -45,7 +45,7 @@ class MongoDBClient(RepositoryInterface):
         try:
             return self.handler[self.collection].insert_one(document).acknowledged
         except DuplicateKeyError:
-            raise EntityAlreadyExistsException
+            raise BadRequestException
 
     def update(self, uid: str, document: Dict) -> bool:
         return self.handler[self.collection].replace_one({"_id": uid}, document, upsert=True).acknowledged
@@ -74,7 +74,7 @@ class MongoDBClient(RepositoryInterface):
             except gridfs.errors.FileExists:
                 message = f"Blob file with id '{uid}' already exists"
                 logger.warning(message)
-                raise EntityAlreadyExistsException(message=message)
+                raise BadRequestException(message=message)
 
     def delete_blob(self, uid: str):
         return self.blob_handler.delete(uid)
@@ -82,5 +82,5 @@ class MongoDBClient(RepositoryInterface):
     def get_blob(self, uid: str) -> bytearray:
         blob = self.blob_handler.get(uid)
         if not blob:
-            raise EntityNotFoundException(uid)
+            raise NotFoundException(uid)
         return blob.read()

@@ -1,9 +1,8 @@
-from enums import SIMOS
-
 from authentication.models import User
+from common.utils.string_helpers import split_absolute_ref
+from enums import SIMOS
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
-from common.utils.string_helpers import split_absolute_ref
 
 
 def add_file_use_case(

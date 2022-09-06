@@ -2,17 +2,21 @@ from typing import Dict, List, Union
 from uuid import uuid4
 
 from pydantic import UUID4
-from common.utils.string_helpers import url_safe_name
 
-from authentication.access_control import access_control, create_acl, DEFAULT_ACL
-from authentication.models import AccessLevel, ACL, User
+from authentication.access_control import DEFAULT_ACL, access_control, create_acl
+from authentication.models import ACL, AccessLevel, User
+from common.exceptions import (
+    BadRequestException,
+    MissingPrivilegeException,
+    NotFoundException,
+)
+from common.utils.logging import logger
+from common.utils.string_helpers import url_safe_name
 from domain_classes.document_look_up import DocumentLookUp
 from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
 from services.database import data_source_collection
-from common.exceptions import EntityNotFoundException, InvalidDocumentNameException, MissingPrivilegeException
-from common.utils.logging import logger
 
 
 class DataSource:
@@ -68,8 +72,8 @@ class DataSource:
         ):
             return DocumentLookUp(**res["documentLookUp"][document_id])
 
-        raise EntityNotFoundException(
-            uid=document_id, message=f"Document with id '{document_id}' was not found in the '{self.name}' data-source"
+        raise NotFoundException(
+            message=f"Document with id '{document_id}' was not found in the '{self.name}' data-source"
         )
 
     def _update_lookup(self, lookup: DocumentLookUp):
@@ -124,19 +128,22 @@ class DataSource:
         """
         if name := document.get("name"):
             if not url_safe_name(name):
-                raise InvalidDocumentNameException(name)
+                raise BadRequestException(
+                    f"'{name}' is a invalid document name. Only alphanumeric,"
+                    + " underscore, and dash are allowed characters"
+                )
 
         document["_id"] = document.get("_id", str(uuid4()))  # Create _id if not yet created
 
         try:  # Get the documents lookup
             lookup = self._lookup(document["_id"])
-        except EntityNotFoundException:  # No lookup found --> Create a new document
+        except NotFoundException:  # No lookup found --> Create a new document
             parent_lookup = None
 
             if parent_root_uid := parent_id.split(".")[0] if parent_id else None:
                 try:  # If parent_id passed, try to get it's lookup
                     parent_lookup = self._lookup(parent_root_uid)
-                except EntityNotFoundException:  # The parent has not yet been created.
+                except NotFoundException:  # The parent has not yet been created.
                     pass
 
             parent_acl = parent_lookup.acl if parent_lookup else self.acl  # If no parentLookup, use DataSource default
@@ -180,7 +187,7 @@ class DataSource:
             access_control(lookup.acl, AccessLevel.WRITE, self.user)
             self._remove_lookup(uid)
             self.repositories[lookup.repository].delete_blob(uid)
-        except EntityNotFoundException:
+        except NotFoundException:
             logger.warning(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
             pass
 
@@ -191,6 +198,6 @@ class DataSource:
             access_control(lookup.acl, AccessLevel.WRITE, self.user)
             self._remove_lookup(uid)
             self.repositories[lookup.repository].delete(uid)
-        except EntityNotFoundException:
+        except NotFoundException:
             logger.warning(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
             pass

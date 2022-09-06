@@ -1,11 +1,13 @@
-from behave import then
 import json
-from deepdiff import DeepDiff
 import pprint
 import uuid
+
+from behave import then
+from deepdiff import DeepDiff
+from dictdiffer import diff
+
 from common.utils.data_structure.compare import pretty_eq, print_pygments
 from common.utils.data_structure.find import find
-from dictdiffer import diff
 
 STATUS_CODES = {
     "OK": 200,
@@ -112,7 +114,7 @@ def step_impl_should_be(context):
         assert actual == data
     else:
         actual = context.response.json()
-        data = context.text or context.data
+        data = json.loads(context.text) or json.loads(context.data)
         pretty_eq(data, actual)
 
 

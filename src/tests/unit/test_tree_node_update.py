@@ -2,14 +2,13 @@ import unittest
 from unittest import mock
 
 from authentication.models import User
-
+from common.exceptions import BadRequestException
+from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_blueprint_provider import blueprint_provider
-from common.utils.data_structure.compare import pretty_eq
-from common.exceptions import DuplicateFileNameException, InvalidChildTypeException
 
 
 class MultiTypeBlueprintProvider:
@@ -241,7 +240,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = DocumentService(
             blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
         )
-        with self.assertRaises(InvalidChildTypeException):
+        with self.assertRaises(BadRequestException):
             document_service.update_document(
                 data_source_id="testing",
                 dotted_id="1.SomeChild",
@@ -337,7 +336,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
         )
 
-        with self.assertRaises(DuplicateFileNameException):
+        with self.assertRaises(BadRequestException):
             document_service.add_document(
                 "testing/1.im_optional",
                 data={"type": "basic_blueprint", "name": "duplicate", "description": "This is my new entity"},
@@ -468,7 +467,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
         )
 
-        with self.assertRaises(InvalidChildTypeException) as error:
+        with self.assertRaises(BadRequestException) as error:
             document_service.update_document(
                 data_source_id="testing",
                 dotted_id="1.SomeChild",

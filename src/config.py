@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import List
 
 from pydantic import BaseSettings, Field
 
@@ -15,9 +14,7 @@ class Config(BaseSettings):
     SECRET_KEY: str = Field(None, env="SECRET_KEY")
     LOGGER_LEVEL: str = Field("INFO", env="LOGGING_LEVEL", to_lower=True)
     MAX_ENTITY_RECURSION_DEPTH: int = Field(50, env="MAX_ENTITY_RECURSION_DEPTH")
-    DATA_SOURCES_COLLECTION: str = "data_sources"
     CORE_DATA_SOURCE: str = "system"
-    CORE_PACKAGES: List[str] = ["SIMOS"]
     CACHE_MAX_SIZE: int = 200
     APPLICATION_HOME: str = Field(f"{str(Path(__file__).parent)}/home", env="APPLICATION_HOME")
     # Access Control
@@ -44,22 +41,22 @@ if not config.AUTH_ENABLED:
     print("################ WARNING ################")
     print("#       Authentication is disabled      #")
     print("################ WARNING ################")
+else:
+    print(f"Authentication is enabled. Admin user is: {config.DMSS_ADMIN}, admin role is: {config.DMSS_ADMIN_ROLE}")
 
 if config.TEST_TOKEN:
     print("########################### WARNING ################################")
     print("#  Authentication is configured to use the mock test certificates  #")
     print("########################### WARNING ################################")
 
-if config.AUTH_ENABLED:
-    print("Authentication is enabled")
-    if not config.OAUTH_WELL_KNOWN or not config.OAUTH_TOKEN_ENDPOINT or not config.OAUTH_AUTH_ENDPOINT:
-        raise ValueError(
-            "Environment variable 'OAUTH_WELL_KNOWN', 'OAUTH_AUTH_ENDPOINT',"
-            "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
-        )
+if config.AUTH_ENABLED and not all((config.OAUTH_WELL_KNOWN, config.OAUTH_TOKEN_ENDPOINT, config.OAUTH_AUTH_ENDPOINT)):
+    raise ValueError(
+        "Environment variable 'OAUTH_WELL_KNOWN', 'OAUTH_AUTH_ENDPOINT',"
+        "and 'OAUTH_TOKEN_ENDPOINT' must be set when 'AUTH_ENABLED' is 'True'"
+    )
 
 if config.AUTH_PROVIDER_FOR_ROLE_CHECK:
-    if not config.OAUTH_CLIENT_ID or not config.OAUTH_CLIENT_SECRET:
+    if not all((config.OAUTH_CLIENT_ID, config.OAUTH_CLIENT_SECRET)):
         raise EnvironmentError(
             "Environment variables 'OAUTH_CLIENT_ID' and 'OAUTH_CLIENT_SECRET' are required if "
             + "live role checks are enabled with 'AUTH_PROVIDER_FOR_ROLE_CHECK'"

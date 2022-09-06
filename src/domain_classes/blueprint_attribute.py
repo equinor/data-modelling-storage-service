@@ -1,5 +1,6 @@
-from pydantic import BaseModel, Field, validator
 from typing import Union
+
+from pydantic import BaseModel, Field, validator
 
 from domain_classes.dimension import Dimension
 from enums import PRIMITIVES, SIMOS

@@ -4,19 +4,13 @@ from typing import Dict, List, Union
 from uuid import uuid4
 
 from authentication.models import User
-
-from enums import SIMOS
-from storage.data_source_class import DataSource
-from storage.internal.data_source_repository import get_data_source
-from common.exceptions import (
-    EntityAlreadyExistsException,
-    EntityNotFoundException,
-    InvalidDocumentNameException,
-    RootPackageNotFoundException,
-)
+from common.exceptions import BadRequestException, NotFoundException
 from common.utils.get_document_by_path import get_document_by_ref
 from common.utils.logging import logger
 from common.utils.string_helpers import url_safe_name
+from enums import SIMOS
+from storage.data_source_class import DataSource
+from storage.internal.data_source_repository import get_data_source
 
 
 def _add_documents(path, documents, data_source) -> List[Dict]:
@@ -26,7 +20,10 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
         with open(f"{path}/{file}") as json_file:
             document = json.load(json_file)
         if not url_safe_name(document["name"]):
-            raise InvalidDocumentNameException(document["name"])
+            raise BadRequestException(
+                message=f"'{document['name']}' is a invalid document name. "
+                f"Only alphanumeric, underscore, and dash are allowed characters"
+            )
         document["_id"] = document.get("_id", str(uuid4()))
         data_source.update(document)
         docs.append({"_id": document["_id"], "name": document.get("name"), "type": document["type"]})
@@ -39,13 +36,13 @@ def import_package(path, user: User, data_source: str, is_root: bool = False) ->
     package = {"name": os.path.basename(path), "type": SIMOS.PACKAGE.value, "isRoot": is_root}
     try:
         if get_document_by_ref(f"{data_source.name}/{package['name']}", user):
-            raise EntityAlreadyExistsException(
+            raise BadRequestException(
                 message=(
                     f"A root package with name '{package['name']}' "
                     "already exists in data source '{data_source.name}'"
                 )
             )
-    except (RootPackageNotFoundException, EntityNotFoundException):
+    except (NotFoundException, NotFoundException):
         pass
 
     files = []

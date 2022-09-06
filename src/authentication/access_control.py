@@ -1,6 +1,6 @@
-from authentication.models import AccessLevel, ACL, User
-from config import config
+from authentication.models import ACL, AccessLevel, User
 from common.exceptions import MissingPrivilegeException
+from config import config
 
 
 def access_control(acl: ACL, access_level_required: AccessLevel, user: User):
