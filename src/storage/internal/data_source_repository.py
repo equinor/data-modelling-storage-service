@@ -1,5 +1,6 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
+from pydantic import BaseModel
 from pymongo.errors import DuplicateKeyError
 
 from authentication.access_control import DEFAULT_ACL, access_control
@@ -12,6 +13,13 @@ from services.database import data_source_collection
 from storage.data_source_class import DataSource
 
 RESERVED_MONGO_DATABASES = ("admin", "local", "config", "dmss-internal")
+
+
+class DataSourceInformation(BaseModel):
+    id: str
+    name: str
+    host: Optional[str] = None
+    type: Optional[str] = None
 
 
 class DataSourceRepository:

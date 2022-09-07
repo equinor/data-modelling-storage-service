@@ -6,7 +6,10 @@ from authentication.models import User
 from common.responses import create_response, responses
 from restful.request_types.create_data_source import DataSourceRequest
 from restful.request_types.shared import DataSource
-from storage.internal.data_source_repository import DataSourceRepository
+from storage.internal.data_source_repository import (
+    DataSourceInformation,
+    DataSourceRepository,
+)
 
 from .use_cases.create_data_source_use_case import create_data_source_use_case
 from .use_cases.get_data_source_use_case import get_data_source_use_case
@@ -40,7 +43,7 @@ def save(
     )
 
 
-@router.get("", operation_id="data_source_get_all", response_model=list[dict], responses=responses)
+@router.get("", operation_id="data_source_get_all", response_model=list[DataSourceInformation], responses=responses)
 @create_response(JSONResponse)
 def get_all(user: User = Depends(auth_w_jwt_or_pat)):
     data_source_repository = DataSourceRepository(user)
