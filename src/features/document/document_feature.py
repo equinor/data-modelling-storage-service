@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, File, Form, UploadFile
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
 from pydantic import Json, conint
 
 from authentication.authentication import auth_w_jwt_or_pat
@@ -11,6 +11,7 @@ from common.responses import create_response, responses
 from .use_cases.get_document_by_path_use_case import get_document_by_path_use_case
 from .use_cases.get_document_use_case import get_document_use_case
 from .use_cases.update_document_use_case import update_document_use_case
+from .use_cases.remove_use_case import remove_use_case
 
 router = APIRouter(tags=["default", "document"], prefix="/documents")
 
@@ -77,3 +78,10 @@ def update(
         files=files,
         update_uncontained=update_uncontained,
     )
+
+@router.delete(
+    "/{data_source_id}/{dotted_id}", operation_id="document_remove", response_model=str, responses=responses
+)
+@create_response(PlainTextResponse)
+def remove(data_source_id: str, dotted_id: str, user: User = Depends(auth_w_jwt_or_pat)):
+    return remove_use_case(user=user, data_source_id=data_source_id, document_id=dotted_id)

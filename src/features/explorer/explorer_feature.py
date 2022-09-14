@@ -12,7 +12,6 @@ from .use_cases.add_document_to_path_use_case import add_document_to_path_use_ca
 from .use_cases.add_file_use_case import add_file_use_case
 from .use_cases.add_raw import add_raw_use_case
 from .use_cases.remove_by_path_use_case import remove_by_path_use_case
-from .use_cases.remove_use_case import remove_use_case
 from .use_cases.rename_file_use_case import rename_use_case
 
 router = APIRouter(tags=["default", "explorer"], prefix="/explorer")
@@ -39,13 +38,6 @@ def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt
 def move(request_data, data_source_id: str, user: User = Depends(auth_w_jwt_or_pat)):  # noqa: E501
     raise NotImplementedError
 
-
-@router.delete(
-    "/{data_source_id}/{dotted_id}", operation_id="explorer_remove", response_model=str, responses=responses
-)
-@create_response(PlainTextResponse)
-def remove(data_source_id: str, dotted_id: str, user: User = Depends(auth_w_jwt_or_pat)):
-    return remove_use_case(user=user, data_source_id=data_source_id, document_id=dotted_id)
 
 
 @router.post("/{data_source_id}/remove-by-path", operation_id="explorer_remove_by_path", responses=responses)
