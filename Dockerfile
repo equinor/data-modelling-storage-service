@@ -6,10 +6,11 @@ EXPOSE 5000
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/code
+ENV PATH="/code/.venv/bin:$PATH"
 
 RUN pip install --upgrade pip && \
     pip install poetry && \
-    poetry config virtualenvs.create false
+    poetry config virtualenvs.in-project true
 
 COPY pyproject.toml pyproject.toml
 COPY poetry.lock poetry.lock
