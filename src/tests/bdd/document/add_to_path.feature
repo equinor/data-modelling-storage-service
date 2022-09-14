@@ -208,7 +208,7 @@ Feature: Add document with document_service
 
 
   Scenario: Add test
-    Given i access the resource url "/api/v1/explorer/data-source-name/add-to-path"
+    Given i access the resource url "/api/v1/documents/data-source-name/add-to-path"
     When i make a "POST" request with "1" files
     """
     {
