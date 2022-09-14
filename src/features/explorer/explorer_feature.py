@@ -1,14 +1,12 @@
-from typing import List, Optional
+from typing import Optional
 
-from fastapi import APIRouter, Depends, File, Form, UploadFile
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse, PlainTextResponse
-from pydantic import Json
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.responses import create_response, responses
 
-from .use_cases.add_document_to_path_use_case import add_document_to_path_use_case
 from .use_cases.add_file_use_case import add_file_use_case
 from .use_cases.add_raw import add_raw_use_case
 from .use_cases.remove_by_path_use_case import remove_by_path_use_case
@@ -39,7 +37,6 @@ def move(request_data, data_source_id: str, user: User = Depends(auth_w_jwt_or_p
     raise NotImplementedError
 
 
-
 @router.post("/{data_source_id}/remove-by-path", operation_id="explorer_remove_by_path", responses=responses)
 @create_response(PlainTextResponse)
 def remove_by_path(data_source_id: str, directory: str, user: User = Depends(auth_w_jwt_or_pat)):
@@ -55,31 +52,6 @@ def rename(
     user: User = Depends(auth_w_jwt_or_pat),
 ):  # noqa: E501
     return rename_use_case(user=user, data_source_id=data_source_id, document_id=document_id, parent_id=parent_id)
-
-
-@router.post(
-    "/{data_source_id}/add-to-path", operation_id="explorer_add_to_path", response_model=dict, responses=responses
-)
-@create_response(JSONResponse)
-def add_to_path(
-    data_source_id: str,
-    document: Json = Form(...),
-    directory: str = Form(...),
-    files: Optional[List[UploadFile]] = File(None),
-    update_uncontained: Optional[bool] = False,
-    user: User = Depends(auth_w_jwt_or_pat),
-):
-    """
-    Same as 'add_to_parent', but reference parent by path instead of ID. Also supports files.
-    """
-    return add_document_to_path_use_case(
-        user=user,
-        data_source_id=data_source_id,
-        document=document,
-        directory=directory,
-        files=files,
-        update_uncontained=update_uncontained,
-    )
 
 
 @router.post("/{absolute_ref:path}", operation_id="explorer_add", response_model=dict, responses=responses)

@@ -8,10 +8,11 @@ from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.responses import create_response, responses
 
+from .use_cases.add_document_to_path_use_case import add_document_to_path_use_case
 from .use_cases.get_document_by_path_use_case import get_document_by_path_use_case
 from .use_cases.get_document_use_case import get_document_use_case
-from .use_cases.update_document_use_case import update_document_use_case
 from .use_cases.remove_use_case import remove_use_case
+from .use_cases.update_document_use_case import update_document_use_case
 
 router = APIRouter(tags=["default", "document"], prefix="/documents")
 
@@ -79,9 +80,35 @@ def update(
         update_uncontained=update_uncontained,
     )
 
+
 @router.delete(
     "/{data_source_id}/{dotted_id}", operation_id="document_remove", response_model=str, responses=responses
 )
 @create_response(PlainTextResponse)
 def remove(data_source_id: str, dotted_id: str, user: User = Depends(auth_w_jwt_or_pat)):
     return remove_use_case(user=user, data_source_id=data_source_id, document_id=dotted_id)
+
+
+@router.post(
+    "/{data_source_id}/add-to-path", operation_id="document_add_to_path", response_model=dict, responses=responses
+)
+@create_response(JSONResponse)
+def add_to_path(
+    data_source_id: str,
+    document: Json = Form(...),
+    directory: str = Form(...),
+    files: Optional[List[UploadFile]] = File(None),
+    update_uncontained: Optional[bool] = False,
+    user: User = Depends(auth_w_jwt_or_pat),
+):
+    """
+    Same as 'add_to_parent', but reference parent by path instead of ID. Also supports files.
+    """
+    return add_document_to_path_use_case(
+        user=user,
+        data_source_id=data_source_id,
+        document=document,
+        directory=directory,
+        files=files,
+        update_uncontained=update_uncontained,
+    )
