@@ -9,6 +9,7 @@ from authentication.models import User
 from common.responses import create_response, responses
 
 from .use_cases.add_document_to_path_use_case import add_document_to_path_use_case
+from .use_cases.add_raw_use_case import add_raw_use_case
 from .use_cases.get_document_by_path_use_case import get_document_by_path_use_case
 from .use_cases.get_document_use_case import get_document_use_case
 from .use_cases.remove_use_case import remove_use_case
@@ -112,3 +113,17 @@ def add_to_path(
         files=files,
         update_uncontained=update_uncontained,
     )
+
+
+# TODO: Create test for this
+@router.post("/{data_source_id}/add-raw", operation_id="document_add_simple", response_model=str, responses=responses)
+@create_response(PlainTextResponse)
+def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt_or_pat)):
+    """
+    Adds the document 'as-is' to the datasource.
+    NOTE: The 'explorer-add' operation is to be preferred.
+    This is mainly for bootstrapping and imports.
+    Blueprint need not exist, and so there is no validation or splitting of entities.
+    Posted document must be a valid Entity.
+    """
+    return add_raw_use_case(user=user, document=document, data_source_id=data_source_id)
