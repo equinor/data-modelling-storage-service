@@ -9,6 +9,7 @@ from authentication.models import User
 from common.responses import create_response, responses
 
 from .use_cases.add_document_to_path_use_case import add_document_to_path_use_case
+from .use_cases.add_file_use_case import add_file_use_case
 from .use_cases.add_raw_use_case import add_raw_use_case
 from .use_cases.get_document_by_path_use_case import get_document_by_path_use_case
 from .use_cases.get_document_use_case import get_document_use_case
@@ -127,3 +128,21 @@ def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt
     Posted document must be a valid Entity.
     """
     return add_raw_use_case(user=user, document=document, data_source_id=data_source_id)
+
+
+@router.post("/{absolute_ref:path}", operation_id="document_add", response_model=dict, responses=responses)
+@create_response(JSONResponse)
+def add_by_parent_id(
+    absolute_ref: str,
+    document: dict,
+    update_uncontained: Optional[bool] = True,
+    user: User = Depends(auth_w_jwt_or_pat),
+):
+    """
+    Add a new document to absolute ref (root of data source, or another document).
+    If added to another document, a valid attribute type check is done.
+    Select parent with format 'data_source/document_id.attribute.index.attribute'
+    """
+    return add_file_use_case(
+        user=user, absolute_ref=absolute_ref, data=document, update_uncontained=update_uncontained
+    )
