@@ -13,6 +13,7 @@ from .use_cases.add_file_use_case import add_file_use_case
 from .use_cases.add_raw_use_case import add_raw_use_case
 from .use_cases.get_document_by_path_use_case import get_document_by_path_use_case
 from .use_cases.get_document_use_case import get_document_use_case
+from .use_cases.remove_by_path_use_case import remove_by_path_use_case
 from .use_cases.remove_use_case import remove_use_case
 from .use_cases.update_document_use_case import update_document_use_case
 
@@ -146,3 +147,9 @@ def add_by_parent_id(
     return add_file_use_case(
         user=user, absolute_ref=absolute_ref, data=document, update_uncontained=update_uncontained
     )
+
+
+@router.post("/{data_source_id}/remove-by-path", operation_id="document_remove_by_path", responses=responses)
+@create_response(PlainTextResponse)
+def remove_by_path(data_source_id: str, directory: str, user: User = Depends(auth_w_jwt_or_pat)):
+    return remove_by_path_use_case(user=user, data_source_id=data_source_id, directory=directory)
