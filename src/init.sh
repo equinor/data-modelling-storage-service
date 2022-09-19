@@ -14,7 +14,7 @@ elif [ "$1" = 'create-key' ]; then
   python3 /code/src/app.py create-key
 elif [ "$1" = 'behave' ]; then
   shift
-  behave "$@"
+  cd src; behave "$@"
 else
   exec "$@"
 fi
