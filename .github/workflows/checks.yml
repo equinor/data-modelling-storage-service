@@ -11,7 +11,7 @@ jobs:
       - name: "Dev image"
         run: docker build -t devimage --target development .
       - name: "Bandit"
-        run: docker run devimage bandit --recursive --exclude ./src/tests/* .
+        run: docker run devimage bandit --recursive --exclude "./.venv,./src/tests/*" .
       - name: "Safety"
         run: docker run devimage safety check
       - name: "Black"
