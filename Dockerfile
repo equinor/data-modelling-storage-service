@@ -1,12 +1,12 @@
 FROM python:3.10-slim as base
-WORKDIR /project
-ENTRYPOINT ["/project/src/init.sh"]
+WORKDIR /code
+ENTRYPOINT ["/code/src/init.sh"]
 CMD ["api"]
 EXPOSE 5000
 
-ENV PATH="/project/.venv/bin:$PATH"
+ENV PATH="/code/.venv/bin:$PATH"
 ENV PYTHONUNBUFFERED=1
-ENV PYTHONPATH=/project/src
+ENV PYTHONPATH=/code/src
 
 RUN pip install --upgrade pip && \
     pip install poetry && \
