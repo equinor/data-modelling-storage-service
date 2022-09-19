@@ -1,2 +1,2 @@
 [behave]
-paths=tests/bdd
+paths=src/tests/bdd
