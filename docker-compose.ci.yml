@@ -6,8 +6,6 @@ services:
     build:
       context: .
       target: development
-    volumes:
-      - ./.behaverc:/code/.behaverc
     environment:
       ENVIRONMENT: local
       MONGO_INITDB_ROOT_PASSWORD: maf

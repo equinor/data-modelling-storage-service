@@ -17,7 +17,8 @@ COPY poetry.lock poetry.lock
 
 FROM base as development
 RUN poetry install
-COPY .flake8 .behaverc ./
+COPY .flake8 ./
+COPY /src/.behaverc ./src/.behaverc
 COPY src ./src
 USER 1000
 
