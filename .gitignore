@@ -5,7 +5,6 @@ gen/
 /data/
 h5/
 /src/home/first-run-false
-/src/.behaverc
 temp_zip_archive.zip
 
 ### macOS ###
@@ -148,7 +147,6 @@ venv
 .vscode
 mongodata/
 /gen/
-/src/.behaverc
 home/first-run-false
 
 /src/version.txt

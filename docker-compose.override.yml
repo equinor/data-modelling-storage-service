@@ -6,8 +6,7 @@ services:
       target: development
     image: dmss-dev
     volumes:
-      - ./src:/code
-      - ./.behaverc:/code/.behaverc
+      - ./src:/code/src
     environment:
       ENVIRONMENT: local
       LOGGING_LEVEL: debug
