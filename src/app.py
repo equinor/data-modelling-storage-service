@@ -154,7 +154,7 @@ def nuke_db():
 def reset_app(context):
     context.invoke(nuke_db)
     logger.info("CREATING SYSTEM DATA SOURCE")
-    context.invoke(import_data_source, file="/code/home/system/data_sources/system.json")
+    context.invoke(import_data_source, file="/code/src/home/system/data_sources/system.json")
     logger.debug("DONE")
     context.invoke(init_application)
 
