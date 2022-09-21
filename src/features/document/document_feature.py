@@ -149,7 +149,9 @@ def add_by_parent_id(
     )
 
 
-@router.post("/{data_source_id}/remove-by-path", operation_id="document_remove_by_path", responses=responses)
+@router.delete(
+    "/{data_source_id}/remove-by-path/{directory:path}", operation_id="document_remove_by_path", responses=responses
+)
 @create_response(PlainTextResponse)
 def remove_by_path(data_source_id: str, directory: str, user: User = Depends(auth_w_jwt_or_pat)):
     return remove_by_path_use_case(user=user, data_source_id=data_source_id, directory=directory)
