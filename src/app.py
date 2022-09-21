@@ -34,7 +34,6 @@ def create_app() -> FastAPI:
     from features.blueprint import blueprint_feature
     from features.datasource import datasource_feature
     from features.document import document_feature
-    from features.explorer import explorer_feature
     from features.export import export_feature
     from features.health_check import health_check_feature
     from features.personal_access_token import personal_access_token_feature
@@ -51,7 +50,6 @@ def create_app() -> FastAPI:
     authenticated_routes.include_router(blueprint_feature.router)
     authenticated_routes.include_router(datasource_feature.router)
     authenticated_routes.include_router(document_feature.router)
-    authenticated_routes.include_router(explorer_feature.router)
     authenticated_routes.include_router(export_feature.router)
     authenticated_routes.include_router(reference_feature.router)
     authenticated_routes.include_router(search_feature.router)
