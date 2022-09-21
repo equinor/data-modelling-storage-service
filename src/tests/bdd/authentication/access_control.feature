@@ -234,7 +234,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/v1/explorer/test-DS/1"
+    Given i access the resource url "/api/v1/documents/test-DS/1"
     When i make a "DELETE" request
     Then the response status should be "Forbidden"
     And the response should be
@@ -257,7 +257,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/v1/explorer/test-DS/1"
+    Given i access the resource url "/api/v1/documents/test-DS/1"
     When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/test-DS/1"
@@ -311,7 +311,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/v1/explorer/test-DS/2.content"
+    Given i access the resource url "/api/v1/documents/test-DS/2.content"
     When i make a "POST" request
     """
     {

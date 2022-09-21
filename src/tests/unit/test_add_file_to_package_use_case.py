@@ -2,7 +2,7 @@ from unittest import mock, skip
 from uuid import uuid4
 
 from authentication.models import User
-from features.explorer.use_cases.add_file_use_case import add_file_use_case
+from features.document.use_cases.add_file_use_case import add_file_use_case
 
 
 @skip("not working")

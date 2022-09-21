@@ -14,8 +14,8 @@ Feature: Explorer - Remove by path
       | 3   | 2          | document_1    |             | system/SIMOS/Blueprint |
 
   Scenario: Remove root package
-    Given i access the resource url "/api/v1/explorer/data-source-name/remove-by-path?directory=blueprints"
-    When i make a "POST" request
+    Given i access the resource url "/api/v1/documents/data-source-name/remove-by-path/blueprints"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/1"
     When I make a "GET" request
@@ -58,8 +58,8 @@ Feature: Explorer - Remove by path
   """
 
   Scenario: Remove subpackage with child
-    Given i access the resource url "/api/v1/explorer/data-source-name/remove-by-path?directory=blueprints/sub_package_1"
-    When i make a "POST" request
+    Given i access the resource url "/api/v1/documents/data-source-name/remove-by-path/blueprints/sub_package_1"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/1"
     When I make a "GET" request
@@ -80,8 +80,8 @@ Feature: Explorer - Remove by path
     """
 
   Scenario: Remove file with no children
-    Given i access the resource url "/api/v1/explorer/data-source-name/remove-by-path?directory=blueprints"
-    When i make a "POST" request
+    Given i access the resource url "/api/v1/documents/data-source-name/remove-by-path/blueprints"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/3"
     When I make a "GET" request
@@ -98,8 +98,8 @@ Feature: Explorer - Remove by path
     """
 
   Scenario: Remove file with children
-    Given i access the resource url "/api/v1/explorer/data-source-name/remove-by-path?directory=blueprints/sub_package_1"
-    When i make a "POST" request
+    Given i access the resource url "/api/v1/documents/data-source-name/remove-by-path/blueprints/sub_package_1"
+    When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/v1/documents/data-source-name/2"
     When I make a "GET" request
