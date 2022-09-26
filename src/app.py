@@ -8,6 +8,7 @@ import uvicorn
 from fastapi import APIRouter, FastAPI, Security
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from starlette import status
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
@@ -67,6 +68,17 @@ def create_app() -> FastAPI:
     app.include_router(authenticated_routes, prefix=prefix, dependencies=[Security(auth_w_jwt_or_pat)])
     app.include_router(jwt_only_routes, prefix=prefix, dependencies=[Security(auth_with_jwt)])
     app.include_router(public_routes, prefix=prefix)
+
+    if config.ENVIRONMENT == "local":
+        logger.warning("CORS has been turned off. This should only occur in in development.")
+        # Turn off CORS when running locally. allow_origins argument can be replaced with a list of URLs.
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins="*",
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
 
     # Intercept FastAPI builtin validation errors, so they can be returned on our standardized format.
     @app.exception_handler(RequestValidationError)
