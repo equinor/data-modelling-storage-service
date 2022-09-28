@@ -22,6 +22,7 @@ from common.utils.logging import logger
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.utils.string_helpers import split_absolute_ref, split_dotted_id
 from common.utils.validators import entity_has_all_required_attributes
+from common.utils.create_entity_utils import create_entity
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
@@ -498,3 +499,7 @@ class DocumentService:
             # Save the selected node, using custom ZipFile repository
             self.save(document, data_source_id, ZipFileClient(zip_file), update_uncontained=True)
         return archive_path
+
+    def instantiate_entity(self, entity: dict) -> dict:
+        entity: dict = create_entity(self.get_blueprint, entity)
+        return entity
