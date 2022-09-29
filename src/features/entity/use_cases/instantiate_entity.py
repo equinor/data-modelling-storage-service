@@ -5,6 +5,7 @@ from pydantic.config import Extra
 
 from authentication.models import User
 from services.document_service import DocumentService
+from common.utils.create_entity import CreateEntity
 
 
 class BasicEntity(BaseModel, extra=Extra.allow):
@@ -14,5 +15,5 @@ class BasicEntity(BaseModel, extra=Extra.allow):
 
 def instantiate_entity_use_case(basic_entity: BasicEntity, user: User) -> dict:
     document_service = DocumentService(user=user)
-    document: dict = document_service.instantiate_entity(basic_entity.dict())
+    document: dict = CreateEntity(document_service.get_blueprint, basic_entity.type).entity
     return document
