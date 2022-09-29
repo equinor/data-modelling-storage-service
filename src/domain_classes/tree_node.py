@@ -137,10 +137,10 @@ class DictImporter:
         for child_attribute in node.blueprint.get_none_primitive_types():
             child_contained = node.blueprint.storage_recipes[0].is_contained(child_attribute.name)
             # This will stop creation of recursive blueprints (only if they are optional)
-            if child_attribute.is_optional() and not entity:
+            if child_attribute.is_optional and not entity:
                 continue
 
-            if child_attribute.is_array():
+            if child_attribute.is_array:
                 children = entity.get(child_attribute.name, [])
 
                 if not isinstance(children, list):
@@ -317,7 +317,7 @@ class NodeBase:
         return isinstance(self, ListNode)
 
     def is_complex_array(self):
-        return self.attribute.is_matrix()
+        return self.attribute.is_matrix
 
     def is_single(self):
         return isinstance(self, Node)
@@ -485,13 +485,13 @@ class Node(NodeBase):
                 continue
 
             # Add/Modify primitive data
-            if attribute.is_primitive():
+            if attribute.is_primitive:
                 self.entity[key] = new_data
             # Add/Modify complex data
             else:
                 child = self.get_by_path([key])
                 if not child:  # A new child has been added
-                    if attribute.is_array():
+                    if attribute.is_array:
                         child = ListNode(attribute.name, attribute, None, new_data, self, self.blueprint_provider)
                     else:
                         child = Node(attribute.name, attribute, None, new_data, self, self.blueprint_provider)
@@ -501,7 +501,7 @@ class Node(NodeBase):
         removed_attributes = [attr for attr in self.blueprint.attributes if attr.name not in data]
         for attribute in removed_attributes:
             # Pop primitive data
-            if attribute.is_primitive():
+            if attribute.is_primitive:
                 self.entity.pop(attribute.name, None)
             # Remove complex data
             else:

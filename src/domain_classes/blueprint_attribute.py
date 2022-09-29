@@ -35,15 +35,19 @@ class BlueprintAttribute(BaseModel):
             f"Contained: '{self.contained}', Optional: '{self.optional}'"
         )
 
+    @property
     def is_array(self):
         return self.dimensions.is_array()
 
+    @property
     def is_matrix(self):
         return self.dimensions.is_matrix()
 
+    @property
     def is_primitive(self):
         return self.attribute_type in PRIMITIVES
 
+    @property
     def is_optional(self):
         # todo get default from blueprint attribute optional's default value.
         default_optional = False
