@@ -12,8 +12,8 @@ class BlueprintAttribute(BaseModel):
     type: str = SIMOS.BLUEPRINT_ATTRIBUTE.value
     description: str = ""
     label: str = ""
-    default: Union[str, list] = ""
-    dimensions: Dimension = None
+    default: str | int | float | bool | list = ""
+    dimensions: Dimension | None = None
     optional: bool = False
     contained: bool = True
     enum_type: str = Field("", alias="enumType")
