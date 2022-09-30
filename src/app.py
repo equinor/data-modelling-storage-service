@@ -41,6 +41,7 @@ def create_app() -> FastAPI:
     from features.reference import reference_feature
     from features.search import search_feature
     from features.whoami import whoami_feature
+    from features.entity import entity_feature
 
     public_routes = APIRouter()
     public_routes.include_router(health_check_feature.router)
@@ -55,6 +56,7 @@ def create_app() -> FastAPI:
     authenticated_routes.include_router(reference_feature.router)
     authenticated_routes.include_router(search_feature.router)
     authenticated_routes.include_router(whoami_feature.router)
+    authenticated_routes.include_router(entity_feature.router)
 
     # Some routes a PAT can not be used to authenticate. For example, to get new access tokens. That would be bad...
     jwt_only_routes = APIRouter()

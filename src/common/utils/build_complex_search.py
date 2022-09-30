@@ -9,7 +9,7 @@ def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: Dict, 
     # Lists
     # TODO: Can only do a "at least one" from the first element in query
     if isinstance(search_value, List):
-        if attribute.is_primitive():
+        if attribute.is_primitive:
             return attribute_to_mongo_query(attribute, search_value[0], key, get_blueprint)
         else:
             list_search_value = search_value[0]
@@ -39,7 +39,7 @@ def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: Dict, 
         return search_value.lower() in ("true", "1")
 
     # Complex
-    if not attribute.is_primitive():
+    if not attribute.is_primitive:
         search_value["type"] = attribute.attribute_type
         return get_complex_search_dict(key, search_value, get_blueprint)
 
@@ -62,7 +62,7 @@ def build_mongo_query(get_blueprint: Callable, search_data: Dict) -> Dict:
             continue
         attribute: BlueprintAttribute = blueprint.get_attribute_by_name(key)
 
-        if attribute.is_primitive():
+        if attribute.is_primitive:
             process_search_data[key] = attribute_to_mongo_query(attribute, search_value, key, get_blueprint)
         else:
             process_search_data.update(attribute_to_mongo_query(attribute, search_value, key, get_blueprint))

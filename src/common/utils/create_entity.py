@@ -38,7 +38,7 @@ class CreateEntity:
         default_value = attr.default
         type = attr.attribute_type
 
-        if default_value is not None and len(str(default_value)) > 0 and attr.is_array():
+        if default_value is not None and len(str(default_value)) > 0 and attr.is_array:
             try:
                 return json.loads(default_value)
             except JSONDecodeError:
@@ -46,7 +46,7 @@ class CreateEntity:
                 return []
 
         if default_value == "":
-            if attr.is_array():
+            if attr.is_array:
                 return attr.dimensions.create_default_array(blueprint_provider, attr)
             if type == "boolean":
                 return False
@@ -90,7 +90,7 @@ class CreateEntity:
     def _get_entity(self, blueprint: Blueprint, entity):
         for attr in blueprint.attributes:
             if attr.attribute_type in PRIMITIVES:
-                if not attr.is_optional() and attr.name not in entity:
+                if not attr.is_optional and attr.name not in entity:
                     entity[attr.name] = CreateEntity.parse_value(attr=attr, blueprint_provider=self.blueprint_provider)
             else:
                 blueprint = (
@@ -98,10 +98,10 @@ class CreateEntity:
                     if attr.attribute_type != BuiltinDataTypes.OBJECT.value
                     else SIMOS.ENTITY.value
                 )
-                if attr.is_array():
+                if attr.is_array:
                     entity[attr.name] = attr.dimensions.create_default_array(self.blueprint_provider, CreateEntity)
                 else:
-                    if attr.is_optional():
+                    if attr.is_optional:
                         entity[attr.name] = {}
 
                     elif CreateEntity.is_json(attr):

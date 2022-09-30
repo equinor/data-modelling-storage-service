@@ -1,5 +1,3 @@
-from typing import Union
-
 from pydantic import BaseModel, Field, validator
 
 from domain_classes.dimension import Dimension
@@ -12,8 +10,8 @@ class BlueprintAttribute(BaseModel):
     type: str = SIMOS.BLUEPRINT_ATTRIBUTE.value
     description: str = ""
     label: str = ""
-    default: Union[str, list] = ""
-    dimensions: Dimension = None
+    default: str | int | float | bool | list = ""
+    dimensions: Dimension | None = None
     optional: bool = False
     contained: bool = True
     enum_type: str = Field("", alias="enumType")
@@ -35,15 +33,19 @@ class BlueprintAttribute(BaseModel):
             f"Contained: '{self.contained}', Optional: '{self.optional}'"
         )
 
+    @property
     def is_array(self):
         return self.dimensions.is_array()
 
+    @property
     def is_matrix(self):
         return self.dimensions.is_matrix()
 
+    @property
     def is_primitive(self):
         return self.attribute_type in PRIMITIVES
 
+    @property
     def is_optional(self):
         # todo get default from blueprint attribute optional's default value.
         default_optional = False

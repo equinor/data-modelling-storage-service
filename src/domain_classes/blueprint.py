@@ -110,10 +110,10 @@ class Blueprint:
 
     def is_attr_removable(self, attribute_name):
         for attr in self.attributes:
-            if attr.name == attribute_name and not attr.is_primitive():
-                if attr.is_array():
+            if attr.name == attribute_name and not attr.is_primitive:
+                if attr.is_array:
                     return False
-                elif not attr.is_optional():
+                elif not attr.is_optional:
                     return False
         return True
 
