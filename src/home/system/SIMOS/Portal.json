@@ -1,0 +1,16 @@
+  {
+  "type": "system/SIMOS/Blueprint",
+  "extends": ["system/SIMOS/DefaultUiRecipes","system/SIMOS/NamedEntity"],
+  "name": "Portal",
+  "description": "This describes an portal",
+  "attributes": [
+    {
+      "attributeType": "string",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "name": "applications",
+      "dimensions": "*",
+      "description": "Connected application to the portal",
+      "label": "Applications"
+    }
+  ]
+}
