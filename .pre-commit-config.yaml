@@ -43,10 +43,6 @@ repos:
       name: Python style checking
       entry: sh -c ".venv/bin/python -m flake8 src"
       language: system
-    - id: safety
-      name: Dependencies CVE check
-      entry: sh -c ".venv/bin/python -m safety check"
-      language: system
       files: poetry.lock
     - id: pytest
       name: Unit Tests

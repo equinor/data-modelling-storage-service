@@ -12,12 +12,9 @@ jobs:
         run: docker build -t devimage --target development .
       - name: "Bandit"
         run: docker run devimage bandit --recursive --exclude "./.venv,./src/tests/*" .
-      - name: "Safety"
-        run: docker run devimage safety check
       - name: "Black"
         run: docker run devimage black --check --diff .
       - name: "Flake8"
         run: docker run devimage flake8
       - name: "Generate API"
         run: docker run -d -p "8000:5000" devimage && ./generate-python-package.sh
-
