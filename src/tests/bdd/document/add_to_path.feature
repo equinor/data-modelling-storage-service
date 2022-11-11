@@ -16,37 +16,37 @@ Feature: Add document with document_service
       {
           "name": "root_package",
           "description": "",
-          "type": "system/SIMOS/Package",
+          "type": "sys://system/SIMOS/Package",
           "isRoot": true,
           "content": [
               {
                   "_id": "2",
                   "name": "Operation",
-                  "type": "system/SIMOS/Blueprint"
+                  "type": "sys://system/SIMOS/Blueprint"
               },
               {
                   "_id": "3",
                   "name": "Phase",
-                  "type": "system/SIMOS/Blueprint"
+                  "type": "sys://system/SIMOS/Blueprint"
               },
               {
                   "_id": "6",
                   "name": "ResponseContainer",
-                  "type": "system/SIMOS/Blueprint"
+                  "type": "sys://system/SIMOS/Blueprint"
               },
               {
                   "_id": "5",
                   "name": "ResultFile",
-                  "type": "system/SIMOS/Blueprint"
+                  "type": "sys://system/SIMOS/Blueprint"
               },
               {
                   "_id": "101",
-                  "type": "system/SIMOS/Package",
+                  "type": "sys://system/SIMOS/Package",
                   "name": "Results"
               },
               {
                   "_id": "102",
-                  "type": "system/SIMOS/Package",
+                  "type": "sys://system/SIMOS/Package",
                   "name": "EntityPackage"
               }
           ]
@@ -58,12 +58,12 @@ Feature: Add document with document_service
       {
           "name": "Results",
           "description": "",
-          "type": "system/SIMOS/Package",
+          "type": "sys://system/SIMOS/Package",
           "isRoot": false,
           "content": [
             {
                   "_id": "99",
-                  "type": "data-source-name/root_package/Operation",
+                  "type": "sys://data-source-name/root_package/Operation",
                   "name": "result1"
             }
           ]
@@ -74,13 +74,14 @@ Feature: Add document with document_service
       """
       {
           "name": "OperationPackage",
+          "name": "OperationPackage",
           "description": "",
-          "type": "system/SIMOS/Package",
+          "type": "sys://system/SIMOS/Package",
           "isRoot": false,
           "content": [
               {
                   "_id": "11",
-                  "type": "data-source-name/root_package/Operation",
+                  "type": "sys://data-source-name/root_package/Operation",
                   "name": "operation1"
               }
           ]
@@ -90,13 +91,13 @@ Feature: Add document with document_service
     Given there exist document with id "2" in data source "data-source-name"
       """
       {
-        "type": "system/SIMOS/Blueprint",
+        "type": "sys://system/SIMOS/Blueprint",
         "name": "Operation",
-        "extends": ["system/SIMOS/NamedEntity"],
+        "extends": ["sys://system/SIMOS/NamedEntity"],
         "attributes": [
           {
             "name": "phases",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": "sys://system/SIMOS/BlueprintAttribute",
             "attributeType": "data-source-name/root_package/Phase",
             "contained": true,
             "dimensions": "*"
@@ -111,12 +112,12 @@ Feature: Add document with document_service
       """
       {
         "name": "Phase",
-        "type": "system/SIMOS/Blueprint",
-        "extends": ["system/SIMOS/NamedEntity"],
+        "type": "sys://system/SIMOS/Blueprint",
+        "extends": ["sys://system/SIMOS/NamedEntity"],
         "attributes": [
           {
             "name": "results",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": "sys://system/SIMOS/BlueprintAttribute",
             "attributeType": "data-source-name/root_package/ResultFile",
             "optional": true,
             "contained": false,
@@ -131,12 +132,12 @@ Feature: Add document with document_service
       """
         {
           "name": "ResultFile",
-          "type": "system/SIMOS/Blueprint",
-          "extends": ["system/SIMOS/NamedEntity"],
+          "type": "sys://system/SIMOS/Blueprint",
+          "extends": ["sys://system/SIMOS/NamedEntity"],
           "attributes": [
             {
               "name": "responseContainer",
-              "type": "system/SIMOS/BlueprintAttribute",
+              "type": "sys://system/SIMOS/BlueprintAttribute",
               "attributeType": "data-source-name/root_package/ResponseContainer",
               "contained": true,
               "optional": false
@@ -150,12 +151,12 @@ Feature: Add document with document_service
       """
         {
           "name": "ResponseContainer",
-          "type": "system/SIMOS/Blueprint",
-          "extends": ["system/SIMOS/NamedEntity"],
+          "type": "sys://system/SIMOS/Blueprint",
+          "extends": ["sys://system/SIMOS/NamedEntity"],
           "attributes": [
             {
               "name": "responses",
-              "type": "system/SIMOS/BlueprintAttribute",
+              "type": "sys://system/SIMOS/BlueprintAttribute",
               "attributeType": "string",
               "dimensions": "*",
               "contained": true,
@@ -171,14 +172,14 @@ Feature: Add document with document_service
         {
           "_id": "11",
           "name": "operation1",
-          "type": "data-source-name/root_package/Operation",
+          "type": "sys://data-source-name/root_package/Operation",
           "phases": [
             {
               "name": "the-first_phase",
-              "type": "data-source-name/root_package/Phase",
+              "type": "sys://data-source-name/root_package/Phase",
                "results": [
                     {
-                      "type": "data-source-name/root_package/ResultFile",
+                      "type": "sys://data-source-name/root_package/ResultFile",
                       "_id": "99",
                       "name": "result_weather_data"
                     }
@@ -192,12 +193,12 @@ Feature: Add document with document_service
       """
       {
         "_id": "99",
-        "type": "data-source-name/root_package/ResultFile",
+        "type": "sys://data-source-name/root_package/ResultFile",
         "name": "result1",
         "description": "Results",
         "responseContainer":
           {
-            "type": "data-source-name/root_package/ResponseContainer",
+            "type": "sys://data-source-name/root_package/ResponseContainer",
             "name": "response_container",
             "responses": [
               "responseA", "responseB", "responseC"
@@ -208,14 +209,13 @@ Feature: Add document with document_service
 
 
   Scenario: Add test
-    Given i access the resource url "/api/v1/documents/data-source-name/add-to-path"
+    Given i access the resource url "/api/v1/documents/data-source-name/root_package/EntityPackage/add-to-path"
     When i make a "POST" request with "1" files
     """
     {
-      "directory": "/root_package/EntityPackage",
       "document":
       {
-        "type": "data-source-name/root_package/Operation",
+        "type": "sys://data-source-name/root_package/Operation",
         "name": "operation2",
         "description": "",
         "phases": []
@@ -230,12 +230,12 @@ Feature: Add document with document_service
     """
       {
         "_id": "99",
-        "type": "data-source-name/root_package/ResultFile",
+        "type": "sys://data-source-name/root_package/ResultFile",
         "name": "result1",
         "description": "Results",
         "responseContainer":
           {
-            "type": "data-source-name/root_package/ResponseContainer",
+            "type": "sys://data-source-name/root_package/ResponseContainer",
             "name": "response_container",
             "responses": [
               "responseA", "responseB", "responseC"

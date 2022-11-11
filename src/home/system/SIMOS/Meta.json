@@ -1,0 +1,23 @@
+{
+  "type": "sys://system/SIMOS/Blueprint",
+  "name": "Meta",
+  "description": "Meta information for the entity",
+  "attributes": [
+    {
+      "attributeType": "sys://system/SIMOS/Dependency",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "name": "dependencies",
+      "dimensions": "*"
+    },
+    {
+      "attributeType": "string",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "name": "version"
+    },
+    {
+      "attributeType": "string",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "name": "type"
+    }
+  ]
+}

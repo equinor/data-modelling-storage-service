@@ -4,8 +4,8 @@ from pydantic import BaseModel
 from pydantic.config import Extra
 
 from authentication.models import User
-from services.document_service import DocumentService
 from common.utils.create_entity import CreateEntity
+from services.document_service import DocumentService
 
 
 class BasicEntity(BaseModel, extra=Extra.allow):

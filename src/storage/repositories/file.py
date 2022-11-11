@@ -12,8 +12,9 @@ class LocalFileRepository(RepositoryInterface):
         self.path = Path(location)
 
     def get(self, doc_ref: str) -> dict:
+        protocol, address = doc_ref.split("://", 1)
         try:
-            with open(f"{self.path}/{doc_ref}.json") as f:
+            with open(f"{self.path}/{address}.json") as f:
                 return json.load(f)
         except FileNotFoundError:
             raise FileNotFoundError(f"'{doc_ref}' not found. Are DMSS core blueprints available at '{self.path}'?")

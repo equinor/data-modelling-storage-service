@@ -22,7 +22,7 @@ services:
       AAD_ENTERPRISE_APP_OID: b9041025-05f0-44d4-89a7-3b5f955c0de5
       AUTH_PROVIDER_FOR_ROLE_CHECK:
     ports:
-      - "8000:5000"
+      - "5000:5000"
 
   db:
     image: mongo:3.4

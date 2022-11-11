@@ -1,5 +1,5 @@
 {
-  "type": "system/SIMOS/Enum",
+  "type": "sys://system/SIMOS/Enum",
   "name": "AttributeTypes",
   "description": "This describes a list of attribute types",
   "values": ["string", "integer", "number", "boolean", "blueprint"],

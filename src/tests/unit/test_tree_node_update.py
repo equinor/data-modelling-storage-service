@@ -6,6 +6,7 @@ from common.exceptions import BadRequestException
 from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
+from enums import SIMOS
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_blueprint_provider import blueprint_provider
@@ -18,13 +19,13 @@ class MultiTypeBlueprintProvider:
             return Blueprint(
                 {
                     "name": "Parent",
-                    "type": "system/SIMOS/Blueprint",
-                    "extends": ["system/SIMOS/NamedEntity"],
+                    "type": SIMOS.BLUEPRINT.value,
+                    "extends": [SIMOS.NAMED_ENTITY.value],
                     "attributes": [
                         {
                             "name": "SomeChild",
                             "attributeType": "base_child",
-                            "type": "system/SIMOS/BlueprintAttribute",
+                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
                             "optional": True,
                         },
                     ],
@@ -34,13 +35,13 @@ class MultiTypeBlueprintProvider:
             return Blueprint(
                 {
                     "name": "Parent",
-                    "type": "system/SIMOS/Blueprint",
-                    "extends": ["system/SIMOS/NamedEntity"],
+                    "type": SIMOS.BLUEPRINT.value,
+                    "extends": [SIMOS.NAMED_ENTITY.value],
                     "attributes": [
                         {
                             "name": "SomeChild",
                             "attributeType": "base_child",
-                            "type": "system/SIMOS/BlueprintAttribute",
+                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
                             "optional": True,
                             "dimensions": "*",
                         },
@@ -51,13 +52,13 @@ class MultiTypeBlueprintProvider:
             return Blueprint(
                 {
                     "name": "wrapps_parent_w_list",
-                    "type": "system/SIMOS/Blueprint",
-                    "extends": ["system/SIMOS/NamedEntity"],
+                    "type": SIMOS.BLUEPRINT.value,
+                    "extends": [SIMOS.NAMED_ENTITY.value],
                     "attributes": [
                         {
                             "name": "Parent-w-list",
                             "attributeType": "parent_w_list",
-                            "type": "system/SIMOS/BlueprintAttribute",
+                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
                         },
                     ],
                 }
@@ -66,13 +67,13 @@ class MultiTypeBlueprintProvider:
             return Blueprint(
                 {
                     "name": "BaseChild",
-                    "type": "system/SIMOS/Blueprint",
-                    "extends": ["system/SIMOS/NamedEntity"],
+                    "type": SIMOS.BLUEPRINT.value,
+                    "extends": [SIMOS.NAMED_ENTITY.value],
                     "attributes": [
                         {
                             "name": "AValue",
                             "attributeType": "integer",
-                            "type": "system/SIMOS/BlueprintAttribute",
+                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
                         },
                     ],
                 }
@@ -81,13 +82,13 @@ class MultiTypeBlueprintProvider:
             return Blueprint(
                 {
                     "name": "SpecialChild",
-                    "type": "system/SIMOS/Blueprint",
+                    "type": SIMOS.BLUEPRINT.value,
                     "extends": ["base_child"],
                     "attributes": [
                         {
                             "name": "AnExtraValue",
                             "attributeType": "string",
-                            "type": "system/SIMOS/BlueprintAttribute",
+                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
                         },
                     ],
                 }
@@ -96,13 +97,13 @@ class MultiTypeBlueprintProvider:
             return Blueprint(
                 {
                     "name": "ExtraSpecialChild",
-                    "type": "system/SIMOS/Blueprint",
-                    "extends": ["system/SIMOS/NamedEntity", "special_child"],
+                    "type": SIMOS.BLUEPRINT.value,
+                    "extends": [SIMOS.NAMED_ENTITY.value, "special_child"],
                     "attributes": [
                         {
                             "name": "AnotherExtraValue",
                             "attributeType": "boolean",
-                            "type": "system/SIMOS/BlueprintAttribute",
+                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
                         },
                     ],
                 }
@@ -111,13 +112,13 @@ class MultiTypeBlueprintProvider:
             return Blueprint(
                 {
                     "name": "SpecialChild",
-                    "type": "system/SIMOS/Blueprint",
-                    "extends": ["system/SIMOS/NamedEntity"],
+                    "type": SIMOS.BLUEPRINT.value,
+                    "extends": [SIMOS.NAMED_ENTITY.value],
                     "attributes": [
                         {
                             "name": "AnExtraValue",
                             "attributeType": "string",
-                            "type": "system/SIMOS/BlueprintAttribute",
+                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
                         },
                     ],
                 }

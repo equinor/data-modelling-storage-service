@@ -1,17 +1,17 @@
 {
-  "type": "system/SIMOS/Blueprint",
-  "extends": ["system/SIMOS/DefaultUiRecipes","system/SIMOS/NamedEntity"],
+  "type": "sys://system/SIMOS/Blueprint",
+  "extends": ["sys://system/SIMOS/DefaultUiRecipes","sys://system/SIMOS/NamedEntity"],
   "name": "Package",
   "description": "This is a blueprint for a package that contains documents and other packages",
   "attributes": [
     {
       "attributeType": "boolean",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "isRoot"
     },
     {
       "attributeType": "object",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "content",
       "dimensions": "*",
       "optional": true
@@ -19,7 +19,7 @@
   ],
   "storageRecipes": [
     {
-      "type": "system/SIMOS/StorageRecipe",
+      "type": "sys://system/SIMOS/StorageRecipe",
       "name": "DEFAULT",
       "description": "",
       "attributes": [
@@ -33,24 +33,24 @@
   ],
   "uiRecipes": [
     {
-      "type": "system/SIMOS/UiRecipe",
+      "type": "sys://system/SIMOS/UiRecipe",
       "name": "DEFAULT_CREATE",
       "plugin": "DEFAULT_CREATE",
       "description": "",
       "attributes": [
         {
           "name": "isRoot",
-          "type": "system/SIMOS/UiAttribute",
+          "type": "sys://system/SIMOS/UiAttribute",
           "contained": false
         },
         {
           "name": "type",
-          "type": "system/SIMOS/UiAttribute",
+          "type": "sys://system/SIMOS/UiAttribute",
           "contained": false
         },
         {
           "name": "content",
-          "type": "system/SIMOS/UiAttribute",
+          "type": "sys://system/SIMOS/UiAttribute",
           "contained": false
         }
       ]

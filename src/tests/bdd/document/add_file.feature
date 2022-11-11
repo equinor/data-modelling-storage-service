@@ -17,43 +17,43 @@ Feature: Explorer - Add file
     {
         "name": "root_package",
         "description": "",
-        "type": "system/SIMOS/Package",
+        "type": "sys://system/SIMOS/Package",
         "isRoot": true,
         "content": [
             {
                 "_id": "2",
                 "name": "MultiplePdfContainer",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             },
             {
                 "_id": "3",
                 "name": "BaseChild",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             },
             {
                 "_id": "4",
                 "name": "Parent",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             },
             {
                 "_id": "5",
                 "name": "SpecialChild",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             },
             {
                 "_id": "6",
                 "name": "parentEntity",
-                "type": "test-DS/root_package/Parent"
+                "type": "sys://test-DS/root_package/Parent"
             },
             {
                 "_id": "7",
                 "name": "Hobby",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             },
             {
                 "_id": "8",
                 "name": "Comment",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             }
         ]
     }
@@ -61,40 +61,40 @@ Feature: Explorer - Add file
     Given there exist document with id "2" in data source "test-DS"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "MultiplePdfContainer",
       "description": "A recursive blueprint with multiple PDFs",
       "attributes": [
         {
           "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "name": "name"
         },
         {
           "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "name": "description"
         },
         {
           "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "name": "type",
           "default": "blueprints/root_package/RecursiveBlueprint"
         },
         {
           "name": "a_pdf",
-          "attributeType": "system/SIMOS/blob_types/PDF",
-          "type": "system/SIMOS/BlueprintAttribute"
+          "attributeType": "sys://system/SIMOS/blob_types/PDF",
+          "type": "sys://system/SIMOS/BlueprintAttribute"
         },
         {
           "name": "another_pdf",
-          "attributeType": "system/SIMOS/blob_types/PDF",
-          "type": "system/SIMOS/BlueprintAttribute"
+          "attributeType": "sys://system/SIMOS/blob_types/PDF",
+          "type": "sys://system/SIMOS/BlueprintAttribute"
         },
         {
           "name": "pdf_container",
-          "attributeType": "test-DS/root_package/MultiplePdfContainer",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "attributeType": "sys://test-DS/root_package/MultiplePdfContainer",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "optional": true
         }
       ]
@@ -104,15 +104,15 @@ Feature: Explorer - Add file
     Given there exist document with id "3" in data source "test-DS"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "BaseChild",
       "description": "",
-      "extends": ["system/SIMOS/NamedEntity"],
+      "extends": ["sys://system/SIMOS/NamedEntity"],
       "attributes": [
         {
         "name": "AValue",
         "attributeType": "integer",
-        "type": "system/SIMOS/BlueprintAttribute"
+        "type": "sys://system/SIMOS/BlueprintAttribute"
         }
       ]
     }
@@ -122,15 +122,15 @@ Feature: Explorer - Add file
     Given there exist document with id "4" in data source "test-DS"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "Parent",
       "description": "",
-      "extends": ["system/SIMOS/NamedEntity"],
+      "extends": ["sys://system/SIMOS/NamedEntity"],
       "attributes": [
         {
         "name": "SomeChild",
-        "attributeType": "test-DS/root_package/BaseChild",
-        "type": "system/SIMOS/BlueprintAttribute",
+        "attributeType": "sys://test-DS/root_package/BaseChild",
+        "type": "sys://system/SIMOS/BlueprintAttribute",
         "optional": true
         }
       ]
@@ -140,20 +140,20 @@ Feature: Explorer - Add file
     Given there exist document with id "5" in data source "test-DS"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "SpecialChild",
       "description": "",
-      "extends": ["test-DS/root_package/BaseChild"],
+      "extends": ["sys://test-DS/root_package/BaseChild"],
       "attributes": [
         {
           "name": "AnExtraValue",
           "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute"
+          "type": "sys://system/SIMOS/BlueprintAttribute"
         },
         {
           "name": "Hobbies",
-          "attributeType": "test-DS/root_package/Hobby",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "attributeType": "sys://test-DS/root_package/Hobby",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "dimensions": "*"
         }
@@ -165,7 +165,7 @@ Feature: Explorer - Add file
   Given there exist document with id "6" in data source "test-DS"
     """
     {
-      "type": "test-DS/root_package/Parent",
+      "type": "sys://test-DS/root_package/Parent",
       "name": "parentEntity",
       "description": "",
       "SomeChild": {}
@@ -175,15 +175,15 @@ Feature: Explorer - Add file
   Given there exist document with id "7" in data source "test-DS"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "Hobby",
       "description": "",
-      "extends": ["system/SIMOS/NamedEntity"],
+      "extends": ["sys://system/SIMOS/NamedEntity"],
       "attributes": [
         {
         "name": "difficulty",
         "attributeType": "string",
-        "type": "system/SIMOS/BlueprintAttribute"
+        "type": "sys://system/SIMOS/BlueprintAttribute"
         }
       ]
     }
@@ -192,14 +192,14 @@ Feature: Explorer - Add file
   Given there exist document with id "8" in data source "test-DS"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "Comment",
       "description": "a comment blueprint, that does not require a name",
       "attributes": [
         {
         "name": "text",
         "attributeType": "string",
-        "type": "system/SIMOS/BlueprintAttribute"
+        "type": "sys://system/SIMOS/BlueprintAttribute"
         }
       ]
     }
@@ -211,7 +211,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "baseChildInParentEntity",
-      "type": "test-DS/root_package/BaseChild",
+      "type": "sys://test-DS/root_package/BaseChild",
       "description": "base child in parent",
       "AValue": 0
     }
@@ -225,12 +225,12 @@ Feature: Explorer - Add file
     {
           "_id": "6",
           "name": "parentEntity",
-          "type": "test-DS/root_package/Parent",
+          "type": "sys://test-DS/root_package/Parent",
           "description": "",
           "SomeChild":
           {
             "name": "baseChildInParentEntity",
-            "type": "test-DS/root_package/BaseChild",
+            "type": "sys://test-DS/root_package/BaseChild",
             "description": "base child in parent",
             "AValue": 0
           }
@@ -243,7 +243,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "newRootPackage",
-      "type": "system/SIMOS/Package",
+      "type": "sys://system/SIMOS/Package",
       "isRoot": true,
       "content": []
     }
@@ -256,7 +256,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "hobbynumber1",
-      "type": "test-DS/root_package/Hobby",
+      "type": "sys://test-DS/root_package/Hobby",
       "description": "example hobby",
       "difficulty": "high"
     }
@@ -270,7 +270,7 @@ Feature: Explorer - Add file
     {
           "_id": "6",
           "name": "parentEntity",
-          "type": "test-DS/root_package/Parent",
+          "type": "sys://test-DS/root_package/Parent",
           "description": "",
           "SomeChild": {}
     }
@@ -282,14 +282,14 @@ Feature: Explorer - Add file
     """
     {
       "name": "specialChild",
-      "type": "test-DS/root_package/SpecialChild",
+      "type": "sys://test-DS/root_package/SpecialChild",
       "description": "specialized child",
       "AValue": 39,
       "AnExtraValue": "abc",
       "Hobbies": [
         {
           "name": "Football",
-          "type": "test-DS/root_package/Hobby",
+          "type": "sys://test-DS/root_package/Hobby",
           "description": "sport",
           "difficulty": "high"
         }
@@ -305,12 +305,12 @@ Feature: Explorer - Add file
     {
           "_id": "6",
           "name": "parentEntity",
-          "type": "test-DS/root_package/Parent",
+          "type": "sys://test-DS/root_package/Parent",
           "description": "",
           "SomeChild":
           {
             "name": "specialChild",
-            "type": "test-DS/root_package/SpecialChild",
+            "type": "sys://test-DS/root_package/SpecialChild",
             "description": "specialized child",
             "AValue": 39,
             "AnExtraValue": "abc"
@@ -324,7 +324,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "new_document",
-      "type": "system/SIMOS/Blueprint"
+      "type": "sys://system/SIMOS/Blueprint"
     }
     """
     Then the response status should be "OK"
@@ -335,7 +335,7 @@ Feature: Explorer - Add file
     """
     {
           "name":"root_package",
-          "type":"system/SIMOS/Package",
+          "type":"sys://system/SIMOS/Package",
           "content":[
             {
               "name": "MultiplePdfContainer"
@@ -390,7 +390,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "new_document",
-      "type": "system/SIMOS/Blueprint"
+      "type": "sys://system/SIMOS/Blueprint"
     }
     """
     Then the response status should be "Not Found"
@@ -420,7 +420,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "new_document",
-      "type": "system/SIMOS/Blueprint"
+      "type": "sys://system/SIMOS/Blueprint"
     }
     """
     Then the response status should be "Forbidden"
@@ -436,13 +436,12 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with duplicate name
-    Given i access the resource url "/api/v1/documents/test-DS/add-to-path"
+    Given i access the resource url "/api/v1/documents/test-DS/root_package/add-to-path"
     When i make a "POST" request with "1" files
     """
       {
-        "directory": "/root_package/",
         "document": {
-          "type": "test-DS/root_package/Parent",
+          "type": "sys://test-DS/root_package/Parent",
           "name": "parentEntity",
           "description": "",
           "SomeChild": {}
@@ -461,30 +460,26 @@ Feature: Explorer - Add file
     }
     """
 
-
   Scenario: Add Comment entity without a name attribute with add-raw endpoint
     Given i access the resource url "/api/v1/documents/test-DS/add-raw"
     When i make a "POST" request
     """
     {
         "_id": "429cb3da-ebbe-4ea6-80a6-b6bca0f67aaa",
-        "type": "test-DS/root_package/Comment",
+        "type": "sys://test-DS/root_package/Comment",
         "description": "comment entity with no name",
         "text": "example comment"
     }
     """
     Then the response status should be "OK"
 
-
   Scenario: Add Parent entity without a name attribute with add-to-path endpoint
-    Given i access the resource url "/api/v1/documents/test-DS/add-to-path?update_uncontained=True"
+    Given i access the resource url "/api/v1/documents/test-DS/root_package/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
-      "directory": "/root_package/",
-      "document":
-      {
-        "type": "test-DS/root_package/Parent",
+      "document": {
+        "type": "sys://test-DS/root_package/Parent",
         "description": "parent entity with no name"
       }
     }
@@ -502,49 +497,45 @@ Feature: Explorer - Add file
     """
 
   Scenario: Adding file with id set to empty string should generate new uid
-    Given I access the resource url "/api/v1/documents/test-DS/add-to-path"
+    Given I access the resource url "/api/v1/documents/test-DS/root_package/add-to-path"
     When i make a "POST" request with "1" files
     """
     {
       "document": {
         "_id": "",
-        "type":"system/SIMOS/Blueprint",
+        "type":"sys://system/SIMOS/Blueprint",
         "name": "new_bp",
         "description": "Blueprint with no name"
-      },
-      "directory": "/root_package/"
+      }
     }
     """
     Then the response status should be "OK"
     And the response should have valid uid
 
   Scenario: Adding file with id
-    Given I access the resource url "/api/v1/documents/test-DS/add-to-path"
+    Given I access the resource url "/api/v1/documents/test-DS/root_package/add-to-path"
     When i make a "POST" request with "1" files
     """
     {
       "document": {
         "_id": "2283c9b0-d509-46c9-a153-94c79f4d7b7b",
-        "type":"system/SIMOS/Blueprint",
+        "type":"sys://system/SIMOS/Blueprint",
         "name": "new_bp",
         "description": "Blueprint with no name"
-      },
-      "directory": "/root_package/"
+      }
     }
     """
     Then the response status should be "OK"
     And the response should have valid uid
 
-
   Scenario: Add Comment entity without a name attribute with add-to-path endpoint
-    Given i access the resource url "/api/v1/documents/test-DS/add-to-path?update_uncontained=True"
+    Given i access the resource url "/api/v1/documents/test-DS/root_package/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
-      "directory": "/root_package/",
       "document":
       {
-        "type": "test-DS/root_package/Comment",
+        "type": "sys://test-DS/root_package/Comment",
         "description": "comment entity with no name",
         "text": "example comment"
       }
@@ -553,14 +544,13 @@ Feature: Explorer - Add file
     Then the response status should be "OK"
 
   Scenario: Add blueprint without a name attribute with add-to-path endpoint should fail
-    Given i access the resource url "/api/v1/documents/test-DS/add-to-path?update_uncontained=True"
+    Given i access the resource url "/api/v1/documents/test-DS/root_package/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
-      "directory": "/root_package/",
       "document":
       {
-        "type":"system/SIMOS/Blueprint",
+        "type":"sys://system/SIMOS/Blueprint",
         "description": "Blueprint with no name"
       }
     }
@@ -578,14 +568,13 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add package without a name attribute with add-to-path endpoint should fail
-    Given i access the resource url "/api/v1/documents/test-DS/add-to-path?update_uncontained=True"
+    Given i access the resource url "/api/v1/documents/test-DS/root_package/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
-      "directory": "/root_package/",
       "document":
       {
-        "type":"system/SIMOS/Package",
+        "type":"sys://system/SIMOS/Package",
         "description": "Package with no name"
       }
     }
@@ -607,7 +596,7 @@ Feature: Explorer - Add file
     When i make a "POST" request
     """
     {
-      "type": "test-DS/root_package/Parent",
+      "type": "sys://test-DS/root_package/Parent",
       "description": "parent entity with no name"
     }
     """
@@ -628,7 +617,7 @@ Feature: Explorer - Add file
     When i make a "POST" request
     """
     {
-      "type": "test-DS/root_package/Comment",
+      "type": "sys://test-DS/root_package/Comment",
       "description": "comment entity with no name",
       "text": "example comment"
     }
@@ -640,7 +629,7 @@ Feature: Explorer - Add file
     When i make a "POST" request
     """
     {
-      "type":"system/SIMOS/Blueprint",
+      "type":"sys://system/SIMOS/Blueprint",
       "description": "Blueprint with no name"
     }
     """
@@ -661,7 +650,7 @@ Feature: Explorer - Add file
     When i make a "POST" request
     """
     {
-      "type":"system/SIMOS/Package",
+      "type":"sys://system/SIMOS/Package",
       "description": "Package with no name"
     }
     """
@@ -678,22 +667,21 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with multiple PDFs
-    Given i access the resource url "/api/v1/documents/test-DS/add-to-path?update_uncontained=True"
+    Given i access the resource url "/api/v1/documents/test-DS/root_package/add-to-path?update_uncontained=True"
     When i make a "POST" request with "4" files
     """
     {
-      "directory": "/root_package/",
       "document": {
         "name": "new_pdf_container",
-        "type": "test-DS/root_package/MultiplePdfContainer",
+        "type": "sys://test-DS/root_package/MultiplePdfContainer",
         "description": "",
         "a_pdf": {
           "name": "MyPDF1",
           "description": "",
-          "type": "system/SIMOS/blob_types/PDF",
+          "type": "sys://system/SIMOS/blob_types/PDF",
           "blob": {
             "name": "file1",
-            "type": "system/SIMOS/Blob",
+            "type": "sys://system/SIMOS/Blob",
             "_blob_id": ""
           },
           "author": "Stig Oskar"
@@ -701,25 +689,25 @@ Feature: Explorer - Add file
         "another_pdf": {
           "name": "MyPDF2",
           "description": "",
-          "type": "system/SIMOS/blob_types/PDF",
+          "type": "sys://system/SIMOS/blob_types/PDF",
           "blob": {
             "name": "file2",
-            "type": "system/SIMOS/Blob",
+            "type": "sys://system/SIMOS/Blob",
             "_blob_id": ""
           },
           "author": "Stig Oskar"
         },
         "pdf_container": {
           "name": "second_pdf_container",
-          "type": "test-DS/root_package/MultiplePdfContainer",
+          "type": "sys://test-DS/root_package/MultiplePdfContainer",
           "description": "",
           "a_pdf": {
             "name": "MyPDF3",
             "description": "",
-            "type": "system/SIMOS/blob_types/PDF",
+            "type": "sys://system/SIMOS/blob_types/PDF",
             "blob": {
               "name": "file3",
-              "type": "system/SIMOS/Blob",
+              "type": "sys://system/SIMOS/Blob",
               "_blob_id": ""
             },
             "author": "Stig Oskar"
@@ -727,10 +715,10 @@ Feature: Explorer - Add file
           "another_pdf": {
             "name": "MyPDF4",
             "description": "",
-            "type": "system/SIMOS/blob_types/PDF",
+            "type": "sys://system/SIMOS/blob_types/PDF",
             "blob": {
               "name": "file4",
-              "type": "system/SIMOS/Blob",
+              "type": "sys://system/SIMOS/Blob",
               "size": 0,
               "_blob_id": ""
             },

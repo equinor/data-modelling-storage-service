@@ -20,12 +20,12 @@ Feature: Personal Access Token
     Given there exist document with id "1" in data source "test-DS"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
         {
           "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "name": "Something"
         }
       ]
@@ -75,12 +75,12 @@ Feature: Personal Access Token
     Given there exist document with id "1" in data source "test-DS"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
         {
           "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "name": "Something"
         }
       ]

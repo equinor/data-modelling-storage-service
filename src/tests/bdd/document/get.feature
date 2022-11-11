@@ -16,26 +16,26 @@ Feature: Get document
     Given there exist document with id "2" in data source "test-source-name"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "ItemType",
       "description": "",
-      "extends": ["system/SIMOS/NamedEntity"],
+      "extends": ["sys://system/SIMOS/NamedEntity"],
       "attributes": [
         {
           "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "extra"
         },
         {
           "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "list"
         },
         {
-          "attributeType": "test-source-name/TestData/ItemTypeTwo",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "attributeType": "sys://test-source-name/TestData/ItemTypeTwo",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "complexList",
           "dimensions" : "*"
@@ -49,14 +49,14 @@ Feature: Get document
     Given there exist document with id "4" in data source "test-source-name"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "ItemTypeTwo",
       "description": "",
-      "extends": ["system/SIMOS/NamedEntity"],
+      "extends": ["sys://system/SIMOS/NamedEntity"],
       "attributes": [
         {
           "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "extra"
         }
@@ -69,33 +69,33 @@ Feature: Get document
     Given there exist document with id "3" in data source "test-source-name"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "TestContainer",
       "description": "",
-      "extends": ["system/SIMOS/NamedEntity"],
+      "extends": ["sys://system/SIMOS/NamedEntity"],
       "attributes": [
         {
-          "attributeType": "test-source-name/TestData/ItemType",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "attributeType": "sys://test-source-name/TestData/ItemType",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "itemContained"
         },
         {
-          "attributeType": "test-source-name/TestData/ItemType",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "attributeType": "sys://test-source-name/TestData/ItemType",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "dimensions": "*",
           "name": "itemsContained"
         },
         {
-          "attributeType": "test-source-name/TestData/ItemType",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "attributeType": "sys://test-source-name/TestData/ItemType",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "itemNotContained"
         },
         {
-          "attributeType": "test-source-name/TestData/ItemType",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "attributeType": "sys://test-source-name/TestData/ItemType",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "dimensions": "*",
           "name": "itemsNotContained"
@@ -104,18 +104,18 @@ Feature: Get document
       "storageRecipes": [
         {
           "name": "DefaultStorageRecipe",
-          "type": "system/SIMOS/StorageRecipe",
+          "type": "sys://system/SIMOS/StorageRecipe",
           "description": "",
           "attributes": [
             {
               "name": "itemNotContained",
-              "type": "test-source-name/TestData/ItemType",
+              "type": "sys://test-source-name/TestData/ItemType",
               "contained": false,
               "storageTypeAffinity": "blob"
             },
             {
               "name": "itemsNotContained",
-              "type": "test-source-name/TestData/ItemType",
+              "type": "sys://test-source-name/TestData/ItemType",
               "contained": false
             }
           ]
@@ -130,22 +130,22 @@ Feature: Get document
     {
         "name": "TestData",
         "description": "",
-        "type": "system/SIMOS/Package",
+        "type": "sys://system/SIMOS/Package",
         "content": [
             {
                 "_id": "3",
                 "name": "TestContainer",
-                "type": "test-source-name/TestData/TestContainer"
+                "type": "sys://test-source-name/TestData/TestContainer"
             },
             {
                 "_id": "2",
                 "name": "ItemType",
-                "type": "test-source-name/TestData/ItemType"
+                "type": "sys://test-source-name/TestData/ItemType"
             },
             {
                 "_id": "4",
                 "name": "ItemTypeTwo",
-                "type": "test-source-name/TestData/ItemTypeTwo"
+                "type": "sys://test-source-name/TestData/ItemTypeTwo"
             }
 
         ],
@@ -155,12 +155,12 @@ Feature: Get document
 
     Given there are documents for the data source "data-source-name" in collection "documents"
       | uid | parent_uid | name          | description | type                                    |
-      | 1   |            | package_1     |             | system/SIMOS/Package                    |
-      | 2   | 1          | sub_package_1 |             | system/SIMOS/Package                    |
-      | 3   | 1          | sub_package_2 |             | system/SIMOS/Package                    |
-      | 4   | 2          | document_1    |             | system/SIMOS/Package                    |
-      | 5   | 2          | document_2    |             | system/SIMOS/Blueprint                  |
-      | 6   | 3          | container_1   |             | test-source-name/TestData/TestContainer |
+      | 1   |            | package_1     |             | sys://system/SIMOS/Package                    |
+      | 2   | 1          | sub_package_1 |             | sys://system/SIMOS/Package                    |
+      | 3   | 1          | sub_package_2 |             | sys://system/SIMOS/Package                    |
+      | 4   | 2          | document_1    |             | sys://system/SIMOS/Package                    |
+      | 5   | 2          | document_2    |             | sys://system/SIMOS/Blueprint                  |
+      | 6   | 3          | container_1   |             | sys://test-source-name/TestData/TestContainer |
 
   Scenario: Get document by id
     Given I access the resource url "/api/v1/documents/data-source-name/1"
@@ -170,7 +170,7 @@ Feature: Get document
     """
     {
       "name":"package_1",
-      "type":"system/SIMOS/Package",
+      "type":"sys://system/SIMOS/Package",
       "content":[
          {
             "name":"sub_package_1"
@@ -184,7 +184,7 @@ Feature: Get document
     """
 
   Scenario: Get document by path
-    Given I access the resource url "/api/v1/documents-by-path/data-source-name?path=package_1/sub_package_1/document_1"
+    Given I access the resource url "/api/v1/documents-by-path/sys://data-source-name/package_1/sub_package_1/document_1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -192,20 +192,20 @@ Feature: Get document
     {
       "_id": "4",
       "name": "document_1",
-      "type": "system/SIMOS/Package",
+      "type": "sys://system/SIMOS/Package",
       "isRoot": false,
       "content": []
     }
     """
 
   Scenario: Get attribute
-    Given I access the resource url "/api/v1/documents/test-source-name/1?attribute=content.0"
+    Given I access the resource url "/api/v1/documents/test-source-name/1.content.0"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "TestContainer"
     }
     """

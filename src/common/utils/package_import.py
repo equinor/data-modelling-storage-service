@@ -35,7 +35,7 @@ def import_package(path, user: User, data_source: str, is_root: bool = False) ->
     data_source: DataSource = get_data_source(data_source_id=data_source, user=user)
     package = {"name": os.path.basename(path), "type": SIMOS.PACKAGE.value, "isRoot": is_root}
     try:
-        if get_document_by_ref(f"{data_source.name}/{package['name']}", user):
+        if get_document_by_ref(f"sys://{data_source.name}/{package['name']}", user):
             raise BadRequestException(
                 message=(
                     f"A root package with name '{package['name']}' "

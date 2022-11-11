@@ -1,0 +1,27 @@
+{
+  "type": "sys://system/SIMOS/Blueprint",
+  "name": "Dependency",
+  "description": "This describes a blueprint",
+  "attributes": [
+    {
+      "attributeType": "sys://system/SIMOS/Dependency",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "name": "version"
+    },
+    {
+      "attributeType": "string",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "name": "alias"
+    },
+    {
+      "attributeType": "string",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "name": "protocol"
+    },
+     {
+      "attributeType": "string",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "name": "address"
+    }
+  ]
+}

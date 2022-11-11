@@ -5,10 +5,7 @@ from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.responses import create_response, responses
 
-from .use_cases.instantiate_entity import (
-    BasicEntity,
-    instantiate_entity_use_case,
-)
+from .use_cases.instantiate_entity import BasicEntity, instantiate_entity_use_case
 
 router = APIRouter(tags=["default", "entity"], prefix="/entity")
 

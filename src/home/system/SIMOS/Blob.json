@@ -1,17 +1,17 @@
 {
   "name": "Blob",
-  "type": "system/SIMOS/Blueprint",
-  "extends": ["system/SIMOS/DefaultUiRecipes","system/SIMOS/NamedEntity"],
+  "type": "sys://system/SIMOS/Blueprint",
+  "extends": ["sys://system/SIMOS/DefaultUiRecipes","sys://system/SIMOS/NamedEntity"],
   "description": "Reference to a BLOB",
   "attributes": [
     {
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "_blob_id",
       "description": "id for the raw blob",
       "attributeType": "string",
       "contained": true
     }, {
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "size",
       "description": "Size of the blob in bytes",
       "attributeType": "integer",

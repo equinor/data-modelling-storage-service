@@ -65,7 +65,10 @@ def create_response(response_class: Type[TResponse]) -> Callable[..., Callable[.
                 )
                 logger.error(error_response)
                 return JSONResponse(error_response.dict(), status_code=error_response.status)
-            except (ValidationError, ValidationException) as e:
+            except ValidationError as e:
+                validation_exception = ValidationException(message=str(e))
+                return JSONResponse(validation_exception.dict(), status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            except ValidationException as e:
                 logger.error(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
             except NotFoundException as e:

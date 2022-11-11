@@ -17,7 +17,7 @@ from common.utils.build_complex_search import build_mongo_query
 from common.utils.delete_documents import delete_document
 from common.utils.get_blueprint import get_blueprint_provider
 from common.utils.get_document_by_path import get_document_uid_by_path
-from common.utils.get_resolved_document_by_id import get_complete_document
+from common.utils.get_resolved_document_by_id import get_complete_sys_document
 from common.utils.logging import logger
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.utils.string_helpers import split_absolute_ref, split_dotted_id
@@ -128,10 +128,10 @@ class DocumentService:
         return ref_dict
 
     def get_document_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> dict:
-        return get_complete_document(document_uid, self.repository_provider(data_source_id, self.user), depth)
+        return get_complete_sys_document(document_uid, self.repository_provider(data_source_id, self.user), depth)
 
     def get_node_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
-        complete_document = get_complete_document(
+        complete_document = get_complete_sys_document(
             document_uid, self.repository_provider(data_source_id, self.user), depth
         )
         return Node.from_dict(complete_document, complete_document.get("_id"), blueprint_provider=self.get_blueprint)
@@ -342,11 +342,9 @@ class DocumentService:
 
     # Add entity by path
     def add(self, data_source_id: str, path: str, document: Entity, files: dict, update_uncontained=False):
-        if not path.startswith("/"):
-            raise ValueError("path parameter have to start with a forward slash")
-        target: Node = self.get_by_path(f"{data_source_id}{path}")
+        target: Node = self.get_by_path(f"{data_source_id}/{path}")
         if not target:
-            raise NotFoundException(uid=path)
+            raise NotFoundException(f"Could not find '{path}' in data source '{data_source_id}'")
 
         # If dotted attribute path, attribute is the last entry. Else content
         new_node_attr = path.split(".")[-1] if "." in path else "content"

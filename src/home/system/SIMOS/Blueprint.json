@@ -1,28 +1,39 @@
 {
-  "type": "system/SIMOS/Blueprint",
+  "type": "sys://system/SIMOS/Blueprint",
   "name": "Blueprint",
   "description": "This describes a blueprint",
+  "_meta_": {
+    "type": "sys://system/SIMOS/Meta",
+    "version": "0.0.1"
+  },
   "attributes": [
+        {
+      "attributeType": "sys://system/SIMOS/Meta",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "name": "_meta_",
+      "contained": true,
+      "optional": true
+    },
     {
       "attributeType": "boolean",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "abstract",
       "default": false,
       "optional": true
     },
     {
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "name"
     },
     {
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "type"
     },
     {
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "extends",
       "default": "[]",
       "optional": true,
@@ -30,14 +41,14 @@
     },
     {
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "description",
       "default": "",
       "optional": true
     },
     {
-      "attributeType": "system/SIMOS/BlueprintAttribute",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "dimensions": "*",
       "name": "attributes",
       "default": "[{\"name\": \"name\", \"type\": \"string\"}, {\"name\": \"type\", \"type\": \"string\"}, {\"name\": \"description\", \"type\": \"string\"}]",
@@ -45,16 +56,16 @@
       "optional": true
     },
     {
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "system/SIMOS/StorageRecipe",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "attributeType": "sys://system/SIMOS/StorageRecipe",
       "dimensions": "*",
       "name": "storageRecipes",
       "optional": true,
       "default": "[]"
     },
     {
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "system/SIMOS/UiRecipe",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "attributeType": "sys://system/SIMOS/UiRecipe",
       "dimensions": "*",
       "name": "uiRecipes",
       "optional": true,
@@ -63,25 +74,25 @@
   ],
   "storageRecipes": [
     {
-      "type": "system/SIMOS/StorageRecipe",
+      "type": "sys://system/SIMOS/StorageRecipe",
       "name": "DefaultStorageRecipe",
       "description": "",
       "attributes": [
         {
           "name": "attributes",
-          "type": "system/SIMOS/StorageAttribute",
+          "type": "sys://system/SIMOS/StorageAttribute",
           "dimensions": "*",
           "contained": true
         },
         {
           "name": "storageRecipes",
-          "type": "system/SIMOS/StorageAttribute",
+          "type": "sys://system/SIMOS/StorageAttribute",
           "dimensions": "*",
           "contained": true
         },
         {
           "name": "uiRecipes",
-          "type": "system/SIMOS/StorageAttribute",
+          "type": "sys://system/SIMOS/StorageAttribute",
           "dimensions": "*",
           "contained": true
         }
@@ -91,18 +102,18 @@
   "uiRecipes": [
     {
       "name": "Yaml",
-      "type": "system/SIMOS/UiRecipe",
+      "type": "sys://system/SIMOS/UiRecipe",
       "plugin": "yaml-view"
     },
     {
-      "type": "system/SIMOS/UiRecipe",
+      "type": "sys://system/SIMOS/UiRecipe",
       "name": "Edit",
       "description": "Default blueprint edit",
       "plugin": "edit-blueprint"
     },
     {
       "name": "Diagram",
-      "type": "system/SIMOS/UiRecipe",
+      "type": "sys://system/SIMOS/UiRecipe",
       "plugin": "mermaid"
     }
   ]

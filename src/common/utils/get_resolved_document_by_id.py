@@ -10,7 +10,7 @@ def resolve_reference_list(x: list, document_repository: DataSource, depth: int 
         resolved = [resolve_reference_list(item, document_repository) for item in x]
     for value in x:
         if isinstance(value, dict) and value.get("_id"):  # It's a reference!
-            resolved.append(get_complete_document(value["_id"], document_repository, depth, depth_count))
+            resolved.append(get_complete_sys_document(value["_id"], document_repository, depth, depth_count))
         elif isinstance(value, dict):
             resolved.append(resolve_contained_dict(value, document_repository, depth, depth_count))
         else:
@@ -18,7 +18,7 @@ def resolve_reference_list(x: list, document_repository: DataSource, depth: int 
     return resolved
 
 
-def get_complete_document(
+def get_complete_sys_document(
     document_uid: str,
     data_source: DataSource,
     depth: int = 999,
@@ -60,7 +60,7 @@ def resolve_complete_document(entity, data_source, depth, depth_count) -> dict:
             else:
                 value: dict
                 if ref_id := value.get("_id"):  # It's a reference
-                    entity[key] = get_complete_document(ref_id, data_source, depth_count)
+                    entity[key] = get_complete_sys_document(ref_id, data_source, depth_count)
                 else:
                     entity[key] = resolve_contained_dict(value, data_source, depth, depth_count)
 

@@ -11,7 +11,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from starlette import status
 from starlette.requests import Request
-from starlette.responses import JSONResponse, Response
+from starlette.responses import JSONResponse, RedirectResponse, Response
 
 from authentication.authentication import auth_w_jwt_or_pat, auth_with_jwt
 from authentication.models import User
@@ -35,13 +35,13 @@ def create_app() -> FastAPI:
     from features.blueprint import blueprint_feature
     from features.datasource import datasource_feature
     from features.document import document_feature
+    from features.entity import entity_feature
     from features.export import export_feature
     from features.health_check import health_check_feature
     from features.personal_access_token import personal_access_token_feature
     from features.reference import reference_feature
     from features.search import search_feature
     from features.whoami import whoami_feature
-    from features.entity import entity_feature
 
     public_routes = APIRouter()
     public_routes.include_router(health_check_feature.router)
@@ -105,6 +105,13 @@ def create_app() -> FastAPI:
         logger.debug(f"{request.method} {request.url.path} - {milliseconds}ms - {response.status_code}")
         response.headers["X-Process-Time"] = str(process_time)
         return response
+
+    @app.get("/", operation_id="redirect_to_docs", response_class=RedirectResponse, include_in_schema=False)
+    def redirect_to_docs():
+        """
+        Redirects any requests to the servers root ('/') to '/docs'
+        """
+        return RedirectResponse(url="/docs")
 
     return app
 

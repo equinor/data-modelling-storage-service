@@ -9,15 +9,15 @@ from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 
 package_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "Package",
     "description": "This is a blueprint for a package that contains documents and other packages",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
-        {"attributeType": "boolean", "type": "system/SIMOS/BlueprintAttribute", "name": "isRoot"},
+        {"attributeType": "boolean", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "isRoot"},
         {
             "attributeType": "object",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "content",
             "dimensions": "*",
             "optional": True,
@@ -25,7 +25,7 @@ package_blueprint = {
     ],
     "storageRecipes": [
         {
-            "type": "system/SIMOS/StorageRecipe",
+            "type": "sys://system/SIMOS/StorageRecipe",
             "name": "DefaultStorageRecipe",
             "description": "",
             "attributes": [{"name": "content", "type": "object", "contained": False}],
@@ -34,42 +34,42 @@ package_blueprint = {
 }
 
 basic_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "A box",
     "description": "First blueprint",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
-        {"attributeType": "integer", "type": "system/SIMOS/BlueprintAttribute", "name": "length"},
+        {"attributeType": "integer", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "length"},
     ],
 }
 
 higher_rank_array_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "Higher rank integer arrays",
     "description": "First blueprint",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
         {
             "attributeType": "integer",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "1_dim-unfixed",
             "dimensions": "*",
         },
         {
             "attributeType": "basic_blueprint",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "1_dim-fixed_complex_type",
             "dimensions": "5",
         },
         {
             "attributeType": "integer",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "2_dim-unfixed",
             "dimensions": "*,*",
         },
         {
             "attributeType": "integer",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "3_dim-mix",
             "dimensions": "*,1,100",
         },

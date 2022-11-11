@@ -1,8 +1,10 @@
+from dataclasses import dataclass
 from typing import Callable, Dict, List
 
 from pydantic import ValidationError
 
 from domain_classes.blueprint_attribute import BlueprintAttribute
+from domain_classes.dependency import Dependency
 from domain_classes.storage_recipe import DefaultStorageRecipe, StorageRecipe
 from domain_classes.ui_recipe import DefaultRecipe, Recipe
 from enums import PRIMITIVES, StorageDataTypes
@@ -22,10 +24,18 @@ def get_storage_recipes(recipes: List[Dict], attributes: List[BlueprintAttribute
         ]
 
 
+@dataclass(frozen=True)
+class Meta:
+    dependencies: List[Dependency]
+    type: str = ""
+    version: str = "0.0.1"
+
+
 class Blueprint:
     def __init__(self, entity: dict):
         self.name = entity["name"]
         self.description = entity.get("description", "")
+        self.meta: Meta = Meta(entity.get("_meta_"))
         self.abstract = entity.get("abstract", False)
         self.extends = entity.get("extends", [])
         self.type = entity["type"]
