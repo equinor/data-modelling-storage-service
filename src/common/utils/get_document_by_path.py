@@ -5,7 +5,7 @@ from common.exceptions import (
     BadRequestException,
     NotFoundException,
 )
-from common.utils.string_helpers import get_package_and_path, split_absolute_ref
+from common.utils.string_helpers import get_package_and_path, split_dmss_ref
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 
@@ -40,8 +40,8 @@ def _find_document_in_package_by_path(
         return _find_document_in_package_by_path(next_package, path_elements, data_source)
 
 
-def get_document_uid_by_path(path: str, repository) -> Union[str, None]:
-    root_package_name, path_elements = get_package_and_path(path)
+def get_document_uid_by_path(dotted_path: str, repository) -> Union[str, None]:
+    root_package_name, path_elements = get_package_and_path(dotted_path)
     root_package: [dict] = repository.find({"name": root_package_name, "isRoot": True})
     if not root_package:
         raise NotFoundException(
@@ -59,23 +59,23 @@ def get_document_uid_by_path(path: str, repository) -> Union[str, None]:
     return uid
 
 
-def get_document_by_ref(type_ref: str, user) -> dict:
-    """Fetches the document from any supported protocol by the type ref which must be on the format
+def get_document_by_absolute_path(absolute_path: str, user) -> dict:
+    """Fetches the document from any supported protocol by the absolute path which must be on the format
     PROTOCOL://ADDRESS"""
 
     try:
-        protocol, address = type_ref.split("://", 1)
+        protocol, address = absolute_path.split("://", 1)
     except ValueError:
-        raise BadRequestException(f"Invalid type format. The value '{type_ref}' does not specify a protocol.")
+        raise BadRequestException(f"Invalid format. The value '{absolute_path}' does not specify a protocol.")
     match protocol:
-        case "sys":  # The Blueprint should be fetched from a DataSource in this DMSS instance
-            data_source_id, path, attribute = split_absolute_ref(address)
+        case "sys":  # The entity should be fetched from a DataSource in this DMSS instance
+            data_source_id, path, attribute = split_dmss_ref(address)
             document_repository = get_data_source(data_source_id, user)
             type_id = get_document_uid_by_path(path, document_repository)
             if not type_id:
-                raise NotFoundException(message=f"Blueprint referenced with '{address}' could not be found")
+                raise NotFoundException(message=f"Entity referenced with '{address}' could not be found")
             return document_repository.get(uid=type_id)
-        case "http":  # The Blueprint should be fetched by an HTTP call
+        case "http":  # The entity should be fetched by an HTTP call
             raise NotImplementedError
         case _:
             raise NotImplementedError

@@ -20,17 +20,17 @@ from .use_cases.update_document_use_case import update_document_use_case
 router = APIRouter(tags=["default", "document"], prefix="/documents")
 
 
-@router.get("/{absolute_id:path}", operation_id="document_get_by_id", response_model=dict, responses=responses)
+@router.get("/{id_reference:path}", operation_id="document_get_by_id", response_model=dict, responses=responses)
 @create_response(JSONResponse)
 def get_by_id(
-    absolute_id: str,
+    id_reference: str,
     depth: conint(gt=-1, lt=1000) = 999,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     # Allow specification of absolute document ref in document_id
     return get_document_use_case(
         user=user,
-        absolute_id=absolute_id,
+        id_reference=id_reference,
         depth=depth,
     )
 
@@ -44,7 +44,7 @@ def get_by_path(
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """
-    Get a document by its path in the form "PROTOCOL://DATA_SOURCE/PACKAGE/FOLDER/NAME
+    Get a document by its path in the form PROTOCOL://DATA_SOURCE/PACKAGE/FOLDER/NAME.Attribute
     """
     return get_document_by_path_use_case(user=user, absolute_path=absolute_path)
 
@@ -81,11 +81,11 @@ def remove(data_source_id: str, dotted_id: str, user: User = Depends(auth_w_jwt_
 
 
 @router.post(
-    "/{absolute_ref:path}/add-to-path", operation_id="document_add_to_path", response_model=dict, responses=responses
+    "/{path_reference:path}/add-to-path", operation_id="document_add_to_path", response_model=dict, responses=responses
 )
 @create_response(JSONResponse)
 def add_to_path(
-    absolute_ref: str,
+    path_reference: str,
     document: Json = Form(...),
     files: Optional[List[UploadFile]] = File(None),
     update_uncontained: Optional[bool] = False,
@@ -93,10 +93,11 @@ def add_to_path(
 ):
     """
     Same as 'add_to_parent', but reference parent by path instead of ID. Also supports files.
+    The path must be on format; DATA_SOURCE/PACKAGE/ENTITY.Attribute
     """
     return add_document_to_path_use_case(
         user=user,
-        absolute_ref=absolute_ref,
+        path_reference=path_reference,
         document=document,
         files=files,
         update_uncontained=update_uncontained,

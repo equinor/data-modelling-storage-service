@@ -20,7 +20,7 @@ from common.utils.get_document_by_path import get_document_uid_by_path
 from common.utils.get_resolved_document_by_id import get_complete_sys_document
 from common.utils.logging import logger
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
-from common.utils.string_helpers import split_absolute_ref, split_dotted_id
+from common.utils.string_helpers import split_dmss_ref, split_dotted_id
 from common.utils.validators import entity_has_all_required_attributes
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
@@ -137,7 +137,7 @@ class DocumentService:
         return Node.from_dict(complete_document, complete_document.get("_id"), blueprint_provider=self.get_blueprint)
 
     def get_by_path(self, absolute_reference: str) -> Node:
-        data_source_id, path, attribute = split_absolute_ref(absolute_reference)
+        data_source_id, path, attribute = split_dmss_ref(absolute_reference)
         document_repository = get_data_source(data_source_id, self.user)
         document_id = get_document_uid_by_path(path, document_repository)
         return self.get_node_by_uid(data_source_id, document_id)
@@ -229,7 +229,7 @@ class DocumentService:
         return {"data": target_node.to_dict()}
 
     def add_document(self, absolute_ref: str, data: dict = None, update_uncontained: bool = False):
-        data_source, parent_id, attribute = split_absolute_ref(absolute_ref)
+        data_source, parent_id, attribute = split_dmss_ref(absolute_ref)
         if parent_id and not attribute:
             raise BadRequestException("Attribute not specified on parent")
         if not data.get("type"):

@@ -1,7 +1,7 @@
 from functools import lru_cache
 
 from authentication.models import User
-from common.utils.get_document_by_path import get_document_by_ref
+from common.utils.get_document_by_path import get_document_by_absolute_path
 from common.utils.logging import logger
 from config import config
 from domain_classes.blueprint import Blueprint
@@ -14,7 +14,7 @@ class BlueprintProvider:
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def get_blueprint(self, type: str) -> Blueprint:
         logger.debug(f"Cache miss! Fetching blueprint '{type}'")
-        document: dict = get_document_by_ref(type, self.user)
+        document: dict = get_document_by_absolute_path(type, self.user)
         return Blueprint(document)
 
     def invalidate_cache(self):

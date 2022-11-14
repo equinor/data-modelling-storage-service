@@ -2,7 +2,7 @@ from typing import List
 
 from authentication.models import User
 from common.exceptions import NotFoundException
-from common.utils.string_helpers import split_absolute_ref
+from common.utils.string_helpers import split_dmss_ref
 from enums import SIMOS
 from storage.internal.data_source_repository import get_data_source
 
@@ -18,7 +18,7 @@ def find_package_with_document(data_source: str, document_id: str, user) -> dict
 
 
 def resolve_blueprint_use_case(user: User, absolute_id: str):
-    data_source_id, document_id, attr = split_absolute_ref(absolute_id)
+    data_source_id, document_id, attr = split_dmss_ref(absolute_id)
     root_package_found = False
     path_elements = []
     package = find_package_with_document(data_source_id, document_id, user)
