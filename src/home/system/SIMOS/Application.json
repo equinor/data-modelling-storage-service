@@ -4,36 +4,5 @@
   "name": "Application",
   "description": "This describes an application",
   "attributes": [
-    {
-      "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
-      "name": "packages",
-      "dimensions": "*",
-      "description": "Blueprint Packages to be internalized. Only supports packages within same DataSource",
-      "label": "Packages"
-    },
-    {
-      "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
-      "name": "entities",
-      "dimensions": "*",
-      "description": "Entity Packages to be internalized. Only supports packages within same DataSource",
-      "label": "Entities"
-    },
-    {
-      "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
-      "name": "models",
-      "dimensions": "*",
-      "description": "Models to create in application. Only supports packages within same DataSource",
-      "label": "Models"
-    },
-    {
-      "attributeType": "sys://system/SIMOS/Action",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
-      "name": "actions",
-      "description": "Runnable actions",
-      "dimensions": "*"
-    }
   ]
 }
