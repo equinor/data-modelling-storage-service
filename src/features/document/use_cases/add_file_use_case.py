@@ -1,5 +1,5 @@
 from authentication.models import User
-from common.utils.string_helpers import split_absolute_ref
+from common.utils.string_helpers import split_dmss_ref
 from enums import SIMOS
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
@@ -16,5 +16,5 @@ def add_file_use_case(
     if data["type"] == SIMOS.BLUEPRINT.value:
         document_service.invalidate_cache()
 
-    data_source, _, _ = split_absolute_ref(absolute_ref)
+    data_source, _, _ = split_dmss_ref(absolute_ref)
     return document

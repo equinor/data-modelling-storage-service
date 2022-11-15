@@ -17,7 +17,7 @@ class OptionalEntityName(BaseModel):
 
 class EntityType(BaseModel):
     # Regex only allow characters a-9 and '_' + '-' + '/' for paths
-    type: constr(min_length=3, max_length=128, regex=r"^[A-Za-z0-9_\/-]*$", strip_whitespace=True)  # noqa
+    type: constr(min_length=3, max_length=128, regex=r"^[A-Z:a-z0-9_\/-]*$", strip_whitespace=True)  # noqa
 
 
 class DataSource(BaseModel):

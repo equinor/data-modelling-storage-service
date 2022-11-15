@@ -1,5 +1,5 @@
 {
-  "type": "system/SIMOS/Blueprint",
+  "type": "sys://system/SIMOS/Blueprint",
   "description": "Blueprint for an entity which MUST have a name",
   "name": "NamedEntity",
   "attributes": [
@@ -7,13 +7,13 @@
       "name": "name",
       "optional": false,
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "label": "Name"
     },
     {
       "name": "type",
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "label": "Type",
       "default": "",
       "optional": false
@@ -21,7 +21,7 @@
     {
       "name": "description",
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "default": "",
       "optional": true,
       "label": "Description"

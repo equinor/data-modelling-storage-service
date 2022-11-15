@@ -20,45 +20,33 @@ from .use_cases.update_document_use_case import update_document_use_case
 router = APIRouter(tags=["default", "document"], prefix="/documents")
 
 
-@router.get(
-    "/{data_source_id}/{document_id}", operation_id="document_get_by_id", response_model=dict, responses=responses
-)
+@router.get("/{id_reference:path}", operation_id="document_get_by_id", response_model=dict, responses=responses)
 @create_response(JSONResponse)
 def get_by_id(
-    data_source_id: str,
-    document_id: str,
-    attribute: Optional[str] = None,
+    id_reference: str,
     depth: conint(gt=-1, lt=1000) = 999,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     # Allow specification of absolute document ref in document_id
-    id_list = document_id.split(".", 1)
-    if len(id_list) >= 2 and attribute:
-        raise ValueError(
-            "An attribute was specified in both the 'attribute' parameter and the 'document_id' parameter."
-            "Please provide a single attribute specification."
-        )
     return get_document_use_case(
         user=user,
-        document_id=id_list[0],
-        data_source_id=data_source_id,
-        attribute=attribute if len(id_list) == 1 else id_list[1],
+        id_reference=id_reference,
         depth=depth,
     )
 
 
-@router.get("-by-path/{data_source_id}", operation_id="document_get_by_path", response_model=dict, responses=responses)
+@router.get(
+    "-by-path/{absolute_path:path}", operation_id="document_get_by_path", response_model=dict, responses=responses
+)
 @create_response(JSONResponse)
 def get_by_path(
-    data_source_id: str,
-    attribute: Optional[str] = None,
-    path: Optional[str] = None,
+    absolute_path: str,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """
-    Get a document by it's path in the form "{dataSource}/{rootPackage}/{subPackage(s)?/{name}
+    Get a document by its path in the form PROTOCOL://DATA_SOURCE/PACKAGE/FOLDER/NAME.Attribute
     """
-    return get_document_by_path_use_case(user=user, data_source_id=data_source_id, path=path, attribute=attribute)
+    return get_document_by_path_use_case(user=user, absolute_path=absolute_path)
 
 
 @router.put("/{data_source_id}/{document_id}", operation_id="document_update", responses=responses)
@@ -93,25 +81,24 @@ def remove(data_source_id: str, dotted_id: str, user: User = Depends(auth_w_jwt_
 
 
 @router.post(
-    "/{data_source_id}/add-to-path", operation_id="document_add_to_path", response_model=dict, responses=responses
+    "/{path_reference:path}/add-to-path", operation_id="document_add_to_path", response_model=dict, responses=responses
 )
 @create_response(JSONResponse)
 def add_to_path(
-    data_source_id: str,
+    path_reference: str,
     document: Json = Form(...),
-    directory: str = Form(...),
     files: Optional[List[UploadFile]] = File(None),
     update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """
     Same as 'add_to_parent', but reference parent by path instead of ID. Also supports files.
+    The path must be on format; DATA_SOURCE/PACKAGE/ENTITY.Attribute
     """
     return add_document_to_path_use_case(
         user=user,
-        data_source_id=data_source_id,
+        path_reference=path_reference,
         document=document,
-        directory=directory,
         files=files,
         update_uncontained=update_uncontained,
     )

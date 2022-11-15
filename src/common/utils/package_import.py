@@ -5,7 +5,7 @@ from uuid import uuid4
 
 from authentication.models import User
 from common.exceptions import BadRequestException, NotFoundException
-from common.utils.get_document_by_path import get_document_by_ref
+from common.utils.get_document_by_path import get_document_by_absolute_path
 from common.utils.logging import logger
 from common.utils.string_helpers import url_safe_name
 from enums import SIMOS
@@ -35,7 +35,7 @@ def import_package(path, user: User, data_source: str, is_root: bool = False) ->
     data_source: DataSource = get_data_source(data_source_id=data_source, user=user)
     package = {"name": os.path.basename(path), "type": SIMOS.PACKAGE.value, "isRoot": is_root}
     try:
-        if get_document_by_ref(f"{data_source.name}/{package['name']}", user):
+        if get_document_by_absolute_path(f"sys://{data_source.name}/{package['name']}", user):
             raise BadRequestException(
                 message=(
                     f"A root package with name '{package['name']}' "

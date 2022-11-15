@@ -43,13 +43,13 @@ class StorageDataTypes(str, Enum):
 
 
 class SIMOS(Enum):
-    BLUEPRINT = "system/SIMOS/Blueprint"
-    ENTITY = "system/SIMOS/Entity"
-    PACKAGE = "system/SIMOS/Package"
-    BLUEPRINT_ATTRIBUTE = "system/SIMOS/BlueprintAttribute"
-    APPLICATION = "system/SIMOS/Application"
-    ATTRIBUTE_TYPES = "system/SIMOS/AttributeTypes"
-    BLOB = "system/SIMOS/Blob"
+    BLUEPRINT = "sys://system/SIMOS/Blueprint"
+    ENTITY = "sys://system/SIMOS/Entity"
+    NAMED_ENTITY = "sys://system/SIMOS/NamedEntity"
+    PACKAGE = "sys://system/SIMOS/Package"
+    BLUEPRINT_ATTRIBUTE = "sys://system/SIMOS/BlueprintAttribute"
+    ATTRIBUTE_TYPES = "sys://system/SIMOS/AttributeTypes"
+    BLOB = "sys://system/SIMOS/Blob"
     DATASOURCE = "datasource"
 
 

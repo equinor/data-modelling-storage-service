@@ -1,33 +1,33 @@
 {
-  "type": "system/SIMOS/Blueprint",
+  "type": "sys://system/SIMOS/Blueprint",
   "name": "Enum",
   "description": "This describes an enum",
-  "extends": ["system/SIMOS/DefaultUiRecipes"],
+  "extends": ["sys://system/SIMOS/DefaultUiRecipes"],
   "attributes": [
     {
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "name"
     },
     {
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "type"
     },
     {
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "description"
     },
     {
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "labels",
       "dimensions": "*"
     },
     {
       "attributeType": "string",
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "values",
       "dimensions": "*"
     }

@@ -17,23 +17,23 @@ Feature: Get correct data for subtypes
     {
         "name": "root_package",
         "description": "",
-        "type": "system/SIMOS/Package",
+        "type": "sys://system/SIMOS/Package",
         "isRoot": true,
         "content": [
             {
                 "_id": "3",
                 "name": "BaseChild",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             },
             {
                 "_id": "4",
                 "name": "Parent",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             },
             {
                 "_id": "5",
                 "name": "SpecialChild",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             },
             {
                 "_id": "7",
@@ -47,15 +47,15 @@ Feature: Get correct data for subtypes
     Given there exist document with id "3" in data source "data-source-name"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "BaseChild",
       "description": "",
-      "extends": ["system/SIMOS/NamedEntity"],
+      "extends": ["sys://system/SIMOS/NamedEntity"],
       "attributes": [
         {
         "name": "AValue",
         "attributeType": "integer",
-        "type": "system/SIMOS/BlueprintAttribute"
+        "type": "sys://system/SIMOS/BlueprintAttribute"
         }
       ]
     }
@@ -65,15 +65,15 @@ Feature: Get correct data for subtypes
     Given there exist document with id "4" in data source "data-source-name"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "Parent",
       "description": "",
-      "extends": ["system/SIMOS/NamedEntity"],
+      "extends": ["sys://system/SIMOS/NamedEntity"],
       "attributes": [
         {
         "name": "SomeChild",
         "attributeType": "data-source-name/root_package/BaseChild",
-        "type": "system/SIMOS/BlueprintAttribute"
+        "type": "sys://system/SIMOS/BlueprintAttribute"
         }
       ]
     }
@@ -82,7 +82,7 @@ Feature: Get correct data for subtypes
     Given there exist document with id "5" in data source "data-source-name"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "SpecialChild",
       "description": "",
       "extends": ["data-source-name/root_package/BaseChild"],
@@ -90,7 +90,7 @@ Feature: Get correct data for subtypes
         {
           "name": "AnExtraValue",
           "attributeType": "string",
-          "type": "system/SIMOS/BlueprintAttribute"
+          "type": "sys://system/SIMOS/BlueprintAttribute"
         }
       ]
     }

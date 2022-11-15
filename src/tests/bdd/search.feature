@@ -19,28 +19,28 @@ Feature: Explorer - Search entity
     {
         "name": "root_package",
         "description": "",
-        "type": "system/SIMOS/Package",
+        "type": "sys://system/SIMOS/Package",
         "isRoot": true,
         "content": [
             {
                 "_id": "2",
                 "name": "ValuesBlueprint",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             },
             {
                 "_id": "3",
                 "name": "NestedVectorsBlueprint",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             },
             {
                 "_id": "4",
                 "name": "NestedBlueprint",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             },
             {
                 "_id": "5",
                 "name": "NestedListBlueprint",
-                "type": "system/SIMOS/Blueprint"
+                "type": "sys://system/SIMOS/Blueprint"
             }
         ]
     }
@@ -48,44 +48,44 @@ Feature: Explorer - Search entity
     Given there exist document with id "2" in data source "blueprints"
     """
     {
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "name": "ValuesBlueprint",
       "description": "This describes a blueprint that has a few different primitive attributes",
       "attributes": [
         {
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "name": "name",
           "attributeType": "string",
           "optional": false
         },
         {
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "name": "description",
           "attributeType": "string",
           "optional": false
         },
         {
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "name": "type",
           "attributeType": "string",
           "default": "blueprints/root_package/ValuesBlueprint",
           "optional": false
         },
         {
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "name": "a_number",
           "attributeType": "number",
           "default": "120",
           "optional": false
         },
         {
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "name": "an_integer",
           "attributeType": "integer",
           "optional": false
         },
         {
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "name": "a_string",
           "attributeType": "string",
           "optional": false
@@ -98,12 +98,12 @@ Feature: Explorer - Search entity
     """
     {
       "name": "NestedVectorsBlueprint",
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "description": "This describes a blueprint that has two attributes",
       "attributes": [
         {
           "name": "height",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "attributeType": "number",
           "label": "height",
           "default": "100.0",
@@ -111,7 +111,7 @@ Feature: Explorer - Search entity
         },
         {
           "name": "width",
-          "type": "system/SIMOS/BlueprintAttribute",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
           "attributeType": "number",
           "label": "width",
           "default": "100.0",
@@ -125,13 +125,13 @@ Feature: Explorer - Search entity
     """
     {
       "name": "NestedBlueprint",
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "description": "This describes a blueprint that has another blueprint as one of its attributes",
       "attributes": [
         {
           "name": "Vectors",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "attributeType": "blueprints/root_package/NestedVectorsBlueprint",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "sys://blueprints/root_package/NestedVectorsBlueprint",
           "label": "Vectors",
           "contained": true
         }
@@ -143,13 +143,13 @@ Feature: Explorer - Search entity
     """
     {
       "name": "NestedListBlueprint",
-      "type": "system/SIMOS/Blueprint",
+      "type": "sys://system/SIMOS/Blueprint",
       "description": "This describes a blueprint that contains a list of nested entities",
       "attributes": [
         {
           "name": "VectorList",
-          "type": "system/SIMOS/BlueprintAttribute",
-          "attributeType": "blueprints/root_package/NestedVectorsBlueprint",
+          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "sys://blueprints/root_package/NestedVectorsBlueprint",
           "dimensions": "*",
           "contained": true
         }
@@ -162,7 +162,7 @@ Feature: Explorer - Search entity
     {
       "name": "primitive_1",
       "description": "",
-      "type": "blueprints/root_package/ValuesBlueprint",
+      "type": "sys://blueprints/root_package/ValuesBlueprint",
       "a_number": 120.0,
       "an_integer": 5,
       "a_string": "abc"
@@ -174,7 +174,7 @@ Feature: Explorer - Search entity
     {
       "name": "primitive_more",
       "description": "",
-      "type": "blueprints/root_package/ValuesBlueprint",
+      "type": "sys://blueprints/root_package/ValuesBlueprint",
       "a_number": 10.0,
       "an_integer": 10,
       "a_string": "def"
@@ -186,7 +186,7 @@ Feature: Explorer - Search entity
     {
       "name": "primitive_2",
       "description": "",
-      "type": "blueprints/root_package/ValuesBlueprint",
+      "type": "sys://blueprints/root_package/ValuesBlueprint",
       "a_number": 150.1,
       "an_integer": 10,
       "a_string": "def"
@@ -198,10 +198,10 @@ Feature: Explorer - Search entity
     {
       "name": "nestedVectors_1",
       "description": "Some nested vectors",
-      "type": "blueprints/root_package/NestedBlueprint",
+      "type": "sys://blueprints/root_package/NestedBlueprint",
       "Vectors": {
         "name": "Vectors",
-        "type": "blueprints/root_package/NestedVectorsBlueprint",
+        "type": "sys://blueprints/root_package/NestedVectorsBlueprint",
         "height": 223.3,
         "width": 133.7
       }
@@ -213,10 +213,10 @@ Feature: Explorer - Search entity
     {
       "name": "nestedVectors_2",
       "description": "Some other nested vectors",
-      "type": "blueprints/root_package/NestedBlueprint",
+      "type": "sys://blueprints/root_package/NestedBlueprint",
       "Vectors": {
         "name": "Vectors",
-        "type": "blueprints/root_package/NestedVectorsBlueprint",
+        "type": "sys://blueprints/root_package/NestedVectorsBlueprint",
         "height": 64.3,
         "width": 512.1
       }
@@ -228,17 +228,17 @@ Feature: Explorer - Search entity
     {
       "name": "myNestedListEntity_1",
       "description": "Some entity with a list of items",
-      "type": "blueprints/root_package/NestedListBlueprint",
+      "type": "sys://blueprints/root_package/NestedListBlueprint",
       "VectorList": [
         {
           "name": "Vector_1",
-          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "type": "sys://blueprints/root_package/NestedVectorsBlueprint",
           "height": 64.3,
           "width": 512.1
         },
         {
           "name": "Vector_2",
-          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "type": "sys://blueprints/root_package/NestedVectorsBlueprint",
           "height": 280.1,
           "width": 123.4
         }
@@ -253,7 +253,7 @@ Feature: Explorer - Search entity
     """
     {
       "name": "PrImiT",
-      "type": "blueprints/root_package/ValuesBlueprint",
+      "type": "sys://blueprints/root_package/ValuesBlueprint",
       "a_number": ">100",
       "an_integer": "<11"
     }
@@ -266,7 +266,7 @@ Feature: Explorer - Search entity
         "_id": "2",
         "name": "primitive_2",
         "description": "",
-        "type": "blueprints/root_package/ValuesBlueprint",
+        "type": "sys://blueprints/root_package/ValuesBlueprint",
         "a_number": 150.1,
         "an_integer": 10,
         "a_string": "def"
@@ -275,7 +275,7 @@ Feature: Explorer - Search entity
         "_id": "1",
         "name": "primitive_1",
         "description": "",
-        "type": "blueprints/root_package/ValuesBlueprint",
+        "type": "sys://blueprints/root_package/ValuesBlueprint",
         "a_number": 120.0,
         "an_integer": 5,
         "a_string": "abc"
@@ -288,7 +288,7 @@ Feature: Explorer - Search entity
     """
     {
       "name": "PrImiT",
-      "type": "blueprints/root_package/ValuesBlueprint",
+      "type": "sys://blueprints/root_package/ValuesBlueprint",
       "a_number": ">121",
       "an_integer": ">5",
       "a_string": "de"
@@ -302,7 +302,7 @@ Feature: Explorer - Search entity
         "_id": "2",
         "name": "primitive_2",
         "description": "",
-        "type": "blueprints/root_package/ValuesBlueprint",
+        "type": "sys://blueprints/root_package/ValuesBlueprint",
         "a_number": 150.1,
         "an_integer": 10,
         "a_string": "def"
@@ -315,7 +315,7 @@ Feature: Explorer - Search entity
     When i make a "POST" request
     """
     {
-      "type": "blueprints/root_package/ValuesBlueprint"
+      "type": "sys://blueprints/root_package/ValuesBlueprint"
     }
     """
     Then the response status should be "OK"
@@ -326,7 +326,7 @@ Feature: Explorer - Search entity
         "_id": "1",
         "name": "primitive_1",
         "description": "",
-        "type": "blueprints/root_package/ValuesBlueprint",
+        "type": "sys://blueprints/root_package/ValuesBlueprint",
         "a_number": 120.0,
         "an_integer": 5,
         "a_string": "abc"
@@ -335,7 +335,7 @@ Feature: Explorer - Search entity
         "_id": "2",
         "name": "primitive_2",
         "description": "",
-        "type": "blueprints/root_package/ValuesBlueprint",
+        "type": "sys://blueprints/root_package/ValuesBlueprint",
         "a_number": 150.1,
         "an_integer": 10,
         "a_string": "def"
@@ -348,7 +348,7 @@ Feature: Explorer - Search entity
     When i make a "POST" request
     """
     {
-      "type": "blueprints/root_package/NestedBlueprint"
+      "type": "sys://blueprints/root_package/NestedBlueprint"
     }
     """
     Then the response status should be "OK"
@@ -359,10 +359,10 @@ Feature: Explorer - Search entity
         "_id": "3",
         "name": "nestedVectors_1",
         "description": "Some nested vectors",
-        "type": "blueprints/root_package/NestedBlueprint",
+        "type": "sys://blueprints/root_package/NestedBlueprint",
         "Vectors": {
           "name": "Vectors",
-          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "type": "sys://blueprints/root_package/NestedVectorsBlueprint",
           "height": 223.3,
           "width": 133.7
         }
@@ -371,10 +371,10 @@ Feature: Explorer - Search entity
         "_id": "4",
         "name": "nestedVectors_2",
         "description": "Some other nested vectors",
-        "type": "blueprints/root_package/NestedBlueprint",
+        "type": "sys://blueprints/root_package/NestedBlueprint",
         "Vectors": {
           "name": "Vectors",
-          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "type": "sys://blueprints/root_package/NestedVectorsBlueprint",
           "height": 64.3,
           "width": 512.1
         }
@@ -387,7 +387,7 @@ Feature: Explorer - Search entity
     When i make a "POST" request
     """
     {
-      "type": "blueprints/root_package/NestedBlueprint"
+      "type": "sys://blueprints/root_package/NestedBlueprint"
     }
     """
     Then the response status should be "OK"
@@ -398,10 +398,10 @@ Feature: Explorer - Search entity
         "_id": "4",
         "name": "nestedVectors_2",
         "description": "Some other nested vectors",
-        "type": "blueprints/root_package/NestedBlueprint",
+        "type": "sys://blueprints/root_package/NestedBlueprint",
         "Vectors": {
           "name": "Vectors",
-          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "type": "sys://blueprints/root_package/NestedVectorsBlueprint",
           "height": 64.3,
           "width": 512.1
         }
@@ -410,10 +410,10 @@ Feature: Explorer - Search entity
         "_id": "3",
         "name": "nestedVectors_1",
         "description": "Some nested vectors",
-        "type": "blueprints/root_package/NestedBlueprint",
+        "type": "sys://blueprints/root_package/NestedBlueprint",
         "Vectors": {
           "name": "Vectors",
-          "type": "blueprints/root_package/NestedVectorsBlueprint",
+          "type": "sys://blueprints/root_package/NestedVectorsBlueprint",
           "height": 223.3,
           "width": 133.7
         }
@@ -426,7 +426,7 @@ Feature: Explorer - Search entity
     When i make a "POST" request
     """
     {
-      "type": "blueprints/root_package/NestedListBlueprint"
+      "type": "sys://blueprints/root_package/NestedListBlueprint"
     }
     """
     Then the response status should be "OK"
@@ -437,17 +437,17 @@ Feature: Explorer - Search entity
         "_id": "5",
         "name": "myNestedListEntity_1",
         "description": "Some entity with a list of items",
-        "type": "blueprints/root_package/NestedListBlueprint",
+        "type": "sys://blueprints/root_package/NestedListBlueprint",
         "VectorList": [
           {
             "name": "Vector_1",
-            "type": "blueprints/root_package/NestedVectorsBlueprint",
+            "type": "sys://blueprints/root_package/NestedVectorsBlueprint",
             "height": 64.3,
             "width": 512.1
           },
           {
             "name": "Vector_2",
-            "type": "blueprints/root_package/NestedVectorsBlueprint",
+            "type": "sys://blueprints/root_package/NestedVectorsBlueprint",
             "height": 280.1,
             "width": 123.4
           }
@@ -462,7 +462,7 @@ Feature: Explorer - Search entity
     When i make a "POST" request
     """
     {
-      "type": "blueprints/root_package/ValuesBlueprint"
+      "type": "sys://blueprints/root_package/ValuesBlueprint"
     }
     """
     Then the response status should be "OK"
@@ -473,7 +473,7 @@ Feature: Explorer - Search entity
       "_id": "1",
       "name": "primitive_1",
       "description": "",
-      "type": "blueprints/root_package/ValuesBlueprint",
+      "type": "sys://blueprints/root_package/ValuesBlueprint",
       "a_number": 120.0,
       "an_integer": 5,
       "a_string": "abc"
@@ -482,7 +482,7 @@ Feature: Explorer - Search entity
       "_id": "2",
       "name": "primitive_2",
       "description": "",
-      "type": "blueprints/root_package/ValuesBlueprint",
+      "type": "sys://blueprints/root_package/ValuesBlueprint",
       "a_number": 150.1,
       "an_integer": 10,
       "a_string": "def"
@@ -491,7 +491,7 @@ Feature: Explorer - Search entity
       "_id": "99",
       "name": "primitive_more",
       "description": "",
-      "type": "blueprints/root_package/ValuesBlueprint",
+      "type": "sys://blueprints/root_package/ValuesBlueprint",
       "a_number": 10.0,
       "an_integer": 10,
       "a_string": "def"
@@ -504,7 +504,7 @@ Feature: Explorer - Search entity
     When i make a "POST" request
     """
     {
-      "type": "blueprints/root_package/ValuesBlueprint"
+      "type": "sys://blueprints/root_package/ValuesBlueprint"
     }
     """
     Then the response status should be "Bad Request"
@@ -525,7 +525,7 @@ Feature: Explorer - Search entity
     When i make a "POST" request
     """
     {
-      "type": "blueprints/root_package/ValuesBlueprint"
+      "type": "sys://blueprints/root_package/ValuesBlueprint"
     }
     """
     Then the response status should be "OK"
@@ -536,7 +536,7 @@ Feature: Explorer - Search entity
       "_id": "1",
       "name": "primitive_1",
       "description": "",
-      "type": "blueprints/root_package/ValuesBlueprint",
+      "type": "sys://blueprints/root_package/ValuesBlueprint",
       "a_number": 120.0,
       "an_integer": 5,
       "a_string": "abc"
@@ -545,7 +545,7 @@ Feature: Explorer - Search entity
       "_id": "2",
       "name": "primitive_2",
       "description": "",
-      "type": "blueprints/root_package/ValuesBlueprint",
+      "type": "sys://blueprints/root_package/ValuesBlueprint",
       "a_number": 150.1,
       "an_integer": 10,
       "a_string": "def"
@@ -554,7 +554,7 @@ Feature: Explorer - Search entity
       "_id": "99",
       "name": "primitive_more",
       "description": "",
-      "type": "blueprints/root_package/ValuesBlueprint",
+      "type": "sys://blueprints/root_package/ValuesBlueprint",
       "a_number": 10.0,
       "an_integer": 10,
       "a_string": "def"

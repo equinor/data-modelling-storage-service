@@ -18,77 +18,85 @@ from domain_classes.blueprint import Blueprint
 from storage.repositories.file import LocalFileRepository
 
 all_contained_cases_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "Blueprint 1",
     "description": "First blueprint",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
-        {"attributeType": "basic_blueprint", "type": "system/SIMOS/BlueprintAttribute", "name": "nested"},
-        {"attributeType": "basic_blueprint", "type": "system/SIMOS/BlueprintAttribute", "name": "reference"},
+        {"attributeType": "basic_blueprint", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "nested"},
+        {"attributeType": "basic_blueprint", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "reference"},
         {
             "attributeType": "basic_blueprint",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "references",
             "dimensions": "*",
         },
     ],
     "storageRecipes": [
         {
-            "type": "system/SIMOS/StorageRecipe",
+            "type": "sys://system/SIMOS/StorageRecipe",
             "name": "DefaultStorageRecipe",
             "description": "",
             "attributes": [
-                {"name": "reference", "type": "system/SIMOS/Entity", "contained": False},
-                {"name": "references", "type": "system/SIMOS/Entity", "contained": False},
+                {"name": "reference", "type": "sys://system/SIMOS/Entity", "contained": False},
+                {"name": "references", "type": "sys://system/SIMOS/Entity", "contained": False},
             ],
         }
     ],
 }
 
 blueprint_with_second_level_reference = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "Blueprint with second level reference",
     "description": "Blueprint with second level reference",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
         {
             "attributeType": "all_contained_cases_blueprint",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "contained_with_child_references",
         },
     ],
 }
 
 two_contained_deep_attributes = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "two_contained_deep_attributes",
     "description": "Two contained deeply nested attributes",
     "attributes": [
-        {"attributeType": "all_contained_cases_blueprint", "type": "system/SIMOS/BlueprintAttribute", "name": "a"},
-        {"attributeType": "all_contained_cases_blueprint", "type": "system/SIMOS/BlueprintAttribute", "name": "b"},
+        {
+            "attributeType": "all_contained_cases_blueprint",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
+            "name": "a",
+        },
+        {
+            "attributeType": "all_contained_cases_blueprint",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
+            "name": "b",
+        },
     ],
 }
 
 basic_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "Blueprint 2",
     "description": "Second blueprint",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [],
     "storageRecipes": [],
     "uiRecipes": [{"name": "default", "description": "", "plugin": "edit1"}],
 }
 
 extended_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "extends": ["basic_blueprint"],
     "name": "ExtendedBlueprint",
     "description": "This Blueprint extends blueprint 2",
-    "attributes": [{"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "another_value"}],
+    "attributes": [{"attributeType": "string", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "another_value"}],
     "storageRecipes": [
         {
             "name": "default",
-            "type": "system/SIMOS/StorageRecipe",
+            "type": "sys://system/SIMOS/StorageRecipe",
             "description": "",
             "storageAffinity": "blob",
             "attributes": [],
@@ -101,31 +109,31 @@ extended_blueprint = {
 }
 
 second_level_extended_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "extends": ["ExtendedBlueprint"],
     "name": "SecondLevelExtendedBlueprint",
     "description": "This Blueprint extends 'ExtendedBlueprint'",
-    "attributes": [{"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "a_third_value"}],
+    "attributes": [{"attributeType": "string", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "a_third_value"}],
     "storageRecipes": [],
     "uiRecipes": [],
 }
 
 uncontained_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "uncontained_blueprint",
     "description": "uncontained_blueprint",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
         {
             "attributeType": "basic_blueprint",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "uncontained_in_every_way",
             "contained": False,
         },
     ],
     "storageRecipes": [
         {
-            "type": "system/SIMOS/StorageRecipe",
+            "type": "sys://system/SIMOS/StorageRecipe",
             "name": "DefaultStorageRecipe",
             "description": "",
             "attributes": [
@@ -141,14 +149,14 @@ uncontained_blueprint = {
 }
 
 uncontained_list_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "uncontained_list_blueprint",
     "description": "uncontained_list_blueprint",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
         {
             "attributeType": "basic_blueprint",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "uncontained_in_every_way",
             "contained": False,
             "dimensions": "*",
@@ -157,28 +165,28 @@ uncontained_list_blueprint = {
 }
 
 blueprint_with_second_level_nested_uncontained_attribute = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "blueprint_with_second_level_nested_uncontained_attribute",
     "description": "",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
         {
             "attributeType": "uncontained_blueprint",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "i_have_a_uncontained_attribute",
         },
     ],
 }
 
 blueprint_with_optional_attr = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "Blueprint_with_optional_attr",
     "description": "",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
         {
             "attributeType": "basic_blueprint",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "im_optional",
             "optional": True,
             "contained": True,
@@ -187,45 +195,50 @@ blueprint_with_optional_attr = {
 }
 
 blueprint_with_blob = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "Blueprint_with_blob",
     "description": "",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
         {
             "attributeType": SIMOS.BLOB.value,
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "blob",
         },
     ],
 }
 
 blueprint_with_nested_optional_attr = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "blueprint_with_nested_optional_attr",
     "description": "",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
         {
             "attributeType": "blueprint_with_optional_attr",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "nested_with_optional",
         },
     ],
 }
 
 blueprint_with_storageAffinity_in_root = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "blob",
     "description": "Test for a blueprint with storageAffinity in storageRecipe",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "someData", "default": ""},
+        {
+            "attributeType": "string",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
+            "name": "someData",
+            "default": "",
+        },
     ],
     "storageRecipes": [
         {
             "name": "default",
-            "type": "system/SIMOS/StorageRecipe",
+            "type": "sys://system/SIMOS/StorageRecipe",
             "description": "",
             "storageAffinity": "blob",
             "attributes": [],
@@ -234,21 +247,21 @@ blueprint_with_storageAffinity_in_root = {
 }
 
 blobContainer = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "blobContainer",
     "description": "A basic blueprint that has a non-storageContained blob, none specified storageAffinity ",
-    "extends": ["system/SIMOS/NamedEntity"],
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
         {
             "attributeType": "blob",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "blob",
         },
     ],
     "storageRecipes": [
         {
             "name": "default",
-            "type": "system/SIMOS/StorageRecipe",
+            "type": "sys://system/SIMOS/StorageRecipe",
             "description": "",
             "attributes": [{"name": "blob", "type": "does_this_matter?", "contained": False}],
         }

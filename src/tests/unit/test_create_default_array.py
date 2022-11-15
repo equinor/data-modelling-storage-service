@@ -3,26 +3,27 @@ import unittest
 from common.utils.create_entity import CreateEntity
 from domain_classes.blueprint import Blueprint
 from domain_classes.dimension import Dimension
+from enums import SIMOS
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 
 package_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "Package",
     "description": "This is a blueprint for a package that contains documents and other packages",
     "attributes": [
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
+        {"attributeType": "string", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "name"},
         {
             "attributeType": "string",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "description",
             "optional": True,
         },
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-        {"attributeType": "boolean", "type": "system/SIMOS/BlueprintAttribute", "name": "isRoot"},
+        {"attributeType": "string", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "type"},
+        {"attributeType": "boolean", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "isRoot"},
         {
             "attributeType": "object",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "content",
             "dimensions": "*",
             "optional": True,
@@ -30,7 +31,7 @@ package_blueprint = {
     ],
     "storageRecipes": [
         {
-            "type": "system/SIMOS/StorageRecipe",
+            "type": "sys://system/SIMOS/StorageRecipe",
             "name": "DefaultStorageRecipe",
             "description": "",
             "attributes": [{"name": "content", "type": "object", "contained": False}],
@@ -39,46 +40,46 @@ package_blueprint = {
 }
 
 basic_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "A box",
     "description": "First blueprint",
     "attributes": [
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
-        {"attributeType": "integer", "type": "system/SIMOS/BlueprintAttribute", "name": "length"},
+        {"attributeType": "string", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "name"},
+        {"attributeType": "string", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "type"},
+        {"attributeType": "string", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "description"},
+        {"attributeType": "integer", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "length"},
     ],
 }
 
 higher_rank_array_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": SIMOS.BLUEPRINT.value,
     "name": "Higher rank integer arrays",
     "description": "First blueprint",
     "attributes": [
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
+        {"attributeType": "string", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "name"},
+        {"attributeType": "string", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "type"},
+        {"attributeType": "string", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "description"},
         {
             "attributeType": "integer",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "1_dim-unfixed",
             "dimensions": "*",
         },
         {
             "attributeType": "basic_blueprint",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "1_dim-fixed_complex_type",
             "dimensions": "5",
         },
         {
             "attributeType": "integer",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "2_dim-unfixed",
             "dimensions": "*,*",
         },
         {
             "attributeType": "integer",
-            "type": "system/SIMOS/BlueprintAttribute",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "3_dim-mix",
             "dimensions": "*,1,100",
         },
@@ -111,9 +112,11 @@ class DefaultArrayTestCase(unittest.TestCase):
         assert default_array == []
 
     def test_creation_of_default_array_complex_type(self):
-        default_array = Dimension("1,1", "system/SIMOS/Package").create_default_array(blueprint_provider, CreateEntity)
+        default_array = Dimension("1,1", "sys://system/SIMOS/Package").create_default_array(
+            blueprint_provider, CreateEntity
+        )
 
-        assert default_array == [[{"name": "", "type": "system/SIMOS/Package", "isRoot": False, "content": []}]]
+        assert default_array == [[{"name": "", "type": "sys://system/SIMOS/Package", "isRoot": False, "content": []}]]
 
     def test_creation_of_default_array_unfixed_rank2(self):
         default_array = Dimension("*,*", "integer").create_default_array(blueprint_provider, CreateEntity)

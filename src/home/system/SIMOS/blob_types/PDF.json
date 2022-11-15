@@ -1,17 +1,17 @@
 {
   "name": "PDF",
-  "type": "system/SIMOS/Blueprint",
-  "extends": ["system/SIMOS/DefaultUiRecipes","system/SIMOS/NamedEntity"],
+  "type": "sys://system/SIMOS/Blueprint",
+  "extends": ["sys://system/SIMOS/DefaultUiRecipes","sys://system/SIMOS/NamedEntity"],
   "description": "Contains metadata for a PDF, and a Blob type for the blob data",
   "attributes": [
     {
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "blob",
       "description": "id for the data blob",
-      "attributeType": "system/SIMOS/Blob",
+      "attributeType": "sys://system/SIMOS/Blob",
       "contained": true
     }, {
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "size",
       "description": "Size of the PDF in bytes",
       "attributeType": "integer",
@@ -19,7 +19,7 @@
       "optional": true,
       "contained": true
     }, {
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "tags",
       "description": "List of tags used for indexing",
       "attributeType": "string",
@@ -27,7 +27,7 @@
       "optional": true,
       "contained": true
     }, {
-      "type": "system/SIMOS/BlueprintAttribute",
+      "type": "sys://system/SIMOS/BlueprintAttribute",
       "name": "author",
       "description": "Author of the PDF",
       "attributeType": "string",
@@ -39,7 +39,7 @@
   "storageRecipes": [],
   "uiRecipes": [
     {
-      "type": "system/SIMOS/UiRecipe",
+      "type": "sys://system/SIMOS/UiRecipe",
       "name": "PDFView",
       "description": "Embedded PDF View",
       "plugin": "default-pdf",

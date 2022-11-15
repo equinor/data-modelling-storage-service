@@ -3,12 +3,24 @@ from typing import Tuple, Union
 
 from enums import BuiltinDataTypes
 
+# Some terminology;
 
-def split_absolute_ref(reference: str) -> Tuple[str, Union[str, None], Union[str, None]]:
-    reference = reference.strip("/. ")  # Remove leading and trailing stuff
-    if "/" not in reference:  # It's reference to the data_source itself
-        return reference, None, None
-    data_source, dotted_id = reference.split("/", 1)
+# PATH_REFERENCE = datasource/package/folder/entity.attribute
+# ID_REFERENCE = datasource/uid.attribute
+# DOTTED_PATH = package/folder/entity.attribute
+# DOTTED_ID = uid.attribute
+
+# DMSS_REFERENCE = {PATH_REFERENCE, ID_REFERENCE}
+# ABSOLUTE_REFERENCE = PROTOCOL://ADDRESS
+
+
+def split_dmss_ref(dmss_reference: str) -> Tuple[str, Union[str, None], Union[str, None]]:
+    """Will split 'path_references' and 'id_references' into it's 3 parts.
+    Expects format; DATA_SOURCE/(PATH|ID).Attribute"""
+    dmss_reference = dmss_reference.strip("/. ")  # Remove leading and trailing stuff
+    if "/" not in dmss_reference:  # It's reference to the data_source itself
+        return dmss_reference, None, None
+    data_source, dotted_id = dmss_reference.split("/", 1)
     document_id, attributes = split_dotted_id(dotted_id)
     return data_source, document_id, attributes
 
@@ -19,8 +31,8 @@ def split_dotted_id(dotted_id: str) -> Tuple[str, Union[str, None]]:
     return dotted_id.split(".", 1)
 
 
-def get_package_and_path(reference: str) -> Tuple[str, Union[list, None]]:
-    elements = reference.split("/")
+def get_package_and_path(dotted_path: str) -> Tuple[str, Union[list, None]]:
+    elements = dotted_path.split("/")
     package = elements.pop(0)
     if len(elements) == 0:
         return package, None
