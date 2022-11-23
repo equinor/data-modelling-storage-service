@@ -1,5 +1,4 @@
 import pprint
-import zipfile
 from functools import lru_cache
 from typing import Dict, List, Union
 from uuid import uuid4
@@ -485,14 +484,3 @@ class DocumentService:
         logger.info(f"Removed reference for '{attribute_path}' in '{root.name}'({root.uid})")
 
         return root.to_dict()
-
-    def create_zip_export(self, absolute_document_ref: str) -> str:
-        # TODO: This is not SAFE. See; https://security.openstack.org/guidelines/dg_using-temporary-files-securely.html
-        archive_path = "/tmp/temp_zip_archive.zip"  # nosec
-        data_source_id, document_uid = absolute_document_ref.split("/", 1)
-        document: Node = self.get_node_by_uid(data_source_id, document_uid)
-        # TODO: Is this secure?
-        with zipfile.ZipFile(archive_path, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=5) as zip_file:
-            # Save the selected node, using custom ZipFile repository
-            self.save(document, data_source_id, ZipFileClient(zip_file), update_uncontained=True)
-        return archive_path
