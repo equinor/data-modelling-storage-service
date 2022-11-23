@@ -26,6 +26,6 @@ def get_blueprint(type_ref: str, user: User = Depends(auth_w_jwt_or_pat)):
 @create_response(PlainTextResponse)
 def resolve_blueprint_id(absolute_id: str, user: User = Depends(auth_w_jwt_or_pat)):
     """
-    Resolve the data_source/uuid form of a blueprint to it's type path
+    Resolve the data_source/uuid form of a blueprint to its type path
     """
     return resolve_blueprint_use_case(user=user, absolute_id=absolute_id)
