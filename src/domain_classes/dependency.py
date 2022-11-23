@@ -1,11 +1,11 @@
-from dataclasses import dataclass
 from typing import Literal, NewType
+
+from pydantic import BaseModel
 
 TDependencyProtocol = NewType("TDependencyProtocol", Literal["sys", "http"])
 
 
-@dataclass(frozen=True)
-class Dependency:
+class Dependency(BaseModel):
     """Class for any dependencies (external types) a entity references"""
 
     alias: str

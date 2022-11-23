@@ -31,14 +31,6 @@ def split_dotted_id(dotted_id: str) -> Tuple[str, Union[str, None]]:
     return dotted_id.split(".", 1)
 
 
-def get_package_and_path(dotted_path: str) -> Tuple[str, Union[list, None]]:
-    elements = dotted_path.split("/")
-    package = elements.pop(0)
-    if len(elements) == 0:
-        return package, None
-    return package, elements
-
-
 # Convert dmt attribute_types to python types. If complex, return type as string.
 def get_data_type_from_dmt_type(attribute_type: str):
     try:
