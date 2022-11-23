@@ -13,7 +13,7 @@ Feature: Exporting root packages
 
 
   Scenario: A user want's to export a root package
-    Given I access the resource url "/api/v1/export/test-DS/1"
+    Given I access the resource url "/api/v1/export/test-DS/blueprints"
     When I make a "GET" request
     Then the response status should be "OK"
     And response node should not be empty
