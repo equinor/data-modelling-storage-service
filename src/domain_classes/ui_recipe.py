@@ -4,7 +4,7 @@ from typing import List
 from pydantic import BaseModel
 
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from enums import PRIMITIVES
+from enums import PRIMITIVES, SIMOS
 
 
 class RecipePlugin(Enum):
@@ -24,6 +24,7 @@ class RecipeAttribute(BaseModel):
 
 class Recipe(BaseModel):
     name: str
+    type: str = SIMOS.UI_RECIPE.value
     attributes: List[RecipeAttribute] = []
     description: str = ""
     plugin: str = "Default"
@@ -60,5 +61,5 @@ class Recipe(BaseModel):
 
 class DefaultRecipe(Recipe):
     def __init__(self, attributes: List[BlueprintAttribute]):
-        recipe_attributes = [RecipeAttribute(name=attr.name, contained=True) for attr in attributes]
+        recipe_attributes = [RecipeAttribute(name=attr.name) for attr in attributes]
         super().__init__("Default", attributes=recipe_attributes)

@@ -74,7 +74,7 @@ class DataSourceTestCase(unittest.TestCase):
 
         document_service.save(node, "testing", update_uncontained=True)
 
-        # Test that both repos get's written into
+        # Test that both repos gets written into
         assert blob_doc_storage and default_doc_storage
 
     def test_save_based_on_root_storageRecipe(self):

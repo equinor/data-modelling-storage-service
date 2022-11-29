@@ -44,6 +44,9 @@ class StorageDataTypes(str, Enum):
 
 class SIMOS(Enum):
     BLUEPRINT = "sys://system/SIMOS/Blueprint"
+    STORAGE_RECIPE = "sys://system/SIMOS/StorageRecipe"
+    STORAGE_ATTRIBUTE = "sys://system/SIMOS/StorageAttribute"
+    UI_RECIPE = "sys://system/SIMOS/UiRecipe"
     ENTITY = "sys://system/SIMOS/Entity"
     NAMED_ENTITY = "sys://system/SIMOS/NamedEntity"
     PACKAGE = "sys://system/SIMOS/Package"

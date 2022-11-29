@@ -22,7 +22,7 @@
     {
       "attributeType": "string",
       "type": "sys://system/SIMOS/BlueprintAttribute",
-      "name": "storageTypeAffinity",
+      "name": "storageAffinity",
       "default": "default",
       "enumType": "sys://system/SIMOS/enums/StorageTypes",
       "description": "Will be used to decide how the data will be stored",

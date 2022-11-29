@@ -4,28 +4,32 @@ from pydantic import UUID4, Field, constr, root_validator
 from pydantic.main import BaseModel, Extra
 
 # Only allow characters a-9 and '_' + '-'
-name_regex = "^[A-Za-z0-9_-]*$"
+common_name_constrained_string = constr(min_length=1, max_length=128, regex="^[A-Za-z0-9_-]*$", strip_whitespace=True)
+
+# Regex only allow characters a-9 and '_' + '-' + '/' for paths
+common_type_constrained_string = constr(
+    min_length=3, max_length=128, regex=r"^[A-Z:a-z0-9_\/-]*$", strip_whitespace=True
+)  # noqa
 
 
 class EntityName(BaseModel):
-    name: constr(min_length=1, max_length=128, regex=name_regex, strip_whitespace=True)
+    name: common_name_constrained_string
 
 
 class OptionalEntityName(BaseModel):
-    name: Optional[constr(min_length=1, max_length=128, regex=name_regex, strip_whitespace=True)]
+    name: Optional[common_name_constrained_string]
 
 
 class EntityType(BaseModel):
-    # Regex only allow characters a-9 and '_' + '-' + '/' for paths
-    type: constr(min_length=3, max_length=128, regex=r"^[A-Z:a-z0-9_\/-]*$", strip_whitespace=True)  # noqa
+    type: common_type_constrained_string
 
 
 class DataSource(BaseModel):
-    data_source_id: constr(min_length=3, max_length=128, regex=name_regex, strip_whitespace=True)
+    data_source_id: common_name_constrained_string
 
 
 class DataSourceList(BaseModel):
-    data_sources: list[constr(min_length=3, max_length=128, regex=name_regex, strip_whitespace=True)]
+    data_sources: list[common_name_constrained_string]
 
 
 class EntityUUID(BaseModel):

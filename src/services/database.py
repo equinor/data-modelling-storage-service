@@ -14,3 +14,4 @@ else:
 internal_db = mongo_client["dmss-internal"]
 data_source_collection = mongo_client["dmss-internal"]["data_sources"]
 personal_access_token_collection = mongo_client["dmss-internal"]["personal_access_tokens"]
+lookup_table_collection = mongo_client["dmss-internal"]["lookup_tables"]
