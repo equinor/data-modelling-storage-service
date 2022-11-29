@@ -127,3 +127,9 @@ def step_impl(context):
 def step_impl(context):
     response = context.response
     assert response.headers["content-type"] == "application/zip" and len(response.content) > 200
+
+
+@then('response should contain a zip file with name "{filename}"')
+def step_impl(context, filename: str):
+    response = context.response
+    assert response.headers["Content-Disposition"] == f"attachment; filename={filename}"
