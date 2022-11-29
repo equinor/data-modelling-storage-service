@@ -70,6 +70,10 @@ class DictExporter:
                 if attribute.name in node.entity:
                     data[attribute.name] = node.entity[attribute.name]
 
+        # Add _meta_ attribute if it exists in the entity
+        if "_meta_" in node.entity:
+            data["_meta_"] = node.entity["_meta_"]
+
         # Complex
         for child in node.children:
             if child.is_array():
@@ -135,6 +139,8 @@ class DictImporter:
         node = Node(key=key, uid=uid, entity=entity, blueprint_provider=blueprint_provider, attribute=node_attribute)
 
         for child_attribute in node.blueprint.get_none_primitive_types():
+            if child_attribute.name == "_meta_":
+                continue
             child_contained = node.blueprint.storage_recipes[0].is_contained(child_attribute.name)
             # This will stop creation of recursive blueprints (only if they are optional)
             if child_attribute.is_optional and not entity:
