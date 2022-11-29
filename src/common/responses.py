@@ -45,7 +45,7 @@ If the execution fails, it will return a JSONResponse with a standardized error 
 """
 
 
-def create_response(response_class: Type[TResponse]) -> Callable[..., Callable[..., TResponse | JSONResponse]]:
+def create_response(response_class: Type[TResponse] = None) -> Callable[..., Callable[..., TResponse | JSONResponse]]:
     def func_wrapper(func) -> Callable[..., TResponse | JSONResponse]:
         @functools.wraps(func)
         async def wrapper_decorator(*args, **kwargs) -> TResponse | JSONResponse:
@@ -55,6 +55,8 @@ def create_response(response_class: Type[TResponse]) -> Callable[..., Callable[.
                     result = func(*args, **kwargs)
                 else:
                     result = await func(*args, **kwargs)
+                if not response_class:  # If there is no response class, we create a 204 response (OK - no content)
+                    return Response(status_code=status.HTTP_204_NO_CONTENT)
                 return response_class(result, status_code=200)
             except HTTPError as http_error:
                 error_response = ErrorResponse(

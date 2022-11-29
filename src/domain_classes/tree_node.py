@@ -514,15 +514,15 @@ class Node(NodeBase):
             nodes_attribute_on_parent = (
                 self.attribute.name if not self.parent.type == BuiltinDataTypes.OBJECT.value else "content"
             )
-            storage_attribute = self.parent.blueprint.storage_recipes[0].storage_attributes[nodes_attribute_on_parent]
+            storage_attribute = self.parent.blueprint.storage_recipes[0].attributes[nodes_attribute_on_parent]
 
             # If the attribute has default StorageAffinity in the parent, get it from the nodes own storageRecipe
-            if storage_attribute.storage_type_affinity is StorageDataTypes.DEFAULT:
-                storage_attribute.storage_type_affinity = self.blueprint.storage_recipes[0].storage_affinity
+            if storage_attribute.storage_affinity is StorageDataTypes.DEFAULT:
+                storage_attribute.storage_affinity = self.blueprint.storage_recipes[0].storage_affinity
             return storage_attribute
         # If no parent, the node is always contained, and get storageAffinity from the nodes own storageRecipe
         return StorageAttribute(
-            name=self.type, contained=True, storageTypeAffinity=self.blueprint.storage_recipes[0].storage_affinity
+            name=self.type, contained=True, storage_affinity=self.blueprint.storage_recipes[0].storage_affinity
         )
 
     def set_uid(self, new_id: str = None):

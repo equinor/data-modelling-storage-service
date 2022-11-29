@@ -5,20 +5,24 @@ from pydantic import ValidationError
 
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dependency import Dependency
-from domain_classes.storage_recipe import DefaultStorageRecipe, StorageRecipe
+from domain_classes.storage_recipe import (
+    DefaultStorageRecipe,
+    StorageAttribute,
+    StorageRecipe,
+)
 from domain_classes.ui_recipe import DefaultRecipe, Recipe
 from enums import PRIMITIVES, StorageDataTypes
 
 
-def get_storage_recipes(recipes: List[Dict], attributes: List[BlueprintAttribute]):
+def get_storage_recipes(recipes: list[dict], attributes: list[BlueprintAttribute]):
     if not recipes:
-        return [DefaultStorageRecipe(attributes)]
+        return [DefaultStorageRecipe(attributes=attributes)]
     else:
         return [
             StorageRecipe(
                 name=recipe["name"],
-                storageAffinity=recipe.get("storageAffinity", StorageDataTypes.DEFAULT.value),
-                attributes=recipe["attributes"],
+                storage_affinity=recipe.get("storageAffinity", StorageDataTypes.DEFAULT),
+                attributes={attribute["name"]: StorageAttribute(**attribute) for attribute in recipe["attributes"]},
             )
             for recipe in recipes
         ]
@@ -56,7 +60,7 @@ class Blueprint:
         instance = cls(adict)
         instance.attributes = [BlueprintAttribute(**attr) for attr in adict.get("attributes", [])]
         instance.storage_recipes = get_storage_recipes(adict.get("storageRecipes", []), instance.attributes)
-        instance.ui_recipes = [Recipe.from_dict(recipe_dict) for recipe_dict in adict.get("uiRecipes", [])]
+        instance.ui_recipes = [Recipe(**recipe_dict) for recipe_dict in adict.get("uiRecipes", [])]
         return instance
 
     def get_required_attributes(self):

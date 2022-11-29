@@ -54,10 +54,10 @@ class DataSource:
         # Returns the first repo with a matching "dataType" value, or the first Repo if no match
         if storage_attribute:
             for r in self.repositories.values():
-                if storage_attribute.storage_type_affinity in r.data_types:
+                if storage_attribute.storage_affinity in r.data_types:
                     return r
         if strict:
-            raise ValueError(f"No repository for '{storage_attribute.storage_type_affinity}' data configured")
+            raise ValueError(f"No repository for '{storage_attribute.storage_affinity}' data configured")
         return self.get_default_repository()
 
     # TODO: Read default attribute from DataSource spec
@@ -168,7 +168,8 @@ class DataSource:
 
     def update_blob(self, uid, file) -> None:
         repo = self._get_repo_from_storage_attribute(
-            StorageAttribute("generic_blob", False, StorageDataTypes.BLOB.value), strict=True
+            StorageAttribute(name="generic_blob", contained=False, storage_affinity=StorageDataTypes.BLOB),
+            strict=True,
         )
         lookup = DocumentLookUp(lookup_id=uid, repository=repo.name, database_id=uid, acl=create_acl(self.user))
         access_control(lookup.acl, AccessLevel.WRITE, self.user)
