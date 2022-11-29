@@ -17,4 +17,5 @@ Feature: Exporting root packages
     When I make a "GET" request
     Then the response status should be "OK"
     And response node should not be empty
+    And response should contain a zip file with name "dmt-export.zip"
 
