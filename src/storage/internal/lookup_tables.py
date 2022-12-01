@@ -13,7 +13,7 @@ def insert_lookup(lookup_id: str, lookup: dict) -> None:
         lookup_table_collection.insert_one(lookup)
     except DuplicateKeyError:
         raise BadRequestException(
-            f"A lookup table with name '{lookup['name']}' already exists."
+            f"A lookup table with name '{lookup['_id']}' already exists."
             + " Use a different name, or delete the old one first"
         )
 

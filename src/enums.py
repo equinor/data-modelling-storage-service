@@ -53,6 +53,7 @@ class SIMOS(Enum):
     BLUEPRINT_ATTRIBUTE = "sys://system/SIMOS/BlueprintAttribute"
     ATTRIBUTE_TYPES = "sys://system/SIMOS/AttributeTypes"
     BLOB = "sys://system/SIMOS/Blob"
+    RECIPE_LINK = "sys://system/SIMOS/RecipeLink"
     DATASOURCE = "datasource"
 
 

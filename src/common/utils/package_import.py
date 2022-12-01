@@ -19,7 +19,7 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
         logger.debug(f"Working on {file}...")
         with open(f"{path}/{file}") as json_file:
             document = json.load(json_file)
-        if not url_safe_name(document["name"]):
+        if document.get("name") and not url_safe_name(document["name"]):
             raise BadRequestException(
                 message=f"'{document['name']}' is a invalid document name. "
                 f"Only alphanumeric, underscore, and dash are allowed characters"
