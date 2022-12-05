@@ -1,6 +1,7 @@
 import json
 from zipfile import ZipFile
 
+from common.exceptions import ValidationException
 from common.utils.logging import logger
 from enums import SIMOS
 from storage.repository_interface import RepositoryInterface
@@ -24,8 +25,19 @@ class ZipFileClient(RepositoryInterface):
     def get(self, uid: str):
         return "Not implemented on ZipFile repository!"
 
-    def add(self, uid: str, document: dict):
-        return "Not implemented on ZipFile repository!"
+    def add(self, document: dict, path: str, filename: str = None):
+        """Add the provided document as a  json file to the zip file"""
+        if path[-1] == "/":
+            raise ValidationException(message=f"When adding file to Zip, path ({path}) should not end with a '/'")
+        json_data = json.dumps(document)
+        binary_data = json_data.encode()
+
+        if filename:
+            write_path = f"{path}/{filename}.json"
+        else:
+            write_path = f"{path}/{document['name']}.json"
+        logger.debug(f"Writing: {document['type']} to {write_path}")
+        self.zip_file.writestr(write_path, binary_data)
 
     def delete(self, uid: str):
         return "Not implemented on ZipFile repository!"
