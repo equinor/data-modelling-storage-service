@@ -8,21 +8,21 @@ from features.lookup_table.use_cases.create_lookup_table import (
     create_lookup_table_use_case,
 )
 
-router = APIRouter(tags=["default", "lookup-table"], prefix="/lookup")
+router = APIRouter(tags=["default", "lookup-table"])
 
 
 @router.post(
-    "/{recipe_package_path:path}",
+    "/application/{application}",
     operation_id="create_lookup",
     status_code=204,
     response_class=Response,
     responses={**responses},
 )
 @create_response()
-def create_lookup(recipe_package_path: str, application: str, user: User = Depends(auth_w_jwt_or_pat)):
+def create_lookup(recipe_package: str, application: str, user: User = Depends(auth_w_jwt_or_pat)):
     """
     Create a recipe lookup table from a package containing RecipeLinks.
     Associate it with an application.
     This can be used for setting Ui- and StorageRecipes for specific applications.
     """
-    return create_lookup_table_use_case(recipe_package_path, application, user)
+    return create_lookup_table_use_case(recipe_package, application, user)
