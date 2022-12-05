@@ -1,19 +1,8 @@
 Feature: Create a lookup table
+    Background: There are data sources in the system
+    Given the system data source and SIMOS core package are available
 
-  Scenario: Create a lookup table
-    Given i access the resource url "/api/v1/lookup/my-new-lookup"
+  Scenario: System admins want to create a recipe lookup for the DMSS - SIMOS/recipe_links folder
+    Given i access the resource url "/api/v1/application/dmss?recipe_package=system/SIMOS/recipe_links"
     When i make a "POST" request
-    """
-    {
-      "uiRecipes": {
-        "someDS/aPackage/myBlueprint": [
-          {
-            "type": "sys://system/SIMOS/UiRecipe",
-            "name": "MySignalView",
-            "plugin": "signal-plot"
-          }
-        ]
-      }
-    }
-    """
     Then the response status should be "No Content"
