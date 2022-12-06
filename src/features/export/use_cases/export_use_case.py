@@ -11,7 +11,7 @@ from storage.repositories.zip import ZipFileClient
 
 
 def create_zip_export(document_service: DocumentService, absolute_document_ref: str, user: User) -> str:
-    """Create a temporary folder on the host that contains a zip file with."""
+    """Create a temporary folder on the host that contains a zip file.s"""
     tmpdir = tempfile.mkdtemp()
     archive_path = os.path.join(tmpdir, "temp_zip_archive.zip")
 
@@ -24,15 +24,16 @@ def create_zip_export(document_service: DocumentService, absolute_document_ref: 
             document_service.save(document_node, data_source_id, storage_client, update_uncontained=True)
 
         return archive_path
-    elif document_node.entity["type"] == SIMOS.PACKAGE.value and not document_node.entity["isRoot"]:
-        # TODO handle non root pacakge
-        raise ApplicationException(message="Create zip export is only supported for a single document (not a package)")
-        # TODO add package.json file when exporting
-    else:
-        with zipfile.ZipFile(archive_path, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=5) as zip_file:
-            # Save the selected node, using custom ZipFile repository
-            document_service.save(document_node, data_source_id, ZipFileClient(zip_file), update_uncontained=True)
-        return archive_path
+    if document_node.entity["type"] == SIMOS.PACKAGE.value and not document_node.entity["isRoot"]:
+        # TODO handle non root package
+        raise ApplicationException(
+            message="Create zip export is only supported for a single document and root package"
+        )
+
+    with zipfile.ZipFile(archive_path, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=5) as zip_file:
+        # Save the selected node, using custom ZipFile repository
+        document_service.save(document_node, data_source_id, ZipFileClient(zip_file), update_uncontained=True)
+    return archive_path
 
 
 def export_use_case(user: User, document_reference: str):

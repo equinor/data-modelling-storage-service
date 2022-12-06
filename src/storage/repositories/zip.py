@@ -14,8 +14,7 @@ class ZipFileClient(RepositoryInterface):
     def update(self, entity: dict, storage_recipe=None, **kwargs):
         entity.pop("_id", None)
         entity.pop("uid", None)
-        if "/" in entity["__path__"][-1]:
-            entity["__path__"] = entity["__path__"][:-1]
+        entity["__path__"] = entity["__path__"].rstrip("/")
         write_to = f"{entity['__path__']}/{entity['name']}.json"
         entity.pop("__path__")
         json_data = json.dumps(entity)
@@ -29,7 +28,7 @@ class ZipFileClient(RepositoryInterface):
     def get(self, uid: str):
         return "Not implemented on ZipFile repository!"
 
-    def add(self, document: dict, path: str, filename: str = None):
+    def add(self, uid: str, document: dict):
         return "Not implemented on ZipFile repository!"
 
     def delete(self, uid: str):
