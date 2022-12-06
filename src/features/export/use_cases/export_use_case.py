@@ -4,42 +4,10 @@ import zipfile
 
 from authentication.models import User
 from common.exceptions import ApplicationException
-from domain_classes.tree_node import ListNode, Node
+from domain_classes.tree_node import Node
 from enums import SIMOS
 from services.document_service import DocumentService
 from storage.repositories.zip import ZipFileClient
-
-
-def get_package_structure_from_node(node: Node | ListNode, document_structure: dict, path: str = ""):
-    """Returns a dict on the format:
-    {
-        "path": document
-    }
-    where document contains _meta_ information about package.
-    """
-    if node.type == SIMOS.PACKAGE.value and "_meta_" in node.entity and len(node.entity["_meta_"]) > 0:
-        if node.is_root():
-            path = node.name
-        else:
-            path += f"/{node.name}"
-        package_document = {"name": node.name, "type": SIMOS.PACKAGE.value, "_meta_": node.entity["_meta_"]}
-
-        document_path = path
-        document_structure[document_path] = package_document
-    for child in node.children:
-        get_package_structure_from_node(child, document_structure, path)
-    return document_structure
-
-
-def store_package_meta_as_files(document_node: Node, storage_client: ZipFileClient):
-    """
-    When exporting a package, the meta information for the package
-    (since a package is exported as a folder in the zip file).
-    Therefore, we must add a package.json file inside the package folder to store meta information.
-    """
-    meta_documents = get_package_structure_from_node(document_node, {})
-    for path, document in meta_documents.items():
-        storage_client.add(document=document, path=path, filename="package")
 
 
 def create_zip_export(document_service: DocumentService, absolute_document_ref: str, user: User) -> str:
@@ -54,7 +22,6 @@ def create_zip_export(document_service: DocumentService, absolute_document_ref: 
             # Save the selected node, using custom ZipFile repository
             storage_client = ZipFileClient(zip_file)
             document_service.save(document_node, data_source_id, storage_client, update_uncontained=True)
-            store_package_meta_as_files(document_node=document_node, storage_client=storage_client)
 
         return archive_path
     elif document_node.entity["type"] == SIMOS.PACKAGE.value and not document_node.entity["isRoot"]:
