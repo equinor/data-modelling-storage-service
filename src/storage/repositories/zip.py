@@ -22,7 +22,7 @@ class ZipFileClient(RepositoryInterface):
         logger.debug(f"Writing: {entity['type']} to {write_to}")
         if entity["type"] != SIMOS.PACKAGE.value:
             self.zip_file.writestr(write_to, binary_data)
-        else:
+        elif "_meta_" in entity:
             self.zip_file.writestr(f"{Path(write_to).parent}/package.json", json.dumps(entity["_meta_"]).encode())
 
     def get(self, uid: str):
