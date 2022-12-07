@@ -44,5 +44,5 @@ def step_impl(context):
 
     # Import SIMOS package
     logger.setLevel("ERROR")
-    import_package(f"{config.APPLICATION_HOME}/system/SIMOS", context.user, is_root=True, data_source="system")
+    import_package(f"{config.APPLICATION_HOME}/system/SIMOS", context.user, is_root=True, data_source_name="system")
     logger.setLevel("INFO")

@@ -1,12 +1,10 @@
-from typing import List
-
 from common.utils.string_helpers import get_data_type_from_dmt_type
 
 
 class Dimension:
     def __init__(self, dimensions: str, attribute_type: str):
-        self.dimensions: List[str] = dimensions.split(",")
-        self.type: attribute_type = get_data_type_from_dmt_type(attribute_type)
+        self.dimensions: list[str] = dimensions.split(",")
+        self.type: str = get_data_type_from_dmt_type(attribute_type)
         self.value = None
 
     def is_array(self):
@@ -20,7 +18,7 @@ class Dimension:
         return self.dimensions[-1] == "*"
 
     def create_default_array(self, blueprint_provider, create_entity_class):
-        def create_default_array_recursive(dimensions: List[str]) -> List:
+        def create_default_array_recursive(dimensions: list[str]) -> list:
             if len(dimensions) == 1:
                 # Return an empty list if size is "*".
                 if dimensions[0] == "*":

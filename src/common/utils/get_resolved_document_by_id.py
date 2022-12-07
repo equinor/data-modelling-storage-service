@@ -4,7 +4,7 @@ from storage.data_source_class import DataSource
 def resolve_reference_list(x: list, document_repository: DataSource, depth: int = 999, depth_count: int = 0) -> list:
     if not x:  # Return an empty list
         return x
-    resolved = []
+    resolved: list[dict | list] = []
 
     if isinstance(x[0], list):  # Call recursively for nested lists
         resolved = [resolve_reference_list(item, document_repository) for item in x]
@@ -58,7 +58,6 @@ def resolve_complete_document(entity, data_source, depth, depth_count) -> dict:
             if isinstance(value, list):  # If it's a list, resolve any references
                 entity[key] = resolve_reference_list(value, data_source, depth, depth_count)
             else:
-                value: dict
                 if ref_id := value.get("_id"):  # It's a reference
                     entity[key] = get_complete_sys_document(ref_id, data_source, depth_count)
                 else:

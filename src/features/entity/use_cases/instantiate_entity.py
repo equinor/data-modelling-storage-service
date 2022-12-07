@@ -8,7 +8,7 @@ from common.utils.create_entity import CreateEntity
 from services.document_service import DocumentService
 
 
-class BasicEntity(BaseModel, extra=Extra.allow):
+class BasicEntity(BaseModel, extra=Extra.allow):  # type: ignore
     name: Optional[str]
     type: str
 

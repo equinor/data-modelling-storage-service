@@ -1,5 +1,3 @@
-from typing import List, Union
-
 from pydantic import conint
 
 from authentication.models import User
@@ -8,13 +6,13 @@ from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 
 
-def get_nested_dict_attribute(entity: Union[dict, list], path_list: List[str]) -> Union[dict, list]:
+def get_nested_dict_attribute(entity: dict | list, path_list: list[str]) -> dict | list:
     try:
         if isinstance(entity, list):
-            path_list[0] = int(path_list[0])
+            path_list[0] = int(path_list[0])  # type: ignore
         if len(path_list) == 1:
-            return entity[path_list[0]]
-        return get_nested_dict_attribute(entity[path_list[0]], path_list[1:])
+            return entity[path_list[0]]  # type: ignore
+        return get_nested_dict_attribute(entity[path_list[0]], path_list[1:])  # type: ignore
     except (KeyError, IndexError):
         raise KeyError(f"Attribute/Item '{path_list[0]}' does not exists in '{entity}'")
 
@@ -22,7 +20,7 @@ def get_nested_dict_attribute(entity: Union[dict, list], path_list: List[str]) -
 def get_document_use_case(
     user: User,
     id_reference: str,
-    depth: conint(gt=-1, lt=1000) = 999,
+    depth: conint(gt=-1, lt=1000) = 999,  # type: ignore
     repository_provider=get_data_source,
 ):
     document_service = DocumentService(repository_provider=repository_provider, user=user)

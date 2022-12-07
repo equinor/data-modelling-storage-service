@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import Optional
 
 from pydantic.main import BaseModel
 
@@ -6,9 +6,9 @@ from common.utils.encryption import encrypt
 from enums import RepositoryType, StorageDataTypes
 
 
-class Repository(BaseModel, use_enum_values=True):
+class Repository(BaseModel, use_enum_values=True):  # type: ignore
     type: RepositoryType
-    data_types: Optional[List[StorageDataTypes]] = None
+    data_types: Optional[list[StorageDataTypes]] = None
     host: Optional[str] = None
     port: Optional[int] = None
     username: Optional[str] = None
@@ -29,7 +29,7 @@ class Repository(BaseModel, use_enum_values=True):
 
 class DataSourceRequest(BaseModel):
     name: str
-    repositories: Dict[str, Repository]
+    repositories: dict[str, Repository]
 
     def dict(self) -> dict:
         return {"name": self.name, "repositories": {k: v.dict() for k, v in self.repositories.items()}}

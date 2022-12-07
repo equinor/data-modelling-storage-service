@@ -13,23 +13,23 @@ common_type_constrained_string = constr(
 
 
 class EntityName(BaseModel):
-    name: common_name_constrained_string
+    name: common_name_constrained_string  # type: ignore
 
 
 class OptionalEntityName(BaseModel):
-    name: Optional[common_name_constrained_string]
+    name: Optional[common_name_constrained_string]  # type: ignore
 
 
 class EntityType(BaseModel):
-    type: common_type_constrained_string
+    type: common_type_constrained_string  # type: ignore
 
 
 class DataSource(BaseModel):
-    data_source_id: common_name_constrained_string
+    data_source_id: common_name_constrained_string  # type: ignore
 
 
 class DataSourceList(BaseModel):
-    data_sources: list[common_name_constrained_string]
+    data_sources: list[common_name_constrained_string]  # type: ignore
 
 
 class EntityUUID(BaseModel):
@@ -42,7 +42,7 @@ class Reference(EntityType, EntityName, EntityUUID):
         return {**values, "uid": values.get("_id")}
 
 
-class UncontainedEntity(EntityType, OptionalEntityName, EntityUUID, extra=Extra.allow):
+class UncontainedEntity(EntityType, OptionalEntityName, EntityUUID, extra=Extra.allow):  # type: ignore
     @root_validator(pre=True)
     def from_underscore_id_to_uid(cls, values):
         return {**values, "uid": values.get("_id")}
@@ -50,11 +50,11 @@ class UncontainedEntity(EntityType, OptionalEntityName, EntityUUID, extra=Extra.
     def to_dict(self):
         if self.name is not None:
             return self.dict(by_alias=True)
-        else:
-            return self.dict(exclude={"name"})
+
+        return self.dict(exclude={"name"})
 
 
-class BlueprintEntity(EntityType, EntityName, EntityUUID, extra=Extra.allow):
+class BlueprintEntity(EntityType, EntityName, EntityUUID, extra=Extra.allow):  # type: ignore
     # an entity that have type: system/SIMOS/Blueprint
     @root_validator(pre=True)
     def from_underscore_id_to_uid(cls, values):
@@ -62,7 +62,7 @@ class BlueprintEntity(EntityType, EntityName, EntityUUID, extra=Extra.allow):
 
 
 # An entity must have a type, but having a name is optional
-class Entity(EntityType, OptionalEntityName, extra=Extra.allow):
+class Entity(EntityType, OptionalEntityName, extra=Extra.allow):  # type: ignore
     def to_dict(self):
         if self.name is not None:
             return self.dict(by_alias=True)

@@ -12,5 +12,3 @@ jobs:
         run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml build
       - name: "BDD Tests"
         run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml run dmss behave
-      - name: "Unit Tests"
-        run: docker-compose -f docker-compose.yml  -f docker-compose.ci.yml run dmss pytest

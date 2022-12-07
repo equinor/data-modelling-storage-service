@@ -15,11 +15,11 @@ class RecipePlugin(Enum):
 class RecipeAttribute(BaseModel):
     name: str
     contained: bool = True
-    field: str = None
-    array_field: str = None
-    collapsible: bool = None
-    ui_recipe: str = None
-    mapping: str = None
+    field: str | None = None
+    array_field: str | None = None
+    collapsible: bool | None = None
+    ui_recipe: str | None = None
+    mapping: str | None = None
 
 
 class Recipe(BaseModel):
@@ -29,8 +29,8 @@ class Recipe(BaseModel):
     description: str = ""
     plugin: str = "Default"
     category: str = ""
-    roles: List[str] = None
-    config: dict = None
+    roles: List[str] | None = None
+    config: dict | None = None
     label: str = ""
 
     def get_attribute_by_name(self, key):
@@ -62,4 +62,4 @@ class Recipe(BaseModel):
 class DefaultRecipe(Recipe):
     def __init__(self, attributes: List[BlueprintAttribute]):
         recipe_attributes = [RecipeAttribute(name=attr.name) for attr in attributes]
-        super().__init__("Default", attributes=recipe_attributes)
+        super().__init__(name="Default", attributes=recipe_attributes)

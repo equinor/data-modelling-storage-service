@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Dict, List, Optional, Union
+from typing import Callable, List, Union
 from uuid import uuid4
 
 from common.exceptions import BadRequestException
@@ -106,11 +106,11 @@ class DictImporter:
     @classmethod
     def _from_dict(
         cls,
-        entity: Union[dict, list],
+        entity: dict,
         uid: str,
         key,
-        blueprint_provider,
-        node_attribute: BlueprintAttribute = None,
+        blueprint_provider: Callable,
+        node_attribute: BlueprintAttribute,
         recursion_depth: int = 0,
     ):
 
@@ -209,43 +209,42 @@ class NodeBase:
         self,
         key: str,
         attribute: BlueprintAttribute,
-        uid: str = None,
+        uid: str | None = None,
         parent=None,
         blueprint_provider=None,
         children=None,
-        entity: dict = {},
+        entity: dict | list[dict] | None = None,
     ):
         if key is None:
             raise Exception("Node requires a key")
         self.key = key
         self.attribute = attribute
-        self.type = self.attribute.attribute_type
+        self._type = self.attribute.attribute_type
         self.uid = uid
-        self.entity = entity
+        self.entity = entity if entity else {}
         self.parent: Union[Node, ListNode] = parent
         if parent:
             parent.add_child(self)
-        self.children = []
+        self.children: list[NodeBase] = []
         if children is not None:
             for child in children:
                 self.add_child(child)
         self.blueprint_provider = blueprint_provider
-        self.has_error = False
 
     @property
     def type(self):
         return self._type
 
+    @type.setter
+    def type(self, value):  # Type can be changed after initiation. e.g Multiple valid specialised types
+        self._type = value
+
     @property
-    def blueprint(self) -> Optional[Blueprint]:
+    def blueprint(self) -> Blueprint:
         if self.type == BuiltinDataTypes.OBJECT.value:
             return self.blueprint_provider(SIMOS.ENTITY.value)
         if self.type != "datasource":
             return self.blueprint_provider(self.type)
-
-    @type.setter
-    def type(self, value):  # Type can be changed after initiation. e.g Multiple valid specialised types
-        self._type = value
 
     def is_empty(self):
         return not self.entity
@@ -384,17 +383,6 @@ class NodeBase:
         next_node = next_node.get_by_path(keys)
         return next_node
 
-    def get_by_name_path(self, path: List):
-        if len(path) == 0:
-            return self
-
-        next_node = next((x for x in self.children if x.name == path[0]), None)
-        if not next_node:
-            return
-        path.pop(0)
-        next_node = next_node.get_by_name_path(path)
-        return next_node
-
     def remove_by_path(self, keys: List) -> None:
         if len(keys) == 1:
             for index, child in enumerate(self.children):
@@ -416,11 +404,8 @@ class NodeBase:
             if c.node_id == node_id:
                 self.children.pop(i)
 
-    def has_error(self):
-        return self.error is not None
-
     def duplicate_attribute(self, attribute: str):
-        if next((child for child in self.children if child.name == attribute), None):
+        if next((child for child in self.children if child.name == attribute), None):  # type: ignore
             return True
 
     def validate_type_on_parent(self):
@@ -444,8 +429,8 @@ class Node(NodeBase):
         self,
         key: str,  # The key this node is in parent
         attribute: BlueprintAttribute,  # The BlueprintAttribute this Node is in parent
-        uid: str = None,
-        entity: Dict = {},
+        uid: str | None = None,
+        entity: dict | None = None,
         parent=None,
         blueprint_provider=None,
     ):
@@ -469,14 +454,10 @@ class Node(NodeBase):
     def from_dict(entity, uid, blueprint_provider, node_attribute: BlueprintAttribute = None):
         return DictImporter.from_dict(entity, uid, blueprint_provider, "", node_attribute)
 
-    def set_error(self, error_message: str):
-        self.has_error = True
-        self.error_message = error_message
-
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
     def update(self, data: dict):
 
-        self.set_uid(data.get("_id"))
+        self.set_uid(data.get("_id"))  # type: ignore
         # Set self.type from posted type, and validate against parent blueprint
         self.type = data.get("type", self.attribute.attribute_type)
         self.validate_type_on_parent()
@@ -508,7 +489,7 @@ class Node(NodeBase):
         for attribute in removed_attributes:
             # Pop primitive data
             if attribute.is_primitive:
-                self.entity.pop(attribute.name, None)
+                self.entity.pop(attribute.name, None)  # type: ignore
             # Remove complex data
             else:
                 self.remove_by_path([attribute.name])
@@ -531,7 +512,7 @@ class Node(NodeBase):
             name=self.type, contained=True, storage_affinity=self.blueprint.storage_recipes[0].storage_affinity
         )
 
-    def set_uid(self, new_id: str = None):
+    def set_uid(self, new_id: str | None = None):
         """
         Based on storage contained, sets, or removes the documents uid. Creates new if missing.
         """
@@ -540,13 +521,13 @@ class Node(NodeBase):
 
         if self.storage_contained:
             self.uid = None
-            self.entity.pop("_id", None)
+            self.entity.pop("_id", None)  # type: ignore
             return
-        entity_id = self.entity.get("_id", None)
+        entity_id = self.entity.get("_id", None)  # type: ignore
 
         current_id = new_id if new_id else (entity_id if entity_id else self.uid if self.uid else str(uuid4()))
         self.uid = current_id
-        self.entity["_id"] = self.uid
+        self.entity["_id"] = self.uid  # type: ignore
 
 
 class ListNode(NodeBase):
@@ -554,11 +535,12 @@ class ListNode(NodeBase):
         self,
         key: str,
         attribute: BlueprintAttribute,
-        uid: str = None,
-        entity: Dict = {},
+        uid: str | None = None,
+        entity: list | None = None,
         parent=None,
         blueprint_provider=None,
     ):
+        entity = entity if entity else []
         super().__init__(key, attribute, uid, parent=parent, blueprint_provider=blueprint_provider, entity=entity)
 
     def to_dict(self):

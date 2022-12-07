@@ -14,6 +14,7 @@ class AccessLevel(str, Enum):
     def check_privilege(self, required_level: "AccessLevel") -> bool:
         if self.value >= required_level.value:
             return True
+        return False
 
     @classmethod
     def __get_validators__(cls):
@@ -79,7 +80,7 @@ class ACL(BaseModel):
 
 
 class PATData(BaseModel):
-    pat_hash: str = None
+    pat_hash: str | None = None
     uuid: UUID4 = str(uuid4())
     user_id: str
     # TODO: Roles should be checked on every request, as they mey be updated after the PAT has been created

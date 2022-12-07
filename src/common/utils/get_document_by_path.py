@@ -12,7 +12,7 @@ from storage.internal.data_source_repository import get_data_source
 
 
 def get_root_package(root_package_name: str, repository: Repository) -> dict:
-    root_package: [dict] = repository.find({"name": root_package_name, "isRoot": True})
+    root_package: list[dict] = repository.find({"name": root_package_name, "isRoot": True})
     if not root_package:
         raise NotFoundException(
             f"No root package with name '{root_package_name}', in data source '{repository.name}' could be found."

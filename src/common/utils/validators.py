@@ -18,6 +18,7 @@ def valid_extended_type(type: str, extended_types: List[str], get_blueprint: Cal
             return True
         if valid_extended_type(type, blueprint.extends, get_blueprint):
             return True
+    return False
 
 
 def entity_has_all_required_attributes(entity: dict, required_attributes: List[BlueprintAttribute]):

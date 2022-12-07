@@ -22,10 +22,11 @@ def get_active_roles() -> Dict[str, Set[str]]:
     match config.AUTH_PROVIDER_FOR_ROLE_CHECK:
         case AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY:
             return pat_role_checker.get_app_role_assignments_azure_ad()
+    return {}
 
 
 def create_personal_access_token(
-    user: User, scope: AccessLevel = AccessLevel.WRITE, ttl: int = datetime.timedelta(days=30).total_seconds()
+    user: User, scope: AccessLevel = AccessLevel.WRITE, ttl: int = int(datetime.timedelta(days=30).total_seconds())
 ) -> str:
     """
     Create a time limited personal access token that can be used to impersonate the user requesting the token.

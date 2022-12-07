@@ -85,7 +85,7 @@ class DocumentService:
             return {}
         # If not passed a custom repository to save into, use the DocumentService's storage
         if not repository:
-            repository: DataSource = self.repository_provider(data_source_id, self.user)
+            repository: DataSource = self.repository_provider(data_source_id, self.user)  # type: ignore
 
         # If the node is a package, we build the path string to be used by filesystem like repositories.
         # Also, check for duplicate names in the package.
@@ -177,7 +177,7 @@ class DocumentService:
 
         # Grab the parent, and set target based on dotted document_id
         else:
-            root_node: Node = self.get_node_by_uid(data_source_id, parent_uid)
+            root_node: Node = self.get_node_by_uid(data_source_id, parent_uid)  # type: ignore
             target_node = root_node.search(document_id)
 
             if not target_node:
@@ -227,7 +227,7 @@ class DocumentService:
         logger.info(f"Updated document '{target_node.node_id}''")
         return {"data": target_node.to_dict()}
 
-    def add_document(self, absolute_ref: str, data: dict = None, update_uncontained: bool = False):
+    def add_document(self, absolute_ref: str, data: dict, update_uncontained: bool = False):
         data_source, parent_id, attribute = split_dmss_ref(absolute_ref)
         if parent_id and not attribute:
             raise BadRequestException("Attribute not specified on parent")
@@ -287,7 +287,7 @@ class DocumentService:
 
         return {"uid": new_node.node_id}
 
-    def _add_document_with_no_parent(self, data_source: str, data: dict = None, update_uncontained: bool = False):
+    def _add_document_with_no_parent(self, data_source: str, data: dict, update_uncontained: bool = False):
         if data.get("type") != SIMOS.PACKAGE.value and not data.get("isRoot"):
             raise BadRequestException("Only root packages may be added without a parent.")
 

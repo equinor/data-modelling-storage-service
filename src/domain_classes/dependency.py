@@ -2,7 +2,7 @@ from typing import Literal, NewType
 
 from pydantic import BaseModel
 
-TDependencyProtocol = NewType("TDependencyProtocol", Literal["dmss", "http"])
+TDependencyProtocol = NewType("TDependencyProtocol", Literal["dmss", "http"])  # type: ignore
 
 
 class Dependency(BaseModel):

@@ -11,7 +11,7 @@ def group_by(items: List[Union[Dict, T]], grouping_function, items_function=None
     :param grouping_function: Items function
     :param
     """
-    grouping = {}
+    grouping: dict = {}
     for item in items:
         grouping_value = grouping_function(item)
         if items_function:

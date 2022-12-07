@@ -31,8 +31,8 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
     return docs
 
 
-def import_package(path, user: User, data_source: str, is_root: bool = False) -> Union[Dict]:
-    data_source: DataSource = get_data_source(data_source_id=data_source, user=user)
+def import_package(path, user: User, data_source_name: str, is_root: bool = False) -> Union[Dict]:
+    data_source: DataSource = get_data_source(data_source_id=data_source_name, user=user)
     package = {"name": os.path.basename(path), "type": SIMOS.PACKAGE.value, "isRoot": is_root}
     try:
         if get_document_by_absolute_path(f"dmss://{data_source.name}/{package['name']}", user):
@@ -56,7 +56,7 @@ def import_package(path, user: User, data_source: str, is_root: bool = False) ->
     package["content"] = _add_documents(path, files, data_source)
     for folder in directories:
         package["content"].append(
-            import_package(f"{path}/{folder}", user, is_root=False, data_source=data_source.name)
+            import_package(f"{path}/{folder}", user, is_root=False, data_source_name=data_source.name)
         )
 
     data_source.update(package)

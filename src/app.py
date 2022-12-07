@@ -139,7 +139,9 @@ def init_application():
     logger.info("IMPORTING CORE DOCUMENTS")
     # Running commands locally sets the user_context to "DMSS_ADMIN"
     user = User(**{"user_id": config.DMSS_ADMIN, "full_name": "Local Admin", "email": "admin@example.com"})
-    import_package(f"{config.APPLICATION_HOME}/system/SIMOS", user, data_source=config.CORE_DATA_SOURCE, is_root=True)
+    import_package(
+        f"{config.APPLICATION_HOME}/system/SIMOS", user, data_source_name=config.CORE_DATA_SOURCE, is_root=True
+    )
     logger.debug("DONE")
 
 
