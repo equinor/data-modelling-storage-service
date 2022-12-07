@@ -118,7 +118,7 @@ class DataSource:
                     pass
         return documents_with_access
 
-    def update(self, document: dict, storage_attribute: StorageAttribute = None, parent_id: str = None) -> None:
+    def update(self, document: dict, storage_attribute: StorageAttribute = None, parent_id: str | None = None) -> None:
         """
         Create or update a document.
         :param document: A dict of the document to create or update.

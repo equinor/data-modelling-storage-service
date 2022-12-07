@@ -12,7 +12,7 @@ def concat_meta_data(meta: dict | None, new_meta: dict | None) -> dict:
     if not meta and not new_meta:
         return {}
     if not meta:
-        return new_meta
+        return new_meta if new_meta else {}
     if not new_meta:
         return meta
 

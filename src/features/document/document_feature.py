@@ -24,7 +24,7 @@ router = APIRouter(tags=["default", "document"], prefix="/documents")
 @create_response(JSONResponse)
 def get_by_id(
     id_reference: str,
-    depth: conint(gt=-1, lt=1000) = 999,
+    depth: conint(gt=-1, lt=1000) = 999,  # type: ignore
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     # Allow specification of absolute document ref in document_id
@@ -123,7 +123,7 @@ def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt
 def add_by_parent_id(
     absolute_ref: str,
     document: dict,
-    update_uncontained: Optional[bool] = True,
+    update_uncontained: bool = True,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """

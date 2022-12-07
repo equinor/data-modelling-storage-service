@@ -25,10 +25,10 @@ def split_dmss_ref(dmss_reference: str) -> Tuple[str, Union[str, None], Union[st
     return data_source, document_id, attributes
 
 
-def split_dotted_id(dotted_id: str) -> Tuple[str, Union[str, None]]:
+def split_dotted_id(dotted_id: str) -> Tuple[str, str | None]:
     if "." not in dotted_id:  # No attribute path in the id
         return dotted_id, None
-    return dotted_id.split(".", 1)
+    return dotted_id.split(".", 1)  # type: ignore
 
 
 # Convert dmt attribute_types to python types. If complex, return type as string.
@@ -48,3 +48,4 @@ def url_safe_name(name: str) -> bool:
     match = expression.match(name)
     if match:
         return True
+    return False

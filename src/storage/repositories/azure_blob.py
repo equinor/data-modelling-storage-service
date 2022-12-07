@@ -22,6 +22,7 @@ class AzureBlobStorageClient(RepositoryInterface):
     def add(self, uid: str, document: Dict) -> bool:
         output = json.dumps(document)
         self.blob_service_client.create_blob_from_text(self.container, uid, output)
+        return True
 
     def update_blob(self, uid: str, blob: bytearray):
         self.blob_service_client.create_blob_from_bytes(self.container, uid, blob)
@@ -32,12 +33,15 @@ class AzureBlobStorageClient(RepositoryInterface):
     def update(self, uid: str, document: Dict) -> bool:
         output = json.dumps(document)
         self.blob_service_client.create_blob_from_text(self.container, uid, output)
+        return True
 
     def delete(self, uid: str) -> bool:
         self.blob_service_client.delete_blob(self.container, uid)
+        return True
 
     def delete_blob(self, uid: str) -> bool:
         self.delete(uid)
+        return True
 
     def find(self, filters: Dict) -> Optional[List[Dict]]:
         # TODO: implement efficient filter functionality by using the python azure src
@@ -46,6 +50,7 @@ class AzureBlobStorageClient(RepositoryInterface):
             blobs = self.blob_service_client.list_blobs(self.container)
             result = self._filter(blobs, filters)
             return result
+        return None
 
     def find_one(self, filters: Dict) -> Optional[Dict]:
         blobs = self.blob_service_client.list_blobs(self.container)
@@ -55,12 +60,12 @@ class AzureBlobStorageClient(RepositoryInterface):
         return None
 
     def _filter(self, blobs, filters) -> List[Dict]:
-        result = {}
+        result = []
         for blob in blobs:
             document = self.get(str(blob.name))
             for key, value in filters.items():
                 if key not in document or document[key] != value:
                     continue
                 else:
-                    result[document["_id"]] = document
-        return result.values()
+                    result.append(document)
+        return result

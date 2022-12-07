@@ -1,4 +1,4 @@
-FROM python:3.10-slim as base
+FROM python:3.11-slim as base
 WORKDIR /code
 ENTRYPOINT ["/code/src/init.sh"]
 CMD ["api"]
@@ -17,7 +17,6 @@ COPY poetry.lock poetry.lock
 
 FROM base as development
 RUN poetry install
-COPY .flake8 ./
 COPY /src/.behaverc ./src/.behaverc
 COPY src ./src
 USER 1000

@@ -79,7 +79,7 @@ def graph_request(request: GraphRequest):
         access_token = get_graph_api_access_token(
             CredentialRequest(client_id=config.OAUTH_CLIENT_ID, client_secret=config.OAUTH_CLIENT_SECRET)
         )
-        headers["Authorization"] = f"Bearer {access_token}"
+        headers["Authorization"] = f"Bearer {access_token}"  # type: ignore
 
         _req = Request(
             url=url,

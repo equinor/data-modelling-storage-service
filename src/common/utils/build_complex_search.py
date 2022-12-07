@@ -5,7 +5,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 
 
-def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: Dict, key: str, get_blueprint: Callable):
+def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: dict, key: str, get_blueprint: Callable):
     # Lists
     # TODO: Can only do a "at least one" from the first element in query
     if isinstance(search_value, List):
@@ -32,11 +32,11 @@ def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: Dict, 
         if search_value[0] == "<":
             return {"$lt": float(search_value[1:])}
 
-        return float(search_value)
+        return float(search_value)  # type: ignore
 
     # Boolean
     if attribute.attribute_type == "boolean":
-        return search_value.lower() in ("true", "1")
+        return search_value.lower() in ("true", "1")  # type: ignore
 
     # Complex
     if not attribute.is_primitive:

@@ -17,7 +17,7 @@ class BlueprintAttribute(BaseModel):
     enum_type: str = Field("", alias="enumType")
 
     def to_dict(self, by_alias: bool = True):
-        return {**self.dict(by_alias=by_alias), "dimensions": self.dimensions.to_dict()}
+        return {**self.dict(by_alias=by_alias), "dimensions": self.dimensions.to_dict() if self.dimensions else None}
 
     class Config:
         arbitrary_types_allowed = True

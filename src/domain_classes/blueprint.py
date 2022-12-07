@@ -39,7 +39,7 @@ class Blueprint:
     def __init__(self, entity: dict):
         self.name = entity["name"]
         self.description = entity.get("description", "")
-        self.meta: Meta = Meta(entity.get("_meta_"))
+        self.meta: Meta = Meta(entity.get("_meta_"))  # type: ignore
         self.abstract = entity.get("abstract", False)
         self.extends = entity.get("extends", [])
         self.type = entity["type"]

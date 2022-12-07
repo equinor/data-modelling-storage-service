@@ -17,7 +17,7 @@ router = APIRouter(tags=["default", "personal_access_token"], prefix="/token")
 @create_response(PlainTextResponse)
 async def new_personal_access_token(
     scope: AccessLevel = AccessLevel.WRITE,
-    time_to_live: int = timedelta(days=30).total_seconds(),
+    time_to_live: int = int(timedelta(days=30).total_seconds()),
     user: User = Depends(auth_with_jwt),
 ) -> str:
     return create_personal_access_token(user, scope, time_to_live)

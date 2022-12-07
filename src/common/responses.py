@@ -45,7 +45,9 @@ If the execution fails, it will return a JSONResponse with a standardized error 
 """
 
 
-def create_response(response_class: Type[TResponse] = None) -> Callable[..., Callable[..., TResponse | JSONResponse]]:
+def create_response(
+    response_class: Type[TResponse] | None = None,
+) -> Callable[..., Callable[..., TResponse | JSONResponse]]:
     def func_wrapper(func) -> Callable[..., TResponse | JSONResponse]:
         @functools.wraps(func)
         async def wrapper_decorator(*args, **kwargs) -> TResponse | JSONResponse:

@@ -17,7 +17,7 @@ def get_pat(pat: str) -> Optional[PATData]:
     return PATData(**pat_dict)
 
 
-def get_users_pats(user: User) -> list[PATData]:
+def get_users_pats(user: User) -> list[dict]:
     # Filter out the hashed "_id" attribute
     pat_list = [
         pat

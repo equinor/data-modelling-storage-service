@@ -12,7 +12,7 @@ repos:
   rev: 22.6.0
   hooks:
     - id: black
-      language_version: python3.10
+      language_version: python3.11
       files: ^src/.*\.py$
 
 - repo: https://github.com/hadialqattan/pycln
@@ -36,14 +36,32 @@ repos:
       args: [-l, --recursive, -x, tests]
       files: ^src/.*\.py$
 
-- repo: local
+- repo: https://github.com/pycqa/flake8
+  rev: 6.0.0
   hooks:
     - id: flake8
-      # The provided hook fails to read config file. Therefore this wrapper.
-      name: Python style checking
-      entry: sh -c ".venv/bin/python -m flake8 src"
-      language: system
-      files: poetry.lock
+      files: ^src/.*\.py$
+      exclude: src/tests
+      args:
+         - '--verbose'
+         - '--max-line-length=119'
+         - '--max-complexity=18'
+         - '--select=B,C,E,F,W,T4,B9'
+         - '--ignore=E203,E266,E501,W503'
+
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: 'v0.991'
+  hooks:
+    - id: mypy
+      args: [--config-file=./pyproject.toml]
+      exclude: src/tests
+      additional_dependencies:
+        - types-cachetools == 5.2.0
+        - types-requests == 2.27.30
+        - types-ujson == 5.3.0
+
+- repo: local
+  hooks:
     - id: pytest
       name: Unit Tests
       entry: sh -c "export PYTHONPATH=./src && .venv/bin/python -m pytest src/tests"
