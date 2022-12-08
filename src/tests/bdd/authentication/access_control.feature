@@ -13,12 +13,12 @@ Feature: Access Control
     Given there exist document with id "1" in data source "test-DS"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "name": "Something"
         }
       ]
@@ -40,12 +40,12 @@ Feature: Access Control
     And the response should contain
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "name": "Something"
         }
       ]
@@ -96,12 +96,12 @@ Feature: Access Control
     And the response should contain
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "name": "Something"
         }
       ]
@@ -131,12 +131,12 @@ Feature: Access Control
     And the response should contain
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "name": "Something"
         }
       ]
@@ -156,12 +156,12 @@ Feature: Access Control
     When i make a form-data "PUT" request
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "name": "ChangedName"
         }
       ]
@@ -172,12 +172,12 @@ Feature: Access Control
     """
     {
       "data": {
-        "type": "sys://system/SIMOS/Blueprint",
+        "type": "dmss://system/SIMOS/Blueprint",
         "name": "Whatever",
         "attributes": [
           {
             "attributeType": "string",
-            "type": "sys://system/SIMOS/BlueprintAttribute",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
             "name": "ChangedName"
           }
         ]
@@ -202,12 +202,12 @@ Feature: Access Control
     When i make a form-data "PUT" request
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "name": "ChangedName"
         }
       ]
@@ -295,7 +295,7 @@ Feature: Access Control
     {
         "name": "root_package",
         "description": "",
-        "type": "sys://system/SIMOS/Package",
+        "type": "dmss://system/SIMOS/Package",
         "isRoot": true,
         "content": []
     }
@@ -317,7 +317,7 @@ Feature: Access Control
     {
       "_id": "3",
       "name": "new_document",
-      "type": "sys://system/SIMOS/Blueprint"
+      "type": "dmss://system/SIMOS/Blueprint"
     }
     """
     Then the response status should be "OK"

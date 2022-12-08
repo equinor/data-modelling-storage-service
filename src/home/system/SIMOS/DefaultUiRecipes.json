@@ -1,19 +1,19 @@
 {
-  "type": "sys://system/SIMOS/Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "A blueprint that defines the default UiRecipes",
   "name": "DefaultUiRecipes",
   "attributes": [],
   "uiRecipes": [
     {
       "name": "Yaml",
-      "type": "sys://system/SIMOS/UiRecipe",
+      "type": "dmss://system/SIMOS/UiRecipe",
       "plugin": "yaml-view",
       "roles": ["dmss-admin"],
       "category": "view"
     },
     {
       "name": "Edit",
-      "type": "sys://system/SIMOS/UiRecipe",
+      "type": "dmss://system/SIMOS/UiRecipe",
       "plugin": "form",
       "category": "edit"
     }

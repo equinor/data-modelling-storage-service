@@ -18,13 +18,13 @@ Feature: Explorer - Add contained node
     {
         "name": "root_package",
         "description": "",
-        "type": "sys://system/SIMOS/Package",
+        "type": "dmss://system/SIMOS/Package",
         "isRoot": true,
         "content": [
             {
                 "_id": "2",
                 "name": "RecursiveBlueprint",
-                "type": "sys://system/SIMOS/Blueprint"
+                "type": "dmss://system/SIMOS/Blueprint"
             }
         ]
     }
@@ -32,15 +32,15 @@ Feature: Explorer - Add contained node
     Given there exist document with id "2" in data source "blueprints"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "RecursiveBlueprint",
       "description": "This describes a blueprint that has a list of itself",
-      "extends": ["sys://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "attributes": [
         {
           "name": "meAgain",
-          "attributeType": "sys://blueprints/root_package/RecursiveBlueprint",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://blueprints/root_package/RecursiveBlueprint",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "default": "[]",
           "dimensions": "*"
         }
@@ -52,12 +52,12 @@ Feature: Explorer - Add contained node
     {
       "name": "recursiveTest",
       "description": "",
-      "type": "sys://blueprints/root_package/RecursiveBlueprint",
+      "type": "dmss://blueprints/root_package/RecursiveBlueprint",
       "meAgain": [
         {
             "name": "level1-index0",
             "description": "",
-            "type": "sys://blueprints/root_package/RecursiveBlueprint",
+            "type": "dmss://blueprints/root_package/RecursiveBlueprint",
             "diameter": 120,
             "pressure": 0,
             "meAgain": []
@@ -65,7 +65,7 @@ Feature: Explorer - Add contained node
         {
             "name": "level1-index1",
             "description": "",
-            "type": "sys://blueprints/root_package/RecursiveBlueprint",
+            "type": "dmss://blueprints/root_package/RecursiveBlueprint",
             "diameter": 120,
             "pressure": 0,
             "meAgain": []
@@ -80,7 +80,7 @@ Feature: Explorer - Add contained node
     """
     {
       "name": "level2",
-      "type": "sys://blueprints/root_package/RecursiveBlueprint"
+      "type": "dmss://blueprints/root_package/RecursiveBlueprint"
     }
     """
     Then the response status should be "OK"

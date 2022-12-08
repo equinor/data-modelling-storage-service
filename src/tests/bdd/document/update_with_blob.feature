@@ -18,18 +18,18 @@ Feature: Update document that has blob data
     {
         "name": "root_package",
         "description": "",
-        "type": "sys://system/SIMOS/Package",
+        "type": "dmss://system/SIMOS/Package",
         "isRoot": true,
         "content": [
             {
                 "_id": "2",
                 "name": "MultiplePdfContainer",
-                "type": "sys://system/SIMOS/Blueprint"
+                "type": "dmss://system/SIMOS/Blueprint"
             },
             {
                 "_id": "3",
                 "name": "new_pdf_container",
-                "type": "sys://test-DS/root_package/MultiplePdfContainer"
+                "type": "dmss://test-DS/root_package/MultiplePdfContainer"
             }
         ]
     }
@@ -37,27 +37,27 @@ Feature: Update document that has blob data
     Given there exist document with id "2" in data source "test-DS"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "MultiplePdfContainer",
-      "extends": ["sys://system/SIMOS/DefaultUiRecipes","sys://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/DefaultUiRecipes","dmss://system/SIMOS/NamedEntity"],
       "description": "A recursive blueprint with multiple PDFs",
       "attributes": [
         {
           "name": "a_pdf",
-          "attributeType": "sys://system/SIMOS/blob_types/PDF",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://system/SIMOS/blob_types/PDF",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true
         },
         {
           "name": "another_pdf",
-          "attributeType": "sys://system/SIMOS/blob_types/PDF",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://system/SIMOS/blob_types/PDF",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true
         },
         {
           "name": "pdf_container",
-          "attributeType": "sys://test-DS/root_package/MultiplePdfContainer",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-DS/root_package/MultiplePdfContainer",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true
         }
       ]
@@ -67,7 +67,7 @@ Feature: Update document that has blob data
     """
     {
         "name": "new_pdf_container",
-        "type": "sys://test-DS/root_package/MultiplePdfContainer",
+        "type": "dmss://test-DS/root_package/MultiplePdfContainer",
         "a_pdf": {},
         "another_pdf": {},
         "pdf_container": {}
@@ -80,14 +80,14 @@ Feature: Update document that has blob data
     """
     {"data":{
         "name": "new_pdf_container",
-        "type": "sys://test-DS/root_package/MultiplePdfContainer",
+        "type": "dmss://test-DS/root_package/MultiplePdfContainer",
         "a_pdf": {
           "name": "MyPDF1",
           "description": "",
-          "type": "sys://system/SIMOS/blob_types/PDF",
+          "type": "dmss://system/SIMOS/blob_types/PDF",
           "blob": {
             "name": "file1",
-            "type": "sys://system/SIMOS/Blob",
+            "type": "dmss://system/SIMOS/Blob",
             "size": 0
           },
           "author": "Stig Oskar"
@@ -95,10 +95,10 @@ Feature: Update document that has blob data
         "another_pdf": {
           "name": "MyPDF2",
           "description": "",
-          "type": "sys://system/SIMOS/blob_types/PDF",
+          "type": "dmss://system/SIMOS/blob_types/PDF",
           "blob": {
             "name": "file2",
-            "type": "sys://system/SIMOS/Blob",
+            "type": "dmss://system/SIMOS/Blob",
             "_blob_id": "",
             "size": 0
           },
@@ -106,15 +106,15 @@ Feature: Update document that has blob data
         },
         "pdf_container": {
           "name": "second_pdf_container",
-          "type": "sys://test-DS/root_package/MultiplePdfContainer",
+          "type": "dmss://test-DS/root_package/MultiplePdfContainer",
           "description": "",
           "a_pdf": {
             "name": "MyPDF3",
             "description": "",
-            "type": "sys://system/SIMOS/blob_types/PDF",
+            "type": "dmss://system/SIMOS/blob_types/PDF",
             "blob": {
               "name": "file3",
-              "type": "sys://system/SIMOS/Blob",
+              "type": "dmss://system/SIMOS/Blob",
               "_blob_id": "",
               "size": 0
             },
@@ -123,10 +123,10 @@ Feature: Update document that has blob data
           "another_pdf": {
             "name": "MyPDF4",
             "description": "",
-            "type": "sys://system/SIMOS/blob_types/PDF",
+            "type": "dmss://system/SIMOS/blob_types/PDF",
             "blob": {
               "name": "file4",
-              "type": "sys://system/SIMOS/Blob",
+              "type": "dmss://system/SIMOS/Blob",
               "_blob_id": "",
               "size": 0
             },

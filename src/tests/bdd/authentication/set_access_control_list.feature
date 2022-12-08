@@ -9,12 +9,12 @@ Feature: Set Access Control List
     Given there exist document with id "1" in data source "test-DS"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "name": "Something"
         }
       ]
@@ -24,13 +24,13 @@ Feature: Set Access Control List
     """
     {
         "name": "root_package",
-        "type": "sys://system/SIMOS/Package",
+        "type": "dmss://system/SIMOS/Package",
         "isRoot": true,
         "content": [
             {
                 "_id": "3",
                 "name": "SubPack",
-                "type": "sys://system/SIMOS/Package"
+                "type": "dmss://system/SIMOS/Package"
             }
         ]
     }
@@ -39,12 +39,12 @@ Feature: Set Access Control List
     """
     {
         "name": "SubPack",
-        "type": "sys://system/SIMOS/Package",
+        "type": "dmss://system/SIMOS/Package",
         "content": [
             {
                 "_id": "4",
                 "name": "SubSubPack",
-                "type": "sys://system/SIMOS/Package"
+                "type": "dmss://system/SIMOS/Package"
             }
         ],
         "isRoot": false
@@ -54,7 +54,7 @@ Feature: Set Access Control List
     """
     {
         "name": "SubSubPack",
-        "type": "sys://system/SIMOS/Package",
+        "type": "dmss://system/SIMOS/Package",
         "content": [
         ],
         "isRoot": false

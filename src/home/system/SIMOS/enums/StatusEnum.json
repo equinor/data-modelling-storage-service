@@ -1,7 +1,7 @@
 {
   "name": "StatusEnum",
   "description": "Valid Status values",
-  "type": "sys://system/SIMOS/Enum",
+  "type": "dmss://system/SIMOS/Enum",
   "labels": [
     "Not Started",
     "Running",

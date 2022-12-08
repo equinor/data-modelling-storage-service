@@ -71,7 +71,7 @@ def get_document_by_absolute_path(absolute_path: str, user: User) -> dict:
     except ValueError:
         raise BadRequestException(f"Invalid format. The value '{absolute_path}' does not specify a protocol.")
     match protocol:
-        case "sys":  # The entity should be fetched from a DataSource in this DMSS instance
+        case "dmss":  # The entity should be fetched from a DataSource in this DMSS instance
             data_source_id, path, attribute = split_dmss_ref(address)
             document_repository = get_data_source(data_source_id, user)
             type_id = get_document_uid_by_path(path, document_repository)

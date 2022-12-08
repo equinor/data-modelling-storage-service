@@ -1,39 +1,39 @@
 {
-  "type": "sys://system/SIMOS/Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "name": "Blueprint",
   "description": "This describes a blueprint",
   "_meta_": {
-    "type": "sys://system/SIMOS/Meta",
+    "type": "dmss://system/SIMOS/Meta",
     "version": "0.0.1"
   },
   "attributes": [
         {
-      "attributeType": "sys://system/SIMOS/Meta",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/Meta",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "_meta_",
       "contained": true,
       "optional": true
     },
     {
       "attributeType": "boolean",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "abstract",
       "default": false,
       "optional": true
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "name"
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "type"
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "extends",
       "default": "[]",
       "optional": true,
@@ -41,14 +41,14 @@
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "description",
       "default": "",
       "optional": true
     },
     {
-      "attributeType": "sys://system/SIMOS/BlueprintAttribute",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "dimensions": "*",
       "name": "attributes",
       "default": "[{\"name\": \"name\", \"type\": \"string\"}, {\"name\": \"type\", \"type\": \"string\"}, {\"name\": \"description\", \"type\": \"string\"}]",
@@ -56,16 +56,16 @@
       "optional": true
     },
     {
-      "type": "sys://system/SIMOS/BlueprintAttribute",
-      "attributeType": "sys://system/SIMOS/StorageRecipe",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/StorageRecipe",
       "dimensions": "*",
       "name": "storageRecipes",
       "optional": true,
       "default": "[]"
     },
     {
-      "type": "sys://system/SIMOS/BlueprintAttribute",
-      "attributeType": "sys://system/SIMOS/UiRecipe",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/UiRecipe",
       "dimensions": "*",
       "name": "uiRecipes",
       "optional": true,
@@ -74,25 +74,25 @@
   ],
   "storageRecipes": [
     {
-      "type": "sys://system/SIMOS/StorageRecipe",
+      "type": "dmss://system/SIMOS/StorageRecipe",
       "name": "DefaultStorageRecipe",
       "description": "",
       "attributes": [
         {
           "name": "attributes",
-          "type": "sys://system/SIMOS/StorageAttribute",
+          "type": "dmss://system/SIMOS/StorageAttribute",
           "dimensions": "*",
           "contained": true
         },
         {
           "name": "storageRecipes",
-          "type": "sys://system/SIMOS/StorageAttribute",
+          "type": "dmss://system/SIMOS/StorageAttribute",
           "dimensions": "*",
           "contained": true
         },
         {
           "name": "uiRecipes",
-          "type": "sys://system/SIMOS/StorageAttribute",
+          "type": "dmss://system/SIMOS/StorageAttribute",
           "dimensions": "*",
           "contained": true
         }
@@ -102,18 +102,18 @@
   "uiRecipes": [
     {
       "name": "Yaml",
-      "type": "sys://system/SIMOS/UiRecipe",
+      "type": "dmss://system/SIMOS/UiRecipe",
       "plugin": "yaml-view"
     },
     {
-      "type": "sys://system/SIMOS/UiRecipe",
+      "type": "dmss://system/SIMOS/UiRecipe",
       "name": "Edit",
       "description": "Default blueprint edit",
       "plugin": "edit-blueprint"
     },
     {
       "name": "Diagram",
-      "type": "sys://system/SIMOS/UiRecipe",
+      "type": "dmss://system/SIMOS/UiRecipe",
       "plugin": "mermaid"
     }
   ]

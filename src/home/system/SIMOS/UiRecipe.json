@@ -1,34 +1,34 @@
 {
-  "type": "sys://system/SIMOS/Blueprint",
-  "extends": ["sys://system/SIMOS/DefaultUiRecipes","sys://system/SIMOS/NamedEntity"],
+  "type": "dmss://system/SIMOS/Blueprint",
+  "extends": ["dmss://system/SIMOS/DefaultUiRecipes","dmss://system/SIMOS/NamedEntity"],
   "name": "UiRecipe",
   "description": "This describes uiRecipes",
   "attributes": [
     {
       "name": "plugin",
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "optional": true,
       "default": ""
     },
     {
       "name": "category",
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "optional": true,
       "default": ""
     },
     {
       "name": "roles",
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "optional": true,
       "dimensions": "*"
     },
     {
       "name": "config",
       "type": "object",
-      "attributeType": "sys://system/SIMOS/UiAttributeOption",
+      "attributeType": "dmss://system/SIMOS/UiAttributeOption",
       "contained": true,
       "optional": true
     }

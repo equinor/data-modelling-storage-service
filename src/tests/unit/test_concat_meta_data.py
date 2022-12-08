@@ -10,7 +10,7 @@ class ConcatMetaTestCase(unittest.TestCase):
             "type": "CORE:Meta",
             "version": "0.0.1",
             "dependencies": [
-                {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "sys"},
+                {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"},
             ],
         }
         new_meta = {
@@ -21,7 +21,7 @@ class ConcatMetaTestCase(unittest.TestCase):
                     "alias": "TEST-MODELS",
                     "address": "DemoApplicationDataSource/models",
                     "version": "0.0.1",
-                    "protocol": "sys",
+                    "protocol": "dmss",
                 }
             ],
         }
@@ -31,12 +31,12 @@ class ConcatMetaTestCase(unittest.TestCase):
             "type": "CORE:Meta",
             "version": "0.0.1",
             "dependencies": [
-                {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "sys"},
+                {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"},
                 {
                     "alias": "TEST-MODELS",
                     "address": "DemoApplicationDataSource/models",
                     "version": "0.0.1",
-                    "protocol": "sys",
+                    "protocol": "dmss",
                 },
             ],
         }
@@ -49,8 +49,8 @@ class ConcatMetaTestCase(unittest.TestCase):
             "type": "CORE:Meta",
             "version": "0.0.1",
             "dependencies": [
-                {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "sys"},
-                {"alias": "EXISTING-ALIAS", "address": "system/SIMOS", "version": "0.0.1", "protocol": "sys"},
+                {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"},
+                {"alias": "EXISTING-ALIAS", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"},
             ],
         }
         new_meta = {
@@ -66,7 +66,7 @@ class ConcatMetaTestCase(unittest.TestCase):
             "type": "dmss://system/SIMOS/Meta",
             "version": "3.3.3",
             "dependencies": [
-                {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "sys"},
+                {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"},
                 {"alias": "EXISTING-ALIAS", "address": "an/address", "version": "2.2.2", "protocol": "http"},
             ],
         }

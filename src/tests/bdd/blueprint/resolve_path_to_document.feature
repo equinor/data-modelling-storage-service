@@ -13,9 +13,9 @@ Feature: Blueprint - Resolve path to document use case
 
     Given there are documents for the data source "data-source-name" in collection "documents"
       | uid | parent_uid | name          | description | type                     |
-      | 1   |            | blueprints    |             | sys://system/SIMOS/Package     |
-      | 2   | 1          | sub_package_1 |             | sys://system/SIMOS/Package     |
-      | 3   | 2          | document_1    |             | sys://system/SIMOS/Blueprint   |
+      | 1   |            | blueprints    |             | dmss://system/SIMOS/Package     |
+      | 2   | 1          | sub_package_1 |             | dmss://system/SIMOS/Package     |
+      | 3   | 2          | document_1    |             | dmss://system/SIMOS/Blueprint   |
 
 
     Scenario: resolve path to document in the blueprints package

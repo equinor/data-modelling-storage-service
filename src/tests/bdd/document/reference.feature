@@ -12,7 +12,7 @@ Feature: Add and remove references
     {
       "name": "TestData",
       "description": "",
-      "type": "sys://system/SIMOS/Package",
+      "type": "dmss://system/SIMOS/Package",
       "content": [],
       "isRoot": true
     }
@@ -21,9 +21,9 @@ Feature: Add and remove references
     Given there exist document with id "3f9ff99f-9cb5-4afc-947b-a3224eee341f" in data source "test-DS"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "some-blueprint",
-      "extends": ["sys://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "description": "just some blueprint",
       "attributes": []
     }
@@ -33,7 +33,7 @@ Feature: Add and remove references
     """
     {
       "name": "some-blueprint",
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
     }
     """
@@ -43,11 +43,11 @@ Feature: Add and remove references
     {
       "name": "TestData",
       "description": "",
-      "type": "sys://system/SIMOS/Package",
+      "type": "dmss://system/SIMOS/Package",
       "content": [
         {
           "name": "some-blueprint",
-          "type": "sys://system/SIMOS/Blueprint",
+          "type": "dmss://system/SIMOS/Blueprint",
           "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
         }
     ],
@@ -62,7 +62,7 @@ Feature: Add and remove references
     {
       "name": "TestData",
       "description": "",
-      "type": "sys://system/SIMOS/Package",
+      "type": "dmss://system/SIMOS/Package",
       "content": [],
       "isRoot": true
     }
@@ -74,26 +74,26 @@ Feature: Add and remove references
     {
       "name": "TestData",
       "description": "",
-      "type": "sys://system/SIMOS/Package",
+      "type": "dmss://system/SIMOS/Package",
       "content": [
         {
           "name": "Turbine",
-          "type": "sys://system/SIMOS/Blueprint",
+          "type": "dmss://system/SIMOS/Blueprint",
           "_id": "2"
         },
         {
           "name": "Mooring",
-          "type": "sys://system/SIMOS/Blueprint",
+          "type": "dmss://system/SIMOS/Blueprint",
           "_id": "3"
         },
         {
           "name": "myTurbine",
-          "type": "sys://system/SIMOS/Blueprint",
+          "type": "dmss://system/SIMOS/Blueprint",
           "_id": "4"
         },
         {
           "name": "myMooring",
-          "type": "sys://system/SIMOS/Blueprint",
+          "type": "dmss://system/SIMOS/Blueprint",
           "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
         }
       ],
@@ -105,14 +105,14 @@ Feature: Add and remove references
     """
     {
       "name": "Turbine",
-      "type": "sys://system/SIMOS/Blueprint",
-      "extends": ["sys://system/SIMOS/NamedEntity"],
+      "type": "dmss://system/SIMOS/Blueprint",
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "description": "",
       "attributes": [
         {
           "name": "Mooring",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
-          "attributeType": "sys://test-DS/TestData/Mooring",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-DS/TestData/Mooring",
           "optional": true,
           "contained": false
         }
@@ -123,13 +123,13 @@ Feature: Add and remove references
     """
     {
       "name": "Mooring",
-      "type": "sys://system/SIMOS/Blueprint",
-      "extends": ["sys://system/SIMOS/NamedEntity"],
+      "type": "dmss://system/SIMOS/Blueprint",
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "description": "",
       "attributes": [
         {
           "name": "Bigness",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "description": "How big? Very",
           "attributeType": "integer",
           "default": "",
@@ -142,7 +142,7 @@ Feature: Add and remove references
     """
     {
       "name": "myTurbine",
-      "type": "sys://test-DS/TestData/Turbine",
+      "type": "dmss://test-DS/TestData/Turbine",
       "description": "This is a wind turbine demoing uncontained relationships",
       "Mooring": {}
     }
@@ -151,7 +151,7 @@ Feature: Add and remove references
     """
     {
     "name": "myMooring",
-    "type": "sys://test-DS/TestData/Mooring",
+    "type": "dmss://test-DS/TestData/Mooring",
     "description": "",
     "Bigness": 10
     }
@@ -161,7 +161,7 @@ Feature: Add and remove references
     """
     {
       "name": "myMooring",
-      "type": "sys://test-DS/TestData/Mooring",
+      "type": "dmss://test-DS/TestData/Mooring",
       "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
     }
     """
@@ -170,11 +170,11 @@ Feature: Add and remove references
     """
     {
       "name": "myTurbine",
-      "type": "sys://test-DS/TestData/Turbine",
+      "type": "dmss://test-DS/TestData/Turbine",
       "description": "This is a wind turbine demoing uncontained relationships",
       "Mooring": {
         "name": "myMooring",
-        "type": "sys://test-DS/TestData/Mooring",
+        "type": "dmss://test-DS/TestData/Mooring",
         "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
       }
     }
@@ -186,7 +186,7 @@ Feature: Add and remove references
     """
     {
       "name": "myTurbine",
-      "type": "sys://test-DS/TestData/Turbine",
+      "type": "dmss://test-DS/TestData/Turbine",
       "description": "This is a wind turbine demoing uncontained relationships",
       "Mooring": {}
     }
