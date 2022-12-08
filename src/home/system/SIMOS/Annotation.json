@@ -1,12 +1,12 @@
 {
-  "type": "sys://system/SIMOS/Blueprint",
-  "extends": ["sys://system/SIMOS/DefaultUiRecipes","sys://system/SIMOS/NamedEntity"],
+  "type": "dmss://system/SIMOS/Blueprint",
+  "extends": ["dmss://system/SIMOS/DefaultUiRecipes","dmss://system/SIMOS/NamedEntity"],
   "name": "Annotation",
   "description": "This describes an annotation",
   "attributes": [
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "value"
     }
   ],

@@ -1,37 +1,37 @@
 {
     "name": "Job",
     "abstract": true,
-    "type": "sys://system/SIMOS/Blueprint",
-    "extends": ["sys://system/SIMOS/NamedEntity", "sys://system/SIMOS/DefaultUiRecipes"],
+    "type": "dmss://system/SIMOS/Blueprint",
+    "extends": ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/DefaultUiRecipes"],
     "attributes": [
       {
         "name": "uid",
-        "type": "sys://system/SIMOS/BlueprintAttribute",
+        "type": "dmss://system/SIMOS/BlueprintAttribute",
         "attributeType": "string",
         "optional": false
       },
       {
         "name": "label",
-        "type": "sys://system/SIMOS/BlueprintAttribute",
+        "type": "dmss://system/SIMOS/BlueprintAttribute",
         "attributeType": "string",
         "optional": true
       },
       {
         "name": "triggeredBy",
-        "type": "sys://system/SIMOS/BlueprintAttribute",
+        "type": "dmss://system/SIMOS/BlueprintAttribute",
         "attributeType": "string",
         "optional": true
       },
       {
         "name": "status",
-        "type": "sys://system/SIMOS/BlueprintAttribute",
+        "type": "dmss://system/SIMOS/BlueprintAttribute",
         "attributeType": "string",
         "optional": false,
         "default": "Not registered"
       },
       {
         "attributeType": "object",
-        "type": "sys://system/SIMOS/BlueprintAttribute",
+        "type": "dmss://system/SIMOS/BlueprintAttribute",
         "name": "applicationInput",
         "label": "Input",
         "description": "Input entity to a job",
@@ -40,32 +40,32 @@
       },
       {
         "name": "started",
-        "type": "sys://system/SIMOS/BlueprintAttribute",
+        "type": "dmss://system/SIMOS/BlueprintAttribute",
         "attributeType": "string",
         "optional": true
       },
       {
         "name": "ended",
-        "type": "sys://system/SIMOS/BlueprintAttribute",
+        "type": "dmss://system/SIMOS/BlueprintAttribute",
         "attributeType": "string",
         "optional": true
       },
       {
         "name": "outputTarget",
-        "type": "sys://system/SIMOS/BlueprintAttribute",
+        "type": "dmss://system/SIMOS/BlueprintAttribute",
         "attributeType": "string",
         "optional": true
       },
       {
         "name": "result",
-        "type": "sys://system/SIMOS/BlueprintAttribute",
+        "type": "dmss://system/SIMOS/BlueprintAttribute",
         "attributeType": "object",
         "contained": false,
         "optional": true
       },
       {
         "attributeType": "/jobHandlers/JobHandler",
-        "type": "sys://system/SIMOS/BlueprintAttribute",
+        "type": "dmss://system/SIMOS/BlueprintAttribute",
         "name": "runner",
         "label": "Runner",
         "description": "JobRunner that will handle this job",
@@ -73,7 +73,7 @@
       },
       {
         "attributeType": "string",
-        "type": "sys://system/SIMOS/BlueprintAttribute",
+        "type": "dmss://system/SIMOS/BlueprintAttribute",
         "name": "referenceTarget",
         "label": "Reference target",
         "description": "Dotted id to an analysis entity's job result. Should be on the format: entityId.jobs.*index*.result. Must be generated at run time since the index can vary.",
@@ -83,14 +83,14 @@
     "uiRecipes": [
       {
         "name": "Edit",
-        "type": "sys://system/SIMOS/UiRecipe",
+        "type": "dmss://system/SIMOS/UiRecipe",
         "plugin": "jobInputEdit",
         "category": "edit",
         "roles": ["dmss-admin", "domain-expert", "expert-operator", "operator"]
       },
       {
         "name": "Control pane",
-        "type": "sys://system/SIMOS/UiRecipe",
+        "type": "dmss://system/SIMOS/UiRecipe",
         "plugin": "jobControl",
         "category": "view",
         "roles": ["dmss-admin", "domain-expert", "expert-operator", "operator"]

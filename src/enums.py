@@ -43,17 +43,17 @@ class StorageDataTypes(str, Enum):
 
 
 class SIMOS(Enum):
-    BLUEPRINT = "sys://system/SIMOS/Blueprint"
-    STORAGE_RECIPE = "sys://system/SIMOS/StorageRecipe"
-    STORAGE_ATTRIBUTE = "sys://system/SIMOS/StorageAttribute"
-    UI_RECIPE = "sys://system/SIMOS/UiRecipe"
-    ENTITY = "sys://system/SIMOS/Entity"
-    NAMED_ENTITY = "sys://system/SIMOS/NamedEntity"
-    PACKAGE = "sys://system/SIMOS/Package"
-    BLUEPRINT_ATTRIBUTE = "sys://system/SIMOS/BlueprintAttribute"
-    ATTRIBUTE_TYPES = "sys://system/SIMOS/AttributeTypes"
-    BLOB = "sys://system/SIMOS/Blob"
-    RECIPE_LINK = "sys://system/SIMOS/RecipeLink"
+    BLUEPRINT = "dmss://system/SIMOS/Blueprint"
+    STORAGE_RECIPE = "dmss://system/SIMOS/StorageRecipe"
+    STORAGE_ATTRIBUTE = "dmss://system/SIMOS/StorageAttribute"
+    UI_RECIPE = "dmss://system/SIMOS/UiRecipe"
+    ENTITY = "dmss://system/SIMOS/Entity"
+    NAMED_ENTITY = "dmss://system/SIMOS/NamedEntity"
+    PACKAGE = "dmss://system/SIMOS/Package"
+    BLUEPRINT_ATTRIBUTE = "dmss://system/SIMOS/BlueprintAttribute"
+    ATTRIBUTE_TYPES = "dmss://system/SIMOS/AttributeTypes"
+    BLOB = "dmss://system/SIMOS/Blob"
+    RECIPE_LINK = "dmss://system/SIMOS/RecipeLink"
     DATASOURCE = "datasource"
 
 

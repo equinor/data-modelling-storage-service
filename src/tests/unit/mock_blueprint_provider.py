@@ -34,12 +34,12 @@ all_contained_cases_blueprint = {
     ],
     "storageRecipes": [
         {
-            "type": "sys://system/SIMOS/StorageRecipe",
+            "type": "dmss://system/SIMOS/StorageRecipe",
             "name": "DefaultStorageRecipe",
             "description": "",
             "attributes": [
-                {"name": "reference", "type": "sys://system/SIMOS/Entity", "contained": False},
-                {"name": "references", "type": "sys://system/SIMOS/Entity", "contained": False},
+                {"name": "reference", "type": "dmss://system/SIMOS/Entity", "contained": False},
+                {"name": "references", "type": "dmss://system/SIMOS/Entity", "contained": False},
             ],
         }
     ],
@@ -96,7 +96,7 @@ extended_blueprint = {
     "storageRecipes": [
         {
             "name": "default",
-            "type": "sys://system/SIMOS/StorageRecipe",
+            "type": "dmss://system/SIMOS/StorageRecipe",
             "description": "",
             "storageAffinity": "blob",
             "attributes": [],
@@ -133,7 +133,7 @@ uncontained_blueprint = {
     ],
     "storageRecipes": [
         {
-            "type": "sys://system/SIMOS/StorageRecipe",
+            "type": "dmss://system/SIMOS/StorageRecipe",
             "name": "DefaultStorageRecipe",
             "description": "",
             "attributes": [
@@ -238,7 +238,7 @@ blueprint_with_storageAffinity_in_root = {
     "storageRecipes": [
         {
             "name": "default",
-            "type": "sys://system/SIMOS/StorageRecipe",
+            "type": "dmss://system/SIMOS/StorageRecipe",
             "description": "",
             "storageAffinity": "blob",
             "attributes": [],
@@ -261,7 +261,7 @@ blobContainer = {
     "storageRecipes": [
         {
             "name": "default",
-            "type": "sys://system/SIMOS/StorageRecipe",
+            "type": "dmss://system/SIMOS/StorageRecipe",
             "description": "",
             "attributes": [{"name": "blob", "type": "does_this_matter?", "contained": False}],
         }

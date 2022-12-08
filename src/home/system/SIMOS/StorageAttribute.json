@@ -1,19 +1,19 @@
 {
-  "type": "sys://system/SIMOS/Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "name": "StorageAttribute",
-  "extends": ["sys://system/SIMOS/DefaultUiRecipes","sys://system/SIMOS/NamedEntity"],
+  "extends": ["dmss://system/SIMOS/DefaultUiRecipes","dmss://system/SIMOS/NamedEntity"],
   "description": "This describes a storage recipe attribute",
   "attributes": [
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "name",
       "default": "root",
       "description": "Which attribute this StorageAttribute applies to."
     },
     {
       "attributeType": "boolean",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "contained",
       "optional": true,
       "default": "true",
@@ -21,24 +21,24 @@
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "storageAffinity",
       "default": "default",
-      "enumType": "sys://system/SIMOS/enums/StorageTypes",
+      "enumType": "dmss://system/SIMOS/enums/StorageTypes",
       "description": "Will be used to decide how the data will be stored",
       "optional": "true"
     },
     {
       "name": "label",
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "optional": true,
       "default": "",
       "description": "Friendly name visible to user"
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "description",
       "default": "",
       "optional": true,

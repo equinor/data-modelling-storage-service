@@ -12,7 +12,7 @@ Feature: Export an entity's meta data
     {
       "name": "TestData",
       "description": "",
-      "type": "sys://system/SIMOS/Package",
+      "type": "dmss://system/SIMOS/Package",
       "_meta_": {
         "type": "CORE:Meta",
         "version": "0.0.1",
@@ -21,14 +21,14 @@ Feature: Export an entity's meta data
             "alias": "CORE",
             "address": "system/SIMOS",
             "version": "0.0.1",
-            "protocol": "sys"
+            "protocol": "dmss"
           }
         ]
       },
       "content": [
         {
           "name": "some-entity",
-          "type": "sys://system/SIMOS/Blueprint",
+          "type": "dmss://system/SIMOS/Blueprint",
           "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
         }
       ],
@@ -39,7 +39,7 @@ Feature: Export an entity's meta data
     Given there exist document with id "3f9ff99f-9cb5-4afc-947b-a3224eee341f" in data source "test-DS"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "some-entity",
       "_meta_": {
         "type": "CORE:Meta",
@@ -49,11 +49,11 @@ Feature: Export an entity's meta data
             "alias": "TEST-MODELS",
             "address": "DemoApplicationDataSource/models",
             "version": "0.0.1",
-            "protocol": "sys"
+            "protocol": "dmss"
           }
         ]
       },
-      "extends": ["sys://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "description": "just some blueprint",
       "attributes": []
     }
@@ -71,13 +71,13 @@ Feature: Export an entity's meta data
           "alias": "CORE",
           "address": "system/SIMOS",
           "version": "0.0.1",
-          "protocol": "sys"
+          "protocol": "dmss"
         },
         {
           "alias": "TEST-MODELS",
           "address": "DemoApplicationDataSource/models",
           "version": "0.0.1",
-          "protocol": "sys"
+          "protocol": "dmss"
         }
       ]
     }
@@ -89,11 +89,11 @@ Feature: Export an entity's meta data
     {
       "name": "TestData",
       "description": "",
-      "type": "sys://system/SIMOS/Package",
+      "type": "dmss://system/SIMOS/Package",
       "content": [
         {
           "name": "some-entity",
-          "type": "sys://system/SIMOS/Blueprint",
+          "type": "dmss://system/SIMOS/Blueprint",
           "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
         }
       ],
@@ -104,9 +104,9 @@ Feature: Export an entity's meta data
     Given there exist document with id "3f9ff99f-9cb5-4afc-947b-a3224eee341f" in data source "test-DS"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "some-entity",
-      "extends": ["sys://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "description": "just some blueprint",
       "attributes": []
     }

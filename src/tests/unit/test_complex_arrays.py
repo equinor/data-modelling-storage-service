@@ -25,7 +25,7 @@ package_blueprint = {
     ],
     "storageRecipes": [
         {
-            "type": "sys://system/SIMOS/StorageRecipe",
+            "type": "dmss://system/SIMOS/StorageRecipe",
             "name": "DefaultStorageRecipe",
             "description": "",
             "attributes": [{"name": "content", "type": "object", "contained": False}],

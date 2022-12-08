@@ -17,43 +17,43 @@ Feature: Explorer - Add file
     {
         "name": "root_package",
         "description": "",
-        "type": "sys://system/SIMOS/Package",
+        "type": "dmss://system/SIMOS/Package",
         "isRoot": true,
         "content": [
             {
                 "_id": "2",
                 "name": "MultiplePdfContainer",
-                "type": "sys://system/SIMOS/Blueprint"
+                "type": "dmss://system/SIMOS/Blueprint"
             },
             {
                 "_id": "3",
                 "name": "BaseChild",
-                "type": "sys://system/SIMOS/Blueprint"
+                "type": "dmss://system/SIMOS/Blueprint"
             },
             {
                 "_id": "4",
                 "name": "Parent",
-                "type": "sys://system/SIMOS/Blueprint"
+                "type": "dmss://system/SIMOS/Blueprint"
             },
             {
                 "_id": "5",
                 "name": "SpecialChild",
-                "type": "sys://system/SIMOS/Blueprint"
+                "type": "dmss://system/SIMOS/Blueprint"
             },
             {
                 "_id": "6",
                 "name": "parentEntity",
-                "type": "sys://test-DS/root_package/Parent"
+                "type": "dmss://test-DS/root_package/Parent"
             },
             {
                 "_id": "7",
                 "name": "Hobby",
-                "type": "sys://system/SIMOS/Blueprint"
+                "type": "dmss://system/SIMOS/Blueprint"
             },
             {
                 "_id": "8",
                 "name": "Comment",
-                "type": "sys://system/SIMOS/Blueprint"
+                "type": "dmss://system/SIMOS/Blueprint"
             }
         ]
     }
@@ -61,40 +61,40 @@ Feature: Explorer - Add file
     Given there exist document with id "2" in data source "test-DS"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "MultiplePdfContainer",
       "description": "A recursive blueprint with multiple PDFs",
       "attributes": [
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "name": "name"
         },
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "name": "description"
         },
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "name": "type",
           "default": "blueprints/root_package/RecursiveBlueprint"
         },
         {
           "name": "a_pdf",
-          "attributeType": "sys://system/SIMOS/blob_types/PDF",
-          "type": "sys://system/SIMOS/BlueprintAttribute"
+          "attributeType": "dmss://system/SIMOS/blob_types/PDF",
+          "type": "dmss://system/SIMOS/BlueprintAttribute"
         },
         {
           "name": "another_pdf",
-          "attributeType": "sys://system/SIMOS/blob_types/PDF",
-          "type": "sys://system/SIMOS/BlueprintAttribute"
+          "attributeType": "dmss://system/SIMOS/blob_types/PDF",
+          "type": "dmss://system/SIMOS/BlueprintAttribute"
         },
         {
           "name": "pdf_container",
-          "attributeType": "sys://test-DS/root_package/MultiplePdfContainer",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-DS/root_package/MultiplePdfContainer",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true
         }
       ]
@@ -104,15 +104,15 @@ Feature: Explorer - Add file
     Given there exist document with id "3" in data source "test-DS"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "BaseChild",
       "description": "",
-      "extends": ["sys://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "attributes": [
         {
         "name": "AValue",
         "attributeType": "integer",
-        "type": "sys://system/SIMOS/BlueprintAttribute"
+        "type": "dmss://system/SIMOS/BlueprintAttribute"
         }
       ]
     }
@@ -122,15 +122,15 @@ Feature: Explorer - Add file
     Given there exist document with id "4" in data source "test-DS"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "Parent",
       "description": "",
-      "extends": ["sys://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "attributes": [
         {
         "name": "SomeChild",
-        "attributeType": "sys://test-DS/root_package/BaseChild",
-        "type": "sys://system/SIMOS/BlueprintAttribute",
+        "attributeType": "dmss://test-DS/root_package/BaseChild",
+        "type": "dmss://system/SIMOS/BlueprintAttribute",
         "optional": true
         }
       ]
@@ -140,20 +140,20 @@ Feature: Explorer - Add file
     Given there exist document with id "5" in data source "test-DS"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "SpecialChild",
       "description": "",
-      "extends": ["sys://test-DS/root_package/BaseChild"],
+      "extends": ["dmss://test-DS/root_package/BaseChild"],
       "attributes": [
         {
           "name": "AnExtraValue",
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute"
+          "type": "dmss://system/SIMOS/BlueprintAttribute"
         },
         {
           "name": "Hobbies",
-          "attributeType": "sys://test-DS/root_package/Hobby",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-DS/root_package/Hobby",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "dimensions": "*"
         }
@@ -165,7 +165,7 @@ Feature: Explorer - Add file
   Given there exist document with id "6" in data source "test-DS"
     """
     {
-      "type": "sys://test-DS/root_package/Parent",
+      "type": "dmss://test-DS/root_package/Parent",
       "name": "parentEntity",
       "description": "",
       "SomeChild": {}
@@ -175,15 +175,15 @@ Feature: Explorer - Add file
   Given there exist document with id "7" in data source "test-DS"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "Hobby",
       "description": "",
-      "extends": ["sys://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "attributes": [
         {
         "name": "difficulty",
         "attributeType": "string",
-        "type": "sys://system/SIMOS/BlueprintAttribute"
+        "type": "dmss://system/SIMOS/BlueprintAttribute"
         }
       ]
     }
@@ -192,14 +192,14 @@ Feature: Explorer - Add file
   Given there exist document with id "8" in data source "test-DS"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "Comment",
       "description": "a comment blueprint, that does not require a name",
       "attributes": [
         {
         "name": "text",
         "attributeType": "string",
-        "type": "sys://system/SIMOS/BlueprintAttribute"
+        "type": "dmss://system/SIMOS/BlueprintAttribute"
         }
       ]
     }
@@ -211,7 +211,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "baseChildInParentEntity",
-      "type": "sys://test-DS/root_package/BaseChild",
+      "type": "dmss://test-DS/root_package/BaseChild",
       "description": "base child in parent",
       "AValue": 0
     }
@@ -225,12 +225,12 @@ Feature: Explorer - Add file
     {
           "_id": "6",
           "name": "parentEntity",
-          "type": "sys://test-DS/root_package/Parent",
+          "type": "dmss://test-DS/root_package/Parent",
           "description": "",
           "SomeChild":
           {
             "name": "baseChildInParentEntity",
-            "type": "sys://test-DS/root_package/BaseChild",
+            "type": "dmss://test-DS/root_package/BaseChild",
             "description": "base child in parent",
             "AValue": 0
           }
@@ -243,7 +243,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "newRootPackage",
-      "type": "sys://system/SIMOS/Package",
+      "type": "dmss://system/SIMOS/Package",
       "isRoot": true,
       "content": []
     }
@@ -256,7 +256,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "hobbynumber1",
-      "type": "sys://test-DS/root_package/Hobby",
+      "type": "dmss://test-DS/root_package/Hobby",
       "description": "example hobby",
       "difficulty": "high"
     }
@@ -270,7 +270,7 @@ Feature: Explorer - Add file
     {
           "_id": "6",
           "name": "parentEntity",
-          "type": "sys://test-DS/root_package/Parent",
+          "type": "dmss://test-DS/root_package/Parent",
           "description": "",
           "SomeChild": {}
     }
@@ -282,14 +282,14 @@ Feature: Explorer - Add file
     """
     {
       "name": "specialChild",
-      "type": "sys://test-DS/root_package/SpecialChild",
+      "type": "dmss://test-DS/root_package/SpecialChild",
       "description": "specialized child",
       "AValue": 39,
       "AnExtraValue": "abc",
       "Hobbies": [
         {
           "name": "Football",
-          "type": "sys://test-DS/root_package/Hobby",
+          "type": "dmss://test-DS/root_package/Hobby",
           "description": "sport",
           "difficulty": "high"
         }
@@ -305,12 +305,12 @@ Feature: Explorer - Add file
     {
           "_id": "6",
           "name": "parentEntity",
-          "type": "sys://test-DS/root_package/Parent",
+          "type": "dmss://test-DS/root_package/Parent",
           "description": "",
           "SomeChild":
           {
             "name": "specialChild",
-            "type": "sys://test-DS/root_package/SpecialChild",
+            "type": "dmss://test-DS/root_package/SpecialChild",
             "description": "specialized child",
             "AValue": 39,
             "AnExtraValue": "abc"
@@ -324,7 +324,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "new_document",
-      "type": "sys://system/SIMOS/Blueprint"
+      "type": "dmss://system/SIMOS/Blueprint"
     }
     """
     Then the response status should be "OK"
@@ -335,7 +335,7 @@ Feature: Explorer - Add file
     """
     {
           "name":"root_package",
-          "type":"sys://system/SIMOS/Package",
+          "type":"dmss://system/SIMOS/Package",
           "content":[
             {
               "name": "MultiplePdfContainer"
@@ -390,7 +390,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "new_document",
-      "type": "sys://system/SIMOS/Blueprint"
+      "type": "dmss://system/SIMOS/Blueprint"
     }
     """
     Then the response status should be "Not Found"
@@ -420,7 +420,7 @@ Feature: Explorer - Add file
     """
     {
       "name": "new_document",
-      "type": "sys://system/SIMOS/Blueprint"
+      "type": "dmss://system/SIMOS/Blueprint"
     }
     """
     Then the response status should be "Forbidden"
@@ -441,7 +441,7 @@ Feature: Explorer - Add file
     """
       {
         "document": {
-          "type": "sys://test-DS/root_package/Parent",
+          "type": "dmss://test-DS/root_package/Parent",
           "name": "parentEntity",
           "description": "",
           "SomeChild": {}
@@ -466,7 +466,7 @@ Feature: Explorer - Add file
     """
     {
         "_id": "429cb3da-ebbe-4ea6-80a6-b6bca0f67aaa",
-        "type": "sys://test-DS/root_package/Comment",
+        "type": "dmss://test-DS/root_package/Comment",
         "description": "comment entity with no name",
         "text": "example comment"
     }
@@ -479,7 +479,7 @@ Feature: Explorer - Add file
     """
     {
       "document": {
-        "type": "sys://test-DS/root_package/Parent",
+        "type": "dmss://test-DS/root_package/Parent",
         "description": "parent entity with no name"
       }
     }
@@ -503,7 +503,7 @@ Feature: Explorer - Add file
     {
       "document": {
         "_id": "",
-        "type":"sys://system/SIMOS/Blueprint",
+        "type":"dmss://system/SIMOS/Blueprint",
         "name": "new_bp",
         "description": "Blueprint with no name"
       }
@@ -519,7 +519,7 @@ Feature: Explorer - Add file
     {
       "document": {
         "_id": "2283c9b0-d509-46c9-a153-94c79f4d7b7b",
-        "type":"sys://system/SIMOS/Blueprint",
+        "type":"dmss://system/SIMOS/Blueprint",
         "name": "new_bp",
         "description": "Blueprint with no name"
       }
@@ -535,7 +535,7 @@ Feature: Explorer - Add file
     {
       "document":
       {
-        "type": "sys://test-DS/root_package/Comment",
+        "type": "dmss://test-DS/root_package/Comment",
         "description": "comment entity with no name",
         "text": "example comment"
       }
@@ -550,7 +550,7 @@ Feature: Explorer - Add file
     {
       "document":
       {
-        "type":"sys://system/SIMOS/Blueprint",
+        "type":"dmss://system/SIMOS/Blueprint",
         "description": "Blueprint with no name"
       }
     }
@@ -574,7 +574,7 @@ Feature: Explorer - Add file
     {
       "document":
       {
-        "type":"sys://system/SIMOS/Package",
+        "type":"dmss://system/SIMOS/Package",
         "description": "Package with no name"
       }
     }
@@ -596,7 +596,7 @@ Feature: Explorer - Add file
     When i make a "POST" request
     """
     {
-      "type": "sys://test-DS/root_package/Parent",
+      "type": "dmss://test-DS/root_package/Parent",
       "description": "parent entity with no name"
     }
     """
@@ -617,7 +617,7 @@ Feature: Explorer - Add file
     When i make a "POST" request
     """
     {
-      "type": "sys://test-DS/root_package/Comment",
+      "type": "dmss://test-DS/root_package/Comment",
       "description": "comment entity with no name",
       "text": "example comment"
     }
@@ -629,7 +629,7 @@ Feature: Explorer - Add file
     When i make a "POST" request
     """
     {
-      "type":"sys://system/SIMOS/Blueprint",
+      "type":"dmss://system/SIMOS/Blueprint",
       "description": "Blueprint with no name"
     }
     """
@@ -650,7 +650,7 @@ Feature: Explorer - Add file
     When i make a "POST" request
     """
     {
-      "type":"sys://system/SIMOS/Package",
+      "type":"dmss://system/SIMOS/Package",
       "description": "Package with no name"
     }
     """
@@ -673,15 +673,15 @@ Feature: Explorer - Add file
     {
       "document": {
         "name": "new_pdf_container",
-        "type": "sys://test-DS/root_package/MultiplePdfContainer",
+        "type": "dmss://test-DS/root_package/MultiplePdfContainer",
         "description": "",
         "a_pdf": {
           "name": "MyPDF1",
           "description": "",
-          "type": "sys://system/SIMOS/blob_types/PDF",
+          "type": "dmss://system/SIMOS/blob_types/PDF",
           "blob": {
             "name": "file1",
-            "type": "sys://system/SIMOS/Blob",
+            "type": "dmss://system/SIMOS/Blob",
             "_blob_id": ""
           },
           "author": "Stig Oskar"
@@ -689,25 +689,25 @@ Feature: Explorer - Add file
         "another_pdf": {
           "name": "MyPDF2",
           "description": "",
-          "type": "sys://system/SIMOS/blob_types/PDF",
+          "type": "dmss://system/SIMOS/blob_types/PDF",
           "blob": {
             "name": "file2",
-            "type": "sys://system/SIMOS/Blob",
+            "type": "dmss://system/SIMOS/Blob",
             "_blob_id": ""
           },
           "author": "Stig Oskar"
         },
         "pdf_container": {
           "name": "second_pdf_container",
-          "type": "sys://test-DS/root_package/MultiplePdfContainer",
+          "type": "dmss://test-DS/root_package/MultiplePdfContainer",
           "description": "",
           "a_pdf": {
             "name": "MyPDF3",
             "description": "",
-            "type": "sys://system/SIMOS/blob_types/PDF",
+            "type": "dmss://system/SIMOS/blob_types/PDF",
             "blob": {
               "name": "file3",
-              "type": "sys://system/SIMOS/Blob",
+              "type": "dmss://system/SIMOS/Blob",
               "_blob_id": ""
             },
             "author": "Stig Oskar"
@@ -715,10 +715,10 @@ Feature: Explorer - Add file
           "another_pdf": {
             "name": "MyPDF4",
             "description": "",
-            "type": "sys://system/SIMOS/blob_types/PDF",
+            "type": "dmss://system/SIMOS/blob_types/PDF",
             "blob": {
               "name": "file4",
-              "type": "sys://system/SIMOS/Blob",
+              "type": "dmss://system/SIMOS/Blob",
               "size": 0,
               "_blob_id": ""
             },

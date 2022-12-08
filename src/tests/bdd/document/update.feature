@@ -18,26 +18,26 @@ Feature: Document 2
     Given there exist document with id "2" in data source "test-source-name"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "ItemType",
       "description": "",
-      "extends": ["sys://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "attributes": [
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "extra"
         },
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "list"
         },
         {
-          "attributeType": "sys://test-source-name/TestData/ItemTypeTwo",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-source-name/TestData/ItemTypeTwo",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "complexList",
           "dimensions" : "*"
@@ -51,14 +51,14 @@ Feature: Document 2
     Given there exist document with id "4" in data source "test-source-name"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "ItemTypeTwo",
       "description": "",
-      "extends": ["sys://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "attributes": [
         {
           "attributeType": "string",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "extra"
         }
@@ -71,33 +71,33 @@ Feature: Document 2
     Given there exist document with id "3" in data source "test-source-name"
     """
     {
-      "type": "sys://system/SIMOS/Blueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
       "name": "TestContainer",
       "description": "",
-      "extends": ["sys://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "attributes": [
         {
-          "attributeType": "sys://test-source-name/TestData/ItemType",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-source-name/TestData/ItemType",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "itemContained"
         },
         {
-          "attributeType": "sys://test-source-name/TestData/ItemType",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-source-name/TestData/ItemType",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "dimensions": "*",
           "name": "itemsContained"
         },
         {
-          "attributeType": "sys://test-source-name/TestData/ItemType",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-source-name/TestData/ItemType",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "itemNotContained"
         },
         {
-          "attributeType": "sys://test-source-name/TestData/ItemType",
-          "type": "sys://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-source-name/TestData/ItemType",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "dimensions": "*",
           "name": "itemsNotContained"
@@ -106,18 +106,18 @@ Feature: Document 2
       "storageRecipes": [
         {
           "name": "DefaultStorageRecipe",
-          "type": "sys://system/SIMOS/StorageRecipe",
+          "type": "dmss://system/SIMOS/StorageRecipe",
           "description": "",
           "attributes": [
             {
               "name": "itemNotContained",
-              "type": "sys://test-source-name/TestData/ItemType",
+              "type": "dmss://test-source-name/TestData/ItemType",
               "contained": false,
               "storageTypeAffinity": "blob"
             },
             {
               "name": "itemsNotContained",
-              "type": "sys://test-source-name/TestData/ItemType",
+              "type": "dmss://test-source-name/TestData/ItemType",
               "contained": false
             }
           ]
@@ -132,22 +132,22 @@ Feature: Document 2
     {
         "name": "TestData",
         "description": "",
-        "type": "sys://system/SIMOS/Package",
+        "type": "dmss://system/SIMOS/Package",
         "content": [
             {
                 "_id": "3",
                 "name": "TestContainer",
-                "type": "sys://test-source-name/TestData/TestContainer"
+                "type": "dmss://test-source-name/TestData/TestContainer"
             },
             {
                 "_id": "2",
                 "name": "ItemType",
-                "type": "sys://test-source-name/TestData/ItemType"
+                "type": "dmss://test-source-name/TestData/ItemType"
             },
             {
                 "_id": "4",
                 "name": "ItemTypeTwo",
-                "type": "sys://test-source-name/TestData/ItemTypeTwo"
+                "type": "dmss://test-source-name/TestData/ItemTypeTwo"
             }
 
         ],
@@ -159,12 +159,12 @@ Feature: Document 2
 
     Given there are documents for the data source "data-source-name" in collection "documents"
       | uid | parent_uid | name          | description | type                                    |
-      | 1   |            | package_1     |             | sys://system/SIMOS/Package                    |
-      | 2   | 1          | sub_package_1 |             | sys://system/SIMOS/Package                    |
-      | 3   | 1          | sub_package_2 |             | sys://system/SIMOS/Package                    |
-      | 4   | 2          | document_1    |             | sys://system/SIMOS/Package                    |
-      | 5   | 2          | document_2    |             | sys://system/SIMOS/Blueprint                  |
-      | 6   | 3          | container_1   |             | sys://test-source-name/TestData/TestContainer |
+      | 1   |            | package_1     |             | dmss://system/SIMOS/Package                    |
+      | 2   | 1          | sub_package_1 |             | dmss://system/SIMOS/Package                    |
+      | 3   | 1          | sub_package_2 |             | dmss://system/SIMOS/Package                    |
+      | 4   | 2          | document_1    |             | dmss://system/SIMOS/Package                    |
+      | 5   | 2          | document_2    |             | dmss://system/SIMOS/Blueprint                  |
+      | 6   | 3          | container_1   |             | dmss://test-source-name/TestData/TestContainer |
 
   Scenario: Update document (only contained)
     Given i access the resource url "/api/v1/documents/data-source-name/1"
@@ -172,7 +172,7 @@ Feature: Document 2
     """
     {
       "name": "package_1",
-      "type": "sys://system/SIMOS/Package",
+      "type": "dmss://system/SIMOS/Package",
       "description": "new description",
       "isRoot": true
     }
@@ -183,7 +183,7 @@ Feature: Document 2
     {
       "data": {
         "name": "package_1",
-        "type": "sys://system/SIMOS/Package",
+        "type": "dmss://system/SIMOS/Package",
         "description": "new description",
         "isRoot": true
       }
@@ -196,22 +196,22 @@ Feature: Document 2
     """
     {
       "name": "new_name",
-      "type": "sys://test-source-name/TestData/TestContainer",
+      "type": "dmss://test-source-name/TestData/TestContainer",
       "description": "some description",
       "itemContained": {
           "name": "item_contained",
-          "type": "sys://test-source-name/TestData/ItemType",
+          "type": "dmss://test-source-name/TestData/ItemType",
            "extra": "extra_1"
       },
       "itemsContained": [
         {
           "name": "item_1_contained",
-          "type": "sys://test-source-name/TestData/ItemType",
+          "type": "dmss://test-source-name/TestData/ItemType",
           "list": ["a", "b", "c"],
           "complexList": [
               {
                 "name": "item_1_contained",
-                "type": "sys://test-source-name/TestData/ItemTypeTwo",
+                "type": "dmss://test-source-name/TestData/ItemTypeTwo",
                 "extra": "extra_1"
               }
             ]
@@ -219,18 +219,18 @@ Feature: Document 2
       ],
       "itemNotContained": {
           "name": "item_single",
-          "type": "sys://test-source-name/TestData/ItemType",
+          "type": "dmss://test-source-name/TestData/ItemType",
            "extra": "extra_1"
       },
       "itemsNotContained": [
         {
           "name": "item_1",
-          "type": "sys://test-source-name/TestData/ItemType",
+          "type": "dmss://test-source-name/TestData/ItemType",
           "list": ["a", "b"],
           "complexList": [
               {
                 "name": "item_1",
-                "type": "sys://test-source-name/TestData/ItemTypeTwo",
+                "type": "dmss://test-source-name/TestData/ItemTypeTwo",
                 "extra": "extra_1"
               }
             ]
@@ -244,22 +244,22 @@ Feature: Document 2
     {
       "data": {
         "name": "new_name",
-        "type": "sys://test-source-name/TestData/TestContainer",
+        "type": "dmss://test-source-name/TestData/TestContainer",
         "description": "some description",
         "itemContained": {
           "name": "item_contained",
-          "type": "sys://test-source-name/TestData/ItemType",
+          "type": "dmss://test-source-name/TestData/ItemType",
            "extra": "extra_1"
         },
         "itemsContained": [
         {
             "name": "item_1_contained",
-            "type": "sys://test-source-name/TestData/ItemType",
+            "type": "dmss://test-source-name/TestData/ItemType",
             "list": ["a", "b", "c"],
             "complexList": [
                 {
                   "name": "item_1_contained",
-                  "type": "sys://test-source-name/TestData/ItemTypeTwo",
+                  "type": "dmss://test-source-name/TestData/ItemTypeTwo",
                   "extra": "extra_1"
                 }
               ]
@@ -267,18 +267,18 @@ Feature: Document 2
         ],
         "itemNotContained": {
             "name": "item_single",
-            "type": "sys://test-source-name/TestData/ItemType",
+            "type": "dmss://test-source-name/TestData/ItemType",
             "extra": "extra_1"
         },
         "itemsNotContained": [
           {
             "name": "item_1",
-            "type": "sys://test-source-name/TestData/ItemType",
+            "type": "dmss://test-source-name/TestData/ItemType",
             "list": ["a", "b"],
             "complexList": [
               {
                 "name": "item_1",
-                "type": "sys://test-source-name/TestData/ItemTypeTwo",
+                "type": "dmss://test-source-name/TestData/ItemTypeTwo",
                 "extra": "extra_1"
               }
             ]
@@ -294,7 +294,7 @@ Feature: Document 2
     """
     {
       "name": "item_single",
-      "type": "sys://test-source-name/TestData/ItemType"
+      "type": "dmss://test-source-name/TestData/ItemType"
     }
     """
     Then the response status should be "OK"
@@ -303,7 +303,7 @@ Feature: Document 2
     {
       "data": {
         "name": "item_single",
-        "type": "sys://test-source-name/TestData/ItemType"
+        "type": "dmss://test-source-name/TestData/ItemType"
       }
     }
     """

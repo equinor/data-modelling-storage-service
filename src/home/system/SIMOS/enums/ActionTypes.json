@@ -1,5 +1,5 @@
 {
-  "type": "sys://system/SIMOS/Enum",
+  "type": "dmss://system/SIMOS/Enum",
   "name": "ActionTypes",
   "description": "Different valid action types",
   "values": ["separateResultFile","resultInEntity"],

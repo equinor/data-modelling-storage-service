@@ -8,10 +8,10 @@ Feature: Explorer - Remove by path
 
     Given there are documents for the data source "data-source-name" in collection "data-source-name"
       | uid | parent_uid | name          | description | type                   |
-      | 1   |            | blueprints    |             | sys://system/SIMOS/Package   |
-      | 2   | 1          | sub_package_1 |             | sys://system/SIMOS/Package   |
-      | 4   | 1          | sub_package_2 |             | sys://system/SIMOS/Package   |
-      | 3   | 2          | document_1    |             | sys://system/SIMOS/Blueprint |
+      | 1   |            | blueprints    |             | dmss://system/SIMOS/Package   |
+      | 2   | 1          | sub_package_1 |             | dmss://system/SIMOS/Package   |
+      | 4   | 1          | sub_package_2 |             | dmss://system/SIMOS/Package   |
+      | 3   | 2          | document_1    |             | dmss://system/SIMOS/Blueprint |
 
   Scenario: Remove root package
     Given i access the resource url "/api/v1/documents/data-source-name/remove-by-path/blueprints"

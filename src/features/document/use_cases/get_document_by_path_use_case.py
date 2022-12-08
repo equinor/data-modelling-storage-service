@@ -18,7 +18,7 @@ def get_document_by_path_use_case(
     protocol, address = absolute_path.split("://", 1)
 
     match protocol:
-        case "sys":  # The document should be fetched from a DataSource in this DMSS instance
+        case "dmss":  # The document should be fetched from a DataSource in this DMSS instance
             data_source_id, path, attribute = split_dmss_ref(address)
             document = document_service.get_node_by_uid(data_source_id=data_source_id, document_uid=root_doc["_id"])
         case "http":  # The document should be fetched by an HTTP call

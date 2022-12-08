@@ -1,61 +1,61 @@
 {
-  "type": "sys://system/SIMOS/Blueprint",
-  "extends": ["sys://system/SIMOS/DefaultUiRecipes","sys://system/SIMOS/NamedEntity"],
+  "type": "dmss://system/SIMOS/Blueprint",
+  "extends": ["dmss://system/SIMOS/DefaultUiRecipes","dmss://system/SIMOS/NamedEntity"],
   "name": "UiAttribute",
   "description": "This describes an ui recipe attribute",
   "attributes": [
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "attributeType",
-      "default": "sys://system/SIMOS/BlueprintAttribute",
+      "default": "dmss://system/SIMOS/BlueprintAttribute",
       "optional": true
     },
     {
       "name": "label",
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "optional": true,
       "default": ""
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "uiRecipe",
       "default": "",
       "optional": true
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "dimensions",
       "optional": true,
       "default": ""
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "arrayField",
       "optional": true,
       "default": ""
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "enumType",
       "optional": true,
       "default": ""
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "field",
       "optional": true,
       "default": ""
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "widget",
       "description": "Widget for this property",
       "optional": true,
@@ -64,14 +64,14 @@
     },
     {
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "default",
       "optional": true,
       "default": ""
     },
     {
-      "type": "sys://system/SIMOS/BlueprintAttribute",
-      "attributeType": "sys://system/SIMOS/UiAttributeOption",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/UiAttributeOption",
       "name": "options",
       "dimensions": "*",
       "contained": true,
@@ -79,28 +79,28 @@
     },
     {
       "attributeType": "boolean",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "optional",
       "optional": true,
       "default": "false"
     },
     {
       "attributeType": "boolean",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "contained",
       "optional": true,
       "default": "true"
     },
     {
       "attributeType": "boolean",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "disabled",
       "default": "false",
       "optional": true
     },
     {
       "attributeType": "boolean",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "required",
       "default": "false",
       "optional": true,
@@ -109,13 +109,13 @@
     {
       "name": "mapping",
       "attributeType": "string",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "optional": true
     },
     {
       "name": "collapsible",
       "attributeType": "boolean",
-      "type": "sys://system/SIMOS/BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "optional": true,
       "default": "false"
     }

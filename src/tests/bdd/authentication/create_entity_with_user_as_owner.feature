@@ -12,7 +12,7 @@ Feature: Set logged in user as owner when creating an entity
       {
           "name": "root_package",
           "description": "",
-          "type": "sys://system/SIMOS/Package",
+          "type": "dmss://system/SIMOS/Package",
           "isRoot": true,
           "content": []
       }
@@ -25,7 +25,7 @@ Feature: Set logged in user as owner when creating an entity
       {
         "_id": "3",
         "name": "new_document",
-        "type": "sys://system/SIMOS/Blueprint"
+        "type": "dmss://system/SIMOS/Blueprint"
       }
       """
       Then the response status should be "OK"
@@ -46,7 +46,7 @@ Feature: Set logged in user as owner when creating an entity
       {
           "name": "root_package",
           "description": "",
-          "type": "sys://system/SIMOS/Package",
+          "type": "dmss://system/SIMOS/Package",
           "isRoot": true,
           "content": []
       }
@@ -59,7 +59,7 @@ Feature: Set logged in user as owner when creating an entity
       {
         "_id": "fe43f567-3606-41d7-972c-9800b8181846",
         "name": "new_document",
-        "type": "sys://system/SIMOS/Blueprint"
+        "type": "dmss://system/SIMOS/Blueprint"
       }
       """
       Then the response status should be "OK"
