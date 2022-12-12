@@ -3,36 +3,48 @@ import tempfile
 import zipfile
 
 from authentication.models import User
-from common.exceptions import ApplicationException
 from domain_classes.tree_node import Node
 from enums import SIMOS
+from features.export.use_cases.export_meta_use_case import export_meta_use_case
 from services.document_service import DocumentService
 from storage.repositories.zip import ZipFileClient
 
 
+def save_node_to_zipfile(
+    archive_path: str,
+    document_node: Node,
+    document_service: DocumentService,
+    data_source_id: str,
+    document_meta: dict | None,
+):
+    with zipfile.ZipFile(archive_path, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=5) as zip_file:
+        if document_meta:
+            document_node.entity["_meta_"] = document_meta
+        storage_client = ZipFileClient(zip_file)
+        document_service.save(document_node, data_source_id, storage_client, update_uncontained=True)
+
+
 def create_zip_export(document_service: DocumentService, absolute_document_ref: str, user: User) -> str:
-    """Create a temporary folder on the host that contains a zip file.s"""
+    """Create a temporary folder on the host that contains a zip file."""
     tmpdir = tempfile.mkdtemp()
     archive_path = os.path.join(tmpdir, "temp_zip_archive.zip")
 
     data_source_id, document_path = absolute_document_ref.split("/", 1)
     document_node: Node = document_service.get_by_path(absolute_document_ref)
-    if document_node.entity["type"] == SIMOS.PACKAGE.value and document_node.entity["isRoot"]:
-        with zipfile.ZipFile(archive_path, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=5) as zip_file:
-            # Save the selected node, using custom ZipFile repository
-            storage_client = ZipFileClient(zip_file)
-            document_service.save(document_node, data_source_id, storage_client, update_uncontained=True)
 
-        return archive_path
-    if document_node.entity["type"] == SIMOS.PACKAGE.value and not document_node.entity["isRoot"]:
-        # TODO handle non root package
-        raise ApplicationException(
-            message="Create zip export is only supported for a single document and root package"
-        )
+    # non-root packages and single documents will inherit the meta information from all parents.
+    document_meta = None
+    if not (document_node.entity["type"] == SIMOS.PACKAGE.value and document_node.entity["isRoot"]):
+        document_meta = export_meta_use_case(user=user, document_reference=absolute_document_ref)
 
-    with zipfile.ZipFile(archive_path, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=5) as zip_file:
-        # Save the selected node, using custom ZipFile repository
-        document_service.save(document_node, data_source_id, ZipFileClient(zip_file), update_uncontained=True)
+    save_node_to_zipfile(
+        archive_path=archive_path,
+        document_service=document_service,
+        document_node=document_node,
+        document_meta=document_meta,
+        data_source_id=data_source_id,
+    )
+
     return archive_path
 
 
