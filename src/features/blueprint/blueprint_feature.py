@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.responses import create_response, responses
+from restful.request_types.shared import common_type_constrained_string
 
 from .use_cases.get_blueprint_use_case import get_blueprint_use_case
 from .use_cases.resolve_blueprint_use_case import resolve_blueprint_use_case
@@ -13,11 +14,13 @@ router = APIRouter(tags=["default", "blueprint"])
 
 @router.get("/blueprint/{type_ref:path}", operation_id="blueprint_get", response_model=dict, responses=responses)
 @create_response(JSONResponse)
-def get_blueprint(type_ref: str, user: User = Depends(auth_w_jwt_or_pat)):
+def get_blueprint(
+    type_ref: common_type_constrained_string, context: str = "_default_", user: User = Depends(auth_w_jwt_or_pat)
+):
     """
-    Fetch the Blueprint of a type (including inherited attributes)
+    Fetch the Blueprint and Recipes of a type (including inherited attributes)
     """
-    return get_blueprint_use_case(user=user, entity_type=type_ref)
+    return get_blueprint_use_case(type_ref, context, user)
 
 
 @router.get(

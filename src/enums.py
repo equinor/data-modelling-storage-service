@@ -47,6 +47,7 @@ class SIMOS(Enum):
     STORAGE_RECIPE = "dmss://system/SIMOS/StorageRecipe"
     STORAGE_ATTRIBUTE = "dmss://system/SIMOS/StorageAttribute"
     UI_RECIPE = "dmss://system/SIMOS/UiRecipe"
+    UI_ATTRIBUTE = "dmss://system/SIMOS/UiAttribute"
     ENTITY = "dmss://system/SIMOS/Entity"
     NAMED_ENTITY = "dmss://system/SIMOS/NamedEntity"
     PACKAGE = "dmss://system/SIMOS/Package"

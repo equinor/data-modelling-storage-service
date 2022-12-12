@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import PRIMITIVES, SIMOS
@@ -14,12 +14,18 @@ class RecipePlugin(Enum):
 
 class RecipeAttribute(BaseModel):
     name: str
+    type: str = SIMOS.UI_ATTRIBUTE.value
+    attribute_type: str = Field(None, alias="attributeType")
+    label: str | None = None
     contained: bool = True
     field: str | None = None
     array_field: str | None = None
     collapsible: bool | None = None
     ui_recipe: str | None = None
     mapping: str | None = None
+
+    class Config:
+        allow_population_by_field_name = True
 
 
 class Recipe(BaseModel):
