@@ -16,7 +16,6 @@ def before_all(context):
 def after_all(context):
     print_overview_features(context.features)
     print_overview_errors(context.errors)
-    wipe_db()
 
 
 def after_feature(context, feature):

@@ -2,9 +2,13 @@ import json
 
 from behave import given
 
+from authentication.models import User
 from common.utils.logging import logger
 from common.utils.package_import import import_package
 from config import config
+from features.lookup_table.use_cases.create_lookup_table import (
+    create_lookup_table_use_case,
+)
 from restful.request_types.create_data_source import DataSourceRequest
 from storage.internal.data_source_repository import (
     DataSourceRepository,
@@ -46,3 +50,9 @@ def step_impl(context):
     logger.setLevel("ERROR")
     import_package(f"{config.APPLICATION_HOME}/system/SIMOS", context.user, is_root=True, data_source_name="system")
     logger.setLevel("INFO")
+
+
+@given("the DMSS-lookup has been created")
+def step_impl(context):
+    user = User(user_id=config.DMSS_ADMIN)
+    create_lookup_table_use_case("system/SIMOS/recipe_links", "DMSS", user)

@@ -7,8 +7,11 @@ from domain_classes.ui_recipe import Recipe
 
 
 class Lookup(BaseModel):
-    # TODO: When openapi-generator supports OpenAPI v3.1, replace dict[str.. -> dict[common_type_constrained_string
+    # TODO: When openapi-generator supports OpenAPI v3.1, replace dict[str,.. -> dict[common_type_constrained_string,...
     ui_recipes: dict[str, list[Recipe]] = Field(default_factory=lambda: defaultdict(list), alias="uiRecipes")
     storage_recipes: dict[str, list[StorageRecipe]] = Field(
         default_factory=lambda: defaultdict(list), alias="storageRecipes"
     )
+
+    class Config:
+        allow_population_by_field_name = True

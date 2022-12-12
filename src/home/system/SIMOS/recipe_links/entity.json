@@ -1,0 +1,20 @@
+{
+  "type": "dmss://system/SIMOS/RecipeLink",
+  "_blueprintPath_": "dmss://system/SIMOS/Entity",
+  "uiRecipes": [
+    {
+      "type": "dmss://system/SIMOS/UiRecipe",
+      "name": "DEFAULT_CREATE",
+      "description": "",
+      "attributes": [
+        {
+          "name": "type",
+          "attributeType": "string",
+          "type": "dmss://system/SIMOS/UiAttribute",
+          "field": "blueprint",
+          "label": "Type"
+        }
+      ]
+    }
+  ]
+}
