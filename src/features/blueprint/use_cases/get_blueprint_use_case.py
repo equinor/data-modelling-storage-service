@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from authentication.models import User
-from common.utils.get_blueprint import default_ui_recipes
+from common.utils.get_storage_recipe import default_ui_recipes
 from domain_classes.lookup import Lookup
 from restful.request_types.shared import common_type_constrained_string
 from services.document_service import DocumentService

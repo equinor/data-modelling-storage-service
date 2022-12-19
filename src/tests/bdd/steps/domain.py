@@ -4,7 +4,7 @@ from behave import given, then
 
 from authentication.models import ACL
 from common.utils.create_entity import CreateEntity
-from common.utils.get_blueprint import storage_recipe_provider
+from common.utils.get_storage_recipe import storage_recipe_provider
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from enums import SIMOS, BuiltinDataTypes

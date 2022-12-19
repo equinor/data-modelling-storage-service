@@ -60,7 +60,7 @@ blueprint_with_storageAffinity_in_root = [
     }
 ]
 
-blobContainer = [
+blob_container = [
     {
         "name": "default",
         "type": "dmss://system/SIMOS/StorageRecipe",
@@ -76,7 +76,7 @@ all_storage_recipes.update(
         "ExtendedBlueprint": extended_blueprint,
         "uncontained_blueprint": uncontained_blueprint,
         "blob": blueprint_with_storageAffinity_in_root,
-        "blobContainer": blobContainer,
+        "blobContainer": blob_container,
     }
 )
 
