@@ -1,6 +1,6 @@
 {
   "type": "dmss://system/SIMOS/Blueprint",
-  "extends": ["dmss://system/SIMOS/DefaultUiRecipes","dmss://system/SIMOS/NamedEntity"],
+  "extends": ["dmss://system/SIMOS/NamedEntity"],
   "name": "Package",
   "description": "This is a blueprint for a package that contains documents and other packages",
   "attributes": [
@@ -15,45 +15,6 @@
       "name": "content",
       "dimensions": "*",
       "optional": true
-    }
-  ],
-  "storageRecipes": [
-    {
-      "type": "dmss://system/SIMOS/StorageRecipe",
-      "name": "DEFAULT",
-      "description": "",
-      "attributes": [
-        {
-          "name": "content",
-          "type": "object",
-          "contained": false
-        }
-      ]
-    }
-  ],
-  "uiRecipes": [
-    {
-      "type": "dmss://system/SIMOS/UiRecipe",
-      "name": "DEFAULT_CREATE",
-      "plugin": "DEFAULT_CREATE",
-      "description": "",
-      "attributes": [
-        {
-          "name": "isRoot",
-          "type": "dmss://system/SIMOS/UiAttribute",
-          "contained": false
-        },
-        {
-          "name": "type",
-          "type": "dmss://system/SIMOS/UiAttribute",
-          "contained": false
-        },
-        {
-          "name": "content",
-          "type": "dmss://system/SIMOS/UiAttribute",
-          "contained": false
-        }
-      ]
     }
   ]
 }

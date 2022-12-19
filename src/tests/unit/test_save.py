@@ -7,6 +7,7 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import Node
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider, flatten_dict
+from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
 
 
 class DocumentServiceTestCase(unittest.TestCase):
@@ -41,13 +42,15 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=blueprint_provider,
+            repository_provider=lambda x, y: repository,
         )
 
         node: Node = document_service.get_node_by_uid("testing", "1")
         contained_node: Node = node.get_by_path("references.1".split("."))
         contained_node.update({"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "basic_blueprint"})
-        document_service.save(node, "testing")
+        document_service.save(node, "testing", update_uncontained=True)
 
         assert doc_storage["4"] == {
             "_id": "4",
@@ -83,7 +86,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=blueprint_provider,
+            repository_provider=lambda x, y: repository,
         )
 
         node: Node = document_service.get_node_by_uid("testing", "1")
@@ -153,7 +158,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                 return repository
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=blueprint_provider,
+            repository_provider=repository_provider,
         )
 
         node: Node = document_service.get_node_by_uid("testing", "1")
@@ -200,10 +207,14 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=blueprint_provider,
+            repository_provider=lambda x, y: repository,
         )
 
-        node: Node = Node.from_dict(doc_storage["1"], "1", document_service.get_blueprint)
+        node: Node = Node.from_dict(
+            doc_storage["1"], "1", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
+        )
         document_service.save(node, "testing", update_uncontained=True)
 
         assert doc_storage["2"]["description"] == "I'm the second nested document, uncontained"
@@ -254,7 +265,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=blueprint_provider,
+            repository_provider=lambda x, y: repository,
         )
 
         document_service.update_document(
@@ -316,7 +329,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=blueprint_provider,
+            repository_provider=lambda x, y: repository,
         )
         new_data = {
             "name": "A-contained_attribute",

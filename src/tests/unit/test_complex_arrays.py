@@ -7,6 +7,7 @@ from domain_classes.blueprint import Blueprint
 from enums import SIMOS
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
+from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
 
 package_blueprint = {
     "type": SIMOS.BLUEPRINT.value,
@@ -22,14 +23,6 @@ package_blueprint = {
             "dimensions": "*",
             "optional": True,
         },
-    ],
-    "storageRecipes": [
-        {
-            "type": "dmss://system/SIMOS/StorageRecipe",
-            "name": "DefaultStorageRecipe",
-            "description": "",
-            "attributes": [{"name": "content", "type": "object", "contained": False}],
-        }
     ],
 }
 
@@ -122,7 +115,9 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
                 return document_repository
 
         document_service = DocumentService(
-            repository_provider=repository_provider, blueprint_provider=blueprint_provider
+            recipe_provider=mock_storage_recipe_provider,
+            repository_provider=repository_provider,
+            blueprint_provider=blueprint_provider,
         )
         document_service.add_document(
             data_source_id="testing",
@@ -271,7 +266,9 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
                 return document_repository
 
         document_service = DocumentService(
-            repository_provider=repository_provider, blueprint_provider=blueprint_provider
+            recipe_provider=mock_storage_recipe_provider,
+            repository_provider=repository_provider,
+            blueprint_provider=blueprint_provider,
         )
         # fmt: off
         document_service.update_document(

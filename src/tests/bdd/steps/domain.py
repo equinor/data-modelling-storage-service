@@ -4,6 +4,7 @@ from behave import given, then
 
 from authentication.models import ACL
 from common.utils.create_entity import CreateEntity
+from common.utils.get_blueprint import storage_recipe_provider
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from enums import SIMOS, BuiltinDataTypes
@@ -29,6 +30,7 @@ def generate_tree_from_rows(node: Node, rows, document_service):
                 uid="",
                 entity=data,
                 blueprint_provider=document_service.get_blueprint,
+                recipe_provider=node.recipe_provider,
                 attribute=BlueprintAttribute(name="content", attribute_type=BuiltinDataTypes.OBJECT.value),
             )
             node.add_child(content_node)
@@ -46,6 +48,7 @@ def generate_tree_from_rows(node: Node, rows, document_service):
                 uid=child_data["uid"],
                 entity=entity,
                 blueprint_provider=document_service.get_blueprint,
+                recipe_provider=node.recipe_provider,
                 attribute=BlueprintAttribute(name="content", attribute_type=child_data["type"]),
             )
 
@@ -75,6 +78,7 @@ def generate_tree(data_source_id: str, table, document_service):
         uid=root_package["uid"],
         entity=root_package_data,
         blueprint_provider=document_service.get_blueprint,
+        recipe_provider=storage_recipe_provider,
         parent=root,
         attribute=BlueprintAttribute(name="root", attribute_type=SIMOS.PACKAGE.value),
     )

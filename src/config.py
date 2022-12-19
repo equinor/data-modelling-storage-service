@@ -12,7 +12,7 @@ class Config(BaseSettings):
     MONGO_URI: str = Field(None, env="MONGO_URI")
     ENVIRONMENT: str = Field("local", env="ENVIRONMENT")
     SECRET_KEY: str = Field(None, env="SECRET_KEY")
-    LOGGER_LEVEL: str = Field("INFO", env="LOGGING_LEVEL", to_lower=True)
+    LOGGER_LEVEL: str = Field("DEBUG", env="LOGGING_LEVEL", to_lower=True)
     MAX_ENTITY_RECURSION_DEPTH: int = Field(50, env="MAX_ENTITY_RECURSION_DEPTH")
     CORE_DATA_SOURCE: str = "system"
     CACHE_MAX_SIZE: int = 200

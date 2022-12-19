@@ -2,7 +2,6 @@
   "type": "dmss://system/SIMOS/Blueprint",
   "name": "Enum",
   "description": "This describes an enum",
-  "extends": ["dmss://system/SIMOS/DefaultUiRecipes"],
   "attributes": [
     {
       "attributeType": "string",
@@ -31,7 +30,5 @@
       "name": "values",
       "dimensions": "*"
     }
-  ],
-  "storageRecipes": [],
-  "uiRecipes": []
+  ]
 }

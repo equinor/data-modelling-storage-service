@@ -26,9 +26,5 @@
       "optional": true,
       "label": "Description"
     }
-  ],
-  "storageRecipes": [],
-  "uiRecipes": [
-
   ]
 }

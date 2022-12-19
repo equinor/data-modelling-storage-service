@@ -6,6 +6,7 @@ from common.utils.data_structure.compare import pretty_eq
 from enums import SIMOS
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider
+from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
 
 
 class DocumentServiceTestCase(unittest.TestCase):
@@ -40,7 +41,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                 return document_repository
 
         document_service = DocumentService(
-            repository_provider=repository_provider, blueprint_provider=blueprint_provider
+            recipe_provider=mock_storage_recipe_provider,
+            repository_provider=repository_provider,
+            blueprint_provider=blueprint_provider,
         )
         document_service.rename_document(
             data_source_id="testing", parent_uid="1", document_id="1.nested", name="New_name"
@@ -80,7 +83,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                 return document_repository
 
         document_service = DocumentService(
-            repository_provider=repository_provider, blueprint_provider=blueprint_provider
+            recipe_provider=mock_storage_recipe_provider,
+            repository_provider=repository_provider,
+            blueprint_provider=blueprint_provider,
         )
         document_service.rename_document(data_source_id="testing", document_id="1", name="New_name")
 
@@ -118,7 +123,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                 return document_repository
 
         document_service = DocumentService(
-            repository_provider=repository_provider, blueprint_provider=blueprint_provider
+            recipe_provider=mock_storage_recipe_provider,
+            repository_provider=repository_provider,
+            blueprint_provider=blueprint_provider,
         )
         document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New_name")
 
@@ -158,7 +165,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                 return document_repository
 
         document_service = DocumentService(
-            repository_provider=repository_provider, blueprint_provider=blueprint_provider
+            recipe_provider=mock_storage_recipe_provider,
+            repository_provider=repository_provider,
+            blueprint_provider=blueprint_provider,
         )
         document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New_name")
 

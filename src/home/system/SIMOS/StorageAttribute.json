@@ -1,7 +1,7 @@
 {
   "type": "dmss://system/SIMOS/Blueprint",
   "name": "StorageAttribute",
-  "extends": ["dmss://system/SIMOS/DefaultUiRecipes","dmss://system/SIMOS/NamedEntity"],
+  "extends": ["dmss://system/SIMOS/NamedEntity"],
   "description": "This describes a storage recipe attribute",
   "attributes": [
     {

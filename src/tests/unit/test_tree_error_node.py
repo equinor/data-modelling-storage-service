@@ -2,6 +2,7 @@ import unittest
 from unittest import skip
 
 from domain_classes.tree_node import Node
+from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
 
 all_contained_cases_blueprint = {
     "type": "system/SIMOS/Blueprint",
@@ -38,6 +39,6 @@ class ErrorTreenodeTestCase(unittest.TestCase):
             def get_blueprint(type: str):
                 raise Exception("fix me")
 
-        root = Node.from_dict(document_1, BlueprintProvider())
+        root = Node.from_dict(document_1, BlueprintProvider(), recipe_provider=mock_storage_recipe_provider)
         error_msg = root.children[0].error_message
         assert error_msg is not None

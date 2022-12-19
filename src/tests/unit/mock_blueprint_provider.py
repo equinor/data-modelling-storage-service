@@ -32,17 +32,6 @@ all_contained_cases_blueprint = {
             "dimensions": "*",
         },
     ],
-    "storageRecipes": [
-        {
-            "type": "dmss://system/SIMOS/StorageRecipe",
-            "name": "DefaultStorageRecipe",
-            "description": "",
-            "attributes": [
-                {"name": "reference", "type": "dmss://system/SIMOS/Entity", "contained": False},
-                {"name": "references", "type": "dmss://system/SIMOS/Entity", "contained": False},
-            ],
-        }
-    ],
 }
 
 blueprint_with_second_level_reference = {
@@ -130,21 +119,6 @@ uncontained_blueprint = {
             "name": "uncontained_in_every_way",
             "contained": False,
         },
-    ],
-    "storageRecipes": [
-        {
-            "type": "dmss://system/SIMOS/StorageRecipe",
-            "name": "DefaultStorageRecipe",
-            "description": "",
-            "attributes": [
-                {
-                    "name": "uncontained_in_every_way",
-                    "type": "does_this_matter?",
-                    "contained": False,
-                    "storageAffinity": "blob",
-                }
-            ],
-        }
     ],
 }
 

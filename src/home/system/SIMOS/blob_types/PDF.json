@@ -1,7 +1,7 @@
 {
   "name": "PDF",
   "type": "dmss://system/SIMOS/Blueprint",
-  "extends": ["dmss://system/SIMOS/DefaultUiRecipes","dmss://system/SIMOS/NamedEntity"],
+  "extends": ["dmss://system/SIMOS/NamedEntity"],
   "description": "Contains metadata for a PDF, and a Blob type for the blob data",
   "attributes": [
     {
@@ -34,16 +34,6 @@
       "default": "",
       "contained": true,
       "optional": true
-    }
-  ],
-  "storageRecipes": [],
-  "uiRecipes": [
-    {
-      "type": "dmss://system/SIMOS/UiRecipe",
-      "name": "PDFView",
-      "description": "Embedded PDF View",
-      "plugin": "default-pdf",
-      "attributes": []
     }
   ]
 }

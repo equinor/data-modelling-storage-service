@@ -1,6 +1,6 @@
 import pprint
 from functools import lru_cache
-from typing import Dict, List, Union
+from typing import Callable, Dict, List, Union
 from uuid import uuid4
 
 from fastapi import UploadFile
@@ -14,7 +14,7 @@ from common.exceptions import (
 )
 from common.utils.build_complex_search import build_mongo_query
 from common.utils.delete_documents import delete_document
-from common.utils.get_blueprint import get_blueprint_provider
+from common.utils.get_blueprint import get_blueprint_provider, storage_recipe_provider
 from common.utils.get_document_by_path import get_document_uid_by_path
 from common.utils.get_resolved_document_by_id import get_complete_sys_document
 from common.utils.logging import logger
@@ -24,8 +24,9 @@ from common.utils.validators import entity_has_all_required_attributes
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
+from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from domain_classes.tree_node import ListNode, Node
-from enums import SIMOS, BuiltinDataTypes
+from enums import SIMOS, BuiltinDataTypes, StorageDataTypes
 from restful.request_types.shared import Entity, Reference
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
@@ -36,21 +37,54 @@ pretty_printer = pprint.PrettyPrinter()
 
 
 class DocumentService:
-    def __init__(self, repository_provider=get_data_source, blueprint_provider=None, user=default_user):
-        self.blueprint_provider = blueprint_provider or get_blueprint_provider(user)
+    def __init__(
+        self,
+        repository_provider=get_data_source,
+        blueprint_provider=None,
+        user=default_user,
+        context: str = None,
+        recipe_provider=None,
+    ):
+        self._blueprint_provider = blueprint_provider or get_blueprint_provider(user)
+        self._recipe_provider: Callable[..., list[StorageRecipe]] = recipe_provider or storage_recipe_provider
         self.repository_provider = repository_provider
         self.user = user
+        self.context = context
 
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def get_blueprint(self, type: str) -> Blueprint:
-        blueprint: Blueprint = self.blueprint_provider.get_blueprint(type)
-        blueprint.realize_extends(self.blueprint_provider.get_blueprint)
+        blueprint: Blueprint = self._blueprint_provider.get_blueprint(type)
+        blueprint.realize_extends(self._blueprint_provider.get_blueprint)
         return blueprint
+
+    def _create_default_storage_recipe(self, type: str) -> list[StorageRecipe]:
+        blueprint_attributes = self.get_blueprint(type).attributes
+        return [
+            StorageRecipe(
+                name="Default",
+                storage_affinity=StorageDataTypes.DEFAULT.value,
+                attributes={
+                    a.name: StorageAttribute(name=a.name, contained=a.contained) for a in blueprint_attributes
+                },
+            )
+        ]
+
+    # @lru_cache(maxsize=config.CACHE_MAX_SIZE)
+    def get_storage_recipes(self, type: str, context: str | None = None) -> list[StorageRecipe]:
+        if not context:
+            return self._create_default_storage_recipe(type)
+
+        # TODO: Support other contexts
+        if context_recipes := self._recipe_provider(type, context=context):
+            return context_recipes
+
+        # No storage recipes created for contex. Creating defaults
+        return self._create_default_storage_recipe(type)
 
     def invalidate_cache(self):
         logger.warning("Clearing blueprint cache")
         self.get_blueprint.cache_clear()
-        self.blueprint_provider.invalidate_cache()
+        self._blueprint_provider.invalidate_cache()
 
     def save_blob_data(self, node, repository) -> dict:
         """
@@ -126,14 +160,24 @@ class DocumentService:
             return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
         return ref_dict
 
-    def get_document_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> dict:
+    def get_document_by_uid(
+        self,
+        data_source_id: str,
+        document_uid: str,
+        depth: int = 999,
+    ) -> dict:
         return get_complete_sys_document(document_uid, self.repository_provider(data_source_id, self.user), depth)
 
     def get_node_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
         complete_document = get_complete_sys_document(
             document_uid, self.repository_provider(data_source_id, self.user), depth
         )
-        return Node.from_dict(complete_document, complete_document.get("_id"), blueprint_provider=self.get_blueprint)
+        return Node.from_dict(
+            complete_document,
+            complete_document.get("_id"),
+            blueprint_provider=self.get_blueprint,
+            recipe_provider=self.get_storage_recipes,
+        )
 
     def get_by_path(self, absolute_reference: str) -> Node:
         data_source_id, path, attribute = split_dmss_ref(absolute_reference)
@@ -265,7 +309,9 @@ class DocumentService:
             entity["extends"] = ["system/SIMOS/DefaultUiRecipes", "system/SIMOS/NamedEntity"]
 
         new_node_attribute = BlueprintAttribute(name=leaf_attribute, attribute_type=type)
-        new_node = Node.from_dict(entity, None, self.get_blueprint, new_node_attribute)
+        new_node = Node.from_dict(
+            entity, None, self.get_blueprint, new_node_attribute, recipe_provider=self.get_storage_recipes
+        )
 
         required_attribute_names = [attribute.name for attribute in new_node.blueprint.get_required_attributes()]
         # If entity has a name, check if a file/attribute with the same name already exists on the target
@@ -291,7 +337,7 @@ class DocumentService:
         if data.get("type") != SIMOS.PACKAGE.value and not data.get("isRoot"):
             raise BadRequestException("Only root packages may be added without a parent.")
 
-        new_node = Node.from_dict(data, None, self.get_blueprint)
+        new_node = Node.from_dict(data, None, self.get_blueprint, recipe_provider=self.get_storage_recipes)
 
         exisiting_root_package = get_data_source(data_source, self.user).find(
             {"type": SIMOS.PACKAGE.value, "isRoot": True, "name": data["name"]}
@@ -353,6 +399,7 @@ class DocumentService:
             None,
             self.get_blueprint,
             BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
+            recipe_provider=self.get_storage_recipes,
         )
         new_node.set_uid()
 
@@ -452,6 +499,7 @@ class DocumentService:
                     entity={**reference.dict(by_alias=True), "_id": str(reference.uid)},
                     uid=str(reference.uid),
                     blueprint_provider=self.get_blueprint,
+                    recipe_provider=self.get_storage_recipes,
                     node_attribute=attribute_node.attribute,
                 )
             )

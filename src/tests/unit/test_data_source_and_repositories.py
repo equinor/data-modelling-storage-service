@@ -8,6 +8,7 @@ from enums import StorageDataTypes
 from services.document_service import DocumentService
 from storage.data_source_class import DataSource
 from tests.unit.mock_blueprint_provider import blueprint_provider
+from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
 
 config.AUTH_ENABLED = False
 test_user = User(**{"user_id": "unit-test", "full_name": "Unit Test", "email": "unit-test@example.com"})
@@ -67,10 +68,15 @@ class DataSourceTestCase(unittest.TestCase):
         )
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: data_source, user=test_user
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=blueprint_provider,
+            repository_provider=lambda x, y: data_source,
+            user=test_user,
         )
 
-        node: Node = Node.from_dict(uncontained_doc, "1", document_service.get_blueprint)
+        node: Node = Node.from_dict(
+            uncontained_doc, "1", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
+        )
 
         document_service.save(node, "testing", update_uncontained=True)
 
@@ -125,10 +131,15 @@ class DataSourceTestCase(unittest.TestCase):
         )
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: data_source, user=test_user
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=blueprint_provider,
+            repository_provider=lambda x, y: data_source,
+            user=test_user,
         )
 
-        node: Node = Node.from_dict(blob_doc, "1", document_service.get_blueprint)
+        node: Node = Node.from_dict(
+            blob_doc, "1", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
+        )
 
         document_service.save(node, "testing")
 
@@ -188,10 +199,15 @@ class DataSourceTestCase(unittest.TestCase):
         )
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: data_source, user=test_user
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=blueprint_provider,
+            repository_provider=lambda x, y: data_source,
+            user=test_user,
         )
 
-        node: Node = Node.from_dict(blob_doc, "1", document_service.get_blueprint)
+        node: Node = Node.from_dict(
+            blob_doc, "1", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
+        )
 
         document_service.save(node, "testing", update_uncontained=True)
 
