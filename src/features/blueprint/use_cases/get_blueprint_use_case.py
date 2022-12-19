@@ -1,24 +1,11 @@
 from pydantic import BaseModel
 
 from authentication.models import User
+from common.utils.get_storage_recipe import default_ui_recipes
 from domain_classes.lookup import Lookup
-from enums import SIMOS
 from restful.request_types.shared import common_type_constrained_string
 from services.document_service import DocumentService
 from storage.internal.lookup_tables import get_lookup
-
-default_ui_recipes = [
-    {
-        "name": "Yaml",
-        "type": SIMOS.UI_RECIPE.value,
-        "plugin": "yaml-view",
-        "roles": ["dmss-admin"],
-        "category": "view",
-    },
-    {"name": "Edit", "type": SIMOS.UI_RECIPE.value, "plugin": "form", "category": "edit"},
-]
-
-default_storage_recipes: list[dict] = []
 
 
 class GetBlueprintResponse(BaseModel):
@@ -35,7 +22,8 @@ def get_blueprint_use_case(type: common_type_constrained_string, context: str | 
         return {
             "blueprint": blueprint.to_dict(),
             "uiRecipes": default_ui_recipes,
-            "storageRecipes": default_storage_recipes,
+            # TODO: Generate default storage recipe
+            "storageRecipes": [],
         }
 
     lookup: Lookup = get_lookup(context)

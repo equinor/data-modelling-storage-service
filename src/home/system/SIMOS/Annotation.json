@@ -1,6 +1,6 @@
 {
   "type": "dmss://system/SIMOS/Blueprint",
-  "extends": ["dmss://system/SIMOS/DefaultUiRecipes","dmss://system/SIMOS/NamedEntity"],
+  "extends": ["dmss://system/SIMOS/NamedEntity"],
   "name": "Annotation",
   "description": "This describes an annotation",
   "attributes": [
@@ -9,7 +9,5 @@
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "value"
     }
-  ],
-  "uiRecipes": [],
-  "storageRecipes": []
+  ]
 }

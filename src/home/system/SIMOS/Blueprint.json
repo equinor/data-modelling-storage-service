@@ -54,67 +54,6 @@
       "default": "[{\"name\": \"name\", \"type\": \"string\"}, {\"name\": \"type\", \"type\": \"string\"}, {\"name\": \"description\", \"type\": \"string\"}]",
       "contained": true,
       "optional": true
-    },
-    {
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "dmss://system/SIMOS/StorageRecipe",
-      "dimensions": "*",
-      "name": "storageRecipes",
-      "optional": true,
-      "default": "[]"
-    },
-    {
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "dmss://system/SIMOS/UiRecipe",
-      "dimensions": "*",
-      "name": "uiRecipes",
-      "optional": true,
-      "default": "[]"
-    }
-  ],
-  "storageRecipes": [
-    {
-      "type": "dmss://system/SIMOS/StorageRecipe",
-      "name": "DefaultStorageRecipe",
-      "description": "",
-      "attributes": [
-        {
-          "name": "attributes",
-          "type": "dmss://system/SIMOS/StorageAttribute",
-          "dimensions": "*",
-          "contained": true
-        },
-        {
-          "name": "storageRecipes",
-          "type": "dmss://system/SIMOS/StorageAttribute",
-          "dimensions": "*",
-          "contained": true
-        },
-        {
-          "name": "uiRecipes",
-          "type": "dmss://system/SIMOS/StorageAttribute",
-          "dimensions": "*",
-          "contained": true
-        }
-      ]
-    }
-  ],
-  "uiRecipes": [
-    {
-      "name": "Yaml",
-      "type": "dmss://system/SIMOS/UiRecipe",
-      "plugin": "yaml-view"
-    },
-    {
-      "type": "dmss://system/SIMOS/UiRecipe",
-      "name": "Edit",
-      "description": "Default blueprint edit",
-      "plugin": "edit-blueprint"
-    },
-    {
-      "name": "Diagram",
-      "type": "dmss://system/SIMOS/UiRecipe",
-      "plugin": "mermaid"
     }
   ]
 }

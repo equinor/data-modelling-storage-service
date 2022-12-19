@@ -6,6 +6,7 @@ from common.utils.data_structure.compare import pretty_eq
 from enums import SIMOS
 from services.document_service import DocumentService
 from tests.unit.mock_blueprint_provider import blueprint_provider
+from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
 
 
 class DocumentServiceTestCase(unittest.TestCase):
@@ -17,7 +18,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = lambda id: document_1.copy()
 
         document_service = DocumentService(
-            repository_provider=lambda id, user: document_repository, blueprint_provider=blueprint_provider
+            recipe_provider=mock_storage_recipe_provider,
+            repository_provider=lambda id, user: document_repository,
+            blueprint_provider=blueprint_provider,
         )
         document_service.remove_document(data_source_id="testing", document_id="1")
         document_repository.delete.assert_called_with("1")
@@ -33,7 +36,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
-            blueprint_provider=NoBlueprints(), repository_provider=lambda x, y: repository
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=NoBlueprints(),
+            repository_provider=lambda x, y: repository,
         )
         document_service.remove_document(data_source_id="testing", document_id="1")
         assert doc_storage == {}
@@ -73,7 +78,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                 return repository
 
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=blueprint_provider,
+            repository_provider=repository_provider,
         )
         document_service.remove_document(data_source_id="testing", document_id="1")
         expected = {"2": {"uid": "2", "_id": "2", "name": "a_reference", "description": "", "type": "basic_blueprint"}}
@@ -95,7 +102,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
-            repository_provider=lambda x, y: repository, blueprint_provider=blueprint_provider
+            recipe_provider=mock_storage_recipe_provider,
+            repository_provider=lambda x, y: repository,
+            blueprint_provider=blueprint_provider,
         )
         document_service.remove_document(data_source_id="testing", document_id="1.nested")
         assert doc_storage["1"].get("nested") is None
@@ -132,7 +141,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
-            repository_provider=lambda x, y: repository, blueprint_provider=blueprint_provider
+            recipe_provider=mock_storage_recipe_provider,
+            repository_provider=lambda x, y: repository,
+            blueprint_provider=blueprint_provider,
         )
         document_service.remove_document(data_source_id="testing", document_id="1")
         assert doc_storage.get("1") is None
@@ -196,7 +207,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
-            repository_provider=lambda x, y: repository, blueprint_provider=blueprint_provider
+            recipe_provider=mock_storage_recipe_provider,
+            repository_provider=lambda x, y: repository,
+            blueprint_provider=blueprint_provider,
         )
         document_service.remove_document(data_source_id="testing", document_id="1")
         assert doc_storage.get("1") is None
@@ -224,7 +237,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                 return repository
 
         document_service = DocumentService(
-            repository_provider=repository_provider, blueprint_provider=blueprint_provider
+            recipe_provider=mock_storage_recipe_provider,
+            repository_provider=repository_provider,
+            blueprint_provider=blueprint_provider,
         )
         document_service.remove_document(data_source_id="testing", document_id="1.reference")
         assert doc_storage["1"] == {
@@ -262,7 +277,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=blueprint_provider,
+            repository_provider=repository_provider,
         )
         document_service.remove_document("testing", "1.im_optional")
         assert {
@@ -297,7 +314,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         repository.delete_blob = lambda doc_id: doc_storage.pop(doc_id)
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=blueprint_provider,
+            repository_provider=repository_provider,
         )
         document_service.remove_document("testing", "1")
         assert doc_storage.get("blob_object") is None

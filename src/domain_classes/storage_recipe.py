@@ -1,8 +1,7 @@
 from typing import Dict, List
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field
 
-from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import PRIMITIVES, SIMOS, StorageDataTypes
 
 DEFAULT_PRIMITIVE_CONTAINED = True
@@ -61,17 +60,3 @@ class StorageRecipe(BaseModel):
 
     def none_contained_attributes(self) -> List[str]:
         return [attr.name for attr in self.attributes.values() if not attr.contained]
-
-
-class DefaultStorageRecipe(StorageRecipe):
-    name: str = "Default"
-    storage_affinity: StorageDataTypes = StorageDataTypes.DEFAULT
-
-    @validator("attributes", pre=True)
-    def validate_attributes(cls, v: list[BlueprintAttribute]):
-        return {
-            attribute.name: StorageAttribute(
-                name=attribute.name, contained=attribute.contained, storage_affinity=StorageDataTypes.DEFAULT
-            )
-            for attribute in v
-        }

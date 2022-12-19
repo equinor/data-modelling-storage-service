@@ -1,8 +1,6 @@
   {
   "type": "dmss://system/SIMOS/Blueprint",
-  "extends": ["dmss://system/SIMOS/DefaultUiRecipes","dmss://system/SIMOS/NamedEntity"],
+  "extends": ["dmss://system/SIMOS/NamedEntity"],
   "name": "Application",
-  "description": "This describes an application",
-  "attributes": [
-  ]
+  "description": "This describes an application"
 }

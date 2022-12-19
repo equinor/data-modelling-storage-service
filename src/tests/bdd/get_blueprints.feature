@@ -2,7 +2,7 @@ Feature: Get a blueprint
 
   Background: The core package is uploaded to the system
     Given the system data source and SIMOS core package are available
-    Given the DMSS-lookup has been created
+#    Given the DMSS-lookup has been created
 
 
   Scenario: Get a simple blueprint with a ui recipe from a recipe context
@@ -16,7 +16,7 @@ Feature: Get a blueprint
       "name": "Entity",
       "description": "Blueprint for a DMT reference",
       "type": "dmss://system/SIMOS/Blueprint",
-      "extends": ["dmss://system/SIMOS/DefaultUiRecipes", "dmss://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "attributes": [
         {
           "name": "name",
@@ -134,7 +134,7 @@ Feature: Get a blueprint
       "name": "Entity",
       "description": "Blueprint for a DMT reference",
       "type": "dmss://system/SIMOS/Blueprint",
-      "extends": ["dmss://system/SIMOS/DefaultUiRecipes", "dmss://system/SIMOS/NamedEntity"],
+      "extends": [ "dmss://system/SIMOS/NamedEntity"],
       "attributes": [
         {
           "name": "name",

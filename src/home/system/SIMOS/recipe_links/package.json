@@ -1,0 +1,43 @@
+{
+  "type": "dmss://system/SIMOS/RecipeLink",
+  "_blueprintPath_": "dmss://system/SIMOS/Package",
+  "storageRecipes": [
+    {
+      "type": "dmss://system/SIMOS/StorageRecipe",
+      "name": "DEFAULT",
+      "description": "",
+      "attributes": [
+        {
+          "name": "content",
+          "type": "object",
+          "contained": false
+        }
+      ]
+    }
+  ],
+  "uiRecipes": [
+    {
+      "type": "dmss://system/SIMOS/UiRecipe",
+      "name": "DEFAULT_CREATE",
+      "plugin": "DEFAULT_CREATE",
+      "description": "",
+      "attributes": [
+        {
+          "name": "isRoot",
+          "type": "dmss://system/SIMOS/UiAttribute",
+          "contained": false
+        },
+        {
+          "name": "type",
+          "type": "dmss://system/SIMOS/UiAttribute",
+          "contained": false
+        },
+        {
+          "name": "content",
+          "type": "dmss://system/SIMOS/UiAttribute",
+          "contained": false
+        }
+      ]
+    }
+  ]
+}

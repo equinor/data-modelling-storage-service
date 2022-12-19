@@ -1,6 +1,6 @@
 {
   "type": "dmss://system/SIMOS/Blueprint",
-  "extends": ["dmss://system/SIMOS/DefaultUiRecipes","dmss://system/SIMOS/NamedEntity"],
+  "extends": ["dmss://system/SIMOS/NamedEntity"],
   "name": "BlueprintAttribute",
   "description": "This describes a blueprint attribute",
   "attributes": [
@@ -61,7 +61,5 @@
       "optional": true,
       "default": ""
     }
-  ],
-  "storageRecipes": [],
-  "uiRecipes": []
+  ]
 }

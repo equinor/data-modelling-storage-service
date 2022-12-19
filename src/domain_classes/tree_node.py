@@ -8,7 +8,7 @@ from common.utils.validators import valid_extended_type
 from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from domain_classes.storage_recipe import StorageAttribute
+from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from enums import SIMOS, BuiltinDataTypes, StorageDataTypes
 
 
@@ -100,8 +100,16 @@ class DictExporter:
 
 class DictImporter:
     @classmethod
-    def from_dict(cls, entity, uid, blueprint_provider, key=None, node_attribute: BlueprintAttribute = None):
-        return cls._from_dict(entity, uid, key, blueprint_provider, node_attribute)
+    def from_dict(
+        cls,
+        entity,
+        uid,
+        blueprint_provider,
+        key=None,
+        node_attribute: BlueprintAttribute = None,
+        recipe_provider: Callable[..., list[StorageRecipe]] | None = None,
+    ):
+        return cls._from_dict(entity, uid, key, blueprint_provider, node_attribute, recipe_provider=recipe_provider)
 
     @classmethod
     def _from_dict(
@@ -112,6 +120,7 @@ class DictImporter:
         blueprint_provider: Callable,
         node_attribute: BlueprintAttribute,
         recursion_depth: int = 0,
+        recipe_provider: Callable[..., list[StorageRecipe]] | None = None,
     ):
 
         if recursion_depth >= config.MAX_ENTITY_RECURSION_DEPTH:
@@ -136,12 +145,19 @@ class DictImporter:
             node_attribute.attribute_type = entity["type"]
 
         key = key if key else node_attribute.name
-        node = Node(key=key, uid=uid, entity=entity, blueprint_provider=blueprint_provider, attribute=node_attribute)
+        node = Node(
+            key=key,
+            uid=uid,
+            entity=entity,
+            blueprint_provider=blueprint_provider,
+            attribute=node_attribute,
+            recipe_provider=recipe_provider,
+        )
 
         for child_attribute in node.blueprint.get_none_primitive_types():
             if child_attribute.name == "_meta_":
                 continue
-            child_contained = node.blueprint.storage_recipes[0].is_contained(child_attribute.name)
+            child_contained = node.storage_recipes[0].is_contained(child_attribute.name)
             # This will stop creation of recursive blueprints (only if they are optional)
             if child_attribute.is_optional and not entity:
                 continue
@@ -160,6 +176,7 @@ class DictImporter:
                     uid="",
                     entity=children,
                     blueprint_provider=blueprint_provider,
+                    recipe_provider=recipe_provider,
                     attribute=child_attribute,
                 )
 
@@ -178,6 +195,7 @@ class DictImporter:
                         entity=child,
                         key=str(i),
                         blueprint_provider=blueprint_provider,
+                        recipe_provider=recipe_provider,
                         node_attribute=list_child_attribute,
                         recursion_depth=recursion_depth + 1,
                     )
@@ -196,6 +214,7 @@ class DictImporter:
                     entity=attribute_data,
                     key=child_attribute.name,
                     blueprint_provider=blueprint_provider,
+                    recipe_provider=recipe_provider,
                     node_attribute=child_attribute,
                     recursion_depth=recursion_depth + 1,
                 )
@@ -214,6 +233,7 @@ class NodeBase:
         blueprint_provider=None,
         children=None,
         entity: dict | list[dict] | None = None,
+        recipe_provider: Callable[..., list[StorageRecipe]] | None = None,
     ):
         if key is None:
             raise Exception("Node requires a key")
@@ -230,6 +250,7 @@ class NodeBase:
             for child in children:
                 self.add_child(child)
         self.blueprint_provider = blueprint_provider
+        self.recipe_provider = recipe_provider
 
     @property
     def type(self):
@@ -246,6 +267,25 @@ class NodeBase:
         if self.type != "datasource":
             return self.blueprint_provider(self.type)
 
+    @property
+    def storage_recipes(self, context: str | None = "DMSS") -> list[StorageRecipe]:
+        # TODO: support other contexts than "DMSS"
+        if not self.recipe_provider:
+            raise ValueError("Tried to access storage recipe, but Node was instantiated without a 'recipe-provider'")
+
+        if context_recipes := self.recipe_provider(self.type, context):
+            return context_recipes
+        # No storage recipes found, creating a default
+        return [
+            StorageRecipe(
+                name="Default",
+                storage_affinity=StorageDataTypes.DEFAULT.value,
+                attributes={
+                    a.name: StorageAttribute(name=a.name, contained=a.contained) for a in self.blueprint.attributes
+                },
+            )
+        ]
+
     def is_empty(self):
         return not self.entity
 
@@ -260,7 +300,9 @@ class NodeBase:
     def storage_contained(self):
         if not self.parent or self.parent.type == SIMOS.DATASOURCE.value:
             return False
-        return self.parent.blueprint.storage_recipes[0].is_contained(self.attribute.name)
+        if self.parent.is_array():
+            return self.parent.parent.storage_recipes[0].is_contained(self.attribute.name)
+        return self.parent.storage_recipes[0].is_contained(self.attribute.name)
 
     @property
     def contained(self):
@@ -311,7 +353,7 @@ class NodeBase:
             node = node.parent
 
     def __repr__(self):
-        return f"Name: '{self.name}', Key: '{self.key}', Type: '{self.type}', Node_ID: '{self.node_id}'"
+        return f"Name: '{self.entity.get('name')}', Key: '{self.key}', Type: '{self.type}', Node_ID: '{self.node_id}'"
 
     def show_tree(self, level=0):
         print("%s%s" % ("." * level, self))
@@ -433,8 +475,11 @@ class Node(NodeBase):
         entity: dict | None = None,
         parent=None,
         blueprint_provider=None,
+        recipe_provider: Callable[..., list[StorageRecipe]] | None = None,
     ):
-        super().__init__(key, attribute, uid, parent, blueprint_provider, entity=entity)
+        super().__init__(
+            key, attribute, uid, parent, blueprint_provider, entity=entity, recipe_provider=recipe_provider
+        )
         self.error_message = None
 
     def is_root(self):
@@ -451,8 +496,16 @@ class Node(NodeBase):
         return self.entity.get("name", self.attribute.name)
 
     @staticmethod
-    def from_dict(entity, uid, blueprint_provider, node_attribute: BlueprintAttribute = None):
-        return DictImporter.from_dict(entity, uid, blueprint_provider, "", node_attribute)
+    def from_dict(
+        entity,
+        uid,
+        blueprint_provider,
+        node_attribute: BlueprintAttribute = None,
+        recipe_provider: Callable[..., list[StorageRecipe]] | None = None,
+    ):
+        return DictImporter.from_dict(
+            entity, uid, blueprint_provider, "", node_attribute, recipe_provider=recipe_provider
+        )
 
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
     def update(self, data: dict):
@@ -479,9 +532,25 @@ class Node(NodeBase):
                 child = self.get_by_path([key])
                 if not child:  # A new child has been added
                     if attribute.is_array:
-                        child = ListNode(attribute.name, attribute, None, new_data, self, self.blueprint_provider)
+                        child = ListNode(
+                            attribute.name,
+                            attribute,
+                            None,
+                            new_data,
+                            self,
+                            self.blueprint_provider,
+                            recipe_provider=self.recipe_provider,
+                        )
                     else:
-                        child = Node(attribute.name, attribute, None, new_data, self, self.blueprint_provider)
+                        child = Node(
+                            attribute.name,
+                            attribute,
+                            None,
+                            new_data,
+                            self,
+                            self.blueprint_provider,
+                            recipe_provider=self.recipe_provider,
+                        )
                 child.update(new_data)
 
         # Remove for every key in blueprint not in data or is a required attribute
@@ -501,15 +570,18 @@ class Node(NodeBase):
             nodes_attribute_on_parent = (
                 self.attribute.name if not self.parent.type == BuiltinDataTypes.OBJECT.value else "content"
             )
-            storage_attribute = self.parent.blueprint.storage_recipes[0].attributes[nodes_attribute_on_parent]
+            if self.parent.is_array():
+                storage_attribute = self.parent.parent.storage_recipes[0].attributes[nodes_attribute_on_parent]
+            else:
+                storage_attribute = self.parent.storage_recipes[0].attributes[nodes_attribute_on_parent]
 
             # If the attribute has default StorageAffinity in the parent, get it from the nodes own storageRecipe
             if storage_attribute.storage_affinity is StorageDataTypes.DEFAULT:
-                storage_attribute.storage_affinity = self.blueprint.storage_recipes[0].storage_affinity
+                storage_attribute.storage_affinity = self.storage_recipes[0].storage_affinity
             return storage_attribute
         # If no parent, the node is always contained, and get storageAffinity from the nodes own storageRecipe
         return StorageAttribute(
-            name=self.type, contained=True, storage_affinity=self.blueprint.storage_recipes[0].storage_affinity
+            name=self.type, contained=True, storage_affinity=self.storage_recipes[0].storage_affinity
         )
 
     def set_uid(self, new_id: str | None = None):
@@ -539,9 +611,18 @@ class ListNode(NodeBase):
         entity: list | None = None,
         parent=None,
         blueprint_provider=None,
+        recipe_provider: Callable[..., list[StorageRecipe]] | None = None,
     ):
         entity = entity if entity else []
-        super().__init__(key, attribute, uid, parent=parent, blueprint_provider=blueprint_provider, entity=entity)
+        super().__init__(
+            key,
+            attribute,
+            uid,
+            parent=parent,
+            blueprint_provider=blueprint_provider,
+            entity=entity,
+            recipe_provider=recipe_provider,
+        )
 
     def to_dict(self):
         return [child.to_dict() for child in self.children]
@@ -562,8 +643,14 @@ class ListNode(NodeBase):
             self.validate_type_on_parent()
 
             # Set uid base on containment and existing(lack of) uid
-            # This require the existing _id to be posted
+            # This requires the existing _id to be posted
             uid = "" if self.storage_contained else item.get("_id", str(uuid4()))
             self.add_child(
-                DictImporter.from_dict(entity=item, uid=uid, blueprint_provider=self.blueprint_provider, key=str(i))
+                DictImporter.from_dict(
+                    entity=item,
+                    uid=uid,
+                    blueprint_provider=self.blueprint_provider,
+                    key=str(i),
+                    recipe_provider=self.recipe_provider,
+                )
             )

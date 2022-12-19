@@ -10,6 +10,7 @@ from enums import SIMOS
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_blueprint_provider import blueprint_provider
+from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
 
 
 class MultiTypeBlueprintProvider:
@@ -155,7 +156,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            blueprint_provider=blueprint_provider,
+            repository_provider=repository_provider,
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         node: Node = document_service.get_node_by_uid("testing", "1")
@@ -207,7 +210,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            blueprint_provider=blueprint_provider,
+            repository_provider=repository_provider,
+            recipe_provider=mock_storage_recipe_provider,
         )
         document_service.add_document(
             "testing/1.im_optional",
@@ -239,7 +244,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
+            blueprint_provider=MultiTypeBlueprintProvider(),
+            repository_provider=lambda x, y: repository,
+            recipe_provider=mock_storage_recipe_provider,
         )
         with self.assertRaises(BadRequestException):
             document_service.update_document(
@@ -298,7 +305,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=repository_provider
+            blueprint_provider=blueprint_provider,
+            repository_provider=repository_provider,
+            recipe_provider=mock_storage_recipe_provider,
         )
         document_service.add_document(
             "testing/1.nested_with_optional.im_optional",
@@ -334,7 +343,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=blueprint_provider, repository_provider=lambda x, y: repository
+            blueprint_provider=blueprint_provider,
+            repository_provider=lambda x, y: repository,
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         with self.assertRaises(BadRequestException):
@@ -357,7 +368,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=MultiTypeBlueprintProvider(),
+            repository_provider=lambda x, y: repository,
         )
         document_service.update_document(
             data_source_id="testing",
@@ -385,7 +398,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=MultiTypeBlueprintProvider(),
+            repository_provider=lambda x, y: repository,
         )
         document_service.update_document(
             data_source_id="testing",
@@ -422,7 +437,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=MultiTypeBlueprintProvider(),
+            repository_provider=lambda x, y: repository,
         )
         document_service.update_document(
             data_source_id="testing",
@@ -465,7 +482,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=MultiTypeBlueprintProvider(),
+            repository_provider=lambda x, y: repository,
         )
 
         with self.assertRaises(BadRequestException) as error:
@@ -500,7 +519,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = DocumentService(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
+            recipe_provider=mock_storage_recipe_provider,
+            blueprint_provider=MultiTypeBlueprintProvider(),
+            repository_provider=lambda x, y: repository,
         )
 
         document_service.update_document(

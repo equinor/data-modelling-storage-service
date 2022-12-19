@@ -5,6 +5,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import DictExporter, DictImporter, ListNode, Node
 from tests.unit.mock_blueprint_provider import flatten_dict
+from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
 
 all_contained_cases_blueprint = {
     "type": "system/SIMOS/Blueprint",
@@ -23,18 +24,6 @@ all_contained_cases_blueprint = {
             "dimensions": "*",
         },
     ],
-    "storageRecipes": [
-        {
-            "type": "system/SIMOS/StorageRecipe",
-            "name": "DefaultStorageRecipe",
-            "description": "",
-            "attributes": [
-                {"name": "reference", "type": "system/SIMOS/Entity", "contained": False},
-                {"name": "references", "type": "system/SIMOS/Entity", "contained": False},
-            ],
-        }
-    ],
-    "uiRecipes": [],
 }
 
 basic_blueprint = {
@@ -52,8 +41,6 @@ basic_blueprint = {
         },
         {"attributeType": "blueprint_3", "type": "system/SIMOS/BlueprintAttribute", "name": "nested"},
     ],
-    "storageRecipes": [],
-    "uiRecipes": [],
 }
 
 blueprint_3 = {
@@ -78,8 +65,6 @@ blueprint_3 = {
             "contained": False,
         },
     ],
-    "storageRecipes": [],
-    "uiRecipes": [],
 }
 
 blueprint_4 = {
@@ -102,8 +87,6 @@ blueprint_4 = {
             "dimensions": "*",
         },
     ],
-    "storageRecipes": [],
-    "uiRecipes": [],
 }
 
 recursive_blueprint = {
@@ -140,6 +123,7 @@ class TreenodeTestCase(unittest.TestCase):
             entity=root_data,
             blueprint_provider=get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         nested_data = {"name": "Nested", "description": "", "type": "basic_blueprint"}
@@ -150,6 +134,7 @@ class TreenodeTestCase(unittest.TestCase):
             blueprint_provider=get_blueprint,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         assert root.is_root()
@@ -163,6 +148,7 @@ class TreenodeTestCase(unittest.TestCase):
             entity=root_data,
             blueprint_provider=get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         nested_1_data = {"name": "Nested1", "description": "", "type": "basic_blueprint"}
@@ -173,6 +159,7 @@ class TreenodeTestCase(unittest.TestCase):
             blueprint_provider=get_blueprint,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         nested_2_data = {"name": "Nested2", "description": "", "type": "basic_blueprint"}
@@ -182,6 +169,7 @@ class TreenodeTestCase(unittest.TestCase):
             entity=nested_2_data,
             blueprint_provider=get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         actual_before = {
@@ -214,6 +202,7 @@ class TreenodeTestCase(unittest.TestCase):
             entity=root_data,
             blueprint_provider=get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         nested_1_data = {"name": "Nested1", "description": "", "type": "basic_blueprint"}
@@ -224,6 +213,7 @@ class TreenodeTestCase(unittest.TestCase):
             blueprint_provider=get_blueprint,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         actual_before = {
@@ -250,6 +240,7 @@ class TreenodeTestCase(unittest.TestCase):
             entity=root_data,
             blueprint_provider=get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         nested_1_data = {"name": "Nested1", "description": "", "type": "basic_blueprint"}
@@ -260,6 +251,7 @@ class TreenodeTestCase(unittest.TestCase):
             blueprint_provider=get_blueprint,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            recipe_provider=mock_storage_recipe_provider,
         )
         nested_2_data = {"name": "Nested2", "description": "", "type": "blueprint_3"}
         nested_2 = Node(
@@ -269,6 +261,7 @@ class TreenodeTestCase(unittest.TestCase):
             blueprint_provider=get_blueprint,
             parent=nested_1,
             attribute=BlueprintAttribute(name="", attribute_type="blueprint_3"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         actual_before = {
@@ -316,7 +309,9 @@ class TreenodeTestCase(unittest.TestCase):
                 }
             ],
         }
-        root = Node.from_dict(document, document.get("_id"), get_blueprint)
+        root = Node.from_dict(
+            document, document.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        )
 
         actual_before = {
             "_id": "1",
@@ -360,6 +355,7 @@ class TreenodeTestCase(unittest.TestCase):
     def test_depth(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
         root = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="root",
             uid="1",
             entity=root_data,
@@ -369,6 +365,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_data = {"name": "Nested", "description": "", "type": "basic_blueprint"}
         nested = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_data,
@@ -399,7 +396,9 @@ class TreenodeTestCase(unittest.TestCase):
             },
         }
 
-        root = Node.from_dict(document_1, document_1.get("_id"), get_blueprint)
+        root = Node.from_dict(
+            document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        )
         result = [node.name for node in root.traverse()]
         # with error nodes
         # expected = ["Parent", "Nested1", "Nested2", "Reference", "nested", "reference", "references"]
@@ -409,6 +408,7 @@ class TreenodeTestCase(unittest.TestCase):
     def test_traverse_reverse(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
         root = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="root",
             uid="1",
             entity=root_data,
@@ -418,6 +418,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_data = {"name": "Nested1", "description": "", "type": "basic_blueprint"}
         nested = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_data,
@@ -428,6 +429,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_2_data = {"name": "Nested2", "description": "", "type": "blueprint_3"}
         nested_2 = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_2_data,
@@ -443,6 +445,7 @@ class TreenodeTestCase(unittest.TestCase):
     def test_node_id(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
         root = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="",
             uid="1",
             entity=root_data,
@@ -452,6 +455,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_data = {"name": "Nested", "description": "", "type": "basic_blueprint"}
         nested = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_data,
@@ -462,6 +466,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_2_data = {"name": "Nested", "description": "", "type": "blueprint_3"}
         nested_2 = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_2_data,
@@ -472,6 +477,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_2_reference_data = {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"}
         reference = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="reference",
             uid="2",
             entity=nested_2_reference_data,
@@ -482,6 +488,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         list_data = {"name": "List", "type": "blueprint_3"}
         list_node = ListNode(
+            recipe_provider=mock_storage_recipe_provider,
             key="list",
             uid="",
             entity=list_data,
@@ -492,6 +499,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         item_1_data = {"name": "Item1", "description": "", "type": "basic_blueprint"}
         item_1 = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="0",
             uid="",
             entity=item_1_data,
@@ -529,7 +537,9 @@ class TreenodeTestCase(unittest.TestCase):
             },
         }
 
-        root = Node.from_dict(document_1, document_1.get("_id"), get_blueprint)
+        root = Node.from_dict(
+            document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        )
 
         child_1 = root.search("1.nested.nested")
 
@@ -558,7 +568,9 @@ class TreenodeTestCase(unittest.TestCase):
             },
         }
 
-        root = Node.from_dict(document_1, document_1.get("_id"), get_blueprint)
+        root = Node.from_dict(
+            document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        )
 
         child_1 = root.get_by_path(["nested", "nested"])
 
@@ -589,7 +601,9 @@ class TreenodeTestCase(unittest.TestCase):
             "references": [],
         }
 
-        root = Node.from_dict(document_1, document_1.get("_id"), get_blueprint)
+        root = Node.from_dict(
+            document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        )
 
         update_0 = {
             "name": "New-name",
@@ -739,7 +753,9 @@ class TreenodeTestCase(unittest.TestCase):
             "_blueprint": all_contained_cases_blueprint,
         }
 
-        root = Node.from_dict(document_1, document_1.get("_id"), get_blueprint)
+        root = Node.from_dict(
+            document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        )
 
         actual = {
             "_id": "1",
@@ -770,7 +786,9 @@ class TreenodeTestCase(unittest.TestCase):
         document_1 = {"_id": "1", "name": "Parent", "description": "", "type": "recursive_blueprint", "im_me!": {}}
 
         with self.assertRaises(RecursionError):
-            Node.from_dict(document_1, document_1.get("_id"), get_blueprint)
+            Node.from_dict(
+                document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+            )
 
     def test_from_dict_using_dict_importer(self):
         document_1 = {
@@ -846,13 +864,16 @@ class TreenodeTestCase(unittest.TestCase):
             ],
         }
 
-        root = DictImporter.from_dict(document_1, document_1.get("_id"), get_blueprint)
+        root = DictImporter.from_dict(
+            document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        )
 
         assert pretty_eq(actual, root.to_dict()) is None
 
     def test_to_dict(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
         root = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="root",
             uid="1",
             entity=root_data,
@@ -862,6 +883,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_data = {"name": "Nested", "description": "", "type": "basic_blueprint"}
         nested = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_data,
@@ -872,6 +894,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_2_data = {"name": "Nested", "description": "", "type": "blueprint_3"}
         nested_2 = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_2_data,
@@ -882,6 +905,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_2_reference_data = {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"}
         Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="reference",
             uid="2",
             entity=nested_2_reference_data,
@@ -892,6 +916,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         list_data = {"name": "List", "type": "blueprint_3"}
         list_node = ListNode(
+            recipe_provider=mock_storage_recipe_provider,
             key="list",
             uid="",
             entity=list_data,
@@ -902,6 +927,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         item_1_data = {"name": "Item1", "description": "", "type": "basic_blueprint"}
         item_1 = Node(
+            recipe_provider=mock_storage_recipe_provider,
             key="0",
             uid="",
             entity=item_1_data,

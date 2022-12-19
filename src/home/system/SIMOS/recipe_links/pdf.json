@@ -1,0 +1,13 @@
+{
+  "type": "dmss://system/SIMOS/RecipeLink",
+  "_blueprintPath_": "dmss://system/SIMOS/blob_types/PDF",
+  "uiRecipes": [
+    {
+      "type": "dmss://system/SIMOS/UiRecipe",
+      "name": "PDFView",
+      "description": "Embedded PDF View",
+      "plugin": "default-pdf",
+      "attributes": []
+    }
+  ]
+}

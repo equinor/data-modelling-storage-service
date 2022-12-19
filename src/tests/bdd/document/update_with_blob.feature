@@ -39,7 +39,7 @@ Feature: Update document that has blob data
     {
       "type": "dmss://system/SIMOS/Blueprint",
       "name": "MultiplePdfContainer",
-      "extends": ["dmss://system/SIMOS/DefaultUiRecipes","dmss://system/SIMOS/NamedEntity"],
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
       "description": "A recursive blueprint with multiple PDFs",
       "attributes": [
         {
