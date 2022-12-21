@@ -4,7 +4,7 @@
   "description": "This describes a blueprint",
   "attributes": [
     {
-      "attributeType": "dmss://system/SIMOS/Dependency",
+      "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "version"
     },
