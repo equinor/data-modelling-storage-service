@@ -5,7 +5,11 @@ from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
-from tests.unit.mock_utils import flatten_dict, mock_storage_recipe_provider
+from tests.unit.mock_utils import (
+    flatten_dict,
+    get_mock_document_service,
+    mock_storage_recipe_provider,
+)
 
 all_contained_cases_blueprint = {
     "type": "system/SIMOS/Blueprint",
@@ -974,3 +978,71 @@ class TreenodeTestCase(unittest.TestCase):
         item_1_actual = {"name": "Item1", "description": "", "type": "basic_blueprint"}
 
         self.assertEqual(item_1_actual, tree_node_to_dict(item_1))
+
+    def test_is_storage_contained(self):
+        document_service = get_mock_document_service()
+
+        # Engine is a blueprint in a package called EnginePackage.
+        # We need to create 3 nodes: engine package, content list in engine package and the engine.
+        engine_entity = {
+            "name": "Engine",
+            "type": "dmss://system/SIMOS/Blueprint",
+            "extends": ["dmss://system/SIMOS/NamedEntity"],
+            "attributes": [
+                {"name": "hp", "type": "dmss://system/SIMOS/BlueprintAttribute", "attributeType": "string"}
+            ],
+        }
+        engine_blueprint_attribute = BlueprintAttribute(
+            name="content", attribute_type="dmss://system/SIMOS/Package", type="dmss://system/SIMOS/BlueprintAttribute"
+        )
+        engine_node: Node = Node(
+            key="0",
+            entity=engine_entity,
+            attribute=engine_blueprint_attribute,
+            blueprint_provider=document_service.get_blueprint,
+            recipe_provider=mock_storage_recipe_provider,
+        )
+
+        engine_package_content_bp_attribute = BlueprintAttribute(
+            name="content", attribute_type="object", type="dmss://system/SIMOS/BlueprintAttribute"
+        )
+        engine_package_content: ListNode = ListNode(
+            key="content",
+            attribute=engine_package_content_bp_attribute,
+            entity=[engine_entity],
+            blueprint_provider=document_service.get_blueprint,
+            recipe_provider=mock_storage_recipe_provider,
+        )
+
+        engine_package_entity = {
+            "_id": "26d94353-3ff0-4b7d-bf06-86f006dd6f7b",
+            "type": "dmss://system/SIMOS/Package",
+            "name": "EnginePackage",
+            "isRoot": False,
+            "content": [engine_entity],
+        }
+        engine_package_blueprint_attribute = BlueprintAttribute(
+            name="Package",
+            attribute_type="dmss://system/SIMOS/Package",
+            type="dmss://system/SIMOS/BlueprintAttribute",
+        )
+        engine_package_node: Node = Node(
+            key="Package",
+            entity=engine_package_entity,
+            attribute=engine_package_blueprint_attribute,
+            blueprint_provider=document_service.get_blueprint,
+            recipe_provider=mock_storage_recipe_provider,
+        )
+
+        """
+        Node structure:
+        * EnginePackage
+            * content list
+                * engine    
+        """
+        engine_package_content.parent = engine_package_node
+        engine_package_content.children = [engine_node]
+        engine_node.parent = engine_package_content
+
+        assert engine_node.storage_contained is False
+        assert engine_node.parent.storage_recipes[0].is_contained(engine_node.attribute.name) is False
