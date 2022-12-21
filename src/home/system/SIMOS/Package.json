@@ -13,6 +13,7 @@
       "attributeType": "object",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "content",
+      "contained": false,
       "dimensions": "*",
       "optional": true
     }
