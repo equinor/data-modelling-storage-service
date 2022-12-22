@@ -16,6 +16,11 @@ example_entity: dict = {
             "name": "color",
             "type": "dmss://system/SIMOS/BlueprintAttribute",
             "attributeType": "dmss://system/SIMOS/string",
+            "blob": {
+                "name": "color_profile.txt",
+                "type": "dmss://system/SIMOS/Blob",
+                "_blob_id": "04cf2783-6118-4bfd-a427-9485b00fa9da",
+            },
         },
         {
             "name": "wheels",
@@ -34,7 +39,16 @@ entity_with_aliases: dict = {
     "extends": ["CORE:NamedEntity", "CAR_PACKAGE:Vehicle"],
     "description": "",
     "attributes": [
-        {"name": "color", "type": "CORE:BlueprintAttribute", "attributeType": "CORE:string"},
+        {
+            "name": "color",
+            "type": "CORE:BlueprintAttribute",
+            "attributeType": "CORE:string",
+            "blob": {
+                "name": "color_profile.txt",
+                "type": "CORE:Blob",
+                "_blob_id": "04cf2783-6118-4bfd-a427-9485b00fa9da",
+            },
+        },
         {"name": "wheels", "type": "CORE:BlueprintAttribute", "attributeType": "CAR_PACKAGE:Wheel", "dimensions": "*"},
     ],
 }
