@@ -2,6 +2,7 @@ import unittest
 from unittest import mock
 
 from authentication.models import User
+from common.tree_node_serializer import tree_node_from_dict
 from config import config
 from domain_classes.tree_node import Node
 from enums import StorageDataTypes
@@ -70,8 +71,8 @@ class DataSourceTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(lambda x, y: data_source, user=test_user)
 
-        node: Node = Node.from_dict(
-            uncontained_doc, "1", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
+        node: Node = tree_node_from_dict(
+            uncontained_doc, "1", "", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
         )
 
         document_service.save(node, "testing", update_uncontained=True)
@@ -128,8 +129,12 @@ class DataSourceTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(lambda x, y: data_source, user=test_user)
 
-        node: Node = Node.from_dict(
-            blob_doc, "1", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
+        node: Node = tree_node_from_dict(
+            blob_doc,
+            "1",
+            key="",
+            blueprint_provider=document_service.get_blueprint,
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         document_service.save(node, "testing")
@@ -191,8 +196,8 @@ class DataSourceTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(lambda x, y: data_source, user=test_user)
 
-        node: Node = Node.from_dict(
-            blob_doc, "1", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
+        node: Node = tree_node_from_dict(
+            blob_doc, "1", "", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
         )
 
         document_service.save(node, "testing", update_uncontained=True)

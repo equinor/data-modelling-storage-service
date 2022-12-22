@@ -12,6 +12,11 @@ from common.exceptions import (
     MissingPrivilegeException,
     NotFoundException,
 )
+from common.tree_node_serializer import (
+    tree_node_from_dict,
+    tree_node_to_dict,
+    tree_node_to_ref_dict,
+)
 from common.utils.build_complex_search import build_mongo_query
 from common.utils.delete_documents import delete_document
 from common.utils.get_blueprint import get_blueprint_provider
@@ -147,7 +152,7 @@ class DocumentService:
             node.entity = self.save_blob_data(node, repository)
 
         node.set_uid()  # Ensure the node has a _id
-        ref_dict = node.to_ref_dict()
+        ref_dict = tree_node_to_ref_dict(node)
 
         entity_has_all_required_attributes(ref_dict, node.blueprint.get_required_attributes())
 
@@ -173,9 +178,10 @@ class DocumentService:
         complete_document = get_complete_sys_document(
             document_uid, self.repository_provider(data_source_id, self.user), depth
         )
-        return Node.from_dict(
+        return tree_node_from_dict(
             complete_document,
             complete_document.get("_id"),
+            key="",
             blueprint_provider=self.get_blueprint,
             recipe_provider=self.get_storage_recipes,
         )
@@ -270,7 +276,7 @@ class DocumentService:
             self.save(root, data_source_id, update_uncontained=False)
 
         logger.info(f"Updated document '{target_node.node_id}''")
-        return {"data": target_node.to_dict()}
+        return {"data": tree_node_to_dict(target_node)}
 
     def add_document(self, absolute_ref: str, data: dict, update_uncontained: bool = False):
         data_source, parent_id, attribute = split_dmss_ref(absolute_ref)
@@ -310,8 +316,13 @@ class DocumentService:
             entity["extends"] = ["system/SIMOS/DefaultUiRecipes", "system/SIMOS/NamedEntity"]
 
         new_node_attribute = BlueprintAttribute(name=leaf_attribute, attribute_type=type)
-        new_node = Node.from_dict(
-            entity, None, self.get_blueprint, new_node_attribute, recipe_provider=self.get_storage_recipes
+        new_node = tree_node_from_dict(
+            entity,
+            uid=None,
+            key="",
+            blueprint_provider=self.get_blueprint,
+            node_attribute=new_node_attribute,
+            recipe_provider=self.get_storage_recipes,
         )
 
         required_attribute_names = [attribute.name for attribute in new_node.blueprint.get_required_attributes()]
@@ -338,7 +349,9 @@ class DocumentService:
         if data.get("type") != SIMOS.PACKAGE.value and not data.get("isRoot"):
             raise BadRequestException("Only root packages may be added without a parent.")
 
-        new_node = Node.from_dict(data, None, self.get_blueprint, recipe_provider=self.get_storage_recipes)
+        new_node = tree_node_from_dict(
+            data, uid=None, key="", blueprint_provider=self.get_blueprint, recipe_provider=self.get_storage_recipes
+        )
 
         exisiting_root_package = get_data_source(data_source, self.user).find(
             {"type": SIMOS.PACKAGE.value, "isRoot": True, "name": data["name"]}
@@ -395,11 +408,12 @@ class DocumentService:
         # If dotted attribute path, attribute is the last entry. Else content
         new_node_attr = path.split(".")[-1] if "." in path else "content"
 
-        new_node = Node.from_dict(
+        new_node = tree_node_from_dict(
             {**document.to_dict()},
-            None,
-            self.get_blueprint,
-            BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
+            uid=None,
+            key="",
+            blueprint_provider=self.get_blueprint,
+            node_attribute=BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
             recipe_provider=self.get_storage_recipes,
         )
         new_node.set_uid()
@@ -496,9 +510,10 @@ class DocumentService:
         # If the node to update is a list, append to end
         if attribute_node.is_array():
             attribute_node.add_child(
-                Node.from_dict(
+                tree_node_from_dict(
                     entity={**reference.dict(by_alias=True), "_id": str(reference.uid)},
                     uid=str(reference.uid),
+                    key="",
                     blueprint_provider=self.get_blueprint,
                     recipe_provider=self.get_storage_recipes,
                     node_attribute=attribute_node.attribute,
@@ -516,7 +531,7 @@ class DocumentService:
             f" as '{attribute_path}' in '{root.name}'({root.uid})"
         )
 
-        return root.to_dict()
+        return tree_node_to_dict(root)
 
     def remove_reference(self, data_source_id: str, document_id: str, attribute_path: str) -> dict:
         root: Node = self.get_node_by_uid(data_source_id, document_id)
@@ -532,4 +547,4 @@ class DocumentService:
         self.save(root, data_source_id)
         logger.info(f"Removed reference for '{attribute_path}' in '{root.name}'({root.uid})")
 
-        return root.to_dict()
+        return tree_node_to_dict(root)

@@ -1,9 +1,10 @@
 import unittest
 
+from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from domain_classes.tree_node import DictExporter, DictImporter, ListNode, Node
+from domain_classes.tree_node import ListNode, Node
 from tests.unit.mock_utils import flatten_dict, mock_storage_recipe_provider
 
 all_contained_cases_blueprint = {
@@ -179,7 +180,7 @@ class TreenodeTestCase(unittest.TestCase):
             "nested": {"name": "Nested1", "description": "", "type": "basic_blueprint"},
         }
 
-        assert actual_before == root.to_dict()
+        assert actual_before == tree_node_to_dict(root)
 
         root.replace("1.nested", nested_2)
 
@@ -191,7 +192,7 @@ class TreenodeTestCase(unittest.TestCase):
             "nested": {"name": "Nested2", "description": "", "type": "basic_blueprint"},
         }
 
-        assert actual_after_replaced == root.to_dict()
+        assert actual_after_replaced == tree_node_to_dict(root)
 
     def test_delete_root_child(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
@@ -223,13 +224,13 @@ class TreenodeTestCase(unittest.TestCase):
             "nested": {"name": "Nested1", "description": "", "type": "basic_blueprint"},
         }
 
-        assert actual_before == root.to_dict()
+        assert actual_before == tree_node_to_dict(root)
 
         root.remove_by_path(["nested"])
 
         actual_after_delete = {"_id": "1", "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
 
-        assert actual_after_delete == root.to_dict()
+        assert actual_after_delete == tree_node_to_dict(root)
 
     def test_delete_nested_child(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
@@ -276,7 +277,7 @@ class TreenodeTestCase(unittest.TestCase):
             },
         }
 
-        assert actual_before == root.to_dict()
+        assert actual_before == tree_node_to_dict(root)
 
         root.remove_by_path(["nested", "nested2"])
 
@@ -288,7 +289,7 @@ class TreenodeTestCase(unittest.TestCase):
             "nested": {"name": "Nested1", "description": "", "type": "basic_blueprint"},
         }
 
-        assert actual_after_delete == root.to_dict()
+        assert actual_after_delete == tree_node_to_dict(root)
 
     def test_delete_list_element_of_nested_child(self):
         document = {
@@ -308,8 +309,8 @@ class TreenodeTestCase(unittest.TestCase):
                 }
             ],
         }
-        root = Node.from_dict(
-            document, document.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        root = tree_node_from_dict(
+            document, document.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
         )
 
         actual_before = {
@@ -330,7 +331,7 @@ class TreenodeTestCase(unittest.TestCase):
             ],
         }
 
-        assert actual_before == root.to_dict()
+        assert actual_before == tree_node_to_dict(root)
 
         root.remove_by_path(["a_list", "0", "a_list", "1"])
 
@@ -349,7 +350,7 @@ class TreenodeTestCase(unittest.TestCase):
             ],
         }
 
-        assert actual_after_delete == root.to_dict()
+        assert actual_after_delete == tree_node_to_dict(root)
 
     def test_depth(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
@@ -395,8 +396,8 @@ class TreenodeTestCase(unittest.TestCase):
             },
         }
 
-        root = Node.from_dict(
-            document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        root = tree_node_from_dict(
+            document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
         )
         result = [node.name for node in root.traverse()]
         # with error nodes
@@ -536,8 +537,8 @@ class TreenodeTestCase(unittest.TestCase):
             },
         }
 
-        root = Node.from_dict(
-            document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        root = tree_node_from_dict(
+            document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
         )
 
         child_1 = root.search("1.nested.nested")
@@ -567,8 +568,8 @@ class TreenodeTestCase(unittest.TestCase):
             },
         }
 
-        root = Node.from_dict(
-            document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        root = tree_node_from_dict(
+            document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
         )
 
         child_1 = root.get_by_path(["nested", "nested"])
@@ -600,8 +601,8 @@ class TreenodeTestCase(unittest.TestCase):
             "references": [],
         }
 
-        root = Node.from_dict(
-            document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        root = tree_node_from_dict(
+            document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
         )
 
         update_0 = {
@@ -625,7 +626,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         root.update(update_0)
 
-        assert pretty_eq(update_0, root.to_dict()) is None
+        assert pretty_eq(update_0, tree_node_to_dict(root)) is None
 
         update_1 = {
             "name": "New-name",
@@ -648,7 +649,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         root.update(update_1)
 
-        assert pretty_eq(update_1, root.to_dict()) is None
+        assert pretty_eq(update_1, tree_node_to_dict(root)) is None
 
         update_2 = {
             "name": "New-name",
@@ -671,7 +672,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         root.update(update_2)
 
-        assert pretty_eq(update_2, root.to_dict()) is None
+        assert pretty_eq(update_2, tree_node_to_dict(root)) is None
 
         expected = {
             "_id": "1",
@@ -697,7 +698,7 @@ class TreenodeTestCase(unittest.TestCase):
         # nodes when attributes are missing, needed for having error nodes in the index.
 
         expected_flat = flatten_dict(expected)
-        actual_flat = flatten_dict(root.to_dict())
+        actual_flat = flatten_dict(tree_node_to_dict(root))
         # less than only works on flat dictionaries.
         assert expected_flat.items() <= actual_flat.items()
 
@@ -752,8 +753,8 @@ class TreenodeTestCase(unittest.TestCase):
             "_blueprint": all_contained_cases_blueprint,
         }
 
-        root = Node.from_dict(
-            document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        root = tree_node_from_dict(
+            document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
         )
 
         actual = {
@@ -779,14 +780,14 @@ class TreenodeTestCase(unittest.TestCase):
             ],
         }
 
-        assert pretty_eq(actual, root.to_dict()) is None
+        assert pretty_eq(actual, tree_node_to_dict(root)) is None
 
     def test_recursive_from_dict(self):
         document_1 = {"_id": "1", "name": "Parent", "description": "", "type": "recursive_blueprint", "im_me!": {}}
 
         with self.assertRaises(RecursionError):
-            Node.from_dict(
-                document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+            tree_node_from_dict(
+                document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
             )
 
     def test_from_dict_using_dict_importer(self):
@@ -863,11 +864,11 @@ class TreenodeTestCase(unittest.TestCase):
             ],
         }
 
-        root = DictImporter.from_dict(
-            document_1, document_1.get("_id"), get_blueprint, recipe_provider=mock_storage_recipe_provider
+        root = tree_node_from_dict(
+            document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
         )
 
-        assert pretty_eq(actual, root.to_dict()) is None
+        assert pretty_eq(actual, tree_node_to_dict(root)) is None
 
     def test_to_dict(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
@@ -954,7 +955,7 @@ class TreenodeTestCase(unittest.TestCase):
             "list": [{"name": "Item1", "description": "", "type": "basic_blueprint"}],
         }
 
-        self.assertEqual(actual_root, DictExporter.to_dict(root))
+        self.assertEqual(actual_root, tree_node_to_dict(root))
 
         actual_nested = {
             "name": "Nested",
@@ -968,8 +969,8 @@ class TreenodeTestCase(unittest.TestCase):
             },
         }
 
-        self.assertEqual(actual_nested, nested.to_dict())
+        self.assertEqual(actual_nested, tree_node_to_dict(nested))
 
         item_1_actual = {"name": "Item1", "description": "", "type": "basic_blueprint"}
 
-        self.assertEqual(item_1_actual, item_1.to_dict())
+        self.assertEqual(item_1_actual, tree_node_to_dict(item_1))

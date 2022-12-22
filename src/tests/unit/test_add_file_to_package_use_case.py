@@ -2,6 +2,7 @@ from unittest import mock, skip
 from uuid import uuid4
 
 from authentication.models import User
+from common.tree_node_serializer import tree_node_to_dict
 from features.document.use_cases.add_file_use_case import add_file_use_case
 
 
@@ -28,6 +29,6 @@ def test_without_parameters():
     assert bool(use_case_result) is True
     document_repository.get.assert_called_with(parent_id)
 
-    result = use_case_result.value.to_dict()
+    result = tree_node_to_dict(use_case_result.value)
 
     assert result["filename"] == data["filename"]
