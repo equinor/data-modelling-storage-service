@@ -4,9 +4,7 @@ from unittest import mock
 from authentication.models import User
 from common.utils.data_structure.compare import pretty_eq
 from enums import SIMOS
-from services.document_service import DocumentService
-from tests.unit.mock_blueprint_provider import blueprint_provider
-from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_utils import get_mock_document_service
 
 
 class DocumentServiceTestCase(unittest.TestCase):
@@ -40,11 +38,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return document_repository
 
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=repository_provider,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(repository_provider)
         document_service.rename_document(
             data_source_id="testing", parent_uid="1", document_id="1.nested", name="New_name"
         )
@@ -82,11 +76,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return document_repository
 
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=repository_provider,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(repository_provider)
         document_service.rename_document(data_source_id="testing", document_id="1", name="New_name")
 
         actual = {"_id": "1", "name": "New_name"}
@@ -122,11 +112,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return document_repository
 
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=repository_provider,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(repository_provider)
         document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New_name")
 
         actual = {"_id": "1", "reference": {"_id": "2", "name": "New_name", "type": "basic_blueprint"}}
@@ -164,11 +150,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return document_repository
 
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=repository_provider,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(repository_provider)
         document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New_name")
 
         actual = {"_id": "1", "references": [{"_id": "2", "name": "New_name", "type": "basic_blueprint"}]}

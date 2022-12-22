@@ -2,7 +2,7 @@ import unittest
 from unittest import skip
 
 from domain_classes.tree_node import Node
-from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_utils import mock_storage_recipe_provider
 
 all_contained_cases_blueprint = {
     "type": "system/SIMOS/Blueprint",

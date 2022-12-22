@@ -5,10 +5,11 @@ from authentication.models import User
 from config import config
 from domain_classes.tree_node import Node
 from enums import StorageDataTypes
-from services.document_service import DocumentService
 from storage.data_source_class import DataSource
-from tests.unit.mock_blueprint_provider import blueprint_provider
-from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_utils import (
+    get_mock_document_service,
+    mock_storage_recipe_provider,
+)
 
 config.AUTH_ENABLED = False
 test_user = User(**{"user_id": "unit-test", "full_name": "Unit Test", "email": "unit-test@example.com"})
@@ -67,12 +68,7 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: data_source,
-            user=test_user,
-        )
+        document_service = get_mock_document_service(lambda x, y: data_source, user=test_user)
 
         node: Node = Node.from_dict(
             uncontained_doc, "1", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
@@ -130,12 +126,7 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: data_source,
-            user=test_user,
-        )
+        document_service = get_mock_document_service(lambda x, y: data_source, user=test_user)
 
         node: Node = Node.from_dict(
             blob_doc, "1", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
@@ -198,12 +189,7 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: data_source,
-            user=test_user,
-        )
+        document_service = get_mock_document_service(lambda x, y: data_source, user=test_user)
 
         node: Node = Node.from_dict(
             blob_doc, "1", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider

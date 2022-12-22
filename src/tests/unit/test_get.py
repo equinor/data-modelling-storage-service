@@ -2,9 +2,7 @@ import unittest
 from unittest import mock
 
 from common.utils.data_structure.compare import pretty_eq
-from services.document_service import DocumentService
-from tests.unit.mock_blueprint_provider import blueprint_provider
-from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_utils import get_mock_document_service
 
 
 class DocumentServiceTestCase(unittest.TestCase):
@@ -40,11 +38,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository = mock.Mock()
         document_repository.get = mock_get
 
-        document_service: DocumentService = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=lambda x, y: document_repository,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(lambda x, y: document_repository)
         root = document_service.get_node_by_uid("datasource", "1").to_dict()
 
         assert isinstance(root, dict)
@@ -98,11 +92,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository = mock.Mock()
         document_repository.get = mock_get
 
-        document_service: DocumentService = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=lambda x, y: document_repository,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(lambda x, y: document_repository)
         root = document_service.get_node_by_uid("datasource", "1").to_dict()
 
         assert isinstance(root, dict)

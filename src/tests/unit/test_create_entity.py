@@ -3,9 +3,8 @@ import unittest
 from common.utils.create_entity import CreateEntity
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
-from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_utils import get_mock_document_service
 
 file_repository_test = LocalFileRepository()
 
@@ -167,9 +166,7 @@ class BlueprintProvider:
         return Blueprint(file_repository_test.get(template_type))
 
 
-document_service = DocumentService(
-    recipe_provider=mock_storage_recipe_provider, repository_provider=None, blueprint_provider=BlueprintProvider()
-)
+document_service = get_mock_document_service(blueprint_provider=BlueprintProvider())
 blueprint_provider = document_service.get_blueprint
 
 

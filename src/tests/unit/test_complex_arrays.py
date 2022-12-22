@@ -5,9 +5,8 @@ from authentication.models import User
 from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
 from enums import SIMOS
-from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
-from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_utils import get_mock_document_service
 
 package_blueprint = {
     "type": SIMOS.BLUEPRINT.value,
@@ -114,11 +113,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return document_repository
 
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=repository_provider,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(repository_provider, blueprint_provider=blueprint_provider)
         document_service.add_document(
             data_source_id="testing",
             parent_id="1",
@@ -265,11 +260,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return document_repository
 
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=repository_provider,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(repository_provider, blueprint_provider=blueprint_provider)
         # fmt: off
         document_service.update_document(
             data_source_id="testing",

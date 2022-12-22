@@ -4,8 +4,7 @@ from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import DictExporter, DictImporter, ListNode, Node
-from tests.unit.mock_blueprint_provider import flatten_dict
-from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_utils import flatten_dict, mock_storage_recipe_provider
 
 all_contained_cases_blueprint = {
     "type": "system/SIMOS/Blueprint",
