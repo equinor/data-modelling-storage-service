@@ -1,7 +1,7 @@
 import unittest
 
 from common.utils.replace_reference_with_alias import (
-    replace_absolute_references_with_alias,
+    replace_absolute_references_in_entity_with_alias,
 )
 from domain_classes.dependency import Dependency
 
@@ -52,5 +52,5 @@ class ReplaceWithAliasTest(unittest.TestCase):
         }
         dependencies: list[Dependency] = [Dependency(**core_dependency), Dependency(**car_package_dependency)]
 
-        replace_absolute_references_with_alias(entity=example_entity, dependencies=dependencies)
+        replace_absolute_references_in_entity_with_alias(entity=example_entity, dependencies=dependencies)
         assert example_entity == entity_with_aliases

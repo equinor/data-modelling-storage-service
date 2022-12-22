@@ -1,3 +1,4 @@
+from common.exceptions import ApplicationException
 from domain_classes.dependency import Dependency
 
 
@@ -10,27 +11,35 @@ def is_alias(path: str, dependencies: list[Dependency]):
     return False
 
 
-def replace_absolute_references_with_alias(entity: dict, dependencies: list[Dependency]):
+def replace_reference_with_alias(reference: str, dependencies: list[Dependency]) -> str:
+    """
+    replace the reference string with an alias.
+    The reference string on the format <protocol>://<datasource>/<path>.
+    """
+    for dependency in dependencies:
+        if reference.startswith(dependency.get_absolute_reference()):
+            path_after_alias = reference.split(dependency.get_absolute_reference())[-1]
+            return f"{dependency.alias}:{path_after_alias}"
+    raise ApplicationException(
+        message="Could not replace reference with alias",
+        debug=f"reference: {reference} could not be replaced with alias.",
+    )
+
+
+def replace_absolute_references_in_entity_with_alias(entity: dict, dependencies: list[Dependency]):
     """Replace path in an entity with alias defined in a list of dependencies.
 
     (for example, replace "dmss://system/SIMOS/Package" with "CORE:Package".)
     """
-    attribute_to_update = ("type", "attributeType", "extends", "_blueprintPath_")  # These keys may contain a reference
+    attributes_to_update = ("type", "attributeType", "_blueprintPath_")  # These keys may contain a reference
+    EXTENDS = "extends"  # extends is a special attribute in an entity that contains a list of referencences
     for attribute in entity:
-        if attribute == "attributes" or attribute == "content":
-            # "attributes" and "content" contain list of entities.
+        if type(entity[attribute]) == list and attribute != EXTENDS:
             for new_entity in entity[attribute]:
-                replace_absolute_references_with_alias(new_entity, dependencies)
-        elif attribute in attribute_to_update:
-            for dependency in dependencies:
-                if attribute == "extends":
-                    # "extends" attribute contains a list of absolute references. Each list item is treated separately.
-                    for index, absolute_reference in enumerate(entity[attribute]):
-                        if not is_alias(entity[attribute][index], dependencies):
-                            path_after_alias = absolute_reference.split(dependency.get_absolute_reference())[-1]
-                            entity[attribute][index] = f"{dependency.alias}:{path_after_alias}"
-                            break
-                elif entity[attribute].startswith(dependency.get_absolute_reference()):
-                    path_after_alias = entity[attribute].split(dependency.get_absolute_reference())[-1]
-                    entity[attribute] = f"{dependency.alias}:{path_after_alias}"
-                    break
+                replace_absolute_references_in_entity_with_alias(new_entity, dependencies)
+        if attribute in attributes_to_update:
+            entity[attribute] = replace_reference_with_alias(entity[attribute], dependencies)
+        elif attribute == EXTENDS:
+            for index, reference in enumerate(entity[attribute]):
+                if not is_alias(reference, dependencies):
+                    entity[attribute][index] = replace_reference_with_alias(entity[attribute][index], dependencies)

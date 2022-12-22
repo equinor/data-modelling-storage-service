@@ -4,7 +4,7 @@ from zipfile import ZipFile
 
 from common.utils.logging import logger
 from common.utils.replace_reference_with_alias import (
-    replace_absolute_references_with_alias,
+    replace_absolute_references_in_entity_with_alias,
 )
 from domain_classes.dependency import Dependency
 from enums import SIMOS
@@ -33,7 +33,7 @@ class ZipFileClient(RepositoryInterface):
                 dependencies: list[Dependency] = [
                     Dependency(**dependency_dict) for dependency_dict in combined_document_meta["dependencies"]
                 ]
-                replace_absolute_references_with_alias(entity, dependencies)
+                replace_absolute_references_in_entity_with_alias(entity, dependencies)
             json_data = json.dumps(entity)
             binary_data = json_data.encode()
             self.zip_file.writestr(write_to, binary_data)
