@@ -2,11 +2,17 @@ from common.exceptions import ApplicationException
 from domain_classes.dependency import Dependency
 
 
-def is_alias(path: str, dependencies: list[Dependency]):
-    NUM_SPLITS = 1
-    path_start = path.split(":", NUM_SPLITS)[0]
+def is_alias(string_to_check: str, dependencies: list[Dependency]) -> bool:
+    """Check if a given string is an alias or not.
+
+    string_to_check is an alias on the form <alias>:<path> or a document reference on the format <protocol>://<datasource>/<path>
+    """
     for dependency in dependencies:
-        if path_start == dependency.alias:
+        if (
+            string_to_check.startswith(f"{dependency.alias}:")
+            and dependency.protocol not in string_to_check
+            and dependency.address not in string_to_check
+        ):
             return True
     return False
 
