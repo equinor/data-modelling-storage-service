@@ -6,7 +6,7 @@ from domain_classes.dimension import Dimension
 from enums import SIMOS
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
-from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_utils import mock_storage_recipe_provider
 
 package_blueprint = {
     "type": SIMOS.BLUEPRINT.value,

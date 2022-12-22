@@ -5,9 +5,7 @@ from pydantic import ValidationError
 
 from common.exceptions import BadRequestException, NotFoundException
 from restful.request_types.shared import Reference
-from services.document_service import DocumentService
-from tests.unit.mock_blueprint_provider import blueprint_provider
-from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_utils import get_mock_document_service
 
 
 class ReferenceTestCase(unittest.TestCase):
@@ -36,11 +34,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: repository,
-        )
+        document_service = get_mock_document_service(lambda x, y: repository)
 
         document_service.insert_reference(
             "testing",
@@ -82,11 +76,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: repository,
-        )
+        document_service = get_mock_document_service(lambda x, y: repository)
 
         with self.assertRaises(NotFoundException):
             document_service.insert_reference(
@@ -123,11 +113,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: repository,
-        )
+        document_service = get_mock_document_service(lambda x, y: repository)
 
         with self.assertRaises(BadRequestException):
             document_service.insert_reference(
@@ -167,11 +153,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: repository,
-        )
+        document_service = get_mock_document_service(lambda x, y: repository)
 
         document_service.insert_reference(
             "testing",
@@ -216,11 +198,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: repository,
-        )
+        document_service = get_mock_document_service(lambda x, y: repository)
 
         with self.assertRaises(ValidationError):
             document_service.insert_reference(
@@ -260,11 +238,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: repository,
-        )
+        document_service = get_mock_document_service(lambda x, y: repository)
 
         document_service.remove_reference(
             "testing",
@@ -308,11 +282,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: repository,
-        )
+        document_service = get_mock_document_service(lambda x, y: repository)
 
         document_service.remove_reference(
             "testing",
@@ -360,11 +330,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: repository,
-        )
+        document_service = get_mock_document_service(lambda x, y: repository)
 
         document_service.remove_reference(
             "testing",
@@ -413,11 +379,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: repository,
-        )
+        document_service = get_mock_document_service(lambda x, y: repository)
         document_service.insert_reference(
             "testing",
             document_id="1",

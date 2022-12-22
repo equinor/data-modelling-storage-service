@@ -4,9 +4,7 @@ from unittest import mock
 from authentication.models import User
 from common.utils.data_structure.compare import pretty_eq
 from enums import SIMOS
-from services.document_service import DocumentService
-from tests.unit.mock_blueprint_provider import blueprint_provider
-from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_utils import get_mock_document_service
 
 
 class DocumentServiceTestCase(unittest.TestCase):
@@ -17,11 +15,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_repository.get = lambda id: document_1.copy()
 
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=lambda id, user: document_repository,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(lambda id, user: document_repository)
         document_service.remove_document(data_source_id="testing", document_id="1")
         document_repository.delete.assert_called_with("1")
 
@@ -35,8 +29,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
+        document_service = get_mock_document_service(
             blueprint_provider=NoBlueprints(),
             repository_provider=lambda x, y: repository,
         )
@@ -77,11 +70,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return repository
 
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=repository_provider,
-        )
+        document_service = get_mock_document_service(repository_provider=repository_provider)
         document_service.remove_document(data_source_id="testing", document_id="1")
         expected = {"2": {"uid": "2", "_id": "2", "name": "a_reference", "description": "", "type": "basic_blueprint"}}
         assert pretty_eq(expected, doc_storage) is None
@@ -101,11 +90,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=lambda x, y: repository,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(lambda id, user: repository)
         document_service.remove_document(data_source_id="testing", document_id="1.nested")
         assert doc_storage["1"].get("nested") is None
 
@@ -140,11 +125,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=lambda x, y: repository,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(lambda id, user: repository)
         document_service.remove_document(data_source_id="testing", document_id="1")
         assert doc_storage.get("1") is None
         assert doc_storage.get("2") is None
@@ -206,11 +187,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=lambda x, y: repository,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(lambda id, user: repository)
         document_service.remove_document(data_source_id="testing", document_id="1")
         assert doc_storage.get("1") is None
         assert doc_storage.get("2") is None
@@ -236,11 +213,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return repository
 
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=repository_provider,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service(repository_provider)
         document_service.remove_document(data_source_id="testing", document_id="1.reference")
         assert doc_storage["1"] == {
             "_id": "1",
@@ -276,11 +249,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=repository_provider,
-        )
+        document_service = get_mock_document_service(repository_provider)
         document_service.remove_document("testing", "1.im_optional")
         assert {
             "_id": "1",
@@ -313,10 +282,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         repository.delete_blob = lambda doc_id: doc_storage.pop(doc_id)
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=repository_provider,
-        )
+        document_service = get_mock_document_service(repository_provider)
         document_service.remove_document("testing", "1")
         assert doc_storage.get("blob_object") is None

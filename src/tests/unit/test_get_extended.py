@@ -4,28 +4,18 @@ from unittest import mock
 from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
-from services.document_service import DocumentService
-from tests.unit.mock_blueprint_provider import blueprint_provider
-from tests.unit.mock_storage_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_utils import get_mock_document_service
 
 
 class GetExtendedBlueprintTestCase(unittest.TestCase):
     def test_get_simple_extended(self):
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=None,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service()
         full_blueprint: Blueprint = document_service.get_blueprint("ExtendedBlueprint")
 
         assert next((attr for attr in full_blueprint.attributes if attr.name == "description"), None) is not None
 
     def test_get_second_level_extended(self):
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            repository_provider=None,
-            blueprint_provider=blueprint_provider,
-        )
+        document_service = get_mock_document_service()
         full_blueprint: Blueprint = document_service.get_blueprint("SecondLevelExtendedBlueprint")
 
         assert next((attr for attr in full_blueprint.attributes if attr.name == "description"), None) is not None
@@ -60,11 +50,7 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
 
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.update = mock_update
-        document_service = DocumentService(
-            recipe_provider=mock_storage_recipe_provider,
-            blueprint_provider=blueprint_provider,
-            repository_provider=lambda x, y: repository,
-        )
+        document_service = get_mock_document_service(lambda x, y: repository)
 
         node: Node = document_service.get_node_by_uid("testing", "1")
         node.update(doc_1_after)
