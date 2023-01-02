@@ -39,7 +39,8 @@ def replace_absolute_references_in_entity_with_alias(entity: dict, dependencies:
             replace_absolute_references_in_entity_with_alias(entity[attribute], dependencies)
         if type(entity[attribute]) == list and attribute != EXTENDS:
             for new_entity in entity[attribute]:
-                replace_absolute_references_in_entity_with_alias(new_entity, dependencies)
+                if type(new_entity) == dict:
+                    replace_absolute_references_in_entity_with_alias(new_entity, dependencies)
         if attribute in attributes_to_update and has_dependency_alias(entity[attribute], dependencies):
             entity[attribute] = replace_reference_with_alias(entity[attribute], dependencies)
         elif attribute == EXTENDS:
