@@ -1,6 +1,7 @@
 import unittest
 from unittest import mock
 
+from common.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import pretty_eq
 from tests.unit.mock_utils import get_mock_document_service
 
@@ -39,7 +40,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
 
         document_service = get_mock_document_service(lambda x, y: document_repository)
-        root = document_service.get_node_by_uid("datasource", "1").to_dict()
+        root = tree_node_to_dict(document_service.get_node_by_uid("datasource", "1"))
 
         assert isinstance(root, dict)
 
@@ -93,7 +94,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
 
         document_service = get_mock_document_service(lambda x, y: document_repository)
-        root = document_service.get_node_by_uid("datasource", "1").to_dict()
+        root = tree_node_to_dict(document_service.get_node_by_uid("datasource", "1"))
 
         assert isinstance(root, dict)
 

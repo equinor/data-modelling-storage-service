@@ -1,4 +1,5 @@
 from authentication.models import User
+from common.tree_node_serializer import tree_node_to_dict
 from common.utils.get_document_by_path import get_document_by_absolute_path
 from common.utils.string_helpers import split_dmss_ref
 from services.document_service import DocumentService
@@ -29,4 +30,4 @@ def get_document_by_path_use_case(
     if attribute:
         document = document.get_by_path(attribute.split("."))
 
-    return document.to_dict()
+    return tree_node_to_dict(document)
