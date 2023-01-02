@@ -72,7 +72,10 @@ class DataSourceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(lambda x, y: data_source, user=test_user)
 
         node: Node = tree_node_from_dict(
-            uncontained_doc, "1", "", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
+            uncontained_doc,
+            uid="1",
+            blueprint_provider=document_service.get_blueprint,
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         document_service.save(node, "testing", update_uncontained=True)
@@ -131,8 +134,7 @@ class DataSourceTestCase(unittest.TestCase):
 
         node: Node = tree_node_from_dict(
             blob_doc,
-            "1",
-            key="",
+            uid="1",
             blueprint_provider=document_service.get_blueprint,
             recipe_provider=mock_storage_recipe_provider,
         )
@@ -197,10 +199,10 @@ class DataSourceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(lambda x, y: data_source, user=test_user)
 
         node: Node = tree_node_from_dict(
-            blob_doc, "1", "", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
+            blob_doc, document_service.get_blueprint, uid="1", recipe_provider=mock_storage_recipe_provider
         )
 
         document_service.save(node, "testing", update_uncontained=True)
 
-        # Test that both repos get's written into
+        # Test that both repos gets written into
         assert blob_doc_storage and default_doc_storage

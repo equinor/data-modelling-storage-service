@@ -180,8 +180,7 @@ class DocumentService:
         )
         return tree_node_from_dict(
             complete_document,
-            complete_document.get("_id"),
-            key="",
+            uid=complete_document.get("_id"),
             blueprint_provider=self.get_blueprint,
             recipe_provider=self.get_storage_recipes,
         )
@@ -318,8 +317,6 @@ class DocumentService:
         new_node_attribute = BlueprintAttribute(name=leaf_attribute, attribute_type=type)
         new_node = tree_node_from_dict(
             entity,
-            uid=None,
-            key="",
             blueprint_provider=self.get_blueprint,
             node_attribute=new_node_attribute,
             recipe_provider=self.get_storage_recipes,
@@ -350,7 +347,7 @@ class DocumentService:
             raise BadRequestException("Only root packages may be added without a parent.")
 
         new_node = tree_node_from_dict(
-            data, uid=None, key="", blueprint_provider=self.get_blueprint, recipe_provider=self.get_storage_recipes
+            data, blueprint_provider=self.get_blueprint, recipe_provider=self.get_storage_recipes
         )
 
         exisiting_root_package = get_data_source(data_source, self.user).find(
@@ -410,8 +407,6 @@ class DocumentService:
 
         new_node = tree_node_from_dict(
             {**document.to_dict()},
-            uid=None,
-            key="",
             blueprint_provider=self.get_blueprint,
             node_attribute=BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
             recipe_provider=self.get_storage_recipes,
@@ -513,7 +508,6 @@ class DocumentService:
                 tree_node_from_dict(
                     entity={**reference.dict(by_alias=True), "_id": str(reference.uid)},
                     uid=str(reference.uid),
-                    key="",
                     blueprint_provider=self.get_blueprint,
                     recipe_provider=self.get_storage_recipes,
                     node_attribute=attribute_node.attribute,

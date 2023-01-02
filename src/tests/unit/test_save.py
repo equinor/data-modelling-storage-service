@@ -200,7 +200,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(lambda x, y: repository)
 
         node: Node = tree_node_from_dict(
-            doc_storage["1"], "1", "", document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
+            doc_storage["1"], document_service.get_blueprint, uid="1", recipe_provider=mock_storage_recipe_provider
         )
         document_service.save(node, "testing", update_uncontained=True)
 

@@ -97,12 +97,12 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
 
 def tree_node_from_dict(
     entity: dict,
-    uid: str | None,
-    key,
     blueprint_provider: Callable[[str], Blueprint],
     node_attribute: BlueprintAttribute | None = None,
     recursion_depth: int = 0,
     recipe_provider: Callable[..., list[StorageRecipe]] | None = None,
+    uid: str | None = None,
+    key: str | None = None,
 ) -> Node | ListNode:
 
     if recursion_depth >= config.MAX_ENTITY_RECURSION_DEPTH:
@@ -191,7 +191,7 @@ def tree_node_from_dict(
                 )
             child_node = tree_node_from_dict(
                 # If the child is not contained, get or create it's _id
-                uid="" if child_contained or not attribute_data else attribute_data.get("_id", ""),
+                uid=None if child_contained or not attribute_data else attribute_data.get("_id", ""),
                 entity=attribute_data,
                 key=child_attribute.name,
                 blueprint_provider=blueprint_provider,

@@ -39,6 +39,6 @@ class ErrorTreenodeTestCase(unittest.TestCase):
             def get_blueprint(type: str):
                 raise Exception("fix me")
 
-        root = tree_node_from_dict(document_1, uid=None, key="", blueprint_provider=BlueprintProvider(), recipe_provider=mock_storage_recipe_provider)  # type: ignore
+        root = tree_node_from_dict(document_1, blueprint_provider=BlueprintProvider(), recipe_provider=mock_storage_recipe_provider)  # type: ignore
         error_msg = root.children[0].error_message
         assert error_msg is not None

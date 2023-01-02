@@ -310,7 +310,7 @@ class TreenodeTestCase(unittest.TestCase):
             ],
         }
         root = tree_node_from_dict(
-            document, document.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
+            document, get_blueprint, uid=document.get("_id"), recipe_provider=mock_storage_recipe_provider
         )
 
         actual_before = {
@@ -397,7 +397,7 @@ class TreenodeTestCase(unittest.TestCase):
         }
 
         root = tree_node_from_dict(
-            document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
+            document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
         )
         result = [node.name for node in root.traverse()]
         # with error nodes
@@ -538,7 +538,7 @@ class TreenodeTestCase(unittest.TestCase):
         }
 
         root = tree_node_from_dict(
-            document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
+            document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
         )
 
         child_1 = root.search("1.nested.nested")
@@ -569,7 +569,7 @@ class TreenodeTestCase(unittest.TestCase):
         }
 
         root = tree_node_from_dict(
-            document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
+            document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
         )
 
         child_1 = root.get_by_path(["nested", "nested"])
@@ -602,7 +602,7 @@ class TreenodeTestCase(unittest.TestCase):
         }
 
         root = tree_node_from_dict(
-            document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
+            document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
         )
 
         update_0 = {
@@ -754,7 +754,7 @@ class TreenodeTestCase(unittest.TestCase):
         }
 
         root = tree_node_from_dict(
-            document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
+            document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
         )
 
         actual = {
@@ -787,7 +787,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         with self.assertRaises(RecursionError):
             tree_node_from_dict(
-                document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
+                document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
             )
 
     def test_from_dict_using_dict_importer(self):
@@ -865,7 +865,7 @@ class TreenodeTestCase(unittest.TestCase):
         }
 
         root = tree_node_from_dict(
-            document_1, document_1.get("_id"), "", get_blueprint, recipe_provider=mock_storage_recipe_provider
+            document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
         )
 
         assert pretty_eq(actual, tree_node_to_dict(root)) is None
