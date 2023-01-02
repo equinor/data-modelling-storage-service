@@ -370,7 +370,13 @@ class DocumentService:
             parent_uid = get_document_uid_by_path(f"{'/'.join(directory.split('/')[0:-1])}", data_source)
             child_uid = get_document_uid_by_path(directory, data_source)
             parent_node = self.get_node_by_uid(data_source_id, parent_uid)
-            parent_node.children[0].remove_by_child_id(child_uid)  # The first child of a directory is always 'content'
+
+            # find the node id of the child with uid equal to child_uid
+            child_node_ids = (child.node_id for child in parent_node.children[0].children if child.uid == child_uid)
+            child_node_id = next(child_node_ids)
+
+            # The first child of a directory is always 'content'
+            parent_node.children[0].remove_by_child_id(child_node_id)
             self.save(parent_node, data_source_id)
             delete_document(data_source, document_id=child_uid)
             return
