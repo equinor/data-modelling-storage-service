@@ -33,7 +33,7 @@ class ZipFileClient(RepositoryInterface):
                 dependencies: list[Dependency] = [
                     Dependency(**dependency_dict) for dependency_dict in combined_document_meta["dependencies"]
                 ]
-                replace_absolute_references_in_entity_with_alias(entity, dependencies)
+                entity = replace_absolute_references_in_entity_with_alias(entity, dependencies)
             json_data = json.dumps(entity)
             binary_data = json_data.encode()
             self.zip_file.writestr(write_to, binary_data)

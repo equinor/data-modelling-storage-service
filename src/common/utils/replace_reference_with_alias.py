@@ -1,4 +1,5 @@
 import math
+from typing import Optional
 
 from domain_classes.dependency import Dependency
 
@@ -13,20 +14,19 @@ def has_dependency_alias(reference: str, dependencies: list[Dependency]) -> bool
     return False
 
 
-def replace_references_in_list(reference_list: list[str], dependencies: list[Dependency]) -> list[str]:
+def replace_references_in_list(reference_list: list[str], dependencies: list[Dependency]) -> list[Optional[str]]:
     """Replace references with alias of a list with references.
 
     The reference_list contains a list of references on the format <protocol>://<datasource>/<path>.
     The returned value is a list where all references are substituted with aliases on the format <alias>:<path>.
     """
-
     list_with_alias = []
     for index, reference in enumerate(reference_list):
         list_with_alias.append(replace_reference_with_alias_if_possible(reference, dependencies))
     return list_with_alias
 
 
-def replace_reference_with_alias_if_possible(reference: str, dependencies: list[Dependency]) -> str:
+def replace_reference_with_alias_if_possible(reference: str, dependencies: list[Dependency]) -> str | None:
     """Replace the reference string with an alias.
     The reference string on the format <protocol>://<datasource>/<path>.
 
