@@ -8,6 +8,7 @@ from domain_classes.dependency import Dependency
 example_entity: dict = {
     "_id": "25cdcef6-ee7c-4377-9487-2f4b8496e7c9",
     "name": "Car",
+    "_blueprintPath_": "dmss://system/SIMOS/Blueprint",
     "type": "dmss://system/SIMOS/Blueprint",
     "extends": ["dmss://system/SIMOS/NamedEntity", "dmss://DemoApplicationDataSource/models/CarPackage/Vehicle"],
     "description": "",
@@ -28,6 +29,17 @@ example_entity: dict = {
             "attributeType": "dmss://DemoApplicationDataSource/models/CarPackage/Wheel",
             "dimensions": "*",
         },
+        {
+            "name": "wheelPressures",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "attributeType": "dmss://DemoApplicationDataSource/models/CarPackage/Wheel/WheelProperties/Pressures",
+            "dimensions": "*",
+        },
+        {
+            "name": "owner",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "attributeType": "dmss://DemoApplicationDataSource/models/Person",
+        },
     ],
 }
 
@@ -35,6 +47,7 @@ example_entity: dict = {
 entity_with_aliases: dict = {
     "_id": "25cdcef6-ee7c-4377-9487-2f4b8496e7c9",
     "name": "Car",
+    "_blueprintPath_": "CORE:Blueprint",
     "type": "CORE:Blueprint",
     "extends": ["CORE:NamedEntity", "CAR_PACKAGE:Vehicle"],
     "description": "",
@@ -50,6 +63,17 @@ entity_with_aliases: dict = {
             },
         },
         {"name": "wheels", "type": "CORE:BlueprintAttribute", "attributeType": "CAR_PACKAGE:Wheel", "dimensions": "*"},
+        {
+            "name": "wheelPressures",
+            "type": "CORE:BlueprintAttribute",
+            "attributeType": "WHEEL:WheelProperties/Pressures",
+            "dimensions": "*",
+        },
+        {
+            "name": "owner",
+            "type": "CORE:BlueprintAttribute",
+            "attributeType": "dmss://DemoApplicationDataSource/models/Person",
+        },
     ],
 }
 
@@ -64,8 +88,17 @@ class ReplaceWithAliasTest(unittest.TestCase):
             "version": "0.0.1",
             "protocol": "dmss",
         }
-        dependencies: list[Dependency] = [Dependency(**core_dependency), Dependency(**car_package_dependency)]
-
+        wheel_package_dependency = {
+            "alias": "WHEEL",
+            "address": "DemoApplicationDataSource/models/CarPackage/Wheel",
+            "version": "0.0.1",
+            "protocol": "dmss",
+        }
+        dependencies: list[Dependency] = [
+            Dependency(**core_dependency),
+            Dependency(**car_package_dependency),
+            Dependency(**wheel_package_dependency),
+        ]
         new_entity_with_alias = replace_absolute_references_in_entity_with_alias(
             entity=example_entity, dependencies=dependencies
         )
