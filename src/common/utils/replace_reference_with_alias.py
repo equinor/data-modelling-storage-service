@@ -27,7 +27,7 @@ def replace_reference_with_alias(reference: str, dependencies: list[Dependency])
     )
 
 
-def replace_absolute_references_in_entity_with_alias(entity: dict, dependencies: list[Dependency]):
+def replace_absolute_references_in_entity_with_alias(entity: dict, dependencies: list[Dependency]) -> dict:
     """Replace references in an entity with alias defined in a list of dependencies.
 
     (for example, replace "dmss://system/SIMOS/Package" with "CORE:Package".)
@@ -36,14 +36,17 @@ def replace_absolute_references_in_entity_with_alias(entity: dict, dependencies:
     EXTENDS = "extends"  # Extends is a special attribute in an entity that contains a list of references
     for attribute in entity:
         if type(entity[attribute]) == dict:
-            replace_absolute_references_in_entity_with_alias(entity[attribute], dependencies)
+            entity[attribute] = replace_absolute_references_in_entity_with_alias(entity[attribute], dependencies)
         if type(entity[attribute]) == list and attribute != EXTENDS:
-            for new_entity in entity[attribute]:
+            for index, new_entity in enumerate(entity[attribute]):
                 if type(new_entity) == dict:
-                    replace_absolute_references_in_entity_with_alias(new_entity, dependencies)
+                    entity[attribute][index] = replace_absolute_references_in_entity_with_alias(
+                        new_entity, dependencies
+                    )
         if attribute in attributes_to_update and has_dependency_alias(entity[attribute], dependencies):
             entity[attribute] = replace_reference_with_alias(entity[attribute], dependencies)
         elif attribute == EXTENDS:
             for index, reference in enumerate(entity[attribute]):
                 if has_dependency_alias(reference, dependencies):
                     entity[attribute][index] = replace_reference_with_alias(reference, dependencies)
+    return entity

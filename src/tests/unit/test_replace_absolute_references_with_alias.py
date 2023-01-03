@@ -66,5 +66,7 @@ class ReplaceWithAliasTest(unittest.TestCase):
         }
         dependencies: list[Dependency] = [Dependency(**core_dependency), Dependency(**car_package_dependency)]
 
-        replace_absolute_references_in_entity_with_alias(entity=example_entity, dependencies=dependencies)
-        assert example_entity == entity_with_aliases
+        new_entity_with_alias = replace_absolute_references_in_entity_with_alias(
+            entity=example_entity, dependencies=dependencies
+        )
+        assert new_entity_with_alias == entity_with_aliases
