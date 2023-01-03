@@ -16,5 +16,5 @@ class Dependency(BaseModel):
     address: str
     version: str = ""
 
-    def get_absolute_reference(self):
+    def get_prefix(self):
         return f"{self.protocol}://{self.address}/"

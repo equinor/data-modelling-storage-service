@@ -9,7 +9,7 @@ def has_dependency_alias(reference: str, dependencies: list[Dependency]) -> bool
     substituted with an alias on the format <alias>:<path>.
     """
     for dependency in dependencies:
-        if reference.startswith(dependency.get_absolute_reference()):
+        if reference.startswith(dependency.get_prefix()):
             return True
     return False
 
@@ -37,8 +37,8 @@ def replace_reference_with_alias_if_possible(reference: str, dependencies: list[
     best_alias_match = None
     longest_path_length_after_alias = math.inf
     for dependency in dependencies:
-        if reference.startswith(dependency.get_absolute_reference()):
-            path_after_alias = reference.split(dependency.get_absolute_reference())[-1]
+        if reference.startswith(dependency.get_prefix()):
+            path_after_alias = reference.split(dependency.get_prefix())[-1]
             if len(path_after_alias) < longest_path_length_after_alias:
                 best_alias_match = f"{dependency.alias}:{path_after_alias}"
                 longest_path_length_after_alias = len(path_after_alias)
