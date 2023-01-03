@@ -89,7 +89,7 @@ Run unit tests:
 docker-compose run --rm dmss pytest api
 ```
 
-Creating DMSS lookup:
+Creating DMSS lookup with [dm-cli](https://github.com/equinor/dm-cli):
 
 ```bash
 dm create-lookup dmss system/SIMOS/recipe_links
