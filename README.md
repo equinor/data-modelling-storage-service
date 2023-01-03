@@ -31,8 +31,9 @@ API documentation can be found at [http://localhost:8000/api/v1/ui](http://local
 
 To refresh the database after first-time:
 
-```
+```bash
 docker-compose exec dmss reset-app
+
 ```
 
 ## Available client APIs
@@ -72,20 +73,26 @@ poetry install
 
 Run BDD tests:
 
-```
+```bash
 docker-compose run --rm dmss behave
 ```
 
 Run BDD tests by regexp:
 
-```
+```bash
 docker-compose run --rm dmss behave -n "Scenario name" # Run single test  
 ```
 
 Run unit tests:
 
-```
+```bash
 docker-compose run --rm dmss pytest api
+```
+
+Creating DMSS lookup:
+
+```bash
+dm create-lookup dmss system/SIMOS/recipe_links
 ```
 
 

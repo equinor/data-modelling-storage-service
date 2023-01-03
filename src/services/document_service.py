@@ -75,7 +75,7 @@ class DocumentService:
             )
         ]
 
-    # @lru_cache(maxsize=config.CACHE_MAX_SIZE)
+    @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def get_storage_recipes(self, type: str, context: str | None = None) -> list[StorageRecipe]:
         if not context:
             return self._create_default_storage_recipe(type)
