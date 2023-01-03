@@ -2,6 +2,7 @@ import unittest
 
 from common.utils.replace_reference_with_alias import (
     replace_absolute_references_in_entity_with_alias,
+    replace_reference_with_alias_if_possible,
 )
 from domain_classes.dependency import Dependency
 
@@ -79,7 +80,29 @@ entity_with_aliases: dict = {
 
 
 class ReplaceWithAliasTest(unittest.TestCase):
-    def test_replace_absolute_references_with_alias(self):
+    def test_replace_ref_with_alias(self):
+        car_package_dependency = {
+            "alias": "CAR_PACKAGE",
+            "address": "DemoApplicationDataSource/models/CarPackage",
+            "version": "0.0.1",
+            "protocol": "dmss",
+        }
+        wheel_package_dependency = {
+            "alias": "WHEEL",
+            "address": "DemoApplicationDataSource/models/CarPackage/Wheel",
+            "version": "0.0.1",
+            "protocol": "dmss",
+        }
+        dependencies: list[Dependency] = [Dependency(**car_package_dependency), Dependency(**wheel_package_dependency)]
+        reference = "dmss://DemoApplicationDataSource/models/CarPackage/Wheel/SubPackage/Pressure"
+        alias = replace_reference_with_alias_if_possible(reference=reference, dependencies=dependencies)
+        assert alias == "WHEEL:SubPackage/Pressure"
+
+        reference = "dmss://DemoApplicationDataSource/models"
+        alias = replace_reference_with_alias_if_possible(reference=reference, dependencies=dependencies)
+        assert alias == reference
+
+    def test_replace_absolute_references_in_entity_with_alias(self):
 
         core_dependency = {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"}
         car_package_dependency = {

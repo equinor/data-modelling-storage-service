@@ -1,4 +1,5 @@
-from common.exceptions import ApplicationException
+import math
+
 from domain_classes.dependency import Dependency
 
 
@@ -28,15 +29,20 @@ def replace_references_in_list(reference_list: list[str], dependencies: list[Dep
 def replace_reference_with_alias_if_possible(reference: str, dependencies: list[Dependency]) -> str:
     """Replace the reference string with an alias.
     The reference string on the format <protocol>://<datasource>/<path>.
+
+    If the reference does not have an alias that match, the original reference is returned.
     """
+    if not has_dependency_alias(reference, dependencies):
+        return reference
+    best_alias_match = None
+    longest_path_length_after_alias = math.inf
     for dependency in dependencies:
         if reference.startswith(dependency.get_absolute_reference()):
             path_after_alias = reference.split(dependency.get_absolute_reference())[-1]
-            return f"{dependency.alias}:{path_after_alias}"
-    raise ApplicationException(
-        message="Could not replace reference with alias",
-        debug=f"reference: {reference} could not be replaced with alias.",
-    )
+            if len(path_after_alias) < longest_path_length_after_alias:
+                best_alias_match = f"{dependency.alias}:{path_after_alias}"
+                longest_path_length_after_alias = len(path_after_alias)
+    return best_alias_match
 
 
 def replace_absolute_references_in_entity_with_alias(entity: dict, dependencies: list[Dependency]) -> dict:
