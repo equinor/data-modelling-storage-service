@@ -1,5 +1,4 @@
 import math
-from typing import Optional
 
 from domain_classes.dependency import Dependency
 
@@ -12,18 +11,6 @@ def has_dependency_alias(reference: str, dependencies: list[Dependency]) -> bool
         if reference.startswith(dependency.get_prefix()):
             return True
     return False
-
-
-def replace_references_in_list(reference_list: list[str], dependencies: list[Dependency]) -> list[Optional[str]]:
-    """Replace references with alias of a list with references.
-
-    The reference_list contains a list of references on the format <protocol>://<datasource>/<path>.
-    The returned value is a list where all references are substituted with aliases on the format <alias>:<path>.
-    """
-    list_with_alias = []
-    for index, reference in enumerate(reference_list):
-        list_with_alias.append(replace_reference_with_alias_if_possible(reference, dependencies))
-    return list_with_alias
 
 
 def replace_reference_with_alias_if_possible(reference: str, dependencies: list[Dependency]) -> str | None:
@@ -54,15 +41,17 @@ def replace_absolute_references_in_entity_with_alias(entity: dict, dependencies:
     attributes_to_update = ("type", "attributeType", "_blueprintPath_")  # These keys may contain a reference
     EXTENDS = "extends"  # Extends is a special attribute in an entity that contains a list of references
 
-    for attribute in entity:
+    for attribute, attribute_value in entity.items():
         if attribute == EXTENDS:
-            entity[EXTENDS] = replace_references_in_list(reference_list=entity[EXTENDS], dependencies=dependencies)
+            entity[EXTENDS] = [
+                replace_reference_with_alias_if_possible(reference, dependencies) for reference in attribute_value
+            ]
         elif attribute in attributes_to_update:
-            entity[attribute] = replace_reference_with_alias_if_possible(entity[attribute], dependencies)
-        elif type(entity[attribute]) == dict:
-            entity[attribute] = replace_absolute_references_in_entity_with_alias(entity[attribute], dependencies)
-        elif type(entity[attribute]) == list:
-            for index, new_entity in enumerate(entity[attribute]):
+            entity[attribute] = replace_reference_with_alias_if_possible(attribute_value, dependencies)
+        elif type(attribute_value) == dict:
+            entity[attribute] = replace_absolute_references_in_entity_with_alias(attribute_value, dependencies)
+        elif type(attribute_value) == list:
+            for index, new_entity in enumerate(attribute_value):
                 if type(new_entity) == dict:
                     entity[attribute][index] = replace_absolute_references_in_entity_with_alias(
                         new_entity, dependencies
