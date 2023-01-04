@@ -6,7 +6,7 @@ from domain_classes.ui_recipe import Recipe
 from enums import SIMOS, StorageDataTypes
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
-from storage.internal.lookup_tables import insert_lookup
+from storage.internal.lookup_tables import get_lookup, insert_lookup
 
 
 def create_lookup_table_use_case(
@@ -37,3 +37,6 @@ def create_lookup_table_use_case(
             lookup.ui_recipes[node.entity["_blueprintPath_"]].extend(ui_recipes)
 
     insert_lookup(name, lookup.dict())
+
+    document_service.get_storage_recipes.cache_clear()
+    get_lookup.cache_clear()
