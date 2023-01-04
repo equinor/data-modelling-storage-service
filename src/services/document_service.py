@@ -115,11 +115,20 @@ class DocumentService:
         repository=None,
         path="",
         update_uncontained: bool = False,
+        combined_document_meta: dict | None = None,
     ) -> Dict:
         """
         Recursively saves a Node.
         Digs down to the leaf child, and based on storageContained,
         either saves the entity and returns the Reference, OR returns the entire entity.
+
+        combined_document_meta is the combined meta information.
+        For example:
+            nodeA
+                nodeB
+                    nodeC
+        Here, combined_document_meta is the combined _meta_ information of node A, B and C.
+        (this meta info can be found with _collect_entity_meta_by_path() util function).-
         """
         if not node.entity:
             return {}
@@ -144,9 +153,12 @@ class DocumentService:
         if update_uncontained:  # If flag is set, dig down and save uncontained documents
             for child in node.children:
                 if child.is_array():
-                    [self.save(x, data_source_id, repository, path, update_uncontained) for x in child.children]
+                    [
+                        self.save(x, data_source_id, repository, path, update_uncontained, combined_document_meta)
+                        for x in child.children
+                    ]
                 else:
-                    self.save(child, data_source_id, repository, path, update_uncontained)
+                    self.save(child, data_source_id, repository, path, update_uncontained, combined_document_meta)
 
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
@@ -161,8 +173,13 @@ class DocumentService:
             # Expand this when adding new repositories requiring PATH
             if isinstance(repository, ZipFileClient):
                 ref_dict["__path__"] = path
+                ref_dict["__combined_document_meta__"] = combined_document_meta
             parent_uid = node.parent.node_id if node.parent else None
-            repository.update(ref_dict, node.get_context_storage_attribute(), parent_id=parent_uid)
+            repository.update(
+                ref_dict,
+                node.get_context_storage_attribute(),
+                parent_id=parent_uid,
+            )
             return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
         return ref_dict
 

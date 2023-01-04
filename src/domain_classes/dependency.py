@@ -15,3 +15,6 @@ class Dependency(BaseModel):
     protocol: TDependencyProtocol
     address: str
     version: str = ""
+
+    def get_prefix(self):
+        return f"{self.protocol}://{self.address}/"
