@@ -3,6 +3,6 @@ Feature: Create a lookup table
     Given the system data source and SIMOS core package are available
 
   Scenario: System admins want to create a recipe lookup for the DMSS - SIMOS/recipe_links folder
-    Given i access the resource url "/api/v1/application/dmss?recipe_package=system/SIMOS/recipe_links"
+    Given i access the resource url "/api/application/dmss?recipe_package=system/SIMOS/recipe_links"
     When i make a "POST" request
     Then the response status should be "No Content"

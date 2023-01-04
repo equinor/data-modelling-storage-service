@@ -19,7 +19,7 @@ Feature: Blueprint - Resolve path to document use case
 
 
     Scenario: resolve path to document in the blueprints package
-      Given I access the resource url "/api/v1/resolve-path/data-source-name/3"
+      Given I access the resource url "/api/resolve-path/data-source-name/3"
       When I make a "GET" request
       Then the response status should be "OK"
       And the response should be
@@ -28,7 +28,7 @@ Feature: Blueprint - Resolve path to document use case
       """
 
     Scenario: resolve path to document fails when document with id does not exist
-      Given I access the resource url "/api/v1/resolve-path/data-source-name/99"
+      Given I access the resource url "/api/resolve-path/data-source-name/99"
       When I make a "GET" request
       Then the response status should be "Not Found"
 

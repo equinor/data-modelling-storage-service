@@ -25,8 +25,6 @@ from services.database import mongo_client
 from storage.internal.data_source_repository import DataSourceRepository
 
 server_root = "/api"
-version = "v1"
-prefix = f"{server_root}/{version}"
 
 
 def create_app() -> FastAPI:
@@ -69,9 +67,9 @@ def create_app() -> FastAPI:
         description="API for basic data modelling interaction",
         swagger_ui_init_oauth={"usePkceWithAuthorizationCodeGrant": True, "clientId": config.OAUTH_CLIENT_ID},
     )
-    app.include_router(authenticated_routes, prefix=prefix, dependencies=[Security(auth_w_jwt_or_pat)])
-    app.include_router(jwt_only_routes, prefix=prefix, dependencies=[Security(auth_with_jwt)])
-    app.include_router(public_routes, prefix=prefix)
+    app.include_router(authenticated_routes, prefix=server_root, dependencies=[Security(auth_w_jwt_or_pat)])
+    app.include_router(jwt_only_routes, prefix=server_root, dependencies=[Security(auth_with_jwt)])
+    app.include_router(public_routes, prefix=server_root)
 
     if config.ENVIRONMENT == "local":
         logger.warning("CORS has been turned off. This should only occur in in development.")

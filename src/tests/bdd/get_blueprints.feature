@@ -6,7 +6,7 @@ Feature: Get a blueprint
 
 
   Scenario: Get a simple blueprint with a ui recipe from a recipe context
-    Given I access the resource url "/api/v1/blueprint/dmss://system/SIMOS/Entity?context=DMSS"
+    Given I access the resource url "/api/blueprint/dmss://system/SIMOS/Entity?context=DMSS"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -54,7 +54,7 @@ Feature: Get a blueprint
     """
 
   Scenario: Get a simple blueprint with a default ui recipe from a recipe context
-    Given I access the resource url "/api/v1/blueprint/dmss://system/SIMOS/Blob?context=DMSS"
+    Given I access the resource url "/api/blueprint/dmss://system/SIMOS/Blob?context=DMSS"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -124,7 +124,7 @@ Feature: Get a blueprint
     """
 
   Scenario: Get a simple blueprint with no specified recipe context given should give the default recipes
-    Given I access the resource url "/api/v1/blueprint/dmss://system/SIMOS/Entity"
+    Given I access the resource url "/api/blueprint/dmss://system/SIMOS/Entity"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain

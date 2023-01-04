@@ -131,7 +131,7 @@ Feature: Get correct data for subtypes
     """
 
   Scenario: fetch entity with a subtype attribute
-    Given i access the resource url "/api/v1/documents/data-source-name/7"
+    Given i access the resource url "/api/documents/data-source-name/7"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -154,7 +154,7 @@ Feature: Get correct data for subtypes
 
 
   Scenario: fetch entity with original attribute type
-    Given i access the resource url "/api/v1/documents/data-source-name/8"
+    Given i access the resource url "/api/documents/data-source-name/8"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain

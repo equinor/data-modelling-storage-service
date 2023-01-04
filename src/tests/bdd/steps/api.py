@@ -96,12 +96,12 @@ def step_set_access_token(context):
 @then("the PAT is expired")
 def step_impl(context):
     sleep(2)  # Give the PAT some time to expire
-    context.response = context.test_client.get("/api/v1/whoami", headers=context.headers)
+    context.response = context.test_client.get("/api/whoami", headers=context.headers)
     assert context.response.status_code == 401
 
 
 @step("the PAT is revoked")
 def step_impl(context):
     context.response = context.test_client.delete(
-        f"api/v1/token/{context.response.json()[0]['uuid']}", headers=context.headers
+        f"api/token/{context.response.json()[0]['uuid']}", headers=context.headers
     )

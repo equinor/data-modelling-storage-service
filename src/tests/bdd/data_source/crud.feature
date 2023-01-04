@@ -13,7 +13,7 @@ Feature: Data Sources
       | demo-DS     | db   | 27017 | maf      | maf      | false | blob-repo |  bdd-test    | demo-DS        | mongo-db | default   |
 
   Scenario: Get single data source
-    Given I access the resource url "/api/v1/data-sources/system"
+    Given I access the resource url "/api/data-sources/system"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -25,7 +25,7 @@ Feature: Data Sources
     """
 
   Scenario: Get all data sources
-    Given I access the resource url "/api/v1/data-sources"
+    Given I access the resource url "/api/data-sources"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -42,7 +42,7 @@ Feature: Data Sources
     """
 
   Scenario: Create new data source
-    Given i access the resource url "/api/v1/data-sources/myTest-DataSource"
+    Given i access the resource url "/api/data-sources/myTest-DataSource"
     When i make a "POST" request
     """
     {
@@ -65,7 +65,7 @@ Feature: Data Sources
     Then the response status should be "OK"
 
   Scenario: Create new data source with multiple repositories
-    Given i access the resource url "/api/v1/data-sources/MyMultiRepDS"
+    Given i access the resource url "/api/data-sources/MyMultiRepDS"
     When i make a "POST" request
     """
     {
@@ -95,7 +95,7 @@ Feature: Data Sources
     Then the response status should be "OK"
 
   Scenario: Try to create a new data source but with an invalid request body
-    Given i access the resource url "/api/v1/data-sources/myTest-DataSource"
+    Given i access the resource url "/api/data-sources/myTest-DataSource"
     When i make a form-data "POST" request
     """
     this is not valid json

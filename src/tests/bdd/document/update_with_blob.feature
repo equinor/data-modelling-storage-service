@@ -75,7 +75,7 @@ Feature: Update document that has blob data
     """
 
   Scenario: Update document with multiple blob entities
-    Given i access the resource url "/api/v1/documents/test-DS/3"
+    Given i access the resource url "/api/documents/test-DS/3"
     When i make a "PUT" request with "4" files
     """
     {"data":{

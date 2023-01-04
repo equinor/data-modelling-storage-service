@@ -206,7 +206,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file - attribute for parentEntity
-    Given i access the resource url "/api/v1/documents/test-DS/6.SomeChild"
+    Given i access the resource url "/api/documents/test-DS/6.SomeChild"
     When i make a "POST" request
     """
     {
@@ -217,7 +217,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-    Given I access the resource url "/api/v1/documents/test-DS/6"
+    Given I access the resource url "/api/documents/test-DS/6"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -238,7 +238,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file (rootPackage) to root of data_source
-    Given i access the resource url "/api/v1/documents/test-DS"
+    Given i access the resource url "/api/documents/test-DS"
     When i make a "POST" request
     """
     {
@@ -251,7 +251,7 @@ Feature: Explorer - Add file
     Then the response status should be "OK"
 
   Scenario: Add file with wrong subtype to parent entity
-    Given i access the resource url "/api/v1/documents/test-DS/6.SomeChild"
+    Given i access the resource url "/api/documents/test-DS/6.SomeChild"
     When i make a "POST" request
     """
     {
@@ -262,7 +262,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Bad Request"
-    Given I access the resource url "/api/v1/documents/test-DS/6"
+    Given I access the resource url "/api/documents/test-DS/6"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -277,7 +277,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with an extended type to parent entity
-    Given i access the resource url "/api/v1/documents/test-DS/6.SomeChild"
+    Given i access the resource url "/api/documents/test-DS/6.SomeChild"
     When i make a "POST" request
     """
     {
@@ -297,7 +297,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-    Given I access the resource url "/api/v1/documents/test-DS/6"
+    Given I access the resource url "/api/documents/test-DS/6"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -319,7 +319,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file - not contained
-    Given i access the resource url "/api/v1/documents/test-DS/1.content?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/1.content?update_uncontained=True"
     When i make a "POST" request
     """
     {
@@ -328,7 +328,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-    Given I access the resource url "/api/v1/documents/test-DS/1"
+    Given I access the resource url "/api/documents/test-DS/1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -367,7 +367,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with missing parameters should fail
-    Given i access the resource url "/api/v1/documents/test-DS/6.whatever"
+    Given i access the resource url "/api/documents/test-DS/6.whatever"
     When i make a "POST" request
     """
     {}
@@ -385,7 +385,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file to parent that does not exists
-    Given i access the resource url "/api/v1/documents/test-DS/-1.documents"
+    Given i access the resource url "/api/documents/test-DS/-1.documents"
     When i make a "POST" request
     """
     {
@@ -415,7 +415,7 @@ Feature: Explorer - Add file
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/v1/documents/test-DS/1.content"
+    Given i access the resource url "/api/documents/test-DS/1.content"
     When i make a "POST" request
     """
     {
@@ -436,7 +436,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with duplicate name
-    Given i access the resource url "/api/v1/documents/test-DS/root_package/add-to-path"
+    Given i access the resource url "/api/documents/test-DS/root_package/add-to-path"
     When i make a "POST" request with "1" files
     """
       {
@@ -461,7 +461,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add Comment entity without a name attribute with add-raw endpoint
-    Given i access the resource url "/api/v1/documents/test-DS/add-raw"
+    Given i access the resource url "/api/documents/test-DS/add-raw"
     When i make a "POST" request
     """
     {
@@ -474,7 +474,7 @@ Feature: Explorer - Add file
     Then the response status should be "OK"
 
   Scenario: Add Parent entity without a name attribute with add-to-path endpoint
-    Given i access the resource url "/api/v1/documents/test-DS/root_package/add-to-path?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/root_package/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
@@ -497,7 +497,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Adding file with id set to empty string should generate new uid
-    Given I access the resource url "/api/v1/documents/test-DS/root_package/add-to-path"
+    Given I access the resource url "/api/documents/test-DS/root_package/add-to-path"
     When i make a "POST" request with "1" files
     """
     {
@@ -513,7 +513,7 @@ Feature: Explorer - Add file
     And the response should have valid uid
 
   Scenario: Adding file with id
-    Given I access the resource url "/api/v1/documents/test-DS/root_package/add-to-path"
+    Given I access the resource url "/api/documents/test-DS/root_package/add-to-path"
     When i make a "POST" request with "1" files
     """
     {
@@ -529,7 +529,7 @@ Feature: Explorer - Add file
     And the response should have valid uid
 
   Scenario: Add Comment entity without a name attribute with add-to-path endpoint
-    Given i access the resource url "/api/v1/documents/test-DS/root_package/add-to-path?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/root_package/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
@@ -544,7 +544,7 @@ Feature: Explorer - Add file
     Then the response status should be "OK"
 
   Scenario: Add blueprint without a name attribute with add-to-path endpoint should fail
-    Given i access the resource url "/api/v1/documents/test-DS/root_package/add-to-path?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/root_package/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
@@ -568,7 +568,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add package without a name attribute with add-to-path endpoint should fail
-    Given i access the resource url "/api/v1/documents/test-DS/root_package/add-to-path?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/root_package/add-to-path?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
@@ -592,7 +592,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add parent entity without a name attribute with add_by_parent_id endpoint
-    Given i access the resource url "/api/v1/documents/test-DS/1.content?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/1.content?update_uncontained=True"
     When i make a "POST" request
     """
     {
@@ -613,7 +613,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add comment entity without a name attribute with add_by_parent_id endpoint
-    Given i access the resource url "/api/v1/documents/test-DS/1.content?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/1.content?update_uncontained=True"
     When i make a "POST" request
     """
     {
@@ -625,7 +625,7 @@ Feature: Explorer - Add file
     Then the response status should be "OK"
 
   Scenario: Add blueprint without a name using add_by_parent_id endpoint should fail
-    Given i access the resource url "/api/v1/documents/test-DS/1.content"
+    Given i access the resource url "/api/documents/test-DS/1.content"
     When i make a "POST" request
     """
     {
@@ -646,7 +646,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add package without a name using add_by_parent_id endpoint should fail
-    Given i access the resource url "/api/v1/documents/test-DS/1.content"
+    Given i access the resource url "/api/documents/test-DS/1.content"
     When i make a "POST" request
     """
     {
@@ -667,7 +667,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with multiple PDFs
-    Given i access the resource url "/api/v1/documents/test-DS/root_package/add-to-path?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/root_package/add-to-path?update_uncontained=True"
     When i make a "POST" request with "4" files
     """
     {

@@ -19,7 +19,7 @@ Feature: Set logged in user as owner when creating an entity
       """
       Given the logged in user is "johndoe" with roles "dmss-admin"
       Given authentication is enabled
-      Given i access the resource url "/api/v1/documents/test-DS/2.content?update_uncontained=True"
+      Given i access the resource url "/api/documents/test-DS/2.content?update_uncontained=True"
       When i make a "POST" request
       """
       {
@@ -53,7 +53,7 @@ Feature: Set logged in user as owner when creating an entity
       """
       Given the logged in user is "johndoe" with roles "dmss-admin"
       Given authentication is enabled
-      Given i access the resource url "/api/v1/documents/test-DS/add-raw"
+      Given i access the resource url "/api/documents/test-DS/add-raw"
       When i make a "POST" request
       """
       {
