@@ -28,7 +28,7 @@ Feature: Add and remove references
       "attributes": []
     }
     """
-    Given i access the resource url "/api/v1/reference/test-DS/1.content"
+    Given i access the resource url "/api/reference/test-DS/1.content"
     When i make a "PUT" request
     """
     {
@@ -54,7 +54,7 @@ Feature: Add and remove references
       "isRoot": true
     }
     """
-    Given i access the resource url "/api/v1/reference/test-DS/1.content.0"
+    Given i access the resource url "/api/reference/test-DS/1.content.0"
     When i make a "DELETE" request
     Then the response status should be "OK"
     And the response should contain
@@ -156,7 +156,7 @@ Feature: Add and remove references
     "Bigness": 10
     }
     """
-    Given i access the resource url "/api/v1/reference/test-DS/4.Mooring"
+    Given i access the resource url "/api/reference/test-DS/4.Mooring"
     When i make a "PUT" request
     """
     {
@@ -179,7 +179,7 @@ Feature: Add and remove references
       }
     }
     """
-    Given i access the resource url "/api/v1/reference/test-DS/4.Mooring"
+    Given i access the resource url "/api/reference/test-DS/4.Mooring"
     When i make a "DELETE" request
     Then the response status should be "OK"
     And the response should contain

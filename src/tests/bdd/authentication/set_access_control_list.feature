@@ -70,7 +70,7 @@ Feature: Set Access Control List
     """
     Given the logged in user is "johndoe" with roles "a,b"
     Given authentication is enabled
-    Given I access the resource url "/api/v1/acl/test-DS/1"
+    Given I access the resource url "/api/acl/test-DS/1"
     When I make a "PUT" request
     """
     {
@@ -85,7 +85,7 @@ Feature: Set Access Control List
     """
     OK
     """
-    Then I access the resource url "/api/v1/acl/test-DS/1"
+    Then I access the resource url "/api/acl/test-DS/1"
     Given the logged in user is "johndoe" with roles "a,b"
     When I make a "GET" request
     Then the response status should be "OK"
@@ -120,7 +120,7 @@ Feature: Set Access Control List
     """
     Given the logged in user is "johndoe" with roles "a,b"
     Given authentication is enabled
-    Given I access the resource url "/api/v1/acl/test-DS/2"
+    Given I access the resource url "/api/acl/test-DS/2"
     When I make a "PUT" request
     """
     {
@@ -135,7 +135,7 @@ Feature: Set Access Control List
     """
     OK
     """
-    Then I access the resource url "/api/v1/acl/test-DS/2"
+    Then I access the resource url "/api/acl/test-DS/2"
     Given the logged in user is "johndoe" with roles "a,b"
     When I make a "GET" request
     Then the response status should be "OK"
@@ -148,7 +148,7 @@ Feature: Set Access Control List
       }
     }
     """
-    Then I access the resource url "/api/v1/acl/test-DS/3"
+    Then I access the resource url "/api/acl/test-DS/3"
     Given the logged in user is "johndoe" with roles "a,b"
     When I make a "GET" request
     Then the response status should be "OK"
@@ -161,7 +161,7 @@ Feature: Set Access Control List
       }
     }
     """
-    Then I access the resource url "/api/v1/acl/test-DS/4"
+    Then I access the resource url "/api/acl/test-DS/4"
     Given the logged in user is "johndoe" with roles "a,b"
     When I make a "GET" request
     Then the response status should be "OK"
@@ -184,7 +184,7 @@ Feature: Set Access Control List
     """
     Given the logged in user is "johndoe" with roles "a,b"
     Given authentication is enabled
-    Given I access the resource url "/api/v1/acl/test-DS/1"
+    Given I access the resource url "/api/acl/test-DS/1"
     When I make a "PUT" request
     """
     {
@@ -205,7 +205,7 @@ Feature: Set Access Control List
     "data": null
     }
     """
-    Then I access the resource url "/api/v1/acl/test-DS/1"
+    Then I access the resource url "/api/acl/test-DS/1"
     Given the logged in user is "johndoe" with roles "a,b"
     When I make a "GET" request
     Then the response status should be "OK"
@@ -226,7 +226,7 @@ Feature: Set Access Control List
     """
     Given the logged in user is "johndoe" with roles "a,b"
     Given authentication is enabled
-    Given I access the resource url "/api/v1/acl/test-DS/1?recursively=false"
+    Given I access the resource url "/api/acl/test-DS/1?recursively=false"
     When I make a "GET" request
     Then the response status should be "Forbidden"
     And the response should be

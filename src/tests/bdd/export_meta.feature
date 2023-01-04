@@ -58,7 +58,7 @@ Feature: Export an entity's meta data
       "attributes": []
     }
     """
-    Given i access the resource url "/api/v1/export/meta/test-DS/TestData/some-entity"
+    Given i access the resource url "/api/export/meta/test-DS/TestData/some-entity"
     When i make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -111,7 +111,7 @@ Feature: Export an entity's meta data
       "attributes": []
     }
     """
-    Given i access the resource url "/api/v1/export/meta/test-DS/TestData/some-entity"
+    Given i access the resource url "/api/export/meta/test-DS/TestData/some-entity"
     When i make a "GET" request
     Then the response status should be "OK"
     And the response should contain

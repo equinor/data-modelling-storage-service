@@ -14,7 +14,7 @@ Feature: Blob - Get
     Given there exists a blob with id "1234" in data source "stuff" loaded from "tests/bdd/steps/test_pdf.pdf"
 
   Scenario: Get a blob by id
-    Given i access the resource url "/api/v1/blobs/stuff/1234"
+    Given i access the resource url "/api/blobs/stuff/1234"
     When i make a "GET" request
     Then the response status should be "OK"
     And the length of the response should not be zero

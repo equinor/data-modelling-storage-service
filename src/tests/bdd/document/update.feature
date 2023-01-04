@@ -167,7 +167,7 @@ Feature: Document 2
       | 6   | 3          | container_1   |             | dmss://test-source-name/TestData/TestContainer |
 
   Scenario: Update document (only contained)
-    Given i access the resource url "/api/v1/documents/data-source-name/1"
+    Given i access the resource url "/api/documents/data-source-name/1"
     When i make a form-data "PUT" request
     """
     {
@@ -191,7 +191,7 @@ Feature: Document 2
     """
 
   Scenario: Update document (both contained and not contained)
-    Given i access the resource url "/api/v1/documents/data-source-name/6"
+    Given i access the resource url "/api/documents/data-source-name/6"
     When i make a form-data "PUT" request
     """
     {
@@ -289,7 +289,7 @@ Feature: Document 2
     """
 
   Scenario: Update document (attribute and not contained)
-    Given i access the resource url "/api/v1/documents/data-source-name/6?attribute=itemNotContained"
+    Given i access the resource url "/api/documents/data-source-name/6?attribute=itemNotContained"
     When i make a form-data "PUT" request
     """
     {

@@ -209,7 +209,7 @@ Feature: Add document with document_service
 
 
   Scenario: Add test
-    Given i access the resource url "/api/v1/documents/data-source-name/root_package/EntityPackage/add-to-path"
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/add-to-path"
     When i make a "POST" request with "1" files
     """
     {
@@ -223,7 +223,7 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/v1/documents/data-source-name/99"
+    Given i access the resource url "/api/documents/data-source-name/99"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should equal

@@ -8,11 +8,11 @@ Feature: Personal Access Token
   Scenario: Create a PAT
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    And I access the resource url "/api/v1/token"
+    And I access the resource url "/api/token"
     When I make a "POST" request
     Then the response status should be "OK"
     And the PAT is added to context
-    And I access the resource url "/api/v1/whoami"
+    And I access the resource url "/api/whoami"
     When I make a "GET" request
     Then the response status should be "OK"
 
@@ -40,11 +40,11 @@ Feature: Personal Access Token
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    And I access the resource url "/api/v1/token?scope=READ"
+    And I access the resource url "/api/token?scope=READ"
     When I make a "POST" request
     Then the response status should be "OK"
     And the PAT is added to context
-    Given i access the resource url "/api/v1/documents/test-DS/1"
+    Given i access the resource url "/api/documents/test-DS/1"
     When i make a "DELETE" request
     Then the response status should be "Forbidden"
 
@@ -52,19 +52,19 @@ Feature: Personal Access Token
   Scenario: Create a PAT using another PAT
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    And I access the resource url "/api/v1/token"
+    And I access the resource url "/api/token"
     When I make a "POST" request
     Then the response status should be "OK"
     And the PAT is added to context
     And the PAT is added to headers
-    And I access the resource url "/api/v1/token"
+    And I access the resource url "/api/token"
     When I make a "POST" request
     Then the response status should be "Unauthorized"
 
   Scenario: Catch an expired PAT
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    And I access the resource url "/api/v1/token?time_to_live=1"
+    And I access the resource url "/api/token?time_to_live=1"
     When I make a "POST" request
     Then the response status should be "OK"
     And the PAT is added to context
@@ -95,12 +95,12 @@ Feature: Personal Access Token
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    And I access the resource url "/api/v1/token?scope=READ"
+    And I access the resource url "/api/token?scope=READ"
     When I make a "POST" request
     Then the response status should be "OK"
     And the PAT is added to context
     And the PAT is added to headers
-    Given i access the resource url "/api/v1/documents/test-DS/1"
+    Given i access the resource url "/api/documents/test-DS/1"
     When i make a "DELETE" request
     Then the response status should be "Forbidden"
     And the response should be
@@ -117,25 +117,25 @@ Feature: Personal Access Token
   Scenario: List all users PAT's
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    And I access the resource url "/api/v1/token"
+    And I access the resource url "/api/token"
     When I make a "POST" request
     Then the response status should be "OK"
-    And I access the resource url "/api/v1/token"
+    And I access the resource url "/api/token"
     When I make a "GET" request
     Then the response status should be "OK"
 
   Scenario: Revoke a PAT
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    And I access the resource url "/api/v1/token"
+    And I access the resource url "/api/token"
     When I make a "POST" request
     Then the response status should be "OK"
     And the PAT is added to context
-    When I access the resource url "/api/v1/token"
+    When I access the resource url "/api/token"
     And I make a "GET" request
     Then the response status should be "OK"
     And the PAT is revoked
     And the PAT is added to headers
-    When I access the resource url "/api/v1/whoami"
+    When I access the resource url "/api/whoami"
     And I make a "GET" request
     Then the response status should be "Unauthorized"

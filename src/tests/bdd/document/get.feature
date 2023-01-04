@@ -163,7 +163,7 @@ Feature: Get document
       | 6   | 3          | container_1   |             | dmss://test-source-name/TestData/TestContainer |
 
   Scenario: Get document by id
-    Given I access the resource url "/api/v1/documents/data-source-name/1"
+    Given I access the resource url "/api/documents/data-source-name/1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -184,7 +184,7 @@ Feature: Get document
     """
 
   Scenario: Get document by path
-    Given I access the resource url "/api/v1/documents-by-path/dmss://data-source-name/package_1/sub_package_1/document_1"
+    Given I access the resource url "/api/documents-by-path/dmss://data-source-name/package_1/sub_package_1/document_1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -199,7 +199,7 @@ Feature: Get document
     """
 
   Scenario: Get attribute
-    Given I access the resource url "/api/v1/documents/test-source-name/1.content.0"
+    Given I access the resource url "/api/documents/test-source-name/1.content.0"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
