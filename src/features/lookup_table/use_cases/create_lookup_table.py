@@ -20,8 +20,11 @@ def create_lookup_table_use_case(
 
     lookup: Lookup = Lookup()
 
+    recipes_to_extend: dict[str, list[str]] = {}
+
     for node in recipe_package.traverse():
         if node.type == SIMOS.RECIPE_LINK.value:
+            blueprint_path = node.entity["_blueprintPath_"]
             ui_recipes = [Recipe(**r) for r in node.entity.get("uiRecipes", [])]
 
             storage_recipes = [
@@ -33,8 +36,14 @@ def create_lookup_table_use_case(
                 for r in node.entity.get("storageRecipes", [])
             ]
 
-            lookup.storage_recipes[node.entity["_blueprintPath_"]].extend(storage_recipes)
-            lookup.ui_recipes[node.entity["_blueprintPath_"]].extend(ui_recipes)
+            if extends := node.entity.get("extends"):
+                recipes_to_extend[blueprint_path] = extends
+
+            lookup.storage_recipes[blueprint_path].extend(storage_recipes)
+            lookup.ui_recipes[blueprint_path].extend(ui_recipes)
+
+    lookup.extends = recipes_to_extend
+    lookup.realize_extends()
 
     insert_lookup(name, lookup.dict())
 
