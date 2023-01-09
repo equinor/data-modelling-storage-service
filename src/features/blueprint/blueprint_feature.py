@@ -26,7 +26,10 @@ def get_blueprint(
     type_ref: common_type_constrained_string, context: str | None = None, user: User = Depends(auth_w_jwt_or_pat)
 ):
     """
-    Fetch the Blueprint and Recipes of a type (including inherited attributes)
+    Fetch the Blueprint and Recipes from a type reference (including inherited attributes).
+
+    - **type_ref**: <protocol>://<data_source>/<path_to_blueprint>
+    - **context**: name of application that has Ui-/StorageRecipe lookup table (optional attribute)
     """
     return get_blueprint_use_case(type_ref, context, user)
 
@@ -36,7 +39,8 @@ def get_blueprint(
 )
 @create_response(PlainTextResponse)
 def resolve_blueprint_id(absolute_id: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """
-    Resolve the data_source/uuid form of a blueprint to its type path
+    """Resolve absolute_id of a blueprint to its type path.
+
+    - **absolute_id**: <data_source</<blueprint_uuid>
     """
     return resolve_blueprint_use_case(user=user, absolute_id=absolute_id)

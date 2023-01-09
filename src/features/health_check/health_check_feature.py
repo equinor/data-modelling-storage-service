@@ -12,4 +12,5 @@ router = APIRouter(tags=["default", "health_check"], prefix="/healthcheck")
     response_class=PlainTextResponse,
 )
 async def get():
+    """Test if DMSS is running."""
     return "OK"

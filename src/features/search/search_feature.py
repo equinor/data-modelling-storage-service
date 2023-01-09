@@ -21,8 +21,13 @@ def search(
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """
-    Takes a list of data source id's as a query parameter, and search all data sources for the posted dictionary.
+    Takes a list of data source id's as a query parameter, and search those data sources for the posted dictionary.
     If data source list is empty, search all databases.
+
+    - **data**: a JSON document, must include a "type" attribute. Can also include other attributes like "name".
+    - **data_sources**: List of data sources to search in.
+    - **sort_by_attribute**: which attribute to sort the result by
+
     """
     return search_use_case(
         user=user, request=SearchRequest(data_sources=data_sources, data=data, dotted_attribute_path=sort_by_attribute)

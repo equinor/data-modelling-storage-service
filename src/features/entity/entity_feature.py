@@ -13,4 +13,8 @@ router = APIRouter(tags=["default", "entity"], prefix="/entity")
 @router.post("", operation_id="instantiate_entity", response_model=dict, responses=responses)
 @create_response(JSONResponse)
 def instantiate(entity: BasicEntity, user: User = Depends(auth_w_jwt_or_pat)):
+    """Create a new entity and return it.
+
+    (entity is not saved in DMSS)
+    """
     return instantiate_entity_use_case(basic_entity=entity, user=user)

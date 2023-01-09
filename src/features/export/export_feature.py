@@ -33,11 +33,12 @@ class ExportMetaResponse(BaseModel):
 def export_meta(absolute_document_ref: str, user: User = Depends(auth_w_jwt_or_pat)):
     """
     Export only the metadata of an entity.
-    Entities must be specified on the format 'DATASOURCE/PACKAGE/{ENTITY.name/ENTITY._id}
     An entities metadata is concatenated from the "top down". Inheriting parents meta, and overriding for any
     specified further down.
 
     If no metadata is defined anywhere in the tree, an empty object is returned.
+
+    - **absolute_document_ref**: <data_source>/<path_to_entity>/<entity_name>
     """
     return ExportMetaResponse(**export_meta_use_case(user=user, document_reference=absolute_document_ref)).dict()
 
@@ -53,7 +54,7 @@ def export(absolute_document_ref: str, user: User = Depends(auth_w_jwt_or_pat)):
     """
     Download a zip-folder with one or more documents as json file(s).
 
-    absolute_document_ref is on the format: 'DATASOURCE/PACKAGE/{ENTITY.name/ENTITY._id}
+    - **absolute_document_ref**: <data_source>/<path>/<document_name>
     """
     memory_file_path = export_use_case(user=user, document_reference=absolute_document_ref)
     directory_to_remove = Path(memory_file_path).parent
