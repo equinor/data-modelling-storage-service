@@ -27,8 +27,8 @@
     },
     {
       "name": "config",
-      "type": "object",
-      "attributeType": "dmss://system/SIMOS/UiAttributeOption",
+      "type": "dmss://system/SIMOS/UiAttributeOption",
+      "attributeType": "object",
       "contained": true,
       "optional": true
     }
