@@ -22,7 +22,7 @@ class InvalidDefaultValue(CreateEntityException):
 
 
 class CreateEntity:
-    def __init__(self, blueprint_provider: Callable, type: str):
+    def __init__(self, blueprint_provider: Callable, type: str, name: str | None = None):
         if type == BuiltinDataTypes.OBJECT.value:
             type = SIMOS.ENTITY.value
         self.type = type
@@ -31,6 +31,9 @@ class CreateEntity:
         self.blueprint_attribute: Blueprint = self.blueprint_provider(SIMOS.BLUEPRINT_ATTRIBUTE.value)
         blueprint: Blueprint = self.blueprint_provider(type)
         entity = {"type": type}
+        if name:
+            self.name = name
+            entity["name"] = name
         self._entity = self._get_entity(blueprint=blueprint, entity=entity)
 
     @staticmethod
