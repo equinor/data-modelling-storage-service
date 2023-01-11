@@ -155,19 +155,16 @@ Feature: Get a blueprint
     },
     "uiRecipes": [
       {
-        "name": "Yaml",
-        "type": "dmss://system/SIMOS/UiRecipe",
-        "plugin": "yaml-view",
-        "roles": [
-          "dmss-admin"
-        ],
-        "category": "view"
-      },
-      {
         "name": "Edit",
         "type": "dmss://system/SIMOS/UiRecipe",
         "plugin": "form",
         "category": "edit"
+      },
+      {
+        "name": "Yaml",
+        "type": "dmss://system/SIMOS/UiRecipe",
+        "plugin": "yaml-view",
+        "category": "view"
       }
     ],
     "storageRecipes": []

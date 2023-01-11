@@ -21,7 +21,7 @@ def get_blueprint_use_case(type: common_type_constrained_string, context: str | 
     if not context:
         return {
             "blueprint": blueprint.to_dict(),
-            "uiRecipes": default_ui_recipes,
+            "uiRecipes": [ur.dict(by_alias=True) for ur in default_ui_recipes],
             # TODO: Generate default storage recipe
             "storageRecipes": [],
         }
@@ -30,9 +30,9 @@ def get_blueprint_use_case(type: common_type_constrained_string, context: str | 
     # Get type specific recipes
     ui_recipes = lookup.ui_recipes.get(type, [])
 
-    # If no recipe link exists for the type, use the contexts default
+    # If no recipe link exists for the type, use the contexts default. If none, use builtin default
     if not ui_recipes:
-        ui_recipes = lookup.ui_recipes.get("_default_", [])
+        ui_recipes = lookup.ui_recipes.get("_default_", default_ui_recipes)
 
     storage_recipes = lookup.storage_recipes.get(type, [])
     if not storage_recipes:

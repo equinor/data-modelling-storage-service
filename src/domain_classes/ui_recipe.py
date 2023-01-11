@@ -63,9 +63,3 @@ class Recipe(BaseModel):
                 return array_contained
             else:
                 return single_contained
-
-
-class DefaultRecipe(Recipe):
-    def __init__(self, attributes: List[BlueprintAttribute]):
-        recipe_attributes = [RecipeAttribute(name=attr.name) for attr in attributes]
-        super().__init__(name="Default", attributes=recipe_attributes)
