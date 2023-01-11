@@ -12,4 +12,5 @@ router = APIRouter(tags=["default", "health_check"], prefix="/healthcheck")
     response_class=PlainTextResponse,
 )
 async def get():
+    """Healthcheck endpoint. Responds with "OK" - 200."""
     return "OK"

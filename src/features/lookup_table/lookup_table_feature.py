@@ -26,6 +26,8 @@ def create_lookup(recipe_package: str, application: str, user: User = Depends(au
     Create a recipe lookup table from a package containing RecipeLinks.
     Associate it with an application.
     This can be used for setting Ui- and StorageRecipes for specific applications.
+
+    - **application**: name of application
     """
     return create_lookup_table_use_case(recipe_package, application, user)
 
@@ -39,6 +41,8 @@ def create_lookup(recipe_package: str, application: str, user: User = Depends(au
 @create_response(JSONResponse)
 def get_lookup(application: str, user: User = Depends(auth_w_jwt_or_pat)):
     """
-    Fetch a single lookup
+    Fetch a single lookup table.
+
+    - **application**: name of application
     """
     return get_lookup_table_use_case(application, user)

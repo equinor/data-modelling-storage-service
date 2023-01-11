@@ -23,6 +23,9 @@ router = APIRouter(tags=["default", "blob"], prefix="/blobs")
 )
 @create_response(PlainTextResponse)
 def get_by_id(data_source_id: str, blob_id: str, user: User = Depends(auth_w_jwt_or_pat)):
+    """Get blob from id.
+    A blob (binary large object) can be anything from video to text file.
+    """
     return get_blob_use_case(user=user, data_source_id=data_source_id, blob_id=blob_id)
 
 
@@ -34,4 +37,7 @@ def upload(
     file: UploadFile = File(...),
     user: User = Depends(auth_w_jwt_or_pat),
 ):
+    """Upload a new blob.
+    A blob (binary large object) can be anything from video to text file.
+    """
     return upload_blob_use_case(user=user, data_source_id=data_source_id, blob_id=blob_id, file=file)

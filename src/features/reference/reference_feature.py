@@ -22,6 +22,13 @@ def insert_reference(
     reference: Reference,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
+    """Add reference to an entity.
+
+    Used to add uncontained attributes to an entity.
+
+    - **document_dotted_id**: <data_source>/<path_to_entity>/<entity_name>.<attribute>
+    - **reference**: a reference object in JSON format
+    """
     document_id, attribute = document_dotted_id.split(".", 1)
     return insert_reference_use_case(
         user=user, data_source_id=data_source_id, document_id=document_id, reference=reference, attribute=attribute
@@ -33,7 +40,12 @@ def insert_reference(
 )
 @create_response(JSONResponse)
 def delete_reference(data_source_id: str, document_dotted_id: str, user: User = Depends(auth_w_jwt_or_pat)):
+    """Delete a reference in an entity.
 
+    Used to delete uncontained attributes in an entity.
+
+    - **document_dotted_id**: <data_source>/<path_to_entity>/<entity_name>.<attribute>
+    """
     document_id, attribute = document_dotted_id.split(".", 1)
     return delete_reference_use_case(
         user=user, document_id=document_id, data_source_id=data_source_id, attribute=attribute

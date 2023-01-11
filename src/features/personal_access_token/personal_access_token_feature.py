@@ -20,12 +20,18 @@ async def new_personal_access_token(
     time_to_live: int = int(timedelta(days=30).total_seconds()),
     user: User = Depends(auth_with_jwt),
 ) -> str:
+    """Create a personal access token (PAT).
+
+    - **scope**: WRITE, READ or NONE
+    - **time_to_live**: Optional parameter to set time to life in seconds (default is 30 days)
+    """
     return create_personal_access_token(user, scope, time_to_live)
 
 
 @router.delete("/{token_id}", operation_id="token_delete", response_model=str, responses=responses)
 @create_response(PlainTextResponse)
 async def revoke_personal_access_token(token_id: str, user: User = Depends(auth_with_jwt)) -> str:
+    """Delete a personal access token (PAT)."""
     delete_pat(token_id, user)
     return "OK"
 
@@ -33,4 +39,5 @@ async def revoke_personal_access_token(token_id: str, user: User = Depends(auth_
 @router.get("", operation_id="token_list_all", response_model=list[PATData], responses=responses)
 @create_response(JSONResponse)
 async def list_all_pats(user: User = Depends(auth_with_jwt)) -> list[PATData]:
+    """Get a list of all personal access tokens (PATs)."""
     return get_users_pats(user)

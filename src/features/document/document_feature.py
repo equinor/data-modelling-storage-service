@@ -27,6 +27,12 @@ def get_by_id(
     depth: conint(gt=-1, lt=1000) = 999,  # type: ignore
     user: User = Depends(auth_w_jwt_or_pat),
 ):
+    """
+    Get document as JSON string.
+
+    - **id_reference**: <data_source>/<document_uuid>
+    - **depth**: Maximum depth for resolving nested documents.
+    """
     # Allow specification of absolute document ref in document_id
     return get_document_use_case(
         user=user,
@@ -44,7 +50,9 @@ def get_by_path(
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """
-    Get a document by its path in the form PROTOCOL://DATA_SOURCE/PACKAGE/FOLDER/NAME.Attribute
+    Get a document by its absolute path.
+
+    - **absolute_path**: <protocol>://<data_source>/<path>.<attribute>
     """
     return get_document_by_path_use_case(user=user, absolute_path=absolute_path)
 
@@ -60,7 +68,7 @@ def update(
     update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
-
+    """Update document"""
     return update_document_use_case(
         user=user,
         document_id=document_id,
@@ -77,6 +85,13 @@ def update(
 )
 @create_response(PlainTextResponse)
 def remove(data_source_id: str, dotted_id: str, user: User = Depends(auth_w_jwt_or_pat)):
+    """Remove document
+
+    - **dotted_id**: can have value <document_id> or <document_id>.<attribute_path>
+
+    Example: dotted_id=3978d9ca-2d7a-4b47-8fed-57710f6cf50b.attributes.1 will remove the first element
+    in the attribute list of a blueprint with the given id.
+    """
     return remove_use_case(user=user, data_source_id=data_source_id, document_id=dotted_id)
 
 
@@ -93,7 +108,8 @@ def add_to_path(
 ):
     """
     Same as 'add_to_parent', but reference parent by path instead of ID. Also supports files.
-    The path must be on format; DATA_SOURCE/PACKAGE/ENTITY.Attribute
+
+    - **path_reference**: <data_source>/<path_to_entity>/<entity_name>.<attribute>
     """
     return add_document_to_path_use_case(
         user=user,
@@ -141,4 +157,8 @@ def add_by_parent_id(
 )
 @create_response(PlainTextResponse)
 def remove_by_path(data_source_id: str, directory: str, user: User = Depends(auth_w_jwt_or_pat)):
+    """Remove a document from DMSS.
+
+    - **directory**: path to document to remove.
+    """
     return remove_by_path_use_case(user=user, data_source_id=data_source_id, directory=directory)
