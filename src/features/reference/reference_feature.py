@@ -24,7 +24,7 @@ def insert_reference(
 ):
     """Add reference to an entity.
 
-    Can be used to add uncontained attributes to an entity.
+    Used to add uncontained attributes to an entity.
 
     - **document_dotted_id**: <data_source>/<path_to_entity>/<entity_name>.<attribute>
     - **reference**: a reference object in JSON format
@@ -42,7 +42,7 @@ def insert_reference(
 def delete_reference(data_source_id: str, document_dotted_id: str, user: User = Depends(auth_w_jwt_or_pat)):
     """Delete a reference in an entity.
 
-    Can be used to delete uncontained attributes in an entity.
+    Used to delete uncontained attributes in an entity.
 
     - **document_dotted_id**: <data_source>/<path_to_entity>/<entity_name>.<attribute>
     """

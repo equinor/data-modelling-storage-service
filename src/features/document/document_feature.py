@@ -31,7 +31,7 @@ def get_by_id(
     Get document as JSON string.
 
     - **id_reference**: <data_source>/<document_uuid>
-    - **depth**: Optional value to determine maximum number of times to resolve a document.
+    - **depth**: Maximum depth for resolving nested documents.
     """
     # Allow specification of absolute document ref in document_id
     return get_document_use_case(
@@ -87,7 +87,10 @@ def update(
 def remove(data_source_id: str, dotted_id: str, user: User = Depends(auth_w_jwt_or_pat)):
     """Remove document
 
-    - **dotted_id**: uuid for document to delete
+    - **dotted_id**: can have value <document_id> or <document_id>.<attribute_path>
+
+    Example: dotted_id=3978d9ca-2d7a-4b47-8fed-57710f6cf50b.attributes.1 will remove the first element
+    in the attribute list of a blueprint with the given id.
     """
     return remove_use_case(user=user, data_source_id=data_source_id, document_id=dotted_id)
 
