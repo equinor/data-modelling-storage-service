@@ -16,6 +16,16 @@ default_yaml_view = Recipe(
 default_form_edit = Recipe(**{"name": "Edit", "type": SIMOS.UI_RECIPE.value, "plugin": "form", "category": "edit"})
 default_ui_recipes = [default_form_edit, default_yaml_view]
 
+default_single_ui_recipe = Recipe(
+    **{
+        "name": "Selector",
+        "type": SIMOS.UI_RECIPE.value,
+        "plugin": "UiPluginSelector",
+        "category": "selector",
+        "config": {"uiRecipes": [default_form_edit.dict(), default_yaml_view.dict()]},
+    }
+)
+
 
 def storage_recipe_provider(type: str, context: str | None = None) -> list[StorageRecipe]:
     if not context:

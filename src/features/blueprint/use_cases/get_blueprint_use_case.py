@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from authentication.models import User
-from common.utils.get_storage_recipe import default_ui_recipes
+from common.utils.get_storage_recipe import default_single_ui_recipe, default_ui_recipes
 from domain_classes.lookup import Lookup
 from restful.request_types.shared import common_type_constrained_string
 from services.document_service import DocumentService
@@ -10,6 +10,7 @@ from storage.internal.lookup_tables import get_lookup
 
 class GetBlueprintResponse(BaseModel):
     blueprint: dict
+    uiRecipe: dict
     uiRecipes: list[dict]
     storageRecipes: list[dict]
 
@@ -21,6 +22,7 @@ def get_blueprint_use_case(type: common_type_constrained_string, context: str | 
     if not context:
         return {
             "blueprint": blueprint.to_dict(),
+            "uiRecipe": default_single_ui_recipe.dict(),
             "uiRecipes": [ur.dict(by_alias=True) for ur in default_ui_recipes],
             # TODO: Generate default storage recipe
             "storageRecipes": [],
@@ -40,6 +42,7 @@ def get_blueprint_use_case(type: common_type_constrained_string, context: str | 
 
     return {
         "blueprint": blueprint.to_dict(),
+        "uiRecipe": default_single_ui_recipe.dict(),
         "uiRecipes": [ur.dict(by_alias=True) for ur in ui_recipes],
         "storageRecipes": [sr.dict(by_alias=True) for sr in storage_recipes],
     }
