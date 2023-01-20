@@ -118,3 +118,51 @@ Feature: Export an entity's meta data
     """
     {}
     """
+
+  Scenario: Fetch the meta of a root package
+    Given there exist document with id "1" in data source "test-DS"
+    """
+    {
+      "name": "TestData",
+      "description": "",
+      "type": "dmss://system/SIMOS/Package",
+      "_meta_": {
+        "type": "CORE:Meta",
+        "version": "0.0.1",
+        "dependencies": [
+          {
+            "alias": "CORE",
+            "address": "system/SIMOS",
+            "version": "0.0.1",
+            "protocol": "dmss"
+          }
+        ]
+      },
+      "content": [
+        {
+          "name": "some-entity",
+          "type": "dmss://system/SIMOS/Blueprint",
+          "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
+        }
+      ],
+      "isRoot": true
+    }
+    """
+    Given i access the resource url "/api/export/meta/test-DS/TestData/"
+    When i make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "type": "CORE:Meta",
+      "version": "0.0.1",
+      "dependencies": [
+        {
+          "alias": "CORE",
+          "address": "system/SIMOS",
+          "version": "0.0.1",
+          "protocol": "dmss"
+        }
+      ]
+    }
+    """

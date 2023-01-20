@@ -58,5 +58,8 @@ def export_meta_use_case(user: User, document_reference: str) -> dict:
     root_package_name = path_elements.pop(0)
     root_package = get_root_package(root_package_name, repository)
 
+    if not path_elements:
+        return root_package.get("_meta_", {})
+
     meta = _collect_entity_meta_by_path(root_package, path_elements, repository, root_package.get("_meta_"))
     return meta
