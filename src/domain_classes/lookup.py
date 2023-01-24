@@ -31,6 +31,7 @@ class Lookup(BaseModel):
     storage_recipes: dict[str, list[StorageRecipe]] = Field(
         default_factory=lambda: defaultdict(list), alias="storageRecipes"
     )
+    initial_ui_recipes: dict[str, Recipe | None] = Field(default_factory=lambda: {}, alias="initialUiRecipes")
     extends: dict[str, list[str]] = {}
 
     def realize_extends(self):

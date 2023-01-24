@@ -26,6 +26,9 @@ def create_lookup_table_use_case(
         if node.type == SIMOS.RECIPE_LINK.value:
             blueprint_path = node.entity["_blueprintPath_"]
             ui_recipes = [Recipe(**r) for r in node.entity.get("uiRecipes", [])]
+            initial_ui_recipe = (
+                Recipe(**node.entity["initialUiRecipe"]) if node.entity.get("initialUiRecipe") else None
+            )
 
             storage_recipes = [
                 StorageRecipe(
@@ -41,6 +44,7 @@ def create_lookup_table_use_case(
 
             lookup.storage_recipes[blueprint_path].extend(storage_recipes)
             lookup.ui_recipes[blueprint_path].extend(ui_recipes)
+            lookup.initial_ui_recipes[blueprint_path] = initial_ui_recipe
 
     lookup.extends = recipes_to_extend
     lookup.realize_extends()

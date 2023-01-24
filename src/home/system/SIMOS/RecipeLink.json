@@ -13,6 +13,14 @@
     {
       "attributeType": "dmss://system/SIMOS/UiRecipe",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "name": "initialUiRecipe",
+      "contained": true,
+      "optional": true,
+      "dimensions": ""
+    },
+    {
+      "attributeType": "dmss://system/SIMOS/UiRecipe",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "uiRecipes",
       "contained": true,
       "optional": true,
