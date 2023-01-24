@@ -1,5 +1,15 @@
-#!/bin/sh
+#! /bin/bash
 set -eu
+
+
+echo "########### VERSION ##########"
+if [[ -e "/code/src/version.txt" ]]; then
+  cat "/code/src/version.txt"
+else
+  echo "No version.txt file"
+fi
+echo -e "########### VERSION ##########\n"
+
 
 if [ "$1" = 'api' ]; then
   if [ "${ENVIRONMENT:-'local'}" != "local" ]; then

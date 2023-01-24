@@ -4,7 +4,7 @@ services:
   dmss:
     build:
       context: .
-    image: mariner.azurecr.io/dmss:latest
+    image: datamodelingtool.azurecr.io/dmss:latest
     restart: unless-stopped
     environment:
       ENVIRONMENT: azure
