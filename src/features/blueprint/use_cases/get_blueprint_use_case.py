@@ -40,6 +40,7 @@ def get_blueprint_use_case(type: common_type_constrained_string, context: str | 
 
     return {
         "blueprint": blueprint.to_dict(),
+        "initialUiRecipe": lookup.initial_ui_recipes[type].dict() if lookup.initial_ui_recipes.get(type) else None,
         "uiRecipes": [ur.dict(by_alias=True) for ur in ui_recipes],
         "storageRecipes": [sr.dict(by_alias=True) for sr in storage_recipes],
     }
