@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Callable
+from typing import Any, Callable
 
 from common.exceptions import BadRequestException
 from common.utils.logging import logger
@@ -11,7 +11,10 @@ from domain_classes.tree_node import ListNode, Node
 from enums import SIMOS
 
 
-def tree_node_to_dict(node: Node | ListNode) -> dict:
+def tree_node_to_dict(node: Node | ListNode) -> list[Any] | dict:
+    if node.is_array():
+        return [tree_node_to_dict(child) for child in node.children]
+
     data = {}
 
     # If it's an empty node, just return the empty object.

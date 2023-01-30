@@ -163,13 +163,17 @@ class DocumentService:
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
 
-        node.set_uid()  # Ensure the node has a _id
         ref_dict = tree_node_to_ref_dict(node)
 
-        entity_has_all_required_attributes(ref_dict, node.blueprint.get_required_attributes())
+        if type(node) is Node:
+            entity_has_all_required_attributes(ref_dict, node.blueprint.get_required_attributes())
 
         # If the node is not contained, and has data, save it!
         if not node.storage_contained and ref_dict:
+            # To ensure the node has a _id
+            if node.uid is None:
+                raise ApplicationException(f"The document with name `{node.name}` is missing uid")
+
             # Expand this when adding new repositories requiring PATH
             if isinstance(repository, ZipFileClient):
                 ref_dict["__path__"] = path
