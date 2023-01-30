@@ -166,6 +166,11 @@ Feature: Document 2
       | 5   | 2          | document_2    |             | dmss://system/SIMOS/Blueprint                  |
       | 6   | 3          | container_1   |             | dmss://test-source-name/TestData/TestContainer |
 
+
+    Given there are documents for the data source "data-source-name" in collection "documents"
+      | uid | parent_uid | name          | description | type                                    |
+      | 7   |            | document_3    |             | dmss://test-source-name/TestData/ItemType |
+
   Scenario: Update document (only contained)
     Given i access the resource url "/api/documents/data-source-name/1"
     When i make a form-data "PUT" request
@@ -305,5 +310,31 @@ Feature: Document 2
         "name": "item_single",
         "type": "dmss://test-source-name/TestData/ItemType"
       }
+    }
+    """
+
+  Scenario: Update complex list attribute
+    Given i access the resource url "/api/documents/data-source-name/7.complexList"
+    When i make a form-data "PUT" request
+    """
+    [
+        {
+          "name": "item_1_contained",
+          "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+          "extra": "extra_1"
+        }
+    ]
+    """
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "data": [
+          {
+            "name": "item_1_contained",
+            "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+            "extra": "extra_1"
+          }
+        ]
     }
     """
