@@ -25,6 +25,11 @@ def create_lookup_table_use_case(
     for node in recipe_package.traverse():
         if node.type == SIMOS.RECIPE_LINK.value:
             blueprint_path = node.entity["_blueprintPath_"]
+
+            # Check if blueprint exists. If not, exception is raised
+            if blueprint_path != "_default_":
+                document_service.get_blueprint(blueprint_path)
+
             ui_recipes = [Recipe(**r) for r in node.entity.get("uiRecipes", [])]
             initial_ui_recipe = (
                 Recipe(**node.entity["initialUiRecipe"]) if node.entity.get("initialUiRecipe") else None
