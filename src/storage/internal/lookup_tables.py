@@ -1,8 +1,6 @@
 from functools import lru_cache
 
-from pymongo.errors import DuplicateKeyError
-
-from common.exceptions import BadRequestException, NotFoundException
+from common.exceptions import NotFoundException
 from config import config
 from domain_classes.lookup import Lookup
 from services.database import lookup_table_collection
@@ -10,13 +8,7 @@ from services.database import lookup_table_collection
 
 def insert_lookup(lookup_id: str, lookup: dict) -> None:
     lookup["_id"] = lookup_id
-    try:
-        lookup_table_collection.insert_one(lookup)
-    except DuplicateKeyError:
-        raise BadRequestException(
-            f"A lookup table with name '{lookup['_id']}' already exists."
-            + " Use a different name, or delete the old one first"
-        )
+    lookup_table_collection.update_one(filter={"_id": lookup_id}, update={"$set": lookup}, upsert=True)
 
 
 @lru_cache(maxsize=config.CACHE_MAX_SIZE)
