@@ -9,23 +9,24 @@
 ## Prerequisites
 
 In order to run the commands described below, you need:
-- [Docker](https://www.docker.com/) 
+
+- [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
 - make (`sudo apt-get install make` on Ubuntu)
 
-## Running 
+## Running
 
 ```bash
 docker-compose build
 # Repository secrets are encrypted at rest. Therefore, an encryption key is needed.
 KEY=$(docker-compose run --rm dmss create-key)
 echo $KEY
-cp .env-template .env 
+cp .env-template .env
 echo "SECRET_KEY=$KEY" >> .env
 docker-compose up
 ```
 
-API documentation can be found at [http://localhost:8000/api/v1/ui](http://localhost:8000/api/v1/ui).
+API documentation can be found at [http://localhost:5000/docs](http://localhost:5000/docs).
 
 ### Database
 
@@ -40,9 +41,9 @@ docker-compose exec dmss reset-app
 
 To talk with the DMSS service, these clients are available:
 
-* Python https://pypi.org/project/dmss-api/
+- Python https://pypi.org/project/dmss-api/
 
-## Development 
+## Development
 
 ### Pre-commit
 
@@ -59,9 +60,9 @@ pip install pre-commit
 pre-commit install
 ```
 
-### 2) Install virtual environment 
+### 2) Install virtual environment
 
-Virtual environment is used for running unit tests with pre-commit. 
+Virtual environment is used for running unit tests with pre-commit.
 
 ```bash
 python -m venv .venv
@@ -80,7 +81,7 @@ docker-compose run --rm dmss behave
 Run BDD tests by regexp:
 
 ```bash
-docker-compose run --rm dmss behave -n "Scenario name" # Run single test  
+docker-compose run --rm dmss behave -n "Scenario name" # Run single test
 ```
 
 Run unit tests:
@@ -94,5 +95,3 @@ Creating DMSS lookup with [dm-cli](https://github.com/equinor/dm-cli):
 ```bash
 dm create-lookup dmss system/SIMOS/recipe_links
 ```
-
-
