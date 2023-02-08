@@ -15,7 +15,7 @@ class BlueprintProvider:
     def get_blueprint(self, type: str) -> Blueprint:
         logger.debug(f"Cache miss! Fetching blueprint '{type}'")
         document: dict = get_document_by_absolute_path(type, self.user)
-        return Blueprint(document)
+        return Blueprint(document, type)
 
     def invalidate_cache(self):
         try:

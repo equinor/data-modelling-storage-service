@@ -12,14 +12,16 @@ class LocalFileRepository(RepositoryInterface):
         self.path = Path(location)
 
     def get(self, absolute_ref: str) -> dict:
-        protocol, address = absolute_ref.split("://", 1)
         try:
+            protocol, address = absolute_ref.split("://", 1)
             with open(f"{self.path}/{address}.json") as f:
                 return json.load(f)
         except FileNotFoundError:
             raise FileNotFoundError(
                 f"'{absolute_ref}' not found. Are DMSS core blueprints available at '{self.path}'?"
             )
+        except ValueError:
+            raise ValueError(f"Got invalid path for local repository blueprint path: '{absolute_ref}'")
 
     def find(self, filter: dict, single=None, raw=None) -> dict:
         return self.get(filter["type"])
