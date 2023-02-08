@@ -7,16 +7,16 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import BuiltinDataTypes
 
 
-def valid_extended_type(type: str, extended_types: List[str], get_blueprint: Callable) -> bool:
-    if type == BuiltinDataTypes.OBJECT.value:
+def valid_complex_type(valid_type: str, extended_types: List[str], get_blueprint: Callable) -> bool:
+    if valid_type == BuiltinDataTypes.OBJECT.value:
         return True
-    if type in extended_types:
+    if valid_type in extended_types:
         return True
     for inherited_type in extended_types:
-        blueprint = get_blueprint(inherited_type)
-        if type in blueprint.extends:
+        inherited_blueprint = get_blueprint(inherited_type)
+        if valid_type in inherited_blueprint.extends:
             return True
-        if valid_extended_type(type, blueprint.extends, get_blueprint):
+        if valid_complex_type(valid_type, inherited_blueprint.extends, get_blueprint):
             return True
     return False
 

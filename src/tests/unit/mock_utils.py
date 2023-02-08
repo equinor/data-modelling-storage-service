@@ -246,6 +246,177 @@ blobContainer = {
     ],
 }
 
+fuel_pump = {
+    "type": "system/SIMOS/Blueprint",
+    "name": "FuelPumpTest",
+    "description": "This describes a fuel pump",
+    "attributes": [
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "description",
+            "default": "A standard fuel pump",
+        },
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
+    ],
+}
+
+engine = {
+    "type": "system/SIMOS/Blueprint",
+    "name": "EngineTest",
+    "description": "This describes an engine",
+    "attributes": [
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
+        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "description",
+        },
+        {
+            "attributeType": "integer",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "power",
+            "default": "120",
+        },
+        {
+            "type": "system/SIMOS/BlueprintAttribute",
+            "attributeType": "test_data/complex/FuelPumpTest",
+            "name": "fuelPump",
+            "default": '{"description":"A standard fuel pump","name":"fuelPump","type":"test_data/complex/FuelPumpTest"}',
+        },
+    ],
+}
+
+car = {
+    "type": "system/SIMOS/Blueprint",
+    "name": "CarTest",
+    "attributes": [
+        {
+            "name": "name",
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "default": "CarTest",
+        },
+        {
+            "name": "type",
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "default": "test_data/complex/CarTest",
+        },
+        {
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "wheel",
+            "attributeType": "test_data/complex/WheelTest",
+        },
+        {
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "wheels",
+            "attributeType": "test_data/complex/WheelTest",
+            "dimensions": "*",
+        },
+        {
+            "name": "seats",
+            "attributeType": "integer",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "default": "2",
+        },
+        {
+            "name": "is_sedan",
+            "attributeType": "boolean",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "default": "true",
+        },
+        {
+            "name": "floatValues",
+            "attributeType": "number",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "dimensions": "*",
+            "default": "[2.1,3.1,4.2]",
+        },
+        {
+            "name": "intValues",
+            "attributeType": "integer",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "dimensions": "*",
+            "default": "[1,5,4,2]",
+        },
+        {
+            "name": "boolValues",
+            "attributeType": "boolean",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "dimensions": "*",
+            "default": "[true, false, true]",
+        },
+        {
+            "name": "stringValues",
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "dimensions": "*",
+            "default": '["one", "two", "three"]',
+        },
+        {
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "engine",
+            "attributeType": "test_data/complex/EngineTest",
+        },
+        {
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "engine2",
+            "optional": True,
+            "attributeType": "test_data/complex/EngineTest",
+        },
+    ],
+}
+wheel = {
+    "name": "WheelTest",
+    "type": "system/SIMOS/Blueprint",
+    "attributes": [
+        {
+            "name": "name",
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "default": "Wheel",
+        },
+        {"name": "type", "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute"},
+        {
+            "name": "power",
+            "attributeType": "number",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "default": "0.0",
+        },
+    ],
+}
+
+parent = {
+    "type": "dmss://system/SIMOS/Blueprint",
+    "name": "Parent",
+    "description": "",
+    "extends": ["dmss://system/SIMOS/NamedEntity"],
+    "attributes": [
+        {"name": "SomeChild", "attributeType": "BaseChild", "type": "dmss://system/SIMOS/BlueprintAttribute"}
+    ],
+}
+
+base_child = {
+    "type": "dmss://system/SIMOS/Blueprint",
+    "name": "BaseChild",
+    "description": "",
+    "extends": ["dmss://system/SIMOS/NamedEntity"],
+    "attributes": [{"name": "AValue", "attributeType": "integer", "type": "dmss://system/SIMOS/BlueprintAttribute"}],
+}
+
+special_child = {
+    "type": "dmss://system/SIMOS/Blueprint",
+    "name": "SpecialChild",
+    "description": "",
+    "extends": ["BaseChild"],
+    "attributes": [
+        {"name": "AnExtraValue", "attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute"}
+    ],
+}
+
 file_repository_test = LocalFileRepository()
 
 
@@ -253,35 +424,49 @@ class BlueprintProvider:
     @staticmethod
     def get_blueprint(type: str):
         if type == "all_contained_cases_blueprint":
-            return Blueprint(all_contained_cases_blueprint)
+            return Blueprint(all_contained_cases_blueprint, type)
         if type == "basic_blueprint":
-            return Blueprint(basic_blueprint)
+            return Blueprint(basic_blueprint, type)
         if type == "blueprint_with_second_level_reference":
-            return Blueprint(blueprint_with_second_level_reference)
+            return Blueprint(blueprint_with_second_level_reference, type)
         if type == "two_contained_deep_attributes":
-            return Blueprint(two_contained_deep_attributes)
+            return Blueprint(two_contained_deep_attributes, type)
         if type == "ExtendedBlueprint":
-            return Blueprint(extended_blueprint)
+            return Blueprint(extended_blueprint, type)
         if type == "SecondLevelExtendedBlueprint":
-            return Blueprint(second_level_extended_blueprint)
+            return Blueprint(second_level_extended_blueprint, type)
         if type == "uncontained_blueprint":
-            return Blueprint(uncontained_blueprint)
+            return Blueprint(uncontained_blueprint, type)
         if type == "uncontained_list_blueprint":
-            return Blueprint(uncontained_list_blueprint)
+            return Blueprint(uncontained_list_blueprint, type)
         if type == "blueprint_with_second_level_nested_uncontained_attribute":
-            return Blueprint(blueprint_with_second_level_nested_uncontained_attribute)
+            return Blueprint(blueprint_with_second_level_nested_uncontained_attribute, type)
         if type == "blueprint_with_optional_attr":
-            return Blueprint(blueprint_with_optional_attr)
+            return Blueprint(blueprint_with_optional_attr, type)
         if type == "blueprint_with_nested_optional_attr":
-            return Blueprint(blueprint_with_nested_optional_attr)
+            return Blueprint(blueprint_with_nested_optional_attr, type)
         if type == "blob":
-            return Blueprint(blueprint_with_storageAffinity_in_root)
+            return Blueprint(blueprint_with_storageAffinity_in_root, type)
         if type == "blobContainer":
-            return Blueprint(blobContainer)
+            return Blueprint(blobContainer, type)
         if type == "blueprint_with_blob":
-            return Blueprint(blueprint_with_blob)
+            return Blueprint(blueprint_with_blob, type)
+        if type == "test_data/complex/FuelPumpTest":
+            return Blueprint(fuel_pump, type)
+        if type == "test_data/complex/EngineTest":
+            return Blueprint(engine, type)
+        if type == "test_data/complex/CarTest":
+            return Blueprint(car, type)
+        if type == "test_data/complex/WheelTest":
+            return Blueprint(wheel, type)
+        if type == "Parent":
+            return Blueprint(parent, type)
+        if type == "BaseChild":
+            return Blueprint(base_child, type)
+        if type == "SpecialChild":
+            return Blueprint(special_child, type)
         else:
-            return Blueprint(file_repository_test.get(type))
+            return Blueprint(file_repository_test.get(type), type)
 
 
 blueprint_provider = BlueprintProvider()

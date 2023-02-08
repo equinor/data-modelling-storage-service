@@ -2,7 +2,7 @@ from typing import Callable, List, Union
 from uuid import uuid4
 
 from common.exceptions import BadRequestException
-from common.utils.validators import valid_extended_type
+from common.utils.validators import valid_complex_type
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
@@ -241,7 +241,7 @@ class NodeBase:
             return True
         key = self.key if not self.parent.is_array() else self.parent.key  # Use attribute key, not list index
         valid_type = self.parent.blueprint.get_attribute_type_by_key(key)  # Valid type as defined in parents blueprint
-        if not valid_extended_type(
+        if not valid_complex_type(
             valid_type, [self.type] + self.blueprint.extends, self.blueprint_provider
         ):  # Resolve extends
             raise BadRequestException(

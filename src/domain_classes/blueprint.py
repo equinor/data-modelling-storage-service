@@ -14,7 +14,7 @@ class Meta:
 
 
 class Blueprint:
-    def __init__(self, entity: dict):
+    def __init__(self, entity: dict, path: str | None = None):
         self.name = entity["name"]
         self.description = entity.get("description", "")
         self.meta: Meta = Meta(entity.get("_meta_"))  # type: ignore
@@ -25,6 +25,7 @@ class Blueprint:
         self.attributes: List[BlueprintAttribute] = [
             BlueprintAttribute(**attribute) for attribute in entity.get("attributes", [])
         ]
+        self.path = path
 
     @classmethod
     def from_dict(cls, adict):
@@ -32,7 +33,7 @@ class Blueprint:
         instance.attributes = [BlueprintAttribute(**attr) for attr in adict.get("attributes", [])]
         return instance
 
-    def get_required_attributes(self):
+    def get_required_attributes(self) -> list[BlueprintAttribute]:
         return [attribute for attribute in self.attributes if attribute.optional is False]
 
     def to_dict(self):
