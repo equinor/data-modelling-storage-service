@@ -18,7 +18,7 @@ class BasicEntity(BaseModel, extra=Extra.allow):
 
 
 def _recursive_validate_single_attribute(
-    attribute: BlueprintAttribute, value: dict | bool | int | float | str, get_blueprint: Callable, key: str | int
+    attribute: BlueprintAttribute, value: dict | bool | int | float | str, get_blueprint: Callable, key: str
 ):
     debug_message = f"Location: Entity in key '{key}'"
     if attribute.is_primitive:
@@ -64,12 +64,13 @@ def validate_entity(
             debug=debug_message,
         )
 
-    # We now know it's a valid type defined in the entity. Get new, potentially specialized blueprint from that type.
+    # We now know it's a valid child type in entity.
+    # Get new, potentially specialized blueprint, from type defined in entity.
     blueprint = get_blueprint(entity["type"])
 
-    if should_not_exist := [key for key in entity.keys() if key not in blueprint.get_attribute_names()]:
+    if keys_not_in_blueprint := [key for key in entity.keys() if key not in blueprint.get_attribute_names()]:
         raise ValidationException(
-            f"Attributes '{should_not_exist}' are not specified in the '{blueprint.path}'", debug=debug_message
+            f"Attributes '{keys_not_in_blueprint}' are not specified in the '{blueprint.path}'", debug=debug_message
         )
 
     for attribute in blueprint.get_required_attributes():
