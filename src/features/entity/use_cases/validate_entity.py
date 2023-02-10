@@ -18,7 +18,7 @@ class BasicEntity(BaseModel, extra=Extra.allow):
 
 
 def _recursive_validate_single_attribute(
-    attribute: BlueprintAttribute, value: dict | bool | int | float | str, get_blueprint: Callable, key: str | int
+    attribute: BlueprintAttribute, value: dict | bool | int | float | str, get_blueprint: Callable, key: str
 ):
     debug_message = f"Location: Entity in key '{key}'"
     if attribute.is_primitive:

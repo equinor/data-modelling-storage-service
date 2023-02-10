@@ -277,7 +277,6 @@ class Node(NodeBase):
 
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
     def update(self, data: dict):
-
         self.set_uid(data.get("_id"))  # type: ignore
         # Set self.type from posted type, and validate against parent blueprint
         self.type = data.get("type", self.attribute.attribute_type)

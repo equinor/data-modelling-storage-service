@@ -8,7 +8,6 @@ from features.document.use_cases.add_file_use_case import add_file_use_case
 
 @skip("not working")
 def test_without_parameters():
-
     document_repository = mock.Mock()
 
     parent_id = str(uuid4())

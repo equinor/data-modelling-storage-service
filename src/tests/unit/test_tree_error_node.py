@@ -20,7 +20,6 @@ all_contained_cases_blueprint = {
 
 
 class ErrorTreenodeTestCase(unittest.TestCase):
-
     # error node breaks tests in document service.
     # add uncommented line in tree_node from_dict to enable this test.
     @skip

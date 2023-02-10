@@ -184,7 +184,6 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         assert pretty_eq(expected_2, doc_storage[list(doc_storage)[1]]) is None
 
     def test_update_complex_array(self):
-
         # fmt: off
         doc_storage = {
             "1": {
