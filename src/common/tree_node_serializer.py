@@ -107,7 +107,6 @@ def tree_node_from_dict(
     uid: str | None = None,
     key: str | None = None,
 ) -> Node | ListNode:
-
     if recursion_depth >= config.MAX_ENTITY_RECURSION_DEPTH:
         message = (
             f"Reached maximum recursion depth while creating NodeTree ({recursion_depth}).\n"

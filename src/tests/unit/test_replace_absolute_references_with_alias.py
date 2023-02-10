@@ -103,7 +103,6 @@ class ReplaceWithAliasTest(unittest.TestCase):
         assert alias == reference
 
     def test_replace_absolute_references_in_entity_with_alias(self):
-
         core_dependency = {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"}
         car_package_dependency = {
             "alias": "CAR_PACKAGE",

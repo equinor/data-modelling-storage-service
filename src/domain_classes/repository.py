@@ -44,7 +44,6 @@ class Repository(RepositoryInterface):
     @staticmethod
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def _get_client(**kwargs):
-
         if kwargs["type"] == RepositoryType.MONGO.value:
             return MongoDBClient(**kwargs)
 
