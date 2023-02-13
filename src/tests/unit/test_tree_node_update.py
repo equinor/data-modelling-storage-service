@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 from authentication.models import User
-from common.exceptions import BadRequestException
+from common.exceptions import BadRequestException, ValidationException
 from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
@@ -14,8 +14,9 @@ from tests.unit.mock_utils import get_mock_document_service
 class MultiTypeBlueprintProvider:
     @staticmethod
     def get_blueprint(type: str):
+        blueprint = None
         if type == "parent":  # Just a container
-            return Blueprint(
+            blueprint = Blueprint(
                 {
                     "name": "Parent",
                     "type": SIMOS.BLUEPRINT.value,
@@ -31,7 +32,7 @@ class MultiTypeBlueprintProvider:
                 }
             )
         if type == "parent_w_list":  # Just a container with a list
-            return Blueprint(
+            blueprint = Blueprint(
                 {
                     "name": "Parent",
                     "type": SIMOS.BLUEPRINT.value,
@@ -48,7 +49,7 @@ class MultiTypeBlueprintProvider:
                 }
             )
         if type == "wrapps_parent_w_list":  # Wrapps a uncontained parent_w_list
-            return Blueprint(
+            blueprint = Blueprint(
                 {
                     "name": "wrapps_parent_w_list",
                     "type": SIMOS.BLUEPRINT.value,
@@ -63,7 +64,7 @@ class MultiTypeBlueprintProvider:
                 }
             )
         if type == "base_child":  # A very basic blueprint, extends from NamedEntity
-            return Blueprint(
+            blueprint = Blueprint(
                 {
                     "name": "BaseChild",
                     "type": SIMOS.BLUEPRINT.value,
@@ -78,7 +79,7 @@ class MultiTypeBlueprintProvider:
                 }
             )
         if type == "special_child":  # A blueprint that extends from 'base_child', and adds an extra attribute
-            return Blueprint(
+            blueprint = Blueprint(
                 {
                     "name": "SpecialChild",
                     "type": SIMOS.BLUEPRINT.value,
@@ -93,7 +94,7 @@ class MultiTypeBlueprintProvider:
                 }
             )
         if type == "extra_special_child":  # A blueprint that extends from 'base_child', and adds an extra attribute
-            return Blueprint(
+            blueprint = Blueprint(
                 {
                     "name": "ExtraSpecialChild",
                     "type": SIMOS.BLUEPRINT.value,
@@ -108,7 +109,7 @@ class MultiTypeBlueprintProvider:
                 }
             )
         if type == "special_child_no_inherit":  # A duplicate of the 'special_child', but does not extends 'base_child'
-            return Blueprint(
+            blueprint = Blueprint(
                 {
                     "name": "SpecialChild",
                     "type": SIMOS.BLUEPRINT.value,
@@ -122,8 +123,11 @@ class MultiTypeBlueprintProvider:
                     ],
                 }
             )
-        else:
-            return Blueprint(LocalFileRepository().get(type))
+        if not blueprint:
+            blueprint = Blueprint(LocalFileRepository().get(type))
+
+        blueprint.path = type
+        return blueprint
 
 
 class DocumentServiceTestCase(unittest.TestCase):
@@ -236,12 +240,16 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(
             blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
         )
-        with self.assertRaises(BadRequestException):
+        with self.assertRaises(ValidationException) as error:
             document_service.update_document(
                 data_source_id="testing",
                 dotted_id="1.SomeChild",
                 data={"name": "whatever", "type": "special_child_no_inherit", "AnExtraValue": "Hallo there!"},
             )
+        assert (
+            error.exception.message
+            == "Entity should be of type 'base_child' (or extending from it). Got 'special_child_no_inherit'"
+        )
         assert not doc_storage["1"]["SomeChild"]
 
     def test_add_optional_nested(self):
@@ -459,7 +467,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
         )
 
-        with self.assertRaises(BadRequestException) as error:
+        with self.assertRaises(ValidationException) as error:
             document_service.update_document(
                 data_source_id="testing",
                 dotted_id="1.SomeChild",
@@ -472,7 +480,10 @@ class DocumentServiceTestCase(unittest.TestCase):
                     },
                 ],
             )
-        print(error.exception)
+        assert (
+            error.exception.message
+            == "Entity should be of type 'base_child' (or extending from it). Got 'special_child_no_inherit'"
+        )
         assert doc_storage["1"]["SomeChild"] == []
 
     def test_add_child_with_empty_list(self):

@@ -26,7 +26,7 @@ from common.utils.get_storage_recipe import storage_recipe_provider
 from common.utils.logging import logger
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.utils.string_helpers import split_dmss_ref, split_dotted_id
-from common.utils.validators import entity_has_all_required_attributes
+from common.utils.validators import validate_entity
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
@@ -164,9 +164,8 @@ class DocumentService:
             node.entity = self.save_blob_data(node, repository)
 
         node.set_uid()  # Ensure the node has a _id
+        validate_entity(tree_node_to_dict(node), node.blueprint, self.get_blueprint)
         ref_dict = tree_node_to_ref_dict(node)
-
-        entity_has_all_required_attributes(ref_dict, node.blueprint.get_required_attributes())
 
         # If the node is not contained, and has data, save it!
         if not node.storage_contained and ref_dict:
@@ -274,12 +273,14 @@ class DocumentService:
         root: Node = self.get_node_by_uid(data_source_id, document_id, depth=0)
         target_node = root
 
-        # If it's a contained nested node, set the modify target based on dotted-path
+        # If it's a contained nested node, set the modify-target based on dotted-path
         if attribute:
             target_node = root.get_by_path(attribute.split("."))
 
         if not target_node:
             raise NotFoundException(dotted_id)
+
+        validate_entity(data, self.get_blueprint(target_node.attribute.attribute_type), self.get_blueprint)
 
         target_node.update(data)
         if files:
@@ -303,6 +304,8 @@ class DocumentService:
 
         if not parent_id:  # No parent_id in reference. Just add the document to the root of the data_source
             return self._add_document_with_no_parent(data_source, data, update_uncontained)
+
+        validate_entity(data, self.get_blueprint(data["type"]), self.get_blueprint)
 
         type = data["type"]
         parent_attribute = attribute.split(".")[0:-1]
@@ -425,11 +428,14 @@ class DocumentService:
         if not target:
             raise NotFoundException(f"Could not find '{path}' in data source '{data_source_id}'")
 
+        document_as_dict = document.dict()
+        validate_entity(document_as_dict, self.get_blueprint(document.type), self.get_blueprint)
+
         # If dotted attribute path, attribute is the last entry. Else content
         new_node_attr = path.split(".")[-1] if "." in path else "content"
 
         new_node = tree_node_from_dict(
-            {**document.to_dict()},
+            document_as_dict,
             blueprint_provider=self.get_blueprint,
             node_attribute=BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
             recipe_provider=self.get_storage_recipes,

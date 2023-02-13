@@ -12,16 +12,16 @@ common_type_constrained_string = constr(
 )  # noqa
 
 
+class Entity(BaseModel, extra=Extra.allow):
+    type: common_type_constrained_string  # type: ignore
+
+
 class EntityName(BaseModel):
     name: common_name_constrained_string  # type: ignore
 
 
 class OptionalEntityName(BaseModel):
     name: Optional[common_name_constrained_string]  # type: ignore
-
-
-class EntityType(BaseModel):
-    type: common_type_constrained_string  # type: ignore
 
 
 class DataSource(BaseModel):
@@ -36,13 +36,13 @@ class EntityUUID(BaseModel):
     uid: UUID4 = Field(..., alias="_id")
 
 
-class Reference(EntityType, EntityName, EntityUUID):
+class Reference(Entity, EntityName, EntityUUID):
     @root_validator(pre=True)
     def from_underscore_id_to_uid(cls, values):
         return {**values, "uid": values.get("_id")}
 
 
-class UncontainedEntity(EntityType, OptionalEntityName, EntityUUID, extra=Extra.allow):  # type: ignore
+class UncontainedEntity(Entity, OptionalEntityName, EntityUUID, extra=Extra.allow):  # type: ignore
     @root_validator(pre=True)
     def from_underscore_id_to_uid(cls, values):
         return {**values, "uid": values.get("_id")}
@@ -54,17 +54,8 @@ class UncontainedEntity(EntityType, OptionalEntityName, EntityUUID, extra=Extra.
         return self.dict(exclude={"name"})
 
 
-class BlueprintEntity(EntityType, EntityName, EntityUUID, extra=Extra.allow):  # type: ignore
+class BlueprintEntity(Entity, EntityName, EntityUUID, extra=Extra.allow):  # type: ignore
     # an entity that have type: system/SIMOS/Blueprint
     @root_validator(pre=True)
     def from_underscore_id_to_uid(cls, values):
         return {**values, "uid": values.get("_id")}
-
-
-# An entity must have a type, but having a name is optional
-class Entity(EntityType, OptionalEntityName, extra=Extra.allow):  # type: ignore
-    def to_dict(self):
-        if self.name is not None:
-            return self.dict(by_alias=True)
-        else:
-            return self.dict(exclude={"name"})

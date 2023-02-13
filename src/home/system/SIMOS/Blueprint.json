@@ -18,7 +18,7 @@
       "attributeType": "boolean",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "abstract",
-      "default": false,
+      "default": "false",
       "optional": true
     },
     {
