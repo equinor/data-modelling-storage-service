@@ -44,12 +44,21 @@ def _recursive_validate_single_attribute(
 
 
 def validate_entity(
-    entity: dict | list, blueprint: Blueprint, get_blueprint: Callable[..., Blueprint], key: str = "^"
+    entity: dict | list,
+    blueprint: Blueprint,
+    get_blueprint: Callable[..., Blueprint],
+    key: str = "^",
+    allow_extra: bool = False,
 ) -> None:
-    """
-    Takes a list, or a complex entity (dict) and validates the entity according to the type of the blueprint.
+    """Takes a list, or a complex entity (dict) and validates the entity according to the type of the blueprint.
 
-    Will raise detailed "ValidationException"s if the entity is invalid
+    Args:
+        blueprint: Blueprint to check the entity against
+        key: Dotted path to the location of the current entity.
+        allow_extra: Whether to raise ValidationException on keys in entity not defined in blueprint
+
+    Raises:
+        Will raise detailed "ValidationException"s if the entity is invalid
     """
     debug_message = f"Location: Entity in key '{key}'"
     if isinstance(entity, list):
@@ -58,26 +67,30 @@ def validate_entity(
             validate_entity(item, blueprint, get_blueprint, f"{key}.{i}")
         return
 
-    if not valid_complex_type(blueprint.path, [entity["type"]] + blueprint.extends, get_blueprint):
-        raise ValidationException(
-            f"Entity should be of type '{blueprint.path}' (or extending from it). Got '{entity['type']}'",
-            debug=debug_message,
-        )
+    if not allow_extra:
+        if not valid_complex_type(blueprint.path, [entity["type"]] + blueprint.extends, get_blueprint):
+            raise ValidationException(
+                f"Entity should be of type '{blueprint.path}' (or extending from it). Got '{entity['type']}'",
+                debug=debug_message,
+            )
 
-    # We now know it's a valid child type in entity.
-    # Get new, potentially specialized blueprint, from type defined in entity.
-    blueprint = get_blueprint(entity["type"])
+        # We now know it's a valid child type in entity.
+        # Get new, potentially specialized blueprint, from type defined in entity.
+        blueprint = get_blueprint(entity["type"])
 
-    if keys_not_in_blueprint := [key for key in entity.keys() if key not in blueprint.get_attribute_names()]:
-        raise ValidationException(
-            f"Attributes '{keys_not_in_blueprint}' are not specified in the '{blueprint.path}'", debug=debug_message
-        )
+        if keys_not_in_blueprint := [key for key in entity.keys() if key not in blueprint.get_attribute_names()]:
+            raise ValidationException(
+                f"Attributes '{keys_not_in_blueprint}' are not specified in the '{blueprint.path}'",
+                debug=debug_message,
+            )
 
     for attribute in blueprint.get_required_attributes():
         if entity.get(attribute.name, None) is None and not attribute.is_array:
             raise ValidationException(f"Missing required attribute '{attribute.name}'", debug=debug_message)
 
     for attribute in [blueprint.get_attribute_by_name(key) for key in entity.keys()]:
+        if attribute is None:
+            continue
         if attribute.is_array:
             if type(entity[attribute.name]) != list:
                 raise ValidationException(f"'{attribute.name}' should be a list", debug=debug_message)
@@ -95,8 +108,8 @@ def validate_entity(
         )
 
 
-def validate_entity_use_case(entity: BasicEntity, user: User) -> str:
+def validate_entity_use_case(entity: BasicEntity, user: User, as_type: common_type_constrained_string | None) -> str:
     document_service = DocumentService(user=user)
-    blueprint = document_service.get_blueprint(entity.type)
-    validate_entity(entity.dict(), blueprint, document_service.get_blueprint)
+    blueprint = document_service.get_blueprint(as_type if as_type else entity.type)
+    validate_entity(entity.dict(), blueprint, document_service.get_blueprint, allow_extra=bool(as_type))
     return "OK"

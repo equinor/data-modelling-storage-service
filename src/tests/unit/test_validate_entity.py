@@ -245,3 +245,35 @@ class ValidateEntityTestCase(unittest.TestCase):
             validate_entity(test_entity, blueprint, self.get_blueprint)
         assert error.exception.message == "Attribute 'floatValues' should be type 'float'. Got 'str'"
         assert error.exception.debug == "Location: Entity in key '^.floatValues.1'"
+
+    def test_validate_against_base_type_not_inherited(self):
+        test_entity = {
+            "type": "something else that should not matter...",
+            "name": "MyBlueprint",
+            "description": "A descsription",
+            "attributes": [
+                {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "name"},
+            ],
+            "anExtraParameter": {"whatEver": 123, "bla": "bla", "not validated": [[[]]]},
+        }
+
+        # Validate against the master blueprint
+        blueprint = self.get_blueprint("dmss://system/SIMOS/Blueprint")
+        validate_entity(test_entity, blueprint, self.get_blueprint, allow_extra=True)
+
+    def test_validate_against_base_type_not_inherited_invalid(self):
+        test_entity = {
+            "type": "something else that should not matter...",
+            "name": "MyBlueprint",
+            "description": "A descsription",
+            "attributes": [
+                {"attributeType": 132, "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "name"},
+            ],
+            "anExtraParameter": {"whatEver": 123, "bla": "bla", "not validated": [[[]]]},
+        }
+        with self.assertRaises(ValidationException) as error:
+            # Validate against the master blueprint
+            blueprint = self.get_blueprint("dmss://system/SIMOS/Blueprint")
+            validate_entity(test_entity, blueprint, self.get_blueprint, allow_extra=True)
+        assert error.exception.message == "Attribute 'attributeType' should be type 'str'. Got 'int'"
+        assert error.exception.debug == "Location: Entity in key '^.attributes.0.attributeType'"

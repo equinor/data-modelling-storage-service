@@ -70,7 +70,7 @@ class Blueprint:
     def get_attribute_type_by_key(self, key):
         return next((attr.attribute_type for attr in self.attributes if attr.name == key), None)
 
-    def get_attribute_by_name(self, key) -> BlueprintAttribute:
+    def get_attribute_by_name(self, key) -> BlueprintAttribute | None:
         return next((attr for attr in self.attributes if attr.name == key), None)
 
     def get_model_contained_by_name(self, key):
