@@ -20,6 +20,7 @@ def find_package_with_document(data_source: str, document_id: str, user) -> dict
 def resolve_blueprint_use_case(user: User, absolute_id: str):
     data_source_id, document_id, attr = split_dmss_ref(absolute_id)
     path_elements = []
+    protocol_prefix = "dmss://"
     package = find_package_with_document(data_source_id, document_id, user)
     root_package_found = package["isRoot"]
     blueprint_name = next((c["name"] for c in package["content"] if c["_id"] == document_id))
@@ -32,4 +33,4 @@ def resolve_blueprint_use_case(user: User, absolute_id: str):
         root_package_found = package["isRoot"]
         next_document_id = package["_id"]
     path_elements.reverse()
-    return data_source_id + "/" + "/".join(path_elements)
+    return protocol_prefix + data_source_id + "/" + "/".join(path_elements)

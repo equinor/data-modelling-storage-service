@@ -24,7 +24,7 @@ Feature: Blueprint - Resolve path to document use case
       Then the response status should be "OK"
       And the response should be
       """
-      data-source-name/blueprints/sub_package_1/document_1
+      dmss://data-source-name/blueprints/sub_package_1/document_1
       """
 
     Scenario: resolve path to document fails when document with id does not exist
