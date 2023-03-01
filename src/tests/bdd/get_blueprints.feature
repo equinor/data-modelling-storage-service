@@ -106,7 +106,7 @@ Feature: Get a blueprint
         {
           "name": "Yaml",
           "type": "dmss://system/SIMOS/UiRecipe",
-          "plugin": "yaml-view",
+          "plugin": "yaml",
           "roles": [
             "dmss-admin"
           ],
@@ -163,7 +163,7 @@ Feature: Get a blueprint
       {
         "name": "Yaml",
         "type": "dmss://system/SIMOS/UiRecipe",
-        "plugin": "yaml-view",
+        "plugin": "yaml",
         "category": "view"
       }
     ],
