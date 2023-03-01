@@ -16,7 +16,7 @@
     {
       "name": "Diagram",
       "type": "dmss://system/SIMOS/UiRecipe",
-      "plugin": "mermaid"
+      "plugin": "blueprint-hierarchy"
     }
   ],
   "storageRecipes": [
