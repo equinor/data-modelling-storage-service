@@ -19,9 +19,9 @@ def find_package_with_document(data_source: str, document_id: str, user) -> dict
 
 def resolve_blueprint_use_case(user: User, absolute_id: str):
     data_source_id, document_id, attr = split_dmss_ref(absolute_id)
-    root_package_found = False
     path_elements = []
     package = find_package_with_document(data_source_id, document_id, user)
+    root_package_found = package["isRoot"]
     blueprint_name = next((c["name"] for c in package["content"] if c["_id"] == document_id))
     path_elements.append(blueprint_name)
     path_elements.append(package["name"])
