@@ -7,7 +7,7 @@
       "type": "dmss://system/SIMOS/UiRecipe",
       "name": "PDFView",
       "description": "Embedded PDF View",
-      "plugin": "default-pdf",
+      "plugin": "'@development-framework/dm-core-plugins/pdf",
       "attributes": []
     }
   ]
