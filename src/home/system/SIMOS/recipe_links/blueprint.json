@@ -11,7 +11,7 @@
       "type": "dmss://system/SIMOS/UiRecipe",
       "name": "Edit",
       "description": "Default blueprint edit",
-      "plugin": "edit-blueprint"
+      "plugin": "@development-framework/dm-core-plugins/blueprint"
     },
     {
       "name": "Diagram",
