@@ -437,7 +437,7 @@ class DocumentService:
         files: Dict with names and files of the files contained in the document
         update_uncontained: Whether to update uncontained children
         """
-        document_dict = document.to_dict()
+        document_dict = document.dict()
         if not path:  # We're adding something to the dataSource itself
             if not document.type == SIMOS.PACKAGE.value or not document_dict.get("isRoot", False):
                 raise BadRequestException("Only root packages may be added to the root of a data source")
