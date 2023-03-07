@@ -1,7 +1,7 @@
 import unittest
 
 from common.exceptions import ValidationException
-from features.entity.use_cases.validate_entity import validate_entity
+from common.utils.validators import validate_entity
 from tests.unit.mock_utils import get_mock_document_service
 
 
