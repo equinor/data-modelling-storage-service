@@ -54,12 +54,15 @@ def _get_document_uid_by_path(package: dict, path_elements: List[str], data_sour
 def get_document_uid_by_path(dotted_path: str, repository: Repository) -> Union[str, None]:
     path_elements = dotted_path.split("/")
     root_package_name = path_elements.pop(0)
-    root_package = get_root_package(root_package_name, repository)
-    # Check if it's a root-package
-    if not path_elements:
-        return root_package["_id"]
-    uid = _get_document_uid_by_path(root_package, path_elements, repository)
-    return uid
+    try:
+        root_package = get_root_package(root_package_name, repository)
+        # Check if it's a root-package
+        if not path_elements:
+            return root_package["_id"]
+        uid = _get_document_uid_by_path(root_package, path_elements, repository)
+        return uid
+    except NotFoundException:
+        return None
 
 
 def get_document_by_absolute_path(absolute_path: str, user: User) -> dict:

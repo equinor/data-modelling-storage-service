@@ -175,12 +175,12 @@ Feature: Document 2
     Given i access the resource url "/api/documents/data-source-name/1"
     When i make a form-data "PUT" request
     """
-    {
+    { "data":{
       "name": "package_1",
       "type": "dmss://system/SIMOS/Package",
       "description": "new description",
       "isRoot": true
-    }
+    }}
     """
     Then the response status should be "OK"
     And the response should contain
@@ -199,7 +199,7 @@ Feature: Document 2
     Given i access the resource url "/api/documents/data-source-name/6"
     When i make a form-data "PUT" request
     """
-    {
+    { "data":{
       "name": "new_name",
       "type": "dmss://test-source-name/TestData/TestContainer",
       "description": "some description",
@@ -241,7 +241,7 @@ Feature: Document 2
             ]
         }
       ]
-    }
+    }}
     """
     Then the response status should be "OK"
     And the response should contain
@@ -297,9 +297,11 @@ Feature: Document 2
     Given i access the resource url "/api/documents/data-source-name/6?attribute=itemNotContained"
     When i make a form-data "PUT" request
     """
+    { "data":
     {
       "name": "item_single",
       "type": "dmss://test-source-name/TestData/ItemType"
+    }
     }
     """
     Then the response status should be "OK"
@@ -317,6 +319,7 @@ Feature: Document 2
     Given i access the resource url "/api/documents/data-source-name/7.complexList"
     When i make a form-data "PUT" request
     """
+    { "data":
     [
         {
           "name": "item_1_contained",
@@ -324,6 +327,7 @@ Feature: Document 2
           "extra": "extra_1"
         }
     ]
+    }
     """
     Then the response status should be "OK"
     And the response should contain

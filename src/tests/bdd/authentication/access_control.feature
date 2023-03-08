@@ -155,7 +155,7 @@ Feature: Access Control
     Given I access the resource url "/api/documents/test-DS/1"
     When i make a form-data "PUT" request
     """
-    {
+    { "data":{
       "type": "dmss://system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
@@ -165,7 +165,7 @@ Feature: Access Control
           "name": "ChangedName"
         }
       ]
-    }
+    }}
     """
     Then the response status should be "OK"
     And the response should contain
@@ -201,7 +201,7 @@ Feature: Access Control
     Given I access the resource url "/api/documents/test-DS/1"
     When i make a form-data "PUT" request
     """
-    {
+    { "data":{
       "type": "dmss://system/SIMOS/Blueprint",
       "name": "Whatever",
       "attributes": [
@@ -211,7 +211,7 @@ Feature: Access Control
           "name": "ChangedName"
         }
       ]
-    }
+    }}
     """
     Then the response status should be "Forbidden"
     And the response should be
