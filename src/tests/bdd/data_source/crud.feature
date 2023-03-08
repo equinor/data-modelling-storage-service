@@ -98,7 +98,7 @@ Feature: Data Sources
     Given i access the resource url "/api/data-sources/myTest-DataSource"
     When i make a form-data "POST" request
     """
-    this is not valid json
+    { "data": "this is not valid json"}
     """
     Then the response status should be "Unprocessable Entity"
     And the response should contain

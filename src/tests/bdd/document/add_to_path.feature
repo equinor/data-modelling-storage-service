@@ -244,3 +244,18 @@ Feature: Add document with document_service
       }
     """
 
+  Scenario: Add root package
+    Given i access the resource url "/api/documents/data-source-name/add-to-path"
+    When i make a form-data "POST" request
+    """
+    {
+      "document":
+      {
+        "type": "dmss://system/SIMOS/Package",
+        "name": "newRootPackage",
+        "isRoot": true,
+        "content": []
+      }
+    }
+    """
+    Then the response status should be "OK"

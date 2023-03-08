@@ -41,10 +41,14 @@ def step_make_file_request(context, method, number_of_files):
 def step_make_request(context, method):
     # These requests may contain files, so we use "multipart/form-data".
     # JSON must then be sent in the 'data' key part of the form
+    form_data = {
+        k: json.dumps(v) if isinstance(v, dict) or isinstance(v, list) else str(v)
+        for k, v in json.loads(context.text).items()
+    }
     if method == "PUT":
-        context.response = context.test_client.put(context.url, data={"data": context.text}, headers=context.headers)
+        context.response = context.test_client.put(context.url, data=form_data, headers=context.headers)
     elif method == "POST":
-        context.response = context.test_client.post(context.url, data={"data": context.text}, headers=context.headers)
+        context.response = context.test_client.post(context.url, data=form_data, headers=context.headers)
     else:
         raise Exception("A 'form-data' request must be either 'PUT' or 'POST'")
 

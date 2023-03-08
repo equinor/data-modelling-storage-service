@@ -1,9 +1,7 @@
 import pprint
 from functools import lru_cache
-from typing import Callable, Dict, List, Union
+from typing import BinaryIO, Callable, Dict, List, Union
 from uuid import uuid4
-
-from fastapi import UploadFile
 
 from authentication.models import ACL
 from common.exceptions import (
@@ -11,6 +9,7 @@ from common.exceptions import (
     BadRequestException,
     MissingPrivilegeException,
     NotFoundException,
+    ValidationException,
 )
 from common.tree_node_serializer import (
     tree_node_from_dict,
@@ -407,7 +406,7 @@ class DocumentService:
         delete_document(data_source, document_id)
 
     @staticmethod
-    def _merge_entity_and_files(node: Node, files: Dict[str, UploadFile]):
+    def _merge_entity_and_files(node: Node, files: Dict[str, BinaryIO]):
         """
         Recursively adds the matching posted files to the system/SIMOS/Blob types in the node
         """
@@ -423,8 +422,35 @@ class DocumentService:
                         f"filename posted. Posted files: {tuple(files.keys())}",
                     )
 
-    # Add entity by path
-    def add(self, data_source_id: str, path: str, document: Entity, files: dict, update_uncontained=False):
+    def add(
+        self,
+        data_source_id: str,
+        path: str | None,
+        document: Entity,
+        files: dict[str, BinaryIO],
+        update_uncontained=False,
+    ):
+        """Add en entity to path
+        path: dotted path on format 'RootPackage/folder/entity.attribute.attribute.
+            If none, we're adding to the data source itself.
+        document: The entity to be added
+        files: Dict with names and files of the files contained in the document
+        update_uncontained: Whether to update uncontained children
+        """
+        document_dict = document.to_dict()
+        if not path:  # We're adding something to the dataSource itself
+            if not document.type == SIMOS.PACKAGE.value or not document_dict.get("isRoot", False):
+                raise BadRequestException("Only root packages may be added to the root of a data source")
+            # TODO: Validate package entity
+            if get_document_uid_by_path(document_dict["name"], self.repository_provider(data_source_id, self.user)):
+                raise ValidationException(
+                    message=f"A root package named '{document_dict['name']}' already exists",
+                    data={"dataSource": data_source_id, "document": document_dict},
+                )
+            document_repository = self.repository_provider(data_source_id, self.user)
+            document_repository.update(document_dict)
+            return {"uid": document_dict["_id"]}
+
         target: Node = self.get_by_path(f"{data_source_id}/{path}")
         if not target:
             raise NotFoundException(f"Could not find '{path}' in data source '{data_source_id}'")
@@ -433,7 +459,7 @@ class DocumentService:
         new_node_attr = path.split(".")[-1] if "." in path else "content"
 
         new_node = tree_node_from_dict(
-            {**document.to_dict()},
+            {**document_dict},
             blueprint_provider=self.get_blueprint,
             node_attribute=BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
             recipe_provider=self.get_storage_recipes,
