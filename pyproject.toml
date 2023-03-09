@@ -36,6 +36,11 @@ black = "^22.3.0"
 [tool.pytest]
 addopts = ["--ignore gen"]
 
+[tool.pytest.ini_options]
+pythonpath = [
+  "./src"
+]
+
 [tool.isort]
 profile = "black"
 
