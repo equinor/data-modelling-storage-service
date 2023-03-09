@@ -266,6 +266,7 @@ class Node(NodeBase):
         super().__init__(
             key, attribute, uid, parent, blueprint_provider, entity=entity, recipe_provider=recipe_provider
         )
+        self.entity: dict = entity if entity else {}
         self.error_message = None
 
     def is_root(self):
@@ -365,13 +366,13 @@ class Node(NodeBase):
 
         if self.storage_contained:
             self.uid = None
-            self.entity.pop("_id", None)  # type: ignore
+            self.entity.pop("_id", None)
             return
-        entity_id = self.entity.get("_id", None)  # type: ignore
+        entity_id = self.entity.get("_id", None)
 
         current_id = new_id if new_id else (entity_id if entity_id else self.uid if self.uid else str(uuid4()))
         self.uid = current_id
-        self.entity["_id"] = self.uid  # type: ignore
+        self.entity["_id"] = self.uid
 
 
 class ListNode(NodeBase):
