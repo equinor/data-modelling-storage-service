@@ -1,7 +1,7 @@
 {
   "type": "dmss://system/SIMOS/Blueprint",
   "name": "ReferenceViewConfig",
-  "extends": ["./ViewConfig"],
+  "extends": ["dmss://system/SIMOS/ViewConfig"],
   "attributes": [
     {
       "type": "CORE:BlueprintAttribute",
