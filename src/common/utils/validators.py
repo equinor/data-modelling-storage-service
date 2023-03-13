@@ -8,16 +8,15 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import BuiltinDataTypes
 
 
-def valid_complex_type(valid_type: str, extended_types: List[str], get_blueprint: Callable) -> bool:
-    if valid_type == BuiltinDataTypes.OBJECT.value:
+def blueprint_extends_blueprint(
+    minimum_blueprint_type: str, blueprint_type: str, get_blueprint: Callable[..., Blueprint]
+) -> bool:
+    if minimum_blueprint_type == BuiltinDataTypes.OBJECT.value:
         return True
-    if valid_type in extended_types:
+    if minimum_blueprint_type == blueprint_type:
         return True
-    for inherited_type in extended_types:
-        inherited_blueprint = get_blueprint(inherited_type)
-        if valid_type in inherited_blueprint.extends:
-            return True
-        if valid_complex_type(valid_type, inherited_blueprint.extends, get_blueprint):
+    for inherited_type in get_blueprint(blueprint_type).extends:
+        if blueprint_extends_blueprint(minimum_blueprint_type, inherited_type, get_blueprint):
             return True
     return False
 
@@ -73,7 +72,7 @@ def validate_entity(
         return
 
     if not allow_extra:
-        if not valid_complex_type(blueprint.path, [entity["type"]] + blueprint.extends, get_blueprint):
+        if not blueprint_extends_blueprint(blueprint.path, entity["type"], get_blueprint):
             raise ValidationException(
                 f"Entity should be of type '{blueprint.path}' (or extending from it). Got '{entity['type']}'",
                 debug=debug_message,
