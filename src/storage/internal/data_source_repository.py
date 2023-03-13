@@ -1,11 +1,15 @@
 from typing import Dict, List, Optional
 
 from pydantic import BaseModel
-from pymongo.errors import DuplicateKeyError
+from pymongo.errors import DuplicateKeyError, ServerSelectionTimeoutError
 
 from authentication.access_control import DEFAULT_ACL, access_control
 from authentication.models import ACL, AccessLevel, User
-from common.exceptions import BadRequestException, NotFoundException
+from common.exceptions import (
+    ApplicationException,
+    BadRequestException,
+    NotFoundException,
+)
 from common.utils.logging import logger
 from enums import RepositoryType
 from restful.request_types.create_data_source import DataSourceRequest
@@ -82,7 +86,11 @@ class DataSourceRepository:
         return str(result.upserted_id)
 
     def get(self, id: str) -> DataSource:
-        data_source = data_source_collection.find_one(filter={"_id": id})
+        try:
+            data_source = data_source_collection.find_one(filter={"_id": id})
+        except ServerSelectionTimeoutError:
+            logger.error("Failed to establish connection to internal database")
+            raise ApplicationException(debug="Internal storage error")
         if not data_source:
             raise NotFoundException(
                 message=f"The data source, with id '{id}' could not be found",
