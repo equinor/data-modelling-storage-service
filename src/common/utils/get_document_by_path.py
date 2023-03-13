@@ -73,6 +73,8 @@ def get_document_by_absolute_path(absolute_path: str, user: User) -> dict:
     match protocol:
         case "dmss":  # The entity should be fetched from a DataSource in this DMSS instance
             data_source_id, path, attribute = split_dmss_ref(address)
+            if not path:
+                raise BadRequestException(f"The path '{absolute_path}' is an invalid document reference.")
             document_repository = get_data_source(data_source_id, user)
             type_id = get_document_uid_by_path(path, document_repository)
             if not type_id:

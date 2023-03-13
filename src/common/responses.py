@@ -85,6 +85,9 @@ def create_response(
             except MissingPrivilegeException as e:
                 logger.warning(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_403_FORBIDDEN)
+            except ApplicationException as e:
+                logger.error(e)
+                return JSONResponse(e.dict(), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
             except Exception as e:
                 traceback.print_exc()
                 logger.error(f"Unexpected unhandled exception: {e}")
