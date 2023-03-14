@@ -197,9 +197,21 @@ Feature: Explorer - Add file
       "description": "a comment blueprint, that does not require a name",
       "attributes": [
         {
-        "name": "text",
-        "attributeType": "string",
-        "type": "dmss://system/SIMOS/BlueprintAttribute"
+          "name": "type",
+          "attributeType": "string",
+          "type": "dmss://system/SIMOS/BlueprintAttribute"
+        },
+        {
+          "name": "description",
+          "attributeType": "string",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "default": "",
+          "optional": true
+        },
+        {
+          "name": "text",
+          "attributeType": "string",
+          "type": "dmss://system/SIMOS/BlueprintAttribute"
         }
       ]
     }
@@ -674,7 +686,7 @@ Feature: Explorer - Add file
       "document": {
         "name": "new_pdf_container",
         "type": "dmss://test-DS/root_package/MultiplePdfContainer",
-        "description": "",
+        "description": "multiple pdf container",
         "a_pdf": {
           "name": "MyPDF1",
           "description": "",
@@ -682,7 +694,7 @@ Feature: Explorer - Add file
           "blob": {
             "name": "file1",
             "type": "dmss://system/SIMOS/Blob",
-            "_blob_id": ""
+            "_blob_id": "1"
           },
           "author": "Stig Oskar"
         },
@@ -693,14 +705,14 @@ Feature: Explorer - Add file
           "blob": {
             "name": "file2",
             "type": "dmss://system/SIMOS/Blob",
-            "_blob_id": ""
+            "_blob_id": "2"
           },
           "author": "Stig Oskar"
         },
         "pdf_container": {
           "name": "second_pdf_container",
           "type": "dmss://test-DS/root_package/MultiplePdfContainer",
-          "description": "",
+          "description": "another multiple pdf container",
           "a_pdf": {
             "name": "MyPDF3",
             "description": "",
@@ -708,7 +720,7 @@ Feature: Explorer - Add file
             "blob": {
               "name": "file3",
               "type": "dmss://system/SIMOS/Blob",
-              "_blob_id": ""
+              "_blob_id": "3"
             },
             "author": "Stig Oskar"
           },
@@ -720,7 +732,7 @@ Feature: Explorer - Add file
               "name": "file4",
               "type": "dmss://system/SIMOS/Blob",
               "size": 0,
-              "_blob_id": ""
+              "_blob_id": "4"
             },
             "author": "Stig Oskar"
           },

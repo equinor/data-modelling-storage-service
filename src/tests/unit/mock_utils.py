@@ -56,6 +56,7 @@ two_contained_deep_attributes = {
     "type": SIMOS.BLUEPRINT.value,
     "name": "two_contained_deep_attributes",
     "description": "Two contained deeply nested attributes",
+    "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
         {
             "attributeType": "all_contained_cases_blueprint",
@@ -210,7 +211,6 @@ blueprint_with_storageAffinity_in_root = {
             "attributeType": "string",
             "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
             "name": "someData",
-            "default": "",
         },
     ],
     "storageRecipes": [

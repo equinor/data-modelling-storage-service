@@ -14,8 +14,9 @@ from tests.unit.mock_utils import get_mock_document_service
 class MultiTypeBlueprintProvider:
     @staticmethod
     def get_blueprint(type: str):
+        blueprint = None
         if type == "parent":  # Just a container
-            return Blueprint(
+            blueprint = Blueprint(
                 {
                     "name": "Parent",
                     "type": SIMOS.BLUEPRINT.value,
@@ -30,8 +31,8 @@ class MultiTypeBlueprintProvider:
                     ],
                 }
             )
-        if type == "parent_w_list":  # Just a container with a list
-            return Blueprint(
+        elif type == "parent_w_list":  # Just a container with a list
+            blueprint = Blueprint(
                 {
                     "name": "Parent",
                     "type": SIMOS.BLUEPRINT.value,
@@ -47,8 +48,8 @@ class MultiTypeBlueprintProvider:
                     ],
                 }
             )
-        if type == "wrapps_parent_w_list":  # Wrapps a uncontained parent_w_list
-            return Blueprint(
+        elif type == "wrapps_parent_w_list":  # Wrapps a uncontained parent_w_list
+            blueprint = Blueprint(
                 {
                     "name": "wrapps_parent_w_list",
                     "type": SIMOS.BLUEPRINT.value,
@@ -62,8 +63,8 @@ class MultiTypeBlueprintProvider:
                     ],
                 }
             )
-        if type == "base_child":  # A very basic blueprint, extends from NamedEntity
-            return Blueprint(
+        elif type == "base_child":  # A very basic blueprint, extends from NamedEntity
+            blueprint = Blueprint(
                 {
                     "name": "BaseChild",
                     "type": SIMOS.BLUEPRINT.value,
@@ -77,8 +78,8 @@ class MultiTypeBlueprintProvider:
                     ],
                 }
             )
-        if type == "special_child":  # A blueprint that extends from 'base_child', and adds an extra attribute
-            return Blueprint(
+        elif type == "special_child":  # A blueprint that extends from 'base_child', and adds an extra attribute
+            blueprint = Blueprint(
                 {
                     "name": "SpecialChild",
                     "type": SIMOS.BLUEPRINT.value,
@@ -92,8 +93,8 @@ class MultiTypeBlueprintProvider:
                     ],
                 }
             )
-        if type == "extra_special_child":  # A blueprint that extends from 'base_child', and adds an extra attribute
-            return Blueprint(
+        elif type == "extra_special_child":  # A blueprint that extends from 'base_child', and adds an extra attribute
+            blueprint = Blueprint(
                 {
                     "name": "ExtraSpecialChild",
                     "type": SIMOS.BLUEPRINT.value,
@@ -107,8 +108,10 @@ class MultiTypeBlueprintProvider:
                     ],
                 }
             )
-        if type == "special_child_no_inherit":  # A duplicate of the 'special_child', but does not extends 'base_child'
-            return Blueprint(
+        elif (
+            type == "special_child_no_inherit"
+        ):  # A duplicate of the 'special_child', but does not extends 'base_child'
+            blueprint = Blueprint(
                 {
                     "name": "SpecialChild",
                     "type": SIMOS.BLUEPRINT.value,
@@ -123,7 +126,10 @@ class MultiTypeBlueprintProvider:
                 }
             )
         else:
-            return Blueprint(LocalFileRepository().get(type))
+            blueprint = Blueprint(LocalFileRepository().get(type))
+
+        blueprint.path = type
+        return blueprint
 
 
 class DocumentServiceTestCase(unittest.TestCase):

@@ -84,7 +84,7 @@ class DataSourceTestCase(unittest.TestCase):
         assert blob_doc_storage and default_doc_storage
 
     def test_save_based_on_root_storageRecipe(self):
-        blob_doc = {"name": "some_entity", "description": "", "type": "blob", "someData": ""}
+        blob_doc = {"name": "some_entity", "description": "", "type": "blob", "someData": "test"}
 
         default_doc_storage = {}
 
