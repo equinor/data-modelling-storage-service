@@ -25,7 +25,7 @@ from common.utils.get_storage_recipe import storage_recipe_provider
 from common.utils.logging import logger
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.utils.string_helpers import split_dmss_ref
-from common.utils.validators import entity_has_all_required_attributes
+from common.utils.validators import validate_entity, validate_entity_against_self
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
@@ -162,10 +162,8 @@ class DocumentService:
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
 
+        node.set_uid()  # Ensure the node has a _id
         ref_dict = tree_node_to_ref_dict(node)
-
-        if type(node) is Node and node.contained:
-            entity_has_all_required_attributes(ref_dict, node.blueprint.get_required_attributes())
 
         # If the node is not contained, and has data, save it!
         if not node.storage_contained and ref_dict:
@@ -178,6 +176,7 @@ class DocumentService:
                 ref_dict["__path__"] = path
                 ref_dict["__combined_document_meta__"] = combined_document_meta
             parent_uid = node.parent.node_id if node.parent else None
+            validate_entity_against_self(tree_node_to_dict(node), self.get_blueprint)
             repository.update(
                 ref_dict,
                 node.get_context_storage_attribute(),
@@ -276,18 +275,21 @@ class DocumentService:
         files: dict = None,
         update_uncontained: bool = True,
     ):
+        validate_entity_against_self(data, self.get_blueprint)
         # TODO: Since we are only fetching 1 lvl here, any updates on nested uncontained attributes by dott reference
         # TODO: will fail, as they are not a node on the root node. For example; '123-456.contAttr.someUncontainedAttr'
         # TODO: We should update 'node.get_by_path()' do fetch documents as needed
         root: Node = self.get_node_by_uid(data_source_id, document_id, depth=0)
         target_node = root
 
-        # If it's a contained nested node, set the modify target based on dotted-path
+        # If it's a contained nested node, set the modify-target based on dotted-path
         if attribute:
             target_node = root.get_by_path(attribute.split("."))
 
         if not target_node:
             raise NotFoundException(f"{data_source_id}/{document_id}.{attribute}")
+
+        validate_entity(data, self.get_blueprint, self.get_blueprint(target_node.attribute.attribute_type), "extend")
 
         target_node.update(data)
         if files:
@@ -303,11 +305,10 @@ class DocumentService:
         return {"data": tree_node_to_dict(target_node)}
 
     def add_document(self, absolute_ref: str, data: dict, update_uncontained: bool = False):
+        validate_entity_against_self(data, self.get_blueprint)
         data_source, parent_id, attribute = split_dmss_ref(absolute_ref)
         if parent_id and not attribute:
             raise BadRequestException("Attribute not specified on parent")
-        if not data.get("type"):
-            raise BadRequestException("Every entity must have a 'type' attribute")
 
         if not parent_id:  # No parent_id in reference. Just add the document to the root of the data_source
             return self._add_document_with_no_parent(data_source, data, update_uncontained)
@@ -330,6 +331,8 @@ class DocumentService:
                     + f"Received '{leaf_attribute}'"
                 )
             )
+        if parent.type != SIMOS.PACKAGE.value:
+            validate_entity(data, self.get_blueprint, leaf_parent.blueprint, "extend")
 
         # If the leaf attribute is a list. Set that as parent
         if leaf_parent.is_array():
@@ -360,8 +363,6 @@ class DocumentService:
             parent.add_child(new_node)
         else:
             parent.replace(new_node.node_id, new_node)
-
-        new_node.validate_type_on_parent()
 
         self.save(root, data_source, update_uncontained=update_uncontained)
 
@@ -447,10 +448,11 @@ class DocumentService:
         update_uncontained: Whether to update uncontained children
         """
         document_dict = document.dict()
+        validate_entity_against_self(document_dict, self.get_blueprint)
+
         if not path:  # We're adding something to the dataSource itself
             if not document.type == SIMOS.PACKAGE.value or not document_dict.get("isRoot", False):
                 raise BadRequestException("Only root packages may be added to the root of a data source")
-            # TODO: Validate package entity
             try:
                 if get_document_uid_by_path(
                     document_dict["name"], self.repository_provider(data_source_id, self.user)
@@ -468,6 +470,11 @@ class DocumentService:
         target: Node = self.get_by_path(f"{data_source_id}/{path}")
         if not target:
             raise NotFoundException(f"Could not find '{path}' in data source '{data_source_id}'")
+
+        if target.type != SIMOS.PACKAGE.value:
+            validate_entity(
+                document_dict, self.get_blueprint, self.get_blueprint(target.attribute.attribute_type), "extend"
+            )
 
         # If dotted attribute path, attribute is the last entry. Else content
         new_node_attr = path.split(".")[-1] if "." in path else "content"

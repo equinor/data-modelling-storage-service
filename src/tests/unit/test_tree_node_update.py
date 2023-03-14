@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 from authentication.models import User
-from common.exceptions import BadRequestException
+from common.exceptions import BadRequestException, ValidationException
 from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
@@ -242,13 +242,17 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(
             blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
         )
-        with self.assertRaises(BadRequestException):
+        with self.assertRaises(ValidationException) as error:
             document_service.update_document(
                 data_source_id="testing",
                 document_id="1",
                 attribute="SomeChild",
                 data={"name": "whatever", "type": "special_child_no_inherit", "AnExtraValue": "Hallo there!"},
             )
+        assert (
+            error.exception.message
+            == "Entity should be of type 'base_child' (or extending from it). Got 'special_child_no_inherit'"
+        )
         assert not doc_storage["1"]["SomeChild"]
 
     def test_add_optional_nested(self):
@@ -469,7 +473,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
         )
 
-        with self.assertRaises(BadRequestException) as error:
+        with self.assertRaises(ValidationException) as error:
             document_service.update_document(
                 data_source_id="testing",
                 document_id="1",
@@ -483,7 +487,10 @@ class DocumentServiceTestCase(unittest.TestCase):
                     },
                 ],
             )
-        print(error.exception)
+        assert (
+            error.exception.message
+            == "Entity should be of type 'base_child' (or extending from it). Got 'special_child_no_inherit'"
+        )
         assert doc_storage["1"]["SomeChild"] == []
 
     def test_add_child_with_empty_list(self):

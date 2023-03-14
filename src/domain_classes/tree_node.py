@@ -1,8 +1,6 @@
 from typing import Callable, List, Union
 from uuid import uuid4
 
-from common.exceptions import BadRequestException
-from common.utils.validators import is_blueprint_instance_of
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
@@ -236,19 +234,6 @@ class NodeBase:
         if next((child for child in self.children if child.name == attribute), None):  # type: ignore
             return True
 
-    def validate_type_on_parent(self):
-        if not self.parent:
-            return True
-        key = self.key if not self.parent.is_array() else self.parent.key  # Use attribute key, not list index
-        valid_type = self.parent.blueprint.get_attribute_type_by_key(key)  # Valid type as defined in parents blueprint
-        if not is_blueprint_instance_of(valid_type, self.type, self.blueprint_provider):  # Resolve extends
-            raise BadRequestException(
-                (
-                    f"The type '{self.type}' is not a valid type for the "
-                    f"'{key}' attribute. The type should be of type '{valid_type} (or extending from it)'"
-                )
-            )
-
 
 class Node(NodeBase):
     def __init__(
@@ -281,7 +266,6 @@ class Node(NodeBase):
         self.set_uid(data.get("_id"))  # type: ignore
         # Set self.type from posted type, and validate against parent blueprint
         self.type = data.get("type", self.attribute.attribute_type)
-        self.validate_type_on_parent()
 
         # Modify and add for each key in posted data
         for key in data.keys():
@@ -411,7 +395,6 @@ class ListNode(NodeBase):
         for i, item in enumerate(data):
             # Set self.type from posted type, and validate against parent blueprint
             self.type = item["type"]
-            self.validate_type_on_parent()
 
             # Set uid base on containment and existing(lack of) uid
             # This requires the existing _id to be posted

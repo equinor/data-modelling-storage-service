@@ -396,9 +396,9 @@ Feature: Explorer - Add file
     """
     {
     "status": 400,
-    "type": "BadRequestException",
+    "type": "ValidationException",
     "message": "Every entity must have a 'type' attribute",
-    "debug": "Unable to complete the requested operation with the given input values.",
+    "debug": "Location: Entity in key '^'",
     "data": null
     }
     """
@@ -507,11 +507,11 @@ Feature: Explorer - Add file
     And the response should be
     """
     {
-    "status": 422,
-    "type": "ValidationException",
-    "message": "Required attribute 'name' not found in the entity",
-    "debug": "Values are invalid for requested operation.",
-    "data": null
+      "status": 422,
+      "type": "ValidationException",
+      "message": "Missing required attribute 'name'",
+      "debug": "Location: Entity in key '^'",
+      "data": null
     }
     """
 
@@ -578,11 +578,11 @@ Feature: Explorer - Add file
     And the response should be
     """
     {
-    "status": 422,
-    "type": "ValidationException",
-    "message": "Required attribute 'name' not found in the entity",
-    "debug": "Values are invalid for requested operation.",
-    "data": null
+      "status": 422,
+      "type": "ValidationException",
+      "message": "Missing required attribute 'name'",
+      "debug": "Location: Entity in key '^'",
+      "data": null
     }
     """
 
@@ -602,11 +602,11 @@ Feature: Explorer - Add file
     And the response should be
     """
     {
-    "status": 422,
-    "type": "ValidationException",
-    "message": "Required attribute 'name' not found in the entity",
-    "debug": "Values are invalid for requested operation.",
-    "data": null
+      "status": 422,
+      "type": "ValidationException",
+      "message": "Missing required attribute 'name'",
+      "debug": "Location: Entity in key '^'",
+      "data": null
     }
     """
 
@@ -623,11 +623,11 @@ Feature: Explorer - Add file
     And the response should be
     """
     {
-    "status": 422,
-    "type": "ValidationException",
-    "message": "Required attribute 'name' not found in the entity",
-    "debug": "Values are invalid for requested operation.",
-    "data": null
+      "status": 422,
+      "type": "ValidationException",
+      "message": "Missing required attribute 'name'",
+      "debug": "Location: Entity in key '^'",
+      "data": null
     }
     """
 
@@ -656,11 +656,11 @@ Feature: Explorer - Add file
     And the response should be
     """
     {
-    "status": 422,
-    "type": "ValidationException",
-    "message": "Required attribute 'name' not found in the entity",
-    "debug": "Values are invalid for requested operation.",
-    "data": null
+      "status": 422,
+      "type": "ValidationException",
+      "message": "Missing required attribute 'name'",
+      "debug": "Location: Entity in key '^'",
+      "data": null
     }
     """
 
@@ -677,11 +677,11 @@ Feature: Explorer - Add file
     And the response should be
     """
     {
-    "status": 422,
-    "type": "ValidationException",
-    "message": "Required attribute 'name' not found in the entity",
-    "debug": "Values are invalid for requested operation.",
-    "data": null
+      "status": 422,
+      "type": "ValidationException",
+      "message": "Missing required attribute 'name'",
+      "debug": "Location: Entity in key '^'",
+      "data": null
     }
     """
 
