@@ -263,7 +263,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         # fmt: off
         document_service.update_document(
             data_source_id="testing",
-            dotted_id="1",
+            document_id="1",
             data={
                 "_id": "1",
                 "name": "complexArraysEntity",

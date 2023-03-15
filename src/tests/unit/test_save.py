@@ -256,7 +256,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service.update_document(
             "test",
             "1",
-            {
+            data={
                 "_id": "1",
                 "name": "Root",
                 "description": "I'm the root document",
@@ -325,7 +325,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "nested": {},
             "references": [],
         }
-        document_service.update_document("testing", "1.a", new_data, update_uncontained=True)
+        document_service.update_document("testing", "1", new_data, attribute="a", update_uncontained=True)
 
         assert doc_storage["1"]["a"]["description"] == "SOME DESCRIPTION"
         assert doc_storage["1"]["a"]["reference"]["description"] == "A NEW DESCRIPTION HERE"
