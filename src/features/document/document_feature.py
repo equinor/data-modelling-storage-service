@@ -57,13 +57,11 @@ def get_by_path(
     return get_document_by_path_use_case(user=user, absolute_path=absolute_path)
 
 
-@router.put("/{data_source_id}/{document_id}", operation_id="document_update", responses=responses)
+@router.put("/{id_reference:path}", operation_id="document_update", responses=responses)
 @create_response(JSONResponse)
 def update(
-    data_source_id: str,
-    document_id: str,
+    id_reference: str,
     data: Json = Form(...),
-    attribute: Optional[str] = Form(None),
     files: Optional[List[UploadFile]] = File(None),
     update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
@@ -71,10 +69,8 @@ def update(
     """Update document"""
     return update_document_use_case(
         user=user,
-        document_id=document_id,
-        data_source_id=data_source_id,
+        id_reference=id_reference,
         data=data,
-        attribute=attribute,
         files=files,
         update_uncontained=update_uncontained,
     )

@@ -3,6 +3,7 @@ from typing import List, Optional, Union
 from fastapi import File, UploadFile
 
 from authentication.models import User
+from common.utils.string_helpers import split_dmss_ref
 from enums import SIMOS
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
@@ -10,25 +11,18 @@ from storage.internal.data_source_repository import get_data_source
 
 def update_document_use_case(
     user: User,
-    document_id: str,
-    data_source_id: str,
+    id_reference: str,
     data: Union[dict, list],
-    attribute: Optional[str] = None,
     files: Optional[List[UploadFile]] = File(None),
     update_uncontained: Optional[bool] = True,
     repository_provider=get_data_source,
 ):
+    data_source_id, document_id, attribute = split_dmss_ref(id_reference)
     document_service = DocumentService(repository_provider=repository_provider, user=user)
-    if attribute and "." in document_id:
-        raise ValueError(
-            "Attribute may only be specified in ether dotted path on "
-            + "documentId or the 'attribute' query parameter"
-        )
-    attribute = attribute if attribute else ""
-    dotted_id = document_id + attribute
     document = document_service.update_document(
         data_source_id=data_source_id,
-        dotted_id=dotted_id,
+        document_id=document_id,
+        attribute=attribute,
         data=data,
         files={f.filename: f.file for f in files} if files else None,
         update_uncontained=update_uncontained,

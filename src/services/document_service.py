@@ -24,7 +24,7 @@ from common.utils.get_resolved_document_by_id import get_complete_sys_document
 from common.utils.get_storage_recipe import storage_recipe_provider
 from common.utils.logging import logger
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
-from common.utils.string_helpers import split_dmss_ref, split_dotted_id
+from common.utils.string_helpers import split_dmss_ref
 from common.utils.validators import entity_has_all_required_attributes
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
@@ -265,12 +265,12 @@ class DocumentService:
     def update_document(
         self,
         data_source_id: str,
-        dotted_id: str,
+        document_id: str,
         data: Union[dict, list],
+        attribute: str | None = None,
         files: dict = None,
         update_uncontained: bool = True,
     ):
-        document_id, attribute = split_dotted_id(dotted_id)
         # TODO: Since we are only fetching 1 lvl here, any updates on nested uncontained attributes by dott reference
         # TODO: will fail, as they are not a node on the root node. For example; '123-456.contAttr.someUncontainedAttr'
         # TODO: We should update 'node.get_by_path()' do fetch documents as needed
@@ -282,7 +282,7 @@ class DocumentService:
             target_node = root.get_by_path(attribute.split("."))
 
         if not target_node:
-            raise NotFoundException(dotted_id)
+            raise NotFoundException(f"{data_source_id}/{document_id}.{attribute}")
 
         target_node.update(data)
         if files:
