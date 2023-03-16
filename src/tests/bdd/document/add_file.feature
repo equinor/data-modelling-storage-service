@@ -693,8 +693,7 @@ Feature: Explorer - Add file
           "type": "dmss://system/SIMOS/blob_types/PDF",
           "blob": {
             "name": "file1",
-            "type": "dmss://system/SIMOS/Blob",
-            "_blob_id": "1"
+            "type": "dmss://system/SIMOS/Blob"
           },
           "author": "Stig Oskar"
         },
@@ -704,8 +703,7 @@ Feature: Explorer - Add file
           "type": "dmss://system/SIMOS/blob_types/PDF",
           "blob": {
             "name": "file2",
-            "type": "dmss://system/SIMOS/Blob",
-            "_blob_id": "2"
+            "type": "dmss://system/SIMOS/Blob"
           },
           "author": "Stig Oskar"
         },
@@ -719,8 +717,7 @@ Feature: Explorer - Add file
             "type": "dmss://system/SIMOS/blob_types/PDF",
             "blob": {
               "name": "file3",
-              "type": "dmss://system/SIMOS/Blob",
-              "_blob_id": "3"
+              "type": "dmss://system/SIMOS/Blob"
             },
             "author": "Stig Oskar"
           },
@@ -731,8 +728,7 @@ Feature: Explorer - Add file
             "blob": {
               "name": "file4",
               "type": "dmss://system/SIMOS/Blob",
-              "size": 0,
-              "_blob_id": "4"
+              "size": 0
             },
             "author": "Stig Oskar"
           },
