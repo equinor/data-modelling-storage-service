@@ -66,7 +66,9 @@ def update(
     update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
-    """Update document"""
+    """Update document
+        - **id_reference**: <data_source>/<document_uuid> (can also include an optional .<attribute> after <document_uuid>)
+     """
     return update_document_use_case(
         user=user,
         id_reference=id_reference,
