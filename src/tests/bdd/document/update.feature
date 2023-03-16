@@ -33,7 +33,8 @@ Feature: Document 2
           "attributeType": "string",
           "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true,
-          "name": "list"
+          "name": "list",
+          "dimensions" : "*"
         },
         {
           "attributeType": "dmss://test-source-name/TestData/ItemTypeTwo",
@@ -42,9 +43,7 @@ Feature: Document 2
           "name": "complexList",
           "dimensions" : "*"
         }
-      ],
-      "storageRecipes":[],
-      "uiRecipes":[]
+      ]
     }
     """
 
@@ -62,9 +61,7 @@ Feature: Document 2
           "optional": true,
           "name": "extra"
         }
-      ],
-      "storageRecipes":[],
-      "uiRecipes":[]
+      ]
     }
     """
 
@@ -102,28 +99,7 @@ Feature: Document 2
           "dimensions": "*",
           "name": "itemsNotContained"
         }
-      ],
-      "storageRecipes": [
-        {
-          "name": "DefaultStorageRecipe",
-          "type": "dmss://system/SIMOS/StorageRecipe",
-          "description": "",
-          "attributes": [
-            {
-              "name": "itemNotContained",
-              "type": "dmss://test-source-name/TestData/ItemType",
-              "contained": false,
-              "storageTypeAffinity": "blob"
-            },
-            {
-              "name": "itemsNotContained",
-              "type": "dmss://test-source-name/TestData/ItemType",
-              "contained": false
-            }
-          ]
-        }
-      ],
-      "uiRecipes":[]
+      ]
     }
     """
 
@@ -151,9 +127,7 @@ Feature: Document 2
             }
 
         ],
-        "isRoot": true,
-        "storageRecipes":[],
-        "uiRecipes":[]
+        "isRoot": true
     }
     """
 
@@ -167,9 +141,13 @@ Feature: Document 2
       | 6   | 3          | container_1   |             | dmss://test-source-name/TestData/TestContainer |
 
 
-    Given there are documents for the data source "data-source-name" in collection "documents"
-      | uid | parent_uid | name          | description | type                                    |
-      | 7   |            | document_3    |             | dmss://test-source-name/TestData/ItemType |
+    Given there exist document with id "7" in data source "data-source-name"
+    """
+    {
+        "name": "document_3",
+        "type": "dmss://test-source-name/TestData/ItemType"
+    }
+    """
 
   Scenario: Update document (only contained)
     Given i access the resource url "/api/documents/data-source-name/1"
@@ -294,14 +272,14 @@ Feature: Document 2
     """
 
   Scenario: Update document (attribute and not contained)
-    Given i access the resource url "/api/documents/data-source-name/6?attribute=itemNotContained"
+    Given i access the resource url "/api/documents/data-source-name/6"
     When i make a form-data "PUT" request
     """
-    { "data":
-    {
-      "name": "item_single",
-      "type": "dmss://test-source-name/TestData/ItemType"
-    }
+    { "data": {
+        "name": "item_single",
+        "type": "dmss://test-source-name/TestData/ItemType"
+      },
+      "attribute": ".itemNotContained"
     }
     """
     Then the response status should be "OK"

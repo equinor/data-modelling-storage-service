@@ -99,7 +99,6 @@ Feature: Update document that has blob data
           "blob": {
             "name": "file2",
             "type": "dmss://system/SIMOS/Blob",
-            "_blob_id": "",
             "size": 0
           },
           "author": "Stig Oskar"
@@ -115,7 +114,6 @@ Feature: Update document that has blob data
             "blob": {
               "name": "file3",
               "type": "dmss://system/SIMOS/Blob",
-              "_blob_id": "",
               "size": 0
             },
             "author": "Stig Oskar"
@@ -127,7 +125,6 @@ Feature: Update document that has blob data
             "blob": {
               "name": "file4",
               "type": "dmss://system/SIMOS/Blob",
-              "_blob_id": "",
               "size": 0
             },
             "author": "Stig Oskar"

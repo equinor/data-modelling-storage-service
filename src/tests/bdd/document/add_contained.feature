@@ -80,7 +80,8 @@ Feature: Explorer - Add contained node
     """
     {
       "name": "level2",
-      "type": "dmss://blueprints/root_package/RecursiveBlueprint"
+      "type": "dmss://blueprints/root_package/RecursiveBlueprint",
+      "meAgain": []
     }
     """
     Then the response status should be "OK"

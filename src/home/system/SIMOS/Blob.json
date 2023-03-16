@@ -9,6 +9,7 @@
       "name": "_blob_id",
       "description": "id for the raw blob",
       "attributeType": "string",
+      "optional": true,
       "contained": true
     }, {
       "type": "dmss://system/SIMOS/BlueprintAttribute",

@@ -74,13 +74,15 @@ file_repository_test = LocalFileRepository()
 class BlueprintProvider:
     def get_blueprint(self, template_type: str):
         if template_type == "higher_rank_array":
-            return Blueprint(higher_rank_array_blueprint)
+            blueprint = Blueprint(higher_rank_array_blueprint)
         elif template_type == "package_blueprint":
-            return Blueprint(package_blueprint)
+            blueprint = Blueprint(package_blueprint)
         elif template_type == "basic_blueprint":
-            return Blueprint(basic_blueprint)
+            blueprint = Blueprint(basic_blueprint)
         else:
-            return Blueprint(file_repository_test.get(template_type))
+            blueprint = Blueprint(file_repository_test.get(template_type))
+        blueprint.path = template_type
+        return blueprint
 
 
 blueprint_provider = BlueprintProvider()

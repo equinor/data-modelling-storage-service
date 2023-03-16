@@ -132,7 +132,6 @@ Feature: Add and remove references
           "type": "dmss://system/SIMOS/BlueprintAttribute",
           "description": "How big? Very",
           "attributeType": "integer",
-          "default": "",
           "contained": true
         }
       ]
