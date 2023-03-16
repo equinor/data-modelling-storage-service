@@ -161,8 +161,7 @@ Feature: Add and remove references
     {
       "name": "myMooring",
       "type": "dmss://test-DS/TestData/Mooring",
-      "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
-      "Bigness": 1
+      "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
     }
     """
     Then the response status should be "OK"
@@ -175,8 +174,7 @@ Feature: Add and remove references
       "Mooring": {
         "name": "myMooring",
         "type": "dmss://test-DS/TestData/Mooring",
-        "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
-        "Bigness": 1
+        "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
       }
     }
     """
