@@ -8,16 +8,29 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import BuiltinDataTypes
 
 
-def valid_complex_type(valid_type: str, extended_types: List[str], get_blueprint: Callable) -> bool:
-    if valid_type == BuiltinDataTypes.OBJECT.value:
+def is_blueprint_instance_of(
+    minimum_blueprint_type: str, blueprint_type: str, get_blueprint: Callable[..., Blueprint]
+) -> bool:
+    """Takes in a blueprint and checks if it's an instance of a minimum blueprint
+
+    Args:
+        minimum_blueprint_type: Blueprint to validate against
+        blueprint_type: Blueprint to validate
+
+    Returns:
+        bool:
+            Returns true if:
+                the minimum blueprint has the generic "object" type, since all blueprints are objects
+                the blueprint has the same type as the minimum blueprint
+                the blueprint extends a blueprint that fulfills one of these three rules
+            Otherwise it returns false.
+    """
+    if minimum_blueprint_type == BuiltinDataTypes.OBJECT.value:
         return True
-    if valid_type in extended_types:
+    if minimum_blueprint_type == blueprint_type:
         return True
-    for inherited_type in extended_types:
-        inherited_blueprint = get_blueprint(inherited_type)
-        if valid_type in inherited_blueprint.extends:
-            return True
-        if valid_complex_type(valid_type, inherited_blueprint.extends, get_blueprint):
+    for inherited_type in get_blueprint(blueprint_type).extends:
+        if is_blueprint_instance_of(minimum_blueprint_type, inherited_type, get_blueprint):
             return True
     return False
 
@@ -73,7 +86,7 @@ def validate_entity(
         return
 
     if not allow_extra:
-        if not valid_complex_type(blueprint.path, [entity["type"]] + blueprint.extends, get_blueprint):
+        if not is_blueprint_instance_of(blueprint.path, entity["type"], get_blueprint):
             raise ValidationException(
                 f"Entity should be of type '{blueprint.path}' (or extending from it). Got '{entity['type']}'",
                 debug=debug_message,
