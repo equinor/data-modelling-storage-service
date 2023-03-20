@@ -9,7 +9,7 @@ default_yaml_view = Recipe(
     **{
         "name": "Yaml",
         "type": SIMOS.UI_RECIPE.value,
-        "plugin": "yaml",
+        "plugin": "@development-framework/dm-core-plugins/yaml",
         "category": "view",
     }
 )
