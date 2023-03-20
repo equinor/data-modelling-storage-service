@@ -77,7 +77,7 @@ def create_response(
                 logger.error(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
             except NotFoundException as e:
-                if logger.level == logging.DEBUG:
+                if logger.level <= logging.DEBUG:
                     traceback.print_exc()
                 logger.error(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_404_NOT_FOUND)

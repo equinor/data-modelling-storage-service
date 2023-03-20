@@ -209,7 +209,7 @@ Feature: Add document with document_service
 
 
   Scenario: Add test
-    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/add-to-path"
+    Given i access the resource url "/api/documents-by-path/data-source-name/root_package/EntityPackage"
     When i make a "POST" request with "1" files
     """
     {
@@ -245,7 +245,7 @@ Feature: Add document with document_service
     """
 
   Scenario: Add root package
-    Given i access the resource url "/api/documents/data-source-name/add-to-path"
+    Given i access the resource url "/api/documents-by-path/data-source-name"
     When i make a form-data "POST" request
     """
     {
