@@ -115,7 +115,7 @@ Feature: Get a blueprint
         {
           "name": "Edit",
           "type": "dmss://system/SIMOS/UiRecipe",
-          "plugin": "form",
+          "plugin": "@development-framework/dm-core-plugins/form",
           "category": "edit"
         }
       ],
@@ -157,7 +157,7 @@ Feature: Get a blueprint
       {
         "name": "Edit",
         "type": "dmss://system/SIMOS/UiRecipe",
-        "plugin": "form",
+        "plugin": "@development-framework/dm-core-plugins/form",
         "category": "edit"
       },
       {

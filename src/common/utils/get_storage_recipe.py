@@ -13,7 +13,14 @@ default_yaml_view = Recipe(
         "category": "view",
     }
 )
-default_form_edit = Recipe(**{"name": "Edit", "type": SIMOS.UI_RECIPE.value, "plugin": "form", "category": "edit"})
+default_form_edit = Recipe(
+    **{
+        "name": "Edit",
+        "type": SIMOS.UI_RECIPE.value,
+        "plugin": "@development-framework/dm-core-plugins/form",
+        "category": "edit",
+    }
+)
 default_ui_recipes = [default_form_edit, default_yaml_view]
 
 
