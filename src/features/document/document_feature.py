@@ -78,23 +78,20 @@ def update(
     )
 
 
-@router.delete(
-    "/{data_source_id}/{dotted_id}", operation_id="document_remove", response_model=str, responses=responses
-)
+@router.delete("/{id_reference:path}", operation_id="document_remove", response_model=str, responses=responses)
 @create_response(PlainTextResponse)
-def remove(data_source_id: str, dotted_id: str, user: User = Depends(auth_w_jwt_or_pat)):
+def remove(id_reference: str, user: User = Depends(auth_w_jwt_or_pat)):
     """Remove document
+    - **id_reference**: <data_source>/<document_uuid>.<attribute_path>
 
-    - **dotted_id**: can have value <document_id> or <document_id>.<attribute_path>
-
-    Example: dotted_id=3978d9ca-2d7a-4b47-8fed-57710f6cf50b.attributes.1 will remove the first element
-    in the attribute list of a blueprint with the given id.
+    Example: id_reference=SomeDataSource/3978d9ca-2d7a-4b47-8fed-57710f6cf50b.attributes.1 will remove the first element
+    in the attribute list of a blueprint with the given id in data source 'SomeDataSource'.
     """
-    return remove_use_case(user=user, data_source_id=data_source_id, document_id=dotted_id)
+    return remove_use_case(user=user, id_reference=id_reference)
 
 
 @router.post(
-    "/{path_reference:path}/add-to-path", operation_id="document_add_to_path", response_model=dict, responses=responses
+    "-by-path/{path_reference:path}", operation_id="document_add_to_path", response_model=dict, responses=responses
 )
 @create_response(JSONResponse)
 def add_to_path(
@@ -150,13 +147,11 @@ def add_by_parent_id(
     )
 
 
-@router.delete(
-    "/{data_source_id}/remove-by-path/{directory:path}", operation_id="document_remove_by_path", responses=responses
-)
+@router.delete("-by-path/{path_reference:path}", operation_id="document_remove_by_path", responses=responses)
 @create_response(PlainTextResponse)
-def remove_by_path(data_source_id: str, directory: str, user: User = Depends(auth_w_jwt_or_pat)):
+def remove_by_path(path_reference: str, user: User = Depends(auth_w_jwt_or_pat)):
     """Remove a document from DMSS.
 
-    - **directory**: path to document to remove.
+    - **path_reference**: <data_source>/<path>.<attribute>
     """
-    return remove_by_path_use_case(user=user, data_source_id=data_source_id, directory=directory)
+    return remove_by_path_use_case(user=user, absolute_path=path_reference)

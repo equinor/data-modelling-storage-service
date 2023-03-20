@@ -91,7 +91,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = get_mock_document_service(lambda id, user: repository)
-        document_service.remove_document(data_source_id="testing", document_id="1.nested")
+        document_service.remove_document(data_source_id="testing", document_id="1", attribute="nested")
         assert doc_storage["1"].get("nested") is None
 
     def test_remove_second_level_nested(self):
@@ -214,7 +214,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 return repository
 
         document_service = get_mock_document_service(repository_provider)
-        document_service.remove_document(data_source_id="testing", document_id="1.reference")
+        document_service.remove_document(data_source_id="testing", document_id="1", attribute="reference")
         assert doc_storage["1"] == {
             "_id": "1",
             "name": "Parent",
@@ -250,7 +250,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = get_mock_document_service(repository_provider)
-        document_service.remove_document("testing", "1.im_optional")
+        document_service.remove_document("testing", "1", "im_optional")
         assert {
             "_id": "1",
             "name": "Parent",

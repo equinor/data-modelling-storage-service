@@ -211,16 +211,16 @@ class DocumentService:
         document_id = get_document_uid_by_path(path, document_repository)
         return self.get_node_by_uid(data_source_id, document_id)
 
-    def remove_document(self, data_source_id: str, document_id: str):
+    def remove_document(self, data_source_id: str, document_id: str, attribute: str = None):
         """
         Delete a document, and any model contained children.
         If document_id is a dotted attribute path, it will remove the reference in the parent.
         Does not use the Node class, as blueprints won't necessarily be available when deleting.
         """
         repository = self.repository_provider(data_source_id, self.user)
-        if "." in document_id:
-            root_document: dict = repository.get(document_id.split(".")[0])
-            path_after_root = document_id.split(".")[1:]
+        if attribute:
+            root_document: dict = repository.get(document_id)
+            path_after_root = attribute.split(".")
             nested_doc = root_document
             for index, attr in enumerate(path_after_root):
                 if index + 1 == len(path_after_root):
@@ -382,7 +382,11 @@ class DocumentService:
 
         return {"uid": new_node.node_id}
 
-    def remove_by_path(self, data_source_id: str, directory: str):
+    def remove_by_path(self, data_source_id: str, directory: str, attribute: str = None):
+        if attribute:
+            raise ApplicationException(
+                "Removing a document by path in combination with attribute is not yet supported"
+            )
         directory = directory.rstrip("/").lstrip("/")
         data_source = self.repository_provider(data_source_id, self.user)
 

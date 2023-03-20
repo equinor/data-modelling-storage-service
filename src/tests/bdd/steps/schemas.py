@@ -47,9 +47,10 @@ def step_impl(context):
     DataSourceRepository(context.user).create(document["name"], DataSourceRequest(**document))
 
     # Import SIMOS package
+    logger_level_before = logger.level
     logger.setLevel("ERROR")
     import_package(f"{config.APPLICATION_HOME}/system/SIMOS", context.user, is_root=True, data_source_name="system")
-    logger.setLevel("INFO")
+    logger.setLevel(logger_level_before)
 
     user = User(user_id=config.DMSS_ADMIN)
     create_lookup_table_use_case("system/SIMOS/recipe_links", "DMSS", user)
