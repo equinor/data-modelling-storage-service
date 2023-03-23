@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from uuid import uuid4
 from zipfile import ZipFile
 
 from common.utils.logging import logger
@@ -25,7 +26,7 @@ class ZipFileClient(RepositoryInterface):
         entity.pop("uid", None)
         entity["__path__"] = entity["__path__"].rstrip("/")
         if "name" not in entity:
-            write_to = f"{entity['__path__']}/unnamed_document.json"
+            write_to = f"{entity['__path__']}/unnamed_document_{str(uuid4())[:8]}.json"
         else:
             write_to = f"{entity['__path__']}/{entity['name']}.json"
         entity.pop("__path__")
