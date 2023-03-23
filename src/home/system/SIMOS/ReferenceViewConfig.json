@@ -4,12 +4,12 @@
   "extends": ["dmss://system/SIMOS/ViewConfig"],
   "attributes": [
     {
-      "type": "CORE:BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
       "name": "recipe"
     },
     {
-      "type": "CORE:BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "object",
       "name": "config",
       "optional": true

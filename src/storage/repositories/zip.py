@@ -24,7 +24,10 @@ class ZipFileClient(RepositoryInterface):
         entity.pop("_id", None)
         entity.pop("uid", None)
         entity["__path__"] = entity["__path__"].rstrip("/")
-        write_to = f"{entity['__path__']}/{entity['name']}.json"
+        if "name" not in entity:
+            write_to = f"{entity['__path__']}/unnamed_document.json"
+        else:
+            write_to = f"{entity['__path__']}/{entity['name']}.json"
         entity.pop("__path__")
         combined_document_meta = entity.pop("__combined_document_meta__")
         logger.debug(f"Writing: {entity['type']} to {write_to}")

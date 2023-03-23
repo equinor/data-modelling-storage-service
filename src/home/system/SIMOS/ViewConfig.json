@@ -3,7 +3,7 @@
   "name": "ViewConfig",
   "attributes": [
     {
-      "type": "CORE:BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
       "name": "scope",
       "optional": true,
