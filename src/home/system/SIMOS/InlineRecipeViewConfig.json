@@ -4,8 +4,8 @@
   "extends": ["dmss://system/SIMOS/ViewConfig"],
   "attributes": [
     {
-      "type": "CORE:BlueprintAttribute",
-      "attributeType": "CORE:UiRecipe",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/UiRecipe",
       "name": "recipe"
     }
   ]
