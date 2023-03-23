@@ -1,6 +1,7 @@
 from pydantic import conint
 
 from authentication.models import User
+from common.exceptions import NotFoundException
 from common.utils.string_helpers import split_dmss_ref
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
@@ -14,7 +15,7 @@ def get_nested_dict_attribute(entity: dict | list, path_list: list[str]) -> dict
             return entity[path_list[0]]  # type: ignore
         return get_nested_dict_attribute(entity[path_list[0]], path_list[1:])  # type: ignore
     except (KeyError, IndexError):
-        raise KeyError(f"Attribute/Item '{path_list[0]}' does not exists in '{entity}'")
+        raise NotFoundException(f"Attribute/Item '{path_list[0]}' does not exists in '{entity}'")
 
 
 def get_document_use_case(
@@ -35,5 +36,4 @@ def get_document_use_case(
     # TODO: Pass attribute to DocumentService.get_document_by_uid and only count depth from the attribute leaf node
     if attribute:
         document = get_nested_dict_attribute(document, attribute.split("."))
-
     return document

@@ -6,6 +6,19 @@
       "type": "CORE:BlueprintAttribute",
       "attributeType": "string",
       "name": "scope",
+      "optional": true,
+      "default": "self"
+    },
+     {
+      "type": "CORE:BlueprintAttribute",
+      "attributeType": "string",
+      "name": "label",
+      "optional": true
+    },
+         {
+      "type": "CORE:BlueprintAttribute",
+      "attributeType": "string",
+      "name": "eds_icon",
       "optional": true
     }
   ]
