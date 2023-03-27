@@ -6,6 +6,7 @@ from authentication.models import User
 from common.tree_node_serializer import tree_node_from_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import Node
+from enums import SIMOS
 from tests.unit.mock_utils import (
     flatten_dict,
     get_mock_document_service,
@@ -100,7 +101,12 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service.save(node, "testing")
 
         assert doc_storage["1"]["references"] == [
-            {"name": "a_reference", "type": "basic_blueprint", "_id": "2", "contained": True}
+            {
+                "targetName": "a_reference",
+                "targetType": "basic_blueprint",
+                "ref": "2",
+                "type": SIMOS.STORAGE_ADDRESS.value,
+            }
         ]
 
     def test_save_delete(self):
@@ -115,9 +121,24 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
                 "reference": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
                 "references": [
-                    {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
-                    {"_id": "3", "name": "a_reference", "type": "basic_blueprint"},
-                    {"_id": "4", "name": "a_reference", "type": "basic_blueprint"},
+                    {
+                        "ref": "2",
+                        "targetName": "a_reference",
+                        "targetType": "basic_blueprint",
+                        "type": SIMOS.STORAGE_ADDRESS.value,
+                    },
+                    {
+                        "ref": "3",
+                        "targetName": "a_reference",
+                        "targetType": "basic_blueprint",
+                        "type": SIMOS.STORAGE_ADDRESS.value,
+                    },
+                    {
+                        "ref": "4",
+                        "targetName": "a_reference",
+                        "targetType": "basic_blueprint",
+                        "type": SIMOS.STORAGE_ADDRESS.value,
+                    },
                 ],
             },
             "2": {"_id": "2", "name": "a_reference", "description": "Index 1", "type": "basic_blueprint"},
@@ -133,8 +154,18 @@ class DocumentServiceTestCase(unittest.TestCase):
             "nested": {},
             "reference": {},
             "references": [
-                {"_id": "2", "name": "a_reference", "type": "basic_blueprint", "contained": True},
-                {"_id": "4", "name": "a_reference", "type": "basic_blueprint", "contained": True},
+                {
+                    "ref": "2",
+                    "targetName": "a_reference",
+                    "targetType": "basic_blueprint",
+                    "type": SIMOS.STORAGE_ADDRESS.value,
+                },
+                {
+                    "ref": "4",
+                    "targetName": "a_reference",
+                    "targetType": "basic_blueprint",
+                    "type": SIMOS.STORAGE_ADDRESS.value,
+                },
             ],
         }
 
@@ -214,7 +245,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         target_node = node.get_by_path(["i_have_a_uncontained_attribute", "uncontained_in_every_way"])
         target_node.update(doc_storage["3"])
         document_service.save(node, "testing")
-        assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"]["_id"] == "3"
+        assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"]["ref"] == "3"
 
     def test_save_no_overwrite_uncontained_document(self):
         repository = mock.Mock()

@@ -34,18 +34,18 @@ def _get_document_uid_by_path(package: dict, path_elements: List[str], data_sour
     """
     if len(path_elements) == 1:
         target = path_elements[0]
-        file = next((f for f in package["content"] if f.get("name") == target), None)
+        file = next((f for f in package["content"] if f.get("targetName") == target), None)
         if not file:
             raise NotFoundException(f"The document {target} could not be found in the package {package['name']}")
-        return file["_id"]
+        return file["ref"]
 
-    next_package_ref = next((p for p in package["content"] if p["name"] == path_elements[0]), None)
+    next_package_ref = next((p for p in package["content"] if p["targetName"] == path_elements[0]), None)
     if not next_package_ref:
         raise NotFoundException(f"The package {path_elements[0]} could not be found in the package {package['name']}")
-    next_package: dict = data_source.get(next_package_ref["_id"])
+    next_package: dict = data_source.get(next_package_ref["ref"])
     if not next_package:
         raise NotFoundException(
-            f"Could not find a package '{next_package_ref['_id']}' in datasource {data_source.name}"
+            f"Could not find a package '{next_package_ref['ref']}' in datasource {data_source.name}"
         )
     del path_elements[0]
     return _get_document_uid_by_path(next_package, path_elements, data_source)

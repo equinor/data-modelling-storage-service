@@ -21,39 +21,46 @@ Feature: Explorer - Add file
         "isRoot": true,
         "content": [
             {
-                "_id": "2",
-                "name": "MultiplePdfContainer",
-                "type": "dmss://system/SIMOS/Blueprint"
+                "ref": "2",
+                "type": "dmss://system/SIMOS/Link",
+                "targetName": "MultiplePdfContainer",
+                "targetType": "dmss://system/SIMOS/Blueprint"
             },
             {
-                "_id": "3",
-                "name": "BaseChild",
-                "type": "dmss://system/SIMOS/Blueprint"
+                "ref": "3",
+                "type": "dmss://system/SIMOS/Link",
+                "targetName": "BaseChild",
+                "targetType": "dmss://system/SIMOS/Blueprint"
             },
             {
-                "_id": "4",
-                "name": "Parent",
-                "type": "dmss://system/SIMOS/Blueprint"
+                "ref": "4",
+                "type": "dmss://system/SIMOS/Link",
+                "targetName": "Parent",
+                "targetType": "dmss://system/SIMOS/Blueprint"
             },
             {
-                "_id": "5",
-                "name": "SpecialChild",
-                "type": "dmss://system/SIMOS/Blueprint"
+                "ref": "5",
+                "type": "dmss://system/SIMOS/Link",
+                "targetName": "SpecialChild",
+                "targetType": "dmss://system/SIMOS/Blueprint"
             },
             {
-                "_id": "6",
-                "name": "parentEntity",
-                "type": "dmss://test-DS/root_package/Parent"
+                "ref": "6",
+                "type": "dmss://system/SIMOS/Link",
+                "targetName": "parentEntity",
+                "targetType": "dmss://test-DS/root_package/Parent"
             },
             {
-                "_id": "7",
-                "name": "Hobby",
-                "type": "dmss://system/SIMOS/Blueprint"
+                "ref": "7",
+                "type": "dmss://system/SIMOS/Link",
+                "targetName": "Hobby",
+                "targetType": "dmss://system/SIMOS/Blueprint"
             },
             {
-                "_id": "8",
-                "name": "Comment",
-                "type": "dmss://system/SIMOS/Blueprint"
+                "ref": "8",
+                "type": "dmss://system/SIMOS/Link",
+                "targetName": "Comment",
+                "targetType": "dmss://system/SIMOS/Blueprint"
             }
         ]
     }

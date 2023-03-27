@@ -23,6 +23,9 @@ services:
       AUTH_PROVIDER_FOR_ROLE_CHECK:
     ports:
       - "5000:5000"
+    depends_on:
+      - db
+      - db-ui
 
   db:
     image: mongo:3.4

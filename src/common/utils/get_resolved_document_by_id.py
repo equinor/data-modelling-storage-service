@@ -9,8 +9,10 @@ def resolve_reference_list(x: list, document_repository: DataSource, depth: int 
     if isinstance(x[0], list):  # Call recursively for nested lists
         resolved = [resolve_reference_list(item, document_repository) for item in x]
     for value in x:
-        if isinstance(value, dict) and value.get("_id"):  # It's a reference!
-            resolved.append(get_complete_sys_document(value["_id"], document_repository, depth, depth_count))
+        if isinstance(value, dict) and value.get("ref"):  # It's a reference!
+            resolved.append(get_complete_sys_document(value["ref"], document_repository, depth, depth_count))
+        # elif isinstance(value, dict) and value.get("_id"):  # It's a reference!
+        #    resolved.append(get_complete_sys_document(value["_id"], document_repository, depth, depth_count))
         elif isinstance(value, dict):
             resolved.append(resolve_contained_dict(value, document_repository, depth, depth_count))
         else:
@@ -58,8 +60,11 @@ def resolve_complete_document(entity, data_source, depth, depth_count) -> dict:
             if isinstance(value, list):  # If it's a list, resolve any references
                 entity[key] = resolve_reference_list(value, data_source, depth, depth_count)
             else:
-                if ref_id := value.get("_id"):  # It's a reference
-                    entity[key] = get_complete_sys_document(ref_id, data_source, depth_count)
+                if ref := value.get("ref"):  # It's a reference
+                    entity[key] = get_complete_sys_document(ref, data_source, depth_count)
+                # TODO: Remove ref_id
+                # elif ref_id := value.get("_id"):  # It's a reference
+                #    entity[key] = get_complete_sys_document(ref_id, data_source, depth_count)
                 else:
                     entity[key] = resolve_contained_dict(value, data_source, depth, depth_count)
 

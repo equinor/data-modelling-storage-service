@@ -80,7 +80,12 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
             # If the content of the list is not contained, i.e. references.
             if not child.storage_contained:
                 data[child.key] = [
-                    {"_id": child.uid, "type": child.type, "name": child.name, "contained": child.contained}
+                    {
+                        "ref": child.uid,
+                        "targetType": child.type,
+                        "targetName": child.name,
+                        "type": SIMOS.STORAGE_ADDRESS.value if child.contained else SIMOS.LINK.value,
+                    }
                     for child in child.children
                 ]
             else:
@@ -88,10 +93,10 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
         else:
             if not child.contained and child.entity:
                 data[child.key] = {
-                    "_id": child.uid,
-                    "type": child.type,
-                    "name": child.name,
-                    "contained": child.contained,
+                    "ref": child.uid,
+                    "targetType": child.type,
+                    "targetName": child.name,
+                    "type": SIMOS.STORAGE_ADDRESS.value if child.contained else SIMOS.LINK.value,
                 }
             else:
                 data[child.key] = tree_node_to_ref_dict(child)
@@ -122,10 +127,16 @@ def tree_node_from_dict(
 
     # If there is data in the entity, load attribute type from the entity
     if entity:
-        if not entity.get("type"):
-            raise ValueError(f"Entity is missing required attribute 'type'.\n{key}\n{entity}")
-        node_attribute = deepcopy(node_attribute)  # If you don't copy, we modify the blueprint in the BP Cache...
-        node_attribute.attribute_type = entity["type"]
+        if entity["type"] == SIMOS.STORAGE_ADDRESS.value or entity["type"] == SIMOS.LINK.value:
+            if not entity.get("targetType"):
+                raise ValueError(f"Reference is missing required attribute 'targetType'.\n{key}\n{entity}")
+            node_attribute = deepcopy(node_attribute)  # If you don't copy, we modify the blueprint in the BP Cache...
+            node_attribute.attribute_type = entity["targetType"]
+        else:
+            if not entity.get("type"):
+                raise ValueError(f"Entity is missing required attribute 'type'.\n{key}\n{entity}")
+            node_attribute = deepcopy(node_attribute)  # If you don't copy, we modify the blueprint in the BP Cache...
+            node_attribute.attribute_type = entity["type"]
 
     key = key if key else node_attribute.name
     node = Node(
@@ -170,7 +181,10 @@ def tree_node_from_dict(
                 # and get it from the child.
                 if node.type == SIMOS.PACKAGE.value:
                     content_attribute: BlueprintAttribute = deepcopy(child_attribute)
-                    content_attribute.attribute_type = child["type"]
+                    if child["type"] == SIMOS.STORAGE_ADDRESS or child["type"] == SIMOS.LINK:
+                        content_attribute.attribute_type = child["targetType"]
+                    else:
+                        content_attribute.attribute_type = child["type"]
                     list_child_attribute = content_attribute
 
                 list_child_node = tree_node_from_dict(
