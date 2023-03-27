@@ -3,6 +3,7 @@ from unittest import mock
 
 from common.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import pretty_eq
+from enums import SIMOS
 from tests.unit.mock_utils import get_mock_document_service
 
 
@@ -14,10 +15,10 @@ class DocumentServiceTestCase(unittest.TestCase):
             "description": "",
             "type": "all_contained_cases_blueprint",
             "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
-            "reference": {"_id": "2", "name": "Reference", "type": "basic_blueprint"},
+            "reference": {"ref": "2", "name": "Reference", "type": "basic_blueprint"},
             "references": [
-                {"_id": "3", "name": "Reference1", "type": "basic_blueprint"},
-                {"_id": "4", "name": "Reference2", "type": "basic_blueprint"},
+                {"ref": "3", "name": "Reference1", "type": SIMOS.LINK},
+                {"ref": "4", "name": "Reference2", "type": SIMOS.LINK},
             ],
         }
 
@@ -67,10 +68,10 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "description": "",
                 "type": "all_contained_cases_blueprint",
                 "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
-                "reference": {"_id": "2", "name": "Reference", "type": "basic_blueprint"},
+                "reference": {"ref": "2", "name": "Reference", "type": SIMOS.LINK},
                 "references": [
-                    {"_id": "3", "name": "Reference1", "type": "basic_blueprint"},
-                    {"_id": "4", "name": "Reference2", "type": "basic_blueprint"},
+                    {"ref": "3", "name": "Reference1", "type": SIMOS.LINK},
+                    {"ref": "4", "name": "Reference2", "type": SIMOS.LINK},
                 ],
             },
         }

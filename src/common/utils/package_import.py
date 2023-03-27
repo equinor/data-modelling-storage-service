@@ -26,7 +26,14 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
             )
         document["_id"] = document.get("_id", str(uuid4()))
         data_source.update(document)
-        docs.append({"_id": document["_id"], "name": document.get("name"), "type": document["type"]})
+        docs.append(
+            {
+                "ref": document["_id"],
+                "targetName": document.get("name"),
+                "targetType": document["type"],
+                "type": SIMOS.LINK.value,
+            }
+        )
 
     return docs
 
@@ -61,4 +68,9 @@ def import_package(path, user: User, data_source_name: str, is_root: bool = Fals
 
     data_source.update(package)
     logger.info(f"Imported package {package['name']}")
-    return {"_id": package["_id"], "type": package["type"], "name": package.get("name")}
+    return {
+        "ref": package["_id"],
+        "targetType": package["type"],
+        "targetName": package.get("name"),
+        "type": SIMOS.LINK.value,
+    }

@@ -164,7 +164,7 @@ class DocumentService:
 
         ref_dict = tree_node_to_ref_dict(node)
 
-        if type(node) is Node:
+        if type(node) is Node and node.contained:
             entity_has_all_required_attributes(ref_dict, node.blueprint.get_required_attributes())
 
         # If the node is not contained, and has data, save it!
@@ -183,7 +183,7 @@ class DocumentService:
                 node.get_context_storage_attribute(),
                 parent_id=parent_uid,
             )
-            return {"_id": node.uid, "type": node.entity["type"], "name": node.name}
+            return {"type": SIMOS.LINK, "ref": node.uid, "targetType": node.entity["type"], "targetName": node.name}
         return ref_dict
 
     def get_document_by_uid(
@@ -227,8 +227,8 @@ class DocumentService:
                     if isinstance(nested_doc, list):
                         attr = int(attr)
                     potential_reference = nested_doc.pop(attr)
-                    if potential_reference.get("_id") and potential_reference.get("contained") is True:
-                        delete_document(repository, potential_reference["_id"])
+                    if potential_reference.get("type") == SIMOS.STORAGE_ADDRESS.value:
+                        delete_document(repository, potential_reference["ref"])
                     break
                 if isinstance(nested_doc, list):
                     nested_doc = nested_doc[int(attr)]
@@ -559,26 +559,25 @@ class DocumentService:
                 f"The referenced entity should be of type '{attribute_node.type}'"
                 f", but was '{referenced_document['type']}'"
             )
-        if reference.type != referenced_document["type"]:
+        if reference.targetType != referenced_document["type"]:
             raise BadRequestException(
-                f"The 'type' value of the reference does not match the referenced document."
-                f"{reference.type} --> {referenced_document['type']}"
+                f"The 'targetType' value of the reference does not match the referenced document."
+                f"{reference.targetType} --> {referenced_document['type']}"
             )
         # If the node to update is a list, append to end
         if attribute_node.is_array():
-            attribute_node.add_child(
-                tree_node_from_dict(
-                    entity={**reference.dict(by_alias=True), "_id": str(reference.uid)},
-                    uid=str(reference.uid),
-                    blueprint_provider=self.get_blueprint,
-                    recipe_provider=self.get_storage_recipes,
-                    node_attribute=attribute_node.attribute,
-                )
+            child_node = tree_node_from_dict(
+                entity=referenced_document,
+                uid=str(reference.uid),
+                blueprint_provider=self.get_blueprint,
+                recipe_provider=self.get_storage_recipes,
+                node_attribute=attribute_node.attribute,
             )
+            attribute_node.add_child(child_node)
         else:
-            attribute_node.entity = {**reference.dict(by_alias=True), "_id": str(reference.uid)}
+            attribute_node.entity = referenced_document
             attribute_node.uid = str(reference.uid)
-            attribute_node.type = reference.type
+            attribute_node.type = reference.targetType
 
         self.save(root, data_source_id, update_uncontained=False)
 

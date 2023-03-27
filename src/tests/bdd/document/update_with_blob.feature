@@ -22,14 +22,16 @@ Feature: Update document that has blob data
         "isRoot": true,
         "content": [
             {
-                "_id": "2",
-                "name": "MultiplePdfContainer",
-                "type": "dmss://system/SIMOS/Blueprint"
+               "type": "dmss://system/SIMOS/Link",
+                "ref": "2",
+                "targetName": "MultiplePdfContainer",
+                "targetType": "dmss://system/SIMOS/Blueprint"
             },
             {
-                "_id": "3",
-                "name": "new_pdf_container",
-                "type": "dmss://test-DS/root_package/MultiplePdfContainer"
+               "type": "dmss://system/SIMOS/Link",
+                "ref": "3",
+                "targetName": "new_pdf_container",
+                "targetType": "dmss://test-DS/root_package/MultiplePdfContainer"
             }
         ]
     }
