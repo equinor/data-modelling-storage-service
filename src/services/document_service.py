@@ -446,11 +446,16 @@ class DocumentService:
             if not document.type == SIMOS.PACKAGE.value or not document_dict.get("isRoot", False):
                 raise BadRequestException("Only root packages may be added to the root of a data source")
             # TODO: Validate package entity
-            if get_document_uid_by_path(document_dict["name"], self.repository_provider(data_source_id, self.user)):
-                raise ValidationException(
-                    message=f"A root package named '{document_dict['name']}' already exists",
-                    data={"dataSource": data_source_id, "document": document_dict},
-                )
+            try:
+                if get_document_uid_by_path(
+                    document_dict["name"], self.repository_provider(data_source_id, self.user)
+                ):
+                    raise ValidationException(
+                        message=f"A root package named '{document_dict['name']}' already exists",
+                        data={"dataSource": data_source_id, "document": document_dict},
+                    )
+            except NotFoundException:
+                pass
             document_repository = self.repository_provider(data_source_id, self.user)
             document_repository.update(document_dict)
             return {"uid": document_dict["_id"]}
