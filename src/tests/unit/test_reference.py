@@ -4,6 +4,7 @@ from unittest import mock
 from pydantic import ValidationError
 
 from common.exceptions import BadRequestException, NotFoundException
+from enums import SIMOS
 from restful.request_types.shared import Reference
 from tests.unit.mock_utils import get_mock_document_service
 
@@ -35,20 +36,25 @@ class ReferenceTestCase(unittest.TestCase):
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
-
+        reference = Reference.parse_obj(
+            {
+                "ref": "2d7c3249-985d-43d2-83cf-a887e440825a",
+                "targetName": "something",
+                "targetType": "basic_blueprint",
+                "type": SIMOS.LINK.value,
+            }
+        )
         document_service.insert_reference(
             "testing",
             document_id="1",
-            reference=Reference.parse_obj(
-                {"_id": "2d7c3249-985d-43d2-83cf-a887e440825a", "name": "something", "type": "basic_blueprint"}
-            ),
+            reference=reference,
             attribute_path="uncontained_in_every_way",
         )
         assert doc_storage["1"]["uncontained_in_every_way"] == {
-            "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
-            "name": "something",
-            "contained": False,
-            "type": "basic_blueprint",
+            "ref": "2d7c3249-985d-43d2-83cf-a887e440825a",
+            "targetName": "something",
+            "targetType": "basic_blueprint",
+            "type": SIMOS.LINK.value,
         }
 
     def test_insert_reference_target_does_not_exist(self):
@@ -83,7 +89,12 @@ class ReferenceTestCase(unittest.TestCase):
                 "testing",
                 document_id="1",
                 reference=Reference.parse_obj(
-                    {"_id": "2d7c3249-985d-43d2-83cf-a887e440825a", "name": "something", "type": "something"}
+                    {
+                        "ref": "2d7c3249-985d-43d2-83cf-a887e440825a",
+                        "targetName": "something",
+                        "targetType": "something",
+                        "type": SIMOS.LINK.value,
+                    }
                 ),
                 attribute_path="uncontained_in_every_way",
             )
@@ -120,7 +131,12 @@ class ReferenceTestCase(unittest.TestCase):
                 "testing",
                 document_id="1",
                 reference=Reference.parse_obj(
-                    {"_id": "2d7c3249-985d-43d2-83cf-a887e440825a", "name": "something", "type": "wrong_type"}
+                    {
+                        "ref": "2d7c3249-985d-43d2-83cf-a887e440825a",
+                        "targetName": "something",
+                        "targetType": "wrong_type",
+                        "type": SIMOS.LINK.value,
+                    }
                 ),
                 attribute_path="uncontained_in_every_way",
             )
@@ -160,20 +176,21 @@ class ReferenceTestCase(unittest.TestCase):
             document_id="1",
             reference=Reference.parse_obj(
                 {
-                    "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
-                    "name": "something",
-                    "type": "basic_blueprint",
+                    "ref": "2d7c3249-985d-43d2-83cf-a887e440825a",
+                    "targetName": "something",
+                    "targetType": "basic_blueprint",
                     "description": "hallO",
                     "something": "something",
+                    "type": SIMOS.LINK.value,
                 }
             ),
             attribute_path="uncontained_in_every_way",
         )
         assert doc_storage["1"]["uncontained_in_every_way"] == {
-            "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
-            "name": "something",
-            "type": "basic_blueprint",
-            "contained": False,
+            "ref": "2d7c3249-985d-43d2-83cf-a887e440825a",
+            "targetName": "something",
+            "targetType": "basic_blueprint",
+            "type": SIMOS.LINK.value,
         }
 
     def test_insert_reference_missing_required_attribute(self):
@@ -302,14 +319,16 @@ class ReferenceTestCase(unittest.TestCase):
                 "type": "uncontained_list_blueprint",
                 "uncontained_in_every_way": [
                     {
-                        "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
-                        "name": "something",
-                        "type": "basic_blueprint",
+                        "ref": "2d7c3249-985d-43d2-83cf-a887e440825a",
+                        "targetName": "something",
+                        "targetType": "basic_blueprint",
+                        "type": SIMOS.LINK.value,
                     },
                     {
-                        "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
-                        "name": "something",
-                        "type": "basic_blueprint",
+                        "ref": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
+                        "targetName": "something",
+                        "targetType": "basic_blueprint",
+                        "type": SIMOS.LINK.value,
                     },
                 ],
             },
@@ -339,10 +358,10 @@ class ReferenceTestCase(unittest.TestCase):
         )
         assert len(doc_storage["1"]["uncontained_in_every_way"]) == 1
         assert doc_storage["1"]["uncontained_in_every_way"][0] == {
-            "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
-            "name": "something",
-            "type": "basic_blueprint",
-            "contained": False,
+            "ref": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
+            "targetName": "something",
+            "targetType": "basic_blueprint",
+            "type": SIMOS.LINK.value,
         }
 
     def test_add_reference_in_list(self):
@@ -356,9 +375,10 @@ class ReferenceTestCase(unittest.TestCase):
                 "type": "uncontained_list_blueprint",
                 "uncontained_in_every_way": [
                     {
-                        "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
-                        "name": "something",
-                        "type": "basic_blueprint",
+                        "ref": "2d7c3249-985d-43d2-83cf-a887e440825a",
+                        "targetName": "something",
+                        "targetType": "basic_blueprint",
+                        "type": SIMOS.LINK.value,
                     }
                 ],
             },
@@ -384,14 +404,19 @@ class ReferenceTestCase(unittest.TestCase):
             "testing",
             document_id="1",
             reference=Reference(
-                **{"_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a", "name": "something", "type": "basic_blueprint"}
+                **{
+                    "ref": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
+                    "targetName": "something",
+                    "targetType": "basic_blueprint",
+                    "type": SIMOS.LINK.value,
+                }
             ),
             attribute_path="uncontained_in_every_way",
         )
         assert len(doc_storage["1"]["uncontained_in_every_way"]) == 2
         assert doc_storage["1"]["uncontained_in_every_way"][1] == {
-            "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
-            "name": "something",
-            "type": "basic_blueprint",
-            "contained": False,
+            "ref": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
+            "targetName": "something",
+            "targetType": "basic_blueprint",
+            "type": SIMOS.LINK.value,
         }

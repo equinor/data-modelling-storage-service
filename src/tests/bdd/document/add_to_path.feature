@@ -20,34 +20,40 @@ Feature: Add document with document_service
           "isRoot": true,
           "content": [
               {
-                  "_id": "2",
-                  "name": "Operation",
-                  "type": "dmss://system/SIMOS/Blueprint"
+                  "ref": "2",
+                  "type": "dmss://system/SIMOS/Link",
+                  "targetName": "Operation",
+                  "targetType": "dmss://system/SIMOS/Blueprint"
               },
               {
-                  "_id": "3",
-                  "name": "Phase",
-                  "type": "dmss://system/SIMOS/Blueprint"
+                  "ref": "3",
+                  "type": "dmss://system/SIMOS/Link",
+                  "targetName": "Phase",
+                  "targetType": "dmss://system/SIMOS/Blueprint"
               },
               {
-                  "_id": "6",
-                  "name": "ResponseContainer",
-                  "type": "dmss://system/SIMOS/Blueprint"
+                  "ref": "6",
+                  "type": "dmss://system/SIMOS/Link",
+                  "targetName": "ResponseContainer",
+                  "targetType": "dmss://system/SIMOS/Blueprint"
               },
               {
-                  "_id": "5",
-                  "name": "ResultFile",
-                  "type": "dmss://system/SIMOS/Blueprint"
+                  "ref": "5",
+                  "type": "dmss://system/SIMOS/Link",
+                  "targetName": "ResultFile",
+                  "targetType": "dmss://system/SIMOS/Blueprint"
               },
               {
-                  "_id": "101",
-                  "type": "dmss://system/SIMOS/Package",
-                  "name": "Results"
+                  "ref": "101",
+                  "type": "dmss://system/SIMOS/Link",
+                  "targetName": "Results",
+                  "targetType": "dmss://system/SIMOS/Package"
               },
               {
-                  "_id": "102",
-                  "type": "dmss://system/SIMOS/Package",
-                  "name": "EntityPackage"
+                  "ref": "102",
+                  "type": "dmss://system/SIMOS/Link",
+                  "targetName": "EntityPackage",
+                  "targetType": "dmss://system/SIMOS/Package"
               }
           ]
       }
@@ -62,9 +68,10 @@ Feature: Add document with document_service
           "isRoot": false,
           "content": [
             {
-                  "_id": "99",
-                  "type": "dmss://data-source-name/root_package/Operation",
-                  "name": "result1"
+                  "ref": "99",
+                  "type": "dmss://system/SIMOS/Link",
+                  "targetType": "dmss://data-source-name/root_package/Operation",
+                  "targetName": "result1"
             }
           ]
       }
@@ -80,9 +87,10 @@ Feature: Add document with document_service
           "isRoot": false,
           "content": [
               {
-                  "_id": "11",
-                  "type": "dmss://data-source-name/root_package/Operation",
-                  "name": "operation1"
+                  "ref": "11",
+                  "type": "dmss://system/SIMOS/Link",
+                  "targetType": "dmss://data-source-name/root_package/Operation",
+                  "targetName": "operation1"
               }
           ]
       }
@@ -138,7 +146,7 @@ Feature: Add document with document_service
             {
               "name": "responseContainer",
               "type": "dmss://system/SIMOS/BlueprintAttribute",
-              "attributeType": "data-source-name/root_package/ResponseContainer",
+              "attributeType": "dmss://data-source-name/root_package/ResponseContainer",
               "contained": true,
               "optional": false
             }

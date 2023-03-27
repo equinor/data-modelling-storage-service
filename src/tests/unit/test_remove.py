@@ -108,10 +108,10 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "description": "",
                     "type": "all_contained_cases_blueprint",
                     "nested": {
-                        "_id": "2",
-                        "name": "Parent",
-                        "contained": True,
-                        "type": "all_contained_cases_blueprint",
+                        "ref": "2",
+                        "targetName": "Parent",
+                        "targetType": "all_contained_cases_blueprint",
+                        "type": SIMOS.STORAGE_ADDRESS.value,
                     },
                 },
             },
@@ -149,10 +149,10 @@ class DocumentServiceTestCase(unittest.TestCase):
                             "type": "all_contained_cases_blueprint",
                             "nested": [
                                 {
-                                    "_id": "2",
-                                    "name": "Parent",
-                                    "contained": True,
-                                    "type": "all_contained_cases_blueprint",
+                                    "ref": "2",
+                                    "targetName": "Parent",
+                                    "targetType": "all_contained_cases_blueprint",
+                                    "type": SIMOS.STORAGE_ADDRESS.value,
                                 }
                             ],
                         },
@@ -161,10 +161,10 @@ class DocumentServiceTestCase(unittest.TestCase):
                             "type": "all_contained_cases_blueprint",
                             "nested": [
                                 {
-                                    "_id": "3",
-                                    "name": "Parent",
-                                    "contained": True,
-                                    "type": "all_contained_cases_blueprint",
+                                    "ref": "3",
+                                    "targetName": "Parent",
+                                    "targetType": "all_contained_cases_blueprint",
+                                    "type": SIMOS.STORAGE_ADDRESS.value,
                                 }
                             ],
                         },

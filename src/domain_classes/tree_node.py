@@ -139,7 +139,7 @@ class NodeBase:
             node = node.parent
 
     def __repr__(self):
-        return f"Name: '{self.entity.get('name')}', Key: '{self.key}', Type: '{self.type}', Node_ID: '{self.node_id}'"
+        return f"Name: '{self.name}', Key: '{self.key}', Type: '{self.type}', Node_ID: '{self.node_id}'"
 
     def show_tree(self, level=0):
         print("%s%s" % ("." * level, self))

@@ -80,7 +80,12 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
             # If the content of the list is not contained, i.e. references.
             if not child.storage_contained:
                 data[child.key] = [
-                    {"_id": child.uid, "type": child.type, "name": child.name, "contained": child.contained}
+                    {
+                        "ref": child.uid,
+                        "targetType": child.type,
+                        "targetName": child.name,
+                        "type": SIMOS.STORAGE_ADDRESS.value if child.contained else SIMOS.LINK.value,
+                    }
                     for child in child.children
                 ]
             else:
@@ -88,10 +93,10 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
         else:
             if not child.contained and child.entity:
                 data[child.key] = {
-                    "_id": child.uid,
-                    "type": child.type,
-                    "name": child.name,
-                    "contained": child.contained,
+                    "ref": child.uid,
+                    "targetType": child.type,
+                    "targetName": child.name,
+                    "type": SIMOS.STORAGE_ADDRESS.value if child.contained else SIMOS.LINK.value,
                 }
             else:
                 data[child.key] = tree_node_to_ref_dict(child)

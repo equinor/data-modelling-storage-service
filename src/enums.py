@@ -56,6 +56,8 @@ class SIMOS(Enum):
     BLOB = "dmss://system/SIMOS/Blob"
     RECIPE_LINK = "dmss://system/SIMOS/RecipeLink"
     DATASOURCE = "datasource"
+    LINK = "dmss://system/SIMOS/Link"
+    STORAGE_ADDRESS = "dmss://system/SIMOS/StorageAddress"
 
 
 class AuthProviderForRoleCheck(str, Enum):

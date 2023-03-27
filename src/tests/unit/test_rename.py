@@ -94,7 +94,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "all_contained_cases_blueprint",
                 "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
                 "references": [],
-                "reference": {"_id": "2", "name": "Reference", "type": "basic_blueprint"},
+                "reference": {"ref": "2", "name": "Reference", "type": SIMOS.LINK},
             },
             "2": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
         }
@@ -131,8 +131,20 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "description": "",
                 "type": "all_contained_cases_blueprint",
                 "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
-                "reference": {"_id": "2", "name": "Reference", "type": "basic_blueprint"},
-                "references": [{"_id": "2", "name": "Reference", "type": "basic_blueprint"}],
+                "reference": {
+                    "ref": "2",
+                    "targetName": "Reference",
+                    "targetType": "basic_blueprint",
+                    "type": SIMOS.STORAGE_ADDRESS.value,
+                },
+                "references": [
+                    {
+                        "ref": "2",
+                        "targetName": "Reference",
+                        "targetType": "basic_blueprint",
+                        "type": SIMOS.STORAGE_ADDRESS.value,
+                    }
+                ],
             },
             "2": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
         }
@@ -153,7 +165,17 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(repository_provider)
         document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New_name")
 
-        actual = {"_id": "1", "references": [{"_id": "2", "name": "New_name", "type": "basic_blueprint"}]}
+        actual = {
+            "_id": "1",
+            "references": [
+                {
+                    "ref": "2",
+                    "targetName": "New_name",
+                    "targetType": "basic_blueprint",
+                    "type": SIMOS.STORAGE_ADDRESS.value,
+                }
+            ],
+        }
         actual2 = {"_id": "2", "name": "New_name", "type": "basic_blueprint"}
 
         assert pretty_eq(actual, doc_storage["1"]) is None

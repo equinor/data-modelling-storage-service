@@ -111,19 +111,22 @@ Feature: Document 2
         "type": "dmss://system/SIMOS/Package",
         "content": [
             {
-                "_id": "3",
-                "name": "TestContainer",
-                "type": "dmss://test-source-name/TestData/TestContainer"
+                "ref": "3",
+                "type": "dmss://system/SIMOS/Link",
+                "targetName": "TestContainer",
+                "targetType": "dmss://test-source-name/TestData/TestContainer"
             },
             {
-                "_id": "2",
-                "name": "ItemType",
-                "type": "dmss://test-source-name/TestData/ItemType"
+                "ref": "2",
+                "type": "dmss://system/SIMOS/Link",
+                "targetName": "ItemType",
+                "targetType": "dmss://test-source-name/TestData/ItemType"
             },
             {
-                "_id": "4",
-                "name": "ItemTypeTwo",
-                "type": "dmss://test-source-name/TestData/ItemTypeTwo"
+                "ref": "4",
+                "type": "dmss://system/SIMOS/Link",
+                "targetName": "ItemTypeTwo",
+                "targetType": "dmss://test-source-name/TestData/ItemTypeTwo"
             }
 
         ],

@@ -1,0 +1,24 @@
+{
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "Reference to another self-contained entity.",
+  "name": "Link",
+  "attributes": [
+    {
+      "attributeType": "string",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "name": "targetType",
+      "optional": true
+    },
+    {
+      "attributeType": "string",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "name": "targetName",
+      "optional": true
+    },
+    {
+      "attributeType": "string",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "name": "ref"
+    }
+  ]
+}
