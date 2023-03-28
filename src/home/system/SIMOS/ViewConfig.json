@@ -10,13 +10,13 @@
       "default": "self"
     },
      {
-      "type": "CORE:BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
       "name": "label",
       "optional": true
     },
          {
-      "type": "CORE:BlueprintAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
       "name": "eds_icon",
       "optional": true
