@@ -37,15 +37,10 @@ class EntityUUID(BaseModel):
 
 
 class Reference(BaseModel):
-    # TODO: uid can also be dotted path
-    uid: str = Field(..., alias="ref")
+    ref: str
     type: common_type_constrained_string  # type: ignore
     targetType: Optional[common_type_constrained_string]  # type: ignore
     targetName: Optional[common_name_constrained_string]  # type: ignore
-
-    @root_validator(pre=True)
-    def from_underscore_id_to_uid(cls, values):
-        return {**values, "uid": values.get("ref")}
 
 
 class UncontainedEntity(Entity, OptionalEntityName, EntityUUID, extra=Extra.allow):  # type: ignore
