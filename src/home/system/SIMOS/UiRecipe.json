@@ -31,6 +31,13 @@
       "attributeType": "object",
       "contained": true,
       "optional": true
+    },
+        {
+      "name": "dimensions",
+      "attributeType": "string",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "optional": true,
+      "default": ""
     }
   ]
 }
