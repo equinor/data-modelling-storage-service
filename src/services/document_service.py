@@ -551,9 +551,9 @@ class DocumentService:
 
         # Check that target exists and has correct values
         # The SIMOS/Entity type can reference any type (used by Package)
-        referenced_document: dict = self.repository_provider(data_source_id, self.user).get(reference.uid)
+        referenced_document: dict = self.repository_provider(data_source_id, self.user).get(reference.ref)
         if not referenced_document:
-            raise NotFoundException(uid=f"{data_source_id}/{reference.uid}")
+            raise NotFoundException(uid=f"{data_source_id}/{referenced_document['_id']}")
         if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document["type"]:
             raise BadRequestException(
                 f"The referenced entity should be of type '{attribute_node.type}'"
@@ -568,7 +568,7 @@ class DocumentService:
         if attribute_node.is_array():
             child_node = tree_node_from_dict(
                 entity=referenced_document,
-                uid=str(reference.uid),
+                uid=str(referenced_document["_id"]),
                 blueprint_provider=self.get_blueprint,
                 recipe_provider=self.get_storage_recipes,
                 node_attribute=attribute_node.attribute,
@@ -576,7 +576,7 @@ class DocumentService:
             attribute_node.add_child(child_node)
         else:
             attribute_node.entity = referenced_document
-            attribute_node.uid = str(reference.uid)
+            attribute_node.uid = str(referenced_document["_id"])
             attribute_node.type = reference.targetType
 
         self.save(root, data_source_id, update_uncontained=False)
