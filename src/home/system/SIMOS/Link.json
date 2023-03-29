@@ -1,6 +1,6 @@
 {
   "type": "dmss://system/SIMOS/Blueprint",
-  "description": "Reference to another self-contained entity.",
+  "description": "Reference to another entity.",
   "name": "Link",
   "attributes": [
     {

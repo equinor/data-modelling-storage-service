@@ -183,7 +183,12 @@ class DocumentService:
                 node.get_context_storage_attribute(),
                 parent_id=parent_uid,
             )
-            return {"type": SIMOS.LINK, "ref": node.uid, "targetType": node.entity["type"], "targetName": node.name}
+            return {
+                "type": SIMOS.LINK.value,
+                "ref": node.uid,
+                "targetType": node.entity["type"],
+                "targetName": node.name,
+            }
         return ref_dict
 
     def get_document_by_uid(

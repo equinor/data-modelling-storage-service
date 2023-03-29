@@ -94,7 +94,12 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "all_contained_cases_blueprint",
                 "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
                 "references": [],
-                "reference": {"ref": "2", "name": "Reference", "type": SIMOS.LINK},
+                "reference": {
+                    "ref": "2",
+                    "targetName": "Reference",
+                    "targetType": "basic_blueprint",
+                    "type": SIMOS.LINK.value,
+                },
             },
             "2": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
         }
