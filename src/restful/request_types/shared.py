@@ -39,8 +39,8 @@ class EntityUUID(BaseModel):
 class Reference(BaseModel):
     ref: str
     type: common_type_constrained_string  # type: ignore
-    targetType: Optional[common_type_constrained_string]  # type: ignore
-    targetName: Optional[common_name_constrained_string]  # type: ignore
+    targetType: common_type_constrained_string | None = None  # type: ignore
+    targetName: common_type_constrained_string | None = None  # type: ignore
 
 
 class UncontainedEntity(Entity, OptionalEntityName, EntityUUID, extra=Extra.allow):  # type: ignore

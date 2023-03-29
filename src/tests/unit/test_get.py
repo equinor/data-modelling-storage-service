@@ -15,10 +15,15 @@ class DocumentServiceTestCase(unittest.TestCase):
             "description": "",
             "type": "all_contained_cases_blueprint",
             "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
-            "reference": {"ref": "2", "name": "Reference", "type": "basic_blueprint"},
+            "reference": {
+                "ref": "2",
+                "targetName": "Reference",
+                "targetType": "basic_blueprint",
+                "type": SIMOS.LINK.value,
+            },
             "references": [
-                {"ref": "3", "name": "Reference1", "type": SIMOS.LINK},
-                {"ref": "4", "name": "Reference2", "type": SIMOS.LINK},
+                {"ref": "3", "targetName": "Reference1", "targetType": "basic_blueprint", "type": SIMOS.LINK.value},
+                {"ref": "4", "targetName": "Reference2", "targetType": "basic_blueprint", "type": SIMOS.LINK.value},
             ],
         }
 
@@ -68,10 +73,25 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "description": "",
                 "type": "all_contained_cases_blueprint",
                 "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
-                "reference": {"ref": "2", "name": "Reference", "type": SIMOS.LINK},
+                "reference": {
+                    "ref": "2",
+                    "targetName": "Reference",
+                    "targetType": "basic_blueprint",
+                    "type": SIMOS.LINK.value,
+                },
                 "references": [
-                    {"ref": "3", "name": "Reference1", "type": SIMOS.LINK},
-                    {"ref": "4", "name": "Reference2", "type": SIMOS.LINK},
+                    {
+                        "ref": "3",
+                        "targetName": "Reference1",
+                        "targetType": "basic_blueprint",
+                        "type": SIMOS.LINK.value,
+                    },
+                    {
+                        "ref": "4",
+                        "targetName": "Reference2",
+                        "targetType": "basic_blueprint",
+                        "type": SIMOS.LINK.value,
+                    },
                 ],
             },
         }
