@@ -306,6 +306,11 @@ car = {
             "default": "test_data/complex/CarTest",
         },
         {
+            "name": "plateNumber",
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+        },
+        {
             "type": "system/SIMOS/BlueprintAttribute",
             "name": "wheel",
             "attributeType": "test_data/complex/WheelTest",
@@ -389,6 +394,40 @@ wheel = {
     ],
 }
 
+car_rental = {
+    "name": "CarRental",
+    "type": "system/SIMOS/Blueprint",
+    "attributes": [
+        {"name": "name", "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute"},
+        {
+            "name": "cars",
+            "dimensions": "*",
+            "attributeType": "test_data/complex/CarTest",
+            "type": "system/SIMOS/BlueprintAttribute",
+        },
+        {
+            "name": "customers",
+            "dimensions": "*",
+            "attributeType": "test_data/complex/Customer",
+            "type": "system/SIMOS/BlueprintAttribute",
+        },
+    ],
+}
+
+car_rental_customer = {
+    "name": "Customer",
+    "type": "system/SIMOS/Blueprint",
+    "attributes": [
+        {"name": "name", "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute"},
+        {
+            "name": "car",
+            "attributeType": "test_data/complex/CarTest",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "contained": False,
+        },
+    ],
+}
+
 parent = {
     "type": "dmss://system/SIMOS/Blueprint",
     "name": "Parent",
@@ -459,6 +498,10 @@ class BlueprintProvider:
             return Blueprint(car, type)
         if type == "test_data/complex/WheelTest":
             return Blueprint(wheel, type)
+        if type == "test_data/complex/CarRental":
+            return Blueprint(car_rental, type)
+        if type == "test_data/complex/Customer":
+            return Blueprint(car_rental_customer, type)
         if type == "Parent":
             return Blueprint(parent, type)
         if type == "BaseChild":

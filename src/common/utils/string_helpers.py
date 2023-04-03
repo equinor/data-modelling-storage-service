@@ -14,15 +14,21 @@ from enums import BuiltinDataTypes
 # ABSOLUTE_REFERENCE = PROTOCOL://ADDRESS
 
 
-def split_dmss_ref(dmss_reference: str) -> Tuple[str, Union[str, None], Union[str, None]]:
-    """Will split 'path_references' and 'id_references' into it's 3 parts.
-    Expects format; DATA_SOURCE/(PATH|ID).Attribute"""
-    dmss_reference = dmss_reference.strip("/. ")  # Remove leading and trailing stuff
-    if "/" not in dmss_reference:  # It's reference to the data_source itself
-        return dmss_reference, None, None
-    data_source, dotted_id = dmss_reference.split("/", 1)
-    document_id, attributes = split_dotted_id(dotted_id)
-    return data_source, document_id, attributes
+def split_dmss_ref(dmss_reference: str) -> Tuple[Union[str, None], Union[str, None], Union[str, None]]:
+    """Will split 'path_references' and 'id_references' into it's 3 parts."""
+    if dmss_reference.startswith("/"):  # By root (no specified data source)
+        # Expects format: //(PATH|ID).Attribute
+        dmss_reference = dmss_reference.strip("/. ")  # Remove leading and trailing stuff
+        document_id, attributes = split_dotted_id(dmss_reference)
+        return None, document_id, attributes
+    else:  # By data source
+        # Expects format: /DATA_SOURCE/(PATH|ID).Attribute
+        dmss_reference = dmss_reference.strip("/. ")  # Remove leading and trailing stuff
+        if "/" not in dmss_reference:  # It's reference to the data_source itself
+            return dmss_reference, None, None
+        data_source, dotted_id = dmss_reference.split("/", 1)
+        document_id, attributes = split_dotted_id(dotted_id)
+        return data_source, document_id, attributes
 
 
 def split_dotted_id(dotted_id: str) -> Tuple[str, str | None]:

@@ -1,6 +1,8 @@
 import unittest
 from unittest import mock
 
+import pytest
+
 from common.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import pretty_eq
 from enums import SIMOS
@@ -8,6 +10,168 @@ from tests.unit.mock_utils import get_mock_document_service
 
 
 class DocumentServiceTestCase(unittest.TestCase):
+    def test_references_that_uses_wrong_protocol(self):
+        my_car_rental = {
+            "_id": "1",
+            "type": "test_data/complex/CarRental",
+            "name": "myCarRental",
+            "description": "",
+            "extends": [SIMOS.NAMED_ENTITY.value],
+            "cars": [{"type": "test_data/complex/CarTest", "name": "Volvo 240"}],
+            "customers": [
+                {
+                    "type": "test_data/complex/Customer",
+                    "name": "Wrong protocol",
+                    "car": {
+                        "ref": "wrong:///1.cars.0",
+                        "targetName": "Volvo 240",
+                        "targetType": "test_data/complex/CarTest",
+                        "type": SIMOS.LINK.value,
+                    },
+                }
+            ],
+        }
+
+        def mock_get(document_id: str):
+            if document_id == "1":
+                return my_car_rental.copy()
+            return None
+
+        def mock_find(target: dict):
+            # Used when resolving reference using paths.
+            return [
+                {
+                    "content": [
+                        {
+                            "ref": "1",
+                            "targetName": "myCarRental",
+                            "targetType": "test_data/complex/CarRental",
+                            "type": SIMOS.LINK.value,
+                        },
+                    ]
+                }
+            ]
+
+        document_repository = mock.Mock()
+        document_repository.get = mock_get
+        document_repository.find = mock_find
+
+        document_service = get_mock_document_service(lambda x, y: document_repository)
+        with pytest.raises(Exception, match=r"The protocol 'wrong' is not supported"):
+            tree_node_to_dict(document_service.get_node_by_uid("datasource", "1"))
+
+    def test_references_that_point_to_nested_attribute(self):
+        my_car_rental = {
+            "_id": "1",
+            "type": "test_data/complex/CarRental",
+            "name": "myCarRental",
+            "description": "",
+            "extends": [SIMOS.NAMED_ENTITY.value],
+            "cars": [{"type": "test_data/complex/CarTest", "name": "Volvo 240"}],
+            "customers": [
+                {
+                    "type": "test_data/complex/Customer",
+                    "name": "Root reference by id",
+                    "car": {
+                        "ref": "dmss:///1.cars.0",
+                        "targetName": "Volvo 240",
+                        "targetType": "test_data/complex/CarTest",
+                        "type": SIMOS.LINK.value,
+                    },
+                },
+                {
+                    "type": "test_data/complex/Customer",
+                    "name": "Root reference by path",
+                    "car": {
+                        "ref": "dmss:///complex/myCarRental.cars.0",
+                        "targetName": "Volvo 240",
+                        "targetType": "test_data/complex/CarTest",
+                        "type": SIMOS.LINK.value,
+                    },
+                },
+                {
+                    "type": "test_data/complex/Customer",
+                    "name": "Absolute reference by id",
+                    "car": {
+                        "ref": "dmss://test_data/1.cars.0",
+                        "targetName": "Volvo 240",
+                        "targetType": "test_data/complex/CarTest",
+                        "type": SIMOS.LINK.value,
+                    },
+                },
+                {
+                    "type": "test_data/complex/Customer",
+                    "name": "Absolute reference by path",
+                    "car": {
+                        "ref": "dmss://test_data/complex/myCarRental.cars.0",
+                        "targetName": "Volvo 240",
+                        "targetType": "test_data/complex/CarTest",
+                        "type": SIMOS.LINK.value,
+                    },
+                },
+            ],
+        }
+
+        def mock_get(document_id: str):
+            if document_id == "1":
+                return my_car_rental.copy()
+            return None
+
+        def mock_find(target: dict):
+            # Used when resolving reference using paths.
+            return [
+                {
+                    "content": [
+                        {
+                            "ref": "1",
+                            "targetName": "myCarRental",
+                            "targetType": "test_data/complex/CarRental",
+                            "type": SIMOS.LINK.value,
+                        },
+                    ]
+                }
+            ]
+
+        document_repository = mock.Mock()
+        document_repository.get = mock_get
+        document_repository.find = mock_find
+
+        document_service = get_mock_document_service(lambda x, y: document_repository)
+        root = tree_node_to_dict(document_service.get_node_by_uid("datasource", "1"))
+
+        assert isinstance(root, dict)
+
+        actual = {
+            "_id": "1",
+            "type": "test_data/complex/CarRental",
+            "name": "myCarRental",
+            "cars": [{"type": "test_data/complex/CarTest", "name": "Volvo 240"}],
+            "customers": [
+                {
+                    "type": "test_data/complex/Customer",
+                    "name": "Root reference by id",
+                    "car": {"type": "test_data/complex/CarTest", "name": "Volvo 240"},
+                },
+                {
+                    "type": "test_data/complex/Customer",
+                    "name": "Root reference by path",
+                    "car": {"type": "test_data/complex/CarTest", "name": "Volvo 240"},
+                },
+                {
+                    "type": "test_data/complex/Customer",
+                    "name": "Absolute reference by id",
+                    "car": {"type": "test_data/complex/CarTest", "name": "Volvo 240"},
+                },
+                {
+                    "type": "test_data/complex/Customer",
+                    "name": "Absolute reference by path",
+                    "car": {"type": "test_data/complex/CarTest", "name": "Volvo 240"},
+                },
+            ],
+        }
+
+        assert pretty_eq(actual, root) is None
+
     def test_get_complete_document(self):
         document_1 = {
             "_id": "1",
