@@ -31,6 +31,7 @@ class CreateEntityTestCase(unittest.TestCase):
             },
             "is_sedan": True,
             "name": "CarTest",
+            "plateNumber": "",
             "seats": 2,
             "type": "test_data/complex/CarTest",
             "wheel": {"name": "Wheel", "power": 0.0, "type": "test_data/complex/WheelTest"},
