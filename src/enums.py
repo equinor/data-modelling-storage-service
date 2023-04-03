@@ -3,6 +3,10 @@ from enum import Enum
 PRIMITIVES = {"string", "number", "integer", "boolean"}
 
 
+class Protocols(Enum):
+    DMSS = "dmss"
+
+
 class BuiltinDataTypes(Enum):
     STR = "string"
     NUM = "number"

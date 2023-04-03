@@ -20,7 +20,7 @@ from common.utils.build_complex_search import build_mongo_query
 from common.utils.delete_documents import delete_document
 from common.utils.get_blueprint import get_blueprint_provider
 from common.utils.get_document_by_path import get_document_uid_by_path
-from common.utils.get_resolved_document_by_id import get_complete_sys_document
+from common.utils.get_resolved_document_by_id import resolve_document
 from common.utils.get_storage_recipe import storage_recipe_provider
 from common.utils.logging import logger
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
@@ -55,6 +55,7 @@ class DocumentService:
         self.repository_provider = repository_provider
         self.user = user
         self.context = context
+        self.get_data_source = lambda data_source_id: self.repository_provider(data_source_id, self.user)
 
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def get_blueprint(self, type: str) -> Blueprint:
@@ -196,12 +197,12 @@ class DocumentService:
         document_uid: str,
         depth: int = 999,
     ) -> dict:
-        return get_complete_sys_document(document_uid, self.repository_provider(data_source_id, self.user), depth)
+        data_source = self.get_data_source(data_source_id)
+        document = data_source.get(document_uid)
+        return resolve_document(document, data_source, self.get_data_source, document_uid, depth)
 
     def get_node_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
-        complete_document = get_complete_sys_document(
-            document_uid, self.repository_provider(data_source_id, self.user), depth
-        )
+        complete_document = self.get_document_by_uid(data_source_id, document_uid, depth)
         return tree_node_from_dict(
             complete_document,
             uid=complete_document.get("_id"),
