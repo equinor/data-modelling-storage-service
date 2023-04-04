@@ -178,8 +178,13 @@ def tree_node_from_dict(
                     content_attribute.attribute_type = child["type"]
                     list_child_attribute = content_attribute
 
+                if "ref" in child:
+                    child_uid = child["ref"]
+                else:
+                    child_uid = child.get("_id", "")
+
                 list_child_node = tree_node_from_dict(
-                    uid=child.get("_id", ""),
+                    uid=child_uid,
                     entity=child,
                     key=str(i),
                     blueprint_provider=blueprint_provider,

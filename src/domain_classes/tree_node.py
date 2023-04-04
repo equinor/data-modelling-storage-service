@@ -266,12 +266,21 @@ class Node(NodeBase):
         )
         self.entity: dict = entity if entity else {}
         self.error_message = None
+        if (
+            entity is not None
+            and entity != {}
+            and entity["type"] == "dmss://system/SIMOS/Link"
+            and "targetName" in entity
+        ):
+            self.type = entity["targetType"]
 
     def is_root(self):
         return super().is_root()
 
     @property
     def name(self):
+        if "targetName" in self.entity and self.entity["type"] == "dmss://system/SIMOS/Link":
+            return self.entity.get("targetName", self.attribute.name)
         return self.entity.get("name", self.attribute.name)
 
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
