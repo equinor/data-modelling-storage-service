@@ -31,13 +31,13 @@ def _collect_entity_meta_by_path(
     # TODO: Handle dotted attribute path
     if len(path_elements) == 1:
         target = path_elements[0]
-        file = next((f for f in package["content"] if f.get("name", f.get("_id")) == target), None)
+        file = next((f for f in package["content"] if f.get("targetName", f.get("_id")) == target), None)
         if not file:
             raise NotFoundException(f"The document '{target}' could not be found in the package '{package['name']}'")
-        entity: dict = data_source.get(file["_id"])
+        entity: dict = data_source.get(file["ref"])
         return concat_meta_data(existing_meta, entity.get("_meta_"))
 
-    next_package_ref = next((p for p in package["content"] if p["name"] == path_elements[0]), None)
+    next_package_ref = next((p for p in package["content"] if p["targetName"] == path_elements[0]), None)
     if not next_package_ref:
         raise NotFoundException(f"The package {path_elements[0]} could not be found in the package {package['name']}")
     next_package: dict = data_source.get(next_package_ref["_id"])
