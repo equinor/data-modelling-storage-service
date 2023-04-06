@@ -21,24 +21,28 @@ Feature: Get correct data for subtypes
         "isRoot": true,
         "content": [
             {
-                "_id": "3",
-                "name": "BaseChild",
-                "type": "dmss://system/SIMOS/Blueprint"
+                "ref": "3",
+                "targetName": "BaseChild",
+                "targetType": "dmss://system/SIMOS/Blueprint",
+                "type": "dmss://system/SIMOS/Link"
             },
             {
-                "_id": "4",
-                "name": "Parent",
-                "type": "dmss://system/SIMOS/Blueprint"
+                "ref": "4",
+                "targetName": "Parent",
+                "targetType": "dmss://system/SIMOS/Blueprint",
+                "type": "dmss://system/SIMOS/Link"
             },
             {
-                "_id": "5",
-                "name": "SpecialChild",
-                "type": "dmss://system/SIMOS/Blueprint"
+                "ref": "5",
+                "targetName": "SpecialChild",
+                "targetType": "dmss://system/SIMOS/Blueprint",
+                "type": "dmss://system/SIMOS/Link"
             },
             {
-                "_id": "7",
-                "name": "parentEntity",
-                "type": "data-source-name/root_package/Parent"
+                "ref": "7",
+                "targetName": "parentEntity",
+                "targetType": "data-source-name/root_package/Parent",
+                "type": "dmss://system/SIMOS/Link"
             }
         ]
     }
