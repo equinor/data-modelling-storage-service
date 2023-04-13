@@ -5,7 +5,7 @@ import pytest
 
 from common.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import pretty_eq
-from enums import SIMOS
+from enums import SIMOS, Protocols
 from tests.unit.mock_utils import get_mock_document_service
 
 
@@ -73,7 +73,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "type": "test_data/complex/Customer",
                     "name": "Root reference by id",
                     "car": {
-                        "ref": "dmss:///1.cars.0",
+                        "ref": f"{Protocols.DMSS.value}:///1.cars.0",
                         "targetName": "Volvo 240",
                         "targetType": "test_data/complex/CarTest",
                         "type": SIMOS.LINK.value,
@@ -83,7 +83,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "type": "test_data/complex/Customer",
                     "name": "Root reference by path",
                     "car": {
-                        "ref": "dmss:///complex/myCarRental.cars.0",
+                        "ref": f"{Protocols.DMSS.value}:///complex/myCarRental.cars.0",
                         "targetName": "Volvo 240",
                         "targetType": "test_data/complex/CarTest",
                         "type": SIMOS.LINK.value,
@@ -93,7 +93,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "type": "test_data/complex/Customer",
                     "name": "Absolute reference by id",
                     "car": {
-                        "ref": "dmss://test_data/1.cars.0",
+                        "ref": f"{Protocols.DMSS.value}://test_data/1.cars.0",
                         "targetName": "Volvo 240",
                         "targetType": "test_data/complex/CarTest",
                         "type": SIMOS.LINK.value,
@@ -103,7 +103,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "type": "test_data/complex/Customer",
                     "name": "Absolute reference by path",
                     "car": {
-                        "ref": "dmss://test_data/complex/myCarRental.cars.0",
+                        "ref": f"{Protocols.DMSS.value}://test_data/complex/myCarRental.cars.0",
                         "targetName": "Volvo 240",
                         "targetType": "test_data/complex/CarTest",
                         "type": SIMOS.LINK.value,

@@ -3,7 +3,7 @@ from typing import Tuple, Union
 from common.utils.get_document_by_path import get_document_uid_by_path
 from common.utils.get_nested_dict_attribute import get_nested_dict_attribute
 from common.utils.string_helpers import split_dmss_ref
-from enums import SIMOS
+from enums import SIMOS, Protocols
 from storage.data_source_class import DataSource
 
 
@@ -40,7 +40,7 @@ def resolve_reference(reference: str, data_source) -> Tuple[Union[str, None], Un
         """
         protocol, dmss_reference = reference.split("://", 1)
         match protocol:
-            case "dmss":
+            case Protocols.DMSS.value:
                 data_source_id, id_or_path, attribute = split_dmss_ref(dmss_reference)
                 if "/" in id_or_path:  # By path
                     document_id = get_document_uid_by_path(id_or_path, data_source)
