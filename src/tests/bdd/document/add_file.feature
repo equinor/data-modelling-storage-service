@@ -503,11 +503,11 @@ Feature: Explorer - Add file
       }
     }
     """
-    Then the response status should be "Unprocessable Entity"
+    Then the response status should be "Bad Request"
     And the response should be
     """
     {
-      "status": 422,
+      "status": 400,
       "type": "ValidationException",
       "message": "Missing required attribute 'name'",
       "debug": "Location: Entity in key '^'",
@@ -574,11 +574,11 @@ Feature: Explorer - Add file
       }
     }
     """
-    Then the response status should be "Unprocessable Entity"
+    Then the response status should be "Bad Request"
     And the response should be
     """
     {
-      "status": 422,
+      "status": 400,
       "type": "ValidationException",
       "message": "Missing required attribute 'name'",
       "debug": "Location: Entity in key '^'",
@@ -598,11 +598,11 @@ Feature: Explorer - Add file
       }
     }
     """
-    Then the response status should be "Unprocessable Entity"
+    Then the response status should be "Bad Request"
     And the response should be
     """
     {
-      "status": 422,
+      "status": 400,
       "type": "ValidationException",
       "message": "Missing required attribute 'name'",
       "debug": "Location: Entity in key '^'",
@@ -619,11 +619,11 @@ Feature: Explorer - Add file
       "description": "parent entity with no name"
     }
     """
-    Then the response status should be "Unprocessable Entity"
+    Then the response status should be "Bad Request"
     And the response should be
     """
     {
-      "status": 422,
+      "status": 400,
       "type": "ValidationException",
       "message": "Missing required attribute 'name'",
       "debug": "Location: Entity in key '^'",
@@ -652,11 +652,11 @@ Feature: Explorer - Add file
       "description": "Blueprint with no name"
     }
     """
-    Then the response status should be "Unprocessable Entity"
+    Then the response status should be "Bad Request"
     And the response should be
     """
     {
-      "status": 422,
+      "status": 400,
       "type": "ValidationException",
       "message": "Missing required attribute 'name'",
       "debug": "Location: Entity in key '^'",
@@ -673,11 +673,11 @@ Feature: Explorer - Add file
       "description": "Package with no name"
     }
     """
-    Then the response status should be "Unprocessable Entity"
+    Then the response status should be "Bad Request"
     And the response should be
     """
     {
-      "status": 422,
+      "status": 400,
       "type": "ValidationException",
       "message": "Missing required attribute 'name'",
       "debug": "Location: Entity in key '^'",
