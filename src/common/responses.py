@@ -72,10 +72,10 @@ def create_response(
                 return JSONResponse(error_response.dict(), status_code=error_response.status)
             except ValidationError as e:
                 validation_exception = ValidationException(message=str(e))
-                return JSONResponse(validation_exception.dict(), status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                return JSONResponse(validation_exception.dict(), status_code=status.HTTP_400_BAD_REQUEST)
             except ValidationException as e:
                 logger.error(e)
-                return JSONResponse(e.dict(), status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                return JSONResponse(e.dict(), status_code=status.HTTP_400_BAD_REQUEST)
             except NotFoundException as e:
                 if logger.level <= logging.DEBUG:
                     traceback.print_exc()
