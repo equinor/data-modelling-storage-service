@@ -275,14 +275,13 @@ Feature: Document 2
     """
 
   Scenario: Update document (attribute and not contained)
-    Given i access the resource url "/api/documents/data-source-name/6"
+    Given i access the resource url "/api/documents/data-source-name/6.itemNotContained"
     When i make a form-data "PUT" request
     """
     { "data": {
         "name": "item_single",
         "type": "dmss://test-source-name/TestData/ItemType"
-      },
-      "attribute": ".itemNotContained"
+      }
     }
     """
     Then the response status should be "OK"
