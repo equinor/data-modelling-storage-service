@@ -178,7 +178,7 @@ def tree_node_from_dict(
                     content_attribute.attribute_type = child["type"]
                     list_child_attribute = content_attribute
 
-                if "ref" in child:
+                if child["type"] == SIMOS.LINK.value:
                     child_uid = child["ref"]
                 else:
                     child_uid = child.get("_id", "")
