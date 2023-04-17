@@ -266,8 +266,6 @@ class Node(NodeBase):
         )
         self.entity: dict = entity if entity else {}
         self.error_message = None
-        if entity is not None and entity != {} and entity["type"] == SIMOS.LINK.value and "targetName" in entity:
-            self.type = entity["targetType"]
 
     def is_root(self):
         return super().is_root()
