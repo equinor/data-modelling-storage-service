@@ -75,7 +75,7 @@ class DataSourceRepository:
         document["_id"] = id
         try:
             self.validate_data_source(document)
-            result = data_source_collection.replace_one({"_id": id}, document, upsert=True)
+            result = data_source_collection.update_one({"_id": id}, {"$set": document}, upsert=True)
         except BadRequestException:
             raise BadRequestException(
                 message=f"Failed to create data source '{id}'. The posted entity is invalid...", data=document
