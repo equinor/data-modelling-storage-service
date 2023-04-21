@@ -10,7 +10,13 @@ class ConcatMetaTestCase(unittest.TestCase):
             "type": "CORE:Meta",
             "version": "0.0.1",
             "dependencies": [
-                {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"},
+                {
+                    "type": "dmss://system/SIMOS/Dependency",
+                    "alias": "CORE",
+                    "address": "system/SIMOS",
+                    "version": "0.0.1",
+                    "protocol": "dmss",
+                },
             ],
         }
         new_meta = {
@@ -18,6 +24,7 @@ class ConcatMetaTestCase(unittest.TestCase):
             "version": "0.0.1",
             "dependencies": [
                 {
+                    "type": "dmss://system/SIMOS/Dependency",
                     "alias": "TEST-MODELS",
                     "address": "DemoApplicationDataSource/models",
                     "version": "0.0.1",
@@ -31,8 +38,15 @@ class ConcatMetaTestCase(unittest.TestCase):
             "type": "CORE:Meta",
             "version": "0.0.1",
             "dependencies": [
-                {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"},
                 {
+                    "type": "dmss://system/SIMOS/Dependency",
+                    "alias": "CORE",
+                    "address": "system/SIMOS",
+                    "version": "0.0.1",
+                    "protocol": "dmss",
+                },
+                {
+                    "type": "dmss://system/SIMOS/Dependency",
                     "alias": "TEST-MODELS",
                     "address": "DemoApplicationDataSource/models",
                     "version": "0.0.1",
@@ -49,15 +63,33 @@ class ConcatMetaTestCase(unittest.TestCase):
             "type": "CORE:Meta",
             "version": "0.0.1",
             "dependencies": [
-                {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"},
-                {"alias": "EXISTING-ALIAS", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"},
+                {
+                    "type": "dmss://system/SIMOS/Dependency",
+                    "alias": "CORE",
+                    "address": "system/SIMOS",
+                    "version": "0.0.1",
+                    "protocol": "dmss",
+                },
+                {
+                    "type": "dmss://system/SIMOS/Dependency",
+                    "alias": "EXISTING-ALIAS",
+                    "address": "system/SIMOS",
+                    "version": "0.0.1",
+                    "protocol": "dmss",
+                },
             ],
         }
         new_meta = {
             "type": "dmss://system/SIMOS/Meta",
             "version": "3.3.3",
             "dependencies": [
-                {"alias": "EXISTING-ALIAS", "address": "an/address", "version": "2.2.2", "protocol": "http"}
+                {
+                    "type": "dmss://system/SIMOS/Dependency",
+                    "alias": "EXISTING-ALIAS",
+                    "address": "an/address",
+                    "version": "2.2.2",
+                    "protocol": "http",
+                }
             ],
         }
 
@@ -66,8 +98,20 @@ class ConcatMetaTestCase(unittest.TestCase):
             "type": "dmss://system/SIMOS/Meta",
             "version": "3.3.3",
             "dependencies": [
-                {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"},
-                {"alias": "EXISTING-ALIAS", "address": "an/address", "version": "2.2.2", "protocol": "http"},
+                {
+                    "type": "dmss://system/SIMOS/Dependency",
+                    "alias": "CORE",
+                    "address": "system/SIMOS",
+                    "version": "0.0.1",
+                    "protocol": "dmss",
+                },
+                {
+                    "type": "dmss://system/SIMOS/Dependency",
+                    "alias": "EXISTING-ALIAS",
+                    "address": "an/address",
+                    "version": "2.2.2",
+                    "protocol": "http",
+                },
             ],
         }
 
