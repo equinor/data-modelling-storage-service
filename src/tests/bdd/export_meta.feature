@@ -18,6 +18,7 @@ Feature: Export an entity's meta data
         "version": "0.0.1",
         "dependencies": [
           {
+            "type": "dmss://system/SIMOS/Dependency",
             "alias": "CORE",
             "address": "system/SIMOS",
             "version": "0.0.1",
@@ -47,6 +48,7 @@ Feature: Export an entity's meta data
         "version": "0.0.1",
         "dependencies": [
           {
+            "type": "dmss://system/SIMOS/Dependency",
             "alias": "TEST-MODELS",
             "address": "DemoApplicationDataSource/models",
             "version": "0.0.1",
@@ -69,12 +71,14 @@ Feature: Export an entity's meta data
       "version": "0.0.1",
       "dependencies": [
         {
+          "type": "dmss://system/SIMOS/Dependency",
           "alias": "CORE",
           "address": "system/SIMOS",
           "version": "0.0.1",
           "protocol": "dmss"
         },
         {
+          "type": "dmss://system/SIMOS/Dependency",
           "alias": "TEST-MODELS",
           "address": "DemoApplicationDataSource/models",
           "version": "0.0.1",
@@ -133,6 +137,7 @@ Feature: Export an entity's meta data
         "version": "0.0.1",
         "dependencies": [
           {
+            "type": "dmss://system/SIMOS/Dependency",
             "alias": "CORE",
             "address": "system/SIMOS",
             "version": "0.0.1",
@@ -161,6 +166,7 @@ Feature: Export an entity's meta data
       "version": "0.0.1",
       "dependencies": [
         {
+          "type": "dmss://system/SIMOS/Dependency",
           "alias": "CORE",
           "address": "system/SIMOS",
           "version": "0.0.1",

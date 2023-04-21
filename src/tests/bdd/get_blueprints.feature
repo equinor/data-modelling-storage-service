@@ -32,24 +32,7 @@ Feature: Get a blueprint
           "type": "dmss://system/SIMOS/BlueprintAttribute"
         }
       ]
-    },
-    "uiRecipes": [
-      {
-        "type": "dmss://system/SIMOS/UiRecipe",
-        "name": "DEFAULT_CREATE",
-        "description": "",
-        "attributes": [
-          {
-            "name": "type",
-            "attributeType": "string",
-            "type": "dmss://system/SIMOS/UiAttribute",
-            "field": "blueprint",
-            "label": "Type"
-          }
-        ]
-      }
-    ],
-     "storageRecipes": []
+    }
     }
     """
 
@@ -85,6 +68,11 @@ Feature: Get a blueprint
             "type": "dmss://system/SIMOS/BlueprintAttribute"
           },
           {
+            "name": "_meta_",
+            "attributeType": "dmss://system/SIMOS/Meta",
+            "type": "dmss://system/SIMOS/BlueprintAttribute"
+          },
+          {
             "type": "dmss://system/SIMOS/BlueprintAttribute",
             "name": "_blob_id",
             "description": "id for the raw blob",
@@ -101,25 +89,7 @@ Feature: Get a blueprint
             "contained": true
           }
         ]
-      },
-      "uiRecipes": [
-        {
-          "name": "Yaml",
-          "type": "dmss://system/SIMOS/UiRecipe",
-          "plugin": "@development-framework/dm-core-plugins/yaml",
-          "roles": [
-            "dmss-admin"
-          ],
-          "category": "view"
-        },
-        {
-          "name": "Edit",
-          "type": "dmss://system/SIMOS/UiRecipe",
-          "plugin": "@development-framework/dm-core-plugins/form",
-          "category": "edit"
-        }
-      ],
-      "storageRecipes": []
+      }
     }
     """
 
@@ -150,24 +120,13 @@ Feature: Get a blueprint
           "name": "description",
           "attributeType": "string",
           "type": "dmss://system/SIMOS/BlueprintAttribute"
+        }, {
+            "name": "_meta_",
+            "attributeType": "dmss://system/SIMOS/Meta",
+            "type": "dmss://system/SIMOS/BlueprintAttribute"
         }
       ]
-    },
-    "uiRecipes": [
-      {
-        "name": "Edit",
-        "type": "dmss://system/SIMOS/UiRecipe",
-        "plugin": "@development-framework/dm-core-plugins/form",
-        "category": "edit"
-      },
-      {
-        "name": "Yaml",
-        "type": "dmss://system/SIMOS/UiRecipe",
-        "plugin": "@development-framework/dm-core-plugins/yaml",
-        "category": "view"
-      }
-    ],
-    "storageRecipes": []
+    }
     }
     """
 
