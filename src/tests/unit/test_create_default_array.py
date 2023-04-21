@@ -8,58 +8,6 @@ from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_utils import mock_storage_recipe_provider
 
-package_blueprint = {
-    "type": SIMOS.BLUEPRINT.value,
-    "name": "Package",
-    "description": "This is a blueprint for a package that contains documents and other packages",
-    "attributes": [
-        {
-            "attributeType": "boolean",
-            "type": "dmss://system/SIMOS/BlueprintAttribute",
-            "name": "isRoot",
-            "optional": True,
-            "default": False,
-        },
-        {
-            "attributeType": "object",
-            "type": "dmss://system/SIMOS/BlueprintAttribute",
-            "name": "content",
-            "contained": False,
-            "dimensions": "*",
-            "optional": True,
-        },
-        {
-            "name": "name",
-            "optional": False,
-            "attributeType": "string",
-            "type": "dmss://system/SIMOS/BlueprintAttribute",
-            "label": "Name",
-        },
-        {
-            "name": "type",
-            "attributeType": "string",
-            "type": "dmss://system/SIMOS/BlueprintAttribute",
-            "label": "Type",
-            "default": "",
-            "optional": False,
-        },
-        {
-            "name": "description",
-            "attributeType": "string",
-            "type": "dmss://system/SIMOS/BlueprintAttribute",
-            "default": "",
-            "optional": True,
-            "label": "Description",
-        },
-        {
-            "name": "_meta_",
-            "attributeType": "dmss://system/SIMOS/Meta",
-            "type": "dmss://system/SIMOS/BlueprintAttribute",
-            "optional": True,
-        },
-    ],
-}
-
 basic_blueprint = {
     "type": SIMOS.BLUEPRINT.value,
     "name": "A box",
@@ -114,8 +62,6 @@ class BlueprintProvider:
     def get_blueprint(self, template_type: str):
         if template_type == "higher_rank_array":
             return Blueprint(higher_rank_array_blueprint)
-        elif template_type == "package_blueprint":
-            return Blueprint(package_blueprint)
         elif template_type == "basic_blueprint":
             return Blueprint(basic_blueprint)
         else:
@@ -139,7 +85,9 @@ class DefaultArrayTestCase(unittest.TestCase):
             blueprint_provider, CreateEntity
         )
 
-        assert default_array == [[{"name": "", "type": "dmss://system/SIMOS/Package", "_meta_": {}, "content": []}]]
+        assert default_array == [
+            [{"name": "", "type": "dmss://system/SIMOS/Package", "_meta_": {}, "isRoot": False, "content": []}]
+        ]
 
     def test_creation_of_default_array_unfixed_rank2(self):
         default_array = Dimension("*,*", "integer").create_default_array(blueprint_provider, CreateEntity)
