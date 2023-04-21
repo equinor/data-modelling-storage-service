@@ -25,6 +25,12 @@
       "default": "",
       "optional": true,
       "label": "Description"
+    },
+    {
+      "name": "_meta_",
+      "attributeType": "dmss://system/SIMOS/Meta",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "optional": true
     }
   ]
 }
