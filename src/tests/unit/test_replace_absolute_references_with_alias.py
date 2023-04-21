@@ -82,12 +82,14 @@ entity_with_aliases: dict = {
 class ReplaceWithAliasTest(unittest.TestCase):
     def test_replace_ref_with_alias(self):
         car_package_dependency = {
+            "type": "dmss://system/SIMOS/Dependency",
             "alias": "CAR_PACKAGE",
             "address": "DemoApplicationDataSource/models/CarPackage",
             "version": "0.0.1",
             "protocol": "dmss",
         }
         wheel_package_dependency = {
+            "type": "dmss://system/SIMOS/Dependency",
             "alias": "WHEEL",
             "address": "DemoApplicationDataSource/models/CarPackage/Wheel",
             "version": "0.0.1",
@@ -103,14 +105,22 @@ class ReplaceWithAliasTest(unittest.TestCase):
         assert alias == reference
 
     def test_replace_absolute_references_in_entity_with_alias(self):
-        core_dependency = {"alias": "CORE", "address": "system/SIMOS", "version": "0.0.1", "protocol": "dmss"}
+        core_dependency = {
+            "type": "dmss://system/SIMOS/Dependency",
+            "alias": "CORE",
+            "address": "system/SIMOS",
+            "version": "0.0.1",
+            "protocol": "dmss",
+        }
         car_package_dependency = {
+            "type": "dmss://system/SIMOS/Dependency",
             "alias": "CAR_PACKAGE",
             "address": "DemoApplicationDataSource/models/CarPackage",
             "version": "0.0.1",
             "protocol": "dmss",
         }
         wheel_package_dependency = {
+            "type": "dmss://system/SIMOS/Dependency",
             "alias": "WHEEL",
             "address": "DemoApplicationDataSource/models/CarPackage/Wheel",
             "version": "0.0.1",

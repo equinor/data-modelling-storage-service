@@ -7,7 +7,9 @@
     {
       "attributeType": "boolean",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "isRoot"
+      "name": "isRoot",
+      "optional": true,
+      "default": false
     },
     {
       "attributeType": "object",

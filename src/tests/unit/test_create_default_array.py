@@ -13,30 +13,50 @@ package_blueprint = {
     "name": "Package",
     "description": "This is a blueprint for a package that contains documents and other packages",
     "attributes": [
-        {"attributeType": "string", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "name"},
         {
-            "attributeType": "string",
-            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
-            "name": "description",
+            "attributeType": "boolean",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "name": "isRoot",
             "optional": True,
+            "default": False,
         },
-        {"attributeType": "string", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "type"},
-        {"attributeType": "boolean", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "isRoot"},
         {
             "attributeType": "object",
-            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
             "name": "content",
+            "contained": False,
             "dimensions": "*",
             "optional": True,
         },
-    ],
-    "storageRecipes": [
         {
-            "type": "dmss://system/SIMOS/StorageRecipe",
-            "name": "DefaultStorageRecipe",
-            "description": "",
-            "attributes": [{"name": "content", "type": "object", "contained": False}],
-        }
+            "name": "name",
+            "optional": False,
+            "attributeType": "string",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "label": "Name",
+        },
+        {
+            "name": "type",
+            "attributeType": "string",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "label": "Type",
+            "default": "",
+            "optional": False,
+        },
+        {
+            "name": "description",
+            "attributeType": "string",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "default": "",
+            "optional": True,
+            "label": "Description",
+        },
+        {
+            "name": "_meta_",
+            "attributeType": "dmss://system/SIMOS/Meta",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "optional": True,
+        },
     ],
 }
 
@@ -119,7 +139,7 @@ class DefaultArrayTestCase(unittest.TestCase):
             blueprint_provider, CreateEntity
         )
 
-        assert default_array == [[{"name": "", "type": "dmss://system/SIMOS/Package", "isRoot": False, "content": []}]]
+        assert default_array == [[{"name": "", "type": "dmss://system/SIMOS/Package", "_meta_": {}, "content": []}]]
 
     def test_creation_of_default_array_unfixed_rank2(self):
         default_array = Dimension("*,*", "integer").create_default_array(blueprint_provider, CreateEntity)

@@ -9,6 +9,7 @@ class Dependency(BaseModel):
     """Class for any dependencies (external types) a entity references"""
 
     alias: str
+    type: str
     # Different ways we support to fetch dependencies.
     # sys: This DMSS instance
     # http: A public HTTP GET call
