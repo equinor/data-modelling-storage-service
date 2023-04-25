@@ -10,7 +10,6 @@ default_yaml_view = Recipe(
         "name": "Yaml",
         "type": SIMOS.UI_RECIPE.value,
         "plugin": "@development-framework/dm-core-plugins/yaml",
-        "category": "view",
     }
 )
 default_form_edit = Recipe(
@@ -18,10 +17,16 @@ default_form_edit = Recipe(
         "name": "Edit",
         "type": SIMOS.UI_RECIPE.value,
         "plugin": "@development-framework/dm-core-plugins/form",
-        "category": "edit",
     }
 )
-default_ui_recipes = [default_form_edit, default_yaml_view]
+default_list_recipe = Recipe(
+    **{
+        "name": "List",
+        "type": SIMOS.UI_RECIPE.value,
+        "plugin": "@development-framework/dm-core-plugins/generic-list",
+        "dimensions": "*",
+    }
+)
 
 
 def storage_recipe_provider(type: str, context: str | None = None) -> list[StorageRecipe]:
