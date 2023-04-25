@@ -100,6 +100,24 @@ Feature: Get a blueprint
     And the response should contain
     """
     {
+    "uiRecipes":[
+    {
+      "name": "Edit",
+      "type": "dmss://system/SIMOS/UiRecipe",
+      "plugin": "@development-framework/dm-core-plugins/form"
+    },
+    {
+      "name": "Yaml",
+      "type": "dmss://system/SIMOS/UiRecipe",
+      "plugin": "@development-framework/dm-core-plugins/yaml"
+    },
+    {
+      "name": "List",
+      "type": "dmss://system/SIMOS/UiRecipe",
+      "plugin": "@development-framework/dm-core-plugins/generic-list",
+      "dimensions": "*"
+    }
+    ],
     "blueprint": {
       "name": "Entity",
       "description": "Blueprint for a DMT reference",

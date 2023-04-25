@@ -1,7 +1,11 @@
 from pydantic import BaseModel
 
 from authentication.models import User
-from common.utils.get_storage_recipe import default_ui_recipes
+from common.utils.get_storage_recipe import (
+    default_form_edit,
+    default_list_recipe,
+    default_yaml_view,
+)
 from domain_classes.lookup import Lookup
 from restful.request_types.shared import common_type_constrained_string
 from services.document_service import DocumentService
@@ -12,6 +16,9 @@ class GetBlueprintResponse(BaseModel):
     blueprint: dict
     uiRecipes: list[dict]
     storageRecipes: list[dict]
+
+
+default_ui_recipes = [default_form_edit, default_yaml_view, default_list_recipe]
 
 
 def get_blueprint_use_case(type: common_type_constrained_string, context: str | None, user: User) -> dict:
@@ -28,11 +35,15 @@ def get_blueprint_use_case(type: common_type_constrained_string, context: str | 
 
     lookup: Lookup = get_lookup(context)
     # Get type specific recipes
-    ui_recipes = lookup.ui_recipes.get(type, [])
+    ui_recipes: list = lookup.ui_recipes.get(type, [])
 
     # If no recipe link exists for the type, use the contexts default. If none, use builtin default
     if not ui_recipes:
         ui_recipes = lookup.ui_recipes.get("_default_", default_ui_recipes)
+
+    # No UiRecipe with dimensions "*" found. Add default list recipe
+    if not next((ur for ur in ui_recipes if ur.dimensions == "*"), None):
+        ui_recipes.append(default_list_recipe)
 
     storage_recipes = lookup.storage_recipes.get(type, [])
     if not storage_recipes:
