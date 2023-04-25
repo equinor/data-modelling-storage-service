@@ -6,7 +6,7 @@ import pytest
 from common.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import pretty_eq
 from common.utils.data_structure.is_same import is_same
-from enums import SIMOS, Protocols
+from enums import REFERENCE_TYPES, SIMOS, Protocols
 from tests.unit.mock_utils import get_mock_document_service
 
 
@@ -27,10 +27,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "type": "test_data/complex/Customer",
                     "name": "Wrong protocol",
                     "car": {
-                        "ref": "wrong:///1.cars.0",
-                        "targetName": "Volvo 240",
-                        "targetType": "test_data/complex/CarTest",
-                        "type": SIMOS.LINK.value,
+                        "address": "wrong:///1.cars.0",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 }
             ],
@@ -46,12 +45,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             return [
                 {
                     "content": [
-                        {
-                            "ref": "1",
-                            "targetName": "myCarRental",
-                            "targetType": "test_data/complex/CarRental",
-                            "type": SIMOS.LINK.value,
-                        },
+                        {"address": "1", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
                     ]
                 }
             ]
@@ -77,8 +71,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "name": "Volvo 240",
                     "plateNumber": "123",
                     "engine": {
-                        "ref": f"{Protocols.DMSS.value}://another_data_source/$3",
-                        "type": SIMOS.LINK.value,
+                        "address": f"{Protocols.DMSS.value}://another_data_source/$3",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
                 {
@@ -86,8 +81,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "name": "Ferrari",
                     "plateNumber": "456",
                     "engine": {
-                        "ref": f"{Protocols.DMSS.value}://another_data_source/parts/engines/myEngine",
-                        "type": SIMOS.LINK.value,
+                        "address": f"{Protocols.DMSS.value}://another_data_source/parts/engines/myEngine",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
             ],
@@ -96,70 +92,82 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "type": "test_data/complex/Customer",
                     "name": "Full absolute path prefixed with protocol",
                     "car": {
-                        "ref": f"{Protocols.DMSS.value}://test_data/complex/myCarRental.cars[0]",
-                        "type": SIMOS.LINK.value,
+                        "address": f"{Protocols.DMSS.value}://test_data/complex/myCarRental.cars[0]",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
                 {
                     "type": "test_data/complex/Customer",
                     "name": "Relative from the destination data source by id",
                     "car": {
-                        "ref": f"/$2.cars[0]",
-                        "type": SIMOS.LINK.value,
+                        "address": f"/$2.cars[0]",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
                 {
                     "type": "test_data/complex/Customer",
                     "name": "Relative from the destination data source by path",
                     "car": {
-                        "ref": f"/complex/myCarRental.cars[0]",
-                        "type": SIMOS.LINK.value,
+                        "address": f"/complex/myCarRental.cars[0]",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
                 {
                     "type": "test_data/complex/Customer",
                     "name": "Relative from the destination data source by query",
                     "car": {
-                        "ref": f"/[(_id=1)].content[(name=myCarRental)].cars[0]",
-                        "type": SIMOS.LINK.value,
+                        "address": f"/[(_id=1)].content[(name=myCarRental)].cars[0]",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
                 {
                     "type": "test_data/complex/Customer",
                     "name": "Relative from the destination data source by query on array",
                     "car": {
-                        "ref": f"/[(_id=1)].content[(name=myCarRental)].cars[(name=Volvo 240)]",
-                        "type": SIMOS.LINK.value,
+                        "address": f"/[(_id=1)].content[(name=myCarRental)].cars[(name=Volvo 240)]",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
                 {
                     "type": "test_data/complex/Customer",
                     "name": "Test",
                     "car": {
-                        "ref": f"/complex.content[(name=myCarRental)].cars[0]",
-                        "type": SIMOS.LINK.value,
+                        "address": f"/complex.content[(name=myCarRental)].cars[0]",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
                 {
                     "type": "test_data/complex/Customer",
                     "name": "Test2",
                     "car": {
-                        "ref": f"/complex.content[0].cars[0]",
-                        "type": SIMOS.LINK.value,
+                        "address": f"/complex.content[0].cars[0]",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
                 {
                     "type": "test_data/complex/Customer",
                     "name": "Relative from the document",
                     "car": {
-                        "ref": f"^.cars[0]",
-                        "type": SIMOS.LINK.value,
+                        "address": f"^.cars[0]",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
                 {
                     "type": "test_data/complex/Customer",
                     "name": "Relative from the document with query on plate number",
-                    "car": {"ref": f"^.cars[(plateNumber=456,name=Ferrari)]", "type": SIMOS.LINK.value},
+                    "car": {
+                        "address": f"^.cars[(plateNumber=456,name=Ferrari)]",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
+                    },
                 },
             ],
         }
@@ -168,15 +176,10 @@ class DocumentServiceTestCase(unittest.TestCase):
             {
                 "_id": "1",
                 "name": "complex",
-                "isRoot": "True",
+                "isRoot": True,
                 "type": SIMOS.PACKAGE.value,
                 "content": [
-                    {
-                        "ref": "2",
-                        "targetName": "myCarRental",
-                        "targetType": "test_data/complex/CarRental",
-                        "type": SIMOS.LINK.value,
-                    },
+                    {"address": "2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
                 ],
             }
         ]
@@ -204,12 +207,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         engines = {
             "_id": "2",
             "name": "engines",
-            "isRoot": "True",
+            "isRoot": True,
             "content": [
-                {
-                    "ref": "3",
-                    "type": SIMOS.LINK.value,
-                },
+                {"address": "3", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
             ],
         }
 
@@ -217,12 +217,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             {
                 "_id": "1",
                 "name": "parts",
-                "isRoot": "True",
+                "isRoot": True,
                 "content": [
-                    {
-                        "ref": "2",
-                        "type": SIMOS.LINK.value,
-                    },
+                    {"address": "2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
                 ],
             },
             my_engine,
@@ -323,15 +320,10 @@ class DocumentServiceTestCase(unittest.TestCase):
             "description": "",
             "type": "all_contained_cases_blueprint",
             "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
-            "reference": {
-                "ref": "2",
-                "targetName": "Reference",
-                "targetType": "basic_blueprint",
-                "type": SIMOS.LINK.value,
-            },
+            "reference": {"address": "2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
             "references": [
-                {"ref": "3", "targetName": "Reference1", "targetType": "basic_blueprint", "type": SIMOS.LINK.value},
-                {"ref": "4", "targetName": "Reference2", "targetType": "basic_blueprint", "type": SIMOS.LINK.value},
+                {"address": "3", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                {"address": "4", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
             ],
         }
 
@@ -382,24 +374,13 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "all_contained_cases_blueprint",
                 "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
                 "reference": {
-                    "ref": "2",
-                    "targetName": "Reference",
-                    "targetType": "basic_blueprint",
-                    "type": SIMOS.LINK.value,
+                    "address": "2",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.LINK.value,
                 },
                 "references": [
-                    {
-                        "ref": "3",
-                        "targetName": "Reference1",
-                        "targetType": "basic_blueprint",
-                        "type": SIMOS.LINK.value,
-                    },
-                    {
-                        "ref": "4",
-                        "targetName": "Reference2",
-                        "targetType": "basic_blueprint",
-                        "type": SIMOS.LINK.value,
-                    },
+                    {"address": "3", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                    {"address": "4", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
                 ],
             },
         }

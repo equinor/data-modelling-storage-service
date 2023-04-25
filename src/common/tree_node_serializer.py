@@ -8,7 +8,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageRecipe
 from domain_classes.tree_node import ListNode, Node
-from enums import SIMOS
+from enums import REFERENCE_TYPES, SIMOS
 
 
 def tree_node_to_dict(node: Node | ListNode) -> list[Any] | dict:
@@ -81,10 +81,11 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
             if not child.storage_contained:
                 data[child.key] = [
                     {
-                        "ref": child.uid,
-                        "targetType": child.entity["targetType"] if child.type == SIMOS.LINK.value else child.type,
-                        "targetName": child.name,
-                        "type": SIMOS.STORAGE_ADDRESS.value if child.contained else SIMOS.LINK.value,
+                        "type": SIMOS.REFERENCE.value,
+                        "address": child.uid,
+                        "referenceType": REFERENCE_TYPES.STORAGE.value
+                        if child.contained
+                        else REFERENCE_TYPES.LINK.value,
                     }
                     for child in child.children
                 ]
@@ -93,10 +94,9 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
         else:
             if not child.contained and child.entity:
                 data[child.key] = {
-                    "ref": child.uid,
-                    "targetType": child.entity["targetType"] if child.type == SIMOS.LINK.value else child.type,
-                    "targetName": child.name,
-                    "type": SIMOS.STORAGE_ADDRESS.value if child.contained else SIMOS.LINK.value,
+                    "type": SIMOS.REFERENCE.value,
+                    "address": child.uid,
+                    "referenceType": REFERENCE_TYPES.STORAGE.value if child.contained else REFERENCE_TYPES.LINK.value,
                 }
             else:
                 data[child.key] = tree_node_to_ref_dict(child)
@@ -178,8 +178,11 @@ def tree_node_from_dict(
                     content_attribute.attribute_type = child["type"]
                     list_child_attribute = content_attribute
 
-                if child["type"] == SIMOS.LINK.value:
-                    child_uid = child["ref"]
+                if (
+                    child["type"] == SIMOS.REFERENCE.value
+                    and child.get("referenceType", REFERENCE_TYPES.LINK.value) == REFERENCE_TYPES.LINK.value
+                ):
+                    child_uid = child["address"]
                 else:
                     child_uid = child.get("_id", "")
 

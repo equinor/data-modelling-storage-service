@@ -22,11 +22,10 @@ Feature: Explorer - Add contained node
         "isRoot": true,
         "content": [
             {
-                "ref": "2",
-                "type": "dmss://system/SIMOS/Link",
-                "targetName": "RecursiveBlueprint",
-                "targetType": "dmss://system/SIMOS/Blueprint"
-            }
+                "address": "2",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
+            }                                           
         ]
     }
     """

@@ -21,46 +21,39 @@ Feature: Explorer - Add file
         "isRoot": true,
         "content": [
             {
-                "ref": "2",
-                "type": "dmss://system/SIMOS/Link",
-                "targetName": "MultiplePdfContainer",
-                "targetType": "dmss://system/SIMOS/Blueprint"
+                "address": "2",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             },
             {
-                "ref": "3",
-                "type": "dmss://system/SIMOS/Link",
-                "targetName": "BaseChild",
-                "targetType": "dmss://system/SIMOS/Blueprint"
+                "address": "3",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             },
             {
-                "ref": "4",
-                "type": "dmss://system/SIMOS/Link",
-                "targetName": "Parent",
-                "targetType": "dmss://system/SIMOS/Blueprint"
+                "address": "4",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             },
             {
-                "ref": "5",
-                "type": "dmss://system/SIMOS/Link",
-                "targetName": "SpecialChild",
-                "targetType": "dmss://system/SIMOS/Blueprint"
+                "address": "5",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             },
             {
-                "ref": "6",
-                "type": "dmss://system/SIMOS/Link",
-                "targetName": "parentEntity",
-                "targetType": "dmss://test-DS/root_package/Parent"
+                "address": "6",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             },
             {
-                "ref": "7",
-                "type": "dmss://system/SIMOS/Link",
-                "targetName": "Hobby",
-                "targetType": "dmss://system/SIMOS/Blueprint"
+                "address": "7",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             },
             {
-                "ref": "8",
-                "type": "dmss://system/SIMOS/Link",
-                "targetName": "Comment",
-                "targetType": "dmss://system/SIMOS/Blueprint"
+                "address": "8",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             }
         ]
     }

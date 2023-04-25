@@ -1,7 +1,7 @@
 from common.exceptions import ApplicationException
 from common.utils.is_reference import is_reference
 from common.utils.resolve_reference import resolve_reference
-from enums import SIMOS
+from enums import REFERENCE_TYPES
 from storage.data_source_class import DataSource
 
 
@@ -38,7 +38,7 @@ def get_complete_sys_document(
     depth: int = 999,
     depth_count: int = 0,
 ) -> dict:
-    address = link_or_storage_address["ref"]
+    address = link_or_storage_address["address"]
 
     if address.startswith("^"):
         # Replace ^ with an id reference that contains the current document id
@@ -51,7 +51,10 @@ def get_complete_sys_document(
     document = resolve_reference(address, data_source, get_data_source)
 
     # Only update if the resolved reference has id (since it can point to a document that are contained in another document)
-    if link_or_storage_address["type"] == SIMOS.LINK.value and "_id" in document:
+    if (
+        link_or_storage_address.get("referenceType", REFERENCE_TYPES.LINK.value) == REFERENCE_TYPES.LINK.value
+        and "_id" in document
+    ):
         # For supporting ^ references, update the current document id
         current_id = document["_id"]
 

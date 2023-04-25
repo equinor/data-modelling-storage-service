@@ -32,10 +32,9 @@ Feature: Add and remove references
     When i make a "PUT" request
     """
     {
-      "type": "dmss://system/SIMOS/Link",
-      "targetName": "some-blueprint",
-      "targetType": "dmss://system/SIMOS/Blueprint",
-      "ref": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
+      "address": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+      "type": "dmss://system/SIMOS/Reference",
+      "referenceType": "link"
     }
     """
     Then the response status should be "OK"
@@ -78,28 +77,24 @@ Feature: Add and remove references
       "type": "dmss://system/SIMOS/Package",
       "content": [
         {
-          "type": "dmss://system/SIMOS/Link",
-          "targetName": "Turbine",
-          "targetType": "dmss://system/SIMOS/Blueprint",
-          "ref": "2"
+          "address": "2",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
         },
         {
-          "type": "dmss://system/SIMOS/Link",
-          "targetName": "Mooring",
-          "targetType": "dmss://system/SIMOS/Blueprint",
-          "ref": "3"
+          "address": "3",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
         },
         {
-          "type": "dmss://system/SIMOS/Link",
-          "targetName": "myTurbine",
-          "targetType": "dmss://system/SIMOS/Blueprint",
-          "ref": "4"
+          "address": "4",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
         },
         {
-          "type": "dmss://system/SIMOS/Link",
-          "targetName": "myMooring",
-          "targetType": "dmss://system/SIMOS/Blueprint",
-          "ref": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
+          "address": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
         }
       ],
       "isRoot": true
@@ -164,10 +159,9 @@ Feature: Add and remove references
     When i make a "PUT" request
     """
     {
-      "type": "dmss://system/SIMOS/Link",
-      "targetName": "myMooring",
-      "targetType": "dmss://test-DS/TestData/Mooring",
-      "ref": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
+      "address": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+      "type": "dmss://system/SIMOS/Reference",
+      "referenceType": "link"
     }
     """
     Then the response status should be "OK"

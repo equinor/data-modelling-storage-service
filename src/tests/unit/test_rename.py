@@ -3,7 +3,7 @@ from unittest import mock
 
 from authentication.models import User
 from common.utils.data_structure.compare import pretty_eq
-from enums import SIMOS
+from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_utils import get_mock_document_service
 
 
@@ -95,10 +95,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
                 "references": [],
                 "reference": {
-                    "ref": "2",
-                    "targetName": "Reference",
-                    "targetType": "basic_blueprint",
-                    "type": SIMOS.LINK.value,
+                    "address": "2",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.LINK.value,
                 },
             },
             "2": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
@@ -137,17 +136,15 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "all_contained_cases_blueprint",
                 "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
                 "reference": {
-                    "ref": "2",
-                    "targetName": "Reference",
-                    "targetType": "basic_blueprint",
-                    "type": SIMOS.STORAGE_ADDRESS.value,
+                    "address": "2",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.STORAGE.value,
                 },
                 "references": [
                     {
-                        "ref": "2",
-                        "targetName": "Reference",
-                        "targetType": "basic_blueprint",
-                        "type": SIMOS.STORAGE_ADDRESS.value,
+                        "address": "2",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.STORAGE.value,
                     }
                 ],
             },
@@ -174,10 +171,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             "_id": "1",
             "references": [
                 {
-                    "ref": "2",
-                    "targetName": "New_name",
-                    "targetType": "basic_blueprint",
-                    "type": SIMOS.STORAGE_ADDRESS.value,
+                    "address": "2",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.STORAGE.value,
                 }
             ],
         }

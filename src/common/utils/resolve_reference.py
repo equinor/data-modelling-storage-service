@@ -1,6 +1,6 @@
 import re
 from dataclasses import dataclass
-from typing import Callable, Tuple, Union
+from typing import Any, Callable, Dict, Tuple, Union
 
 from common.exceptions import ApplicationException, NotFoundException
 from common.utils.data_structure.find import find
@@ -81,12 +81,15 @@ class QueryItem:
 
     query: str
 
-    def filter(self) -> dict:
+    def filter(self) -> Dict[str, Any]:
         """Create filter from query string."""
-        query = {}
+        query: Dict[str, Any] = {}
         for pair in self.query.split(","):
             key, value = pair.split("=")
-            query[key] = value
+            if value == "True" or value == "False":
+                query[key] = bool(value)
+            else:
+                query[key] = value
         return query
 
     def resolve(self, document: dict | list, data_source: DataSource, get_data_source: Callable) -> dict | None:
@@ -105,7 +108,7 @@ class QueryItem:
 
         # Search inside an existing document (need to resolve any references first before trying to compare against filter)
         elements = [
-            resolve_reference(f["ref"], data_source, get_data_source) if is_reference(f) else f for f in document
+            resolve_reference(f["address"], data_source, get_data_source) if is_reference(f) else f for f in document
         ]  # Resolve any references
         return next(
             (f for f in elements if is_same(f, self.filter())), None
@@ -125,7 +128,7 @@ class AttributeItem:
             raise NotFoundException(f"No '{self.path}' inside the '{str(document)}' exist.")
 
         if is_reference(result):
-            return resolve_reference(result["ref"], data_source, get_data_source)
+            return resolve_reference(result["address"], data_source, get_data_source)
         return result
 
 

@@ -31,7 +31,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from domain_classes.tree_node import ListNode, Node
-from enums import SIMOS, BuiltinDataTypes, StorageDataTypes
+from enums import REFERENCE_TYPES, SIMOS, BuiltinDataTypes, StorageDataTypes
 from restful.request_types.shared import Entity, Reference
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
@@ -183,12 +183,7 @@ class DocumentService:
                 node.get_context_storage_attribute(),
                 parent_id=parent_uid,
             )
-            return {
-                "type": SIMOS.LINK.value,
-                "ref": node.uid,
-                "targetType": node.entity["type"],
-                "targetName": node.name,
-            }
+            return {"type": SIMOS.REFERENCE.value, "address": node.uid, "referenceType": REFERENCE_TYPES.LINK.value}
         return ref_dict
 
     def get_document_by_uid(
@@ -212,8 +207,7 @@ class DocumentService:
 
     def get_by_path(self, absolute_reference: str) -> Node:
         data_source_id, path, attribute = split_dmss_ref(absolute_reference)
-        document_repository = get_data_source(data_source_id, self.user)
-        document_id = get_document_uid_by_path(path, document_repository)
+        document_id = get_document_uid_by_path(f"/{path}", data_source_id, self.user)
         return self.get_node_by_uid(data_source_id, document_id)
 
     def remove_document(self, data_source_id: str, document_id: str, attribute: str = None):
@@ -232,8 +226,11 @@ class DocumentService:
                     if isinstance(nested_doc, list):
                         attr = int(attr)
                     potential_reference = nested_doc.pop(attr)
-                    if potential_reference.get("type") == SIMOS.STORAGE_ADDRESS.value:
-                        delete_document(repository, potential_reference["ref"])
+                    if (
+                        potential_reference.get("type") == SIMOS.REFERENCE.value
+                        and potential_reference.get("referenceType") == REFERENCE_TYPES.STORAGE.value
+                    ):
+                        delete_document(repository, potential_reference["address"])
                     break
                 if isinstance(nested_doc, list):
                     nested_doc = nested_doc[int(attr)]
@@ -398,8 +395,10 @@ class DocumentService:
         data_source = self.repository_provider(data_source_id, self.user)
 
         if "/" in directory:
-            parent_uid = get_document_uid_by_path(f"{'/'.join(directory.split('/')[0:-1])}", data_source)
-            child_uid = get_document_uid_by_path(directory, data_source)
+            parent_uid = get_document_uid_by_path(
+                f"/{'/'.join(directory.split('/')[0:-1])}", data_source_id, self.user
+            )
+            child_uid = get_document_uid_by_path(f"/{directory}", data_source_id, self.user)
             parent_node = self.get_node_by_uid(data_source_id, parent_uid)
 
             # find the node id of the child with uid equal to child_uid
@@ -413,7 +412,7 @@ class DocumentService:
             return
 
         # We are removing a root-package with no parent
-        document_id = get_document_uid_by_path(directory, data_source)
+        document_id = get_document_uid_by_path(f"/{directory}", data_source_id, self.user)
         delete_document(data_source, document_id)
 
     @staticmethod
@@ -455,9 +454,7 @@ class DocumentService:
             if not document.type == SIMOS.PACKAGE.value or not document_dict.get("isRoot", False):
                 raise BadRequestException("Only root packages may be added to the root of a data source")
             try:
-                if get_document_uid_by_path(
-                    document_dict["name"], self.repository_provider(data_source_id, self.user)
-                ):
+                if get_document_uid_by_path(document_dict["name"], data_source_id, self.user):
                     raise ValidationException(
                         message=f"A root package named '{document_dict['name']}' already exists",
                         data={"dataSource": data_source_id, "document": document_dict},
@@ -562,9 +559,11 @@ class DocumentService:
         if not attribute_node:
             raise NotFoundException(uid=document_id + attribute_path)
 
+        data_source = self.repository_provider(data_source_id, self.user)
+
         # Check that target exists and has correct values
         # The SIMOS/Entity type can reference any type (used by Package)
-        referenced_document: dict = self.repository_provider(data_source_id, self.user).get(reference.ref)
+        referenced_document: dict = data_source.get(reference.address)
         if not referenced_document:
             raise NotFoundException(uid=f"{data_source_id}/{referenced_document['_id']}")
         if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document["type"]:
@@ -572,11 +571,7 @@ class DocumentService:
                 f"The referenced entity should be of type '{attribute_node.type}'"
                 f", but was '{referenced_document['type']}'"
             )
-        if reference.targetType != referenced_document["type"]:
-            raise BadRequestException(
-                f"The 'targetType' value of the reference does not match the referenced document."
-                f"{reference.targetType} --> {referenced_document['type']}"
-            )
+
         # If the node to update is a list, append to end
         if attribute_node.is_array():
             child_node = tree_node_from_dict(
@@ -590,7 +585,7 @@ class DocumentService:
         else:
             attribute_node.entity = referenced_document
             attribute_node.uid = str(referenced_document["_id"])
-            attribute_node.type = reference.targetType
+            attribute_node.type = referenced_document["type"]
 
         self.save(root, data_source_id, update_uncontained=False)
 

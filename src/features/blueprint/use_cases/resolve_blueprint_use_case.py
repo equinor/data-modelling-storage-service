@@ -2,6 +2,7 @@ from typing import List
 
 from authentication.models import User
 from common.exceptions import NotFoundException
+from common.utils.resolve_reference import resolve_reference
 from common.utils.string_helpers import split_dmss_ref
 from enums import SIMOS
 from storage.internal.data_source_repository import get_data_source
@@ -10,11 +11,21 @@ from storage.internal.data_source_repository import get_data_source
 def find_package_with_document(data_source: str, document_id: str, user) -> dict:
     repository = get_data_source(data_source, user)
     packages: List[dict] = repository.find(
-        {"type": SIMOS.PACKAGE.value, "content": {"$elemMatch": {"ref": document_id}}}
+        {"type": SIMOS.PACKAGE.value, "content": {"$elemMatch": {"address": document_id}}}
     )
     if not packages:
         raise NotFoundException(document_id, "Failed to find package")
     return packages[0]
+
+
+def resolve_references(values: list, data_source: str, user: User) -> list:
+    data_source = get_data_source(data_source, user)
+    return [
+        resolve_reference(
+            value["address"], data_source, lambda data_source_name: get_data_source(data_source_name, user)
+        )
+        for value in values
+    ]
 
 
 def resolve_blueprint_use_case(user: User, absolute_id: str):
@@ -23,7 +34,9 @@ def resolve_blueprint_use_case(user: User, absolute_id: str):
     protocol_prefix = "dmss://"
     package = find_package_with_document(data_source_id, document_id, user)
     root_package_found = package["isRoot"]
-    blueprint_name = next((c["targetName"] for c in package["content"] if c["ref"] == document_id))
+    blueprint_name = next(
+        (c["name"] for c in resolve_references(package["content"], data_source_id, user) if c["_id"] == document_id)
+    )
     path_elements.append(blueprint_name)
     path_elements.append(package["name"])
     next_document_id = package["_id"]

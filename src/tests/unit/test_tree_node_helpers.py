@@ -9,7 +9,7 @@ from common.utils.data_structure.compare import pretty_eq
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
-from enums import SIMOS
+from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_utils import (
     flatten_dict,
     get_mock_document_service,
@@ -137,19 +137,14 @@ def get_engine_package_node() -> Node:
     }
     engine_blueprint_attribute = BlueprintAttribute(
         name="content",
-        attribute_type=SIMOS.LINK.value,
+        attribute_type=SIMOS.REFERENCE.value,
         type="dmss://system/SIMOS/BlueprintAttribute",
         contained=False,
     )
     engine_package_content_bp_attribute = BlueprintAttribute(
         name="content", attribute_type="object", type="dmss://system/SIMOS/BlueprintAttribute"
     )
-    engine_entity_ref = {
-        "ref": "123",
-        "targetType": SIMOS.BLUEPRINT.value,
-        "targetName": "Engine",
-        "type": SIMOS.BLUEPRINT.LINK.value,
-    }
+    engine_entity_ref = {"address": "123", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value}
 
     engine_package_content: ListNode = ListNode(
         key="content",
@@ -165,7 +160,7 @@ def get_engine_package_node() -> Node:
         attribute=engine_blueprint_attribute,
         blueprint_provider=document_service.get_blueprint,
         recipe_provider=mock_storage_recipe_provider,
-        uid=engine_entity_ref["ref"],
+        uid=engine_entity_ref["address"],
     )
 
     engine_package_entity = {
@@ -1074,8 +1069,7 @@ class TreenodeTestCase(unittest.TestCase):
         engine_package_dict = tree_node_to_ref_dict(engine_package_node)
         expected_ref = "123"
         assert engine_package_dict["content"][0] == {
-            "ref": expected_ref,
-            "targetType": SIMOS.BLUEPRINT.value,
-            "targetName": "Engine",
-            "type": SIMOS.BLUEPRINT.LINK.value,
+            "address": expected_ref,
+            "type": SIMOS.REFERENCE.value,
+            "referenceType": REFERENCE_TYPES.LINK.value,
         }

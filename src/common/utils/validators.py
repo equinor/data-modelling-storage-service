@@ -96,7 +96,7 @@ def _validate_entity(
     key: str,
 ) -> None:
     if implementation_mode == "extend":
-        if entity["type"] not in (SIMOS.LINK.value, SIMOS.STORAGE_ADDRESS.value):
+        if entity["type"] not in (SIMOS.REFERENCE.value):
             if not is_blueprint_instance_of(blueprint.path, entity["type"], get_blueprint):
                 raise ValidationException(
                     f"Entity should be of type '{blueprint.path}' (or extending from it). Got '{entity['type']}'",
