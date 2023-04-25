@@ -8,7 +8,7 @@ from common.exceptions import BadRequestException, NotFoundException
 from common.utils.get_document_by_path import get_document_by_absolute_path
 from common.utils.logging import logger
 from common.utils.string_helpers import url_safe_name
-from enums import SIMOS
+from enums import REFERENCE_TYPES, SIMOS
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 
@@ -27,12 +27,7 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
         document["_id"] = document.get("_id", str(uuid4()))
         data_source.update(document)
         docs.append(
-            {
-                "ref": document["_id"],
-                "targetName": document.get("name"),
-                "targetType": document["type"],
-                "type": SIMOS.LINK.value,
-            }
+            {"address": document["_id"], "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value}
         )
 
     return docs
@@ -68,9 +63,4 @@ def import_package(path, user: User, data_source_name: str, is_root: bool = Fals
 
     data_source.update(package)
     logger.info(f"Imported package {package['name']}")
-    return {
-        "ref": package["_id"],
-        "targetType": package["type"],
-        "targetName": package.get("name"),
-        "type": SIMOS.LINK.value,
-    }
+    return {"address": package["_id"], "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value}

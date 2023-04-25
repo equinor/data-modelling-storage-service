@@ -28,10 +28,9 @@ Feature: Set Access Control List
         "isRoot": true,
         "content": [
             {
-                "type": "dmss://system/SIMOS/Link",
-                "ref": "3",
-                "targetName": "SubPack",
-                "targetType": "dmss://system/SIMOS/Package"
+                "address": "3",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             }
         ]
     }
@@ -43,10 +42,9 @@ Feature: Set Access Control List
         "type": "dmss://system/SIMOS/Package",
         "content": [
             {
-                "type": "dmss://system/SIMOS/Link",
-                "ref": "4",
-                "targetName": "SubSubPack",
-                "targetType": "dmss://system/SIMOS/Package"
+                "address": "4",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             }
         ],
         "isRoot": false

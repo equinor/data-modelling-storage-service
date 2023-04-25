@@ -1,6 +1,6 @@
 from typing import Union
 
-from enums import SIMOS
+from enums import REFERENCE_TYPES, SIMOS
 from storage.data_source_class import DataSource
 
 
@@ -15,8 +15,10 @@ def delete_list_recursive(value: Union[list, dict], data_source: DataSource):
 
 
 def delete_dict_recursive(in_dict: dict, data_source: DataSource):
-    if in_dict.get("type") == SIMOS.STORAGE_ADDRESS.value:  # It's a model contained reference
-        delete_document(data_source, in_dict["ref"])
+    if (
+        in_dict.get("type") == SIMOS.REFERENCE.value and in_dict.get("referenceType") == REFERENCE_TYPES.STORAGE.value
+    ):  # It's a model contained reference
+        delete_document(data_source, in_dict["address"])
     elif in_dict.get("type") == SIMOS.BLOB.value:
         data_source.delete_blob(in_dict["_blob_id"])
     else:

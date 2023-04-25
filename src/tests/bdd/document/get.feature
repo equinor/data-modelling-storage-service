@@ -133,22 +133,19 @@ Feature: Get document
         "type": "dmss://system/SIMOS/Package",
         "content": [
             {
-                "ref": "3",
-                "type": "dmss://system/SIMOS/Link",
-                "targetName": "TestContainer",
-                "targetType": "dmss://test-source-name/TestData/TestContainer"
+                "address": "3",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             },
             {
-                "ref": "2",
-                "type": "dmss://system/SIMOS/Link",
-                "targetName": "ItemType",
-                "targetType": "dmss://test-source-name/TestData/ItemType"
+                "address": "2",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             },
             {
-                "ref": "4",
-                "type": "dmss://system/SIMOS/Link",
-                "targetName": "ItemTypeTwo",
-                "targetType": "dmss://test-source-name/TestData/ItemTypeTwo"
+                "address": "4",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             }
 
         ],

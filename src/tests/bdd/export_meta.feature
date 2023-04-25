@@ -28,10 +28,9 @@ Feature: Export an entity's meta data
       },
       "content": [
         {
-          "targetName": "some-entity",
-          "targetType": "dmss://system/SIMOS/Blueprint",
-          "ref": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
-          "type": "dmss://system/SIMOS/Link"
+          "address": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
         }
       ],
       "isRoot": true
@@ -97,10 +96,9 @@ Feature: Export an entity's meta data
       "type": "dmss://system/SIMOS/Package",
       "content": [
         {
-          "targetName": "some-entity",
-          "targetType": "dmss://system/SIMOS/Blueprint",
-          "ref": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
-          "type": "dmss://system/SIMOS/Link"
+          "address": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
         }
       ],
       "isRoot": true
@@ -147,10 +145,9 @@ Feature: Export an entity's meta data
       },
       "content": [
         {
-          "targetName": "some-entity",
-          "targetType": "dmss://system/SIMOS/Blueprint",
-          "ref": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
-          "type": "dmss://system/SIMOS/Link"
+          "address": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
         }
       ],
       "isRoot": true

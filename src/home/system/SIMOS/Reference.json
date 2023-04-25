@@ -1,7 +1,7 @@
 {
   "type": "dmss://system/SIMOS/Blueprint",
-  "description": "Reference to a contained entity that is stored separately.",
-  "name": "StorageAddress",
+  "description": "Can be of type link, pointer or storage.",
+  "name": "Reference",
   "attributes": [
     {
       "attributeType": "string",
@@ -11,19 +11,15 @@
     {
       "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "targetType",
-      "optional": true
+      "name": "referenceType",
+      "optional": false,
+      "default": "link"
     },
     {
       "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "targetName",
-      "optional": true
-    },
-    {
-      "attributeType": "string",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "ref"
+      "name": "address",
+      "optional": false
     }
   ]
 }

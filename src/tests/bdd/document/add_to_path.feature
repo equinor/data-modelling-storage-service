@@ -20,40 +20,34 @@ Feature: Add document with document_service
           "isRoot": true,
           "content": [
               {
-                  "ref": "2",
-                  "type": "dmss://system/SIMOS/Link",
-                  "targetName": "Operation",
-                  "targetType": "dmss://system/SIMOS/Blueprint"
+                  "address": "2",
+                  "type": "dmss://system/SIMOS/Reference",
+                  "referenceType": "link"
               },
               {
-                  "ref": "3",
-                  "type": "dmss://system/SIMOS/Link",
-                  "targetName": "Phase",
-                  "targetType": "dmss://system/SIMOS/Blueprint"
+                  "address": "3",
+                  "type": "dmss://system/SIMOS/Reference",
+                  "referenceType": "link"
               },
               {
-                  "ref": "6",
-                  "type": "dmss://system/SIMOS/Link",
-                  "targetName": "ResponseContainer",
-                  "targetType": "dmss://system/SIMOS/Blueprint"
+                  "address": "6",
+                  "type": "dmss://system/SIMOS/Reference",
+                  "referenceType": "link"
               },
               {
-                  "ref": "5",
-                  "type": "dmss://system/SIMOS/Link",
-                  "targetName": "ResultFile",
-                  "targetType": "dmss://system/SIMOS/Blueprint"
+                  "address": "5",
+                  "type": "dmss://system/SIMOS/Reference",
+                   "referenceType": "link"
               },
               {
-                  "ref": "101",
-                  "type": "dmss://system/SIMOS/Link",
-                  "targetName": "Results",
-                  "targetType": "dmss://system/SIMOS/Package"
+                  "address": "101",
+                  "type": "dmss://system/SIMOS/Reference",
+                  "referenceType": "link"
               },
               {
-                  "ref": "102",
-                  "type": "dmss://system/SIMOS/Link",
-                  "targetName": "EntityPackage",
-                  "targetType": "dmss://system/SIMOS/Package"
+                  "address": "102",
+                  "type": "dmss://system/SIMOS/Reference",
+                  "referenceType": "link"
               }
           ]
       }
@@ -68,10 +62,9 @@ Feature: Add document with document_service
           "isRoot": false,
           "content": [
             {
-                  "ref": "99",
-                  "type": "dmss://system/SIMOS/Link",
-                  "targetType": "dmss://data-source-name/root_package/Operation",
-                  "targetName": "result1"
+                  "address": "99",
+                  "type": "dmss://system/SIMOS/Reference",
+                  "referenceType": "link"
             }
           ]
       }
@@ -80,17 +73,15 @@ Feature: Add document with document_service
     Given there exist document with id "102" in data source "data-source-name"
       """
       {
-          "name": "OperationPackage",
-          "name": "OperationPackage",
+          "name": "EntityPackage",
           "description": "",
           "type": "dmss://system/SIMOS/Package",
           "isRoot": false,
           "content": [
               {
-                  "ref": "11",
-                  "type": "dmss://system/SIMOS/Link",
-                  "targetType": "dmss://data-source-name/root_package/Operation",
-                  "targetName": "operation1"
+                  "address": "11",
+                  "type": "dmss://system/SIMOS/Reference",
+                  "referenceType": "link"
               }
           ]
       }

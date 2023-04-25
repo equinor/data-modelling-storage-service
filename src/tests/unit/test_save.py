@@ -6,7 +6,7 @@ from authentication.models import User
 from common.tree_node_serializer import tree_node_from_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import Node
-from enums import SIMOS
+from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_utils import (
     flatten_dict,
     get_mock_document_service,
@@ -102,10 +102,9 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         assert doc_storage["1"]["references"] == [
             {
-                "targetName": "a_reference",
-                "targetType": "basic_blueprint",
-                "ref": "2",
-                "type": SIMOS.STORAGE_ADDRESS.value,
+                "type": SIMOS.REFERENCE.value,
+                "referenceType": REFERENCE_TYPES.STORAGE.value,
+                "address": "2",
             }
         ]
 
@@ -122,22 +121,19 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "reference": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
                 "references": [
                     {
-                        "ref": "2",
-                        "targetName": "a_reference",
-                        "targetType": "basic_blueprint",
-                        "type": SIMOS.STORAGE_ADDRESS.value,
+                        "address": "2",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.STORAGE.value,
                     },
                     {
-                        "ref": "3",
-                        "targetName": "a_reference",
-                        "targetType": "basic_blueprint",
-                        "type": SIMOS.STORAGE_ADDRESS.value,
+                        "address": "3",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.STORAGE.value,
                     },
                     {
-                        "ref": "4",
-                        "targetName": "a_reference",
-                        "targetType": "basic_blueprint",
-                        "type": SIMOS.STORAGE_ADDRESS.value,
+                        "address": "4",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.STORAGE.value,
                     },
                 ],
             },
@@ -155,16 +151,14 @@ class DocumentServiceTestCase(unittest.TestCase):
             "reference": {},
             "references": [
                 {
-                    "ref": "2",
-                    "targetName": "a_reference",
-                    "targetType": "basic_blueprint",
-                    "type": SIMOS.STORAGE_ADDRESS.value,
+                    "address": "2",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.STORAGE.value,
                 },
                 {
-                    "ref": "4",
-                    "targetName": "a_reference",
-                    "targetType": "basic_blueprint",
-                    "type": SIMOS.STORAGE_ADDRESS.value,
+                    "address": "4",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.STORAGE.value,
                 },
             ],
         }
@@ -245,7 +239,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         target_node = node.get_by_path(["i_have_a_uncontained_attribute", "uncontained_in_every_way"])
         target_node.update(doc_storage["3"])
         document_service.save(node, "testing")
-        assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"]["ref"] == "3"
+        assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"]["address"] == "3"
 
     def test_save_no_overwrite_uncontained_document(self):
         repository = mock.Mock()
@@ -261,10 +255,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "name": "first",
                     "description": "I'm the first nested document, contained",
                     "uncontained_in_every_way": {
-                        "type": SIMOS.LINK.value,
-                        "ref": "2",
-                        "targetName": "im_a_uncontained_attribute",
-                        "targetType": "basic_blueprint",
+                        "type": SIMOS.REFERENCE.value,
+                        "address": "2",
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
             },
@@ -297,10 +290,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "name": "first",
                     "description": "This has changed!",
                     "uncontained_in_every_way": {
-                        "type": SIMOS.LINK.value,
-                        "ref": "2",
-                        "targetName": "im_a_uncontained_attribute",
-                        "targetType": "basic_blueprint",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
+                        "address": "2",
                     },
                 },
             },

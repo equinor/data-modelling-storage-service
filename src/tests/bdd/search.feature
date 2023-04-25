@@ -23,28 +23,24 @@ Feature: Explorer - Search entity
         "isRoot": true,
         "content": [
             {
-                "ref": "2",
-                "target": "dmss://system/SIMOS/Link",
-                "targetName": "ValuesBlueprint",
-                "targetType": "dmss://system/SIMOS/Blueprint"
+                "address": "2",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             },
             {
-                "ref": "3",
-                "target": "dmss://system/SIMOS/Link",
-                "targetName": "NestedVectorsBlueprint",
-                "targetType": "dmss://system/SIMOS/Blueprint"
+                "address": "3",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             },
             {
-                "ref": "4",
-                "target": "dmss://system/SIMOS/Link",
-                "targetName": "NestedBlueprint",
-                "targetType": "dmss://system/SIMOS/Blueprint"
+                "address": "4",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             },
             {
-                "ref": "5",
-                "target": "dmss://system/SIMOS/Link",
-                "targetName": "NestedListBlueprint",
-                "targetType": "dmss://system/SIMOS/Blueprint"
+                "address": "5",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             }
         ]
     }
