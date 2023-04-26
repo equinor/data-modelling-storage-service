@@ -311,61 +311,47 @@ class DocumentService:
         if not parent_id:  # No parent_id in reference. Just add the document to the root of the data_source
             return self._add_document_with_no_parent(data_source, data, update_uncontained)
 
-        type = data["type"]
-        parent_attribute = attribute.split(".")[0:-1]
-        leaf_attribute = attribute.split(".")[-1]
-
         root: Node = self.get_node_by_uid(data_source, parent_id)
         if not root:
-            raise NotFoundException(uid=parent_id)
-        parent: Node = root.get_by_path(parent_attribute)
+            raise NotFoundException(f"Could not find the document {parent_id}")
+        target: Node = root.get_by_path(attribute.split("."))
 
-        leaf_parent = parent.get_by_path([leaf_attribute])
-        if not leaf_parent:
-            raise AttributeError(
-                (
-                    f"Invalid attribute given for type '{parent.type}'.\n"
-                    + f"Valid attributes are {parent.blueprint.get_attribute_names()}.\n"
-                    + f"Received '{leaf_attribute}'"
-                )
-            )
-
-        # If the leaf attribute is a list, set the ListNode as parent
-        if leaf_parent.is_array():
-            parent = leaf_parent
-
-        if parent.type != BuiltinDataTypes.OBJECT.value:
-            validation_blueprint = (
-                parent.blueprint if parent.is_array() else parent.get_by_path([leaf_attribute]).blueprint
-            )
-            validate_entity(data, self.get_blueprint, validation_blueprint, "extend")
+        if target.parent.type != SIMOS.PACKAGE.value:
+            validate_entity(data, self.get_blueprint, target.blueprint, "extend")
 
         entity: dict = data
 
-        if type == SIMOS.BLUEPRINT.value and not entity.get("extends"):  # Extend default attributes and uiRecipes
+        if target.type == SIMOS.BLUEPRINT.value and not entity.get(
+            "extends"
+        ):  # Extend default attributes and uiRecipes
             entity["extends"] = ["system/SIMOS/DefaultUiRecipes", "system/SIMOS/NamedEntity"]
 
-        new_node_attribute = BlueprintAttribute(name=leaf_attribute, attribute_type=type)
         new_node = tree_node_from_dict(
             entity,
             blueprint_provider=self.get_blueprint,
-            node_attribute=new_node_attribute,
+            node_attribute=None
+            if target.is_array()
+            else BlueprintAttribute(name=target.attribute.name, attribute_type=target.type),
             recipe_provider=self.get_storage_recipes,
         )
+        # Generate uid for the new node
+        new_node.set_uid()
+
+        if target.type != BuiltinDataTypes.OBJECT.value:
+            validation_blueprint = (
+                target.blueprint if target.is_array() else target.parent.get_by_path([target.attribute.name]).blueprint
+            )
+            validate_entity(data, self.get_blueprint, validation_blueprint, "extend")
+
+        if not target.is_array():
+            target = target.parent
 
         required_attribute_names = [attribute.name for attribute in new_node.blueprint.get_required_attributes()]
         # If entity has a name, check if a file/attribute with the same name already exists on the target
-        if "name" in required_attribute_names and parent.duplicate_attribute(new_node.name):
-            raise BadRequestException(f"The document '{data_source}/{parent.name}/{new_node.name}' already exists")
+        if "name" in required_attribute_names and target.duplicate_attribute(new_node.name):
+            raise BadRequestException(f"The document '{data_source}/{target.name}/{new_node.name}' already exists")
 
-        new_node.parent = parent
-        new_node.set_uid()
-
-        if isinstance(parent, ListNode):
-            new_node.key = str(len(parent.children)) if parent.is_array() else new_node.attribute.name
-            parent.add_child(new_node)
-        else:
-            parent.replace(new_node.node_id, new_node)
+        target.add(new_node)
 
         self.save(root, data_source, update_uncontained=update_uncontained)
 
@@ -479,15 +465,19 @@ class DocumentService:
                 document_dict, self.get_blueprint, self.get_blueprint(target.attribute.attribute_type), "extend"
             )
 
-        # If dotted attribute path, attribute is the last entry. Else content
-        new_node_attr = path.split(".")[-1] if "." in path else "content"
+        if target.type == SIMOS.PACKAGE.value:
+            target = target.children[0]  # Set target to be the package content
 
         new_node = tree_node_from_dict(
             {**document_dict},
             blueprint_provider=self.get_blueprint,
-            node_attribute=BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
+            # If the target is an array, then the node attribute is given by the parent
+            node_attribute=None
+            if target.is_array()
+            else BlueprintAttribute(name=target.attribute.name, attribute_type=document.type),
             recipe_provider=self.get_storage_recipes,
         )
+        # Generate uid for the new node
         new_node.set_uid()
 
         if files:
@@ -495,16 +485,12 @@ class DocumentService:
 
         self.save(new_node, data_source_id, update_uncontained=update_uncontained)
 
-        if target.type == SIMOS.PACKAGE.value:
-            target = target.children[0]  # Set target to be the packages content
-        if isinstance(target, ListNode):
-            new_node.parent = target
-            target.add_child(new_node)
-            self.save(target.parent, data_source_id, update_uncontained=False)
-        else:
-            new_node.parent = target.parent
-            target = new_node
-            self.save(target, data_source_id, update_uncontained=False)
+        target.add(new_node)
+
+        if target.is_array():
+            target = target.parent
+
+        self.save(target, data_source_id, update_uncontained=False)
 
         return {"uid": new_node.node_id}
 

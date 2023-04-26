@@ -85,7 +85,7 @@ class NodeBase:
         if not self.parent or self.parent.type == SIMOS.DATASOURCE.value:
             return False
         if self.parent.is_array():
-            return self.parent.parent.storage_recipes[0].is_contained(self.attribute.name)
+            return self.parent.parent.storage_recipes[0].is_contained(self.parent.attribute.name)
         return self.parent.storage_recipes[0].is_contained(self.attribute.name)
 
     @property
@@ -198,13 +198,32 @@ class NodeBase:
         keys = [child.key for child in self.children]
         return name in keys
 
+    def add(self, node):
+        if self.is_array():
+            node.key = str(len(self.children))
+            self.add_child(node)
+        else:
+            node.parent = self
+            self.replace(node.node_id, node)
+
     def get_by_path(self, keys: List[str]):
         if len(keys) == 0:
             return self
 
         next_node = next((x for x in self.children if x.key == keys[0]), None)
         if not next_node:
-            return
+            if keys[0] != "blob" and keys[0] in [
+                attribute.name for attribute in self.blueprint.get_required_attributes()
+            ]:
+                raise AttributeError(
+                    (
+                        f"Invalid attribute given for type '{self.parent.type}'.\n"
+                        + f"Valid attributes are {self.parent.blueprint.get_attribute_names()}.\n"
+                        + f"Received '{keys[0]}'"
+                    )
+                )
+            else:
+                return
         keys.pop(0)
         next_node = next_node.get_by_path(keys)
         return next_node
@@ -323,14 +342,10 @@ class Node(NodeBase):
     def get_context_storage_attribute(self):
         # TODO: How to decide which storage_recipe?
         if self.parent and self.parent.type != SIMOS.DATASOURCE.value:
-            # The 'node.attribute.name' will be invalid for Package.content. Set it explicitly
-            nodes_attribute_on_parent = (
-                self.attribute.name if not self.parent.type == BuiltinDataTypes.OBJECT.value else "content"
-            )
             if self.parent.is_array():
-                storage_attribute = self.parent.parent.storage_recipes[0].attributes[nodes_attribute_on_parent]
+                storage_attribute = self.parent.parent.storage_recipes[0].attributes[self.parent.attribute.name]
             else:
-                storage_attribute = self.parent.storage_recipes[0].attributes[nodes_attribute_on_parent]
+                storage_attribute = self.parent.storage_recipes[0].attributes[self.attribute.name]
 
             # If the attribute has default StorageAffinity in the parent, get it from the nodes own storageRecipe
             if storage_attribute.storage_affinity is StorageDataTypes.DEFAULT:
