@@ -330,15 +330,14 @@ class DocumentService:
                 )
             )
 
-        # If the leaf attribute is a list. Set that as parent and get validation blueprint from the ListNode
+        # If the leaf attribute is a list, set the ListNode as parent
         if leaf_parent.is_array():
             parent = leaf_parent
-            validation_blueprint = parent.blueprint
-        else:
-            # validation_blueprint = self.get_blueprint(parent.blueprint.get_attribute_type_by_key(leaf_attribute))
-            validation_blueprint = parent.get_by_path([leaf_attribute]).blueprint
 
-        if parent.type != SIMOS.PACKAGE.value:
+        if parent.type != BuiltinDataTypes.OBJECT.value:
+            validation_blueprint = (
+                parent.blueprint if parent.is_array() else parent.get_by_path([leaf_attribute]).blueprint
+            )
             validate_entity(data, self.get_blueprint, validation_blueprint, "extend")
 
         entity: dict = data

@@ -35,9 +35,11 @@ def is_blueprint_instance_of(
 
 def _validate_primitive_attribute(attribute: BlueprintAttribute, value: bool | int | float | str, key: str):
     python_type = BuiltinDataTypes(attribute.attribute_type).to_py_type()
+    if attribute.attribute_type == "number" and type(value) == int:  # float is considered a superset containing int
+        return
     if type(value) != python_type:
         raise ValidationException(
-            f"Attribute '{attribute.name}' should be type '{python_type.__name__}'. Got '{type(value).__name__}'",
+            f"Attribute '{attribute.name}' should be type '{python_type.__name__}'. Got '{type(value).__name__}'. Value: {value}",
             debug=_get_debug_message(key),
         )
 
@@ -96,7 +98,7 @@ def _validate_entity(
     key: str,
 ) -> None:
     if implementation_mode == "extend":
-        if entity["type"] not in (SIMOS.REFERENCE.value):
+        if entity["type"] != SIMOS.REFERENCE.value:
             if not is_blueprint_instance_of(blueprint.path, entity["type"], get_blueprint):
                 raise ValidationException(
                     f"Entity should be of type '{blueprint.path}' (or extending from it). Got '{entity['type']}'",
@@ -110,7 +112,7 @@ def _validate_entity(
             key for key in entity.keys() if key not in (blueprint.get_attribute_names() + ["_id"])
         ]:
             raise ValidationException(
-                f"Attributes '{keys_not_in_blueprint}' are not specified in the '{blueprint.path}'",
+                f"Attributes '{keys_not_in_blueprint}' are not specified in the blueprint '{blueprint.path}'",
                 debug=_get_debug_message(key),
             )
         if not blueprint.path == entity["type"]:
