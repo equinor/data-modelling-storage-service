@@ -71,9 +71,13 @@ def create_response(
                 logger.error(error_response)
                 return JSONResponse(error_response.dict(), status_code=error_response.status)
             except ValidationError as e:
+                if logger.level <= logging.DEBUG:
+                    traceback.print_exc()
                 validation_exception = ValidationException(message=str(e))
                 return JSONResponse(validation_exception.dict(), status_code=status.HTTP_400_BAD_REQUEST)
             except ValidationException as e:
+                if logger.level <= logging.DEBUG:
+                    traceback.print_exc()
                 logger.error(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_400_BAD_REQUEST)
             except NotFoundException as e:
