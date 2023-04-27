@@ -86,6 +86,8 @@ def create_response(
                 logger.error(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_404_NOT_FOUND)
             except BadRequestException as e:
+                if logger.level <= logging.DEBUG:
+                    traceback.print_exc()
                 logger.error(e)
                 logger.error(e.dict())
                 return JSONResponse(e.dict(), status_code=status.HTTP_400_BAD_REQUEST)
