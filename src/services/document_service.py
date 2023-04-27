@@ -329,12 +329,18 @@ class DocumentService:
                     + f"Received '{leaf_attribute}'"
                 )
             )
-        if parent.type != SIMOS.PACKAGE.value:
-            validate_entity(data, self.get_blueprint, leaf_parent.blueprint, "extend")
 
-        # If the leaf attribute is a list. Set that as parent
+        # If the leaf attribute is a list. Set that as parent and get validation blueprint from the ListNode
         if leaf_parent.is_array():
             parent = leaf_parent
+            validation_blueprint = parent.blueprint
+        else:
+            # validation_blueprint = self.get_blueprint(parent.blueprint.get_attribute_type_by_key(leaf_attribute))
+            validation_blueprint = parent.get_by_path([leaf_attribute]).blueprint
+
+        if parent.type != SIMOS.PACKAGE.value:
+            validate_entity(data, self.get_blueprint, validation_blueprint, "extend")
+
         entity: dict = data
 
         if type == SIMOS.BLUEPRINT.value and not entity.get("extends"):  # Extend default attributes and uiRecipes

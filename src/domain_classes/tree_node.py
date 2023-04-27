@@ -387,7 +387,7 @@ class ListNode(NodeBase):
 
     @property
     def blueprint(self):
-        return self.parent.blueprint
+        return self.blueprint_provider(self.attribute.attribute_type)  # TODO: blueprint_provider is required now...
 
     def update(self, data: list):
         # Replaces the whole list with the new one

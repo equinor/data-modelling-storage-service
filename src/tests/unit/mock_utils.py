@@ -399,6 +399,7 @@ car_rental = {
     "type": "system/SIMOS/Blueprint",
     "attributes": [
         {"name": "name", "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute"},
+        {"name": "type", "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute"},
         {
             "name": "cars",
             "dimensions": "*",

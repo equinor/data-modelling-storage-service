@@ -1,8 +1,12 @@
 import unittest
 
 from common.exceptions import ValidationException
+from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from common.utils.validators import validate_entity, validate_entity_against_self
-from tests.unit.mock_utils import get_mock_document_service
+from tests.unit.mock_utils import (
+    get_mock_document_service,
+    mock_storage_recipe_provider,
+)
 
 
 class ValidateEntityTestCase(unittest.TestCase):
@@ -47,7 +51,7 @@ class ValidateEntityTestCase(unittest.TestCase):
             "type": "test_data/complex/CarTest",
             "wheel": {"name": "Wheel", "power": 0.0, "type": "test_data/complex/WheelTest"},
             "wheels": [],
-            "floatValues": [2.1, 3.1, 4.2],
+            "floatValues": [2.1, 3.1, 0, 5, 99999123123],
             "intValues": [1, 5, 4, 2],
             "boolValues": [True, False, True],
             "stringValues": ["one", "two", "three"],
@@ -79,7 +83,7 @@ class ValidateEntityTestCase(unittest.TestCase):
             validate_entity_against_self(test_entity, self.get_blueprint)
         assert (
             error.exception.message
-            == "Attributes '['do-not-belong']' are not specified in the 'dmss://system/SIMOS/BlueprintAttribute'"
+            == "Attributes '['do-not-belong']' are not specified in the blueprint 'dmss://system/SIMOS/BlueprintAttribute'"
         )
 
     def test_an_entity_with_a_missing_required_attribute(self):
@@ -119,7 +123,7 @@ class ValidateEntityTestCase(unittest.TestCase):
         }
         with self.assertRaises(ValidationException) as error:
             validate_entity_against_self(test_entity, self.get_blueprint)
-        assert error.exception.message == "Attribute 'name' should be type 'str'. Got 'bool'"
+        assert error.exception.message == "Attribute 'name' should be type 'str'. Got 'bool'. Value: True"
 
     def test_an_entity_with_a_wrong_typed_value_that_is_list(self):
         test_entity = {
@@ -139,7 +143,10 @@ class ValidateEntityTestCase(unittest.TestCase):
         }
         with self.assertRaises(ValidationException) as error:
             validate_entity_against_self(test_entity, self.get_blueprint)
-        assert error.exception.message == "Attribute 'name' should be type 'str'. Got 'list'"
+        assert (
+            error.exception.message
+            == "Attribute 'name' should be type 'str'. Got 'list'. Value: ['this', 'is', 'wrong']"
+        )
 
     def test_an_entity_with_a_valid_inherited_complex_type(self):
         test_entity = {
@@ -207,6 +214,48 @@ class ValidateEntityTestCase(unittest.TestCase):
         assert error.exception.message == "Missing required attribute 'name'"
         assert error.exception.debug == "Location: Entity in key '^.engine.fuelPump'"
 
+    def test_array_with_complex_child_getting_array_type_from_parent_node(self):
+        test_entity = {
+            "_id": "2",
+            "type": "test_data/complex/CarRental",
+            "name": "myCarRental",
+            "cars": [
+                {
+                    "type": "test_data/complex/CarTest",
+                    "name": "Volvo 240",
+                    "plateNumber": "123",
+                    "wheels": [],
+                    "wheel": {"name": "Wheel", "power": 0.0, "type": "test_data/complex/WheelTest"},
+                    "engine": {
+                        "name": "myEngine",
+                        "description": "Some description",
+                        "fuelPump": {
+                            "name": "fuelPump",
+                            "description": "A standard fuel pump",
+                            "type": "test_data/complex/FuelPumpTest",
+                        },
+                        "power": 120,
+                        "type": "test_data/complex/EngineTest",
+                    },
+                    "seats": 2,
+                    "is_sedan": True,
+                    "floatValues": [2.1, 0, 4.2],
+                    "intValues": [1, 5, 4, 2],
+                    "boolValues": [True, False, True],
+                    "stringValues": ["one", "two", "three"],
+                },
+            ],
+            "customers": [],
+        }
+
+        parent_node = tree_node_from_dict(
+            test_entity, self.get_blueprint, recipe_provider=mock_storage_recipe_provider
+        )
+        new_node = parent_node.get_by_path(["cars"])
+        blueprint = new_node.blueprint
+
+        validate_entity(tree_node_to_dict(new_node), self.get_blueprint, blueprint, implementation_mode="exact")
+
     def test_an_entity_with_an_invalid_primitive_element_in_list(self):
         test_entity = {
             "engine2": {},
@@ -235,7 +284,7 @@ class ValidateEntityTestCase(unittest.TestCase):
         }
         with self.assertRaises(ValidationException) as error:
             validate_entity_against_self(test_entity, self.get_blueprint)
-        assert error.exception.message == "Attribute 'floatValues' should be type 'float'. Got 'str'"
+        assert error.exception.message == "Attribute 'floatValues' should be type 'float'. Got 'str'. Value: string"
         assert error.exception.debug == "Location: Entity in key '^.floatValues.1'"
 
     def test_validate_against_base_type_not_inherited(self):
@@ -267,5 +316,5 @@ class ValidateEntityTestCase(unittest.TestCase):
             # Validate against the master blueprint
             blueprint = self.get_blueprint("dmss://system/SIMOS/Blueprint")
             validate_entity(test_entity, self.get_blueprint, blueprint, "minimum")
-        assert error.exception.message == "Attribute 'attributeType' should be type 'str'. Got 'int'"
+        assert error.exception.message == "Attribute 'attributeType' should be type 'str'. Got 'int'. Value: 132"
         assert error.exception.debug == "Location: Entity in key '^.attributes.0.attributeType'"
