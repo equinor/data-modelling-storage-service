@@ -22,12 +22,12 @@ Feature: Update document that has blob data
         "isRoot": true,
         "content": [
             {
-               "address": "2",
+               "address": "$2",
                "type": "dmss://system/SIMOS/Reference",
                "referenceType": "link"
             },
             {
-               "address": "3",
+               "address": "$3",
                "type": "dmss://system/SIMOS/Reference",
                "referenceType": "link"
             }
@@ -75,7 +75,7 @@ Feature: Update document that has blob data
     """
 
   Scenario: Update document with multiple blob entities
-    Given i access the resource url "/api/documents/test-DS/3"
+    Given i access the resource url "/api/documents/test-DS/$3"
     When i make a "PUT" request with "4" files
     """
     {"data":{

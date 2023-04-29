@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from authentication.models import User
 from common.exceptions import NotFoundException
@@ -28,14 +28,14 @@ def concat_meta_data(meta: dict | None, new_meta: dict | None) -> dict:
 def resolve_references(values: list, data_source: DataSource, user: User) -> list:
     return [
         resolve_reference(
-            value["address"], data_source, lambda data_source_name: get_data_source(data_source_name, user)
-        )
+            f"/{data_source.name}/{value['address']}", lambda data_source_name: get_data_source(data_source_name, user)
+        ).entity
         for value in values
     ]
 
 
 def _collect_entity_meta_by_path(
-    package: dict, path_elements: List[str], data_source: DataSource, existing_meta: dict, user: User
+    package: dict, path_elements: List[str], data_source: DataSource, existing_meta: Optional[dict], user: User
 ) -> dict:
     # TODO: Handle dotted attribute path
     if len(path_elements) == 1:
@@ -75,9 +75,9 @@ def export_meta_use_case(user: User, document_reference: str) -> dict:
 
     path_elements = path.split("/")
     root_package_name = path_elements.pop(0)
-    root_package = resolve_reference(
-        f"/{root_package_name}", data_source, lambda data_source_name: get_data_source(data_source_name, user)
-    )
+    root_package: dict = resolve_reference(
+        f"/{data_source_id}/{root_package_name}", lambda data_source_name: get_data_source(data_source_name, user)
+    ).entity
 
     if not path_elements:
         return root_package.get("_meta_", {})

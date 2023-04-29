@@ -28,11 +28,11 @@ Feature: Add and remove references
       "attributes": []
     }
     """
-    Given i access the resource url "/api/reference/test-DS/1.content"
+    Given i access the resource url "/api/reference/test-DS/$1.content"
     When i make a "PUT" request
     """
     {
-      "address": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+      "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
       "type": "dmss://system/SIMOS/Reference",
       "referenceType": "link"
     }
@@ -54,7 +54,7 @@ Feature: Add and remove references
       "isRoot": true
     }
     """
-    Given i access the resource url "/api/reference/test-DS/1.content.0"
+    Given i access the resource url "/api/reference/test-DS/$1.content.0"
     When i make a "DELETE" request
     Then the response status should be "OK"
     And the response should contain
@@ -77,22 +77,22 @@ Feature: Add and remove references
       "type": "dmss://system/SIMOS/Package",
       "content": [
         {
-          "address": "2",
+          "address": "$2",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         },
         {
-          "address": "3",
+          "address": "$3",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         },
         {
-          "address": "4",
+          "address": "$4",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         },
         {
-          "address": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+          "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         }
@@ -155,11 +155,11 @@ Feature: Add and remove references
     "Bigness": 10
     }
     """
-    Given i access the resource url "/api/reference/test-DS/4.Mooring"
+    Given i access the resource url "/api/reference/test-DS/$4.Mooring"
     When i make a "PUT" request
     """
     {
-      "address": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+      "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
       "type": "dmss://system/SIMOS/Reference",
       "referenceType": "link"
     }
@@ -178,7 +178,7 @@ Feature: Add and remove references
       }
     }
     """
-    Given i access the resource url "/api/reference/test-DS/4.Mooring"
+    Given i access the resource url "/api/reference/test-DS/$4.Mooring"
     When i make a "DELETE" request
     Then the response status should be "OK"
     And the response should contain

@@ -40,7 +40,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(repository_provider)
         document_service.rename_document(
-            data_source_id="testing", parent_uid="1", document_id="1.nested", name="New_name"
+            data_source_id="testing", parent_uid="$1", document_id="1.nested", name="New_name"
         )
 
         actual = {"name": "New_name", "description": "", "type": "basic_blueprint"}
@@ -77,7 +77,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 return document_repository
 
         document_service = get_mock_document_service(repository_provider)
-        document_service.rename_document(data_source_id="testing", document_id="1", name="New_name")
+        document_service.rename_document(data_source_id="testing", document_id="$1", name="New_name")
 
         actual = {"_id": "1", "name": "New_name"}
 
@@ -95,7 +95,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
                 "references": [],
                 "reference": {
-                    "address": "2",
+                    "address": "$2",
                     "type": SIMOS.REFERENCE.value,
                     "referenceType": REFERENCE_TYPES.LINK.value,
                 },
@@ -104,7 +104,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            if document_id in doc_storage:
+                return doc_storage[document_id]
+            return None
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -113,11 +115,12 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.update = mock_update
 
         def repository_provider(data_source_id, user: User):
+            document_repository.name = data_source_id
             if data_source_id == "testing":
                 return document_repository
 
         document_service = get_mock_document_service(repository_provider)
-        document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New_name")
+        document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="$1", name="New_name")
 
         actual = {"_id": "1", "reference": {"_id": "2", "name": "New_name", "type": "basic_blueprint"}}
         actual2 = {"_id": "2", "name": "New_name", "type": "basic_blueprint"}
@@ -136,13 +139,13 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "all_contained_cases_blueprint",
                 "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
                 "reference": {
-                    "address": "2",
+                    "address": "$2",
                     "type": SIMOS.REFERENCE.value,
                     "referenceType": REFERENCE_TYPES.STORAGE.value,
                 },
                 "references": [
                     {
-                        "address": "2",
+                        "address": "$2",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.STORAGE.value,
                     }
@@ -161,17 +164,18 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.update = mock_update
 
         def repository_provider(data_source_id, user: User):
+            document_repository.name = data_source_id
             if data_source_id == "testing":
                 return document_repository
 
         document_service = get_mock_document_service(repository_provider)
-        document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="1", name="New_name")
+        document_service.rename_document(data_source_id="testing", document_id="2", parent_uid="$1", name="New_name")
 
         actual = {
             "_id": "1",
             "references": [
                 {
-                    "address": "2",
+                    "address": "$2",
                     "type": SIMOS.REFERENCE.value,
                     "referenceType": REFERENCE_TYPES.STORAGE.value,
                 }

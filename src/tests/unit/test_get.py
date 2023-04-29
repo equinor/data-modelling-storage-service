@@ -27,7 +27,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "type": "test_data/complex/Customer",
                     "name": "Wrong protocol",
                     "car": {
-                        "address": "wrong:///1.cars.0",
+                        "address": "wrong:///$1.cars.0",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.LINK.value,
                     },
@@ -45,7 +45,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             return [
                 {
                     "content": [
-                        {"address": "1", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                        {"address": "$1", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
                     ]
                 }
             ]
@@ -56,7 +56,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(lambda x, y: document_repository)
         with pytest.raises(Exception, match=r"The protocol 'wrong' is not supported"):
-            tree_node_to_dict(document_service.get_node_by_uid("datasource", "1"))
+            tree_node_to_dict(document_service.get_document("datasource/$1"))
 
     def test_references(self):
         my_car_rental = {
@@ -179,7 +179,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "isRoot": True,
                 "type": SIMOS.PACKAGE.value,
                 "content": [
-                    {"address": "2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                    {"address": "$2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
                 ],
             }
         ]
@@ -209,7 +209,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "name": "engines",
             "isRoot": True,
             "content": [
-                {"address": "3", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                {"address": "$3", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
             ],
         }
 
@@ -219,7 +219,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "name": "parts",
                 "isRoot": True,
                 "content": [
-                    {"address": "2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                    {"address": "$2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
                 ],
             },
             my_engine,
@@ -242,6 +242,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         def mock_data_source(data_source_id: str, user: dict):
             document_repository = mock.Mock()
+            document_repository.name = data_source_id
             if data_source_id == "test_data":
                 document_repository.get = mock_get_inside_test_data
                 document_repository.find = lambda target: find(target, test_data_data_source)
@@ -251,8 +252,8 @@ class DocumentServiceTestCase(unittest.TestCase):
             return document_repository
 
         document_service = get_mock_document_service(mock_data_source)
-        directly = tree_node_to_dict(document_service.get_node_by_uid("test_data", "2"))
-        complex_package = tree_node_to_dict(document_service.get_node_by_uid("test_data", "1"))
+        directly = tree_node_to_dict(document_service.get_document("test_data/$2"))
+        complex_package = tree_node_to_dict(document_service.get_document("test_data/$1"))
 
         assert isinstance(directly, dict)
 
@@ -320,10 +321,10 @@ class DocumentServiceTestCase(unittest.TestCase):
             "description": "",
             "type": "all_contained_cases_blueprint",
             "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
-            "reference": {"address": "2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+            "reference": {"address": "$2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
             "references": [
-                {"address": "3", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
-                {"address": "4", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                {"address": "$3", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                {"address": "$4", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
             ],
         }
 
@@ -346,7 +347,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
 
         document_service = get_mock_document_service(lambda x, y: document_repository)
-        root = tree_node_to_dict(document_service.get_node_by_uid("datasource", "1"))
+        root = tree_node_to_dict(document_service.get_document("datasource/$1"))
 
         assert isinstance(root, dict)
 
@@ -374,13 +375,13 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "all_contained_cases_blueprint",
                 "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
                 "reference": {
-                    "address": "2",
+                    "address": "$2",
                     "type": SIMOS.REFERENCE.value,
                     "referenceType": REFERENCE_TYPES.LINK.value,
                 },
                 "references": [
-                    {"address": "3", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
-                    {"address": "4", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                    {"address": "$3", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                    {"address": "$4", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
                 ],
             },
         }
@@ -404,7 +405,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
 
         document_service = get_mock_document_service(lambda x, y: document_repository)
-        root = tree_node_to_dict(document_service.get_node_by_uid("datasource", "1"))
+        root = tree_node_to_dict(document_service.get_document("datasource/$1"))
 
         assert isinstance(root, dict)
 

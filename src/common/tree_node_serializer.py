@@ -82,7 +82,7 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
                 data[child.key] = [
                     {
                         "type": SIMOS.REFERENCE.value,
-                        "address": child.uid,
+                        "address": f"${child.uid}",
                         "referenceType": REFERENCE_TYPES.STORAGE.value
                         if child.contained
                         else REFERENCE_TYPES.LINK.value,
@@ -95,7 +95,7 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
             if not child.contained and child.entity:
                 data[child.key] = {
                     "type": SIMOS.REFERENCE.value,
-                    "address": child.uid,
+                    "address": f"${child.uid}",
                     "referenceType": REFERENCE_TYPES.STORAGE.value if child.contained else REFERENCE_TYPES.LINK.value,
                 }
             else:
@@ -182,7 +182,8 @@ def tree_node_from_dict(
                     child["type"] == SIMOS.REFERENCE.value
                     and child.get("referenceType", REFERENCE_TYPES.LINK.value) == REFERENCE_TYPES.LINK.value
                 ):
-                    child_uid = child["address"]
+                    # TODO: Resolve to get uid?
+                    child_uid = child["address"].replace("$", "")
                 else:
                     child_uid = child.get("_id", "")
 

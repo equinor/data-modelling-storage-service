@@ -22,7 +22,7 @@ Feature: Explorer - Add contained node
         "isRoot": true,
         "content": [
             {
-                "address": "2",
+                "address": "$2",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             }                                           
@@ -75,7 +75,7 @@ Feature: Explorer - Add contained node
     """
 
   Scenario: Add nested contained node
-    Given i access the resource url "/api/documents/entities/1.meAgain.1.meAgain"
+    Given i access the resource url "/api/documents/entities/$1.meAgain.1.meAgain"
     When i make a "POST" request
     """
     {

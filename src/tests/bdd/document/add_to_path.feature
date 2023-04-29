@@ -20,32 +20,32 @@ Feature: Add document with document_service
           "isRoot": true,
           "content": [
               {
-                  "address": "2",
+                  "address": "$2",
                   "type": "dmss://system/SIMOS/Reference",
                   "referenceType": "link"
               },
               {
-                  "address": "3",
+                  "address": "$3",
                   "type": "dmss://system/SIMOS/Reference",
                   "referenceType": "link"
               },
               {
-                  "address": "6",
+                  "address": "$6",
                   "type": "dmss://system/SIMOS/Reference",
                   "referenceType": "link"
               },
               {
-                  "address": "5",
+                  "address": "$5",
                   "type": "dmss://system/SIMOS/Reference",
                    "referenceType": "link"
               },
               {
-                  "address": "101",
+                  "address": "$101",
                   "type": "dmss://system/SIMOS/Reference",
                   "referenceType": "link"
               },
               {
-                  "address": "102",
+                  "address": "$102",
                   "type": "dmss://system/SIMOS/Reference",
                   "referenceType": "link"
               }
@@ -62,7 +62,7 @@ Feature: Add document with document_service
           "isRoot": false,
           "content": [
             {
-                  "address": "99",
+                  "address": "$99",
                   "type": "dmss://system/SIMOS/Reference",
                   "referenceType": "link"
             }
@@ -79,7 +79,7 @@ Feature: Add document with document_service
           "isRoot": false,
           "content": [
               {
-                  "address": "11",
+                  "address": "$11",
                   "type": "dmss://system/SIMOS/Reference",
                   "referenceType": "link"
               }
@@ -222,7 +222,7 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/data-source-name/99"
+    Given i access the resource url "/api/documents/data-source-name/$99"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should equal

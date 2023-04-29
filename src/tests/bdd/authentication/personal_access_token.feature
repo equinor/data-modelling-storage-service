@@ -44,7 +44,7 @@ Feature: Personal Access Token
     When I make a "POST" request
     Then the response status should be "OK"
     And the PAT is added to context
-    Given i access the resource url "/api/documents/test-DS/1"
+    Given i access the resource url "/api/documents/test-DS/$1"
     When i make a "DELETE" request
     Then the response status should be "Forbidden"
 
@@ -100,7 +100,7 @@ Feature: Personal Access Token
     Then the response status should be "OK"
     And the PAT is added to context
     And the PAT is added to headers
-    Given i access the resource url "/api/documents/test-DS/1"
+    Given i access the resource url "/api/documents/test-DS/$1"
     When i make a "DELETE" request
     Then the response status should be "Forbidden"
     And the response should be
