@@ -1,6 +1,6 @@
 from common.exceptions import ApplicationException
 from common.utils.is_reference import is_reference
-from common.utils.resolve_reference import resolve_reference
+from common.utils.resolve_reference import ResolvedReference, resolve_reference
 from enums import REFERENCE_TYPES
 from storage.data_source_class import DataSource
 
@@ -48,23 +48,26 @@ def get_complete_sys_document(
             )
         address = address.replace("^", f"${current_id}")
 
-    document = resolve_reference(address, data_source, get_data_source)
+    if "://" not in address:
+        address = f"{data_source.name}/{address}"
+
+    resolved_reference: ResolvedReference = resolve_reference(address, get_data_source)
 
     # Only update if the resolved reference has id (since it can point to a document that are contained in another document)
     if (
         link_or_storage_address.get("referenceType", REFERENCE_TYPES.LINK.value) == REFERENCE_TYPES.LINK.value
-        and "_id" in document
+        and "_id" in resolved_reference.entity
     ):
         # For supporting ^ references, update the current document id
-        current_id = document["_id"]
+        current_id = resolved_reference.entity["_id"]
 
     if depth <= depth_count:
         if depth_count >= 999:
             raise RecursionError("Reached max-nested-depth (999). Most likely some recursive entities")
-        return document
+        return resolved_reference.entity
     depth_count += 1
 
-    return resolve_document(document, data_source, get_data_source, current_id, depth, depth_count)
+    return resolve_document(resolved_reference.entity, data_source, get_data_source, current_id, depth, depth_count)
 
 
 def resolve_contained_dict(

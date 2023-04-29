@@ -36,7 +36,7 @@ def create_zip_export(document_service: DocumentService, absolute_document_ref: 
     archive_path = os.path.join(tmpdir, "temp_zip_archive.zip")
 
     data_source_id, document_path = absolute_document_ref.split("/", 1)
-    document_node: Node = document_service.get_by_path(absolute_document_ref)
+    document_node: Node = document_service.get_document(f"/{absolute_document_ref}")
 
     # non-root packages and single documents will inherit the meta information from all parents.
     document_meta = {}

@@ -19,10 +19,10 @@ from common.tree_node_serializer import (
 from common.utils.build_complex_search import build_mongo_query
 from common.utils.delete_documents import delete_document
 from common.utils.get_blueprint import get_blueprint_provider
-from common.utils.get_document_by_path import get_document_uid_by_path
 from common.utils.get_resolved_document_by_id import resolve_document
 from common.utils.get_storage_recipe import storage_recipe_provider
 from common.utils.logging import logger
+from common.utils.resolve_reference import ResolvedReference, resolve_reference
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.utils.string_helpers import split_dmss_ref
 from common.utils.validators import validate_entity, validate_entity_against_self
@@ -183,32 +183,38 @@ class DocumentService:
                 node.get_context_storage_attribute(),
                 parent_id=parent_uid,
             )
-            return {"type": SIMOS.REFERENCE.value, "address": node.uid, "referenceType": REFERENCE_TYPES.LINK.value}
+            result = {
+                "type": SIMOS.REFERENCE.value,
+                "address": f"${node.uid}",
+                "referenceType": REFERENCE_TYPES.LINK.value,
+            }
+            return result
         return ref_dict
 
-    def get_document_by_uid(
-        self,
-        data_source_id: str,
-        document_uid: str,
-        depth: int = 999,
-    ) -> dict:
-        data_source = self.get_data_source(data_source_id)
-        document = data_source.get(document_uid)
-        return resolve_document(document, data_source, self.get_data_source, document_uid, depth)
+    def get_document(self, reference: str, depth: int = 999) -> Node:
+        resolved_reference: ResolvedReference = resolve_reference(reference, self.get_data_source)
 
-    def get_node_by_uid(self, data_source_id: str, document_uid: str, depth: int = 999) -> Node:
-        complete_document = self.get_document_by_uid(data_source_id, document_uid, depth)
-        return tree_node_from_dict(
-            complete_document,
-            uid=complete_document.get("_id"),
+        data_source: DataSource = self.get_data_source(resolved_reference.data_source_id)
+        document: dict = data_source.get(resolved_reference.document_id)
+
+        resolved_document: dict = resolve_document(
+            document,
+            data_source,
+            self.get_data_source,
+            resolved_reference.document_id,
+            depth + len(resolved_reference.attribute_path.split(".")),
+        )
+
+        node: Node = tree_node_from_dict(
+            resolved_document,
+            uid=resolved_reference.document_id,
             blueprint_provider=self.get_blueprint,
             recipe_provider=self.get_storage_recipes,
         )
 
-    def get_by_path(self, absolute_reference: str) -> Node:
-        data_source_id, path, attribute = split_dmss_ref(absolute_reference)
-        document_id = get_document_uid_by_path(f"/{path}", data_source_id, self.user)
-        return self.get_node_by_uid(data_source_id, document_id)
+        if resolved_reference.attribute_path:
+            node = node.get_by_path(resolved_reference.attribute_path.split("."))
+        return node
 
     def remove_document(self, data_source_id: str, document_id: str, attribute: str = None):
         """
@@ -216,6 +222,9 @@ class DocumentService:
         If document_id is a dotted attribute path, it will remove the reference in the parent.
         Does not use the Node class, as blueprints won't necessarily be available when deleting.
         """
+        if document_id.startswith("$"):  # TODO: to support new reference format
+            document_id = document_id[1:]
+
         repository = self.repository_provider(data_source_id, self.user)
         if attribute:
             root_document: dict = repository.get(document_id)
@@ -244,12 +253,12 @@ class DocumentService:
     def rename_document(self, data_source_id: str, document_id: str, name: str, parent_uid: str = None):
         # Only root-packages have no parent_id
         if not parent_uid:
-            root_node: Node = self.get_node_by_uid(data_source_id, document_id)
+            root_node: Node = self.get_document(f"{data_source_id}/{document_id}")
             target_node = root_node
 
         # Grab the parent, and set target based on dotted document_id
         else:
-            root_node: Node = self.get_node_by_uid(data_source_id, parent_uid)  # type: ignore
+            root_node: Node = self.get_document(f"{data_source_id}/{parent_uid}")  # type: ignore
             target_node = root_node.search(document_id)
 
             if not target_node:
@@ -277,7 +286,7 @@ class DocumentService:
         # TODO: Since we are only fetching 1 lvl here, any updates on nested uncontained attributes by dott reference
         # TODO: will fail, as they are not a node on the root node. For example; '123-456.contAttr.someUncontainedAttr'
         # TODO: We should update 'node.get_by_path()' do fetch documents as needed
-        root: Node = self.get_node_by_uid(data_source_id, document_id, depth=0)
+        root: Node = self.get_document(f"{data_source_id}/{document_id}", depth=0)
         target_node = root
 
         # If it's a contained nested node, set the modify-target based on dotted-path
@@ -315,7 +324,7 @@ class DocumentService:
         parent_attribute = attribute.split(".")[0:-1]
         leaf_attribute = attribute.split(".")[-1]
 
-        root: Node = self.get_node_by_uid(data_source, parent_id)
+        root: Node = self.get_document(f"{data_source}/{parent_id}")
         if not root:
             raise NotFoundException(uid=parent_id)
         parent: Node = root.get_by_path(parent_attribute)
@@ -400,25 +409,23 @@ class DocumentService:
         data_source = self.repository_provider(data_source_id, self.user)
 
         if "/" in directory:
-            parent_uid = get_document_uid_by_path(
-                f"/{'/'.join(directory.split('/')[0:-1])}", data_source_id, self.user
-            )
-            child_uid = get_document_uid_by_path(f"/{directory}", data_source_id, self.user)
-            parent_node = self.get_node_by_uid(data_source_id, parent_uid)
+            parent = self.get_document(f"/{data_source_id}/{'/'.join(directory.split('/')[0:-1])}")
+
+            child = self.get_document(f"/{data_source_id}/{directory}")
 
             # find the node id of the child with uid equal to child_uid
-            child_node_ids = (child.node_id for child in parent_node.children[0].children if child.uid == child_uid)
+            child_node_ids = (child.node_id for child in parent.children[0].children if child.uid == child.uid)
             child_node_id = next(child_node_ids)
 
             # The first child of a directory is always 'content'
-            parent_node.children[0].remove_by_child_id(child_node_id)
-            self.save(parent_node, data_source_id)
-            delete_document(data_source, document_id=child_uid)
+            parent.children[0].remove_by_child_id(child_node_id)
+            self.save(parent, data_source_id)
+            delete_document(data_source, document_id=child.uid)
             return
 
         # We are removing a root-package with no parent
-        document_id = get_document_uid_by_path(f"/{directory}", data_source_id, self.user)
-        delete_document(data_source, document_id)
+        document = self.get_document(f"/{data_source_id}/{directory}")
+        delete_document(data_source, document.uid)
 
     @staticmethod
     def _merge_entity_and_files(node: Node, files: Dict[str, BinaryIO]):
@@ -459,7 +466,7 @@ class DocumentService:
             if not document.type == SIMOS.PACKAGE.value or not document_dict.get("isRoot", False):
                 raise BadRequestException("Only root packages may be added to the root of a data source")
             try:
-                if get_document_uid_by_path(document_dict["name"], data_source_id, self.user):
+                if self.get_document(f"/{data_source_id}/{document_dict['name']}"):
                     raise ValidationException(
                         message=f"A root package named '{document_dict['name']}' already exists",
                         data={"dataSource": data_source_id, "document": document_dict},
@@ -470,7 +477,11 @@ class DocumentService:
             document_repository.update(document_dict)
             return {"uid": document_dict["_id"]}
 
-        target: Node = self.get_by_path(f"{data_source_id}/{path}")
+        target: Node = self.get_document(f"/{data_source_id}/{path}")
+
+        for node in target.traverse():
+            print(node.uid)
+
         if not target:
             raise NotFoundException(f"Could not find '{path}' in data source '{data_source_id}'")
 
@@ -541,7 +552,7 @@ class DocumentService:
             data_source.update_access_control(document_id, acl)
             return
 
-        root_node = self.get_node_by_uid(data_source_id, document_id)
+        root_node = self.get_document(f"{data_source_id}/{document_id}")
         data_source.update_access_control(root_node.node_id, acl)
         for child in root_node.children:
             for node in child.traverse():
@@ -553,56 +564,47 @@ class DocumentService:
 
     def get_acl(self, data_source_id, document_id) -> ACL:
         data_source: DataSource = self.repository_provider(data_source_id, self.user)
+        if document_id.startswith("$"):
+            document_id = document_id[1:]
         lookup = data_source.get_access_control(document_id)
         return lookup.acl
 
     def insert_reference(
         self, data_source_id: str, document_id: str, reference: Reference, attribute_path: str
     ) -> dict:
-        root: Node = self.get_node_by_uid(data_source_id, document_id)
-        attribute_node: Node = root.search(f"{document_id}.{attribute_path}")
-        if not attribute_node:
-            raise NotFoundException(uid=document_id + attribute_path)
-
-        data_source = self.repository_provider(data_source_id, self.user)
+        root: Node = self.get_document(f"{data_source_id}/{document_id}")
+        attribute_node: Node = root.get_by_path(attribute_path.split("."))
 
         # Check that target exists and has correct values
         # The SIMOS/Entity type can reference any type (used by Package)
-        referenced_document: dict = data_source.get(reference.address)
+        referenced_document: Node = self.get_document(f"{data_source_id}/{reference.address}")
         if not referenced_document:
             raise NotFoundException(uid=f"{data_source_id}/{referenced_document['_id']}")
-        if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document["type"]:
+        if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document.type:
             raise BadRequestException(
                 f"The referenced entity should be of type '{attribute_node.type}'"
-                f", but was '{referenced_document['type']}'"
+                f", but was '{referenced_document.type}'"
             )
 
         # If the node to update is a list, append to end
         if attribute_node.is_array():
-            child_node = tree_node_from_dict(
-                entity=referenced_document,
-                uid=str(referenced_document["_id"]),
-                blueprint_provider=self.get_blueprint,
-                recipe_provider=self.get_storage_recipes,
-                node_attribute=attribute_node.attribute,
-            )
-            attribute_node.add_child(child_node)
+            referenced_document.attribute = attribute_node.attribute
+            attribute_node.add_child(referenced_document)
         else:
-            attribute_node.entity = referenced_document
-            attribute_node.uid = str(referenced_document["_id"])
-            attribute_node.type = referenced_document["type"]
+            attribute_node.entity = tree_node_to_dict(referenced_document)
+            attribute_node.uid = str(referenced_document.uid)
+            attribute_node.type = referenced_document.type
 
         self.save(root, data_source_id, update_uncontained=False)
 
         logger.info(
-            f"Inserted reference to '{referenced_document['_id']}'"
-            f" as '{attribute_path}' in '{root.name}'({root.uid})"
+            f"Inserted reference to '{referenced_document.uid}'" f" as '{attribute_path}' in '{root.name}'({root.uid})"
         )
 
         return tree_node_to_dict(root)
 
     def remove_reference(self, data_source_id: str, document_id: str, attribute_path: str) -> dict:
-        root: Node = self.get_node_by_uid(data_source_id, document_id)
+        root: Node = self.get_document(f"{data_source_id}/{document_id}")
         attribute_node = root.get_by_path(attribute_path.split("."))
         if not attribute_node:
             raise Exception(f"Could not find the '{attribute_path}' Node on '{document_id}'")

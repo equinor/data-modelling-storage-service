@@ -34,7 +34,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a,b"
     Given authentication is enabled
-    Given I access the resource url "/api/documents/test-DS/1"
+    Given I access the resource url "/api/documents/test-DS/$1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -62,7 +62,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a,b"
     Given authentication is enabled
-    Given I access the resource url "/api/documents/test-DS/1"
+    Given I access the resource url "/api/documents/test-DS/$1"
     When I make a "GET" request
     Then the response status should be "Forbidden"
     And the response should be
@@ -90,7 +90,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "someRole,anotherRole"
     Given authentication is enabled
-    Given I access the resource url "/api/documents/test-DS/1"
+    Given I access the resource url "/api/documents/test-DS/$1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -125,7 +125,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "someRole,anotherRole"
     Given authentication is enabled
-    Given I access the resource url "/api/documents/test-DS/1"
+    Given I access the resource url "/api/documents/test-DS/$1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -152,7 +152,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given I access the resource url "/api/documents/test-DS/1"
+    Given I access the resource url "/api/documents/test-DS/$1"
     When i make a form-data "PUT" request
     """
     { "data":{
@@ -198,7 +198,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given I access the resource url "/api/documents/test-DS/1"
+    Given I access the resource url "/api/documents/test-DS/$1"
     When i make a form-data "PUT" request
     """
     { "data":{
@@ -234,7 +234,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/documents/test-DS/1"
+    Given i access the resource url "/api/documents/test-DS/$1"
     When i make a "DELETE" request
     Then the response status should be "Forbidden"
     And the response should be
@@ -257,10 +257,10 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/documents/test-DS/1"
+    Given i access the resource url "/api/documents/test-DS/$1"
     When i make a "DELETE" request
     Then the response status should be "OK"
-    Given I access the resource url "/api/documents/test-DS/1"
+    Given I access the resource url "/api/documents/test-DS/$1"
     When I make a "GET" request
     Then the response status should be "Not Found"
 
@@ -275,7 +275,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/blobs/test-DS/1234"
+    Given i access the resource url "/api/blobs/test-DS/$1234"
     When i make a "GET" request
     Then the response status should be "Forbidden"
     And the response should be
@@ -311,7 +311,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/documents/test-DS/2.content"
+    Given i access the resource url "/api/documents/test-DS/$2.content"
     When i make a "POST" request
     """
     {

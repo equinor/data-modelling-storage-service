@@ -5,8 +5,8 @@ from uuid import uuid4
 
 from authentication.models import User
 from common.exceptions import BadRequestException, NotFoundException
-from common.utils.get_document_by_path import get_document_by_absolute_path
 from common.utils.logging import logger
+from common.utils.resolve_reference import ResolvedReference, resolve_reference
 from common.utils.string_helpers import url_safe_name
 from enums import REFERENCE_TYPES, SIMOS
 from storage.data_source_class import DataSource
@@ -27,7 +27,11 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
         document["_id"] = document.get("_id", str(uuid4()))
         data_source.update(document)
         docs.append(
-            {"address": document["_id"], "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value}
+            {
+                "address": f"${document['_id']}",
+                "type": SIMOS.REFERENCE.value,
+                "referenceType": REFERENCE_TYPES.LINK.value,
+            }
         )
 
     return docs
@@ -37,7 +41,11 @@ def import_package(path, user: User, data_source_name: str, is_root: bool = Fals
     data_source: DataSource = get_data_source(data_source_id=data_source_name, user=user)
     package = {"name": os.path.basename(path), "type": SIMOS.PACKAGE.value, "isRoot": is_root}
     try:
-        if get_document_by_absolute_path(f"dmss://{data_source.name}/{package['name']}", user):
+        resolved_reference: ResolvedReference = resolve_reference(
+            f"dmss://{data_source.name}/{package['name']}",
+            lambda data_source_name: get_data_source(data_source_name, user),
+        )
+        if resolved_reference.entity:
             raise BadRequestException(
                 message=(
                     f"A root package with name '{package['name']}' "
@@ -63,4 +71,8 @@ def import_package(path, user: User, data_source_name: str, is_root: bool = Fals
 
     data_source.update(package)
     logger.info(f"Imported package {package['name']}")
-    return {"address": package["_id"], "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value}
+    return {
+        "address": f"${package['_id']}",
+        "type": SIMOS.REFERENCE.value,
+        "referenceType": REFERENCE_TYPES.LINK.value,
+    }

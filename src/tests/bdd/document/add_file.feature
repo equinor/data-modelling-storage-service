@@ -21,37 +21,37 @@ Feature: Explorer - Add file
         "isRoot": true,
         "content": [
             {
-                "address": "2",
+                "address": "$2",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "3",
+                "address": "$3",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "4",
+                "address": "$4",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "5",
+                "address": "$5",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "6",
+                "address": "$6",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "7",
+                "address": "$7",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "8",
+                "address": "$8",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             }
@@ -218,7 +218,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file - attribute for parentEntity
-    Given i access the resource url "/api/documents/test-DS/6.SomeChild"
+    Given i access the resource url "/api/documents/test-DS/$6.SomeChild"
     When i make a "POST" request
     """
     {
@@ -229,7 +229,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-    Given I access the resource url "/api/documents/test-DS/6"
+    Given I access the resource url "/api/documents/test-DS/$6"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -263,7 +263,7 @@ Feature: Explorer - Add file
     Then the response status should be "OK"
 
   Scenario: Add file with wrong subtype to parent entity
-    Given i access the resource url "/api/documents/test-DS/6.SomeChild"
+    Given i access the resource url "/api/documents/test-DS/$6.SomeChild"
     When i make a "POST" request
     """
     {
@@ -274,7 +274,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Bad Request"
-    Given I access the resource url "/api/documents/test-DS/6"
+    Given I access the resource url "/api/documents/test-DS/$6"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -289,7 +289,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with an extended type to parent entity
-    Given i access the resource url "/api/documents/test-DS/6.SomeChild"
+    Given i access the resource url "/api/documents/test-DS/$6.SomeChild"
     When i make a "POST" request
     """
     {
@@ -309,7 +309,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-    Given I access the resource url "/api/documents/test-DS/6"
+    Given I access the resource url "/api/documents/test-DS/$6"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -331,7 +331,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file - not contained
-    Given i access the resource url "/api/documents/test-DS/1.content?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/$1.content?update_uncontained=True"
     When i make a "POST" request
     """
     {
@@ -340,7 +340,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-    Given I access the resource url "/api/documents/test-DS/1"
+    Given I access the resource url "/api/documents/test-DS/$1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -379,7 +379,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with missing parameters should fail
-    Given i access the resource url "/api/documents/test-DS/6.whatever"
+    Given i access the resource url "/api/documents/test-DS/$6.whatever"
     When i make a "POST" request
     """
     {}
@@ -397,7 +397,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file to parent that does not exists
-    Given i access the resource url "/api/documents/test-DS/-1.documents"
+    Given i access the resource url "/api/documents/test-DS/$-1.documents"
     When i make a "POST" request
     """
     {
@@ -427,7 +427,7 @@ Feature: Explorer - Add file
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/documents/test-DS/1.content"
+    Given i access the resource url "/api/documents/test-DS/$1.content"
     When i make a "POST" request
     """
     {
@@ -625,7 +625,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add comment entity without a name attribute with add_by_parent_id endpoint
-    Given i access the resource url "/api/documents/test-DS/1.content?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/$1.content?update_uncontained=True"
     When i make a "POST" request
     """
     {
@@ -637,7 +637,7 @@ Feature: Explorer - Add file
     Then the response status should be "OK"
 
   Scenario: Add blueprint without a name using add_by_parent_id endpoint should fail
-    Given i access the resource url "/api/documents/test-DS/1.content"
+    Given i access the resource url "/api/documents/test-DS/$1.content"
     When i make a "POST" request
     """
     {
@@ -658,7 +658,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add package without a name using add_by_parent_id endpoint should fail
-    Given i access the resource url "/api/documents/test-DS/1.content"
+    Given i access the resource url "/api/documents/test-DS/$1.content"
     When i make a "POST" request
     """
     {

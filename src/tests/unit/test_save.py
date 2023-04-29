@@ -47,7 +47,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        node: Node = document_service.get_node_by_uid("testing", "1")
+        node: Node = document_service.get_document("testing/$1")
         contained_node: Node = node.get_by_path("references.1".split("."))
         contained_node.update({"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "basic_blueprint"})
         document_service.save(node, "testing", update_uncontained=True)
@@ -87,7 +87,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        node: Node = document_service.get_node_by_uid("testing", "1")
+        node: Node = document_service.get_document("testing/$1")
         contained_node: Node = node.search("1.references")
         contained_node.children.append(
             Node(
@@ -104,7 +104,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             {
                 "type": SIMOS.REFERENCE.value,
                 "referenceType": REFERENCE_TYPES.STORAGE.value,
-                "address": "2",
+                "address": "$2",
             }
         ]
 
@@ -121,17 +121,17 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "reference": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
                 "references": [
                     {
-                        "address": "2",
+                        "address": "$2",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.STORAGE.value,
                     },
                     {
-                        "address": "3",
+                        "address": "$3",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.STORAGE.value,
                     },
                     {
-                        "address": "4",
+                        "address": "$4",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.STORAGE.value,
                     },
@@ -151,12 +151,12 @@ class DocumentServiceTestCase(unittest.TestCase):
             "reference": {},
             "references": [
                 {
-                    "address": "2",
+                    "address": "$2",
                     "type": SIMOS.REFERENCE.value,
                     "referenceType": REFERENCE_TYPES.STORAGE.value,
                 },
                 {
-                    "address": "4",
+                    "address": "$4",
                     "type": SIMOS.REFERENCE.value,
                     "referenceType": REFERENCE_TYPES.STORAGE.value,
                 },
@@ -174,12 +174,13 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
 
         def repository_provider(data_source_id, user: User):
+            repository.name = data_source_id
             if data_source_id == "testing":
                 return repository
 
         document_service = get_mock_document_service(repository_provider)
 
-        node: Node = document_service.get_node_by_uid("testing", "1")
+        node: Node = document_service.get_document("testing/$1")
         contained_node: Node = node.search("1.references")
         contained_node.remove_by_path(["1"])
         document_service.save(node, "testing")
@@ -235,11 +236,11 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         # Testing updating the reference
-        node: Node = document_service.get_node_by_uid("testing", "1")
+        node: Node = document_service.get_document("testing/$1")
         target_node = node.get_by_path(["i_have_a_uncontained_attribute", "uncontained_in_every_way"])
         target_node.update(doc_storage["3"])
         document_service.save(node, "testing")
-        assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"]["address"] == "3"
+        assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"]["address"] == "$3"
 
     def test_save_no_overwrite_uncontained_document(self):
         repository = mock.Mock()
@@ -256,7 +257,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "description": "I'm the first nested document, contained",
                     "uncontained_in_every_way": {
                         "type": SIMOS.REFERENCE.value,
-                        "address": "2",
+                        "address": "$2",
                         "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
@@ -279,7 +280,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_service.update_document(
             "test",
-            "1",
+            "$1",
             data={
                 "_id": "1",
                 "name": "Root",
@@ -292,7 +293,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "uncontained_in_every_way": {
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.LINK.value,
-                        "address": "2",
+                        "address": "$2",
                     },
                 },
             },
@@ -348,7 +349,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "nested": {},
             "references": [],
         }
-        document_service.update_document("testing", "1", new_data, attribute="a", update_uncontained=True)
+        document_service.update_document("testing", "$1", new_data, attribute="a", update_uncontained=True)
 
         assert doc_storage["1"]["a"]["description"] == "SOME DESCRIPTION"
         assert doc_storage["1"]["a"]["reference"]["description"] == "A NEW DESCRIPTION HERE"

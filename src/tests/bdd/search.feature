@@ -23,22 +23,22 @@ Feature: Explorer - Search entity
         "isRoot": true,
         "content": [
             {
-                "address": "2",
+                "address": "$2",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "3",
+                "address": "$3",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "4",
+                "address": "$4",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "5",
+                "address": "$5",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             }

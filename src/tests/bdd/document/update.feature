@@ -111,17 +111,17 @@ Feature: Document 2
         "type": "dmss://system/SIMOS/Package",
         "content": [
             {
-                "address": "3",
+                "address": "$3",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "2",
+                "address": "$2",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "4",
+                "address": "$4",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             }
@@ -150,7 +150,7 @@ Feature: Document 2
     """
 
   Scenario: Update document (only contained)
-    Given i access the resource url "/api/documents/data-source-name/1"
+    Given i access the resource url "/api/documents/data-source-name/$1"
     When i make a form-data "PUT" request
     """
     { "data":{
@@ -174,7 +174,7 @@ Feature: Document 2
     """
 
   Scenario: Update document (both contained and not contained)
-    Given i access the resource url "/api/documents/data-source-name/6"
+    Given i access the resource url "/api/documents/data-source-name/$6"
     When i make a form-data "PUT" request
     """
     { "data":{
@@ -272,7 +272,7 @@ Feature: Document 2
     """
 
   Scenario: Update document (attribute and not contained)
-    Given i access the resource url "/api/documents/data-source-name/6.itemNotContained"
+    Given i access the resource url "/api/documents/data-source-name/$6.itemNotContained"
     When i make a form-data "PUT" request
     """
     { "data": {
@@ -293,7 +293,7 @@ Feature: Document 2
     """
 
   Scenario: Update complex list attribute
-    Given i access the resource url "/api/documents/data-source-name/7.complexList"
+    Given i access the resource url "/api/documents/data-source-name/$7.complexList"
     When i make a form-data "PUT" request
     """
     { "data":

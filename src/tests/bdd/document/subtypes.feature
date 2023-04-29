@@ -21,22 +21,22 @@ Feature: Get correct data for subtypes
         "isRoot": true,
         "content": [
             {
-                "address": "3",
+                "address": "$3",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "4",
+                "address": "$4",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "5",
+                "address": "$5",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "7",
+                "address": "$7",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             }
@@ -72,7 +72,7 @@ Feature: Get correct data for subtypes
       "attributes": [
         {
         "name": "SomeChild",
-        "attributeType": "data-source-name/root_package/BaseChild",
+        "attributeType": "dmss://data-source-name/root_package/BaseChild",
         "type": "dmss://system/SIMOS/BlueprintAttribute"
         }
       ]
@@ -85,7 +85,7 @@ Feature: Get correct data for subtypes
       "type": "dmss://system/SIMOS/Blueprint",
       "name": "SpecialChild",
       "description": "",
-      "extends": ["data-source-name/root_package/BaseChild"],
+      "extends": ["dmss://data-source-name/root_package/BaseChild"],
       "attributes": [
         {
           "name": "AnExtraValue",
@@ -102,12 +102,12 @@ Feature: Get correct data for subtypes
   Given there exist document with id "7" in data source "data-source-name"
     """
     {
-      "type": "data-source-name/root_package/Parent",
+      "type": "dmss://data-source-name/root_package/Parent",
       "name": "parentEntity",
       "description": "",
       "SomeChild": {
         "name": "specialChildInParent2",
-        "type": "data-source-name/root_package/SpecialChild",
+        "type": "dmss://data-source-name/root_package/SpecialChild",
         "description": "special child type",
         "AValue": 222,
         "AnExtraValue": "extra value"
@@ -118,12 +118,12 @@ Feature: Get correct data for subtypes
   Given there exist document with id "8" in data source "data-source-name"
     """
     {
-      "type": "data-source-name/root_package/Parent",
+      "type": "dmss://data-source-name/root_package/Parent",
       "name": "parentEntity2",
       "description": "",
       "SomeChild": {
         "name": "baseChildInParent",
-        "type": "data-source-name/root_package/BaseChild",
+        "type": "dmss://data-source-name/root_package/BaseChild",
         "description": "base child type",
         "AValue": 333
       }
@@ -131,7 +131,7 @@ Feature: Get correct data for subtypes
     """
 
   Scenario: fetch entity with a subtype attribute
-    Given i access the resource url "/api/documents/data-source-name/7"
+    Given i access the resource url "/api/documents/data-source-name/$7"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -139,12 +139,12 @@ Feature: Get correct data for subtypes
     {
        "_id": "7",
        "name": "parentEntity",
-       "type": "data-source-name/root_package/Parent",
+       "type": "dmss://data-source-name/root_package/Parent",
        "description": "",
        "SomeChild":
         {
           "name": "specialChildInParent2",
-          "type": "data-source-name/root_package/SpecialChild",
+          "type": "dmss://data-source-name/root_package/SpecialChild",
           "description": "special child type",
           "AValue": 222,
           "AnExtraValue": "extra value"
@@ -154,7 +154,7 @@ Feature: Get correct data for subtypes
 
 
   Scenario: fetch entity with original attribute type
-    Given i access the resource url "/api/documents/data-source-name/8"
+    Given i access the resource url "/api/documents/data-source-name/$8"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -162,12 +162,12 @@ Feature: Get correct data for subtypes
     {
        "_id": "8",
        "name": "parentEntity2",
-       "type": "data-source-name/root_package/Parent",
+       "type": "dmss://data-source-name/root_package/Parent",
        "description": "",
        "SomeChild":
         {
           "name": "baseChildInParent",
-          "type": "data-source-name/root_package/BaseChild",
+          "type": "dmss://data-source-name/root_package/BaseChild",
           "description": "base child type",
           "AValue": 333
         }

@@ -36,6 +36,8 @@ def delete_document(data_source: DataSource, document_id: str):
     """
     Delete a document, and any model contained children.
     """
+    if document_id.startswith("$"):
+        document_id = document_id[1:]
     document: dict = data_source.get(document_id)
     delete_dict_recursive(document, data_source)
     data_source.delete(document_id)

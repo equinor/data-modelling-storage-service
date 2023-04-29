@@ -28,7 +28,7 @@ class ResolveReferenceTestCase(unittest.TestCase):
         self.assertEqual(_next_reference_part("$1"), ("$1", None, ""))
 
     def test_reference_with_id_only_to_reference_items(self):
-        reference = "1234-1234-1234"
+        reference = "$1234-1234-1234"
         items = reference_to_reference_items(reference)
         self.assertEqual(items, [IdItem("1234-1234-1234")])
 

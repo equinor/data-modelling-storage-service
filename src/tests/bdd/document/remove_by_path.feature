@@ -17,7 +17,7 @@ Feature: Explorer - Remove by path
     Given i access the resource url "/api/documents-by-path/data-source-name/blueprints"
     When i make a "DELETE" request
     Then the response status should be "OK"
-    Given I access the resource url "/api/documents/data-source-name/1"
+    Given I access the resource url "/api/documents/data-source-name/$1"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should be
@@ -30,7 +30,7 @@ Feature: Explorer - Remove by path
   "data": null
   }
   """
-    Given I access the resource url "/api/documents/data-source-name/2"
+    Given I access the resource url "/api/documents/data-source-name/$2"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should be
@@ -43,7 +43,7 @@ Feature: Explorer - Remove by path
   "data": null
   }
   """
-    Given I access the resource url "/api/documents/data-source-name/3"
+    Given I access the resource url "/api/documents/data-source-name/$3"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should be
@@ -61,12 +61,12 @@ Feature: Explorer - Remove by path
     Given i access the resource url "/api/documents-by-path/data-source-name/blueprints/sub_package_1"
     When i make a "DELETE" request
     Then the response status should be "OK"
-    Given I access the resource url "/api/documents/data-source-name/1"
+    Given I access the resource url "/api/documents/data-source-name/$1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the array at content should be of length 1
 
-    Given I access the resource url "/api/documents/data-source-name/2"
+    Given I access the resource url "/api/documents/data-source-name/$2"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should be
@@ -84,7 +84,7 @@ Feature: Explorer - Remove by path
     Given i access the resource url "/api/documents-by-path/data-source-name/blueprints"
     When i make a "DELETE" request
     Then the response status should be "OK"
-    Given I access the resource url "/api/documents/data-source-name/3"
+    Given I access the resource url "/api/documents/data-source-name/$3"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should be
@@ -102,7 +102,7 @@ Feature: Explorer - Remove by path
     Given i access the resource url "/api/documents-by-path/data-source-name/blueprints/sub_package_1"
     When i make a "DELETE" request
     Then the response status should be "OK"
-    Given I access the resource url "/api/documents/data-source-name/2"
+    Given I access the resource url "/api/documents/data-source-name/$2"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should be
@@ -115,7 +115,7 @@ Feature: Explorer - Remove by path
   "data": null
   }
   """
-    Given I access the resource url "/api/documents/data-source-name/3"
+    Given I access the resource url "/api/documents/data-source-name/$3"
     When I make a "GET" request
     Then the response status should be "Not Found"
     And the response should be

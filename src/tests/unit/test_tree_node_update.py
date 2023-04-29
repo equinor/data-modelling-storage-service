@@ -161,7 +161,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(repository_provider)
 
-        node: Node = document_service.get_node_by_uid("testing", "1")
+        node: Node = document_service.get_document("testing/$1")
         node.update(
             {
                 "_id": "1",
@@ -211,7 +211,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(repository_provider)
         document_service.add_document(
-            "testing/1.im_optional",
+            "testing/$1.im_optional",
             data={"type": "basic_blueprint", "name": "new_entity", "description": "This is my new entity"},
         )
 
@@ -245,7 +245,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         with self.assertRaises(ValidationException) as error:
             document_service.update_document(
                 data_source_id="testing",
-                document_id="1",
+                document_id="$1",
                 attribute="SomeChild",
                 data={"name": "whatever", "type": "special_child_no_inherit", "AnExtraValue": "Hallo there!"},
             )
@@ -305,7 +305,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(repository_provider)
         document_service.add_document(
-            "testing/1.nested_with_optional.im_optional",
+            "testing/$1.nested_with_optional.im_optional",
             {"name": "new_entity", "description": "This is my new entity", "type": "basic_blueprint"},
         )
 
@@ -341,7 +341,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         with self.assertRaises(BadRequestException):
             document_service.add_document(
-                "testing/1.im_optional",
+                "testing/$1.im_optional",
                 data={"type": "basic_blueprint", "name": "duplicate", "description": "This is my new entity"},
             )
 
@@ -363,7 +363,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         document_service.update_document(
             data_source_id="testing",
-            document_id="1",
+            document_id="$1",
             attribute="SomeChild",
             data={"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
         )
@@ -392,7 +392,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         document_service.update_document(
             data_source_id="testing",
-            document_id="1",
+            document_id="$1",
             attribute="SomeChild",
             data={
                 "name": "whatever",
@@ -430,7 +430,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         document_service.update_document(
             data_source_id="testing",
-            document_id="1",
+            document_id="$1",
             attribute="SomeChild",
             data=[
                 {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
@@ -476,7 +476,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         with self.assertRaises(ValidationException) as error:
             document_service.update_document(
                 data_source_id="testing",
-                document_id="1",
+                document_id="$1",
                 attribute="SomeChild",
                 data=[
                     {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
@@ -514,7 +514,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_service.update_document(
             data_source_id="testing",
-            document_id="1",
+            document_id="$1",
             data={
                 "_id": "1",
                 "name": "parent",

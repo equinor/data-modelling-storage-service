@@ -28,7 +28,7 @@ Feature: Export an entity's meta data
       },
       "content": [
         {
-          "address": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+          "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         }
@@ -41,7 +41,7 @@ Feature: Export an entity's meta data
     """
     {
       "type": "dmss://system/SIMOS/Blueprint",
-      "name": "some-entity",
+      "name": "SomeEntity",
       "_meta_": {
         "type": "CORE:Meta",
         "version": "0.0.1",
@@ -60,7 +60,7 @@ Feature: Export an entity's meta data
       "attributes": []
     }
     """
-    Given i access the resource url "/api/export/meta/test-DS/TestData/some-entity"
+    Given i access the resource url "/api/export/meta/test-DS/TestData/SomeEntity"
     When i make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -96,7 +96,7 @@ Feature: Export an entity's meta data
       "type": "dmss://system/SIMOS/Package",
       "content": [
         {
-          "address": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+          "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         }
@@ -145,7 +145,7 @@ Feature: Export an entity's meta data
       },
       "content": [
         {
-          "address": "3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+          "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         }
