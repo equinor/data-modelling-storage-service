@@ -409,23 +409,23 @@ class DocumentService:
         data_source = self.repository_provider(data_source_id, self.user)
 
         if "/" in directory:
-            parent = self.get_document(f"/{data_source_id}/{'/'.join(directory.split('/')[0:-1])}")
+            parent = self.get_document(f"/{data_source_id}/{'/'.join(directory.split('/')[0:-1])}", depth=1)
 
-            child = self.get_document(f"/{data_source_id}/{directory}")
+            sub: ResolvedReference = resolve_reference(f"/{data_source_id}/{directory}", self.get_data_source)
 
             # find the node id of the child with uid equal to child_uid
-            child_node_ids = (child.node_id for child in parent.children[0].children if child.uid == child.uid)
+            child_node_ids = (child.node_id for child in parent.children[0].children if child.uid == sub.document_id)
             child_node_id = next(child_node_ids)
 
             # The first child of a directory is always 'content'
             parent.children[0].remove_by_child_id(child_node_id)
             self.save(parent, data_source_id)
-            delete_document(data_source, document_id=child.uid)
+            delete_document(data_source, document_id=sub.document_id)
             return
 
         # We are removing a root-package with no parent
-        document = self.get_document(f"/{data_source_id}/{directory}")
-        delete_document(data_source, document.uid)
+        root_package: ResolvedReference = resolve_reference(f"/{data_source_id}/{directory}", self.get_data_source)
+        delete_document(data_source, root_package.document_id)
 
     @staticmethod
     def _merge_entity_and_files(node: Node, files: Dict[str, BinaryIO]):
