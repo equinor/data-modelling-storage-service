@@ -113,10 +113,13 @@ class QueryItem:
             for f in document
         ]  # Resolve any references
         default = (None, None)
-        return next(
-            ((element, str(index)) for index, element in enumerate(elements) if is_same(element, self.filter())),
-            default,
-        )  # Find an item that match the given filter
+        try:
+            return next(
+                ((element, str(index)) for index, element in enumerate(elements) if is_same(element, self.filter())),
+                default,
+            )  # Find an item that match the given filter
+        except KeyError:
+            raise ApplicationException(f"No object matches filter '{self.query}'", data={"elements": elements})
 
 
 @dataclass
