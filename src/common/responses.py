@@ -46,7 +46,7 @@ If the execution fails, it will return a JSONResponse with a standardized error 
 """
 
 
-def create_response(
+def create_response(  # noqa: C901
     response_class: Type[TResponse] | None = None,
 ) -> Callable[..., Callable[..., TResponse | JSONResponse]]:
     def func_wrapper(func) -> Callable[..., TResponse | JSONResponse]:
@@ -95,6 +95,8 @@ def create_response(
                 logger.warning(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_403_FORBIDDEN)
             except ApplicationException as e:
+                if logger.level <= logging.DEBUG:
+                    traceback.print_exc()
                 logger.error(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
             except Exception as e:
