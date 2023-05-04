@@ -365,7 +365,9 @@ class DocumentService:
         required_attribute_names = [attribute.name for attribute in new_node.blueprint.get_required_attributes()]
         # If entity has a name, check if a file/attribute with the same name already exists on the target
         if "name" in required_attribute_names and parent.duplicate_attribute(new_node.name):
-            raise BadRequestException(f"The document '{data_source}/{parent.name}/{new_node.name}' already exists")
+            raise BadRequestException(
+                f"The document at '{absolute_ref}' already has a child with name '{new_node.name}'"
+            )
 
         new_node.parent = parent
         new_node.set_uid()
