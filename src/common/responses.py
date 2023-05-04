@@ -92,6 +92,8 @@ def create_response(  # noqa: C901
                 logger.error(e.dict())
                 return JSONResponse(e.dict(), status_code=status.HTTP_400_BAD_REQUEST)
             except MissingPrivilegeException as e:
+                if logger.level <= logging.DEBUG:
+                    traceback.print_exc()
                 logger.warning(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_403_FORBIDDEN)
             except ApplicationException as e:
