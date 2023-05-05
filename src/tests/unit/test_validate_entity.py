@@ -25,6 +25,19 @@ class ValidateEntityTestCase(unittest.TestCase):
                     "name": "description",
                     "default": "A standard fuel pump",
                 },
+                {
+                    "attributeType": "number",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "a_number",
+                    "default": 3,
+                },
+                {
+                    "attributeType": "boolean",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "a_list",
+                    "dimensions": "*",
+                    "default": [True, False],
+                },
                 {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "type"},
             ],
         }

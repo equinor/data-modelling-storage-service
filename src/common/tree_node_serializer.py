@@ -154,6 +154,8 @@ def tree_node_from_dict(
     for child_attribute in node.blueprint.get_none_primitive_types():
         if child_attribute.name == "_meta_":
             continue
+        if child_attribute.name == "default" and child_attribute.attribute_type == "any":
+            continue
         child_contained = node.storage_recipes[0].is_contained(child_attribute.name)
         # This will stop creation of recursive blueprints (only if they are optional)
         if child_attribute.is_optional and not entity:

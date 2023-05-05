@@ -41,7 +41,7 @@ Feature: Explorer - Add contained node
           "name": "meAgain",
           "attributeType": "dmss://blueprints/root_package/RecursiveBlueprint",
           "type": "dmss://system/SIMOS/BlueprintAttribute",
-          "default": "[]",
+          "default": [],
           "dimensions": "*"
         }
       ]

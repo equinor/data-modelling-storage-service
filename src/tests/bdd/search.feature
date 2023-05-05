@@ -75,7 +75,7 @@ Feature: Explorer - Search entity
           "type": "dmss://system/SIMOS/BlueprintAttribute",
           "name": "a_number",
           "attributeType": "number",
-          "default": "120",
+          "default": 120,
           "optional": false
         },
         {
@@ -106,7 +106,7 @@ Feature: Explorer - Search entity
           "type": "dmss://system/SIMOS/BlueprintAttribute",
           "attributeType": "number",
           "label": "height",
-          "default": "100.0",
+          "default": 100.0,
           "contained": "true"
         },
         {
@@ -114,7 +114,7 @@ Feature: Explorer - Search entity
           "type": "dmss://system/SIMOS/BlueprintAttribute",
           "attributeType": "number",
           "label": "width",
-          "default": "100.0",
+          "default": 100.0,
           "contained": "true"
         }
       ]
