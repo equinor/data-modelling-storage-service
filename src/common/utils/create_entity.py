@@ -38,14 +38,14 @@ class CreateEntity:
         default_value = attr.default
         type = attr.attribute_type
 
-        if default_value is not None and len(str(default_value)) > 0 and attr.is_array:
+        if default_value is not None and len(str(default_value)) > 0 and attr.is_array and type not in PRIMITIVES:
             try:
                 return json.loads(default_value)
             except JSONDecodeError:
                 print(f"invalid default value: {default_value} for attribute: {attr}")
                 return []
 
-        if default_value == "":
+        if default_value is None:
             if attr.is_array:
                 return attr.dimensions.create_default_array(blueprint_provider, attr)
             if type == "boolean":
@@ -54,13 +54,8 @@ class CreateEntity:
                 return 0.0
             if type == "integer":
                 return 0
-
-        if type == "boolean":
-            return bool(default_value)
-        if type == "number":
-            return float(default_value)
-        if type == "integer":
-            return int(default_value)
+            if type == "string":
+                return ""
         return default_value
 
     @property
@@ -69,21 +64,10 @@ class CreateEntity:
 
     @staticmethod
     def is_json(attr: BlueprintAttribute):
-        try:
-            json.loads(attr.default)
-            return True
-        except JSONDecodeError:
-            return False
-        except StopIteration:
-            return False
-
-    @staticmethod
-    def parse_json(attr: BlueprintAttribute):
-        try:
-            return json.loads(attr.default)
-        except JSONDecodeError:
-            print(f"invalid default value: {attr.default} for attribute: {attr}")
-            return ""
+        """A blueprint attribute is json if the default value is either a list or a dict."""
+        return attr.attribute_type not in PRIMITIVES or attr.dimensions.dimensions != [
+            ""
+        ]  # type(attr.default) == dict or type(attr.default) == list
 
     # add all non optional attributes with default value.
     # type is inserted based on the parent attributes type, or the initial type for root entity.
@@ -105,9 +89,9 @@ class CreateEntity:
                         entity[attr.name] = {}
 
                     elif CreateEntity.is_json(attr):
-                        value = CreateEntity.parse_json(attr)
-                        if len(value) > 0:
-                            entity[attr.name] = CreateEntity.parse_json(attr)
+                        value = attr.default
+                        if value is not None and len(value) > 0:
+                            entity[attr.name] = attr.default
                         else:
                             entity[attr.name] = self._get_entity(
                                 blueprint=blueprint, entity={"type": attr.attribute_type}

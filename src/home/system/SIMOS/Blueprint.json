@@ -35,7 +35,7 @@
       "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "extends",
-      "default": "[]",
+      "default": [],
       "optional": true,
       "dimensions": "*"
     },
@@ -51,7 +51,7 @@
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "dimensions": "*",
       "name": "attributes",
-      "default": "[{\"name\": \"name\", \"type\": \"string\"}, {\"name\": \"type\", \"type\": \"string\"}, {\"name\": \"description\", \"type\": \"string\"}]",
+      "default": [{"name": "name", "type": "string"}, {"name": "type", "type": "string"}, {"name": "description", "type": "string"}],
       "contained": true,
       "optional": true
     }

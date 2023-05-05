@@ -16,7 +16,7 @@
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "contained",
       "optional": true,
-      "default": "true",
+      "default": true,
       "description": "WARNING: Change how the entity is stored. Changing this value will make current entities unavailable. If True, storageTypeAffinity will have no effect"
     },
     {

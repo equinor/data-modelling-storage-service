@@ -3,6 +3,174 @@ Feature: Get a blueprint
   Background: The core package is uploaded to the system
     Given the system data source and SIMOS core package are available
 #    Given the DMSS-lookup has been created
+    Given there are basic data sources with repositories
+      |   name  |
+      | test-DS |
+
+    Given there are repositories in the data sources
+      | data-source | host | port  | username | password | tls   | name  | database  | collection | type     | dataTypes |
+      |  test-DS    | db   | 27017 | maf      | maf      | false | blobs |  bdd-test | blobs      | mongo-db | blob      |
+
+
+
+   Given there exist document with id "1" in data source "test-DS"
+    """
+    {
+        "name": "root_package",
+        "type": "dmss://system/SIMOS/Package",
+        "isRoot": true,
+        "content": [
+            {
+                "address": "$2",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
+            },
+            {
+                "address": "$3",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
+            }
+        ]
+    }
+    """
+    Given there exist document with id "2" in data source "test-DS"
+    """
+    {
+      "type": "dmss://system/SIMOS/Blueprint",
+      "name": "BlueprintWithManyDefaultValues",
+      "attributes": [
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "name",
+          "attributeType": "string",
+          "default": "exampleName",
+          "optional": false
+        },
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "type",
+          "attributeType": "string",
+          "default": "blueprints/root_package/ValuesBlueprint",
+          "optional": false
+        },
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "a_number",
+          "attributeType": "number",
+          "default": 120.44,
+          "optional": false
+        },
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "an_integer",
+          "attributeType": "integer",
+          "default": 33,
+          "optional": false
+        },
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "a_bool",
+          "attributeType": "boolean",
+          "default": false,
+          "optional": false
+        },
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "a_list",
+          "attributeType": "boolean",
+          "dimensions": "*",
+          "default": [false, true, false],
+          "optional": false
+        },
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "an_entity",
+          "attributeType": "test-DS/root_package/ExampleBlueprint",
+          "default": {
+            "name": "foo",
+            "type": "test-DS/root_package/ExampleBlueprint",
+            "AValue": 123
+          }
+        }
+      ]
+    }
+    """
+    Given there exist document with id "3" in data source "test-DS"
+    """
+    {
+      "type": "dmss://system/SIMOS/Blueprint",
+      "name": "ExampleBlueprint",
+      "description": "",
+      "extends": ["dmss://system/SIMOS/NamedEntity"],
+      "attributes": [
+        {
+        "name": "AValue",
+        "attributeType": "integer",
+        "type": "dmss://system/SIMOS/BlueprintAttribute"
+        }
+      ]
+    }
+    """
+
+
+  Scenario: Get a blueprint with many default values
+    Given I access the resource url "/api/blueprint/dmss://test-DS/root_package/BlueprintWithManyDefaultValues"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+    "blueprint": {
+      "type": "dmss://system/SIMOS/Blueprint",
+      "name": "BlueprintWithManyDefaultValues",
+      "attributes": [
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "name",
+          "attributeType": "string",
+          "default": "exampleName",
+          "optional": false
+        },
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "type",
+          "attributeType": "string",
+          "default": "blueprints/root_package/ValuesBlueprint",
+          "optional": false
+        },
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "a_number",
+          "attributeType": "number",
+          "default": 120.44,
+          "optional": false
+        },
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "an_integer",
+          "attributeType": "integer",
+          "default": 33,
+          "optional": false
+        },
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "a_bool",
+          "attributeType": "boolean",
+          "default": false,
+          "optional": false
+        },
+        {
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "name": "a_list",
+          "attributeType": "boolean",
+          "dimensions": "*",
+          "default": [false, true, false],
+          "optional": false
+        }
+      ]
+    }
+    }
+    """
 
 
   Scenario: Get a simple blueprint with a ui recipe from a recipe context
@@ -35,6 +203,7 @@ Feature: Get a blueprint
     }
     }
     """
+
 
   Scenario: Get a simple blueprint with a default ui recipe from a recipe context
     Given I access the resource url "/api/blueprint/dmss://system/SIMOS/Blob?context=DMSS"
@@ -84,7 +253,7 @@ Feature: Get a blueprint
             "name": "size",
             "description": "Size of the blob in bytes",
             "attributeType": "integer",
-            "default": "0",
+            "default": 0,
             "optional": true,
             "contained": true
           }

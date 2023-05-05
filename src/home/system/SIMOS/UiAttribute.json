@@ -82,27 +82,27 @@
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "optional",
       "optional": true,
-      "default": "false"
+      "default": false
     },
     {
       "attributeType": "boolean",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "contained",
       "optional": true,
-      "default": "true"
+      "default": true
     },
     {
       "attributeType": "boolean",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "disabled",
-      "default": "false",
+      "default": false,
       "optional": true
     },
     {
       "attributeType": "boolean",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "required",
-      "default": "false",
+      "default": false,
       "optional": true,
       "description": ""
     },
@@ -117,7 +117,7 @@
       "attributeType": "boolean",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "optional": true,
-      "default": "false"
+      "default": false
     }
   ]
 }

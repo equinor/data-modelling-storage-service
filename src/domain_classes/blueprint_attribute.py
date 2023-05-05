@@ -1,4 +1,12 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import (
+    BaseModel,
+    Field,
+    StrictBool,
+    StrictFloat,
+    StrictInt,
+    StrictStr,
+    validator,
+)
 
 from domain_classes.dimension import Dimension
 from enums import PRIMITIVES, SIMOS
@@ -10,7 +18,7 @@ class BlueprintAttribute(BaseModel):
     type: str = SIMOS.BLUEPRINT_ATTRIBUTE.value
     description: str = ""
     label: str = ""
-    default: str | int | float | bool | list = ""
+    default: StrictStr | StrictInt | StrictFloat | StrictBool | list | dict | None = None
     dimensions: Dimension | None = None
     optional: bool = False
     contained: bool = True

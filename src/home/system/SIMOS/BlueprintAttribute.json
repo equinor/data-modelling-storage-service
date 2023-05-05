@@ -35,23 +35,22 @@
     },
     {
       "name": "default",
-      "attributeType": "string",
+      "attributeType": "any",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "optional": true,
-      "default": ""
+      "optional": true
     },
     {
       "attributeType": "boolean",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "optional",
-      "default": "false",
+      "default": false,
       "optional": true
     },
     {
       "name": "contained",
       "attributeType": "boolean",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "default": "true",
+      "default": true,
       "optional": true
     },
     {

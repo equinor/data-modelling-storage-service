@@ -143,6 +143,8 @@ def _validate_entity(
             _validate_primitive_attribute(
                 attributeDefinition, entity[attributeDefinition.name], f"{key}.{attributeDefinition.name}"
             )
+        elif attributeDefinition.attribute_type == "any" and attributeDefinition.name == "default":
+            continue
         else:
             _validate_complex_attribute(
                 attributeDefinition,
