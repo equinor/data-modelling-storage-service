@@ -9,12 +9,13 @@ from storage.internal.data_source_repository import get_data_source
 
 def get_document_use_case(
     user: User,
-    id_reference: str,
+    reference: str,
     depth: conint(gt=-1, lt=1000) = 999,  # type: ignore
     repository_provider=get_data_source,
 ):
+    """Get document by reference."""
     document_service = DocumentService(repository_provider=repository_provider, user=user)
-    if "://" not in id_reference:
-        id_reference = f"/{id_reference}"
-    node: Node = document_service.get_document(id_reference, depth)
+    if "://" not in reference:
+        reference = f"/{reference}"
+    node: Node = document_service.get_document(reference, depth)
     return tree_node_to_dict(node)

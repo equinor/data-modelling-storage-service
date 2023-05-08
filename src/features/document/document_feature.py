@@ -11,7 +11,6 @@ from common.responses import create_response, responses
 from .use_cases.add_document_to_path_use_case import add_document_to_path_use_case
 from .use_cases.add_file_use_case import add_file_use_case
 from .use_cases.add_raw_use_case import add_raw_use_case
-from .use_cases.get_document_by_path_use_case import get_document_by_path_use_case
 from .use_cases.get_document_use_case import get_document_use_case
 from .use_cases.remove_by_path_use_case import remove_by_path_use_case
 from .use_cases.remove_use_case import remove_use_case
@@ -20,41 +19,30 @@ from .use_cases.update_document_use_case import update_document_use_case
 router = APIRouter(tags=["default", "document"], prefix="/documents")
 
 
-@router.get("/{id_reference:path}", operation_id="document_get_by_id", response_model=dict, responses=responses)
+@router.get("/{reference:path}", operation_id="document_get", response_model=dict, responses=responses)
 @create_response(JSONResponse)
-def get_by_id(
-    id_reference: str,
+def get(
+    reference: str,
     depth: conint(gt=-1, lt=1000) = 999,  # type: ignore
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """
     Get document as JSON string.
 
-    - **id_reference**: <data_source>/<document_uuid>
+    - **reference**:
+      - By id: PROTOCOL://DATA SOURCE/$ID.Attribute
+      - By path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY.Attribute
+      - By query: PROTOCOL://DATA SOURCE/$ID.list(key=value)
+
+      The PROTOCOL is optional, and the default is dmss.
+
     - **depth**: Maximum depth for resolving nested documents.
     """
-    # Allow specification of absolute document ref in document_id
     return get_document_use_case(
         user=user,
-        id_reference=id_reference,
+        reference=reference,
         depth=depth,
     )
-
-
-@router.get(
-    "-by-path/{absolute_path:path}", operation_id="document_get_by_path", response_model=dict, responses=responses
-)
-@create_response(JSONResponse)
-def get_by_path(
-    absolute_path: str,
-    user: User = Depends(auth_w_jwt_or_pat),
-):
-    """
-    Get a document by its absolute path.
-
-    - **absolute_path**: <protocol>://<data_source>/<path>.<attribute>
-    """
-    return get_document_by_path_use_case(user=user, absolute_path=absolute_path)
 
 
 @router.put("/{id_reference:path}", operation_id="document_update", responses=responses)
