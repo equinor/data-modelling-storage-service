@@ -38,6 +38,7 @@ class MongoDBClient(RepositoryInterface):
 
     def get(self, uid: str) -> dict:
         result = self.handler[self.collection].find_one(filter={"_id": uid})
+        result.pop("_id")
         return result
 
     def add(self, uid: str, document: Dict) -> bool:
@@ -47,7 +48,8 @@ class MongoDBClient(RepositoryInterface):
         except DuplicateKeyError:
             raise BadRequestException
 
-    def update(self, uid: str, document: Dict) -> bool:
+    def update(self, uid: str, document: dict) -> bool:
+        document["_id"] = uid
         return self.handler[self.collection].replace_one({"_id": uid}, document, upsert=True).acknowledged
 
     def delete(self, uid: str) -> bool:
@@ -56,8 +58,10 @@ class MongoDBClient(RepositoryInterface):
     def find(self, filters: Dict) -> Optional[List[Dict]]:
         return self.handler[self.collection].find(filter=filters)
 
-    def find_one(self, filters: Dict) -> Optional[Dict]:
-        return self.handler[self.collection].find_one(filter=filters)
+    def find_one(self, filters: Dict) -> dict | None:
+        if result := self.handler[self.collection].find_one(filter=filters):
+            result.pop("_id")
+            return result
 
     def update_blob(self, uid: str, blob: bytearray):
         attempts = 0

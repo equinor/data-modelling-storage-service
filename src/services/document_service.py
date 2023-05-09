@@ -164,7 +164,7 @@ class DocumentService:
             node.entity = self.save_blob_data(node, repository)
 
         node.set_uid()  # Ensure the node has a _id
-        ref_dict = tree_node_to_ref_dict(node)
+        ref_dict = tree_node_to_ref_dict(node, data_source_id)
 
         # If the node is not contained, and has data, save it!
         if not node.storage_contained and ref_dict:
@@ -191,7 +191,7 @@ class DocumentService:
             return result
         return ref_dict
 
-    def get_document(self, reference: str, depth: int = 999) -> Node:
+    def get_document(self, reference: str, depth: int = 0) -> Node:
         resolved_reference: ResolvedReference = resolve_reference(reference, self.get_data_source)
 
         data_source: DataSource = self.get_data_source(resolved_reference.data_source_id)

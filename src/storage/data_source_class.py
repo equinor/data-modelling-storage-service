@@ -65,7 +65,7 @@ class DataSource:
         # Now just returns the first repo in the ordered_dict
         return next(iter(self.repositories.values()))
 
-    def _lookup(self, document_id) -> DocumentLookUp:
+    def _lookup(self, document_id: str) -> DocumentLookUp:
         if res := self.data_source_collection.find_one(
             filter={"_id": self.name, f"documentLookUp.{document_id}.lookup_id": document_id},
             projection={f"documentLookUp.{document_id}": True},
@@ -97,25 +97,31 @@ class DataSource:
             filter={"_id": self.name}, update={"$unset": {f"documentLookUp.{lookup_id}": ""}}
         )
 
-    def get(self, uid: Union[str, UUID4]) -> dict:
-        uid = str(uid)
-        lookup = self._lookup(uid)
+    def get(self, id: Union[str, UUID4]) -> dict:
+        id = str(id)
+        try:
+            lookup = self._lookup(id)
+        except NotFoundException as e:
+            raise e
         access_control(lookup.acl, AccessLevel.READ, self.user)
         repo = self.repositories[lookup.repository]
-        return repo.get(uid)
-
+        document = repo.get(lookup.database_id)
+        document.pop("_id", None)
+        document["$id"] = f"dmss://{self.name}/${lookup.lookup_id}"
+        return document
     # TODO: Implement find across repositories
     def find(self, filter: dict) -> Union[dict, List[dict]]:
         repo = self.get_default_repository()
 
         documents_with_access: List[dict] = []
         for entity in repo.find(filter):
-            if lookup := self._lookup(entity.get("_id")):
+            if lookup := self._lookup(entity['_id']):  # TODO: Make DB agnostic
                 try:
                     access_control(lookup.acl, AccessLevel.READ, self.user)
                     documents_with_access.append(entity)
                 except MissingPrivilegeException:
                     pass
+        # TODO: Replace $id with full reference
         return documents_with_access
 
     def update(self, document: dict, storage_attribute: StorageAttribute = None, parent_id: str | None = None) -> None:
@@ -133,15 +139,16 @@ class DataSource:
                     + " underscore, and dash are allowed characters"
                 )
 
-        document["_id"] = document.get("_id", str(uuid4()))  # Create _id if not yet created
-
         try:  # Get the documents lookup
-            lookup = self._lookup(document["_id"])
+            full_id = document.pop("$id", None)
+            if not full_id:
+                raise NotFoundException
+            lookup = self._lookup(full_id.split("$")[1])
         except NotFoundException:  # No lookup found --> Create a new document
             parent_lookup = None
 
             if parent_root_uid := parent_id.split(".")[0] if parent_id else None:
-                try:  # If parent_id passed, try to get it's lookup
+                try:  # If parent_id passed, try to get its lookup
                     parent_lookup = self._lookup(parent_root_uid)
                 except NotFoundException:  # The parent has not yet been created.
                     pass
@@ -157,14 +164,23 @@ class DataSource:
                 users=parent_acl.users,
                 others=parent_acl.others,
             )
+            lookup_id = str(uuid4())
+            if full_id:
+                try:
+                    lookup_id = full_id.split("$")[1]
+                    UUID4(lookup_id)
+                except ValueError:
+                    raise BadRequestException(f"Document id for '{full_id}' has an invalid UUID")
+                except IndexError:
+                    raise BadRequestException(f"Format of posted '$id'({full_id}) is invalid. Should be '<protocol>://<data source>/$<UUID>'")
             lookup = DocumentLookUp(
-                lookup_id=document["_id"], repository=repo.name, database_id=document["_id"], acl=acl
+                lookup_id=lookup_id, repository=repo.name, database_id=lookup_id, acl=acl
             )
             self._update_lookup(lookup)
 
         repo = self.repositories[lookup.repository]
         access_control(lookup.acl, AccessLevel.WRITE, self.user)
-        repo.update(document["_id"], document)
+        repo.update(lookup.database_id, document)
 
     def update_blob(self, uid, file) -> None:
         repo = self._get_repo_from_storage_attribute(
@@ -186,8 +202,8 @@ class DataSource:
         try:
             lookup = self._lookup(uid)
             access_control(lookup.acl, AccessLevel.WRITE, self.user)
-            self._remove_lookup(uid)
-            self.repositories[lookup.repository].delete_blob(uid)
+            self.repositories[lookup.repository].delete_blob(lookup.database_id)
+            self._remove_lookup(lookup.lookup_id)
         except NotFoundException:
             logger.warning(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
             pass
@@ -197,8 +213,8 @@ class DataSource:
         try:
             lookup = self._lookup(uid)
             access_control(lookup.acl, AccessLevel.WRITE, self.user)
-            self._remove_lookup(uid)
-            self.repositories[lookup.repository].delete(uid)
+            self.repositories[lookup.repository].delete(lookup.database_id)
+            self._remove_lookup(lookup.lookup_id)
         except NotFoundException:
             logger.warning(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
             pass

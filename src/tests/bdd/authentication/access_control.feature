@@ -10,7 +10,7 @@ Feature: Access Control
       | data-source | host | port  | username | password | tls   | name  | database  | collection | type     | dataTypes |
       |  test-DS    | db   | 27017 | maf      | maf      | false | blobs |  bdd-test | blobs      | mongo-db | blob      |
 
-    Given there exist document with id "1" in data source "test-DS"
+    Given there exist document with id "dmss://test-DS/$0f390843-3282-49fd-82fe-86ac668f241e"
     """
     {
       "type": "dmss://system/SIMOS/Blueprint",
@@ -26,7 +26,7 @@ Feature: Access Control
     """
 
   Scenario: Get owned document
-    Given AccessControlList for document "1" in data-source "test-DS" is
+    Given AccessControlList for document "0f390843-3282-49fd-82fe-86ac668f241e" in data-source "test-DS" is
     """
     {
       "owner": "johndoe"
@@ -34,7 +34,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a,b"
     Given authentication is enabled
-    Given I access the resource url "/api/documents/test-DS/$1"
+    Given I access the resource url "/api/documents/test-DS/$0f390843-3282-49fd-82fe-86ac668f241e"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -53,7 +53,7 @@ Feature: Access Control
     """
 
   Scenario: Get document with no access
-    Given AccessControlList for document "1" in data-source "test-DS" is
+    Given AccessControlList for document "0f390843-3282-49fd-82fe-86ac668f241e" in data-source "test-DS" is
     """
     {
       "owner": "somebody",
@@ -62,7 +62,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a,b"
     Given authentication is enabled
-    Given I access the resource url "/api/documents/test-DS/$1"
+    Given I access the resource url "/api/documents/test-DS/$0f390843-3282-49fd-82fe-86ac668f241e"
     When I make a "GET" request
     Then the response status should be "Forbidden"
     And the response should be
@@ -77,7 +77,7 @@ Feature: Access Control
     """
 
   Scenario: Get document with read access from role
-    Given AccessControlList for document "1" in data-source "test-DS" is
+    Given AccessControlList for document "0f390843-3282-49fd-82fe-86ac668f241e" in data-source "test-DS" is
     """
     {
       "owner": "somebody",
@@ -90,7 +90,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "someRole,anotherRole"
     Given authentication is enabled
-    Given I access the resource url "/api/documents/test-DS/$1"
+    Given I access the resource url "/api/documents/test-DS/$0f390843-3282-49fd-82fe-86ac668f241e"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -109,7 +109,7 @@ Feature: Access Control
     """
 
   Scenario: Get document with read access from users
-    Given AccessControlList for document "1" in data-source "test-DS" is
+    Given AccessControlList for document "0f390843-3282-49fd-82fe-86ac668f241e" in data-source "test-DS" is
     """
     {
       "owner": "somebody",
@@ -125,7 +125,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "someRole,anotherRole"
     Given authentication is enabled
-    Given I access the resource url "/api/documents/test-DS/$1"
+    Given I access the resource url "/api/documents/test-DS/$0f390843-3282-49fd-82fe-86ac668f241e"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -144,7 +144,7 @@ Feature: Access Control
     """
 
   Scenario: Update owned document
-    Given AccessControlList for document "1" in data-source "test-DS" is
+    Given AccessControlList for document "0f390843-3282-49fd-82fe-86ac668f241e" in data-source "test-DS" is
     """
     {
       "owner": "johndoe"
@@ -152,7 +152,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given I access the resource url "/api/documents/test-DS/$1"
+    Given I access the resource url "/api/documents/test-DS/$0f390843-3282-49fd-82fe-86ac668f241e"
     When i make a form-data "PUT" request
     """
     { "data":{
@@ -186,7 +186,7 @@ Feature: Access Control
     """
 
   Scenario: Update document with only READ access
-    Given AccessControlList for document "1" in data-source "test-DS" is
+    Given AccessControlList for document "0f390843-3282-49fd-82fe-86ac668f241e" in data-source "test-DS" is
     """
     {
       "owner": "someoneElse",
@@ -198,7 +198,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given I access the resource url "/api/documents/test-DS/$1"
+    Given I access the resource url "/api/documents/test-DS/$0f390843-3282-49fd-82fe-86ac668f241e"
     When i make a form-data "PUT" request
     """
     { "data":{
@@ -226,7 +226,7 @@ Feature: Access Control
     """
 
   Scenario: Delete document with only READ access
-    Given AccessControlList for document "1" in data-source "test-DS" is
+    Given AccessControlList for document "0f390843-3282-49fd-82fe-86ac668f241e" in data-source "test-DS" is
     """
     {
       "owner": "someoneElse"
@@ -234,7 +234,7 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/documents/test-DS/$1"
+    Given i access the resource url "/api/documents/test-DS/$0f390843-3282-49fd-82fe-86ac668f241e"
     When i make a "DELETE" request
     Then the response status should be "Forbidden"
     And the response should be
@@ -249,7 +249,7 @@ Feature: Access Control
     """
 
   Scenario: Delete owned document
-    Given AccessControlList for document "1" in data-source "test-DS" is
+    Given AccessControlList for document "0f390843-3282-49fd-82fe-86ac668f241e" in data-source "test-DS" is
     """
     {
       "owner": "johndoe"
@@ -257,10 +257,10 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/documents/test-DS/$1"
+    Given i access the resource url "/api/documents/test-DS/$0f390843-3282-49fd-82fe-86ac668f241e"
     When i make a "DELETE" request
     Then the response status should be "OK"
-    Given I access the resource url "/api/documents/test-DS/$1"
+    Given I access the resource url "/api/documents/test-DS/$0f390843-3282-49fd-82fe-86ac668f241e"
     When I make a "GET" request
     Then the response status should be "Not Found"
 
@@ -290,7 +290,7 @@ Feature: Access Control
     """
 
   Scenario: Add file - not contained - inherit ACL
-    Given there exist document with id "2" in data source "test-DS"
+    Given there exist document with id "dmss://test-DS/$1d390843-3282-49fd-82fe-86ac668f241e"
     """
     {
         "name": "root_package",
@@ -300,7 +300,7 @@ Feature: Access Control
         "content": []
     }
     """
-    Given AccessControlList for document "2" in data-source "test-DS" is
+    Given AccessControlList for document "1d390843-3282-49fd-82fe-86ac668f241e" in data-source "test-DS" is
     """
     {
       "owner": "johndoe",
@@ -311,11 +311,10 @@ Feature: Access Control
     """
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
-    Given i access the resource url "/api/documents/test-DS/$2.content"
+    Given i access the resource url "/api/documents/test-DS/$1d390843-3282-49fd-82fe-86ac668f241e.content"
     When i make a "POST" request
     """
     {
-      "_id": "3",
       "name": "new_document",
       "type": "dmss://system/SIMOS/Blueprint"
     }

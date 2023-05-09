@@ -16,10 +16,12 @@ from storage.internal.data_source_repository import (
 )
 
 
-@given('there exist document with id "{uid}" in data source "{data_source_id}"')
-def step_impl_2(context, uid: str, data_source_id: str):
+@given('there exist document with id "{uid}"')
+def step_impl_2(context, uid: str):
     document: dict = json.loads(context.text)
-    document["_id"] = uid
+    document["$id"] = uid
+    id_list = uid.split("/")
+    data_source_id = id_list[2]
     document_repository = get_data_source(data_source_id, context.user)
     document_repository.update(document)
 
@@ -53,4 +55,4 @@ def step_impl(context):
     logger.setLevel(logger_level_before)
 
     user = User(user_id=config.DMSS_ADMIN)
-    create_lookup_table_use_case("system/SIMOS/recipe_links", "DMSS", user)
+    create_lookup_table_use_case("dmss://system/SIMOS/recipe_links", "DMSS", user)

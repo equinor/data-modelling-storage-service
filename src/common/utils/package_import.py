@@ -24,11 +24,12 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
                 message=f"'{document['name']}' is a invalid document name. "
                 f"Only alphanumeric, underscore, and dash are allowed characters"
             )
-        document["_id"] = document.get("_id", str(uuid4()))
-        data_source.update(document)
+        reference = f"dmss://{data_source.name}/${str(uuid4())}"
+        document["$id"] = reference
+        data_source.update(document.copy())
         docs.append(
             {
-                "address": f"${document['_id']}",
+                "address": reference,
                 "type": SIMOS.REFERENCE.value,
                 "referenceType": REFERENCE_TYPES.LINK.value,
             }
@@ -37,9 +38,9 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
     return docs
 
 
-def import_package(path, user: User, data_source_name: str, is_root: bool = False) -> Union[Dict]:
+def import_package(path, user: User, data_source_name: str, is_root: bool = False) -> dict:
     data_source: DataSource = get_data_source(data_source_id=data_source_name, user=user)
-    package = {"name": os.path.basename(path), "type": SIMOS.PACKAGE.value, "isRoot": is_root}
+    package = {"$id": f"dmss://{data_source_name}/${str(uuid4())}","name": os.path.basename(path), "type": SIMOS.PACKAGE.value, "isRoot": is_root}
     try:
         resolved_reference: ResolvedReference = resolve_reference(
             f"dmss://{data_source.name}/{package['name']}",
@@ -69,10 +70,10 @@ def import_package(path, user: User, data_source_name: str, is_root: bool = Fals
             import_package(f"{path}/{folder}", user, is_root=False, data_source_name=data_source.name)
         )
 
-    data_source.update(package)
+    data_source.update(package.copy())
     logger.info(f"Imported package {package['name']}")
     return {
-        "address": f"${package['_id']}",
+        "address": f"{package['$id']}",
         "type": SIMOS.REFERENCE.value,
         "referenceType": REFERENCE_TYPES.LINK.value,
     }

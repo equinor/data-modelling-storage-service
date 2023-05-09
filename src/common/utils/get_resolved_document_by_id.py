@@ -39,6 +39,8 @@ def get_complete_sys_document(
     depth_count: int = 0,
 ) -> dict:
     address = link_or_storage_address["address"]
+    if not address:
+        raise ApplicationException("Invalid link. Missing 'address'", data=link_or_storage_address)
 
     if address.startswith("^"):
         # Replace ^ with an id reference that contains the current document id

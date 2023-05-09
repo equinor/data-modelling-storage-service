@@ -7,7 +7,7 @@ Feature: Export an entity's meta data
       | test-DS |
 
   Scenario: Fetch the meta of an entity with some meta info in root_package and some in the entity itself
-    Given there exist document with id "1" in data source "test-DS"
+    Given there exist document with id "dmss://test-DS/$2e9ff99f-9cb5-4afc-947b-a3224eee341f"
     """
     {
       "name": "TestData",
@@ -37,7 +37,7 @@ Feature: Export an entity's meta data
     }
     """
 
-    Given there exist document with id "3f9ff99f-9cb5-4afc-947b-a3224eee341f" in data source "test-DS"
+    Given there exist document with id "dmss://test-DS/$3f9ff99f-9cb5-4afc-947b-a3224eee341f"
     """
     {
       "type": "dmss://system/SIMOS/Blueprint",
@@ -88,7 +88,7 @@ Feature: Export an entity's meta data
     """
 
   Scenario: Fetch the meta of an entity with no meta data defined
-    Given there exist document with id "1" in data source "test-DS"
+    Given there exist document with id "dmss://test-DS/$4fd85b95-0c60-4e28-87fa-e767b26b41c5"
     """
     {
       "name": "TestData",
@@ -105,7 +105,7 @@ Feature: Export an entity's meta data
     }
     """
 
-    Given there exist document with id "3f9ff99f-9cb5-4afc-947b-a3224eee341f" in data source "test-DS"
+    Given there exist document with id "dmss://test-DS/$3f9ff99f-9cb5-4afc-947b-a3224eee341f"
     """
     {
       "type": "dmss://system/SIMOS/Blueprint",
@@ -124,7 +124,7 @@ Feature: Export an entity's meta data
     """
 
   Scenario: Fetch the meta of a root package
-    Given there exist document with id "1" in data source "test-DS"
+    Given there exist document with id "dmss://test-DS/$3f9ff99f-9cb5-4afc-947b-a3224eee341f"
     """
     {
       "name": "TestData",

@@ -45,13 +45,13 @@ def _collect_entity_meta_by_path(
             (
                 f
                 for f in resolve_references(package["content"], data_source, user)
-                if f.get("name", f.get("_id")) == target
+                if f.get("name", f.get("$id")) == target
             ),
             None,
         )
         if not file:
             raise NotFoundException(f"The document '{target}' could not be found in the package '{package['name']}'")
-        entity: dict = data_source.get(file["_id"])
+        entity: dict = data_source.get(file["$id"].split("$")[1])  # TODO: Use common get_document function
         return concat_meta_data(existing_meta, entity.get("_meta_"))
 
     next_package_ref = next(
@@ -59,10 +59,10 @@ def _collect_entity_meta_by_path(
     )
     if not next_package_ref:
         raise NotFoundException(f"The package {path_elements[0]} could not be found in the package {package['name']}")
-    next_package: dict = data_source.get(next_package_ref["_id"])
+    next_package: dict = data_source.get(next_package_ref["$id"])
     if not next_package:
         raise NotFoundException(
-            f"Could not find package '{next_package_ref['_id']}' in '{data_source.name}/{package['name']}'"
+            f"Could not find package '{next_package_ref['$id']}' in '{data_source.name}/{package['name']}'"
         )
     del path_elements[0]
     collected_meta = concat_meta_data(existing_meta, next_package.get("_meta_"))

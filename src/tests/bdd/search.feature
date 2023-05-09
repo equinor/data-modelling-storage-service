@@ -14,7 +14,7 @@ Feature: Explorer - Search entity
       | moreEntities   | db   | 27017 | maf      | maf      | false | repo2     |  bdd-test    | moreEntities | mongo-db | default   |
       | blueprints     | db   | 27017 | maf      | maf      | false | blob-repo |  bdd-test    | blueprints   | mongo-db | default   |
 
-    Given there exist document with id "1" in data source "blueprints"
+    Given there exist document with id "dmss://blueprints/$1adaab7c-a3a2-4e90-b665-b4755d4f4821"
     """
     {
         "name": "root_package",
@@ -23,29 +23,29 @@ Feature: Explorer - Search entity
         "isRoot": true,
         "content": [
             {
-                "address": "$2",
+                "address": "$2bdaab7c-a3a2-4e90-b665-b4755d4f4821",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "$3",
+                "address": "$3cfdaab7c-a3a2-4e90-b665-b4755d4f4821",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "$4",
+                "address": "$4ddaab7c-a3a2-4e90-b665-b4755d4f4821",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             },
             {
-                "address": "$5",
+                "address": "$5edaab7c-a3a2-4e90-b665-b4755d4f4821",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             }
         ]
     }
     """
-    Given there exist document with id "2" in data source "blueprints"
+    Given there exist document with id "dmss://blueprints/$2bdaab7c-a3a2-4e90-b665-b4755d4f4821"
     """
     {
       "type": "dmss://system/SIMOS/Blueprint",
@@ -94,7 +94,7 @@ Feature: Explorer - Search entity
     }
     """
 
-    Given there exist document with id "3" in data source "blueprints"
+    Given there exist document with id "dmss://blueprints/$3cdaab7c-a3a2-4e90-b665-b4755d4f4821"
     """
     {
       "name": "NestedVectorsBlueprint",
@@ -121,7 +121,7 @@ Feature: Explorer - Search entity
     }
     """
 
-    Given there exist document with id "4" in data source "blueprints"
+    Given there exist document with id "dmss://blueprints/$4ddaab7c-a3a2-4e90-b665-b4755d4f4821"
     """
     {
       "name": "NestedBlueprint",
@@ -139,7 +139,7 @@ Feature: Explorer - Search entity
     }
     """
 
-    Given there exist document with id "5" in data source "blueprints"
+    Given there exist document with id "dmss://blueprints/$5edaab7c-a3a2-4e90-b665-b4755d4f4821"
     """
     {
       "name": "NestedListBlueprint",
@@ -157,7 +157,7 @@ Feature: Explorer - Search entity
     }
     """
 
-    Given there exist document with id "1" in data source "entities"
+    Given there exist document with id "dmss://entities/$1adaab7c-a3a2-4e90-b665-b4755d4f4821"
     """
     {
       "name": "primitive_1",
@@ -169,7 +169,7 @@ Feature: Explorer - Search entity
     }
     """
 
-    Given there exist document with id "99" in data source "moreEntities"
+    Given there exist document with id "dmss://moreEntities/$4fdaab7c-a3a2-4e90-b665-b4755d4f4821"
     """
     {
       "name": "primitive_more",
@@ -181,7 +181,7 @@ Feature: Explorer - Search entity
     }
     """
 
-    Given there exist document with id "2" in data source "entities"
+    Given there exist document with id "dmss://entities/$2bdaab7c-a3a2-4e90-b665-b4755d4f4821"
     """
     {
       "name": "primitive_2",
@@ -193,7 +193,7 @@ Feature: Explorer - Search entity
     }
     """
 
-    Given there exist document with id "3" in data source "entities"
+    Given there exist document with id "dmss://entities/$3cdaab7c-a3a2-4e90-b665-b4755d4f4821"
     """
     {
       "name": "nestedVectors_1",
@@ -208,7 +208,7 @@ Feature: Explorer - Search entity
     }
     """
 
-    Given there exist document with id "4" in data source "entities"
+    Given there exist document with id "dmss://entities/$4ddaab7c-a3a2-4e90-b665-b4755d4f4821"
     """
     {
       "name": "nestedVectors_2",
@@ -223,7 +223,7 @@ Feature: Explorer - Search entity
     }
     """
 
-    Given there exist document with id "5" in data source "entities"
+    Given there exist document with id "dmss://entities/$5fdaab7c-a3a2-4e90-b665-b4755d4f4821"
     """
     {
       "name": "myNestedListEntity_1",
@@ -262,8 +262,8 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "entities/2": {
-        "_id": "2",
+      "entities/2bdaab7c-a3a2-4e90-b665-b4755d4f4821": {
+        "$id": "dmss://entitites/$2bdaab7c-a3a2-4e90-b665-b4755d4f4821",
         "name": "primitive_2",
         "description": "",
         "type": "dmss://blueprints/root_package/ValuesBlueprint",
@@ -271,8 +271,8 @@ Feature: Explorer - Search entity
         "an_integer": 10,
         "a_string": "def"
       },
-      "entities/1": {
-        "_id": "1",
+      "entities/1adaab7c-a3a2-4e90-b665-b4755d4f4821": {
+        "$id": "dmss://entities/$1adaab7c-a3a2-4e90-b665-b4755d4f4821",
         "name": "primitive_1",
         "description": "",
         "type": "dmss://blueprints/root_package/ValuesBlueprint",
@@ -298,8 +298,8 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "entities/2": {
-        "_id": "2",
+      "entities/2bdaab7c-a3a2-4e90-b665-b4755d4f4821": {
+        "$id": "dmss://entitites/$2bdaab7c-a3a2-4e90-b665-b4755d4f4821",
         "name": "primitive_2",
         "description": "",
         "type": "dmss://blueprints/root_package/ValuesBlueprint",
@@ -322,8 +322,8 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "entities/1": {
-        "_id": "1",
+      "entities/1adaab7c-a3a2-4e90-b665-b4755d4f4821": {
+        "$id": "dmss://entities/$1adaab7c-a3a2-4e90-b665-b4755d4f4821",
         "name": "primitive_1",
         "description": "",
         "type": "dmss://blueprints/root_package/ValuesBlueprint",
@@ -331,8 +331,8 @@ Feature: Explorer - Search entity
         "an_integer": 5,
         "a_string": "abc"
       },
-      "entities/2": {
-        "_id": "2",
+      "entities/2bdaab7c-a3a2-4e90-b665-b4755d4f4821": {
+        "_id": "2bdaab7c-a3a2-4e90-b665-b4755d4f4821",
         "name": "primitive_2",
         "description": "",
         "type": "dmss://blueprints/root_package/ValuesBlueprint",
@@ -355,8 +355,8 @@ Feature: Explorer - Search entity
     And the response should equal
     """
     {
-      "entities/3": {
-        "_id": "3",
+      "entities/3cdaab7c-a3a2-4e90-b665-b4755d4f4821": {
+        "_id": "dmss://entities/$3cdaab7c-a3a2-4e90-b665-b4755d4f4821",
         "name": "nestedVectors_1",
         "description": "Some nested vectors",
         "type": "dmss://blueprints/root_package/NestedBlueprint",
@@ -479,7 +479,7 @@ Feature: Explorer - Search entity
       "a_string": "abc"
     },
     "entities/2":     {
-      "_id": "2",
+      "$id": "2bdaab7c-a3a2-4e90-b665-b4755d4f4821",
       "name": "primitive_2",
       "description": "",
       "type": "dmss://blueprints/root_package/ValuesBlueprint",
@@ -541,8 +541,8 @@ Feature: Explorer - Search entity
       "an_integer": 5,
       "a_string": "abc"
     },
-    "entities/2":     {
-      "_id": "2",
+    "entities/2bdaab7c-a3a2-4e90-b665-b4755d4f4821":     {
+      "$id": "2bdaab7c-a3a2-4e90-b665-b4755d4f4821",
       "name": "primitive_2",
       "description": "",
       "type": "dmss://blueprints/root_package/ValuesBlueprint",

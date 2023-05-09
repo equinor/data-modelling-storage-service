@@ -109,7 +109,7 @@ class QueryItem:
 
         # Search inside an existing document (need to resolve any references first before trying to compare against filter)
         elements = [
-            resolve_reference(f"/{data_source.name}/{f['address']}", get_data_source).entity if is_reference(f) else f
+            resolve_reference(f['address'], get_data_source).entity if is_reference(f) else f
             for f in document
         ]  # Resolve any references
         default = (None, None)
@@ -144,19 +144,24 @@ def resolve_reference_items(
     reference_items: list[AttributeItem | QueryItem | IdItem],
     get_data_source: Callable,
     document=None,
-    path=None,
-):
+    path: list[str]| None=None,
+) -> tuple[dict | list, list[str]]:
     if len(reference_items) == 0:
         return document, path
     resolved_document, path_element = reference_items[0].resolve(document, data_source, get_data_source)
+    if not resolved_document:
+        raise NotFoundException(f"Failed to find document '{reference_items}'")
     if path is None:
         path = [path_element]
     else:
-        if resolved_document and "_id" in resolved_document:
+        if resolved_document and "$id" in resolved_document:
             # Found a new document, use that as new starting point for the attribute path
-            path = [resolved_document["_id"]]
+            path = [resolved_document["$id"].split("$")[1]]
         else:
             path.append(path_element)
+
+    # if not resolved_document:
+    #     raise NotFoundException(f"Failed to find document '{reference_items}'")
     return resolve_reference_items(data_source, reference_items[1:], get_data_source, resolved_document, path)
 
 
@@ -170,6 +175,8 @@ class ResolvedReference:
 
 def resolve_reference(reference: str, get_data_source: Callable) -> ResolvedReference:
     """Resolve the reference into a document."""
+    if not reference:
+        raise ApplicationException("Failed to resolve reference. Got empty reference.")
 
     if "://" in reference:  # Expects format: dmss://DATA_SOURCE/(PATH|ID).Attribute"""
         # The reference points to another data source

@@ -1066,8 +1066,8 @@ class TreenodeTestCase(unittest.TestCase):
 
     def test_tree_node_to_ref_dict(self):
         engine_package_node = get_engine_package_node()
-        engine_package_dict = tree_node_to_ref_dict(engine_package_node)
-        expected_ref = "$123"
+        engine_package_dict = tree_node_to_ref_dict(engine_package_node, data_source_id="testDS")
+        expected_ref = "dmss://testDS/$123"
         assert engine_package_dict["content"][0] == {
             "address": expected_ref,
             "type": SIMOS.REFERENCE.value,

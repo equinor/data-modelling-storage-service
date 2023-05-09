@@ -13,7 +13,7 @@ Feature: Explorer - Add contained node
       | entities       | db   | 27017 | maf      | maf      | false | repo1     |  bdd-test    | entities   | mongo-db | default   |
       | blueprints     | db   | 27017 | maf      | maf      | false | blob-repo |  bdd-test    | blueprints | mongo-db | default   |
 
-    Given there exist document with id "1" in data source "blueprints"
+    Given there exist document with id "dmss://blueprints/$0f390843-3282-49fd-82fe-86ac668f241c"
     """
     {
         "name": "root_package",
@@ -22,14 +22,14 @@ Feature: Explorer - Add contained node
         "isRoot": true,
         "content": [
             {
-                "address": "$2",
+                "address": "dmss://blueprints/$0f390843-3282-49fd-82fe-86ac668f241d",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
             }                                           
         ]
     }
     """
-    Given there exist document with id "2" in data source "blueprints"
+    Given there exist document with id "dmss://blueprints/$0f390843-3282-49fd-82fe-86ac668f241d"
     """
     {
       "type": "dmss://system/SIMOS/Blueprint",
@@ -47,7 +47,7 @@ Feature: Explorer - Add contained node
       ]
     }
     """
-    Given there exist document with id "1" in data source "entities"
+    Given there exist document with id "dmss://entities/$0f390843-3282-49fd-82fe-86ac668f241a"
     """
     {
       "name": "recursiveTest",
@@ -75,7 +75,7 @@ Feature: Explorer - Add contained node
     """
 
   Scenario: Add nested contained node
-    Given i access the resource url "/api/documents/entities/$1.meAgain.1.meAgain"
+    Given i access the resource url "/api/documents/entities/$0f390843-3282-49fd-82fe-86ac668f241a.meAgain.1.meAgain"
     When i make a "POST" request
     """
     {
@@ -87,5 +87,5 @@ Feature: Explorer - Add contained node
     Then the response status should be "OK"
     And the response should contain
     """
-    {"uid": "1.meAgain.1.meAgain.0"}
+    {"uid": "0f390843-3282-49fd-82fe-86ac668f241a.meAgain.1.meAgain.0"}
     """
