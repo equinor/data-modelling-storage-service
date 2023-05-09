@@ -15,32 +15,37 @@ def resolve_reference_list(
 ) -> list:
     if not values:  # Return an empty list
         return values
-    resolved: list[dict | list] = []
 
-    if isinstance(values[0], list):  # Call recursively for nested lists
-        resolved = [
+    value_sample = values[0]
+
+    if isinstance(value_sample, list):  # Call recursively for nested lists
+        return [
             resolve_reference_list(
                 value, document_repository, get_data_source, current_id, depth, depth_count + 1, resolve_links
             )
             for value in values
         ]
-    for value in values:
-        if is_reference(value):
-            if resolve_links or not is_link(value):
-                resolved.append(
-                    get_complete_sys_document(
-                        value, document_repository, get_data_source, current_id, depth, depth_count + 1, resolve_links
-                    )
-                )
-        elif isinstance(value, dict):
-            resolved.append(
-                resolve_document(
+
+    if is_reference(value_sample):
+        if resolve_links or not is_link(value_sample):
+            return [
+                get_complete_sys_document(
                     value, document_repository, get_data_source, current_id, depth, depth_count + 1, resolve_links
                 )
+                for value in values
+            ]
+        return values
+
+    if isinstance(value_sample, dict):
+        return [
+            resolve_document(
+                value, document_repository, get_data_source, current_id, depth, depth_count + 1, resolve_links
             )
-        else:
-            resolved.append(value)
-    return resolved
+            for value in values
+        ]
+
+    # Values are primitive, return as is.
+    return values
 
 
 def get_complete_sys_document(

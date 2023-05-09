@@ -585,7 +585,7 @@ class DocumentService:
         # The SIMOS/Entity type can reference any type (used by Package)
         referenced_document: Node = self.get_document(f"{data_source_id}/{reference.address}")
         if not referenced_document:
-            raise NotFoundException(uid=f"{data_source_id}/{referenced_document['_id']}")
+            raise NotFoundException(debug=f"{data_source_id}/{referenced_document['_id']}")
         if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document.type:
             raise BadRequestException(
                 f"The referenced entity should be of type '{attribute_node.type}'"
