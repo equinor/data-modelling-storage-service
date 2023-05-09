@@ -34,7 +34,7 @@ def resolve_reference_list(
                 )
                 for value in values
             ]
-        return values
+        return values  # If we're not going to resolve references, return them as is
 
     if isinstance(value_sample, dict):
         return [

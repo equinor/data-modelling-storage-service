@@ -23,7 +23,7 @@ router = APIRouter(tags=["default", "document"], prefix="/documents")
 @create_response(JSONResponse)
 def get(
     reference: str,
-    depth: conint(gt=-1, lt=1000) = 999,  # type: ignore
+    depth: conint(gt=-1, lt=1000) = 0,  # type: ignore
     resolve_links: bool = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
