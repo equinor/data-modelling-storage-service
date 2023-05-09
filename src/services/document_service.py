@@ -191,7 +191,8 @@ class DocumentService:
             return result
         return ref_dict
 
-    def get_document(self, reference: str, depth: int = 999) -> Node:
+    # TODO: Dont return Node. Doing this is 33% slower
+    def get_document(self, reference: str, depth: int = 0, resolve_links: bool = False) -> Node:
         resolved_reference: ResolvedReference = resolve_reference(reference, self.get_data_source)
 
         data_source: DataSource = self.get_data_source(resolved_reference.data_source_id)
@@ -203,6 +204,7 @@ class DocumentService:
             self.get_data_source,
             resolved_reference.document_id,
             depth + len(resolved_reference.attribute_path.split(".")),
+            resolve_links,
         )
 
         node: Node = tree_node_from_dict(
@@ -554,7 +556,9 @@ class DocumentService:
             data_source.update_access_control(document_id, acl)
             return
 
-        root_node = self.get_document(f"{data_source_id}/{document_id}")
+        # TODO: Updating ACL for Links should only be additive
+        # TODO: ACL for StorageReferences should always be identical to parent document
+        root_node = self.get_document(f"{data_source_id}/{document_id}", 99, resolve_links=True)
         data_source.update_access_control(root_node.node_id, acl)
         for child in root_node.children:
             for node in child.traverse():
