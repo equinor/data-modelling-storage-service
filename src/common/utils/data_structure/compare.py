@@ -25,11 +25,6 @@ def pretty_eq(expected, actual):
             print_pygments(a)
         if a != b:
             raise Exception
-    except KeyError:
+    except Exception as e:
         print_pygments(actual)
-        raise Exception
-    except IndexError:
-        print_pygments(actual)
-        raise Exception
-    except Exception:
-        raise Exception
+        raise e

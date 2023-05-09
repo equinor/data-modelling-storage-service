@@ -34,7 +34,7 @@ def resolve_reference_list(
                 )
                 for value in values
             ]
-        return values  # If we're not going to resolve references, return them as is
+        return values  # If we're not resolving references, return them as is
 
     if isinstance(value_sample, dict):
         return [
@@ -111,9 +111,11 @@ def resolve_document(
                         entity[key] = get_complete_sys_document(
                             value, data_source, get_data_source, current_id, depth, depth_count + 1, resolve_links
                         )
+                        continue
+                    entity[key] = value
                 else:
                     entity[key] = resolve_document(
-                        value, data_source, get_data_source, current_id, depth, depth_count + 1
+                        value, data_source, get_data_source, current_id, depth, depth_count + 1, resolve_links
                     )
 
     return entity

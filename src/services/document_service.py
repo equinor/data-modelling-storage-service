@@ -204,6 +204,7 @@ class DocumentService:
             self.get_data_source,
             resolved_reference.document_id,
             depth + len(resolved_reference.attribute_path.split(".")),
+            0,
             resolve_links,
         )
 
@@ -251,29 +252,6 @@ class DocumentService:
             return
         else:
             delete_document(repository, document_id)
-
-    def rename_document(self, data_source_id: str, document_id: str, name: str, parent_uid: str = None):
-        # Only root-packages have no parent_id
-        if not parent_uid:
-            root_node: Node = self.get_document(f"{data_source_id}/{document_id}")
-            target_node = root_node
-
-        # Grab the parent, and set target based on dotted document_id
-        else:
-            root_node: Node = self.get_document(f"{data_source_id}/{parent_uid}")  # type: ignore
-            target_node = root_node.search(document_id)
-
-            if not target_node:
-                raise NotFoundException(
-                    message=f"Document with id '{document_id}' in data source '{data_source_id}' could not be found"
-                )
-
-        target_node.entity["name"] = name
-        self.save(root_node, data_source_id)
-
-        logger.info(f"Rename document '{target_node.node_id}' to '{name}")
-
-        return {"uid": target_node.node_id}
 
     def update_document(
         self,

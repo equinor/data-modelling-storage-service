@@ -6,4 +6,4 @@ def is_reference(entity):
 
 
 def is_link(reference: dict) -> bool:
-    return reference.get("referenceType", REFERENCE_TYPES.LINK.value) == REFERENCE_TYPES.LINK.LINK
+    return reference.get("referenceType", REFERENCE_TYPES.LINK.value) == REFERENCE_TYPES.LINK.value
