@@ -16,7 +16,7 @@ def create_lookup_table_use_case(
 
     document_service = DocumentService(repository_provider=repository_provider, user=user)
 
-    recipe_package = document_service.get_document(f"/{recipe_package_path}")
+    recipe_package = document_service.get_document(f"/{recipe_package_path}", depth=999, resolve_links=True)
 
     lookup: Lookup = Lookup()
 

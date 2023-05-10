@@ -203,9 +203,9 @@ class DocumentService:
             data_source,
             self.get_data_source,
             resolved_reference.document_id,
-            depth + len(resolved_reference.attribute_path.split(".")),
-            0,
-            resolve_links,
+            depth=depth + len(resolved_reference.attribute_path.split(".")),
+            depth_count=0,
+            resolve_links=resolve_links,
         )
 
         node: Node = tree_node_from_dict(
@@ -304,7 +304,7 @@ class DocumentService:
         parent_attribute = attribute.split(".")[0:-1]
         leaf_attribute = attribute.split(".")[-1]
 
-        root: Node = self.get_document(f"{data_source}/{parent_id}")
+        root: Node = self.get_document(f"{data_source}/{parent_id}", depth=99, resolve_links=True)
         if not root:
             raise NotFoundException(uid=parent_id)
         parent: Node = root.get_by_path(parent_attribute)
@@ -448,7 +448,7 @@ class DocumentService:
             if not document.type == SIMOS.PACKAGE.value or not document_dict.get("isRoot", False):
                 raise BadRequestException("Only root packages may be added to the root of a data source")
             try:
-                if self.get_document(f"/{data_source_id}/{document_dict['name']}"):
+                if self.get_document(f"/{data_source_id}/{document_dict['name']}", resolve_links=True, depth=99):
                     raise ValidationException(
                         message=f"A root package named '{document_dict['name']}' already exists",
                         data={"dataSource": data_source_id, "document": document_dict},
@@ -459,7 +459,7 @@ class DocumentService:
             document_repository.update(document_dict)
             return {"uid": document_dict["_id"]}
 
-        target: Node = self.get_document(f"/{data_source_id}/{path}")
+        target: Node = self.get_document(f"/{data_source_id}/{path}", resolve_links=True, depth=99)
 
         for node in target.traverse():
             print(node.uid)
