@@ -191,7 +191,8 @@ class DocumentService:
             return result
         return ref_dict
 
-    def get_document(self, reference: str, depth: int = 999) -> Node:
+    # TODO: Dont return Node. Doing this is 33% slower
+    def get_document(self, reference: str, depth: int = 0, resolve_links: bool = False) -> Node:
         resolved_reference: ResolvedReference = resolve_reference(reference, self.get_data_source)
 
         data_source: DataSource = self.get_data_source(resolved_reference.data_source_id)
@@ -203,6 +204,8 @@ class DocumentService:
             self.get_data_source,
             resolved_reference.document_id,
             depth + len(resolved_reference.attribute_path.split(".")),
+            0,
+            resolve_links,
         )
 
         node: Node = tree_node_from_dict(
@@ -249,29 +252,6 @@ class DocumentService:
             return
         else:
             delete_document(repository, document_id)
-
-    def rename_document(self, data_source_id: str, document_id: str, name: str, parent_uid: str = None):
-        # Only root-packages have no parent_id
-        if not parent_uid:
-            root_node: Node = self.get_document(f"{data_source_id}/{document_id}")
-            target_node = root_node
-
-        # Grab the parent, and set target based on dotted document_id
-        else:
-            root_node: Node = self.get_document(f"{data_source_id}/{parent_uid}")  # type: ignore
-            target_node = root_node.search(document_id)
-
-            if not target_node:
-                raise NotFoundException(
-                    message=f"Document with id '{document_id}' in data source '{data_source_id}' could not be found"
-                )
-
-        target_node.entity["name"] = name
-        self.save(root_node, data_source_id)
-
-        logger.info(f"Rename document '{target_node.node_id}' to '{name}")
-
-        return {"uid": target_node.node_id}
 
     def update_document(
         self,
@@ -554,7 +534,9 @@ class DocumentService:
             data_source.update_access_control(document_id, acl)
             return
 
-        root_node = self.get_document(f"{data_source_id}/{document_id}")
+        # TODO: Updating ACL for Links should only be additive
+        # TODO: ACL for StorageReferences should always be identical to parent document
+        root_node = self.get_document(f"{data_source_id}/{document_id}", 99, resolve_links=True)
         data_source.update_access_control(root_node.node_id, acl)
         for child in root_node.children:
             for node in child.traverse():
@@ -581,7 +563,7 @@ class DocumentService:
         # The SIMOS/Entity type can reference any type (used by Package)
         referenced_document: Node = self.get_document(f"{data_source_id}/{reference.address}")
         if not referenced_document:
-            raise NotFoundException(uid=f"{data_source_id}/{referenced_document['_id']}")
+            raise NotFoundException(debug=f"{data_source_id}/{referenced_document['_id']}")
         if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document.type:
             raise BadRequestException(
                 f"The referenced entity should be of type '{attribute_node.type}'"

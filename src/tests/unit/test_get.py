@@ -56,7 +56,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(lambda x, y: document_repository)
         with pytest.raises(Exception, match=r"The protocol 'wrong' is not supported"):
-            tree_node_to_dict(document_service.get_document("datasource/$1"))
+            tree_node_to_dict(document_service.get_document("datasource/$1", resolve_links=True, depth=9))
 
     def test_references(self):
         my_car_rental = {
@@ -252,8 +252,10 @@ class DocumentServiceTestCase(unittest.TestCase):
             return document_repository
 
         document_service = get_mock_document_service(mock_data_source)
-        directly = tree_node_to_dict(document_service.get_document("test_data/$2"))
-        complex_package = tree_node_to_dict(document_service.get_document("test_data/$1"))
+        directly = tree_node_to_dict(document_service.get_document("test_data/$2", resolve_links=True, depth=99))
+        complex_package = tree_node_to_dict(
+            document_service.get_document("test_data/$1", resolve_links=True, depth=99)
+        )
 
         assert isinstance(directly, dict)
 
@@ -347,7 +349,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
 
         document_service = get_mock_document_service(lambda x, y: document_repository)
-        root = tree_node_to_dict(document_service.get_document("datasource/$1"))
+        root = tree_node_to_dict(document_service.get_document("datasource/$1", 99, resolve_links=True))
 
         assert isinstance(root, dict)
 
@@ -405,7 +407,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = mock_get
 
         document_service = get_mock_document_service(lambda x, y: document_repository)
-        root = tree_node_to_dict(document_service.get_document("datasource/$1"))
+        doc = document_service.get_document("datasource/$1", resolve_links=True, depth=99)
+        root = tree_node_to_dict(doc)
 
         assert isinstance(root, dict)
 
