@@ -1,38 +1,30 @@
-def _get_value(obj, key):
-    list_end = key.find("]")
-    is_list = list_end > 0
-    if is_list:
-        list_index = int(key[list_end - 1])
-        return obj[list_index]
-    return obj[key]
+import re
+from typing import Any
 
 
-def find(obj, path):
-    # Base case
-    if len(path) == 0:
-        return obj
-    key = str(path[0])
-    rest = path[1:]
-    nested = _get_value(obj, key)
-    return find(nested, rest)
+def _get_value(obj: object, key: str):
+    match = re.search(r"^\[([0-9]+)\]$", key)
+    if isinstance(obj, list) and match:
+        return obj[int(match.group(1))]
+    if isinstance(obj, dict) and not match:
+        return obj[key]
+
+    raise ValueError(f"Invalid path. Object {obj} has no key {key}")
 
 
-def has(obj, name: str):
-    if isinstance(obj, dict):
-        return name in obj
-    return hasattr(obj, name)
+def find(obj: dict | list, path: list[str | list[int]]) -> Any:
+    """
+    Find a value in a nested object
 
-
-def get(obj, name: str, **kwargs):
-    use_default = "default" in kwargs
-    if isinstance(obj, dict):
-        try:
-            return obj[name]
-        except KeyError as e:
-            if use_default:
-                return kwargs["default"]
-            raise e
-    if use_default:
-        return getattr(obj, name, kwargs["default"])
-    else:
-        return getattr(obj, name)
+    :param obj: a nested dict or list. Note that all dict keys must be strings
+    :param path: a list, where each element can be either a parameter or an array index. Ex: ["myKey", "[10]", [10]]
+    :return: the value the path leads to
+    :raise:
+        NotFoundException if the path format does not match the type of obj
+        IndexError if the list does not have the index requested
+        KeyError if the dict does not have the key requested
+    """
+    result = obj
+    for key in path:
+        result = _get_value(result, str(key))
+    return result
