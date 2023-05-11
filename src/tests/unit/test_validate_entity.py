@@ -221,11 +221,9 @@ class ValidateEntityTestCase(unittest.TestCase):
             "name": "myCarRental",
             "cars": [
                 {
-                    "type": "test_data/complex/CarTest",
+                    "type": "test_data/complex/RentalCar",
                     "name": "Volvo 240",
                     "plateNumber": "123",
-                    "wheels": [],
-                    "wheel": {"name": "Wheel", "power": 0.0, "type": "test_data/complex/WheelTest"},
                     "engine": {
                         "name": "myEngine",
                         "description": "Some description",
@@ -237,12 +235,6 @@ class ValidateEntityTestCase(unittest.TestCase):
                         "power": 120,
                         "type": "test_data/complex/EngineTest",
                     },
-                    "seats": 2,
-                    "is_sedan": True,
-                    "floatValues": [2.1, 0, 4.2],
-                    "intValues": [1, 5, 4, 2],
-                    "boolValues": [True, False, True],
-                    "stringValues": ["one", "two", "three"],
                 },
             ],
             "customers": [],

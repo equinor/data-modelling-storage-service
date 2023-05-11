@@ -16,11 +16,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             "_id": "1",
             "type": "test_data/complex/CarRental",
             "name": "myCarRental",
-            "description": "",
-            "extends": [SIMOS.NAMED_ENTITY.value],
             "cars": [
-                {"type": "test_data/complex/CarTest", "name": "Volvo 240", "plateNumber": "123"},
-                {"type": "test_data/complex/CarTest", "name": "Ferrari", "plateNumber": "456"},
+                {"type": "test_data/complex/RentalCar", "name": "Volvo 240", "plateNumber": "123"},
+                {"type": "test_data/complex/RentalCar", "name": "Ferrari", "plateNumber": "456"},
             ],
             "customers": [
                 {
@@ -63,11 +61,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             "_id": "2",
             "type": "test_data/complex/CarRental",
             "name": "myCarRental",
-            "description": "",
-            "extends": [SIMOS.NAMED_ENTITY.value],
             "cars": [
                 {
-                    "type": "test_data/complex/CarTest",
+                    "type": "test_data/complex/RentalCar",
                     "name": "Volvo 240",
                     "plateNumber": "123",
                     "engine": {
@@ -77,7 +73,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     },
                 },
                 {
-                    "type": "test_data/complex/CarTest",
+                    "type": "test_data/complex/RentalCar",
                     "name": "Ferrari",
                     "plateNumber": "456",
                     "engine": {
@@ -259,59 +255,22 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         assert isinstance(directly, dict)
 
-        actual = {
-            "_id": "2",
-            "type": "test_data/complex/CarRental",
-            "name": "myCarRental",
-            "cars": [{"type": "test_data/complex/CarTest", "name": "Volvo 240"}],
-            "customers": [
-                {
-                    "type": "test_data/complex/Customer",
-                    "name": "Full absolute path prefixed with protocol",
-                    "car": {"type": "test_data/complex/CarTest", "name": "Volvo 240"},
-                },
-                {
-                    "type": "test_data/complex/Customer",
-                    "name": "Relative from the destination data source by id",
-                    "car": {"type": "test_data/complex/CarTest", "name": "Volvo 240"},
-                },
-                {
-                    "type": "test_data/complex/Customer",
-                    "name": "Relative from the destination data source by path",
-                    "car": {"type": "test_data/complex/CarTest", "name": "Volvo 240"},
-                },
-                {
-                    "type": "test_data/complex/Customer",
-                    "name": "Relative from the destination data source by query",
-                    "car": {"type": "test_data/complex/CarTest", "name": "Volvo 240"},
-                },
-                {
-                    "type": "test_data/complex/Customer",
-                    "name": "Relative from the destination data source by query on array",
-                    "car": {"type": "test_data/complex/CarTest", "name": "Volvo 240"},
-                },
-                {
-                    "type": "test_data/complex/Customer",
-                    "name": "Test",
-                    "car": {"type": "test_data/complex/CarTest", "name": "Volvo 240"},
-                },
-                {
-                    "type": "test_data/complex/Customer",
-                    "name": "Test2",
-                    "car": {"type": "test_data/complex/CarTest", "name": "Volvo 240"},
-                },
-                {
-                    "type": "test_data/complex/Customer",
-                    "name": "Relative from the document",
-                    "car": {"type": "test_data/complex/CarTest", "name": "Volvo 240"},
-                },
-                {
-                    "type": "test_data/complex/Customer",
-                    "name": "Relative from the document with query on plate number",
-                    "car": {"type": "test_data/complex/CarTest", "name": "Ferrari"},
-                },
-            ],
-        }
+        actual_engine = {**my_engine}
+        actual_engine.pop("_id")
+        actual_volvo = {**my_car_rental["cars"][0], "engine": actual_engine}
+        actual_ferrari = {**my_car_rental["cars"][1], "engine": actual_engine}
+        actual_customers = [
+            {**my_car_rental["customers"][0], "car": actual_volvo},
+            {**my_car_rental["customers"][1], "car": actual_volvo},
+            {**my_car_rental["customers"][2], "car": actual_volvo},
+            {**my_car_rental["customers"][3], "car": actual_volvo},
+            {**my_car_rental["customers"][4], "car": actual_volvo},
+            {**my_car_rental["customers"][5], "car": actual_volvo},
+            {**my_car_rental["customers"][6], "car": actual_volvo},
+            {**my_car_rental["customers"][7], "car": actual_volvo},
+            {**my_car_rental["customers"][8], "car": actual_ferrari},
+        ]
+        actual = {**my_car_rental, "cars": [actual_volvo, actual_ferrari], "customers": actual_customers}
 
         assert pretty_eq(actual, directly) is None
         assert pretty_eq(actual, complex_package["content"][0]) is None
