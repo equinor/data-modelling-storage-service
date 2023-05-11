@@ -1,6 +1,6 @@
 import unittest
 
-from common.utils.data_structure.compare import pretty_eq
+from common.utils.data_structure.compare import get_and_print_diff
 from features.export.use_cases.export_meta_use_case import concat_meta_data
 
 
@@ -55,8 +55,8 @@ class ConcatMetaTestCase(unittest.TestCase):
             ],
         }
 
-        result = pretty_eq(expected, concat_meta)
-        self.assertEqual(result, None)
+        result = get_and_print_diff(concat_meta, expected)
+        self.assertEqual(result, [])
 
     def test_concat_entity_with_override(self):
         existing_meta = {
@@ -115,5 +115,5 @@ class ConcatMetaTestCase(unittest.TestCase):
             ],
         }
 
-        result = pretty_eq(expected, concat_meta)
-        self.assertEqual(result, None)
+        result = get_and_print_diff(concat_meta, expected)
+        self.assertEqual(result, [])

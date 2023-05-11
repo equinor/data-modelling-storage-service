@@ -5,7 +5,7 @@ from common.tree_node_serializer import (
     tree_node_to_dict,
     tree_node_to_ref_dict,
 )
-from common.utils.data_structure.compare import pretty_eq
+from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
@@ -708,7 +708,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         root.update(update_0)
 
-        assert pretty_eq({**update_0, "_id": "1"}, tree_node_to_dict(root)) is None
+        assert get_and_print_diff(tree_node_to_dict(root), {**update_0, "_id": "1"}) == []
 
         update_1 = {
             "name": "New-name",
@@ -731,7 +731,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         root.update(update_1)
 
-        assert pretty_eq({**update_1, "_id": "1"}, tree_node_to_dict(root)) is None
+        assert get_and_print_diff(tree_node_to_dict(root), {**update_1, "_id": "1"}) == []
 
         update_2 = {
             "name": "New-name",
@@ -754,7 +754,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         root.update(update_2)
 
-        assert pretty_eq({**update_2, "_id": "1"}, tree_node_to_dict(root)) is None
+        assert get_and_print_diff(tree_node_to_dict(root), {**update_2, "_id": "1"}) == []
 
         expected = {
             "_id": "1",
@@ -868,7 +868,7 @@ class TreenodeTestCase(unittest.TestCase):
             ],
         }
 
-        assert pretty_eq(actual, tree_node_to_dict(root)) is None
+        assert get_and_print_diff(actual, tree_node_to_dict(root)) == []
 
     def test_recursive_from_dict(self):
         document_1 = {"_id": "1", "name": "Parent", "description": "", "type": "recursive_blueprint", "im_me!": {}}
@@ -962,7 +962,7 @@ class TreenodeTestCase(unittest.TestCase):
             document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
         )
 
-        assert pretty_eq(actual, tree_node_to_dict(root)) is None
+        assert get_and_print_diff(actual, tree_node_to_dict(root)) == []
 
     def test_to_dict(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}

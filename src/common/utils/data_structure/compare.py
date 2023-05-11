@@ -12,19 +12,13 @@ def print_pygments(json_object):
     print(highlight(json_str, JsonLexer(), TerminalFormatter()))
 
 
-def pretty_eq(expected, actual):
-    try:
-        a = traverse_compare(expected, actual)
-        b = []
-        if a != b:
-            print("Actual:")
-            print_pygments(actual)
-            print("Expected:")
-            print_pygments(expected)
-            print("Differences:")
-            print_pygments(a)
-        if a != b:
-            raise Exception
-    except Exception as e:
+def get_and_print_diff(actual: dict | list, expected: dict | list):
+    diff = traverse_compare(actual, expected)
+    if diff:
+        print("Actual:")
         print_pygments(actual)
-        raise e
+        print("Expected:")
+        print_pygments(expected)
+        print("Differences:")
+        print_pygments(diff)
+    return diff

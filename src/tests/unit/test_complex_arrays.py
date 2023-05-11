@@ -2,7 +2,7 @@ import unittest
 from unittest import mock, skip
 
 from authentication.models import User
-from common.utils.data_structure.compare import pretty_eq
+from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from enums import SIMOS
 from storage.repositories.file import LocalFileRepository
@@ -182,8 +182,8 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         }
         # fmt: on
 
-        assert pretty_eq(expected_1, doc_storage["1"]) is None
-        assert pretty_eq(expected_2, doc_storage[list(doc_storage)[1]]) is None
+        assert get_and_print_diff(doc_storage["1"], expected_1) == []
+        assert get_and_print_diff(doc_storage[list(doc_storage)[1]], expected_2) == []
 
     def test_update_complex_array(self):
         # fmt: off

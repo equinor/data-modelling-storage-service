@@ -3,7 +3,7 @@ from unittest import mock
 
 from authentication.models import User
 from common.exceptions import BadRequestException, ValidationException
-from common.utils.data_structure.compare import pretty_eq
+from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
 from enums import SIMOS
@@ -215,7 +215,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             data={"type": "basic_blueprint", "name": "new_entity", "description": "This is my new entity"},
         )
 
-        assert pretty_eq(doc_1_after, doc_storage["1"]) is None
+        assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
 
     def test_add_invalid_child_type(self):
         repository = mock.Mock()
@@ -309,7 +309,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             {"name": "new_entity", "description": "This is my new entity", "type": "basic_blueprint"},
         )
 
-        assert pretty_eq(doc_1_after, doc_storage["1"]) is None
+        assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
 
     def test_add_duplicate(self):
         repository = mock.Mock()
