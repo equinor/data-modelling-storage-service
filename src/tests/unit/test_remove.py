@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 from authentication.models import User
-from common.utils.data_structure.compare import pretty_eq
+from common.utils.data_structure.compare import get_and_print_diff
 from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_utils import get_mock_document_service
 
@@ -73,7 +73,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(repository_provider=repository_provider)
         document_service.remove_document(data_source_id="testing", document_id="1")
         expected = {"2": {"uid": "2", "_id": "2", "name": "a_reference", "description": "", "type": "basic_blueprint"}}
-        assert pretty_eq(expected, doc_storage) is None
+        assert get_and_print_diff(doc_storage, expected) == []
 
     def test_remove_nested(self):
         repository = mock.Mock()

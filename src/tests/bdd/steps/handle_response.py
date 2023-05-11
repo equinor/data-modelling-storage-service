@@ -6,7 +6,7 @@ from behave import then
 from deepdiff import DeepDiff
 from dictdiffer import diff
 
-from common.utils.data_structure.compare import pretty_eq, print_pygments
+from common.utils.data_structure.compare import get_and_print_diff, print_pygments
 from common.utils.data_structure.find import find
 
 STATUS_CODES = {
@@ -115,7 +115,7 @@ def step_impl_should_be(context):
     else:
         actual = context.response.json()
         data = json.loads(context.text) or json.loads(context.data)
-        pretty_eq(data, actual)
+        assert get_and_print_diff(actual, data) == []
 
 
 @then("the length of the response should not be zero")

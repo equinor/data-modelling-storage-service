@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from common.utils.data_structure.compare import pretty_eq
+from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
 from tests.unit.mock_utils import get_mock_document_service
@@ -56,4 +56,4 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
         node.update(doc_1_after)
         document_service.save(node, "testing")
 
-        assert pretty_eq(doc_1_after, doc_storage["1"]) is None
+        assert get_and_print_diff(doc_storage["1"], doc_1_after) == []

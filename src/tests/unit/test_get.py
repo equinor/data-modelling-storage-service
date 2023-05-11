@@ -4,7 +4,7 @@ from unittest import mock
 import pytest
 
 from common.tree_node_serializer import tree_node_to_dict
-from common.utils.data_structure.compare import pretty_eq
+from common.utils.data_structure.compare import get_and_print_diff
 from common.utils.data_structure.is_same import is_same
 from enums import REFERENCE_TYPES, SIMOS, Protocols
 from tests.unit.mock_utils import get_mock_document_service
@@ -272,8 +272,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         ]
         actual = {**my_car_rental, "cars": [actual_volvo, actual_ferrari], "customers": actual_customers}
 
-        assert pretty_eq(actual, directly) is None
-        assert pretty_eq(actual, complex_package["content"][0]) is None
+        assert get_and_print_diff(actual, directly) == []
+        assert get_and_print_diff(actual, complex_package["content"][0]) == []
 
     def test_get_complete_document(self):
         document_1 = {
@@ -322,7 +322,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "references": [document_3, document_4],
         }
 
-        assert pretty_eq(actual, root) is None
+        assert get_and_print_diff(actual, root) == []
 
     def test_get_complete_nested_reference(self):
         document_1 = {
@@ -386,4 +386,4 @@ class DocumentServiceTestCase(unittest.TestCase):
             },
         }
 
-        assert pretty_eq(actual, root) is None
+        assert get_and_print_diff(actual, root) == []
