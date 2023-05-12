@@ -403,7 +403,7 @@ car_rental = {
         {
             "name": "cars",
             "dimensions": "*",
-            "attributeType": "test_data/complex/CarTest",
+            "attributeType": "test_data/complex/RentalCar",
             "type": "system/SIMOS/BlueprintAttribute",
         },
         {
@@ -415,6 +415,36 @@ car_rental = {
     ],
 }
 
+car_rental_car = {
+    "type": "system/SIMOS/Blueprint",
+    "name": "RentalCar",
+    "attributes": [
+        {
+            "name": "name",
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "default": "RentalCar",
+        },
+        {
+            "name": "type",
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "default": "test_data/complex/RentalCar",
+        },
+        {
+            "name": "plateNumber",
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+        },
+        {
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "engine",
+            "attributeType": "test_data/complex/EngineTest",
+            "optional": True,
+        },
+    ],
+}
+
 car_rental_customer = {
     "name": "Customer",
     "type": "system/SIMOS/Blueprint",
@@ -422,7 +452,7 @@ car_rental_customer = {
         {"name": "name", "attributeType": "string", "type": "system/SIMOS/BlueprintAttribute"},
         {
             "name": "car",
-            "attributeType": "test_data/complex/CarTest",
+            "attributeType": "test_data/complex/RentalCar",
             "type": "system/SIMOS/BlueprintAttribute",
             "contained": False,
         },
@@ -501,6 +531,8 @@ class BlueprintProvider:
             return Blueprint(wheel, type)
         if type == "test_data/complex/CarRental":
             return Blueprint(car_rental, type)
+        if type == "test_data/complex/RentalCar":
+            return Blueprint(car_rental_car, type)
         if type == "test_data/complex/Customer":
             return Blueprint(car_rental_customer, type)
         if type == "Parent":
