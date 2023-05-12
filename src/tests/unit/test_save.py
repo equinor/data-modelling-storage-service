@@ -50,7 +50,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         node: Node = document_service.get_document("testing/$1")
         contained_node: Node = node.get_by_path("references.1".split("."))
         contained_node.update({"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "basic_blueprint"})
-        document_service.save(node, "testing", update_uncontained=True)
+        document_service.save(
+            node,
+            "testing",
+        )
 
         assert doc_storage["4"] == {
             "_id": "4",
@@ -202,12 +205,17 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "name": "first",
                     "description": "I'm the first nested document, contained",
                     "uncontained_in_every_way": {
-                        "_id": "2",
-                        "name": "im_a_uncontained_attribute",
-                        "type": "basic_blueprint",
-                        "description": "I'm the second nested document, uncontained",
+                        "address": "$2",
+                        "referenceType": REFERENCE_TYPES.LINK.value,
+                        "type": SIMOS.REFERENCE.value,
                     },
                 },
+            },
+            "2": {
+                "_id": "2",
+                "name": "im_a_uncontained_attribute",
+                "type": "basic_blueprint",
+                "description": "I'm the second nested document, uncontained",
             },
             "3": {
                 "_id": "3",
@@ -228,7 +236,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         node: Node = tree_node_from_dict(
             doc_storage["1"], document_service.get_blueprint, uid="1", recipe_provider=mock_storage_recipe_provider
         )
-        document_service.save(node, "testing", update_uncontained=True)
+        document_service.save(
+            node,
+            "testing",
+        )
 
         assert doc_storage["2"]["description"] == "I'm the second nested document, uncontained"
         assert (
@@ -238,7 +249,11 @@ class DocumentServiceTestCase(unittest.TestCase):
         # Testing updating the reference
         node: Node = document_service.get_document("testing/$1")
         target_node = node.get_by_path(["i_have_a_uncontained_attribute", "uncontained_in_every_way"])
-        target_node.update(doc_storage["3"])
+        target_node.update({
+                        "address": "$3",
+                        "referenceType": REFERENCE_TYPES.LINK.value,
+                        "type": SIMOS.REFERENCE.value,
+                    })
         document_service.save(node, "testing")
         assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"]["address"] == "$3"
 
@@ -297,7 +312,6 @@ class DocumentServiceTestCase(unittest.TestCase):
                     },
                 },
             },
-            update_uncontained=False,
         )
         # Test that the "2" document has not been overwritten
         assert doc_storage["2"].get("description") == "I'm the second nested document, uncontained"
@@ -349,7 +363,12 @@ class DocumentServiceTestCase(unittest.TestCase):
             "nested": {},
             "references": [],
         }
-        document_service.update_document("testing", "$1", new_data, attribute="a", update_uncontained=True)
+        document_service.update_document(
+            "testing",
+            "$1",
+            new_data,
+            attribute="a",
+        )
 
         assert doc_storage["1"]["a"]["description"] == "SOME DESCRIPTION"
         assert doc_storage["1"]["a"]["reference"]["description"] == "A NEW DESCRIPTION HERE"

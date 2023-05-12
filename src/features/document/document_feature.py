@@ -48,7 +48,6 @@ def update(
     id_reference: str,
     data: Json = Form(...),
     files: Optional[List[UploadFile]] = File(None),
-    update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Update document
@@ -59,7 +58,6 @@ def update(
         id_reference=id_reference,
         data=data,
         files=files,
-        update_uncontained=update_uncontained,
     )
 
 

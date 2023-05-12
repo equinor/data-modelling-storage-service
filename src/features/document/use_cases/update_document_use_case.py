@@ -14,7 +14,6 @@ def update_document_use_case(
     id_reference: str,
     data: Union[dict, list],
     files: Optional[List[UploadFile]] = File(None),
-    update_uncontained: Optional[bool] = True,
     repository_provider=get_data_source,
 ):
     data_source_id, document_id, attribute = split_dmss_ref(id_reference)
@@ -25,7 +24,6 @@ def update_document_use_case(
         attribute=attribute,
         data=data,
         files={f.filename: f.file for f in files} if files else None,
-        update_uncontained=update_uncontained,
     )
     # Do not invalidate the blueprint cache if it was not a blueprint that was changed
     if "type" in document["data"] and document["data"]["type"] == SIMOS.BLUEPRINT.value:

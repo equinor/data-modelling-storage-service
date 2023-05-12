@@ -78,7 +78,10 @@ class DataSourceTestCase(unittest.TestCase):
             recipe_provider=mock_storage_recipe_provider,
         )
 
-        document_service.save(node, "testing", update_uncontained=True)
+        document_service.save(
+            node,
+            "testing",
+        )
 
         # Test that both repos gets written into
         assert blob_doc_storage and default_doc_storage
@@ -202,7 +205,10 @@ class DataSourceTestCase(unittest.TestCase):
             blob_doc, document_service.get_blueprint, uid="1", recipe_provider=mock_storage_recipe_provider
         )
 
-        document_service.save(node, "testing", update_uncontained=True)
+        document_service.save(
+            node,
+            "testing",
+        )
 
         # Test that both repos gets written into
         assert blob_doc_storage and default_doc_storage

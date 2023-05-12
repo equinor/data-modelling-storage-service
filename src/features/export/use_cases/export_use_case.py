@@ -25,7 +25,6 @@ def save_node_to_zipfile(
             document_node,
             data_source_id,
             storage_client,
-            update_uncontained=True,
             combined_document_meta=document_meta,
         )
 

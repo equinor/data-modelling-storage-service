@@ -47,60 +47,63 @@ def tree_node_to_dict(node: Node | ListNode) -> list[Any] | dict:
 
 
 def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
-    """
-    Rebuilds the entity as it should be stored based on the passed child entities that can be either contained
-    documents, or references.
-    """
-    if node.is_empty():
-        return node.entity
-    data = {}
-    if node.uid:
-        data = {"_id": node.uid}
+    pass
 
-    # Always add 'type', regardless of blueprint
-    try:
-        data["type"] = node.type
-    except KeyError:
-        raise BadRequestException(f"The node '{node.uid}' is missing the 'type' attributes")
 
-    # Primitive
-    # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.
-    if node.blueprint is not None:
-        for attribute in node.blueprint.get_primitive_types():
-            if attribute.name in node.entity:
-                data[attribute.name] = node.entity[attribute.name]
-
-    # Add _meta_ attribute if it exists in the entity
-    if "_meta_" in node.entity:
-        data["_meta_"] = node.entity["_meta_"]
-
-    # Complex
-    for child in node.children:
-        if child.is_array():
-            # If the content of the list is not contained, i.e. references.
-            if not child.storage_contained:
-                data[child.key] = [
-                    {
-                        "type": SIMOS.REFERENCE.value,
-                        "address": f"${child.uid}",
-                        "referenceType": REFERENCE_TYPES.STORAGE.value
-                        if child.contained
-                        else REFERENCE_TYPES.LINK.value,
-                    }
-                    for child in child.children
-                ]
-            else:
-                data[child.key] = [tree_node_to_ref_dict(list_child) for list_child in child.children]
-        else:
-            if not child.contained and child.entity:
-                data[child.key] = {
-                    "type": SIMOS.REFERENCE.value,
-                    "address": f"${child.uid}",
-                    "referenceType": REFERENCE_TYPES.STORAGE.value if child.contained else REFERENCE_TYPES.LINK.value,
-                }
-            else:
-                data[child.key] = tree_node_to_ref_dict(child)
-    return data
+#     """
+#     Rebuilds the entity as it should be stored based on the passed child entities that can be either contained
+#     documents, or references.
+#     """
+#     if node.is_empty():
+#         return node.entity
+#     data = {}
+#     if node.uid:
+#         data = {"_id": node.uid}
+#
+#     # Always add 'type', regardless of blueprint
+#     try:
+#         data["type"] = node.type
+#     except KeyError:
+#         raise BadRequestException(f"The node '{node.uid}' is missing the 'type' attributes")
+#
+#     # Primitive
+#     # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.
+#     if node.blueprint is not None:
+#         for attribute in node.blueprint.get_primitive_types():
+#             if attribute.name in node.entity:
+#                 data[attribute.name] = node.entity[attribute.name]
+#
+#     # Add _meta_ attribute if it exists in the entity
+#     if "_meta_" in node.entity:
+#         data["_meta_"] = node.entity["_meta_"]
+#
+#     # Complex
+#     for child in node.children:
+#         if child.is_array():
+#             # If the content of the list is not contained, i.e. references.
+#             if not child.storage_contained:
+#                 data[child.key] = [
+#                     {
+#                         "type": SIMOS.REFERENCE.value,
+#                         "address": f"${child.uid}",
+#                         "referenceType": REFERENCE_TYPES.STORAGE.value
+#                         if child.contained
+#                         else REFERENCE_TYPES.LINK.value,
+#                     }
+#                     for child in child.children
+#                 ]
+#             else:
+#                 data[child.key] = [tree_node_to_ref_dict(list_child) for list_child in child.children]
+#         else:
+#             if not child.contained and child.entity:
+#                 data[child.key] = {
+#                     "type": SIMOS.REFERENCE.value,
+#                     "address": f"${child.uid}",
+#                     "referenceType": REFERENCE_TYPES.STORAGE.value if child.contained else REFERENCE_TYPES.LINK.value,
+#                 }
+#             else:
+#                 data[child.key] = tree_node_to_ref_dict(child)
+#     return data
 
 
 def tree_node_from_dict(

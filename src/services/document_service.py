@@ -11,11 +11,7 @@ from common.exceptions import (
     NotFoundException,
     ValidationException,
 )
-from common.tree_node_serializer import (
-    tree_node_from_dict,
-    tree_node_to_dict,
-    tree_node_to_ref_dict,
-)
+from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from common.utils.build_complex_search import build_mongo_query
 from common.utils.delete_documents import delete_document
 from common.utils.get_blueprint import get_blueprint_provider
@@ -114,12 +110,11 @@ class DocumentService:
         data_source_id: str,
         repository=None,
         path="",
-        update_uncontained: bool = False,
         combined_document_meta: dict | None = None,
     ) -> Dict:
         """
         Recursively saves a Node.
-        Digs down to the leaf child, and based on storageContained,
+        Digs down to the leaf child, and based on _model contained_,
         either saves the entity and returns the Reference, OR returns the entire entity.
 
         combined_document_meta is the combined meta information.
@@ -130,11 +125,18 @@ class DocumentService:
         Here, combined_document_meta is the combined _meta_ information of node A, B and C.
         (this meta info can be found with _collect_entity_meta_by_path() util function).-
         """
+
         if not node.entity:
             return {}
         # If not passed a custom repository to save into, use the DocumentService's storage
         if not repository:
             repository: DataSource = self.repository_provider(data_source_id, self.user)  # type: ignore
+
+        # For model uncontained entities, only references are allowed values
+        if not node.attribute.contained and node.entity["type"] != SIMOS.REFERENCE.value:
+            raise BadRequestException(
+                f"Type for uncontained attribute '{node.attribute.name}' should be a reference.", data=node.entity
+            )
 
         # If the node is a package, we build the path string to be used by filesystem like repositories.
         # Also, check for duplicate names in the package.
@@ -150,46 +152,40 @@ class DocumentService:
                         )
                     contentListNames.append(child.name)
 
-        if update_uncontained:  # If flag is set, dig down and save uncontained documents
-            for child in node.children:
-                if child.is_array():
-                    [
-                        self.save(x, data_source_id, repository, path, update_uncontained, combined_document_meta)
-                        for x in child.children
-                    ]
-                else:
-                    self.save(child, data_source_id, repository, path, update_uncontained, combined_document_meta)
+        for child in node.children:
+            if child.is_array():
+                [self.save(x, data_source_id, repository, path, combined_document_meta) for x in child.children]
+            else:
+                self.save(child, data_source_id, repository, path, combined_document_meta)
 
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
 
         node.set_uid()  # Ensure the node has a _id
-        ref_dict = tree_node_to_ref_dict(node)
 
-        # If the node is not contained, and has data, save it!
-        if not node.storage_contained and ref_dict:
+        # If the node is model contained and not storage contained, save it!
+        if node.contained and not node.storage_contained:
             # To ensure the node has a _id
             if node.uid is None:
                 raise ApplicationException(f"The document with name `{node.name}` is missing uid")
 
             # Expand this when adding new repositories requiring PATH
             if isinstance(repository, ZipFileClient):
-                ref_dict["__path__"] = path
-                ref_dict["__combined_document_meta__"] = combined_document_meta
+                node.entity["__path__"] = path
+                node.entity["__combined_document_meta__"] = combined_document_meta
             parent_uid = node.parent.node_id if node.parent else None
             validate_entity_against_self(tree_node_to_dict(node), self.get_blueprint)
             repository.update(
-                ref_dict,
+                node.entity,
                 node.get_context_storage_attribute(),
                 parent_id=parent_uid,
             )
-            result = {
+            return {
                 "type": SIMOS.REFERENCE.value,
                 "address": f"${node.uid}",
-                "referenceType": REFERENCE_TYPES.LINK.value,
+                "referenceType": REFERENCE_TYPES.STORAGE.value,
             }
-            return result
-        return ref_dict
+        return node.entity
 
     # TODO: Dont return Node. Doing this is 33% slower
     def get_document(self, reference: str, depth: int = 0, resolve_links: bool = False) -> Node:
@@ -260,7 +256,6 @@ class DocumentService:
         data: Union[dict, list],
         attribute: str | None = None,
         files: dict = None,
-        update_uncontained: bool = True,
     ):
         validate_entity_against_self(data, self.get_blueprint)
         # TODO: Since we are only fetching 1 lvl here, any updates on nested uncontained attributes by dott reference
@@ -282,11 +277,14 @@ class DocumentService:
         if files:
             self._merge_entity_and_files(target_node, files)
 
-        self.save(target_node, data_source_id, update_uncontained=update_uncontained)
+        self.save(target_node, data_source_id)
 
         # If the target was a contained child of root, update root as well with any contained attributes
         if attribute and target_node.storage_contained:
-            self.save(root, data_source_id, update_uncontained=False)
+            self.save(
+                root,
+                data_source_id,
+            )
 
         logger.info(f"Updated document '{target_node.node_id}''")
         return {"data": tree_node_to_dict(target_node)}
@@ -432,7 +430,6 @@ class DocumentService:
         path: str | None,
         document: Entity,
         files: dict[str, BinaryIO],
-        update_uncontained=False,
     ):
         """Add en entity to path
         path: dotted path on format 'RootPackage/folder/entity.attribute.attribute.
@@ -486,18 +483,18 @@ class DocumentService:
         if files:
             self._merge_entity_and_files(new_node, files)
 
-        self.save(new_node, data_source_id, update_uncontained=update_uncontained)
+        self.save(new_node, data_source_id)
 
         if target.type == SIMOS.PACKAGE.value:
             target = target.children[0]  # Set target to be the packages content
         if isinstance(target, ListNode):
             new_node.parent = target
             target.add_child(new_node)
-            self.save(target.parent, data_source_id, update_uncontained=False)
+            self.save(target.parent, data_source_id)
         else:
             new_node.parent = target.parent
             target = new_node
-            self.save(target, data_source_id, update_uncontained=False)
+            self.save(target, data_source_id)
 
         return {"uid": new_node.node_id}
 
@@ -552,53 +549,3 @@ class DocumentService:
             document_id = document_id[1:]
         lookup = data_source.get_access_control(document_id)
         return lookup.acl
-
-    def insert_reference(
-        self, data_source_id: str, document_id: str, reference: Reference, attribute_path: str
-    ) -> dict:
-        root: Node = self.get_document(f"{data_source_id}/{document_id}")
-        attribute_node: Node = root.get_by_path(attribute_path.split("."))
-
-        # Check that target exists and has correct values
-        # The SIMOS/Entity type can reference any type (used by Package)
-        referenced_document: Node = self.get_document(f"{data_source_id}/{reference.address}")
-        if not referenced_document:
-            raise NotFoundException(debug=f"{data_source_id}/{referenced_document['_id']}")
-        if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document.type:
-            raise BadRequestException(
-                f"The referenced entity should be of type '{attribute_node.type}'"
-                f", but was '{referenced_document.type}'"
-            )
-
-        # If the node to update is a list, append to end
-        if attribute_node.is_array():
-            referenced_document.attribute = attribute_node.attribute
-            attribute_node.add_child(referenced_document)
-        else:
-            attribute_node.entity = tree_node_to_dict(referenced_document)
-            attribute_node.uid = str(referenced_document.uid)
-            attribute_node.type = referenced_document.type
-
-        self.save(root, data_source_id, update_uncontained=False)
-
-        logger.info(
-            f"Inserted reference to '{referenced_document.uid}'" f" as '{attribute_path}' in '{root.name}'({root.uid})"
-        )
-
-        return tree_node_to_dict(root)
-
-    def remove_reference(self, data_source_id: str, document_id: str, attribute_path: str) -> dict:
-        root: Node = self.get_document(f"{data_source_id}/{document_id}")
-        attribute_node = root.get_by_path(attribute_path.split("."))
-        if not attribute_node:
-            raise Exception(f"Could not find the '{attribute_path}' Node on '{document_id}'")
-
-        # If we are removing a reference from a list, pop child with posted index
-        if attribute_node.parent.is_array():
-            attribute_node.parent.children.pop(int(attribute_path.split(".")[-1]))
-        else:
-            attribute_node.entity = {}
-        self.save(root, data_source_id)
-        logger.info(f"Removed reference for '{attribute_path}' in '{root.name}'({root.uid})")
-
-        return tree_node_to_dict(root)
