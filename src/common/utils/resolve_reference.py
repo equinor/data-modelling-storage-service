@@ -73,12 +73,18 @@ class IdItem:
         # Get the document from the data source
         return data_source.get(self.id), self.id
 
+    def __repr__(self):
+        return f"${self.id}"
+
 
 @dataclass
 class QueryItem:
     """Query a list for a document."""
 
     query: str
+
+    def __repr__(self):
+        return f'Query="{self.query}"'
 
     def filter(self) -> Dict[str, Any]:
         """Create filter from query string."""
@@ -128,6 +134,9 @@ class AttributeItem:
 
     path: str
 
+    def __repr__(self):
+        return f'Attribute="{self.path}"'
+
     def resolve(self, document: dict | list, data_source: DataSource, get_data_source: Callable) -> Tuple[dict, str]:
         try:
             result = find(document, [self.path])
@@ -149,6 +158,11 @@ def resolve_reference_items(
     if len(reference_items) == 0:
         return document, path
     resolved_document, path_element = reference_items[0].resolve(document, data_source, get_data_source)
+    if not resolved_document:
+        raise NotFoundException(
+            f"No entity matches '{reference_items[0]}' in document 'dmss://{data_source.name}/${'.'.join(path)}'",
+            data={"reference_items": [str(reference_items[0])]},
+        )
     if path is None:
         path = [path_element]
     else:
@@ -157,6 +171,7 @@ def resolve_reference_items(
             path = [resolved_document["_id"]]
         else:
             path.append(path_element)
+
     return resolve_reference_items(data_source, reference_items[1:], get_data_source, resolved_document, path)
 
 
@@ -170,6 +185,8 @@ class ResolvedReference:
 
 def resolve_reference(reference: str, get_data_source: Callable) -> ResolvedReference:
     """Resolve the reference into a document."""
+    if not reference:
+        raise ApplicationException("Failed to resolve reference. Got empty reference.")
 
     if "://" in reference:  # Expects format: dmss://DATA_SOURCE/(PATH|ID).Attribute"""
         # The reference points to another data source

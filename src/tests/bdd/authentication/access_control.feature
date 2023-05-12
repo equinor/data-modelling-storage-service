@@ -68,11 +68,11 @@ Feature: Access Control
     And the response should be
     """
     {
-    "status": 403,
-    "type": "MissingPrivilegeException",
-    "message": "The requested operation requires 'READ' privileges",
-    "debug": "Action denied because of insufficient permissions",
-    "data": null
+      "data": null,
+      "debug": "The requested operation requires 'READ' privileges. Action denied because of insufficient permissions",
+      "message": "Failed to get document referenced with '/test-DS/$1'",
+      "status": 403,
+      "type": "MissingPrivilegeException"
     }
     """
 

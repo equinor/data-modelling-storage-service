@@ -1,7 +1,11 @@
 from copy import deepcopy
 from typing import Any, Callable
 
-from common.exceptions import BadRequestException
+from common.exceptions import (
+    ApplicationException,
+    BadRequestException,
+    NotFoundException,
+)
 from common.utils.logging import logger
 from config import config
 from domain_classes.blueprint import Blueprint
@@ -141,6 +145,11 @@ def tree_node_from_dict(
         attribute=node_attribute,
         recipe_provider=recipe_provider,
     )
+
+    try:
+        node.blueprint
+    except NotFoundException as e:
+        raise ApplicationException(f"Failed to find blueprint with reference '{node.type}'", debug=str(e))
 
     for child_attribute in node.blueprint.get_none_primitive_types():
         if child_attribute.name == "_meta_":

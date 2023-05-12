@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Dict, List, Union
+from typing import Dict, List
 from uuid import uuid4
 
 from authentication.models import User
@@ -37,7 +37,7 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
     return docs
 
 
-def import_package(path, user: User, data_source_name: str, is_root: bool = False) -> Union[Dict]:
+def import_package(path, user: User, data_source_name: str, is_root: bool = False) -> dict:
     data_source: DataSource = get_data_source(data_source_id=data_source_name, user=user)
     package = {"name": os.path.basename(path), "type": SIMOS.PACKAGE.value, "isRoot": is_root}
     try:
