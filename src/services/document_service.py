@@ -193,31 +193,36 @@ class DocumentService:
 
     # TODO: Dont return Node. Doing this is 33% slower
     def get_document(self, reference: str, depth: int = 0, resolve_links: bool = False) -> Node:
-        resolved_reference: ResolvedReference = resolve_reference(reference, self.get_data_source)
+        try:
+            resolved_reference: ResolvedReference = resolve_reference(reference, self.get_data_source)
 
-        data_source: DataSource = self.get_data_source(resolved_reference.data_source_id)
-        document: dict = data_source.get(resolved_reference.document_id)
+            data_source: DataSource = self.get_data_source(resolved_reference.data_source_id)
+            document: dict = data_source.get(resolved_reference.document_id)
 
-        resolved_document: dict = resolve_document(
-            document,
-            data_source,
-            self.get_data_source,
-            resolved_reference.document_id,
-            depth=depth + len(resolved_reference.attribute_path.split(".")),
-            depth_count=0,
-            resolve_links=resolve_links,
-        )
+            resolved_document: dict = resolve_document(
+                document,
+                data_source,
+                self.get_data_source,
+                resolved_reference.document_id,
+                depth=depth + len(resolved_reference.attribute_path.split(".")),
+                depth_count=0,
+                resolve_links=resolve_links,
+            )
 
-        node: Node = tree_node_from_dict(
-            resolved_document,
-            uid=resolved_reference.document_id,
-            blueprint_provider=self.get_blueprint,
-            recipe_provider=self.get_storage_recipes,
-        )
+            node: Node = tree_node_from_dict(
+                resolved_document,
+                uid=resolved_reference.document_id,
+                blueprint_provider=self.get_blueprint,
+                recipe_provider=self.get_storage_recipes,
+            )
 
-        if resolved_reference.attribute_path:
-            node = node.get_by_path(resolved_reference.attribute_path.split("."))
-        return node
+            if resolved_reference.attribute_path:
+                node = node.get_by_path(resolved_reference.attribute_path.split("."))
+            return node
+        except (NotFoundException, ApplicationException) as e:
+            e.debug = f"{e.message}. {e.debug}"
+            e.message = f"Failed to get document referenced with '{reference}'"
+            raise e
 
     def remove_document(self, data_source_id: str, document_id: str, attribute: str = None):
         """

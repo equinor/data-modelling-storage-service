@@ -58,6 +58,8 @@ def get_complete_sys_document(
     resolve_links: bool = False,
 ) -> dict:
     address = reference["address"]
+    if not address:
+        raise ApplicationException("Invalid link. Missing 'address'", data=reference)
 
     if address.startswith("^"):
         # Replace ^ with an id reference that contains the current document id

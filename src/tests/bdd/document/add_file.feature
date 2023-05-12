@@ -409,11 +409,11 @@ Feature: Explorer - Add file
     And the response should be
     """
     {
+    "data": null,
+    "debug": "Document with id '-1' was not found in the 'test-DS' data-source. The requested resource could not be found",
+    "message": "Failed to get document referenced with 'test-DS/$-1'",
     "status": 404,
-    "type": "NotFoundException",
-    "message": "Document with id '-1' was not found in the 'test-DS' data-source",
-    "debug": "The requested resource could not be found",
-    "data": null
+    "type": "NotFoundException"
     }
     """
 

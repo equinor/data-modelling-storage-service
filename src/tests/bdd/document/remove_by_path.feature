@@ -23,11 +23,11 @@ Feature: Explorer - Remove by path
     And the response should be
   """
   {
+  "data": null,
+  "debug": "Document with id '1' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+  "message": "Failed to get document referenced with '/data-source-name/$1'",
   "status": 404,
-  "type": "NotFoundException",
-  "message": "Document with id '1' was not found in the 'data-source-name' data-source",
-  "debug": "The requested resource could not be found",
-  "data": null
+  "type": "NotFoundException"
   }
   """
     Given I access the resource url "/api/documents/data-source-name/$2"
@@ -36,11 +36,11 @@ Feature: Explorer - Remove by path
     And the response should be
   """
   {
+  "data": null,
+  "debug": "Document with id '2' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+  "message": "Failed to get document referenced with '/data-source-name/$2'",
   "status": 404,
-  "type": "NotFoundException",
-  "message": "Document with id '2' was not found in the 'data-source-name' data-source",
-  "debug": "The requested resource could not be found",
-  "data": null
+  "type": "NotFoundException"
   }
   """
     Given I access the resource url "/api/documents/data-source-name/$3"
@@ -49,11 +49,11 @@ Feature: Explorer - Remove by path
     And the response should be
   """
   {
+  "data": null,
+  "debug": "Document with id '3' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+  "message": "Failed to get document referenced with '/data-source-name/$3'",
   "status": 404,
-  "type": "NotFoundException",
-  "message": "Document with id '3' was not found in the 'data-source-name' data-source",
-  "debug": "The requested resource could not be found",
-  "data": null
+  "type": "NotFoundException"
   }
   """
 
@@ -72,11 +72,11 @@ Feature: Explorer - Remove by path
     And the response should be
     """
     {
+    "data": null,
+    "debug": "Document with id '2' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+    "message": "Failed to get document referenced with '/data-source-name/$2'",
     "status": 404,
-    "type": "NotFoundException",
-    "message": "Document with id '2' was not found in the 'data-source-name' data-source",
-    "debug": "The requested resource could not be found",
-    "data": null
+    "type": "NotFoundException"
     }
     """
 
@@ -90,11 +90,11 @@ Feature: Explorer - Remove by path
     And the response should be
     """
     {
+    "data": null,
+    "debug": "Document with id '3' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+    "message": "Failed to get document referenced with '/data-source-name/$3'",
     "status": 404,
-    "type": "NotFoundException",
-    "message": "Document with id '3' was not found in the 'data-source-name' data-source",
-    "debug": "The requested resource could not be found",
-    "data": null
+    "type": "NotFoundException"
     }
     """
 
@@ -108,11 +108,11 @@ Feature: Explorer - Remove by path
     And the response should be
   """
   {
-  "status": 404,
-  "type": "NotFoundException",
-  "message": "Document with id '2' was not found in the 'data-source-name' data-source",
-  "debug": "The requested resource could not be found",
-  "data": null
+    "data": null,
+    "debug": "Document with id '2' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+    "message": "Failed to get document referenced with '/data-source-name/$2'",
+    "status": 404,
+    "type": "NotFoundException"
   }
   """
     Given I access the resource url "/api/documents/data-source-name/$3"
@@ -121,11 +121,11 @@ Feature: Explorer - Remove by path
     And the response should be
   """
   {
+  "data": null,
+  "debug": "Document with id '3' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+  "message": "Failed to get document referenced with '/data-source-name/$3'",
   "status": 404,
-  "type": "NotFoundException",
-  "message": "Document with id '3' was not found in the 'data-source-name' data-source",
-  "debug": "The requested resource could not be found",
-  "data": null
+  "type": "NotFoundException"
   }
   """
 
