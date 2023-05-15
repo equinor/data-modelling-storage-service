@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from starlette.responses import JSONResponse, Response
 
 from authentication.authentication import auth_w_jwt_or_pat
@@ -21,15 +21,18 @@ router = APIRouter(tags=["default", "lookup-table"])
     responses={**responses},
 )
 @create_response()
-def create_lookup(recipe_package: str, application: str, user: User = Depends(auth_w_jwt_or_pat)):
+def create_lookup(
+    application: str, recipe_package_paths: list[str] = Query(), user: User = Depends(auth_w_jwt_or_pat)
+):
     """
     Create a recipe lookup table from a package containing RecipeLinks.
     Associate it with an application.
     This can be used for setting Ui- and StorageRecipes for specific applications.
 
     - **application**: name of application
+    - **recipe_package_paths**: List with one or more paths to package(s) that contain recipe links
     """
-    return create_lookup_table_use_case(recipe_package, application, user)
+    return create_lookup_table_use_case(recipe_package_paths, application, user)
 
 
 @router.get(

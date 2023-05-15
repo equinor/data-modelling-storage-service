@@ -53,4 +53,4 @@ def step_impl(context):
     logger.setLevel(logger_level_before)
 
     user = User(user_id=config.DMSS_ADMIN)
-    create_lookup_table_use_case("system/SIMOS/recipe_links", "DMSS", user)
+    create_lookup_table_use_case(["system/SIMOS/recipe_links"], "DMSS", user)
