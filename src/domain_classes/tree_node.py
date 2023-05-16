@@ -199,6 +199,11 @@ class NodeBase:
         return name in keys
 
     def get_by_path(self, keys: List[str]):
+        """
+        Uses a list of keys to find and return the correct child node
+
+        :param keys: list of keys, ex ["[0]", "cars", "0", "engine"]. Keys on format "cars[0]" are invalid
+        """
         if len(keys) == 0:
             return self
 

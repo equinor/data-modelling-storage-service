@@ -163,7 +163,7 @@ Feature: Get document
       | 6   | 3          | container_1   |             | dmss://test-source-name/TestData/TestContainer |
 
   Scenario: Get document by id
-    Given I access the resource url "/api/documents/data-source-name/$1"
+    Given I access the resource url "/api/documents/data-source-name/$1?depth=1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain

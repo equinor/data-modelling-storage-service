@@ -205,6 +205,19 @@ class DocumentService:
 
     # TODO: Dont return Node. Doing this is ~33% slower
     def get_document(self, reference: str, depth: int = 0, resolve_links: bool = False) -> Node:
+        """
+        Get document by reference.
+
+        :param reference: accepts multiple types of reference:
+            full path. Ex: "dmss://test_data/complex/myCarRental.cars[0]"
+            data source relative path. Ex "/$2.cars[0]"
+            document relative path. Ex "^.cars[0]"
+            path with query. Ex "^.cars[(plateNumber=456,name=Ferrari)]"
+        :param depth: depth=0 means that the entire entity will be returned, except any references it may contain
+            along the tree. depth=1 means that the entity's direct child references will be returned as well.
+        :param resolve_links: If false, model uncontained references (ie of type link) will not be resolved, no
+            matter the depth. If true, they will be resolved if the depth param allows it
+        """
         try:
             resolved_reference: ResolvedReference = resolve_reference(reference, self.get_data_source)
             data_source: DataSource = self.get_data_source(resolved_reference.data_source_id)
@@ -215,7 +228,8 @@ class DocumentService:
                 data_source,
                 self.get_data_source,
                 resolved_reference.document_id,
-                depth=depth + len(resolved_reference.attribute_path.split(".")),
+                depth=depth
+                + (len(resolved_reference.attribute_path.split(".")) if resolved_reference.attribute_path else 0),
                 depth_count=0,
                 resolve_links=resolve_links,
             )
@@ -228,7 +242,9 @@ class DocumentService:
             )
 
             if resolved_reference.attribute_path:
-                node = node.get_by_path(resolved_reference.attribute_path.split("."))
+                node = node.get_by_path(
+                    resolved_reference.attribute_path.replace("[", ".").replace("]", "").split(".")
+                )
             return node
         except (NotFoundException, ApplicationException) as e:
             e.debug = f"{e.message}. {e.debug}"

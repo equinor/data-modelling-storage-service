@@ -21,7 +21,7 @@ def resolve_reference_list(
     if isinstance(value_sample, list):  # Call recursively for nested lists
         return [
             resolve_reference_list(
-                value, document_repository, get_data_source, current_id, depth, depth_count + 1, resolve_links
+                value, document_repository, get_data_source, current_id, depth, depth_count, resolve_links
             )
             for value in values
         ]
@@ -30,7 +30,7 @@ def resolve_reference_list(
         if resolve_links or not is_link(value_sample):
             return [
                 get_complete_sys_document(
-                    value, document_repository, get_data_source, current_id, depth, depth_count + 1, resolve_links
+                    value, document_repository, get_data_source, current_id, depth, depth_count, resolve_links
                 )
                 for value in values
             ]
@@ -39,7 +39,7 @@ def resolve_reference_list(
     if isinstance(value_sample, dict):
         return [
             resolve_document(
-                value, document_repository, get_data_source, current_id, depth, depth_count + 1, resolve_links
+                value, document_repository, get_data_source, current_id, depth, depth_count, resolve_links
             )
             for value in values
         ]
@@ -79,13 +79,8 @@ def get_complete_sys_document(
         # For supporting ^ references, update the current document id
         current_id = resolved_reference.entity["_id"]
 
-    if depth <= depth_count:
-        if depth_count >= 999:
-            raise RecursionError("Reached max-nested-depth (999). Most likely some recursive entities")
-        return resolved_reference.entity
-
     return resolve_document(
-        resolved_reference.entity, data_source, get_data_source, current_id, depth, depth_count + 1, resolve_links
+        resolved_reference.entity, data_source, get_data_source, current_id, depth, depth_count, resolve_links
     )
 
 

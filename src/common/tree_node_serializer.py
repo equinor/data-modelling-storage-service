@@ -187,10 +187,7 @@ def tree_node_from_dict(
                     content_attribute.attribute_type = child["type"]
                     list_child_attribute = content_attribute
 
-                if (
-                    child["type"] == SIMOS.REFERENCE.value
-                    and child.get("referenceType", REFERENCE_TYPES.LINK.value) == REFERENCE_TYPES.LINK.value
-                ):
+                if child["type"] == SIMOS.REFERENCE.value:
                     # TODO: Resolve to get uid?
                     child_uid = child["address"].replace("$", "")
                 else:
