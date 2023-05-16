@@ -209,6 +209,18 @@ class NodeBase:
         next_node = next_node.get_by_path(keys)
         return next_node
 
+    def get_by_ref_part(self, keys: List[str]):
+        # TODO: Only supports AttributeItems now
+        if len(keys) == 0:
+            return self
+
+        next_node = next((x for x in self.children if x.key == keys[0].strip(".")), None)
+        if not next_node:
+            return
+        keys.pop(0)
+        next_node = next_node.get_by_path(keys)
+        return next_node
+
     def remove_by_path(self, keys: List) -> None:
         if len(keys) == 1:
             for index, child in enumerate(self.children):

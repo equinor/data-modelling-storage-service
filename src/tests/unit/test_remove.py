@@ -1,4 +1,5 @@
 import unittest
+from copy import deepcopy
 from unittest import mock
 
 from authentication.models import User
@@ -51,7 +52,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -238,14 +239,18 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return repository
 
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
+
         repository.get = mock_get
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
+        repository.update = mock_update
         document_service = get_mock_document_service(repository_provider)
         document_service.remove_document("testing", "1", "im_optional")
         assert {
@@ -270,7 +275,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":

@@ -25,7 +25,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "type": "test_data/complex/Customer",
                     "name": "Wrong protocol",
                     "car": {
-                        "address": "wrong:///$1.cars.0",
+                        "address": "wrong://$1.cars[0]",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.LINK.value,
                     },

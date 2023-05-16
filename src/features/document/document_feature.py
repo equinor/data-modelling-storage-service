@@ -56,7 +56,7 @@ def update(
     """
     return update_document_use_case(
         user=user,
-        id_reference=id_reference,
+        reference=id_reference,
         data=data,
         files=files,
         update_uncontained=update_uncontained,

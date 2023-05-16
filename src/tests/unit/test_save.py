@@ -37,7 +37,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -59,6 +59,36 @@ class DocumentServiceTestCase(unittest.TestCase):
             "type": "basic_blueprint",
         }
 
+    def test_save_update_attribute(self):
+        repository = mock.Mock()
+
+        doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "Parent",
+                "description": "",
+                "type": "all_contained_cases_blueprint",
+                "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
+            }
+        }
+
+        def mock_get(document_id: str):
+            return deepcopy(doc_storage[document_id])
+
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
+            return None
+
+        repository.get = mock_get
+        repository.update = mock_update
+        document_service = get_mock_document_service(lambda x, y: repository)
+
+        contained_node: Node = document_service.get_document("testing/$1.nested")
+        contained_node.update({"name": "RENAMED", "description": "TEST_MODIFY", "type": "basic_blueprint"})
+        document_service.save(contained_node, "testing", update_uncontained=True, initial=True)
+
+        assert doc_storage["1"]["nested"]["description"] == "TEST_MODIFY"
+
     def test_save_append(self):
         repository = mock.Mock()
 
@@ -76,7 +106,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -164,7 +194,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -279,8 +309,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(lambda x, y: repository)
 
         document_service.update_document(
-            "test",
-            "$1",
+            "dmss://test/$1",
             data={
                 "_id": "1",
                 "name": "Root",
@@ -327,7 +356,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -349,7 +378,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "nested": {},
             "references": [],
         }
-        document_service.update_document("testing", "$1", new_data, attribute="a", update_uncontained=True)
+        document_service.update_document("dmss://testing/$1.a", new_data, update_uncontained=True)
 
         assert doc_storage["1"]["a"]["description"] == "SOME DESCRIPTION"
         assert doc_storage["1"]["a"]["reference"]["description"] == "A NEW DESCRIPTION HERE"

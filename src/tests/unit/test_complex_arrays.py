@@ -1,4 +1,5 @@
 import unittest
+from copy import deepcopy
 from unittest import mock, skip
 
 from authentication.models import User
@@ -102,7 +103,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -248,7 +249,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         # fmt: on
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -264,8 +265,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(repository_provider, blueprint_provider=blueprint_provider)
         # fmt: off
         document_service.update_document(
-            data_source_id="testing",
-            document_id="$1",
+            reference="dmss://testing/$1",
             data={
                 "_id": "1",
                 "name": "complexArraysEntity",

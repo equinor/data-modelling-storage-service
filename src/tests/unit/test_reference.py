@@ -201,7 +201,7 @@ class ReferenceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
