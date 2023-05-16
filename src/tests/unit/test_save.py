@@ -4,11 +4,11 @@ from unittest import mock
 
 from authentication.models import User
 from common.tree_node_serializer import tree_node_from_dict
+from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import Node
 from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_utils import (
-    flatten_dict,
     get_mock_document_service,
     mock_storage_recipe_provider,
 )
@@ -143,23 +143,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         doc_1_after = {
-            "name": "Parent",
-            "_id": "1",
-            "description": "",
-            "type": "all_contained_cases_blueprint",
-            "nested": {},
-            "reference": {},
+            **doc_storage["1"],
             "references": [
-                {
-                    "address": "$2",
-                    "type": SIMOS.REFERENCE.value,
-                    "referenceType": REFERENCE_TYPES.STORAGE.value,
-                },
-                {
-                    "address": "$4",
-                    "type": SIMOS.REFERENCE.value,
-                    "referenceType": REFERENCE_TYPES.STORAGE.value,
-                },
+                doc_storage["1"]["references"][0],
+                doc_storage["1"]["references"][2],
             ],
         }
 
@@ -185,7 +172,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         contained_node.remove_by_path(["1"])
         document_service.save(node, "testing")
 
-        assert flatten_dict(doc_1_after).items() <= flatten_dict(doc_storage["1"]).items()
+        assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
         assert doc_storage["3"] is not None
 
     def test_save_nested_uncontained(self):

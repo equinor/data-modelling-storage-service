@@ -210,7 +210,9 @@ def resolve_reference(reference: str, get_data_source: Callable) -> ResolvedRefe
             f"No document found that matches '{reference}', in the data source '{data_source.name}' could be found.",
             debug=str(reference_items),
         )
-
     return ResolvedReference(
-        entity=document, data_source_id=data_source_id, document_id=str(path[0]), attribute_path=".".join(path[1:])
+        entity=document,
+        data_source_id=data_source_id,
+        document_id=str(path[0]),
+        attribute_path=".".join(path[1:]).replace(".[", "["),
     )
