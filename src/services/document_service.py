@@ -22,7 +22,12 @@ from common.utils.get_blueprint import get_blueprint_provider
 from common.utils.get_resolved_document_by_id import resolve_document
 from common.utils.get_storage_recipe import storage_recipe_provider
 from common.utils.logging import logger
-from common.utils.resolve_reference import ResolvedReference, resolve_reference
+from common.utils.resolve_reference import (
+    ResolvedReference,
+    resolve_reference,
+    split_data_source_and_reference,
+    split_reference,
+)
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.utils.string_helpers import split_dmss_ref
 from common.utils.validators import validate_entity, validate_entity_against_self
@@ -116,11 +121,14 @@ class DocumentService:
         path="",
         update_uncontained: bool = False,
         combined_document_meta: dict | None = None,
+        initial: bool = False,  # Should never be passed to children
     ) -> Dict:
         """
         Recursively saves a Node.
         Digs down to the leaf child, and based on storageContained,
         either saves the entity and returns the Reference, OR returns the entire entity.
+
+        If the node initially called for save, is contained within another, first dig up until a self-contained node is found.
 
         combined_document_meta is the combined meta information.
         For example:
@@ -130,6 +138,10 @@ class DocumentService:
         Here, combined_document_meta is the combined _meta_ information of node A, B and C.
         (this meta info can be found with _collect_entity_meta_by_path() util function).-
         """
+        if initial and node.storage_contained:
+            self.save(
+                node.parent, data_source_id, repository, path, update_uncontained, combined_document_meta, initial
+            )
         if not node.entity:
             return {}
         # If not passed a custom repository to save into, use the DocumentService's storage
@@ -191,11 +203,10 @@ class DocumentService:
             return result
         return ref_dict
 
-    # TODO: Dont return Node. Doing this is 33% slower
+    # TODO: Dont return Node. Doing this is ~33% slower
     def get_document(self, reference: str, depth: int = 0, resolve_links: bool = False) -> Node:
         try:
             resolved_reference: ResolvedReference = resolve_reference(reference, self.get_data_source)
-
             data_source: DataSource = self.get_data_source(resolved_reference.data_source_id)
             document: dict = data_source.get(resolved_reference.document_id)
 
@@ -260,41 +271,34 @@ class DocumentService:
 
     def update_document(
         self,
-        data_source_id: str,
-        document_id: str,
+        reference: str,
         data: Union[dict, list],
-        attribute: str | None = None,
         files: dict = None,
-        update_uncontained: bool = True,
+        update_uncontained: bool = True,  # TODO: Remove this flag
     ):
         validate_entity_against_self(data, self.get_blueprint)
-        # TODO: Since we are only fetching 1 lvl here, any updates on nested uncontained attributes by dott reference
-        # TODO: will fail, as they are not a node on the root node. For example; '123-456.contAttr.someUncontainedAttr'
-        # TODO: We should update 'node.get_by_path()' do fetch documents as needed
-        root: Node = self.get_document(f"{data_source_id}/{document_id}", depth=0)
-        target_node = root
+        data_source_id, _reference = split_data_source_and_reference(reference)
+        reference_parts = split_reference(_reference)
 
-        # If it's a contained nested node, set the modify-target based on dotted-path
-        if attribute:
-            target_node = root.get_by_path(attribute.split("."))
+        # Since the node targeted by the reference might not exist (e.g. optional complex attribute)
+        # we aim for the parent node first. Then get the child.
+        if len(reference_parts) > 1:
+            parent_reference = "".join(reference_parts[:-1])
+            parent_node: Node = self.get_document(f"dmss://{data_source_id}/{parent_reference}", depth=0)
+            node = parent_node.get_by_ref_part([reference_parts[-1]])
+        else:
+            node: Node = self.get_document(reference)  # type: ignore
 
-        if not target_node:
-            raise NotFoundException(f"{data_source_id}/{document_id}.{attribute}")
+        validate_entity(data, self.get_blueprint, self.get_blueprint(node.attribute.attribute_type), "extend")
 
-        validate_entity(data, self.get_blueprint, self.get_blueprint(target_node.attribute.attribute_type), "extend")
-
-        target_node.update(data)
+        node.update(data)
         if files:
-            self._merge_entity_and_files(target_node, files)
+            self._merge_entity_and_files(node, files)
 
-        self.save(target_node, data_source_id, update_uncontained=update_uncontained)
+        self.save(node, data_source_id, update_uncontained=update_uncontained, initial=True)
 
-        # If the target was a contained child of root, update root as well with any contained attributes
-        if attribute and target_node.storage_contained:
-            self.save(root, data_source_id, update_uncontained=False)
-
-        logger.info(f"Updated document '{target_node.node_id}''")
-        return {"data": tree_node_to_dict(target_node)}
+        logger.info(f"Updated entity '{reference}'")
+        return {"data": tree_node_to_dict(node)}
 
     def add_document(self, absolute_ref: str, data: dict, update_uncontained: bool = False):
         validate_entity_against_self(data, self.get_blueprint)

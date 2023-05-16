@@ -1,4 +1,5 @@
 import unittest
+from copy import deepcopy
 from unittest import mock
 
 from authentication.models import User
@@ -147,7 +148,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -197,7 +198,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -231,7 +232,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -244,9 +245,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         with self.assertRaises(ValidationException) as error:
             document_service.update_document(
-                data_source_id="testing",
-                document_id="$1",
-                attribute="SomeChild",
+                reference="dmss://testing/$1.SomeChild",
                 data={"name": "whatever", "type": "special_child_no_inherit", "AnExtraValue": "Hallo there!"},
             )
         assert (
@@ -291,7 +290,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -329,7 +328,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -351,7 +350,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "parent", "SomeChild": {}}}
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -362,9 +361,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
         )
         document_service.update_document(
-            data_source_id="testing",
-            document_id="$1",
-            attribute="SomeChild",
+            reference="dmss://testing/$1.SomeChild",
             data={"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
         )
         assert doc_storage["1"]["SomeChild"] == {
@@ -380,7 +377,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "parent", "SomeChild": {}}}
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -391,9 +388,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
         )
         document_service.update_document(
-            data_source_id="testing",
-            document_id="$1",
-            attribute="SomeChild",
+            reference="dmss://testing/$1.SomeChild",
             data={
                 "name": "whatever",
                 "type": "extra_special_child",
@@ -418,7 +413,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -429,9 +424,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
         )
         document_service.update_document(
-            data_source_id="testing",
-            document_id="$1",
-            attribute="SomeChild",
+            reference="dmss://testing/$1.SomeChild",
             data=[
                 {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
                 {
@@ -462,7 +455,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -475,9 +468,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         with self.assertRaises(ValidationException) as error:
             document_service.update_document(
-                data_source_id="testing",
-                document_id="$1",
-                attribute="SomeChild",
+                reference="dmss://testing/$1.SomeChild",
                 data=[
                     {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
                     {
@@ -501,7 +492,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         def mock_get(document_id: str):
-            return doc_storage[document_id]
+            return deepcopy(doc_storage[document_id])
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -513,8 +504,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         document_service.update_document(
-            data_source_id="testing",
-            document_id="$1",
+            reference="dmss://testing/$1",
             data={
                 "_id": "1",
                 "name": "parent",
