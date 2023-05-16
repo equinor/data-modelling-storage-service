@@ -108,7 +108,7 @@ Feature: Create a lookup table
     When i make a "POST" request
     Then the response status should be "No Content"
 
-  Scenario: System admins want use several package paths to create a lookup table
+  Scenario: System admins want to use several package paths to create a lookup table
     Given i access the resource url "/api/application/test-DS?recipe_package_paths=test-DS/root_package/recipe_links"
     When i make a "POST" request
     Then the response status should be "No Content"
@@ -188,6 +188,77 @@ Feature: Create a lookup table
       },
       "initial_ui_recipes": {
         "_default_": null,
+        "dmss://system/SIMOS/NamedEntity": null
+      },
+      "extends": {}
+    }
+    """
+
+
+  Scenario: System admins want to replace an existing recipe lookup (test-DS/root_package/recipe_links) with a new one (test-DS/root_package/more_recipe_links)
+    Given i access the resource url "/api/application/test-DS?recipe_package_paths=test-DS/root_package/recipe_links"
+    When i make a "POST" request
+    Then the response status should be "No Content"
+    Given i access the resource url "/api/application/test-DS"
+    When i make a "GET" request
+    Then the response status should be "OK"
+    And the response should be
+    """
+    {
+      "ui_recipes": {
+        "_default_": [
+          {
+            "name": "Edit",
+            "type": "dmss://system/SIMOS/UiRecipe",
+            "attributes": [],
+            "description": "",
+            "plugin": "@development-framework/dm-core-plugins/form",
+            "category": "edit",
+            "roles": null,
+            "config": null,
+            "label": "",
+            "dimensions": ""
+          }
+        ]
+      },
+      "storage_recipes": {
+        "_default_": []
+      },
+      "initial_ui_recipes": {
+        "_default_": null
+      },
+      "extends": {}
+    }
+    """
+    Given i access the resource url "/api/application/test-DS?recipe_package_paths=test-DS/root_package/more_recipe_links"
+    When i make a "POST" request
+    Then the response status should be "No Content"
+    Given i access the resource url "/api/application/test-DS"
+    When i make a "GET" request
+    Then the response status should be "OK"
+    And the response should be
+    """
+    {
+      "ui_recipes": {
+        "dmss://system/SIMOS/NamedEntity": [
+          {
+            "name": "Yaml",
+            "type": "dmss://system/SIMOS/UiRecipe",
+            "attributes": [],
+            "description": "",
+            "plugin": "@development-framework/dm-core-plugins/yaml",
+            "category": "",
+            "roles": null,
+            "config": null,
+            "label": "",
+            "dimensions": ""
+          }
+        ]
+      },
+      "storage_recipes": {
+        "dmss://system/SIMOS/NamedEntity": []
+      },
+      "initial_ui_recipes": {
         "dmss://system/SIMOS/NamedEntity": null
       },
       "extends": {}
