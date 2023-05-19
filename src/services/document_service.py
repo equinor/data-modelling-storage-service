@@ -121,22 +121,25 @@ class DocumentService:
         path="",
         update_uncontained: bool = False,
         combined_document_meta: dict | None = None,
-        initial: bool = False,  # Should never be passed to children
+        initial: bool = False,
     ) -> Dict:
         """
         Recursively saves a Node.
-        Digs down to the leaf child, and based on storageContained,
+        Digs down to the leaf children, and based on storageContained,
         either saves the entity and returns the Reference, OR returns the entire entity.
 
-        If the node initially called for save, is contained within another, first dig up until a self-contained node is found.
+        node: The Node to save
+        path: A Filesystem equivalent path for this node. Used when writing zip-files.
+        combined_document_meta:  The combined meta information.
+            For example:
+                nodeA
+                    nodeB
+                        nodeC
+            Here, combined_document_meta is the combined _meta_ information of node A, B and C.
+            (this meta info can be found with _collect_entity_meta_by_path() util function).-
+        initial:  When true, the function will move up the tree until it finds a storage non-contained node, and start saving from there.
+            This allows us to call "save()" on any node, without having to find the "root node" (storage non-contained)
 
-        combined_document_meta is the combined meta information.
-        For example:
-            nodeA
-                nodeB
-                    nodeC
-        Here, combined_document_meta is the combined _meta_ information of node A, B and C.
-        (this meta info can be found with _collect_entity_meta_by_path() util function).-
         """
         if initial and node.storage_contained:
             self.save(
