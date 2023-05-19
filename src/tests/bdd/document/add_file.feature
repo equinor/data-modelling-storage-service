@@ -219,13 +219,15 @@ Feature: Explorer - Add file
 
   Scenario: Add file - attribute for parentEntity
     Given i access the resource url "/api/documents/test-DS/$6.SomeChild"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
-      "name": "baseChildInParentEntity",
-      "type": "dmss://test-DS/root_package/BaseChild",
-      "description": "base child in parent",
-      "AValue": 0
+      "document": {
+        "name": "baseChildInParentEntity",
+        "type": "dmss://test-DS/root_package/BaseChild",
+        "description": "base child in parent",
+        "AValue": 0
+      }
     }
     """
     Then the response status should be "OK"
@@ -251,26 +253,30 @@ Feature: Explorer - Add file
 
   Scenario: Add file (rootPackage) to root of data_source
     Given i access the resource url "/api/documents/test-DS"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
-      "name": "newRootPackage",
-      "type": "dmss://system/SIMOS/Package",
-      "isRoot": true,
-      "content": []
+      "document": {
+        "name": "newRootPackage",
+        "type": "dmss://system/SIMOS/Package",
+        "isRoot": true,
+        "content": []
+      }
     }
     """
     Then the response status should be "OK"
 
   Scenario: Add file with wrong subtype to parent entity
     Given i access the resource url "/api/documents/test-DS/$6.SomeChild"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
-      "name": "hobbynumber1",
-      "type": "dmss://test-DS/root_package/Hobby",
-      "description": "example hobby",
-      "difficulty": "high"
+      "document": {
+        "name": "hobbynumber1",
+        "type": "dmss://test-DS/root_package/Hobby",
+        "description": "example hobby",
+        "difficulty": "high"
+      }
     }
     """
     Then the response status should be "Bad Request"
@@ -290,22 +296,24 @@ Feature: Explorer - Add file
 
   Scenario: Add file with an extended type to parent entity
     Given i access the resource url "/api/documents/test-DS/$6.SomeChild"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
-      "name": "specialChild",
-      "type": "dmss://test-DS/root_package/SpecialChild",
-      "description": "specialized child",
-      "AValue": 39,
-      "AnExtraValue": "abc",
-      "Hobbies": [
-        {
-          "name": "Football",
-          "type": "dmss://test-DS/root_package/Hobby",
-          "description": "sport",
-          "difficulty": "high"
-        }
-      ]
+      "document" : {
+        "name": "specialChild",
+        "type": "dmss://test-DS/root_package/SpecialChild",
+        "description": "specialized child",
+        "AValue": 39,
+        "AnExtraValue": "abc",
+        "Hobbies": [
+          {
+            "name": "Football",
+            "type": "dmss://test-DS/root_package/Hobby",
+            "description": "sport",
+            "difficulty": "high"
+          }
+        ]
+      }
     }
     """
     Then the response status should be "OK"
@@ -332,11 +340,13 @@ Feature: Explorer - Add file
 
   Scenario: Add file - not contained
     Given i access the resource url "/api/documents/test-DS/$1.content?update_uncontained=True"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
-      "name": "new_document",
-      "type": "dmss://system/SIMOS/Blueprint"
+      "document" : {
+        "name": "new_document",
+        "type": "dmss://system/SIMOS/Blueprint"
+      }
     }
     """
     Then the response status should be "OK"
@@ -380,9 +390,11 @@ Feature: Explorer - Add file
 
   Scenario: Add file with missing parameters should fail
     Given i access the resource url "/api/documents/test-DS/$6.whatever"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
-    {}
+    {
+      "document": {}
+    }
     """
     Then the response status should be "Bad Request"
     And the response should be
@@ -398,11 +410,13 @@ Feature: Explorer - Add file
 
   Scenario: Add file to parent that does not exists
     Given i access the resource url "/api/documents/test-DS/$-1.documents"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
-      "name": "new_document",
-      "type": "dmss://system/SIMOS/Blueprint"
+      "document": {
+        "name": "new_document",
+        "type": "dmss://system/SIMOS/Blueprint"
+      }
     }
     """
     Then the response status should be "Not Found"
@@ -411,7 +425,7 @@ Feature: Explorer - Add file
     {
     "data": null,
     "debug": "Document with id '-1' was not found in the 'test-DS' data-source. The requested resource could not be found",
-    "message": "Failed to get document referenced with 'test-DS/$-1'",
+    "message": "Failed to get document referenced with '/test-DS/$-1.documents'",
     "status": 404,
     "type": "NotFoundException"
     }
@@ -428,11 +442,13 @@ Feature: Explorer - Add file
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
     Given i access the resource url "/api/documents/test-DS/$1.content"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
-      "name": "new_document",
-      "type": "dmss://system/SIMOS/Blueprint"
+      "document": {
+        "name": "new_document",
+        "type": "dmss://system/SIMOS/Blueprint"
+      }
     }
     """
     Then the response status should be "Forbidden"
@@ -448,7 +464,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with duplicate name
-    Given i access the resource url "/api/documents-by-path/test-DS/root_package"
+    Given i access the resource url "/api/documents/test-DS/root_package"
     When i make a "POST" request with "1" files
     """
       {
@@ -473,7 +489,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add Comment entity without a name attribute with add-raw endpoint
-    Given i access the resource url "/api/documents/test-DS/add-raw"
+    Given i access the resource url "/api/documents-add-raw/test-DS"
     When i make a "POST" request
     """
     {
@@ -486,7 +502,7 @@ Feature: Explorer - Add file
     Then the response status should be "OK"
 
   Scenario: Add Parent entity without a name attribute with -by-path endpoint
-    Given i access the resource url "/api/documents-by-path/test-DS/root_package?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/root_package?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
@@ -509,7 +525,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Adding file with id set to empty string should generate new uid
-    Given I access the resource url "/api/documents-by-path/test-DS/root_package"
+    Given I access the resource url "/api/documents/test-DS/root_package"
     When i make a "POST" request with "1" files
     """
     {
@@ -525,7 +541,7 @@ Feature: Explorer - Add file
     And the response should have valid uid
 
   Scenario: Adding file with id
-    Given I access the resource url "/api/documents-by-path/test-DS/root_package"
+    Given I access the resource url "/api/documents/test-DS/root_package"
     When i make a "POST" request with "1" files
     """
     {
@@ -541,7 +557,7 @@ Feature: Explorer - Add file
     And the response should have valid uid
 
   Scenario: Add Comment entity without a name attribute with -by-path endpoint
-    Given i access the resource url "/api/documents-by-path/test-DS/root_package?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/root_package?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
@@ -556,7 +572,7 @@ Feature: Explorer - Add file
     Then the response status should be "OK"
 
   Scenario: Add blueprint without a name attribute with -by-path endpoint should fail
-    Given i access the resource url "/api/documents-by-path/test-DS/root_package?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/root_package?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
@@ -580,7 +596,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add package without a name attribute with -by-path endpoint should fail
-    Given i access the resource url "/api/documents-by-path/test-DS/root_package?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/root_package?update_uncontained=True"
     When i make a "POST" request with "1" files
     """
     {
@@ -605,11 +621,13 @@ Feature: Explorer - Add file
 
   Scenario: Add parent entity without a name attribute with add_by_parent_id endpoint
     Given i access the resource url "/api/documents/test-DS/1.content?update_uncontained=True"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
-      "type": "dmss://test-DS/root_package/Parent",
-      "description": "parent entity with no name"
+      "document": {
+        "type": "dmss://test-DS/root_package/Parent",
+        "description": "parent entity with no name"
+      }
     }
     """
     Then the response status should be "Bad Request"
@@ -626,23 +644,27 @@ Feature: Explorer - Add file
 
   Scenario: Add comment entity without a name attribute with add_by_parent_id endpoint
     Given i access the resource url "/api/documents/test-DS/$1.content?update_uncontained=True"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
-      "type": "dmss://test-DS/root_package/Comment",
-      "description": "comment entity with no name",
-      "text": "example comment"
+      "document": {
+        "type": "dmss://test-DS/root_package/Comment",
+        "description": "comment entity with no name",
+        "text": "example comment"
+      }
     }
     """
     Then the response status should be "OK"
 
   Scenario: Add blueprint without a name using add_by_parent_id endpoint should fail
     Given i access the resource url "/api/documents/test-DS/$1.content"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
-      "type":"dmss://system/SIMOS/Blueprint",
-      "description": "Blueprint with no name"
+      "document" : {
+        "type":"dmss://system/SIMOS/Blueprint",
+        "description": "Blueprint with no name"
+      }
     }
     """
     Then the response status should be "Bad Request"
@@ -659,11 +681,13 @@ Feature: Explorer - Add file
 
   Scenario: Add package without a name using add_by_parent_id endpoint should fail
     Given i access the resource url "/api/documents/test-DS/$1.content"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
-      "type":"dmss://system/SIMOS/Package",
-      "description": "Package with no name"
+      "document": {
+        "type":"dmss://system/SIMOS/Package",
+        "description": "Package with no name"
+      }
     }
     """
     Then the response status should be "Bad Request"
@@ -679,7 +703,7 @@ Feature: Explorer - Add file
     """
 
   Scenario: Add file with multiple PDFs
-    Given i access the resource url "/api/documents-by-path/test-DS/root_package?update_uncontained=True"
+    Given i access the resource url "/api/documents/test-DS/root_package?update_uncontained=True"
     When i make a "POST" request with "4" files
     """
     {

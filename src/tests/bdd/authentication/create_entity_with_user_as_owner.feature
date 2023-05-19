@@ -19,16 +19,37 @@ Feature: Set logged in user as owner when creating an entity
       """
       Given the logged in user is "johndoe" with roles "dmss-admin"
       Given authentication is enabled
-      Given i access the resource url "/api/documents/test-DS/$2.content?update_uncontained=True"
-      When i make a "POST" request
+      Given i access the resource url "/api/documents/test-DS/$2.content?update_uncontained=False"
+      When i make a form-data "POST" request
       """
       {
-        "_id": "3",
-        "name": "new_document",
-        "type": "dmss://system/SIMOS/Blueprint"
+        "document": {
+          "_id": "3",
+          "name": "new_document",
+          "type": "dmss://system/SIMOS/Blueprint"
+        }
       }
       """
       Then the response status should be "OK"
+      Given I access the resource url "/api/documents/test-DS/$2"
+      When I make a "GET" request
+      Then the response status should be "OK"
+      And the response should contain
+      """
+      {
+        "name": "root_package",
+        "description": "",
+        "type": "dmss://system/SIMOS/Package",
+        "isRoot": true,
+        "content": [
+          {
+            "type": "dmss://system/SIMOS/Reference",
+            "referenceType": "storage",
+            "address": "$3"
+          }
+        ]
+      }
+      """
       And AccessControlList for document "3" in data-source "test-DS" should be
       """
       {
@@ -53,7 +74,7 @@ Feature: Set logged in user as owner when creating an entity
       """
       Given the logged in user is "johndoe" with roles "dmss-admin"
       Given authentication is enabled
-      Given i access the resource url "/api/documents/test-DS/add-raw"
+      Given i access the resource url "/api/documents-add-raw/test-DS"
       When i make a "POST" request
       """
       {

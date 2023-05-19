@@ -101,9 +101,7 @@ Feature: Add document with document_service
             "contained": true,
             "dimensions": "*"
           }
-        ],
-        "storageRecipes":[],
-        "uiRecipes":[]
+        ]
       }
       """
 
@@ -207,8 +205,8 @@ Feature: Add document with document_service
       """
 
 
-  Scenario: Add test
-    Given i access the resource url "/api/documents-by-path/data-source-name/root_package/EntityPackage"
+  Scenario: Add document to EntityPackage using path as reference
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage"
     When i make a "POST" request with "1" files
     """
     {
@@ -222,29 +220,108 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/data-source-name/$99"
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation2"
     When I make a "GET" request
     Then the response status should be "OK"
-    And the response should equal
+    And the response should contain
     """
       {
-        "_id": "99",
-        "type": "dmss://data-source-name/root_package/ResultFile",
-        "name": "result1",
-        "description": "Results",
-        "responseContainer":
-          {
-            "type": "dmss://data-source-name/root_package/ResponseContainer",
-            "name": "response_container",
-            "responses": [
-              "responseA", "responseB", "responseC"
-            ]
-          }
+        "type": "dmss://data-source-name/root_package/Operation",
+        "name": "operation2",
+        "description": "",
+        "phases": []
       }
     """
 
+  Scenario: Add document to EntityPackage using id as reference
+    Given i access the resource url "/api/documents/data-source-name/root_package.content[5]"
+    When i make a "POST" request with "1" files
+    """
+    {
+      "document":
+      {
+        "type": "dmss://data-source-name/root_package/Operation",
+        "name": "operation3",
+        "description": "",
+        "phases": []
+      }
+    }
+    """
+    Then the response status should be "OK"
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation3"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+      {
+        "type": "dmss://data-source-name/root_package/Operation",
+        "name": "operation3",
+        "description": "",
+        "phases": []
+      }
+    """
+
+
+  Scenario: Add document to root package using path as reference
+    Given i access the resource url "/api/documents/data-source-name/root_package"
+    When i make a "POST" request with "1" files
+    """
+    {
+      "document":
+      {
+        "type": "dmss://data-source-name/root_package/Operation",
+        "name": "operation2",
+        "description": "",
+        "phases": []
+      }
+    }
+    """
+    Then the response status should be "OK"
+    Given i access the resource url "/api/documents/data-source-name/root_package/operation2"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+      {
+        "type": "dmss://data-source-name/root_package/Operation",
+        "name": "operation2",
+        "description": "",
+        "phases": []
+      }
+    """
+
+
+  Scenario: Add document to root package using id as reference
+    Given i access the resource url "/api/documents/data-source-name/$100"
+    When i make a "POST" request with "1" files
+    """
+    {
+      "document":
+      {
+        "type": "dmss://data-source-name/root_package/Operation",
+        "name": "operation3",
+        "description": "",
+        "phases": []
+      }
+    }
+    """
+    Then the response status should be "OK"
+    Given i access the resource url "/api/documents/data-source-name/root_package.content[6]?resolve_links=true&depth=2"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+      {
+        "type": "dmss://data-source-name/root_package/Operation",
+        "name": "operation3",
+        "description": "",
+        "phases": []
+      }
+    """
+
+
   Scenario: Add root package
-    Given i access the resource url "/api/documents-by-path/data-source-name"
+    Given i access the resource url "/api/documents/data-source-name"
     When i make a form-data "POST" request
     """
     {

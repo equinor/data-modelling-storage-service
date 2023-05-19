@@ -75,13 +75,15 @@ Feature: Explorer - Add contained node
     """
 
   Scenario: Add nested contained node
-    Given i access the resource url "/api/documents/entities/$1.meAgain.1.meAgain"
-    When i make a "POST" request
+    Given i access the resource url "/api/documents/entities/$1.meAgain[1].meAgain"
+    When i make a form-data "POST" request
     """
     {
-      "name": "level2",
-      "type": "dmss://blueprints/root_package/RecursiveBlueprint",
-      "meAgain": []
+      "document": {
+        "name": "level2",
+        "type": "dmss://blueprints/root_package/RecursiveBlueprint",
+        "meAgain": []
+      }
     }
     """
     Then the response status should be "OK"

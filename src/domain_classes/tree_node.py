@@ -85,7 +85,7 @@ class NodeBase:
         if not self.parent or self.parent.type == SIMOS.DATASOURCE.value:
             return False
         if self.parent.is_array():
-            return self.parent.parent.storage_recipes[0].is_contained(self.attribute.name)
+            return self.parent.parent.storage_recipes[0].is_contained(self.parent.attribute.name)
         return self.parent.storage_recipes[0].is_contained(self.attribute.name)
 
     @property
@@ -135,6 +135,11 @@ class NodeBase:
         while node is not None:
             yield node
             node = node.parent
+
+    def find_parent(self):
+        for node in self.traverse_reverse():
+            if not node.storage_contained:
+                return node
 
     def __repr__(self):
         return f"Name: '{self.name}', Key: '{self.key}', Type: '{self.type}', Node_ID: '{self.node_id}'"
