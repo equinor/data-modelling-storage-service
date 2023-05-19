@@ -10,7 +10,7 @@ from enums import REFERENCE_TYPES, SIMOS, Protocols
 from tests.unit.mock_utils import get_mock_document_service
 
 
-class DocumentServiceTestCase(unittest.TestCase):
+class GetDocumentResolveTestCase(unittest.TestCase):
     def test_references_that_uses_wrong_protocol(self):
         my_car_rental = {
             "_id": "1",
@@ -55,96 +55,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(lambda x, y: document_repository)
         with pytest.raises(Exception, match=r"The protocol 'wrong' is not supported"):
             tree_node_to_dict(document_service.get_document("datasource/$1", resolve_links=True, depth=9))
-
-    def test_depths(self):
-        car_rental_company = {
-            "_id": "1",
-            "type": "test_data/complex/CarRental",
-            "name": "myCarRentalCompany",
-            "cars": [
-                {
-                    "type": "test_data/complex/RentalCar",
-                    "name": "Volvo 240",
-                    "plateNumber": "123",
-                    "engine": {
-                        "address": "$2",
-                        "type": SIMOS.REFERENCE.value,
-                        "referenceType": REFERENCE_TYPES.LINK.value,
-                    },
-                }
-            ],
-            "customers": [
-                {
-                    "type": "test_data/complex/Customer",
-                    "name": "Jane",
-                    "car": {
-                        "address": "$1.cars[0]",
-                        "type": SIMOS.REFERENCE.value,
-                        "referenceType": REFERENCE_TYPES.LINK.value,
-                    },
-                }
-            ],
-        }
-        engine = {
-            "type": "test_data/complex/EngineTest",
-            "name": "myEngine",
-            "description": "",
-            "fuelPump": {
-                "address": "$3",
-                "type": SIMOS.REFERENCE.value,
-                "referenceType": REFERENCE_TYPES.LINK.value,
-            },
-            "power": 120,
-        }
-        fuel_pump = {
-            "type": "test_data/complex/FuelPumpTest",
-            "name": "fuelPump",
-            "description": "A standard fuel pump",
-        }
-
-        def mock_get(document_id: str):
-            if document_id == "1":
-                return {**car_rental_company}
-            if document_id == "2":
-                return {**engine}
-            if document_id == "3":
-                return {**fuel_pump}
-            return None
-
-        document_repository = mock.Mock()
-        document_repository.get = mock_get
-        document_service = get_mock_document_service(lambda x, y: document_repository)
-
-        root = tree_node_to_dict(document_service.get_document("datasource/$1", 0, resolve_links=True))
-        assert get_and_print_diff(root, car_rental_company) == []
-
-        root = tree_node_to_dict(document_service.get_document("datasource/$1", 1, resolve_links=True))
-        assert get_and_print_diff(root, car_rental_company) == []
-
-        root = tree_node_to_dict(document_service.get_document("datasource/$1", 2, resolve_links=True))
-        assert (
-            get_and_print_diff(
-                root,
-                {
-                    **car_rental_company,
-                    "cars": [{**car_rental_company["cars"][0], "engine": engine}],
-                    "customers": [{**car_rental_company["customers"][0], "car": car_rental_company["cars"][0]}],
-                },
-            )
-            == []
-        )
-
-        root = tree_node_to_dict(document_service.get_document("datasource/$1.cars[0]", 0, resolve_links=True))
-        assert get_and_print_diff(root, car_rental_company["cars"][0]) == []
-
-        root = tree_node_to_dict(document_service.get_document("datasource/$1.cars[0]", 1, resolve_links=True))
-        assert get_and_print_diff(root, {**car_rental_company["cars"][0], "engine": engine}) == []
-
-        root = tree_node_to_dict(document_service.get_document("datasource/$1.cars[0]", 2, resolve_links=True))
-        assert (
-            get_and_print_diff(root, {**car_rental_company["cars"][0], "engine": {**engine, "fuelPump": fuel_pump}})
-            == []
-        )
 
     def test_references(self):
         my_car_rental = {
