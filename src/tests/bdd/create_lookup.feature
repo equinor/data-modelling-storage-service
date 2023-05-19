@@ -96,20 +96,20 @@ Feature: Create a lookup table
 
 
   Scenario: System admins want to create a recipe lookup for the DMSS - SIMOS/recipe_links folder
-    Given i access the resource url "/api/application/dmss?recipe_package_paths=system/SIMOS/recipe_links"
+    Given i access the resource url "/api/application/dmss?recipe_package=system/SIMOS/recipe_links"
     When i make a "POST" request
     Then the response status should be "No Content"
 
   Scenario: System admins want to replace an existing recipe lookup for DMSS - SIMOS/recipe_links folder
-    Given i access the resource url "/api/application/dmss?recipe_package_paths=system/SIMOS/recipe_links"
+    Given i access the resource url "/api/application/dmss?recipe_package=system/SIMOS/recipe_links"
     When i make a "POST" request
     Then the response status should be "No Content"
-    Given i access the resource url "/api/application/dmss?recipe_package_paths=system/SIMOS/recipe_links"
+    Given i access the resource url "/api/application/dmss?recipe_package=system/SIMOS/recipe_links"
     When i make a "POST" request
     Then the response status should be "No Content"
 
   Scenario: System admins want to use several package paths to create a lookup table
-    Given i access the resource url "/api/application/test-DS?recipe_package_paths=test-DS/root_package/recipe_links"
+    Given i access the resource url "/api/application/test-DS?recipe_package=test-DS/root_package/recipe_links"
     When i make a "POST" request
     Then the response status should be "No Content"
     Given i access the resource url "/api/application/test-DS"
@@ -143,7 +143,7 @@ Feature: Create a lookup table
       "extends": {}
     }
     """
-    Given i access the resource url "/api/application/test-DS?recipe_package_paths=test-DS/root_package/recipe_links&recipe_package_paths=test-DS/root_package/more_recipe_links"
+    Given i access the resource url "/api/application/test-DS?recipe_package=test-DS/root_package/recipe_links&recipe_package=test-DS/root_package/more_recipe_links"
     When i make a "POST" request
     Then the response status should be "No Content"
     Given i access the resource url "/api/application/test-DS"
@@ -196,7 +196,7 @@ Feature: Create a lookup table
 
 
   Scenario: System admins want to replace an existing recipe lookup (test-DS/root_package/recipe_links) with a new one (test-DS/root_package/more_recipe_links)
-    Given i access the resource url "/api/application/test-DS?recipe_package_paths=test-DS/root_package/recipe_links"
+    Given i access the resource url "/api/application/test-DS?recipe_package=test-DS/root_package/recipe_links"
     When i make a "POST" request
     Then the response status should be "No Content"
     Given i access the resource url "/api/application/test-DS"
@@ -230,7 +230,7 @@ Feature: Create a lookup table
       "extends": {}
     }
     """
-    Given i access the resource url "/api/application/test-DS?recipe_package_paths=test-DS/root_package/more_recipe_links"
+    Given i access the resource url "/api/application/test-DS?recipe_package=test-DS/root_package/more_recipe_links"
     When i make a "POST" request
     Then the response status should be "No Content"
     Given i access the resource url "/api/application/test-DS"
