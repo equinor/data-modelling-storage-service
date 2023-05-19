@@ -24,8 +24,9 @@ def split_reference(reference: str) -> list[str]:
             continue
         if remaining_ref[0] in "[(":
             prefix_delim = remaining_ref[0]
-            content = re.split(r"[\[\]\(\)]", remaining_ref, 2)[1]
-            parts.append(f"{prefix_delim}{content}{']' if prefix_delim == '[' else ')'}")
+            closing_bracket = "]" if prefix_delim == "[" else ")"
+            content = re.split("[" + re.escape(f"{closing_bracket}") + "]", remaining_ref, 2)[0][1:]
+            parts.append(f"{prefix_delim}{content}{closing_bracket}")
             remaining_ref = remaining_ref.removeprefix(parts[-1])
             continue
 
@@ -131,6 +132,8 @@ class AttributeItem:
         self, document: dict | list | None, data_source: DataSource, get_data_source: Callable
     ) -> tuple[dict | list | None, str]:
         try:
+            if not document:
+                raise KeyError
             result = find(document, [self.path])
         except (IndexError, TypeError, KeyError):
             raise NotFoundException(f"No '{self.path}' inside the '{str(document)}' exist.")
@@ -213,9 +216,7 @@ def resolve_reference_items(
     if path is None:
         path = [path_element]
     else:
-        if resolved_document and "_id" in resolved_document:
-            if isinstance(resolved_document, list):
-                raise NotImplementedError("Support for resolving lists has not been fully implemented")
+        if isinstance(resolved_document, dict) and resolved_document and "_id" in resolved_document:
             # Found a new document, use that as new starting point for the attribute path
             path = [resolved_document["_id"]]
         else:
