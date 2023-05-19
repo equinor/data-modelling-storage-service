@@ -312,12 +312,14 @@ Feature: Access Control
     Given the logged in user is "johndoe" with roles "a"
     Given authentication is enabled
     Given i access the resource url "/api/documents/test-DS/$2.content"
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
-      "_id": "3",
-      "name": "new_document",
-      "type": "dmss://system/SIMOS/Blueprint"
+      "document": {
+        "_id": "3",
+        "name": "new_document",
+        "type": "dmss://system/SIMOS/Blueprint"
+      }
     }
     """
     Then the response status should be "OK"
