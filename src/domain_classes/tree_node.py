@@ -389,6 +389,9 @@ class ListNode(NodeBase):
     def blueprint(self):
         return self.blueprint_provider(self.attribute.attribute_type)  # TODO: blueprint_provider is required now...
 
+    def set_uid(self, new_id: str | None = None):
+        self.uid = None
+
     def update(self, data: list):
         # Replaces the whole list with the new one
         self.children = []
