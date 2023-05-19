@@ -8,7 +8,6 @@ from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.responses import create_response, responses
 
-from .use_cases.add_document_to_path_use_case import add_document_to_path_use_case
 from .use_cases.add_file_use_case import add_file_use_case
 from .use_cases.add_raw_use_case import add_raw_use_case
 from .use_cases.get_document_use_case import get_document_use_case
@@ -75,31 +74,6 @@ def remove(id_reference: str, user: User = Depends(auth_w_jwt_or_pat)):
     return remove_use_case(user=user, id_reference=id_reference)
 
 
-@router.post(
-    "-by-path/{path_reference:path}", operation_id="document_add_to_path", response_model=dict, responses=responses
-)
-@create_response(JSONResponse)
-def add_to_path(
-    path_reference: str,
-    document: Json = Form(...),
-    files: Optional[List[UploadFile]] = File(None),
-    update_uncontained: Optional[bool] = False,
-    user: User = Depends(auth_w_jwt_or_pat),
-):
-    """
-    Same as 'add_to_parent', but reference parent by path instead of ID. Also supports files.
-
-    - **path_reference**: <data_source>/<path_to_entity>/<entity_name>.<attribute>
-    """
-    return add_document_to_path_use_case(
-        user=user,
-        path_reference=path_reference,
-        document=document,
-        files=files,
-        update_uncontained=update_uncontained,
-    )
-
-
 # TODO: Create test for this
 @router.post("/{data_source_id}/add-raw", operation_id="document_add_simple", response_model=str, responses=responses)
 @create_response(PlainTextResponse)
@@ -114,11 +88,12 @@ def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt
     return add_raw_use_case(user=user, document=document, data_source_id=data_source_id)
 
 
-@router.post("/{absolute_ref:path}", operation_id="document_add", response_model=dict, responses=responses)
+@router.post("/{reference:path}", operation_id="document_add", response_model=dict, responses=responses)
 @create_response(JSONResponse)
-def add_by_parent_id(
-    absolute_ref: str,
-    document: dict,
+def add(
+    reference: str,
+    document: Json = Form(...),
+    files: Optional[List[UploadFile]] = File(None),
     update_uncontained: bool = True,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
@@ -128,7 +103,7 @@ def add_by_parent_id(
     Select parent with format 'data_source/document_id.attribute.index.attribute'
     """
     return add_file_use_case(
-        user=user, absolute_ref=absolute_ref, data=document, update_uncontained=update_uncontained
+        user=user, reference=reference, data=document, update_uncontained=update_uncontained, files=files
     )
 
 

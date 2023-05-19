@@ -29,7 +29,6 @@ from common.utils.resolve_reference import (
     split_reference,
 )
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
-from common.utils.string_helpers import split_dmss_ref
 from common.utils.validators import validate_entity, validate_entity_against_self
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
@@ -37,7 +36,7 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS, BuiltinDataTypes, StorageDataTypes
-from restful.request_types.shared import Entity, Reference
+from restful.request_types.shared import Reference
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
@@ -300,96 +299,91 @@ class DocumentService:
         logger.info(f"Updated entity '{reference}'")
         return {"data": tree_node_to_dict(node)}
 
-    def add_document(self, absolute_ref: str, data: dict, update_uncontained: bool = False):
-        validate_entity_against_self(data, self.get_blueprint)
-        data_source, parent_id, attribute = split_dmss_ref(absolute_ref)
-        if parent_id and not attribute:
-            raise BadRequestException("Attribute not specified on parent")
+    # def add_document(self, absolute_ref: str, data: dict, update_uncontained: bool = False,files: dict[str, BinaryIO],):
+    #     validate_entity_against_self(data, self.get_blueprint)
+    #     data_source, parent_id, attribute = split_dmss_ref(absolute_ref)
+    #     if parent_id and not attribute:
+    #         raise BadRequestException("Attribute not specified on parent")
+    #
+    #     if not parent_id:  # No parent_id in reference. Just add the document to the root of the data_source
+    #         return self._add_document_with_no_parent(data_source, data, update_uncontained)
+    #
+    #     type = data["type"]
+    #     parent_attribute = attribute.split(".")[0:-1]
+    #     leaf_attribute = attribute.split(".")[-1]
+    #
+    #     root: Node = self.get_document(f"{data_source}/{parent_id}", depth=99, resolve_links=True)
+    #     if not root:
+    #         raise NotFoundException(uid=parent_id)
+    #     parent: Node = root.get_by_path(parent_attribute)
+    #
+    #     leaf_parent = parent.get_by_path([leaf_attribute])
+    #     if not leaf_parent:
+    #         raise AttributeError(
+    #             (
+    #                 f"Invalid attribute given for type '{parent.type}'.\n"
+    #                 + f"Valid attributes are {parent.blueprint.get_attribute_names()}.\n"
+    #                 + f"Received '{leaf_attribute}'"
+    #             )
+    #         )
+    #
+    #     # If the leaf attribute is a list, set the ListNode as parent
+    #     if leaf_parent.is_array():
+    #         parent = leaf_parent
+    #
+    #     if parent.type != BuiltinDataTypes.OBJECT.value:
+    #         validation_blueprint = (
+    #             parent.blueprint if parent.is_array() else parent.get_by_path([leaf_attribute]).blueprint
+    #         )
+    #         validate_entity(data, self.get_blueprint, validation_blueprint, "extend")
+    #
+    #     entity: dict = data
+    #
+    #     if type == SIMOS.BLUEPRINT.value and not entity.get("extends"):  # Extend default attributes and uiRecipes
+    #         entity["extends"] = ["system/SIMOS/DefaultUiRecipes", "system/SIMOS/NamedEntity"]
+    #
+    #     new_node_attribute = BlueprintAttribute(name=leaf_attribute, attribute_type=type)
+    #     new_node = tree_node_from_dict(
+    #         entity,
+    #         blueprint_provider=self.get_blueprint,
+    #         node_attribute=new_node_attribute,
+    #         recipe_provider=self.get_storage_recipes,
+    #     )
+    #
+    #     required_attribute_names = [attribute.name for attribute in new_node.blueprint.get_required_attributes()]
+    #     # If entity has a name, check if a file/attribute with the same name already exists on the target
+    #     if "name" in required_attribute_names and parent.duplicate_attribute(new_node.name):
+    #         raise BadRequestException(
+    #             f"The document at '{absolute_ref}' already has a child with name '{new_node.name}'"
+    #         )
+    #
+    #     new_node.parent = parent
+    #     new_node.set_uid()
+    #
+    #     if isinstance(parent, ListNode):
+    #         new_node.key = str(len(parent.children)) if parent.is_array() else new_node.attribute.name
+    #         parent.add_child(new_node)
+    #     else:
+    #         parent.replace(new_node.node_id, new_node)
+    #
+    #     self.save(root, data_source, update_uncontained=update_uncontained)
+    #
+    #     return {"uid": new_node.node_id}
 
-        if not parent_id:  # No parent_id in reference. Just add the document to the root of the data_source
-            return self._add_document_with_no_parent(data_source, data, update_uncontained)
-
-        type = data["type"]
-        parent_attribute = attribute.split(".")[0:-1]
-        leaf_attribute = attribute.split(".")[-1]
-
-        root: Node = self.get_document(f"{data_source}/{parent_id}", depth=99, resolve_links=True)
-        if not root:
-            raise NotFoundException(uid=parent_id)
-        parent: Node = root.get_by_path(parent_attribute)
-
-        leaf_parent = parent.get_by_path([leaf_attribute])
-        if not leaf_parent:
-            raise AttributeError(
-                (
-                    f"Invalid attribute given for type '{parent.type}'.\n"
-                    + f"Valid attributes are {parent.blueprint.get_attribute_names()}.\n"
-                    + f"Received '{leaf_attribute}'"
+    def _add_document_with_no_parent(self, data_source_id: str, entity: dict):
+        if not entity["type"] == SIMOS.PACKAGE.value or not entity.get("isRoot", False):
+            raise BadRequestException("Only root packages may be added to the root of a data source")
+        try:
+            if self.get_document(f"/{data_source_id}/{entity['name']}"):
+                raise ValidationException(
+                    message=f"A root package named '{entity['name']}' already exists",
+                    data={"dataSource": data_source_id, "document": entity},
                 )
-            )
-
-        # If the leaf attribute is a list, set the ListNode as parent
-        if leaf_parent.is_array():
-            parent = leaf_parent
-
-        if parent.type != BuiltinDataTypes.OBJECT.value:
-            validation_blueprint = (
-                parent.blueprint if parent.is_array() else parent.get_by_path([leaf_attribute]).blueprint
-            )
-            validate_entity(data, self.get_blueprint, validation_blueprint, "extend")
-
-        entity: dict = data
-
-        if type == SIMOS.BLUEPRINT.value and not entity.get("extends"):  # Extend default attributes and uiRecipes
-            entity["extends"] = ["system/SIMOS/DefaultUiRecipes", "system/SIMOS/NamedEntity"]
-
-        new_node_attribute = BlueprintAttribute(name=leaf_attribute, attribute_type=type)
-        new_node = tree_node_from_dict(
-            entity,
-            blueprint_provider=self.get_blueprint,
-            node_attribute=new_node_attribute,
-            recipe_provider=self.get_storage_recipes,
-        )
-
-        required_attribute_names = [attribute.name for attribute in new_node.blueprint.get_required_attributes()]
-        # If entity has a name, check if a file/attribute with the same name already exists on the target
-        if "name" in required_attribute_names and parent.duplicate_attribute(new_node.name):
-            raise BadRequestException(
-                f"The document at '{absolute_ref}' already has a child with name '{new_node.name}'"
-            )
-
-        new_node.parent = parent
-        new_node.set_uid()
-
-        if isinstance(parent, ListNode):
-            new_node.key = str(len(parent.children)) if parent.is_array() else new_node.attribute.name
-            parent.add_child(new_node)
-        else:
-            parent.replace(new_node.node_id, new_node)
-
-        self.save(root, data_source, update_uncontained=update_uncontained)
-
-        return {"uid": new_node.node_id}
-
-    def _add_document_with_no_parent(self, data_source: str, data: dict, update_uncontained: bool = False):
-        if data.get("type") != SIMOS.PACKAGE.value and not data.get("isRoot"):
-            raise BadRequestException("Only root packages may be added without a parent.")
-
-        new_node = tree_node_from_dict(
-            data, blueprint_provider=self.get_blueprint, recipe_provider=self.get_storage_recipes
-        )
-
-        exisiting_root_package = get_data_source(data_source, self.user).find(
-            {"type": SIMOS.PACKAGE.value, "isRoot": True, "name": data["name"]}
-        )
-        if exisiting_root_package:
-            raise BadRequestException(f"The document '{data_source}/{new_node.name}' already exists")
-
-        new_node.set_uid()
-
-        self.save(new_node, data_source, update_uncontained=update_uncontained)
-
-        return {"uid": new_node.node_id}
+        except NotFoundException:
+            pass
+        document_repository = self.repository_provider(data_source_id, self.user)
+        document_repository.update(entity)
+        return {"uid": entity["_id"]}
 
     def remove_by_path(self, data_source_id: str, directory: str, attribute: str = None):
         if attribute:
@@ -437,76 +431,74 @@ class DocumentService:
 
     def add(
         self,
-        data_source_id: str,
-        path: str | None,
-        document: Entity,
-        files: dict[str, BinaryIO],
+        reference: str | None,
+        entity: dict,
+        files: dict[str, BinaryIO] | None = None,
         update_uncontained=False,
     ):
-        """Add en entity to path
-        path: dotted path on format 'RootPackage/folder/entity.attribute.attribute.
-            If none, we're adding to the data source itself.
+        """Add en entity to reference target
+        reference: Reference string of parent of this new node.
+            If none, we're adding to the data source itself (only allowed for root packages).
         document: The entity to be added
         files: Dict with names and files of the files contained in the document
         update_uncontained: Whether to update uncontained children
         """
-        document_dict = document.dict()
-        validate_entity_against_self(document_dict, self.get_blueprint)
+        validate_entity_against_self(entity, self.get_blueprint)
+        data_source_id, relative_reference = split_data_source_and_reference(reference)
 
-        if not path:  # We're adding something to the dataSource itself
-            if not document.type == SIMOS.PACKAGE.value or not document_dict.get("isRoot", False):
-                raise BadRequestException("Only root packages may be added to the root of a data source")
-            try:
-                if self.get_document(f"/{data_source_id}/{document_dict['name']}", resolve_links=True, depth=99):
-                    raise ValidationException(
-                        message=f"A root package named '{document_dict['name']}' already exists",
-                        data={"dataSource": data_source_id, "document": document_dict},
-                    )
-            except NotFoundException:
-                pass
-            document_repository = self.repository_provider(data_source_id, self.user)
-            document_repository.update(document_dict)
-            return {"uid": document_dict["_id"]}
+        if not reference:  # We're adding something to the dataSource itself
+            return self._add_document_with_no_parent(data_source_id, entity)
 
-        target: Node = self.get_document(f"/{data_source_id}/{path}", resolve_links=True, depth=99)
+        reference_parts = split_reference(relative_reference)
 
-        for node in target.traverse():
-            print(node.uid)
+        # Since the node targeted by the "add" might not exist (e.g. optional complex attribute)
+        # we aim for the parent node first. Then get the child.
+        if len(reference_parts) > 1:
+            parent_reference = "".join(reference_parts[:-1])
+            parent_node: Node = self.get_document(f"dmss://{data_source_id}/{parent_reference}", depth=0)
+            node = parent_node.get_by_ref_part([reference_parts[-1]])
+        else:
+            node: Node = self.get_document(reference)  # type: ignore
+        parent_node: Node = self.get_document(reference)
 
-        if not target:
-            raise NotFoundException(f"Could not find '{path}' in data source '{data_source_id}'")
+        # if parent_node.type != SIMOS.PACKAGE.value:
+        validate_entity(entity, self.get_blueprint, self.get_blueprint(parent_node.attribute.attribute_type), "extend")
 
-        if target.type != SIMOS.PACKAGE.value:
-            validate_entity(
-                document_dict, self.get_blueprint, self.get_blueprint(target.attribute.attribute_type), "extend"
-            )
-
-        # If dotted attribute path, attribute is the last entry. Else content
-        new_node_attr = path.split(".")[-1] if "." in path else "content"
-
+        # new_node = parent_node.get_by_ref_part(split_reference(relative_reference)[1:])
+        # # If dotted attribute path, attribute is the last entry. Else content
+        # # new_node_attr = reference.split(".")[-1] if "." in reference else "content"
+        # #
+        new_node_attribute= parent_node.blueprint.get_attribute_by_name(split_reference(relative_reference)[-1])
         new_node = tree_node_from_dict(
-            {**document_dict},
+            {**entity},
             blueprint_provider=self.get_blueprint,
-            node_attribute=BlueprintAttribute(name=new_node_attr, attribute_type=document.type),
+            node_attribute=new_node_attribute,
             recipe_provider=self.get_storage_recipes,
         )
+
+        # If entity has a name, check if a file/attribute with the same name already exists on the target
+        required_attribute_names = [attribute.name for attribute in new_node.blueprint.get_required_attributes()]
+        if "name" in required_attribute_names and parent_node.duplicate_attribute(new_node.name):
+            raise BadRequestException(
+                f"The document at '{reference}' already has a child with name '{new_node.name}'"
+            )
         new_node.set_uid()
 
         if files:
             self._merge_entity_and_files(new_node, files)
 
-        self.save(new_node, data_source_id, update_uncontained=update_uncontained)
-
-        if target.type == SIMOS.PACKAGE.value:
-            target = target.children[0]  # Set target to be the packages content
-        if isinstance(target, ListNode):
-            new_node.parent = target
-            target.add_child(new_node)
-            self.save(target.parent, data_source_id, update_uncontained=False)
-        else:
-            new_node.parent = target.parent
-            target = new_node
-            self.save(target, data_source_id, update_uncontained=False)
+        # self.save(new_node, data_source_id, update_uncontained=update_uncontained)
+        #
+        # if parent_node.type == SIMOS.PACKAGE.value:
+        #     parent_node = parent_node.children[0]  # Set target to be the packages content
+        # if isinstance(parent_node, ListNode):
+        new_node.parent = parent_node
+        parent_node.add_child(new_node)
+        #     self.save(parent_node.parent, data_source_id, update_uncontained=False)
+        # else:
+        #     new_node.parent = parent_node.parent
+        #     parent_node = new_node
+        self.save(parent_node, data_source_id, update_uncontained=False)
 
         return {"uid": new_node.node_id}
 

@@ -211,9 +211,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = get_mock_document_service(repository_provider)
-        document_service.add_document(
+        document_service.add(
             "testing/$1.im_optional",
-            data={"type": "basic_blueprint", "name": "new_entity", "description": "This is my new entity"},
+            entity={"type": "basic_blueprint", "name": "new_entity", "description": "This is my new entity"},
         )
 
         assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
@@ -303,7 +303,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = get_mock_document_service(repository_provider)
-        document_service.add_document(
+        document_service.add(
             "testing/$1.nested_with_optional.im_optional",
             {"name": "new_entity", "description": "This is my new entity", "type": "basic_blueprint"},
         )
@@ -339,9 +339,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(lambda x, y: repository)
 
         with self.assertRaises(BadRequestException):
-            document_service.add_document(
+            document_service.add(
                 "testing/$1.im_optional",
-                data={"type": "basic_blueprint", "name": "duplicate", "description": "This is my new entity"},
+                entity={"type": "basic_blueprint", "name": "duplicate", "description": "This is my new entity"},
             )
 
     def test_add_valid_specialized_child_type(self):
