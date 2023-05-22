@@ -58,11 +58,14 @@ class IdItem:
 
     id: str
 
-    def resolve(
-        self, document: dict | list | None, data_source: DataSource, get_data_source: Callable
-    ) -> Tuple[dict, str]:
+    def get_entry_point(self, data_source: DataSource) -> Tuple[dict, str]:
         # Get the document from the data source
-        return data_source.get(self.id), self.id
+        result = data_source.get(self.id)
+        if not result:
+            raise NotFoundException(
+                f"No document with id '{self.id}' could be found in data source '{data_source.name}'."
+            )
+        return result, self.id
 
     def __repr__(self):
         return f"${self.id}"
@@ -88,34 +91,29 @@ class QueryItem:
                 query[key] = value
         return query
 
-    def resolve(
-        self, document: dict | list | None, data_source: DataSource, get_data_source: Callable
-    ) -> Tuple[Union[dict | None], Union[str | None]]:
-        # We need to search inside the data source for the document
-        if not document:
-            result: list[dict] = data_source.find(self.filter())
-            if not result:
-                raise NotFoundException(
-                    f"No document that match '{self.query}', in data source '{data_source.name}' could be found."
-                )
-            if len(result) > 2:
-                raise ApplicationException(
-                    f"More than 1 document that match '{self.query}' was returned from DataSource. That should not happen..."
-                )
-            return result[0], result[0]["_id"]
+    def get_entry_point(self, data_source: DataSource) -> Tuple[dict, str]:
+        result: list[dict] = data_source.find(self.filter())
+        if not result:
+            raise NotFoundException(
+                f"No document that match '{self.query}' could be found in data source '{data_source.name}'."
+            )
+        if len(result) > 2:
+            raise ApplicationException(
+                f"More than 1 document that match '{self.query}' was returned from DataSource. That should not happen..."
+            )
+        return result[0], result[0]["_id"]
 
+    def get_child(self, document: dict | list, data_source: DataSource, get_data_source: Callable) -> Tuple[Any, str]:
         # Search inside an existing document (need to resolve any references first before trying to compare against filter)
         elements = [
             resolve_reference(f"/{data_source.name}/{f['address']}", get_data_source).entity if is_reference(f) else f
             for f in document
         ]  # Resolve any references
-        default = (None, None)
         try:
             return next(
                 ((element, str(index)) for index, element in enumerate(elements) if is_same(element, self.filter())),
-                default,
             )  # Find an item that match the given filter
-        except KeyError:
+        except StopIteration:
             raise ApplicationException(f"No object matches filter '{self.query}'", data={"elements": elements})
 
 
@@ -128,18 +126,19 @@ class AttributeItem:
     def __repr__(self):
         return f'Attribute="{self.path}"'
 
-    def resolve(
-        self, document: dict | list | None, data_source: DataSource, get_data_source: Callable
-    ) -> tuple[dict | list | None, str]:
+    def get_child(self, document: dict | list, data_source: DataSource, get_data_source: Callable) -> tuple[Any, str]:
+        if isinstance(document, dict) and is_reference(document):
+            document = resolve_reference(f"/{data_source.name}/{document['address']}", get_data_source).entity
         try:
-            if not document:
-                raise KeyError
             result = find(document, [self.path])
-        except (IndexError, TypeError, KeyError):
-            raise NotFoundException(f"No '{self.path}' inside the '{str(document)}' exist.")
+        except (IndexError, ValueError, KeyError):
+            if isinstance(document, dict):
+                raise NotFoundException(
+                    f"Invalid attribute '{self.path}'. Valid attributes are '{list(document.keys())}'."
+                )
+            else:
+                raise NotFoundException(f"Invalid index '{self.path}'. Valid indices are < {len(document)}.")
 
-        if is_reference(result):
-            return resolve_reference(f"/{data_source.name}/{result['address']}", get_data_source).entity, self.path
         return result, self.path
 
 
@@ -163,6 +162,7 @@ def reference_to_reference_items(
         # Continue resolve the remaining reference.
         return reference_to_reference_items(remaining_reference, items, deliminator)
 
+    # TODO: Handle queries with paths, ex type=test_data/complex/Customer
     if "$" in content:  # By id
         items.append(IdItem(content[1:]))
     elif prev_deliminator == "/" and len(items) == 0:  # By root package
@@ -202,34 +202,32 @@ def resolve_reference_items(
     data_source: DataSource,
     reference_items: list[AttributeItem | QueryItem | IdItem],
     get_data_source: Callable,
-    document=None,
-    path=None,
-):
-    if len(reference_items) == 0:
-        return document, path
-    resolved_document, path_element = reference_items[0].resolve(document, data_source, get_data_source)
-    if not resolved_document:
-        raise NotFoundException(
-            f"No entity matches '{reference_items[0]}' in document 'dmss://{data_source.name}/${'.'.join(path)}'",
-            data={"reference_items": [str(reference_items[0])]},
-        )
-    if path is None:
-        path = [path_element]
-    else:
-        if isinstance(resolved_document, dict) and resolved_document and "_id" in resolved_document:
+) -> tuple[list | dict, list[str]]:
+    if len(reference_items) == 0 or isinstance(reference_items[0], AttributeItem):
+        raise NotFoundException(f"Invalid reference_items {reference_items}.")
+    document, id = reference_items[0].get_entry_point(data_source)
+    path = [id]
+    reference_items.pop(0)
+    while len(reference_items):
+        if isinstance(reference_items[0], IdItem):
+            raise NotFoundException(f"Invalid reference_items {reference_items}.")
+        document, attribute = reference_items[0].get_child(document, data_source, get_data_source)
+        if isinstance(document, dict) and "_id" in document:
             # Found a new document, use that as new starting point for the attribute path
-            path = [resolved_document["_id"]]
+            path = [document["_id"]]
         else:
-            path.append(path_element)
-
-    return resolve_reference_items(data_source, reference_items[1:], get_data_source, resolved_document, path)
+            path.append(attribute)
+        if not isinstance(document, (list, dict)):
+            raise NotFoundException(f"Path {path} leads to a primitive value.")
+        reference_items.pop(0)
+    return document, path
 
 
 @dataclass(frozen=True)
 class ResolvedReference:
     data_source_id: str
     document_id: str
-    attribute_path: str
+    attribute_path: list[str]
     entity: dict | list
 
 
@@ -244,14 +242,9 @@ def resolve_reference(reference: str, get_data_source: Callable) -> ResolvedRefe
     # The first reference item should always be a DataSourceItem
     data_source = get_data_source(data_source_id)
     document, path = resolve_reference_items(data_source, reference_items, get_data_source)
-    if document is None:
-        raise NotFoundException(
-            f"No document found that matches '{reference}', in the data source '{data_source.name}' could be found.",
-            debug=str(reference_items),
-        )
     return ResolvedReference(
         entity=document,
         data_source_id=data_source_id,
         document_id=str(path[0]),
-        attribute_path=".".join(path[1:]).replace(".[", "["),
+        attribute_path=path[1:],
     )

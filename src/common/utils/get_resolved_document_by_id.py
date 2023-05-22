@@ -86,7 +86,7 @@ def get_complete_sys_document(
 
 def resolve_document(
     entity, data_source, get_data_source, current_id, depth: int = 1, depth_count: int = 0, resolve_links: bool = False
-) -> dict | list:
+) -> dict:
     if depth <= depth_count:
         if depth_count >= 999:
             raise RecursionError("Reached max-nested-depth (999). Most likely some recursive entities")

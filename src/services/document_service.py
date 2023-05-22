@@ -207,7 +207,7 @@ class DocumentService:
         return ref_dict
 
     # TODO: Dont return Node. Doing this is ~33% slower
-    def get_document(self, reference: str, depth: int = 0, resolve_links: bool = False) -> Node:
+    def get_document(self, reference: str, depth: int = 0, resolve_links: bool = False) -> Node | ListNode:
         """
         Get document by reference.
 
@@ -231,8 +231,7 @@ class DocumentService:
                 data_source,
                 self.get_data_source,
                 resolved_reference.document_id,
-                depth=depth
-                + (len(resolved_reference.attribute_path.split(".")) if resolved_reference.attribute_path else 0),
+                depth=depth + len(list(filter(lambda x: x[0] != "[", resolved_reference.attribute_path))),
                 depth_count=0,
                 resolve_links=resolve_links,
             )
@@ -245,9 +244,10 @@ class DocumentService:
             )
 
             if resolved_reference.attribute_path:
-                node = node.get_by_path(
-                    resolved_reference.attribute_path.replace("[", ".").replace("]", "").split(".")
-                )
+                child = node.get_by_path(resolved_reference.attribute_path)
+                if not child:
+                    raise NotFoundException(f"Invalid path {resolved_reference.attribute_path}")
+                return child
             return node
         except (NotFoundException, ApplicationException) as e:
             e.debug = f"{e.message}. {e.debug}"
