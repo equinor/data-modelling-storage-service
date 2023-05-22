@@ -198,8 +198,20 @@ Feature: Get document
     }
     """
 
-  Scenario: Get attribute
-    Given I access the resource url "/api/documents/test-source-name/$1.content[0]"
+  Scenario: Get nested resolved attribute
+    Given I access the resource url "/api/documents/data-source-name/package_1/sub_package_2/container_1"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "type": "dmss://test-source-name/TestData/TestContainer",
+      "name": "container_1"
+    }
+    """
+
+  Scenario: Get resolved attribute
+    Given I access the resource url "/api/documents/test-source-name/$1.content[0]?resolve_links=True"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -207,5 +219,16 @@ Feature: Get document
     {
       "type": "dmss://system/SIMOS/Blueprint",
       "name": "TestContainer"
+    }
+    """
+
+  Scenario: Get unresolved attribute
+    Given I access the resource url "/api/documents/test-source-name/$1.content[0]?resolve_links=False"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "type": "dmss://system/SIMOS/Reference"
     }
     """

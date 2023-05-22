@@ -20,7 +20,7 @@ def find(obj: dict | list, path: list[str | list[int]]) -> Any:
     :param path: a list, where each element can be either a parameter or an array index. Ex: ["myKey", "[10]", [10]]
     :return: the value the path leads to
     :raise:
-        NotFoundException if the path format does not match the type of obj
+        ValueError if the path format does not match the type of obj
         IndexError if the list does not have the index requested
         KeyError if the dict does not have the key requested
     """

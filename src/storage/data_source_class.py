@@ -105,7 +105,7 @@ class DataSource:
         return repo.get(uid)
 
     # TODO: Implement find across repositories
-    def find(self, filter: dict) -> Union[dict, List[dict]]:
+    def find(self, filter: dict) -> List[dict]:
         repo = self.get_default_repository()
 
         documents_with_access: List[dict] = []

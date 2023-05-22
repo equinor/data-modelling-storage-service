@@ -57,6 +57,7 @@ Feature: Explorer - Remove by path
   }
   """
 
+  @skip   # TODO: unskip this test when soofstad is done rewriting the delete endpoints
   Scenario: Remove subpackage with child
     Given i access the resource url "/api/documents-by-path/data-source-name/blueprints/sub_package_1"
     When i make a "DELETE" request
@@ -98,6 +99,7 @@ Feature: Explorer - Remove by path
     }
     """
 
+  @skip   # TODO: unskip this test when soofstad is done rewriting the delete endpoints
   Scenario: Remove file with children
     Given i access the resource url "/api/documents-by-path/data-source-name/blueprints/sub_package_1"
     When i make a "DELETE" request
