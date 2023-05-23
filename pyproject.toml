@@ -16,7 +16,7 @@ click = "^8.0.0"
 aiofiles = "^0.7.0"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 cachetools = "^5.2.0"
-requests = "^2.27.1"
+requests = "^2.31.0"
 gunicorn = "^20.1.0"
 
 [tool.poetry.group.dev.dependencies]
