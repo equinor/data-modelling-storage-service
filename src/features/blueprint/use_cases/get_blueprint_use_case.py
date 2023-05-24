@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from authentication.models import User
 from common.utils.get_storage_recipe import (
     default_form_edit,
+    default_initial_ui_recipe,
     default_list_recipe,
     default_yaml_view,
 )
@@ -51,7 +52,9 @@ def get_blueprint_use_case(type: common_type_constrained_string, context: str | 
 
     return {
         "blueprint": blueprint.to_dict(),
-        "initialUiRecipe": lookup.initial_ui_recipes[type].dict() if lookup.initial_ui_recipes.get(type) else None,
+        "initialUiRecipe": lookup.initial_ui_recipes[type].dict()
+        if lookup.initial_ui_recipes.get(type)
+        else default_initial_ui_recipe.dict(by_alias=True),
         "uiRecipes": [ur.dict(by_alias=True) for ur in ui_recipes],
         "storageRecipes": [sr.dict(by_alias=True) for sr in storage_recipes],
     }

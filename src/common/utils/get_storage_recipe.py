@@ -28,6 +28,50 @@ default_list_recipe = Recipe(
     }
 )
 
+default_initial_ui_recipe = Recipe(
+    **{
+        "name": "RecipeSelect",
+        "type": SIMOS.UI_RECIPE.value,
+        "plugin": "@development-framework/dm-core-plugins/attribute-selector",
+        "config": {
+            "type": "dmss://system/Plugins/dm-core-plugins/attribute-selector/AttributeSelectorConfig",
+            "asSidebar": False,
+            "items": [
+                {
+                    "type": "dmss://system/Plugins/dm-core-plugins/attribute-selector/AttributeSelectorItem",
+                    "label": "Yaml",
+                    "view": {
+                        "type": "dmss://system/SIMOS/InlineRecipeViewConfig",
+                        "recipe": {
+                            "type": "dmss://system/SIMOS/UiRecipe",
+                            "name": "YAML",
+                            "description": "YAML representation",
+                            "plugin": "@development-framework/dm-core-plugins/yaml",
+                        },
+                        "scope": "self",
+                        "eds_icon": "code",
+                    },
+                },
+                {
+                    "type": "dmss://system/Plugins/dm-core-plugins/attribute-selector/AttributeSelectorItem",
+                    "label": "Edit",
+                    "view": {
+                        "type": "dmss://system/SIMOS/InlineRecipeViewConfig",
+                        "recipe": {
+                            "type": "dmss://system/SIMOS/UiRecipe",
+                            "name": "Edit",
+                            "description": "Default edit",
+                            "plugin": "@development-framework/dm-core-plugins/form",
+                        },
+                        "scope": "self",
+                        "eds_icon": "edit",
+                    },
+                },
+            ],
+        },
+    }
+)
+
 
 def storage_recipe_provider(type: str, context: str | None = None) -> list[StorageRecipe]:
     if not context:
