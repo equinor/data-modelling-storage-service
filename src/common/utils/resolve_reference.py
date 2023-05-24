@@ -42,7 +42,7 @@ def _next_reference_part(reference: str) -> Tuple[str, Union[str, None], str]:
     deliminator = None
     remaining_reference = ""
 
-    search = re.search(r"[.|/|\]|\[|(|)]", reference)  # Search for next deliminator
+    search = re.search(r"[.|/|\]|\[]", reference)  # Search for next deliminator
     if search:
         deliminator = search.group(0)
         # Extract the content (the text between the two deliminators)
@@ -142,25 +142,34 @@ class AttributeItem:
         return result, self.path
 
 
-def reference_to_reference_items(
-    reference: str, items=None, prev_deliminator=None
-) -> list[AttributeItem | QueryItem | IdItem]:
-    """Split up the reference into reference items. DataSourceItem return as first element"""
+def reference_to_reference_items(reference: str) -> list[AttributeItem | QueryItem | IdItem]:
+    """Split up the reference into reference items"""
+    queries = re.findall(r"\(([^\)]+)\)", reference)
+    if queries:
+        # Split the reference into the pieces surrounding the queries
+        remaining_ref_parts = list(
+            map(lambda x: re.sub(r"\[?\($|^\)\]?", "", x), re.split("|".join(queries), reference))
+        )
+        items = _reference_to_reference_items(remaining_ref_parts[0], [], None)
+        for index, query in enumerate(queries):
+            items.append(QueryItem(query=query))
+            items = _reference_to_reference_items(remaining_ref_parts[index + 1], [*items], None)
+        return items
+    else:
+        return _reference_to_reference_items(reference, [], None)
 
+
+def _reference_to_reference_items(reference: str, items, prev_deliminator) -> list[AttributeItem | QueryItem | IdItem]:
     if len(reference) == 0:
         return items
-
-    if not items:
-        items = []
 
     content, deliminator, remaining_reference = _next_reference_part(reference)
     if content == "":
         # If the original reference starts with a deliminator (e.g. /)
-        # or two deliminators are next to each other (e.g. ([),
         # then there is no content.
         # The deliminator is extracted from the remaining reference.
         # Continue resolve the remaining reference.
-        return reference_to_reference_items(remaining_reference, items, deliminator)
+        return _reference_to_reference_items(remaining_reference, items, deliminator)
 
     # TODO: Handle queries with paths, ex type=test_data/complex/Customer
     if "$" in content:  # By id
@@ -170,8 +179,6 @@ def reference_to_reference_items(
     elif prev_deliminator == "/":  # By package
         items.append(AttributeItem("content"))
         items.append(QueryItem(query=f"name={content}"))
-    elif prev_deliminator == "(" and deliminator == ")":  # By query
-        items.append(QueryItem(query=content))
     elif prev_deliminator == "[" and deliminator == "]":  # By list index
         items.append(AttributeItem(f"[{content}]"))
     elif prev_deliminator == ".":  # By attribute
@@ -179,7 +186,7 @@ def reference_to_reference_items(
     else:
         raise Exception(f"Not supported reference format: {reference}")
 
-    return reference_to_reference_items(remaining_reference, items, deliminator)
+    return _reference_to_reference_items(remaining_reference, items, deliminator)
 
 
 def split_data_source_and_reference(reference: str) -> tuple[str, str]:
