@@ -147,7 +147,7 @@ def reference_to_reference_items(reference: str) -> list[AttributeItem | QueryIt
     queries = re.findall(r"\(([^\)]+)\)", reference)
     if queries:
         # Split the reference into the pieces surrounding the queries and remove trailing [( and )]
-        remaining_ref_parts = re.split(re.escape("|".join(queries)), reference)
+        remaining_ref_parts = re.split("|".join([re.escape(q) for q in queries]), reference)
         remaining_ref_parts = list(map(lambda x: re.sub(r"\[?\($|^\)\]?", "", x), remaining_ref_parts))
 
         items = _reference_to_reference_items(remaining_ref_parts[0], [], None)
