@@ -146,10 +146,10 @@ def reference_to_reference_items(reference: str) -> list[AttributeItem | QueryIt
     """Split up the reference into reference items"""
     queries = re.findall(r"\(([^\)]+)\)", reference)
     if queries:
-        # Split the reference into the pieces surrounding the queries
-        remaining_ref_parts = list(
-            map(lambda x: re.sub(r"\[?\($|^\)\]?", "", x), re.split("|".join(queries), reference))
-        )
+        # Split the reference into the pieces surrounding the queries and remove trailing [( and )]
+        remaining_ref_parts = re.split(re.escape("|".join(queries)), reference)
+        remaining_ref_parts = list(map(lambda x: re.sub(r"\[?\($|^\)\]?", "", x), remaining_ref_parts))
+
         items = _reference_to_reference_items(remaining_ref_parts[0], [], None)
         for index, query in enumerate(queries):
             items.append(QueryItem(query=query))
@@ -171,7 +171,6 @@ def _reference_to_reference_items(reference: str, items, prev_deliminator) -> li
         # Continue resolve the remaining reference.
         return _reference_to_reference_items(remaining_reference, items, deliminator)
 
-    # TODO: Handle queries with paths, ex type=test_data/complex/Customer
     if "$" in content:  # By id
         items.append(IdItem(content[1:]))
     elif prev_deliminator == "/" and len(items) == 0:  # By root package
