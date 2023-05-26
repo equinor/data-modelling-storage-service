@@ -1,6 +1,7 @@
 from functools import lru_cache
 
 from authentication.models import User
+from common.utils.get_address import get_address
 from common.utils.logging import logger
 from common.utils.resolve_reference import ResolvedReference, resolve_reference
 from config import config
@@ -17,6 +18,10 @@ class BlueprintProvider:
         logger.debug(f"Cache miss! Fetching blueprint '{type}'")
         resolved_reference: ResolvedReference = resolve_reference(
             type, lambda data_source_name: get_data_source(data_source_name, self.user)
+        )
+        resolved_reference = resolve_reference(
+            get_address(resolved_reference.data_source_id, resolved_reference.entity),
+            lambda data_source_name: get_data_source(data_source_name, self.user),
         )
         return Blueprint(resolved_reference.entity, type)
 

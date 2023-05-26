@@ -14,7 +14,7 @@ Feature: Explorer - Remove by path
       | 3   | 2          | document_1    |             | dmss://system/SIMOS/Blueprint |
 
   Scenario: Remove root package
-    Given i access the resource url "/api/documents-by-path/data-source-name/blueprints"
+    Given i access the resource url "/api/documents/data-source-name/blueprints"
     When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/documents/data-source-name/$1"
@@ -57,12 +57,11 @@ Feature: Explorer - Remove by path
   }
   """
 
-  @skip   # TODO: unskip this test when soofstad is done rewriting the delete endpoints
   Scenario: Remove subpackage with child
-    Given i access the resource url "/api/documents-by-path/data-source-name/blueprints/sub_package_1"
+    Given i access the resource url "/api/documents/data-source-name/blueprints/sub_package_1"
     When i make a "DELETE" request
     Then the response status should be "OK"
-    Given I access the resource url "/api/documents/data-source-name/$1"
+    Given I access the resource url "/api/documents/data-source-name/$1?resolve_links=True"
     When I make a "GET" request
     Then the response status should be "OK"
     And the array at content should be of length 1
@@ -82,7 +81,7 @@ Feature: Explorer - Remove by path
     """
 
   Scenario: Remove file with no children
-    Given i access the resource url "/api/documents-by-path/data-source-name/blueprints"
+    Given i access the resource url "/api/documents/data-source-name/blueprints"
     When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/documents/data-source-name/$3"
@@ -99,9 +98,8 @@ Feature: Explorer - Remove by path
     }
     """
 
-  @skip   # TODO: unskip this test when soofstad is done rewriting the delete endpoints
   Scenario: Remove file with children
-    Given i access the resource url "/api/documents-by-path/data-source-name/blueprints/sub_package_1"
+    Given i access the resource url "/api/documents/data-source-name/blueprints/sub_package_1"
     When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/documents/data-source-name/$2"
