@@ -1,4 +1,5 @@
 import unittest
+from copy import deepcopy
 from unittest import mock
 
 import pytest
@@ -182,9 +183,9 @@ class GetDocumentResolveTestCase(unittest.TestCase):
 
         def mock_get_inside_test_data(document_id: str):
             if document_id == "1":
-                return test_data_data_source[0].copy()
+                return deepcopy(test_data_data_source[0])
             if document_id == "2":
-                return my_car_rental.copy()
+                return deepcopy(my_car_rental)
             return None
 
         my_engine = {
@@ -223,18 +224,18 @@ class GetDocumentResolveTestCase(unittest.TestCase):
 
         def mock_get_inside_another_data_source(document_id: str):
             if document_id == "1":
-                return another_data_source[0].copy()
+                return deepcopy(another_data_source[0])
             if document_id == "2":
-                return engines.copy()
+                return deepcopy(engines)
             if document_id == "3":
-                return my_engine.copy()
+                return deepcopy(my_engine)
             return None
 
         def find(target: dict, data_source: list) -> dict:
             """Utility method to be able to search for a document inside a test data source."""
             hit = next((f for f in data_source if is_same(f, target)), None)
             if hit:
-                return [hit.copy()]
+                return [deepcopy(hit)]
 
         def mock_data_source(data_source_id: str, user: dict):
             document_repository = mock.Mock()

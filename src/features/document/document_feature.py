@@ -7,16 +7,25 @@ from pydantic import Json, conint
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.responses import create_response, responses
-
-from .use_cases.add_document_to_path_use_case import add_document_to_path_use_case
-from .use_cases.add_file_use_case import add_file_use_case
-from .use_cases.add_raw_use_case import add_raw_use_case
-from .use_cases.get_document_use_case import get_document_use_case
-from .use_cases.remove_by_path_use_case import remove_by_path_use_case
-from .use_cases.remove_use_case import remove_use_case
-from .use_cases.update_document_use_case import update_document_use_case
+from features.document.use_cases.add_document_to_path_use_case import (
+    add_document_to_path_use_case,
+)
+from features.document.use_cases.add_file_use_case import add_file_use_case
+from features.document.use_cases.add_raw_use_case import add_raw_use_case
+from features.document.use_cases.get_document_use_case import get_document_use_case
+from features.document.use_cases.remove import remove_use_case
+from features.document.use_cases.update_document_use_case import (
+    update_document_use_case,
+)
 
 router = APIRouter(tags=["default", "document"], prefix="/documents")
+
+"""    - **reference**:
+      - By id: PROTOCOL://DATA SOURCE/$ID.Attribute
+      - By path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY.Attribute
+      - By query: PROTOCOL://DATA SOURCE/$ID.list(key=value)
+
+      The PROTOCOL is optional, and the default is dmss."""
 
 
 @router.get("/{reference:path}", operation_id="document_get", response_model=dict, responses=responses)
@@ -29,13 +38,6 @@ def get(
 ):
     """
     Get document as JSON string.
-
-    - **reference**:
-      - By id: PROTOCOL://DATA SOURCE/$ID.Attribute
-      - By path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY.Attribute
-      - By query: PROTOCOL://DATA SOURCE/$ID.list(key=value)
-
-      The PROTOCOL is optional, and the default is dmss.
 
     - **depth**: Maximum depth for resolving nested documents.
     """
@@ -61,18 +63,6 @@ def update(
         files=files,
         update_uncontained=update_uncontained,
     )
-
-
-@router.delete("/{id_reference:path}", operation_id="document_remove", response_model=str, responses=responses)
-@create_response(PlainTextResponse)
-def remove(id_reference: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """Remove document
-    - **id_reference**: <data_source>/<document_uuid>.<attribute_path>
-
-    Example: id_reference=SomeDataSource/3978d9ca-2d7a-4b47-8fed-57710f6cf50b.attributes.1 will remove the first element
-    in the attribute list of a blueprint with the given id in data source 'SomeDataSource'.
-    """
-    return remove_use_case(user=user, id_reference=id_reference)
 
 
 @router.post(
@@ -132,11 +122,8 @@ def add_by_parent_id(
     )
 
 
-@router.delete("-by-path/{path_reference:path}", operation_id="document_remove_by_path", responses=responses)
+@router.delete("/{reference:path}", operation_id="document_remove", responses=responses)
 @create_response(PlainTextResponse)
-def remove_by_path(path_reference: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """Remove a document from DMSS.
-
-    - **path_reference**: <data_source>/<path>.<attribute>
-    """
-    return remove_by_path_use_case(user=user, absolute_path=path_reference)
+def remove(reference: str, user: User = Depends(auth_w_jwt_or_pat)):
+    """Remove a document from DMSS."""
+    return remove_use_case(user=user, reference=reference)

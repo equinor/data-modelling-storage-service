@@ -16,7 +16,7 @@ class BlueprintProvider:
     def get_blueprint(self, type: str) -> Blueprint:
         logger.debug(f"Cache miss! Fetching blueprint '{type}'")
         resolved_reference: ResolvedReference = resolve_reference(
-            type, lambda data_source_name: get_data_source(data_source_name, self.user)
+            type, lambda data_source_name: get_data_source(data_source_name, self.user), resolve=True
         )
         return Blueprint(resolved_reference.entity, type)
 

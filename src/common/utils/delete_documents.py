@@ -14,6 +14,25 @@ def delete_list_recursive(value: Union[list, dict], data_source: DataSource):
         delete_dict_recursive(value, data_source)
 
 
+def delete_by_attribute_path(document: dict, path: list[str], data_source: DataSource, get_data_source) -> dict:
+    target = document
+    path_elements = [e.strip("[]./") for e in path]
+    for element in path_elements[:-1]:  # Step through all the path items except the last one that should be deleted
+        if isinstance(target, list):
+            target = target[int(element)]
+        else:
+            target = target[element]
+
+    if isinstance(target, list):
+        delete_dict_recursive(target[int(path_elements[-1])], data_source=data_source)
+        del target[int(path_elements[-1])]
+    else:
+        delete_dict_recursive(target[path_elements[-1]], data_source=data_source)
+        del target[path_elements[-1]]
+
+    return document
+
+
 def delete_dict_recursive(in_dict: dict, data_source: DataSource):
     if (
         in_dict.get("type") == SIMOS.REFERENCE.value and in_dict.get("referenceType") == REFERENCE_TYPES.STORAGE.value

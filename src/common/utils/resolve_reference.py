@@ -77,9 +77,6 @@ class QueryItem:
 
     query: str
 
-    def __repr__(self):
-        return f'Query="{self.query}"'
-
     def filter(self) -> Dict[str, Any]:
         """Create filter from query string."""
         query: Dict[str, Any] = {}
@@ -103,16 +100,23 @@ class QueryItem:
             )
         return result[0], result[0]["_id"]
 
-    def get_child(self, document: dict | list, data_source: DataSource, get_data_source: Callable) -> Tuple[Any, str]:
+    def get_child(
+        self, document: dict | list, data_source: DataSource, get_data_source: Callable, resolve: bool = False
+    ) -> Tuple[Any, str]:
         # Search inside an existing document (need to resolve any references first before trying to compare against filter)
         elements = [
-            resolve_reference(f"/{data_source.name}/{f['address']}", get_data_source).entity if is_reference(f) else f
+            resolve_reference(f"/{data_source.name}/{f['address']}", get_data_source, resolve).entity
+            if is_reference(f)
+            else f
             for f in document
         ]  # Resolve any references
         try:
-            return next(
+            child, index = next(
                 ((element, str(index)) for index, element in enumerate(elements) if is_same(element, self.filter())),
             )  # Find an item that match the given filter
+            if resolve:
+                return child, index
+            return find(document, [f"[{index}]"]), f"[{index}]"
         except StopIteration:
             raise ApplicationException(f"No object matches filter '{self.query}'", data={"elements": elements})
 
@@ -124,9 +128,11 @@ class AttributeItem:
     path: str
 
     def __repr__(self):
-        return f'Attribute="{self.path}"'
+        return self.path
 
-    def get_child(self, document: dict | list, data_source: DataSource, get_data_source: Callable) -> tuple[Any, str]:
+    def get_child(
+        self, document: dict | list, data_source: DataSource, get_data_source: Callable, resolve: bool = False
+    ) -> tuple[Any, str]:
         if isinstance(document, dict) and is_reference(document):
             document = resolve_reference(f"/{data_source.name}/{document['address']}", get_data_source).entity
         try:
@@ -202,6 +208,7 @@ def resolve_reference_items(
     data_source: DataSource,
     reference_items: list[AttributeItem | QueryItem | IdItem],
     get_data_source: Callable,
+    resolve: bool = False,
 ) -> tuple[list | dict, list[str]]:
     if len(reference_items) == 0 or isinstance(reference_items[0], AttributeItem):
         raise NotFoundException(f"Invalid reference_items {reference_items}.")
@@ -211,7 +218,9 @@ def resolve_reference_items(
     while len(reference_items):
         if isinstance(reference_items[0], IdItem):
             raise NotFoundException(f"Invalid reference_items {reference_items}.")
-        document, attribute = reference_items[0].get_child(document, data_source, get_data_source)
+        document, attribute = reference_items[0].get_child(
+            document, data_source, get_data_source, resolve=len(reference_items) != 1 or resolve
+        )
         if isinstance(document, dict) and "_id" in document:
             # Found a new document, use that as new starting point for the attribute path
             path = [document["_id"]]
@@ -231,8 +240,10 @@ class ResolvedReference:
     entity: dict | list
 
 
-def resolve_reference(reference: str, get_data_source: Callable) -> ResolvedReference:
-    """Resolve the reference into a document."""
+def resolve_reference(reference: str, get_data_source: Callable, resolve: bool = False) -> ResolvedReference:
+    """Resolve the reference into a document.
+
+    resolve: Resolve the target if it's a reference"""
     if not reference:
         raise ApplicationException("Failed to resolve reference. Got empty reference.")
 
@@ -241,7 +252,7 @@ def resolve_reference(reference: str, get_data_source: Callable) -> ResolvedRefe
 
     # The first reference item should always be a DataSourceItem
     data_source = get_data_source(data_source_id)
-    document, path = resolve_reference_items(data_source, reference_items, get_data_source)
+    document, path = resolve_reference_items(data_source, reference_items, get_data_source, resolve=resolve)
     return ResolvedReference(
         entity=document,
         data_source_id=data_source_id,
