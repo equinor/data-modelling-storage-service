@@ -64,7 +64,7 @@ Feature: Explorer - Remove
   """
 
   Scenario: Remove file with no children
-    Given i access the resource url "/api/documents/data-source-name/$1.content.0"
+    Given i access the resource url "/api/documents/data-source-name/$1.content[0]"
     When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/documents/data-source-name/$1"
@@ -86,7 +86,7 @@ Feature: Explorer - Remove
     """
 
   Scenario: Remove another file with no children
-    Given i access the resource url "/api/documents/data-source-name/$2.content.0"
+    Given i access the resource url "/api/documents/data-source-name/$2.content[0]"
     When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/documents/data-source-name/$3"
@@ -104,7 +104,7 @@ Feature: Explorer - Remove
     """
 
   Scenario: Remove file with children
-    Given i access the resource url "/api/documents/data-source-name/$1.content.0"
+    Given i access the resource url "/api/documents/data-source-name/$1.content[0]"
     When i make a "DELETE" request
     Then the response status should be "OK"
     Given I access the resource url "/api/documents/data-source-name/$2"

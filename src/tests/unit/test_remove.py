@@ -1,5 +1,5 @@
 import unittest
-from copy import deepcopy
+from copy import copy, deepcopy
 from unittest import mock
 
 from authentication.models import User
@@ -17,7 +17,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = lambda id: document_1.copy()
 
         document_service = get_mock_document_service(lambda id, user: document_repository)
-        document_service.remove_document(data_source_id="testing", document_id="1")
+        document_service.remove("/testing/$1")
         document_repository.delete.assert_called_with("1")
 
     def test_remove_document_wo_existing_blueprint(self):
@@ -34,7 +34,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=NoBlueprints(),
             repository_provider=lambda x, y: repository,
         )
-        document_service.remove_document(data_source_id="testing", document_id="1")
+        document_service.remove("/testing/$1")
         assert doc_storage == {}
 
     def test_remove_document_with_model_and_storage_uncontained_children(self):
@@ -72,7 +72,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 return repository
 
         document_service = get_mock_document_service(repository_provider=repository_provider)
-        document_service.remove_document(data_source_id="testing", document_id="1")
+        document_service.remove("/testing/$1")
         expected = {"2": {"uid": "2", "_id": "2", "name": "a_reference", "description": "", "type": "basic_blueprint"}}
         assert get_and_print_diff(doc_storage, expected) == []
 
@@ -92,7 +92,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = get_mock_document_service(lambda id, user: repository)
-        document_service.remove_document(data_source_id="testing", document_id="1", attribute="nested")
+        document_service.remove("/testing/$1.nested")
         assert doc_storage["1"].get("nested") is None
 
     def test_remove_second_level_nested(self):
@@ -126,7 +126,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = get_mock_document_service(lambda id, user: repository)
-        document_service.remove_document(data_source_id="testing", document_id="1")
+        document_service.remove("/testing/$1")
         assert doc_storage.get("1") is None
         assert doc_storage.get("2") is None
 
@@ -186,7 +186,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         document_service = get_mock_document_service(lambda id, user: repository)
-        document_service.remove_document(data_source_id="testing", document_id="1")
+        document_service.remove("/testing/$1")
         assert doc_storage.get("1") is None
         assert doc_storage.get("2") is None
         assert doc_storage.get("3") is None
@@ -200,19 +200,28 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "name": "Parent",
                 "description": "",
                 "type": "all_contained_cases_blueprint",
-                "reference": {"_id": "2", "name": "Reference", "type": "basic_blueprint", "contained": False},
+                "reference": {
+                    "address": "2",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.LINK.value,
+                },
             },
             "2": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
         }
+
+        def mock_update(entity: dict, *args, **kwargs):
+            doc_storage[entity["_id"]] = entity
+
+        repository.update = mock_update
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
-        repository.get = lambda uid: doc_storage[uid]
+        repository.get = lambda uid: copy(doc_storage[uid])
 
         def repository_provider(data_source_id, user: User):
             if data_source_id == "testing":
                 return repository
 
         document_service = get_mock_document_service(repository_provider)
-        document_service.remove_document(data_source_id="testing", document_id="1", attribute="reference")
+        document_service.remove("/testing/$1.reference")
         assert doc_storage["1"] == {
             "_id": "1",
             "name": "Parent",
@@ -252,7 +261,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         repository.update = mock_update
         document_service = get_mock_document_service(repository_provider)
-        document_service.remove_document("testing", "1", "im_optional")
+        document_service.remove("/testing/$1.im_optional")
         assert {
             "_id": "1",
             "name": "Parent",
@@ -285,5 +294,5 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.delete = lambda doc_id: doc_storage.pop(doc_id)
         repository.delete_blob = lambda doc_id: doc_storage.pop(doc_id)
         document_service = get_mock_document_service(repository_provider)
-        document_service.remove_document("testing", "1")
+        document_service.remove("/testing/$1")
         assert doc_storage.get("blob_object") is None

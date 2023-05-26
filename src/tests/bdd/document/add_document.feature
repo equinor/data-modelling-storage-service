@@ -220,7 +220,7 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation2"
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation2?resolve_links=true&depth=2"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -248,7 +248,7 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation3"
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation3?resolve_links=true&depth=2"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -277,7 +277,7 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/data-source-name/root_package/operation2"
+    Given i access the resource url "/api/documents/data-source-name/root_package/operation2?resolve_links=true&depth=2"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain

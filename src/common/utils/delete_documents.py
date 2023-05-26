@@ -1,5 +1,6 @@
 from typing import Union
 
+from common.utils.data_structure.find import find
 from enums import REFERENCE_TYPES, SIMOS
 from storage.data_source_class import DataSource
 
@@ -12,6 +13,21 @@ def delete_list_recursive(value: Union[list, dict], data_source: DataSource):
         [delete_list_recursive(item, data_source) for item in value]
     elif isinstance(value, dict):
         delete_dict_recursive(value, data_source)
+
+
+def delete_by_attribute_path(document: dict, path: list[str], data_source: DataSource, get_data_source) -> dict:
+    path_elements = [e.strip("[]./") for e in path]
+    # Step through all the path items except the last one that should be deleted
+    target = find(document, path_elements[:-1])
+
+    if isinstance(target, list):
+        delete_dict_recursive(target[int(path_elements[-1])], data_source=data_source)
+        del target[int(path_elements[-1])]
+    else:
+        delete_dict_recursive(target[path_elements[-1]], data_source=data_source)
+        del target[path_elements[-1]]
+
+    return document
 
 
 def delete_dict_recursive(in_dict: dict, data_source: DataSource):

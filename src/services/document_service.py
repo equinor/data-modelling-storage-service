@@ -17,7 +17,7 @@ from common.tree_node_serializer import (
     tree_node_to_ref_dict,
 )
 from common.utils.build_complex_search import build_mongo_query
-from common.utils.delete_documents import delete_document
+from common.utils.delete_documents import delete_by_attribute_path, delete_document
 from common.utils.get_blueprint import get_blueprint_provider
 from common.utils.get_resolved_document_by_id import resolve_document
 from common.utils.get_storage_recipe import storage_recipe_provider
@@ -253,40 +253,6 @@ class DocumentService:
             e.message = f"Failed to get document referenced with '{reference}'"
             raise e
 
-    def remove_document(self, data_source_id: str, document_id: str, attribute: str = None):
-        """
-        Delete a document, and any model contained children.
-        If document_id is a dotted attribute path, it will remove the reference in the parent.
-        Does not use the Node class, as blueprints won't necessarily be available when deleting.
-        """
-        if document_id.startswith("$"):  # TODO: to support new reference format
-            document_id = document_id[1:]
-
-        repository = self.repository_provider(data_source_id, self.user)
-        if attribute:
-            root_document: dict = repository.get(document_id)
-            path_after_root = attribute.split(".")
-            nested_doc = root_document
-            for index, attr in enumerate(path_after_root):
-                if index + 1 == len(path_after_root):
-                    if isinstance(nested_doc, list):
-                        attr = int(attr)
-                    potential_reference = nested_doc.pop(attr)
-                    if (
-                        potential_reference.get("type") == SIMOS.REFERENCE.value
-                        and potential_reference.get("referenceType") == REFERENCE_TYPES.STORAGE.value
-                    ):
-                        delete_document(repository, potential_reference["address"])
-                    break
-                if isinstance(nested_doc, list):
-                    nested_doc = nested_doc[int(attr)]
-                else:
-                    nested_doc = nested_doc[attr]
-            repository.update(root_document)
-            return
-        else:
-            delete_document(repository, document_id)
-
     def update_document(
         self,
         reference: str,
@@ -318,32 +284,21 @@ class DocumentService:
         logger.info(f"Updated entity '{reference}'")
         return {"data": tree_node_to_dict(node)}
 
-    def remove_by_path(self, data_source_id: str, directory: str, attribute: str = None):
-        if attribute:
-            raise ApplicationException(
-                "Removing a document by path in combination with attribute is not yet supported"
-            )
-        directory = directory.rstrip("/").lstrip("/")
+    def remove(self, reference: str) -> None:
+        data_source_id, _reference = split_data_source_and_reference(reference)
         data_source = self.repository_provider(data_source_id, self.user)
 
-        if "/" in directory:
-            parent = self.get_document(f"/{data_source_id}/{'/'.join(directory.split('/')[0:-1])}", depth=1)
-
-            sub: ResolvedReference = resolve_reference(f"/{data_source_id}/{directory}", self.get_data_source)
-
-            # find the node id of the child with uid equal to child_uid
-            child_node_ids = (child.node_id for child in parent.children[0].children if child.uid == sub.document_id)
-            child_node_id = next(child_node_ids)
-
-            # The first child of a directory is always 'content'
-            parent.children[0].remove_by_child_id(child_node_id)
-            self.save(parent, data_source_id)
-            delete_document(data_source, document_id=sub.document_id)
+        resolved_reference: ResolvedReference = resolve_reference(reference, self.get_data_source)
+        # If the reference goes through a parent, get the parent document
+        if resolved_reference.attribute_path:
+            document = data_source.get(resolved_reference.document_id)
+            new_document = delete_by_attribute_path(
+                document, resolved_reference.attribute_path, data_source, self.get_data_source
+            )
+            data_source.update(new_document)
             return
 
-        # We are removing a root-package with no parent
-        root_package: ResolvedReference = resolve_reference(f"/{data_source_id}/{directory}", self.get_data_source)
-        delete_document(data_source, root_package.document_id)
+        delete_document(data_source, resolved_reference.document_id)
 
     @staticmethod
     def _merge_entity_and_files(node: Node, files: Dict[str, BinaryIO]):

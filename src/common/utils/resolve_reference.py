@@ -5,6 +5,7 @@ from typing import Any, Callable, Tuple, Union
 from common.exceptions import ApplicationException, NotFoundException
 from common.utils.data_structure.find import find
 from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
+from common.utils.get_address import get_address
 from common.utils.is_reference import is_reference
 from enums import Protocols
 from storage.data_source_class import DataSource
@@ -102,6 +103,9 @@ class QueryItem:
         return result[0], result[0]["_id"]
 
     def get_child(self, document: dict | list, data_source: DataSource, get_data_source: Callable) -> Tuple[Any, str]:
+        if isinstance(document, dict) and is_reference(document):
+            document = resolve_reference(get_address(data_source.name, document), get_data_source).entity
+
         # Search inside an existing document (need to resolve any references first before trying to compare against filter)
         elements = [
             resolve_reference(f"/{data_source.name}/{f['address']}", get_data_source).entity if is_reference(f) else f
@@ -109,7 +113,7 @@ class QueryItem:
         ]  # Resolve any references
         for index, element in enumerate(elements):
             if isinstance(element, dict) and has_key_value_pairs(element, self.query_as_dict):
-                return element, str(index)
+                return document[index], str(index)
         raise ApplicationException(f"No object matches filter '{self.query_as_str}'", data={"elements": elements})
 
 
@@ -124,7 +128,7 @@ class AttributeItem:
 
     def get_child(self, document: dict | list, data_source: DataSource, get_data_source: Callable) -> tuple[Any, str]:
         if isinstance(document, dict) and is_reference(document):
-            document = resolve_reference(f"/{data_source.name}/{document['address']}", get_data_source).entity
+            document = resolve_reference(get_address(data_source.name, document), get_data_source).entity
         try:
             result = find(document, [self.path])
         except (IndexError, ValueError, KeyError):
