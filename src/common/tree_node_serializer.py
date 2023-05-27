@@ -25,14 +25,15 @@ def tree_node_to_dict(node: Node | ListNode) -> list[Any] | dict:
     if not node.entity:
         return node.entity
 
-    if node.uid:
-        data["_id"] = node.uid
-
     # Always add 'type'
     try:
         data["type"] = node.entity["type"]
     except KeyError:
         raise BadRequestException(f"The node '{node.uid}' is missing the 'type' attributes")
+
+    if node.uid and not data["type"] == SIMOS.REFERENCE.value:
+        data["_id"] = node.uid
+
     # Primitive
     # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.
     if node.blueprint is not None:
