@@ -99,6 +99,28 @@ class ResolveReferenceTestCase(unittest.TestCase):
             ],
         )
 
+    def test_reference_with_query_and_slash_to_reference_items(self):
+        reference = "/(name=package,isRoot=True)/subPackage"
+        items = reference_to_reference_items(reference)
+        self.assertEqual(
+            items,
+            [
+                QueryItem(query="name=package,isRoot=True"),
+                AttributeItem(path="content"),
+                QueryItem(query="name=subPackage"),
+            ],
+        )
+
+    def test_reference_with_query_2_to_reference_items(self):
+        reference = "/(type=test_data/complex/Customer)"
+        items = reference_to_reference_items(reference)
+        self.assertEqual(
+            items,
+            [
+                QueryItem(query="type=test_data/complex/Customer"),
+            ],
+        )
+
     def test_reference_with_query_and_attribute_query_to_reference_items(self):
         reference = "/[(_id=1)].attribute(key1=value1,key2=value2)"
         items = reference_to_reference_items(reference)
