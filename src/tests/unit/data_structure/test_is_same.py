@@ -1,15 +1,15 @@
 import unittest
 
-from common.utils.data_structure.is_same import is_same
+from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
 
 
 class IsSameTestCase(unittest.TestCase):
     def test_is_same(self):
         target = {"a": "1", "b": "2"}
         content = {"a": "1"}
-        assert is_same(target, content)
+        assert has_key_value_pairs(target, content)
 
     def test_is_not_same(self):
         target = {"a": "1", "b": "2"}
         content = {"a": "2"}
-        assert is_same(target, content) is False
+        assert has_key_value_pairs(target, content) is False

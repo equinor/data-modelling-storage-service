@@ -5,7 +5,7 @@ import pytest
 
 from common.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
-from common.utils.data_structure.is_same import is_same
+from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
 from enums import REFERENCE_TYPES, SIMOS, Protocols
 from tests.unit.mock_utils import get_mock_document_service
 
@@ -232,7 +232,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
 
         def find(target: dict, data_source: list) -> dict:
             """Utility method to be able to search for a document inside a test data source."""
-            hit = next((f for f in data_source if is_same(f, target)), None)
+            hit = next((f for f in data_source if has_key_value_pairs(f, target)), None)
             if hit:
                 return [hit.copy()]
 
