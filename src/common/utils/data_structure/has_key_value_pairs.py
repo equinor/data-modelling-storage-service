@@ -1,5 +1,5 @@
-def is_same(target: dict, content: dict):
-    """Util method that for checking that target document contains the content."""
+def has_key_value_pairs(target: dict, content: dict):
+    """Util method for checking that target entity contains the key-value pairs defined in content"""
     is_identical = True
     for key in content:
         if key not in target:

@@ -1,10 +1,10 @@
 import re
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, Tuple, Union
+from typing import Any, Callable, Tuple, Union
 
 from common.exceptions import ApplicationException, NotFoundException
 from common.utils.data_structure.find import find
-from common.utils.data_structure.is_same import is_same
+from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
 from common.utils.is_reference import is_reference
 from enums import Protocols
 from storage.data_source_class import DataSource
@@ -75,31 +75,29 @@ class IdItem:
 class QueryItem:
     """Query a list for a document."""
 
-    query: str
-
     def __repr__(self):
-        return f'Query="{self.query}"'
+        return f'Query="{self.query_as_str}"'
 
-    def filter(self) -> Dict[str, Any]:
-        """Create filter from query string."""
-        query: Dict[str, Any] = {}
-        for pair in self.query.split(","):
+    def __init__(self, query: str):
+        self.query_as_str = query
+
+        self.query_as_dict: dict[str, Any] = {}
+        for pair in self.query_as_str.split(","):
             key, value = pair.split("=")
             if value == "True" or value == "False":
-                query[key] = bool(value)
+                self.query_as_dict[key] = bool(value)
             else:
-                query[key] = value
-        return query
+                self.query_as_dict[key] = value
 
     def get_entry_point(self, data_source: DataSource) -> Tuple[dict, str]:
-        result: list[dict] = data_source.find(self.filter())
+        result: list[dict] = data_source.find(self.query_as_dict)
         if not result:
             raise NotFoundException(
-                f"No document that match '{self.query}' could be found in data source '{data_source.name}'."
+                f"No document that match '{self.query_as_str}' could be found in data source '{data_source.name}'."
             )
         if len(result) > 2:
             raise ApplicationException(
-                f"More than 1 document that match '{self.query}' was returned from DataSource. That should not happen..."
+                f"More than 1 document that match '{self.query_as_str}' was returned from DataSource. That should not happen..."
             )
         return result[0], result[0]["_id"]
 
@@ -109,12 +107,10 @@ class QueryItem:
             resolve_reference(f"/{data_source.name}/{f['address']}", get_data_source).entity if is_reference(f) else f
             for f in document
         ]  # Resolve any references
-        try:
-            return next(
-                ((element, str(index)) for index, element in enumerate(elements) if is_same(element, self.filter())),
-            )  # Find an item that match the given filter
-        except StopIteration:
-            raise ApplicationException(f"No object matches filter '{self.query}'", data={"elements": elements})
+        for index, element in enumerate(elements):
+            if isinstance(element, dict) and has_key_value_pairs(element, self.query_as_dict):
+                return element, str(index)
+        raise ApplicationException(f"No object matches filter '{self.query_as_str}'", data={"elements": elements})
 
 
 @dataclass
