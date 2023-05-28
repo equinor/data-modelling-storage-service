@@ -72,7 +72,7 @@ def get_complete_sys_document(
     if "://" not in address:
         address = f"{data_source.name}/{address}"
 
-    resolved_reference: ResolvedReference = resolve_reference(address, get_data_source)
+    resolved_reference: ResolvedReference = resolve_reference(address, get_data_source, resolve=resolve_links)
 
     # Only update if the resolved reference has id (since it can point to a document that are contained in another document)
     if is_link(reference) and "_id" in resolved_reference.entity:
