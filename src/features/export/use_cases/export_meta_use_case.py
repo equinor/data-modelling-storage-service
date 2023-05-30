@@ -2,8 +2,12 @@ from typing import List, Optional
 
 from authentication.models import User
 from common.exceptions import NotFoundException
-from common.utils.resolve_reference import resolve_reference
-from common.utils.string_helpers import split_dmss_ref
+from common.utils.resolve_reference import (
+    QueryItem,
+    reference_to_reference_items,
+    resolve_reference,
+    split_data_source_and_reference,
+)
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 
@@ -69,18 +73,38 @@ def _collect_entity_meta_by_path(
     return _collect_entity_meta_by_path(next_package, path_elements, data_source, collected_meta, user)
 
 
-def export_meta_use_case(user: User, document_reference: str) -> dict:
-    data_source_id, path, attribute = split_dmss_ref(document_reference)
-    data_source = get_data_source(data_source_id, user)
+def export_meta_use_case(user: User, reference: str) -> dict:
+    """Export meta.
 
-    path_elements = path.split("/")
-    root_package_name = path_elements.pop(0)
+    This function assumes that reference is on a path format, without any id.
+    Also, a reference must be on the format PROTOCOL://DATASOURCE_NAME/ROOT_PACKAGE/*path to document or package*.
+    (Protocol is optional)
+    """
+    if "://" not in reference:
+        reference = f"/{reference}"
+
+    data_source_id, reference_path = split_data_source_and_reference(reference)
+    data_source = get_data_source(data_source_id, user)
+    reference_items = reference_to_reference_items(reference_path)
+    if (
+        len(reference_items) >= 1
+        and isinstance(reference_items[0], QueryItem)
+        and reference_items[0].query_as_dict["isRoot"]
+    ):
+        root_package_name = reference_items[0].query_as_dict["name"]
+    else:
+        raise NotFoundException(f"Could not find a root package from reference '{reference}'")
+
     root_package: dict = resolve_reference(
         f"/{data_source_id}/{root_package_name}", lambda data_source_name: get_data_source(data_source_name, user)
     ).entity
 
-    if not path_elements:
+    path_without_root_package: List[str] = reference_path.strip("/").split("/")[1:]
+
+    if not path_without_root_package:
         return root_package.get("_meta_", {})
 
-    meta = _collect_entity_meta_by_path(root_package, path_elements, data_source, root_package.get("_meta_"), user)
+    meta = _collect_entity_meta_by_path(
+        root_package, path_without_root_package, data_source, root_package.get("_meta_"), user
+    )
     return meta

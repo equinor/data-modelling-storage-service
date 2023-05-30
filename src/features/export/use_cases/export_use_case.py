@@ -3,6 +3,7 @@ import tempfile
 import zipfile
 
 from authentication.models import User
+from common.utils.resolve_reference import ResolvedReference, resolve_reference
 from domain_classes.tree_node import Node
 from enums import SIMOS
 from features.export.use_cases.export_meta_use_case import export_meta_use_case
@@ -30,18 +31,17 @@ def save_node_to_zipfile(
         )
 
 
-def create_zip_export(document_service: DocumentService, absolute_document_ref: str, user: User) -> str:
+def create_zip_export(document_service: DocumentService, reference: str, user: User) -> str:
     """Create a temporary folder on the host that contains a zip file."""
     tmpdir = tempfile.mkdtemp()
     archive_path = os.path.join(tmpdir, "temp_zip_archive.zip")
-
-    data_source_id, document_path = absolute_document_ref.split("/", 1)
-    document_node: Node = document_service.get_document(f"/{absolute_document_ref}")
+    resolved_reference: ResolvedReference = resolve_reference(reference, document_service.get_data_source)
+    document_node: Node = document_service.get_document(reference, depth=999, resolve_links=True)
 
     # non-root packages and single documents will inherit the meta information from all parents.
     document_meta = {}
     if not (document_node.entity["type"] == SIMOS.PACKAGE.value and document_node.entity["isRoot"]):
-        document_meta = export_meta_use_case(user=user, document_reference=absolute_document_ref)
+        document_meta = export_meta_use_case(user=user, reference=reference)
     elif "_meta_" in document_node.entity:
         document_meta = document_node.entity["_meta_"]
 
@@ -51,7 +51,7 @@ def create_zip_export(document_service: DocumentService, absolute_document_ref: 
         document_service=document_service,
         document_node=document_node,
         document_meta=document_meta,
-        data_source_id=data_source_id,
+        data_source_id=resolved_reference.data_source_id,
     )
 
     return archive_path
@@ -59,6 +59,6 @@ def create_zip_export(document_service: DocumentService, absolute_document_ref: 
 
 def export_use_case(user: User, document_reference: str):
     memory_file = create_zip_export(
-        document_service=DocumentService(user=user), absolute_document_ref=document_reference, user=user
+        document_service=DocumentService(user=user), reference=document_reference, user=user
     )
     return memory_file

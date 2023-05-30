@@ -24,13 +24,13 @@ class ExportMetaResponse(BaseModel):
 
 
 @router.get(
-    "/meta/{absolute_document_ref:path}",
+    "/meta/{reference:path}",
     operation_id="export-meta",
     response_class=JSONResponse,
     responses={**responses, 200: {"content": {"application/json": {}}}},
 )
 @create_response(JSONResponse)
-def export_meta(absolute_document_ref: str, user: User = Depends(auth_w_jwt_or_pat)):
+def export_meta(reference: str, user: User = Depends(auth_w_jwt_or_pat)):
     """
     Export only the metadata of an entity.
     An entities metadata is concatenated from the "top down". Inheriting parents meta, and overriding for any
@@ -38,25 +38,31 @@ def export_meta(absolute_document_ref: str, user: User = Depends(auth_w_jwt_or_p
 
     If no metadata is defined anywhere in the tree, an empty object is returned.
 
-    - **absolute_document_ref**: <data_source>/<path_to_entity>/<entity_name>
+    - **reference**:
+      - By path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY
+
+      The PROTOCOL is optional, and the default is dmss.
     """
-    return ExportMetaResponse(**export_meta_use_case(user=user, document_reference=absolute_document_ref)).dict()
+    return ExportMetaResponse(**export_meta_use_case(user=user, reference=reference)).dict()
 
 
-@create_response(FileResponse)
 @router.get(
-    "/{absolute_document_ref:path}",
+    "/{reference:path}",
     operation_id="export",
     response_class=FileResponse,
     responses={**responses, 200: {"content": {"application/zip": {}}}},
 )
-def export(absolute_document_ref: str, user: User = Depends(auth_w_jwt_or_pat)):
+def export(reference: str, user: User = Depends(auth_w_jwt_or_pat)):
     """
     Download a zip-folder with one or more documents as json file(s).
 
-    - **absolute_document_ref**: <data_source>/<path>/<document_name>
+    - **reference**:
+      - By path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY
+
+      The PROTOCOL is optional, and the default is dmss.
     """
-    memory_file_path = export_use_case(user=user, document_reference=absolute_document_ref)
+    # TODO add proper error handling. The create_response() wrapper does not work with FileResponse.
+    memory_file_path = export_use_case(user=user, document_reference=reference)
     directory_to_remove = Path(memory_file_path).parent
     response = FileResponse(
         memory_file_path, media_type="application/zip", background=BackgroundTask(shutil.rmtree, directory_to_remove)
