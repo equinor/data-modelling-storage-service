@@ -143,7 +143,9 @@ class AttributeItem:
 
 
 def reference_to_reference_items(reference: str) -> list[AttributeItem | QueryItem | IdItem]:
-    """Split up the reference into reference items"""
+    """Split up the reference into reference items.
+    The reference used as input to this function should not include protocol or data source.
+    """
     queries = re.findall(r"\(([^\)]+)\)", reference)
     if queries:
         # Split the reference into the pieces surrounding the queries and remove trailing [( and )]

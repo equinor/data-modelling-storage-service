@@ -123,7 +123,7 @@ Feature: Export an entity's meta data
     {}
     """
 
-  Scenario: Fetch the meta of a root package
+  Scenario: Fetch the meta of a root package using path
     Given there exist document with id "1" in data source "test-DS"
     """
     {
@@ -172,3 +172,31 @@ Feature: Export an entity's meta data
       ]
     }
     """
+    Given i access the resource url "/api/export/meta/dmss://test-DS/TestData/"
+    When i make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "type": "CORE:Meta",
+      "version": "0.0.1",
+      "dependencies": [
+        {
+          "type": "dmss://system/SIMOS/Dependency",
+          "alias": "CORE",
+          "address": "system/SIMOS",
+          "version": "0.0.1",
+          "protocol": "dmss"
+        }
+      ]
+    }
+    """
+
+  Scenario: Fetch the meta when root packages does not exist
+    Given i access the resource url "/api/export/meta/test-DS/missingRootPackage/document"
+    When i make a "GET" request
+    Then the response status should be "Not Found"
+    Given i access the resource url "/api/export/meta/dmss://test-DS/missingRootPackage/document"
+    When i make a "GET" request
+    Then the response status should be "Not Found"
+
