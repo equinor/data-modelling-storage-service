@@ -42,6 +42,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
             ],
         }
         self.engine = {
+            "_id": "2",
             "type": "test_data/complex/EngineTest",
             "name": "myEngine",
             "description": "",
@@ -53,6 +54,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
             "power": 120,
         }
         self.fuel_pump = {
+            "_id": "3",
             "type": "test_data/complex/FuelPumpTest",
             "name": "fuelPump",
             "description": "A standard fuel pump",

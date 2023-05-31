@@ -249,29 +249,28 @@ class GetDocumentResolveTestCase(unittest.TestCase):
             return document_repository
 
         document_service = get_mock_document_service(mock_data_source)
-        directly = tree_node_to_dict(document_service.get_document("test_data/$2", resolve_links=True, depth=99))
+        actual = tree_node_to_dict(document_service.get_document("test_data/$2", resolve_links=True, depth=99))
         complex_package = tree_node_to_dict(
             document_service.get_document("test_data/$1", resolve_links=True, depth=99)
         )
 
-        assert isinstance(directly, dict)
+        assert isinstance(actual, dict)
 
-        actual_engine = {**my_engine}
-        actual_engine.pop("_id")
-        actual_volvo = {**my_car_rental["cars"][0], "engine": actual_engine}
-        actual_ferrari = {**my_car_rental["cars"][1], "engine": actual_engine}
-        actual_customers = [
-            {**my_car_rental["customers"][0], "car": actual_volvo},
-            {**my_car_rental["customers"][1], "car": actual_volvo},
-            {**my_car_rental["customers"][2], "car": actual_volvo},
-            {**my_car_rental["customers"][3], "car": actual_volvo},
-            {**my_car_rental["customers"][4], "car": actual_volvo},
-            {**my_car_rental["customers"][5], "car": actual_volvo},
-            {**my_car_rental["customers"][6], "car": actual_volvo},
-            {**my_car_rental["customers"][7], "car": actual_volvo},
-            {**my_car_rental["customers"][8], "car": actual_ferrari},
+        expected_engine = {**my_engine}
+        expected_volvo = {**my_car_rental["cars"][0], "engine": expected_engine}
+        expected_ferrari = {**my_car_rental["cars"][1], "engine": expected_engine}
+        expected_customers = [
+            {**my_car_rental["customers"][0], "car": expected_volvo},
+            {**my_car_rental["customers"][1], "car": expected_volvo},
+            {**my_car_rental["customers"][2], "car": expected_volvo},
+            {**my_car_rental["customers"][3], "car": expected_volvo},
+            {**my_car_rental["customers"][4], "car": expected_volvo},
+            {**my_car_rental["customers"][5], "car": expected_volvo},
+            {**my_car_rental["customers"][6], "car": expected_volvo},
+            {**my_car_rental["customers"][7], "car": expected_volvo},
+            {**my_car_rental["customers"][8], "car": expected_ferrari},
         ]
-        actual = {**my_car_rental, "cars": [actual_volvo, actual_ferrari], "customers": actual_customers}
+        expected = {**my_car_rental, "cars": [expected_volvo, expected_ferrari], "customers": expected_customers}
 
-        assert get_and_print_diff(actual, directly) == []
-        assert get_and_print_diff(actual, complex_package["content"][0]) == []
+        assert get_and_print_diff(actual, expected) == []
+        assert get_and_print_diff(complex_package["content"][0], expected) == []
