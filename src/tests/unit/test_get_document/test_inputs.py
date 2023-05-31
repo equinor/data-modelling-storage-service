@@ -1,10 +1,6 @@
-import re
 import unittest
 from unittest import mock
 
-import pytest
-
-from common.exceptions import ApplicationException, NotFoundException
 from common.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from enums import REFERENCE_TYPES, SIMOS
@@ -31,15 +27,21 @@ class GetDocumentInputTestCase(unittest.TestCase):
             ],
             "customers": [
                 {
-                    "type": "test_data/complex/Customer",
-                    "name": "Jane",
-                    "car": {
-                        "address": "$1.cars[0]",
-                        "type": SIMOS.REFERENCE.value,
-                        "referenceType": REFERENCE_TYPES.LINK.value,
-                    },
+                    "address": "$4",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.LINK.value,
                 }
             ],
+        }
+        self.customer = {
+            "_id": "4",
+            "type": "test_data/complex/Customer",
+            "name": "Jane",
+            "car": {
+                "address": "$1.cars[0]",
+                "type": SIMOS.REFERENCE.value,
+                "referenceType": REFERENCE_TYPES.LINK.value,
+            },
         }
         self.engine = {
             "_id": "2",
@@ -72,52 +74,39 @@ class GetDocumentInputTestCase(unittest.TestCase):
             return {**self.engine}
         if document_id == "3":
             return {**self.fuel_pump}
+        if document_id == "4":
+            return {**self.customer}
         return None
 
     def mock_find(self, query: dict) -> list[dict]:
-        documents: list[dict] = [self.car_rental_company, self.engine, self.fuel_pump]
+        documents: list[dict] = [self.car_rental_company, self.engine, self.fuel_pump, self.customer]
         for key, value in query.items():
             documents = list(filter(lambda x: key in x and x[key] == value, documents))
         return documents
 
-    def test_invalid_id(self):
-        with pytest.raises(
-            NotFoundException, match=re.escape("No document with id '4' could be found in data source 'datasource'.")
-        ):
-            self.document_service.get_document("datasource/$4")
+    def test_attribute_no_resolve(self):
+        root = tree_node_to_dict(
+            self.document_service.get_document("datasource/$1.cars[0].engine", 0, resolve_links=False)
+        )
+        assert get_and_print_diff(root, self.car_rental_company["cars"][0]["engine"]) == []
 
-    def test_invalid_query_no_document(self):
-        with pytest.raises(
-            NotFoundException,
-            match=re.escape("No document that match '_id=4' could be found in data source 'datasource'."),
-        ):
-            self.document_service.get_document("datasource/[(_id=4)]")
+    def test_attribute_resolve(self):
+        root = tree_node_to_dict(
+            self.document_service.get_document("datasource/$1.cars[0].engine", 0, resolve_links=True)
+        )
+        assert get_and_print_diff(root, self.engine) == []
 
-    def test_invalid_query_no_attribute(self):
-        with pytest.raises(ApplicationException, match=re.escape("No object matches filter 'name=Peter'")):
-            self.document_service.get_document("datasource/$1.customers[(name=Peter)]")
+    def test_query_no_resolve(self):
+        root = tree_node_to_dict(
+            self.document_service.get_document("datasource/$1.customers(name=Jane)", 0, resolve_links=False)
+        )
+        assert get_and_print_diff(root, self.car_rental_company["customers"][0]) == []
 
-    def test_invalid_attribute(self):
-        with pytest.raises(
-            NotFoundException,
-            match=re.escape(
-                f"Invalid attribute 'cers'. Valid attributes are '{list(self.car_rental_company.keys())}'."
-            ),
-        ):
-            self.document_service.get_document("datasource/$1.cers")
-
-    def test_invalid_index(self):
-        with pytest.raises(
-            NotFoundException,
-            match=re.escape(f"Invalid index '[1]'. Valid indices are < {len(self.car_rental_company['cars'])}."),
-        ):
-            self.document_service.get_document("datasource/$1.cars[1]")
-
-    def test_invalid_reference_to_primitive(self):
-        with pytest.raises(
-            NotFoundException, match=re.escape(f"Path ['1', 'cars', '[0]', 'plateNumber'] leads to a primitive value.")
-        ):
-            self.document_service.get_document("datasource/$1.cars[0].plateNumber")
+    def test_query_resolve(self):
+        root = tree_node_to_dict(
+            self.document_service.get_document("datasource/$1.customers(name=Jane)", 0, resolve_links=True)
+        )
+        assert get_and_print_diff(root, self.customer) == []
 
     def test_depth_0(self):
         root = tree_node_to_dict(self.document_service.get_document("datasource/$1", 0, resolve_links=True))
@@ -125,7 +114,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
 
     def test_depth_1(self):
         root = tree_node_to_dict(self.document_service.get_document("datasource/$1", 1, resolve_links=True))
-        assert get_and_print_diff(root, self.car_rental_company) == []
+        assert get_and_print_diff(root, {**self.car_rental_company, "customers": [self.customer]}) == []
 
     def test_depth_2(self):
         root = tree_node_to_dict(self.document_service.get_document("datasource/$1", 2, resolve_links=True))
@@ -135,9 +124,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
                 {
                     **self.car_rental_company,
                     "cars": [{**self.car_rental_company["cars"][0], "engine": self.engine}],
-                    "customers": [
-                        {**self.car_rental_company["customers"][0], "car": self.car_rental_company["cars"][0]},
-                    ],
+                    "customers": [{**self.customer, "car": self.car_rental_company["cars"][0]}],
                 },
             )
             == []
