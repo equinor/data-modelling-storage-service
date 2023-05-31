@@ -9,7 +9,7 @@ from common.utils.resolve_reference import (
 )
 
 
-class ResolveReferenceTestCase(unittest.TestCase):
+class ReferenceToReferenceItemsTestCase(unittest.TestCase):
     def setUp(self):
         pass
 
