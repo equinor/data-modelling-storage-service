@@ -114,7 +114,7 @@ class QueryItem:
         for index, element in enumerate(elements):
             if isinstance(element, dict) and has_key_value_pairs(element, self.query_as_dict):
                 return document[index], str(index)
-        raise ApplicationException(f"No object matches filter '{self.query_as_str}'", data={"elements": elements})
+        raise NotFoundException(f"No object matches filter '{self.query_as_str}'", data={"elements": elements})
 
 
 @dataclass
