@@ -113,7 +113,7 @@ class QueryItem:
         ]  # Resolve any references
         for index, element in enumerate(elements):
             if isinstance(element, dict) and has_key_value_pairs(element, self.query_as_dict):
-                return document[index], str(index)
+                return document[index], f"[{index}]"
         raise NotFoundException(f"No object matches filter '{self.query_as_str}'", data={"elements": elements})
 
 
@@ -213,19 +213,17 @@ def resolve_reference_items(
         raise NotFoundException(f"Invalid reference_items {reference_items}.")
     document, id = reference_items[0].get_entry_point(data_source)
     path = [id]
-    reference_items.pop(0)
-    while len(reference_items):
-        if isinstance(reference_items[0], IdItem):
+    for index, ref_item in enumerate(reference_items[1:]):
+        if isinstance(ref_item, IdItem):
             raise NotFoundException(f"Invalid reference_items {reference_items}.")
-        document, attribute = reference_items[0].get_child(document, data_source, get_data_source)
-        if isinstance(document, dict) and "_id" in document:
+        document, attribute = ref_item.get_child(document, data_source, get_data_source)
+        if isinstance(document, dict) and "address" in document and index < len(reference_items) - 2:
             # Found a new document, use that as new starting point for the attribute path
-            path = [document["_id"]]
+            path = [document["address"][1:]]
         else:
             path.append(attribute)
         if not isinstance(document, (list, dict)):
             raise NotFoundException(f"Path {path} leads to a primitive value.")
-        reference_items.pop(0)
     return document, path
 
 
