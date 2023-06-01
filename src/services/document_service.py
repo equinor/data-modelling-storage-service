@@ -292,9 +292,7 @@ class DocumentService:
         # If the reference goes through a parent, get the parent document
         if resolved_reference.attribute_path:
             document = data_source.get(resolved_reference.document_id)
-            new_document = delete_by_attribute_path(
-                document, resolved_reference.attribute_path, data_source, self.get_data_source
-            )
+            new_document = delete_by_attribute_path(document, resolved_reference.attribute_path, data_source)
             data_source.update(new_document)
             return
 
