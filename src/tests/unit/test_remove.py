@@ -67,19 +67,47 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.document_service.remove("/testing/$1")
         assert get_and_print_diff(self.storage, {"2": doc_2}) == []
 
-    def test_remove_nested(self):
+    def test_remove_child_dict(self):
         self.storage = {
             "1": {
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
                 "type": "all_contained_cases_blueprint",
-                "nested": {"name": "Nested", "description": "", "type": "basic_blueprint"},
-            }
+                "nested": {
+                    "address": "2",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.STORAGE.value,
+                },
+            },
+            "2": {"name": "Nested", "description": "", "type": "basic_blueprint"},
         }
 
         self.document_service.remove("/testing/$1.nested")
         assert self.storage["1"].get("nested") is None
+        assert self.storage.get("2") is None
+
+    def test_remove_child_list(self):
+        self.storage = {
+            "1": {
+                "_id": "1",
+                "name": "Parent",
+                "description": "",
+                "type": "all_contained_cases_blueprint",
+                "references": [
+                    {
+                        "address": "2",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.STORAGE.value,
+                    }
+                ],
+            },
+            "2": {"name": "Nested", "description": "", "type": "basic_blueprint"},
+        }
+
+        self.document_service.remove("/testing/$1.references")
+        assert self.storage["1"].get("references") is None
+        assert self.storage.get("2") is None
 
     def test_remove_second_level_nested(self):
         self.storage = {
