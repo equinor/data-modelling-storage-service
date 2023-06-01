@@ -148,7 +148,8 @@ def tree_node_from_dict(
     )
 
     try:
-        node.blueprint
+        if node.attribute.attribute_type != "object":
+            node.blueprint
     except NotFoundException as e:
         raise ApplicationException(f"Failed to find blueprint with reference '{node.type}'", debug=str(e))
 
