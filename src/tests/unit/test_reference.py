@@ -5,7 +5,7 @@ from pydantic import ValidationError
 
 from common.exceptions import BadRequestException, NotFoundException
 from enums import REFERENCE_TYPES, SIMOS
-from restful.request_types.shared import Reference
+from restful.request_types.shared import ReferenceEntity
 from tests.unit.mock_utils import get_mock_document_service
 
 
@@ -36,7 +36,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
-        reference = Reference.parse_obj(
+        reference = ReferenceEntity.parse_obj(
             {
                 "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
                 "type": SIMOS.REFERENCE.value,
@@ -86,7 +86,7 @@ class ReferenceTestCase(unittest.TestCase):
             document_service.insert_reference(
                 "testing",
                 document_id="$1",
-                reference=Reference.parse_obj(
+                reference=ReferenceEntity.parse_obj(
                     {
                         "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
                         "type": SIMOS.REFERENCE.value,
@@ -127,7 +127,7 @@ class ReferenceTestCase(unittest.TestCase):
             document_service.insert_reference(
                 "testing",
                 document_id="$1",
-                reference=Reference.parse_obj(
+                reference=ReferenceEntity.parse_obj(
                     {
                         "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
                         "type": SIMOS.REFERENCE.value,
@@ -170,7 +170,7 @@ class ReferenceTestCase(unittest.TestCase):
         document_service.insert_reference(
             "testing",
             document_id="$1",
-            reference=Reference.parse_obj(
+            reference=ReferenceEntity.parse_obj(
                 {
                     "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
                     "description": "hallO",
@@ -215,7 +215,7 @@ class ReferenceTestCase(unittest.TestCase):
             document_service.insert_reference(
                 "testing",
                 document_id="1",
-                reference=Reference.parse_obj({"_id": "something", "type": "something"}),
+                reference=ReferenceEntity.parse_obj({"_id": "something", "type": "something"}),
                 attribute_path="uncontained_in_every_way",
             )
 
@@ -393,7 +393,7 @@ class ReferenceTestCase(unittest.TestCase):
         document_service.insert_reference(
             "testing",
             document_id="$1",
-            reference=Reference(
+            reference=ReferenceEntity(
                 **{
                     "address": "$42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
                     "type": SIMOS.REFERENCE.value,

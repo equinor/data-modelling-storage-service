@@ -36,7 +36,7 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS, BuiltinDataTypes, StorageDataTypes
-from restful.request_types.shared import Entity, Reference
+from restful.request_types.shared import Entity, ReferenceEntity
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
@@ -510,7 +510,7 @@ class DocumentService:
         return lookup.acl
 
     def insert_reference(
-        self, data_source_id: str, document_id: str, reference: Reference, attribute_path: str
+        self, data_source_id: str, document_id: str, reference: ReferenceEntity, attribute_path: str
     ) -> dict:
         root: Node = self.get_document(f"{data_source_id}/{document_id}")
         attribute_node: Node = root.get_by_path(attribute_path.split("."))

@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.responses import create_response, responses
-from restful.request_types.shared import Reference
+from restful.request_types.shared import ReferenceEntity
 
 from .use_cases.delete_reference_use_case import delete_reference_use_case
 from .use_cases.insert_reference_use_case import insert_reference_use_case
@@ -19,7 +19,7 @@ router = APIRouter(tags=["default", "reference"], prefix="/reference")
 def insert_reference(
     data_source_id: str,
     document_dotted_id: str,
-    reference: Reference,
+    reference: ReferenceEntity,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Add reference to an entity.

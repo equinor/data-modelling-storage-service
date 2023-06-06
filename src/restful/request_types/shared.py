@@ -36,7 +36,7 @@ class EntityUUID(BaseModel):
     uid: UUID4 = Field(..., alias="_id")
 
 
-class Reference(BaseModel):
+class ReferenceEntity(BaseModel):
     address: str
     type: common_type_constrained_string  # type: ignore
     referenceType: str
