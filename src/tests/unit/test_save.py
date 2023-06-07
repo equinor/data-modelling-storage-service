@@ -257,7 +257,11 @@ class DocumentServiceTestCase(unittest.TestCase):
         target_node = node.get_by_path(["i_have_a_uncontained_attribute", "uncontained_in_every_way"])
         target_node.update(doc_storage["3"])
         document_service.save(node, "testing")
-        assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"]["address"] == "$3"
+        assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"] == {
+            "address": "$3",
+            "type": SIMOS.REFERENCE.value,
+            "referenceType": REFERENCE_TYPES.LINK.value,
+        }
 
     def test_save_no_overwrite_uncontained_document(self):
         repository = mock.Mock()
@@ -321,7 +325,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
     """
     This test tests that we can update a contained attribute, and all it's children (contained or not), without
-    modifying the "root" document.     
+    modifying the "root" document.
     """
 
     def test_save_update_children_of_contained_attribute(self):

@@ -4,7 +4,7 @@ from uuid import uuid4
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
-from enums import SIMOS, BuiltinDataTypes, StorageDataTypes
+from enums import REFERENCE_TYPES, SIMOS, BuiltinDataTypes, StorageDataTypes
 
 
 class NodeBase:
@@ -370,7 +370,14 @@ class Node(NodeBase):
         if not self.entity and not new_id:
             return
 
-        if self.storage_contained:
+        node_is_uncontained_reference_and_should_not_be_updated: bool = (
+            new_id is None
+            and not self.storage_contained
+            and self.type == SIMOS.REFERENCE.value
+            and self.entity["referenceType"] == REFERENCE_TYPES.LINK.value
+        )
+
+        if self.storage_contained or node_is_uncontained_reference_and_should_not_be_updated:
             self.uid = None
             self.entity.pop("_id", None)
             return
