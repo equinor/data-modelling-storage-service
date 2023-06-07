@@ -7,9 +7,12 @@ from common.exceptions import BadRequestException, ValidationException
 from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
-from enums import SIMOS
+from enums import REFERENCE_TYPES, SIMOS
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_utils import get_mock_document_service
+from tests.unit.test_tree_functionality.get_node_for_tree_tests import (
+    get_form_example_node,
+)
 
 
 class MultiTypeBlueprintProvider:
@@ -122,6 +125,23 @@ class MultiTypeBlueprintProvider:
                             "name": "AnExtraValue",
                             "attributeType": "string",
                             "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
+                        },
+                    ],
+                }
+            )
+        elif type == "FormBlueprint":
+            return Blueprint(
+                {
+                    "name": "FormBlueprint",
+                    "type": "system/SIMOS/Blueprint",
+                    "attributes": [
+                        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
+                        {
+                            "type": "system/SIMOS/BlueprintAttribute",
+                            "name": "inputEntity",
+                            "description": "Generic input entity",
+                            "attributeType": "object",
+                            "contained": False,
                         },
                     ],
                 }
@@ -517,3 +537,10 @@ class DocumentServiceTestCase(unittest.TestCase):
             },
         )
         assert doc_storage["1"]["Parent-w-list"]["SomeChild"] == []
+
+    def test_set_update_uncontained_child(self):
+        form_node = get_form_example_node()
+        target_node = form_node.children[1]
+        new_reference = {"type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value, "address": "$new"}
+        target_node.update(new_reference)
+        assert "_id" not in target_node.entity and target_node.entity["address"] == "$new"

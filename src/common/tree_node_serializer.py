@@ -51,6 +51,18 @@ def tree_node_to_dict(node: Node | ListNode) -> list[Any] | dict:
     return data
 
 
+def _create_link_reference_to_node(node: Node):
+    if node.contained:
+        raise BadRequestException("Can only create link reference for a node that is not contained")
+    if not node.uid:
+        raise BadRequestException("Could not create reference to node, because node uid was not defined", data=node)
+    return {
+        "type": SIMOS.REFERENCE.value,
+        "address": f"${node.uid}",
+        "referenceType": REFERENCE_TYPES.LINK.value,
+    }
+
+
 def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
     """
     Rebuilds the entity as it should be stored based on the passed child entities that can be either contained
@@ -97,12 +109,13 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
             else:
                 data[child.key] = [tree_node_to_ref_dict(list_child) for list_child in child.children]
         else:
-            if not child.contained and child.entity:
-                data[child.key] = {
-                    "type": SIMOS.REFERENCE.value,
-                    "address": f"${child.uid}",
-                    "referenceType": REFERENCE_TYPES.STORAGE.value if child.contained else REFERENCE_TYPES.LINK.value,
-                }
+            child_is_link_reference = (
+                child.type == SIMOS.REFERENCE.value
+                and child.entity
+                and child.entity["referenceType"] == REFERENCE_TYPES.LINK.value
+            )
+            if not child.contained and child.entity and not child_is_link_reference:
+                data[child.key] = _create_link_reference_to_node(child)
             else:
                 data[child.key] = tree_node_to_ref_dict(child)
     return data
