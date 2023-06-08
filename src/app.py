@@ -29,6 +29,7 @@ server_root = "/api"
 
 def create_app() -> FastAPI:
     from features.access_control import access_control_feature
+    from features.attribute import attribute_feature
     from features.blob import blob_feature
     from features.blueprint import blueprint_feature
     from features.datasource import datasource_feature
@@ -57,6 +58,7 @@ def create_app() -> FastAPI:
     authenticated_routes.include_router(whoami_feature.router)
     authenticated_routes.include_router(entity_feature.router)
     authenticated_routes.include_router(lookup_table_feature.router)
+    authenticated_routes.include_router(attribute_feature.router)
 
     # Some routes a PAT can not be used to authenticate. For example, to get new access tokens. That would be bad...
     jwt_only_routes = APIRouter()

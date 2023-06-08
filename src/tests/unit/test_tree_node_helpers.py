@@ -108,6 +108,33 @@ recursive_blueprint = {
     ],
 }
 
+signal_container_blueprint = {
+    "name": "SignalContainer",
+    "type": "system/SIMOS/Blueprint",
+    "extends": ["system/SIMOS/NamedEntity"],
+    "attributes": [
+        {"name": "cases", "attributeType": "Case", "dimensions": "*", "type": "CORE:BlueprintAttribute"},
+    ],
+}
+
+case_blueprint = {
+    "name": "Case",
+    "type": "system/SIMOS/Blueprint",
+    "extends": ["system/SIMOS/NamedEntity"],
+    "attributes": [
+        {"name": "signal", "attributeType": "Signal", "type": "CORE:BlueprintAttribute"},
+    ],
+}
+
+
+signal_blueprint = {
+    "name": "Signal",
+    "type": "system/SIMOS/Blueprint",
+    "attributes": [
+        {"name": "values", "attributeType": "number", "dimensions": "*", "type": "CORE:BlueprintAttribute"},
+    ],
+}
+
 
 def get_blueprint(type: str):
     if type == "all_contained_cases_blueprint":
@@ -120,6 +147,12 @@ def get_blueprint(type: str):
         return Blueprint(blueprint_4)
     if type == "recursive_blueprint":
         return Blueprint(recursive_blueprint)
+    if type == "SignalContainer":
+        return Blueprint(signal_container_blueprint)
+    if type == "Case":
+        return Blueprint(case_blueprint)
+    if type == "Signal":
+        return Blueprint(signal_blueprint)
     return None
 
 
@@ -783,6 +816,26 @@ class TreenodeTestCase(unittest.TestCase):
         actual_flat = flatten_dict(tree_node_to_dict(root))
         # less than only works on flat dictionaries.
         assert expected_flat.items() <= actual_flat.items()
+
+    def test_from_dict_dimensions(self):
+        doc = {
+            "_id": "1",
+            "type": "SignalContainer",
+            "name": "signalContainer",
+            "cases": [
+                {"type": "Case", "name": "case1", "signal": {"type": "Signal", "values": [1, 2, 3, 4, 5, 6, 7]}}
+            ],
+        }
+
+        expected = {}
+
+        root = tree_node_from_dict(
+            doc, get_blueprint, uid=doc.get("_id"), recipe_provider=mock_storage_recipe_provider
+        )
+        case_list_attribute = root.children[0].attribute
+        single_case_attribute = root.children[0].children[0].attribute
+        assert case_list_attribute.dimensions.dimensions == ["*"]
+        assert single_case_attribute.dimensions.dimensions == ""
 
     def test_from_dict(self):
         document_1 = {

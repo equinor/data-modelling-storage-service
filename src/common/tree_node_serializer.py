@@ -181,7 +181,7 @@ def tree_node_from_dict(
             )
 
             for i, child in enumerate(children):
-                list_child_attribute = child_attribute
+                list_child_attribute = deepcopy(child_attribute)
 
                 # If the node is of type DMT/Package, we need to override the attribute_type "Entity",
                 # and get it from the child.
@@ -195,6 +195,10 @@ def tree_node_from_dict(
                     child_uid = child["address"].replace("$", "")
                 else:
                     child_uid = child.get("_id", "")
+
+                # The child inside a list is identical to the attribute in the parent,
+                # except it does not have dimensions *
+                list_child_attribute.dimensions.dimensions = ""
 
                 list_child_node = tree_node_from_dict(
                     uid=child_uid,
