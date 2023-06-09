@@ -97,7 +97,7 @@ Feature: Add document with document_service
           {
             "name": "phases",
             "type": "dmss://system/SIMOS/BlueprintAttribute",
-            "attributeType": "data-source-name/root_package/Phase",
+            "attributeType": "dmss://data-source-name/root_package/Phase",
             "contained": true,
             "dimensions": "*"
           }
@@ -115,9 +115,17 @@ Feature: Add document with document_service
           {
             "name": "results",
             "type": "dmss://system/SIMOS/BlueprintAttribute",
-            "attributeType": "data-source-name/root_package/ResultFile",
+            "attributeType": "dmss://data-source-name/root_package/ResultFile",
             "optional": true,
             "contained": false,
+            "dimensions": "*"
+          },
+          {
+            "name": "containedResults",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "attributeType": "dmss://data-source-name/root_package/ResultFile",
+            "optional": true,
+            "contained": true,
             "dimensions": "*"
           }
         ]
@@ -176,11 +184,12 @@ Feature: Add document with document_service
               "type": "dmss://data-source-name/root_package/Phase",
                "results": [
                     {
-                      "type": "dmss://data-source-name/root_package/ResultFile",
-                      "_id": "99",
-                      "name": "result_weather_data"
+                    "address": "$99",
+                    "type": "dmss://system/SIMOS/Reference",
+                    "referenceType": "link"
                     }
-              ]
+              ],
+              "containedResults": []
             }
           ]
         }
@@ -335,3 +344,106 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
+
+  Scenario: add document to list using path
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation1.phases"
+    When I make a "POST" request with "1" files
+    """
+    {
+      "document":
+      {
+          "name": "the-second-phase",
+          "type": "dmss://data-source-name/root_package/Phase",
+           "results": []
+      }
+    }
+    """
+    Then the response status should be "OK"
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation1?resolve_links=true&depth=2"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+        {
+          "_id": "11",
+          "name": "operation1",
+          "type": "dmss://data-source-name/root_package/Operation",
+          "phases": [
+            {
+              "name": "the-first_phase",
+              "type": "dmss://data-source-name/root_package/Phase",
+               "results": [
+                    {
+                      "type": "dmss://data-source-name/root_package/ResultFile",
+                      "name": "result1",
+                      "description": "Results",
+                      "responseContainer":
+                        {
+                          "type": "dmss://data-source-name/root_package/ResponseContainer",
+                          "name": "response_container",
+                          "responses": [
+                            "responseA", "responseB", "responseC"
+                          ]
+                        }
+                    }
+              ]
+            },
+            {
+            "name": "the-second-phase",
+            "type": "dmss://data-source-name/root_package/Phase",
+             "results": []
+            }
+          ]
+        }
+    """
+
+  Scenario: add document to list using id
+    Given i access the resource url "/api/documents/data-source-name/$11.phases[0].containedResults"
+    When I make a "POST" request with "1" files
+    """
+    {
+      "document":
+       {
+        "type": "dmss://data-source-name/root_package/ResultFile",
+        "name": "addedResult",
+        "description": "added result via document update",
+        "responseContainer":
+          {
+            "type": "dmss://data-source-name/root_package/ResponseContainer",
+            "name": "response_container",
+            "responses": [
+              "responseA", "responseB", "responseC"
+            ]
+          }
+      }
+    }
+    """
+    Then the response status should be "OK"
+    And the response should contain
+    """
+      {
+        "uid": "11.phases.0.containedResults.0"
+      }
+    """
+#     todo update document add use case such that id contains bracket notation for lists: 11.phases[0].containedResults[0]
+    Given i access the resource url "/api/documents/data-source-name/$11.phases[0].containedResults?resolve_links=true&depth=2"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+        [
+           {
+            "type": "dmss://data-source-name/root_package/ResultFile",
+            "name": "addedResult",
+            "description": "added result via document update",
+            "responseContainer":
+              {
+                "type": "dmss://data-source-name/root_package/ResponseContainer",
+                "name": "response_container",
+                "responses": [
+                  "responseA", "responseB", "responseC"
+                ]
+              }
+          }
+        ]
+    """
