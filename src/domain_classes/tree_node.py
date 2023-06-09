@@ -137,7 +137,10 @@ class NodeBase:
             node = node.parent
 
     def find_parent(self):
-        for node in self.traverse_reverse():
+        nodes = [node for node in self.traverse_reverse()]
+        if len(nodes) > 1:
+            nodes.pop(0)  # Remove first node since parent of self cannot be self
+        for node in nodes:
             if not node.storage_contained:
                 return node
 

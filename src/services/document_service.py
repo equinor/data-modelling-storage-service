@@ -393,7 +393,7 @@ class DocumentService:
             new_node.parent = target
             new_node.key = str(len(target.children))
             target.add_child(new_node)
-            self.save(target.parent, data_source_id, update_uncontained=False)
+            self.save(target.find_parent(), data_source_id, update_uncontained=False)
         else:
             new_node.parent = target.parent
             target.parent.replace(new_node.node_id, new_node)
