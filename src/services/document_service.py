@@ -253,6 +253,51 @@ class DocumentService:
             e.message = f"Failed to get document referenced with '{reference}'"
             raise e
 
+    def _get_node_to_update(self, reference: str, node_entity: Union[dict, list]) -> Union[Node, ListNode]:
+        """
+        Updating a document is done by fetching the node. This functions returns a node specified by reference.
+        Note: if the node specified by reference does not exist, it will be created if and only if the attribute is
+        specified as optional in the blueprint.
+        """
+        data_source_id, _reference = split_data_source_and_reference(reference)
+        reference_parts = split_reference(_reference)
+        parent_reference = "".join(reference_parts[:-1])
+        parent_node: Node = self.get_document(f"dmss://{data_source_id}/{parent_reference}", depth=0)
+        parent_blueprint_attribute_names = [attribute.name for attribute in parent_node.blueprint.attributes]
+        attribute_to_update = reference_parts[-1].strip(".").strip("[]")
+        node = parent_node.get_by_ref_part([attribute_to_update])
+
+        attribute_to_update_does_not_exist_in_parent_document = node is None
+
+        if (
+            attribute_to_update_does_not_exist_in_parent_document
+            and attribute_to_update in parent_blueprint_attribute_names
+        ):
+            attribute = [
+                attribute for attribute in parent_node.blueprint.attributes if attribute.name == attribute_to_update
+            ][0]
+
+            # We only want to add the attribute if it does not already exist AND is optional.
+            if not attribute.is_optional:
+                raise ValidationException(f"Could not update node. attribute '{attribute.name}' is not optional.")
+            if attribute.dimensions.dimensions != [""]:
+                node = ListNode(
+                    key=attribute_to_update,
+                    attribute=attribute,
+                    blueprint_provider=self.get_blueprint,
+                    entity=node_entity,
+                )
+            else:
+                node = Node(
+                    key=attribute_to_update,
+                    entity=node_entity,
+                    attribute=attribute,
+                    blueprint_provider=self.get_blueprint,
+                )
+        node.parent = parent_node
+        parent_node.children.append(node)
+        return node
+
     def update_document(
         self,
         reference: str,
@@ -260,6 +305,12 @@ class DocumentService:
         files: dict = None,
         update_uncontained: bool = True,  # TODO: Remove this flag
     ):
+        """
+        Update a document.
+
+        What to update is referred to with a reference string.
+        It can either be an entire document or just an attribute inside a document.
+        """
         validate_entity_against_self(data, self.get_blueprint)
         data_source_id, _reference = split_data_source_and_reference(reference)
         reference_parts = split_reference(_reference)
@@ -267,14 +318,11 @@ class DocumentService:
         # Since the node targeted by the reference might not exist (e.g. optional complex attribute)
         # we aim for the parent node first. Then get the child.
         if len(reference_parts) > 1:
-            parent_reference = "".join(reference_parts[:-1])
-            parent_node: Node = self.get_document(f"dmss://{data_source_id}/{parent_reference}", depth=0)
-            node = parent_node.get_by_ref_part([reference_parts[-1]])
+            node: Union[Node, ListNode] = self._get_node_to_update(reference=reference, node_entity=data)
         else:
             node: Node = self.get_document(reference)  # type: ignore
 
         validate_entity(data, self.get_blueprint, self.get_blueprint(node.attribute.attribute_type), "extend")
-
         node.update(data)
         if files:
             self._merge_entity_and_files(node, files)

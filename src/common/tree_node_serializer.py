@@ -172,7 +172,7 @@ def tree_node_from_dict(
         if child_attribute.name == "default" and child_attribute.attribute_type == "any":
             continue
         # This will stop creation of recursive blueprints (only if they are optional)
-        if child_attribute.is_optional and not entity:
+        if child_attribute.is_optional and child_attribute.name not in entity:
             continue
 
         if child_attribute.is_array:

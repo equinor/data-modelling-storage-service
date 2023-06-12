@@ -346,3 +346,20 @@ class TreeNodeDictConversion(unittest.TestCase):
         single_case_attribute = root.children[0].children[0].attribute
         assert case_list_attribute.dimensions.dimensions == ["*"]
         assert single_case_attribute.dimensions.dimensions == ""
+
+    def test_from_dict_optional_values(self):
+        doc = {
+            "_id": "1",
+            "type": "FormBlueprint",
+            "name": "form",
+            "aNestedObject": {"type": "NestedField", "bar": "..."},
+            "inputEntity": {"type": "NestedField", "bar": "..."},
+        }
+
+        root = tree_node_from_dict(
+            doc, get_blueprint, uid=doc.get("_id"), recipe_provider=mock_storage_recipe_provider
+        )
+
+        assert "aOptionalNestedObject" not in doc and "aOptionalNestedObject" not in tree_node_to_dict(root)
+        assert "optionalNumberList" not in doc and "optionalNumberList" not in tree_node_to_dict(root)
+        assert "optionalObjectList" not in doc and "optionalObjectList" not in tree_node_to_dict(root)

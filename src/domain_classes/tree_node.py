@@ -227,7 +227,7 @@ class NodeBase:
         if len(keys) == 0:
             return self
 
-        next_node = next((x for x in self.children if x.key == keys[0].strip(".").strip("[]")), None)
+        next_node = next((x for x in self.children if x.key == keys[0]), None)
         if not next_node:
             return
         keys.pop(0)
