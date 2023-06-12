@@ -100,13 +100,13 @@ form_blueprint = {
         {
             "name": "aNestedObject",
             "type": "system/SIMOS/BlueprintAttribute",
-            "attributeType": "./NestedField",
+            "attributeType": "NestedField",
             "label": "A nested object",
         },
         {
             "name": "aOptionalNestedObject",
             "type": "system/SIMOS/BlueprintAttribute",
-            "attributeType": "./NestedField",
+            "attributeType": "NestedField",
             "label": "A optional nested object",
             "optional": True,
         },
@@ -117,8 +117,52 @@ form_blueprint = {
             "attributeType": "object",
             "contained": False,
         },
+        {
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "optionalNumberList",
+            "attributeType": "number",
+            "dimensions": "*",
+            "optional": True,
+        },
+        {
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "optionalObjectList",
+            "attributeType": "object",
+            "dimensions": "*",
+            "optional": True,
+        },
     ],
 }
+
+nested_field = {
+    "name": "NestedField",
+    "type": "CORE:Blueprint",
+    "attributes": [
+        {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "type"},
+        {
+            "name": "foo",
+            "type": "CORE:BlueprintAttribute",
+            "attributeType": "number",
+            "label": "Foo",
+            "optional": True,
+        },
+        {
+            "name": "bar",
+            "type": "CORE:BlueprintAttribute",
+            "attributeType": "string",
+            "label": "Bar",
+            "optional": False,
+        },
+        {
+            "name": "baz",
+            "type": "CORE:BlueprintAttribute",
+            "attributeType": "string",
+            "label": "Baz",
+            "optional": True,
+        },
+    ],
+}
+
 
 signal_container_blueprint = {
     "name": "SignalContainer",
@@ -161,6 +205,8 @@ def get_blueprint(type: str):
         return Blueprint(recursive_blueprint)
     if type == "FormBlueprint":
         return Blueprint(form_blueprint)
+    if type == "NestedField":
+        return Blueprint(nested_field)
     if type == "SignalContainer":
         return Blueprint(signal_container_blueprint)
     if type == "Case":
