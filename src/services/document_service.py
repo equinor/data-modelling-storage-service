@@ -280,7 +280,7 @@ class DocumentService:
             # We only want to add the attribute if it does not already exist AND is optional.
             if not attribute.is_optional:
                 raise ValidationException(f"Could not update node. attribute '{attribute.name}' is not optional.")
-            if attribute.dimensions.dimensions != [""]:
+            if attribute.is_array:
                 node = ListNode(
                     key=attribute_to_update,
                     attribute=attribute,
@@ -294,8 +294,14 @@ class DocumentService:
                     attribute=attribute,
                     blueprint_provider=self.get_blueprint,
                 )
+        elif (
+            attribute_to_update_does_not_exist_in_parent_document
+            and attribute_to_update not in parent_blueprint_attribute_names
+        ):
+            raise ApplicationException(
+                f"Could not get node to update. Attribute {attribute_to_update} was not found in the list of attributes on the parents blueprint ({parent_blueprint_attribute_names})."
+            )
         node.parent = parent_node
-        parent_node.children.append(node)
         return node
 
     def update_document(
