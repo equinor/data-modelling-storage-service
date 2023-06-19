@@ -1,8 +1,9 @@
 from pydantic import conint
 
 from authentication.models import User
+from common.reference import Reference
 from common.tree_node_serializer import tree_node_to_dict
-from domain_classes.tree_node import Node
+from domain_classes.tree_node import ListNode, Node
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 
@@ -16,7 +17,6 @@ def get_document_use_case(
 ):
     """Get document by reference."""
     document_service = DocumentService(repository_provider=repository_provider, user=user)
-    if "://" not in reference:
-        reference = f"/{reference}"
-    node: Node = document_service.get_document(reference, depth, resolve_links)
+    reference_object = Reference.fromabsolute(reference)
+    node: Node | ListNode = document_service.get_document(reference_object, depth, resolve_links)
     return tree_node_to_dict(node)

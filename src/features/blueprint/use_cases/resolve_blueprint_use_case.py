@@ -2,6 +2,7 @@ from typing import List
 
 from authentication.models import User
 from common.exceptions import NotFoundException
+from common.reference import Reference
 from common.utils.resolve_reference import resolve_reference
 from common.utils.string_helpers import split_dmss_ref
 from enums import SIMOS
@@ -23,7 +24,8 @@ def resolve_references(values: list, data_source_id: str, user: User) -> list:
     data_source: DataSource = get_data_source(data_source_id, user)
     return [
         resolve_reference(
-            f"{data_source.name}/{value['address']}", lambda data_source_name: get_data_source(data_source_name, user)
+            Reference(value["address"], data_source.name),  # TODO Can address contain data source and protocol?
+            lambda data_source_name: get_data_source(data_source_name, user),
         ).entity
         for value in values
     ]

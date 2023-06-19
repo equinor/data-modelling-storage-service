@@ -25,7 +25,7 @@ Feature: Explorer - Remove by path
   {
   "data": null,
   "debug": "Document with id '1' was not found in the 'data-source-name' data-source. The requested resource could not be found",
-  "message": "Failed to get document referenced with '/data-source-name/$1'",
+  "message": "Failed to get document referenced with 'dmss://data-source-name/$1'",
   "status": 404,
   "type": "NotFoundException"
   }
@@ -38,7 +38,7 @@ Feature: Explorer - Remove by path
   {
   "data": null,
   "debug": "Document with id '2' was not found in the 'data-source-name' data-source. The requested resource could not be found",
-  "message": "Failed to get document referenced with '/data-source-name/$2'",
+  "message": "Failed to get document referenced with 'dmss://data-source-name/$2'",
   "status": 404,
   "type": "NotFoundException"
   }
@@ -51,7 +51,7 @@ Feature: Explorer - Remove by path
   {
   "data": null,
   "debug": "Document with id '3' was not found in the 'data-source-name' data-source. The requested resource could not be found",
-  "message": "Failed to get document referenced with '/data-source-name/$3'",
+  "message": "Failed to get document referenced with 'dmss://data-source-name/$3'",
   "status": 404,
   "type": "NotFoundException"
   }
@@ -74,7 +74,7 @@ Feature: Explorer - Remove by path
     {
     "data": null,
     "debug": "Document with id '2' was not found in the 'data-source-name' data-source. The requested resource could not be found",
-    "message": "Failed to get document referenced with '/data-source-name/$2'",
+    "message": "Failed to get document referenced with 'dmss://data-source-name/$2'",
     "status": 404,
     "type": "NotFoundException"
     }
@@ -92,7 +92,7 @@ Feature: Explorer - Remove by path
     {
     "data": null,
     "debug": "Document with id '3' was not found in the 'data-source-name' data-source. The requested resource could not be found",
-    "message": "Failed to get document referenced with '/data-source-name/$3'",
+    "message": "Failed to get document referenced with 'dmss://data-source-name/$3'",
     "status": 404,
     "type": "NotFoundException"
     }
@@ -110,7 +110,7 @@ Feature: Explorer - Remove by path
   {
     "data": null,
     "debug": "Document with id '2' was not found in the 'data-source-name' data-source. The requested resource could not be found",
-    "message": "Failed to get document referenced with '/data-source-name/$2'",
+    "message": "Failed to get document referenced with 'dmss://data-source-name/$2'",
     "status": 404,
     "type": "NotFoundException"
   }
@@ -123,7 +123,7 @@ Feature: Explorer - Remove by path
   {
   "data": null,
   "debug": "Document with id '3' was not found in the 'data-source-name' data-source. The requested resource could not be found",
-  "message": "Failed to get document referenced with '/data-source-name/$3'",
+  "message": "Failed to get document referenced with 'dmss://data-source-name/$3'",
   "status": 404,
   "type": "NotFoundException"
   }

@@ -3,6 +3,7 @@ import tempfile
 import zipfile
 
 from authentication.models import User
+from common.reference import Reference
 from common.utils.resolve_reference import ResolvedReference, resolve_reference
 from domain_classes.tree_node import Node
 from enums import SIMOS
@@ -31,7 +32,7 @@ def save_node_to_zipfile(
         )
 
 
-def create_zip_export(document_service: DocumentService, reference: str, user: User) -> str:
+def create_zip_export(document_service: DocumentService, reference: Reference, user: User) -> str:
     """Create a temporary folder on the host that contains a zip file."""
     tmpdir = tempfile.mkdtemp()
     archive_path = os.path.join(tmpdir, "temp_zip_archive.zip")
@@ -41,7 +42,7 @@ def create_zip_export(document_service: DocumentService, reference: str, user: U
     # non-root packages and single documents will inherit the meta information from all parents.
     document_meta = {}
     if not (document_node.entity["type"] == SIMOS.PACKAGE.value and document_node.entity["isRoot"]):
-        document_meta = export_meta_use_case(user=user, reference=reference)
+        document_meta = export_meta_use_case(user=user, reference=str(reference))
     elif "_meta_" in document_node.entity:
         document_meta = document_node.entity["_meta_"]
 
@@ -59,6 +60,6 @@ def create_zip_export(document_service: DocumentService, reference: str, user: U
 
 def export_use_case(user: User, document_reference: str):
     memory_file = create_zip_export(
-        document_service=DocumentService(user=user), reference=document_reference, user=user
+        document_service=DocumentService(user=user), reference=Reference.fromabsolute(document_reference), user=user
     )
     return memory_file

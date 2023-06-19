@@ -29,9 +29,8 @@ def insert_reference(
     - **document_dotted_id**: <data_source>/<path_to_entity>/<entity_name>.<attribute>
     - **reference**: a reference object in JSON format
     """
-    document_id, attribute = document_dotted_id.split(".", 1)
     return insert_reference_use_case(
-        user=user, data_source_id=data_source_id, document_id=document_id, reference=reference, attribute=attribute
+        user=user, data_source_id=data_source_id, document_dotted_id=document_dotted_id, reference=reference
     )
 
 
@@ -46,7 +45,4 @@ def delete_reference(data_source_id: str, document_dotted_id: str, user: User = 
 
     - **document_dotted_id**: <data_source>/<path_to_entity>/<entity_name>.<attribute>
     """
-    document_id, attribute = document_dotted_id.split(".", 1)
-    return delete_reference_use_case(
-        user=user, document_id=document_id, data_source_id=data_source_id, attribute=attribute
-    )
+    return delete_reference_use_case(user=user, data_source_id=data_source_id, document_dotted_id=document_dotted_id)

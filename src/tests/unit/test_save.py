@@ -3,6 +3,7 @@ from copy import deepcopy
 from unittest import mock
 
 from authentication.models import User
+from common.reference import Reference
 from common.tree_node_serializer import tree_node_from_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
@@ -47,7 +48,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        node: Node = document_service.get_document("testing/$1")
+        node: Node = document_service.get_document(Reference("$1", "testing"))
         contained_node: Node = node.get_by_path("references.1".split("."))
         contained_node.update({"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "basic_blueprint"})
         document_service.save(node, "testing", update_uncontained=True)
@@ -83,7 +84,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        contained_node: Node = document_service.get_document("testing/$1.nested")
+        contained_node: Node = document_service.get_document(Reference("$1.nested", "testing"))
         contained_node.update({"name": "RENAMED", "description": "TEST_MODIFY", "type": "basic_blueprint"})
         document_service.save(contained_node, "testing", update_uncontained=True, initial=True)
 
@@ -117,7 +118,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        node: Node = document_service.get_document("testing/$1")
+        node: Node = document_service.get_document(Reference("$1", "testing"))
         contained_node: Node = node.search("1.references")
         contained_node.children.append(
             Node(
@@ -197,7 +198,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(repository_provider)
 
-        node: Node = document_service.get_document("testing/$1")
+        node: Node = document_service.get_document(Reference("$1", "testing"))
         contained_node: Node = node.search("1.references")
         contained_node.remove_by_path(["1"])
         document_service.save(node, "testing")
@@ -253,7 +254,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         # Testing updating the reference
-        node: Node = document_service.get_document("testing/$1")
+        node: Node = document_service.get_document(Reference("$1", "testing"))
         target_node = node.get_by_path(["i_have_a_uncontained_attribute", "uncontained_in_every_way"])
         target_node.update(doc_storage["3"])
         document_service.save(node, "testing")
@@ -300,7 +301,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(lambda x, y: repository)
 
         document_service.update_document(
-            "dmss://test/$1",
+            Reference("$1", "test"),
             data={
                 "_id": "1",
                 "name": "Root",
@@ -369,7 +370,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "nested": {},
             "references": [],
         }
-        document_service.update_document("dmss://testing/$1.a", new_data, update_uncontained=True)
+        document_service.update_document(Reference("$1.a", "testing"), new_data, update_uncontained=True)
 
         assert doc_storage["1"]["a"]["description"] == "SOME DESCRIPTION"
         assert doc_storage["1"]["a"]["reference"]["description"] == "A NEW DESCRIPTION HERE"

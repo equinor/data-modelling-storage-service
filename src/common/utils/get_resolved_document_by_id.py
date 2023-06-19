@@ -1,5 +1,5 @@
 from common.exceptions import ApplicationException
-from common.utils.get_address import get_address
+from common.reference import Reference
 from common.utils.is_reference import is_link, is_reference
 from common.utils.resolve_reference import ResolvedReference, resolve_reference
 from storage.data_source_class import DataSource
@@ -58,25 +58,17 @@ def get_complete_sys_document(
     depth_count: int = 0,
     resolve_links: bool = False,
 ) -> dict | list:
-    address = reference["address"]
-    if not address:
+    if not reference["address"]:
         raise ApplicationException("Invalid link. Missing 'address'", data=reference)
-
-    if address.startswith("^"):
-        # Replace ^ with an id reference that contains the current document id
-        if not current_id:
-            raise ApplicationException(
-                "Current id is missing and therefore it is not possible to replace ^ with an id reference."
-            )
-        address = address.replace("^", f"${current_id}")
-
-    if "://" not in address:
-        address = f"{data_source.name}/{address}"
+    address = Reference.fromrelative(reference["address"], current_id, data_source.name)
 
     resolved_reference: ResolvedReference = resolve_reference(address, get_data_source)
     if is_reference(resolved_reference.entity) and resolve_links:
         resolved_reference = resolve_reference(
-            get_address(resolved_reference.data_source_id, resolved_reference.entity), get_data_source
+            Reference.fromrelative(
+                resolved_reference.entity["address"], resolved_reference.document_id, resolved_reference.data_source_id
+            ),
+            get_data_source,
         )
 
     # Only update if the resolved reference has id (since it can point to a document that are contained in another document)

@@ -31,7 +31,7 @@ class Reference:
             protocol, reference = reference.split("://", 1)
         if "/" in reference:
             reference, path = reference.split("/", 1)
-        return cls(f"/{path}", reference, protocol)
+        return cls(path, reference, protocol)
 
     @classmethod
     def fromrelative(cls, reference: str, document_id: str | None, data_source: str):

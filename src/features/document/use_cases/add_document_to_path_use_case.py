@@ -3,6 +3,7 @@ from typing import List, Optional
 from fastapi import UploadFile
 
 from authentication.models import User
+from common.reference import Reference
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 
@@ -17,11 +18,8 @@ def add_document_use_case(
 ):
     document_service = DocumentService(repository_provider=repository_provider, user=user)
 
-    if "/" in reference and "://" not in reference:
-        reference = f"/{reference}"
-
     document = document_service.add(
-        reference=reference,
+        reference=Reference.fromabsolute(reference),
         document=document,
         files={f.filename: f.file for f in files} if files else None,
         update_uncontained=update_uncontained,

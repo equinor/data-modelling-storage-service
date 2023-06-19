@@ -1,5 +1,6 @@
 from authentication.access_control import DEFAULT_ACL, access_control
 from authentication.models import AccessLevel, User
+from common.reference import Reference
 from domain_classes.lookup import Lookup
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from domain_classes.ui_recipe import Recipe
@@ -21,7 +22,9 @@ def create_lookup_table_use_case(
     lookup_class_attributes = list(Lookup.__annotations__.keys())
     combined_lookup = Lookup().dict()
     for path in recipe_package_paths:
-        recipe_package = document_service.get_document(f"/{path}", depth=999, resolve_links=True)
+        recipe_package = document_service.get_document(
+            Reference(*path.split("/", 1)[::-1]), depth=999, resolve_links=True
+        )
 
         lookup: Lookup = Lookup()
 

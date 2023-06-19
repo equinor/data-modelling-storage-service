@@ -4,6 +4,7 @@ from unittest import mock
 
 from authentication.models import User
 from common.exceptions import BadRequestException, ValidationException
+from common.reference import Reference
 from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
@@ -182,7 +183,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(repository_provider)
 
-        node: Node = document_service.get_document("testing/$1")
+        node: Node = document_service.get_document(Reference("$1", "testing"))
         node.update(
             {
                 "_id": "1",
@@ -232,7 +233,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(repository_provider)
         document_service.add(
-            "testing/$1.im_optional",
+            Reference("$1.im_optional", "testing"),
             document={"type": "basic_blueprint", "name": "new_entity", "description": "This is my new entity"},
             files=[],
         )
@@ -266,7 +267,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         with self.assertRaises(ValidationException) as error:
             document_service.update_document(
-                reference="dmss://testing/$1.SomeChild",
+                reference=Reference("$1.SomeChild", "testing"),
                 data={"name": "whatever", "type": "special_child_no_inherit", "AnExtraValue": "Hallo there!"},
             )
         assert (
@@ -325,7 +326,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(repository_provider)
         document_service.add(
-            "testing/$1.nested_with_optional.im_optional",
+            Reference("$1.nested_with_optional.im_optional", "testing"),
             document={"name": "new_entity", "description": "This is my new entity", "type": "basic_blueprint"},
             files=[],
         )
@@ -362,7 +363,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         with self.assertRaises(BadRequestException):
             document_service.add(
-                "testing/$1.im_optional",
+                Reference("$1.im_optional", "testing"),
                 document={"type": "basic_blueprint", "name": "duplicate", "description": "This is my new entity"},
                 files=[],
             )
@@ -384,7 +385,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
         )
         document_service.update_document(
-            reference="dmss://testing/$1.SomeChild",
+            reference=Reference("$1.SomeChild", "testing"),
             data={"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
         )
         assert doc_storage["1"]["SomeChild"] == {
@@ -411,7 +412,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
         )
         document_service.update_document(
-            reference="dmss://testing/$1.SomeChild",
+            reference=Reference("$1.SomeChild", "testing"),
             data={
                 "name": "whatever",
                 "type": "extra_special_child",
@@ -447,7 +448,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
         )
         document_service.update_document(
-            reference="dmss://testing/$1.SomeChild",
+            reference=Reference("$1.SomeChild", "testing"),
             data=[
                 {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
                 {
@@ -491,7 +492,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         with self.assertRaises(ValidationException) as error:
             document_service.update_document(
-                reference="dmss://testing/$1.SomeChild",
+                reference=Reference("$1.SomeChild", "testing"),
                 data=[
                     {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
                     {
@@ -527,7 +528,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         document_service.update_document(
-            reference="dmss://testing/$1",
+            reference=Reference("$1", "testing"),
             data={
                 "_id": "1",
                 "name": "parent",
