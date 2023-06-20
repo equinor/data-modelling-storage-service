@@ -24,7 +24,7 @@ def resolve_references(values: list, data_source_id: str, user: User) -> list:
     data_source: DataSource = get_data_source(data_source_id, user)
     return [
         resolve_reference(
-            Address(value["address"], data_source.name),  # TODO Can address contain data source and protocol?
+            Address.fromrelative(value["address"], None, data_source.name),
             lambda data_source_name: get_data_source(data_source_name, user),
         ).entity
         for value in values

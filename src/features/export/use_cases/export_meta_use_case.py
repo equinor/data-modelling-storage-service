@@ -32,7 +32,7 @@ def concat_meta_data(meta: dict | None, new_meta: dict | None) -> dict:
 def resolve_references(values: list, data_source: DataSource, user: User) -> list:
     return [
         resolve_reference(
-            Address(value["address"], data_source.name),  # TODO Can address contain data source and protocol?
+            Address.fromrelative(value["address"], None, data_source.name),
             lambda data_source_name: get_data_source(data_source_name, user),
         ).entity
         for value in values
