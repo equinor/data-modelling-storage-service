@@ -24,13 +24,13 @@ class ExportMetaResponse(BaseModel):
 
 
 @router.get(
-    "/meta/{reference:path}",
+    "/meta/{address:path}",
     operation_id="export-meta",
     response_class=JSONResponse,
     responses={**responses, 200: {"content": {"application/json": {}}}},
 )
 @create_response(JSONResponse)
-def export_meta(reference: str, user: User = Depends(auth_w_jwt_or_pat)):
+def export_meta(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     """
     Export only the metadata of an entity.
     An entities metadata is concatenated from the "top down". Inheriting parents meta, and overriding for any
@@ -38,31 +38,31 @@ def export_meta(reference: str, user: User = Depends(auth_w_jwt_or_pat)):
 
     If no metadata is defined anywhere in the tree, an empty object is returned.
 
-    - **reference**:
+    - **address**:
       - By path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY
 
       The PROTOCOL is optional, and the default is dmss.
     """
-    return ExportMetaResponse(**export_meta_use_case(user=user, reference=reference)).dict()
+    return ExportMetaResponse(**export_meta_use_case(user=user, address=address)).dict()
 
 
 @router.get(
-    "/{reference:path}",
+    "/{address:path}",
     operation_id="export",
     response_class=FileResponse,
     responses={**responses, 200: {"content": {"application/zip": {}}}},
 )
-def export(reference: str, user: User = Depends(auth_w_jwt_or_pat)):
+def export(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     """
     Download a zip-folder with one or more documents as json file(s).
 
-    - **reference**:
+    - **address**:
       - By path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY
 
       The PROTOCOL is optional, and the default is dmss.
     """
     # TODO add proper error handling. The create_response() wrapper does not work with FileResponse.
-    memory_file_path = export_use_case(user=user, document_reference=reference)
+    memory_file_path = export_use_case(user=user, document_address=address)
     directory_to_remove = Path(memory_file_path).parent
     response = FileResponse(
         memory_file_path, media_type="application/zip", background=BackgroundTask(shutil.rmtree, directory_to_remove)

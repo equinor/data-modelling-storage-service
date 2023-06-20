@@ -4,6 +4,7 @@ from typing import BinaryIO, Callable, Dict, List, Union
 from uuid import uuid4
 
 from authentication.models import ACL
+from common.address import Address
 from common.exceptions import (
     ApplicationException,
     BadRequestException,
@@ -11,7 +12,6 @@ from common.exceptions import (
     NotFoundException,
     ValidationException,
 )
-from common.reference import Reference
 from common.tree_node_serializer import (
     tree_node_from_dict,
     tree_node_to_dict,
@@ -206,7 +206,7 @@ class DocumentService:
         return ref_dict
 
     # TODO: Dont return Node. Doing this is ~33% slower
-    def get_document(self, reference: Reference, depth: int = 0, resolve_links: bool = False) -> Node | ListNode:
+    def get_document(self, address: Address, depth: int = 0, resolve_links: bool = False) -> Node | ListNode:
         """
         Get document by reference.
 
@@ -221,7 +221,7 @@ class DocumentService:
             matter the depth. If true, they will be resolved if the depth param allows it
         """
         try:
-            resolved_reference: ResolvedReference = resolve_reference(reference, self.get_data_source)
+            resolved_reference: ResolvedReference = resolve_reference(address, self.get_data_source)
             data_source: DataSource = self.get_data_source(resolved_reference.data_source_id)
             document: dict = data_source.get(resolved_reference.document_id)
 
@@ -250,18 +250,18 @@ class DocumentService:
             return node
         except (NotFoundException, ApplicationException) as e:
             e.debug = f"{e.message}. {e.debug}"
-            e.message = f"Failed to get document referenced with '{reference}'"
+            e.message = f"Failed to get document referenced with '{address}'"
             raise e
 
-    def _get_node_to_update(self, reference: Reference, node_entity: Union[dict, list]) -> Union[Node, ListNode]:
+    def _get_node_to_update(self, address: Address, node_entity: Union[dict, list]) -> Union[Node, ListNode]:
         """
         Updating a document is done by fetching the node. This functions returns a node specified by reference.
         Note: if the node specified by reference does not exist, it will be created if and only if the attribute is
         specified as optional in the blueprint.
         """
-        reference_parts = split_reference(reference.path)
+        reference_parts = split_reference(address.path)
         parent_reference = "".join(reference_parts[:-1])
-        parent_node: Node = self.get_document(Reference(parent_reference, reference.data_source), depth=0)
+        parent_node: Node = self.get_document(Address(parent_reference, address.data_source), depth=0)
         parent_blueprint_attribute_names = [attribute.name for attribute in parent_node.blueprint.attributes]
         attribute_to_update = reference_parts[-1].strip(".").strip("[]")
         node = parent_node.get_by_ref_part([attribute_to_update])
@@ -305,7 +305,7 @@ class DocumentService:
 
     def update_document(
         self,
-        reference: Reference,
+        address: Address,
         data: Union[dict, list],
         files: dict = None,
         update_uncontained: bool = True,  # TODO: Remove this flag
@@ -317,31 +317,31 @@ class DocumentService:
         It can either be an entire document or just an attribute inside a document.
         """
         validate_entity_against_self(data, self.get_blueprint)
-        if not reference.path:
-            raise Exception(f"Could not find the node on '{reference}'")
-        reference_parts = split_reference(reference.path)
+        if not address.path:
+            raise Exception(f"Could not find the node on '{address}'")
+        reference_parts = split_reference(address.path)
 
         # Since the node targeted by the reference might not exist (e.g. optional complex attribute)
         # we aim for the parent node first. Then get the child.
         if len(reference_parts) > 1:
-            node: Union[Node, ListNode] = self._get_node_to_update(reference=reference, node_entity=data)
+            node: Union[Node, ListNode] = self._get_node_to_update(address=address, node_entity=data)
         else:
-            node: Node = self.get_document(reference)  # type: ignore
+            node: Node = self.get_document(address)  # type: ignore
 
         validate_entity(data, self.get_blueprint, self.get_blueprint(node.attribute.attribute_type), "extend")
         node.update(data)
         if files:
             self._merge_entity_and_files(node, files)
 
-        self.save(node, reference.data_source, update_uncontained=update_uncontained, initial=True)
+        self.save(node, address.data_source, update_uncontained=update_uncontained, initial=True)
 
-        logger.info(f"Updated entity '{reference}'")
+        logger.info(f"Updated entity '{address}'")
         return {"data": tree_node_to_dict(node)}
 
-    def remove(self, reference: Reference) -> None:
-        data_source = self.repository_provider(reference.data_source, self.user)
+    def remove(self, address: Address) -> None:
+        data_source = self.repository_provider(address.data_source, self.user)
 
-        resolved_reference: ResolvedReference = resolve_reference(reference, self.get_data_source)
+        resolved_reference: ResolvedReference = resolve_reference(address, self.get_data_source)
         # If the reference goes through a parent, get the parent document
         if resolved_reference.attribute_path:
             document = data_source.get(resolved_reference.document_id)
@@ -377,7 +377,7 @@ class DocumentService:
         )
 
         try:
-            if self.get_document(Reference(new_node.name, data_source_id), resolve_links=True, depth=99):
+            if self.get_document(Address(new_node.name, data_source_id), resolve_links=True, depth=99):
                 raise ValidationException(
                     message=f"A root package named '{new_node.name}' already exists",
                     data={"dataSource": data_source_id, "document": document},
@@ -393,7 +393,7 @@ class DocumentService:
 
     def add(
         self,
-        reference: Reference,
+        address: Address,
         document: dict,
         files: dict[str, BinaryIO],
         update_uncontained=False,
@@ -407,13 +407,13 @@ class DocumentService:
         validate_entity_against_self(document, self.get_blueprint)
         entity: Entity = Entity(**document)
 
-        if not reference.path:  # We're adding something to the dataSource itself
-            return self._add_document_to_data_source(reference.data_source, document, update_uncontained)
+        if not address.path:  # We're adding something to the dataSource itself
+            return self._add_document_to_data_source(address.data_source, document, update_uncontained)
 
-        target: Node = self.get_document(reference, resolve_links=True, depth=99)
+        target: Node = self.get_document(address, resolve_links=True, depth=99)
 
         if not target:
-            raise NotFoundException(f"Could not find '{reference}' in data source '{reference.data_source}'")
+            raise NotFoundException(f"Could not find '{address}' in data source '{address.data_source}'")
 
         if target.type != SIMOS.PACKAGE.value and target.type != "object":
             validate_entity(
@@ -432,7 +432,7 @@ class DocumentService:
             # If entity has a name, check if a file/attribute with the same name already exists on the target
             if "name" in required_attribute_names and target.parent.duplicate_attribute(new_node.name):
                 raise BadRequestException(
-                    f"The document at '{reference}' already has a child with name '{new_node.name}'"
+                    f"The document at '{address}' already has a child with name '{new_node.name}'"
                 )
 
         if files:
@@ -445,13 +445,13 @@ class DocumentService:
             new_node.parent = target
             new_node.key = str(len(target.children))
             target.add_child(new_node)
-            self.save(target.find_parent(), reference.data_source, update_uncontained=False)
+            self.save(target.find_parent(), address.data_source, update_uncontained=False)
         else:
             new_node.parent = target.parent
             target.parent.replace(new_node.node_id, new_node)
-            self.save(target.find_parent(), reference.data_source, update_uncontained=False)
+            self.save(target.find_parent(), address.data_source, update_uncontained=False)
 
-        self.save(new_node, reference.data_source, update_uncontained=update_uncontained)
+        self.save(new_node, address.data_source, update_uncontained=update_uncontained)
 
         return {"uid": new_node.node_id}
 
@@ -490,7 +490,7 @@ class DocumentService:
 
         # TODO: Updating ACL for Links should only be additive
         # TODO: ACL for StorageReferences should always be identical to parent document
-        root_node = self.get_document(Reference(document_id, data_source_id), 99, resolve_links=True)
+        root_node = self.get_document(Address(document_id, data_source_id), 99, resolve_links=True)
         data_source.update_access_control(root_node.node_id, acl)
         for child in root_node.children:
             for node in child.traverse():
@@ -507,13 +507,13 @@ class DocumentService:
         lookup = data_source.get_access_control(document_id)
         return lookup.acl
 
-    def insert_reference(self, address: Reference, reference: ReferenceEntity) -> dict:
+    def insert_reference(self, address: Address, reference: ReferenceEntity) -> dict:
         attribute_node: Node = self.get_document(address)
         root: Node = attribute_node.parent.find_parent()
 
         # Check that target exists and has correct values
         # The SIMOS/Entity type can reference any type (used by Package)
-        referenced_document: Node = self.get_document(Reference(reference.address, address.data_source))
+        referenced_document: Node = self.get_document(Address(reference.address, address.data_source))
         if not referenced_document:
             raise NotFoundException(debug=f"{address.data_source}/{referenced_document['_id']}")
         if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document.type:
@@ -537,7 +537,7 @@ class DocumentService:
 
         return tree_node_to_dict(root)
 
-    def remove_reference(self, address: Reference) -> dict:
+    def remove_reference(self, address: Address) -> dict:
         attribute_node: Node = self.get_document(address)
         if not address.path:
             raise Exception(f"Could not find the node on '{address}'")

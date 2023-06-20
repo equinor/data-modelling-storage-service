@@ -2,7 +2,7 @@ import unittest
 from copy import deepcopy
 from unittest import mock
 
-from common.reference import Reference
+from common.address import Address
 from common.utils.data_structure.compare import get_and_print_diff
 from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_utils import get_mock_document_service
@@ -35,7 +35,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_repository.get = lambda id: document_1.copy()
 
         document_service = get_mock_document_service(lambda id, user: document_repository)
-        document_service.remove(Reference("$1", "testing"))
+        document_service.remove(Address("$1", "testing"))
         document_repository.delete.assert_called_with("1")
 
     def test_remove_document_wo_existing_blueprint(self):
@@ -51,7 +51,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=NoBlueprints(),
             repository_provider=lambda x, y: self.repository,
         )
-        self.document_service.remove(Reference("$1", "testing"))
+        self.document_service.remove(Address("$1", "testing"))
         assert self.storage == {}
 
     def test_remove_document_with_model_and_storage_uncontained_children(self):
@@ -65,7 +65,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         doc_2 = {"uid": "2", "_id": "2", "name": "a_reference", "description": "", "type": "basic_blueprint"}
         self.storage = {"1": doc_1, "2": doc_2}
 
-        self.document_service.remove(Reference("$1", "testing"))
+        self.document_service.remove(Address("$1", "testing"))
         assert get_and_print_diff(self.storage, {"2": doc_2}) == []
 
     def test_remove_child_dict(self):
@@ -84,7 +84,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {"name": "Nested", "description": "", "type": "basic_blueprint"},
         }
 
-        self.document_service.remove(Reference("$1.nested", "testing"))
+        self.document_service.remove(Address("$1.nested", "testing"))
         assert self.storage["1"].get("nested") is None
         assert self.storage.get("2") is None
 
@@ -106,7 +106,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {"name": "Nested", "description": "", "type": "basic_blueprint"},
         }
 
-        self.document_service.remove(Reference("$1.references", "testing"))
+        self.document_service.remove(Address("$1.references", "testing"))
         assert self.storage["1"].get("references") is None
         assert self.storage.get("2") is None
 
@@ -136,7 +136,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             },
         }
 
-        self.document_service.remove(Reference("$1", "testing"))
+        self.document_service.remove(Address("$1", "testing"))
         assert self.storage.get("1") is None
         assert self.storage.get("2") is None
 
@@ -191,7 +191,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             },
         }
 
-        self.document_service.remove(Reference("$1", "testing"))
+        self.document_service.remove(Address("$1", "testing"))
         assert self.storage.get("1") is None
         assert self.storage.get("2") is None
         assert self.storage.get("3") is None
@@ -212,7 +212,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
         }
 
-        self.document_service.remove(Reference("$1.reference", "testing"))
+        self.document_service.remove(Address("$1.reference", "testing"))
         assert self.storage["1"] == {
             "_id": "1",
             "name": "Parent",
@@ -236,7 +236,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             }
         }
 
-        self.document_service.remove(Reference("$1.im_optional", "testing"))
+        self.document_service.remove(Address("$1.im_optional", "testing"))
         assert {
             "_id": "1",
             "name": "Parent",
@@ -256,5 +256,5 @@ class DocumentServiceTestCase(unittest.TestCase):
             "blob_object": "someData",
         }
 
-        self.document_service.remove(Reference("$1", "testing"))
+        self.document_service.remove(Address("$1", "testing"))
         assert self.storage.get("blob_object") is None

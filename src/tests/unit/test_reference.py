@@ -3,8 +3,8 @@ from unittest import mock
 
 from pydantic import ValidationError
 
+from common.address import Address
 from common.exceptions import BadRequestException, NotFoundException
-from common.reference import Reference
 from enums import REFERENCE_TYPES, SIMOS
 from restful.request_types.shared import ReferenceEntity
 from tests.unit.mock_utils import get_mock_document_service
@@ -43,7 +43,7 @@ class ReferenceTestCase(unittest.TestCase):
             "referenceType": REFERENCE_TYPES.LINK.value,
         }
         document_service.insert_reference(
-            Reference("$1.uncontained_in_every_way", "testing"),
+            Address("$1.uncontained_in_every_way", "testing"),
             ReferenceEntity.parse_obj(reference),
         )
         assert doc_storage["1"]["uncontained_in_every_way"] == reference
@@ -77,7 +77,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         with self.assertRaises(NotFoundException):
             document_service.insert_reference(
-                Reference("$1.uncontained_in_every_way", "testing"),
+                Address("$1.uncontained_in_every_way", "testing"),
                 ReferenceEntity.parse_obj(
                     {
                         "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
@@ -116,7 +116,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         with self.assertRaises(BadRequestException):
             document_service.insert_reference(
-                Reference("$1.uncontained_in_every_way", "testing"),
+                Address("$1.uncontained_in_every_way", "testing"),
                 ReferenceEntity.parse_obj(
                     {
                         "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
@@ -157,7 +157,7 @@ class ReferenceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(lambda x, y: repository)
 
         document_service.insert_reference(
-            Reference("$1.uncontained_in_every_way", "testing"),
+            Address("$1.uncontained_in_every_way", "testing"),
             ReferenceEntity.parse_obj(
                 {
                     "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
@@ -200,7 +200,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         with self.assertRaises(ValidationError):
             document_service.insert_reference(
-                Reference("$1.uncontained_in_every_way", "testing"),
+                Address("$1.uncontained_in_every_way", "testing"),
                 ReferenceEntity.parse_obj({"_id": "something", "type": "something"}),
             )
 
@@ -236,7 +236,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        document_service.remove_reference(Reference("$1.uncontained_in_every_way", "testing"))
+        document_service.remove_reference(Address("$1.uncontained_in_every_way", "testing"))
         assert doc_storage["1"]["uncontained_in_every_way"] == {}
 
     def test_remove_nested_reference(self):
@@ -277,7 +277,7 @@ class ReferenceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(lambda x, y: repository)
 
         document_service.remove_reference(
-            Reference("$1.i_have_a_uncontained_attribute.uncontained_in_every_way", "testing")
+            Address("$1.i_have_a_uncontained_attribute.uncontained_in_every_way", "testing")
         )
         assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"] == {}
 
@@ -322,7 +322,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        document_service.remove_reference(Reference("$1.uncontained_in_every_way[0]", "testing"))
+        document_service.remove_reference(Address("$1.uncontained_in_every_way[0]", "testing"))
         assert len(doc_storage["1"]["uncontained_in_every_way"]) == 1
         assert doc_storage["1"]["uncontained_in_every_way"][0] == {
             "address": "$42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
@@ -371,7 +371,7 @@ class ReferenceTestCase(unittest.TestCase):
             "referenceType": REFERENCE_TYPES.LINK.value,
         }
         document_service.insert_reference(
-            Reference("$1.uncontained_in_every_way", "testing"), ReferenceEntity(**reference)
+            Address("$1.uncontained_in_every_way", "testing"), ReferenceEntity(**reference)
         )
         assert len(doc_storage["1"]["uncontained_in_every_way"]) == 2
         assert doc_storage["1"]["uncontained_in_every_way"][1] == reference

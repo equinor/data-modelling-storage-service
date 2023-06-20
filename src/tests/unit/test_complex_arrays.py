@@ -3,7 +3,7 @@ from copy import deepcopy
 from unittest import mock, skip
 
 from authentication.models import User
-from common.reference import Reference
+from common.address import Address
 from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from enums import SIMOS
@@ -266,7 +266,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(repository_provider, blueprint_provider=blueprint_provider)
         # fmt: off
         document_service.update_document(
-            reference=Reference.fromabsolute("dmss://testing/$1"),
+            address=Address.fromabsolute("dmss://testing/$1"),
             data={
                 "_id": "1",
                 "name": "complexArraysEntity",

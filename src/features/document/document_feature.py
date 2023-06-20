@@ -17,10 +17,10 @@ from .use_cases.update_document_use_case import update_document_use_case
 router = APIRouter(tags=["default", "document"], prefix="/documents")
 
 
-@router.get("/{reference:path}", operation_id="document_get", response_model=dict, responses=responses)
+@router.get("/{address:path}", operation_id="document_get", response_model=dict, responses=responses)
 @create_response(JSONResponse)
 def get(
-    reference: str,
+    address: str,
     depth: conint(gt=-1, lt=1000) = 0,  # type: ignore
     resolve_links: bool = False,
     user: User = Depends(auth_w_jwt_or_pat),
@@ -28,7 +28,7 @@ def get(
     """
     Get document as JSON string.
 
-    - **reference**: A reference to a package or a data source
+    - **address**: An address to a package or a data source
       - By id: PROTOCOL://DATA SOURCE/$ID.Attribute
       - By path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY.Attribute
       - By query: PROTOCOL://DATA SOURCE/$ID.list(key=value)
@@ -37,43 +37,43 @@ def get(
 
     - **depth**: Maximum depth for resolving nested documents.
     """
-    return get_document_use_case(user=user, reference=reference, depth=depth, resolve_links=resolve_links)
+    return get_document_use_case(user=user, address=address, depth=depth, resolve_links=resolve_links)
 
 
-@router.put("/{id_reference:path}", operation_id="document_update", responses=responses)
+@router.put("/{id_address:path}", operation_id="document_update", responses=responses)
 @create_response(JSONResponse)
 def update(
-    id_reference: str,
+    id_address: str,
     data: Json = Form(...),
     files: Optional[List[UploadFile]] = File(None),
     update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Update document
-    - **id_reference**: <data_source>/<document_uuid> (can also include an optional .<attribute> after <document_uuid>)
+    - **id_address**: <data_source>/<document_uuid> (can also include an optional .<attribute> after <document_uuid>)
     """
     return update_document_use_case(
         user=user,
-        reference=id_reference,
+        address=id_address,
         data=data,
         files=files,
         update_uncontained=update_uncontained,
     )
 
 
-@router.post("/{reference:path}", operation_id="document_add", response_model=dict, responses=responses)
+@router.post("/{address:path}", operation_id="document_add", response_model=dict, responses=responses)
 @create_response(JSONResponse)
 def add_document(
-    reference: str,
+    address: str,
     document: Json = Form(...),
     files: Optional[List[UploadFile]] = File(None),
     update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """
-    Add a document to a package (or a data source) using a reference.
+    Add a document to a package (or a data source) using an address.
 
-    - **reference**:
+    - **address**:
       - Reference to data source: PROTOCOL://DATA SOURCE
       - Reference to package by id: PROTOCOL://DATA SOURCE/$ID
       - Reference to package by path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE
@@ -81,7 +81,7 @@ def add_document(
     """
     return add_document_use_case(
         user=user,
-        reference=reference,
+        address=address,
         document=document,
         files=files,
         update_uncontained=update_uncontained,
@@ -102,8 +102,8 @@ def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt
     return add_raw_use_case(user=user, document=document, data_source_id=data_source_id)
 
 
-@router.delete("/{reference:path}", operation_id="document_remove", responses=responses)
+@router.delete("/{address:path}", operation_id="document_remove", responses=responses)
 @create_response(PlainTextResponse)
-def remove(reference: str, user: User = Depends(auth_w_jwt_or_pat)):
+def remove(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     """Remove a document from DMSS."""
-    return remove_use_case(user=user, reference=reference)
+    return remove_use_case(user=user, address=address)

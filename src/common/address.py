@@ -2,7 +2,7 @@ from common.exceptions import ApplicationException
 from enums import Protocols
 
 
-class Reference:
+class Address:
     def __repr__(self):
         path = f"/{self.path}" if self.path else ""
         return f"{self.protocol}://{self.data_source}{path}"
@@ -16,7 +16,7 @@ class Reference:
         self.path = path
 
     @classmethod
-    def fromabsolute(cls, reference: str):
+    def fromabsolute(cls, address: str):
         """Returns an instance of the Reference class based on the reference input
 
         @param reference: Must be on one of the following formats
@@ -26,23 +26,23 @@ class Reference:
         """
         protocol = Protocols.DMSS.value
         path = None
-        reference = reference.strip("/. ")
-        if "://" in reference:
-            protocol, reference = reference.split("://", 1)
-        if "/" in reference:
-            reference, path = reference.split("/", 1)
-        return cls(path, reference, protocol)
+        address = address.strip("/. ")
+        if "://" in address:
+            protocol, address = address.split("://", 1)
+        if "/" in address:
+            address, path = address.split("/", 1)
+        return cls(path, address, protocol)
 
     @classmethod
-    def fromrelative(cls, reference: str, document_id: str | None, data_source: str):
-        if "://" in reference:
+    def fromrelative(cls, address: str, document_id: str | None, data_source: str):
+        if "://" in address:
             # Already contains protocol and data source
-            return cls.fromabsolute(reference)
-        elif reference.startswith("^"):
+            return cls.fromabsolute(address)
+        elif address.startswith("^"):
             if not document_id:
                 raise ApplicationException(
                     "Document id is missing and therefore it is not possible to replace ^ with an id reference."
                 )
-            return cls(reference.replace("^", f"${document_id}"), data_source)
+            return cls(address.replace("^", f"${document_id}"), data_source)
         else:
-            return cls(reference, data_source)
+            return cls(address, data_source)

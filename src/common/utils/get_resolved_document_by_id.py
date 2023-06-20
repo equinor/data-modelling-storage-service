@@ -1,5 +1,5 @@
+from common.address import Address
 from common.exceptions import ApplicationException
-from common.reference import Reference
 from common.utils.is_reference import is_link, is_reference
 from common.utils.resolve_reference import ResolvedReference, resolve_reference
 from storage.data_source_class import DataSource
@@ -60,12 +60,12 @@ def get_complete_sys_document(
 ) -> dict | list:
     if not reference["address"]:
         raise ApplicationException("Invalid link. Missing 'address'", data=reference)
-    address = Reference.fromrelative(reference["address"], current_id, data_source.name)
+    address = Address.fromrelative(reference["address"], current_id, data_source.name)
 
     resolved_reference: ResolvedReference = resolve_reference(address, get_data_source)
     if is_reference(resolved_reference.entity) and resolve_links:
         resolved_reference = resolve_reference(
-            Reference.fromrelative(
+            Address.fromrelative(
                 resolved_reference.entity["address"], resolved_reference.document_id, resolved_reference.data_source_id
             ),
             get_data_source,

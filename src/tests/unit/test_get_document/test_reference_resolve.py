@@ -4,7 +4,7 @@ from unittest import mock
 
 import pytest
 
-from common.reference import Reference
+from common.address import Address
 from common.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
@@ -57,7 +57,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
         document_service = get_mock_document_service(lambda x, y: document_repository)
         with pytest.raises(Exception, match=r"The protocol 'wrong' is not supported"):
             tree_node_to_dict(
-                document_service.get_document(Reference.fromabsolute("datasource/$1"), resolve_links=True, depth=9)
+                document_service.get_document(Address.fromabsolute("datasource/$1"), resolve_links=True, depth=9)
             )
 
     def test_references(self):
@@ -253,10 +253,10 @@ class GetDocumentResolveTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(mock_data_source)
         actual = tree_node_to_dict(
-            document_service.get_document(Reference.fromabsolute("test_data/$2"), resolve_links=True, depth=99)
+            document_service.get_document(Address.fromabsolute("test_data/$2"), resolve_links=True, depth=99)
         )
         complex_package = tree_node_to_dict(
-            document_service.get_document(Reference.fromabsolute("test_data/$1"), resolve_links=True, depth=99)
+            document_service.get_document(Address.fromabsolute("test_data/$1"), resolve_links=True, depth=99)
         )
 
         assert isinstance(actual, dict)

@@ -2,8 +2,8 @@ import re
 from dataclasses import dataclass
 from typing import Any, Callable, Tuple, Union
 
+from common.address import Address
 from common.exceptions import ApplicationException, NotFoundException
-from common.reference import Reference
 from common.utils.data_structure.find import find
 from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
 from common.utils.is_reference import is_reference
@@ -106,7 +106,7 @@ class QueryItem:
     ) -> Tuple[Any, str]:
         if isinstance(entity, dict) and is_reference(entity):
             resolvedRef = resolve_reference(
-                Reference.fromrelative(entity["address"], document_id, data_source.name), get_data_source
+                Address.fromrelative(entity["address"], document_id, data_source.name), get_data_source
             )
             entity = resolvedRef.entity
             document_id = resolvedRef.document_id
@@ -114,7 +114,7 @@ class QueryItem:
         # Search inside an existing document (need to resolve any references first before trying to compare against filter)
         elements = [
             resolve_reference(
-                Reference.fromrelative(f["address"], document_id, data_source.name), get_data_source
+                Address.fromrelative(f["address"], document_id, data_source.name), get_data_source
             ).entity
             if is_reference(f)
             else f
@@ -140,7 +140,7 @@ class AttributeItem:
     ) -> tuple[Any, str]:
         if isinstance(entity, dict) and is_reference(entity):
             entity = resolve_reference(
-                Reference.fromrelative(entity["address"], document_id, data_source.name), get_data_source
+                Address.fromrelative(entity["address"], document_id, data_source.name), get_data_source
             ).entity
         try:
             result = find(entity, [self.path])
@@ -218,8 +218,8 @@ def resolve_reference_items(
         entity, attribute = ref_item.get_child(entity, path[0], data_source, get_data_source)
         if is_reference(entity) and index < len(reference_items) - 2:
             # Found a new document, use that as new starting point for the attribute path
-            ref_obj = Reference.fromrelative(entity["address"], path[0], data_source.name)
-            resolved_reference = resolve_reference(ref_obj, get_data_source)
+            address = Address.fromrelative(entity["address"], path[0], data_source.name)
+            resolved_reference = resolve_reference(address, get_data_source)
             path = [resolved_reference.document_id, *resolved_reference.attribute_path]
         else:
             path.append(attribute)
@@ -236,19 +236,19 @@ class ResolvedReference:
     entity: dict | list
 
 
-def resolve_reference(reference: Reference, get_data_source: Callable) -> ResolvedReference:
+def resolve_reference(address: Address, get_data_source: Callable) -> ResolvedReference:
     """Resolve the reference into a document."""
-    if not reference.path:
+    if not address.path:
         raise ApplicationException("Failed to resolve reference. Got empty reference.")
 
-    reference_items = reference_to_reference_items(reference.path)
+    reference_items = reference_to_reference_items(address.path)
 
     # The first reference item should always be a DataSourceItem
-    data_source = get_data_source(reference.data_source)
+    data_source = get_data_source(address.data_source)
     document, path = resolve_reference_items(data_source, reference_items, get_data_source)
     return ResolvedReference(
         entity=document,
-        data_source_id=reference.data_source,
+        data_source_id=address.data_source,
         document_id=str(path[0]),
         attribute_path=path[1:],
     )

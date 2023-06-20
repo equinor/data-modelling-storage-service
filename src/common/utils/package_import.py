@@ -4,8 +4,8 @@ from typing import Dict, List
 from uuid import uuid4
 
 from authentication.models import User
+from common.address import Address
 from common.exceptions import BadRequestException, NotFoundException
-from common.reference import Reference
 from common.utils.logging import logger
 from common.utils.resolve_reference import ResolvedReference, resolve_reference
 from common.utils.string_helpers import url_safe_name
@@ -43,7 +43,7 @@ def import_package(path: str, user: User, data_source_name: str, is_root: bool =
     package = {"name": os.path.basename(path), "type": SIMOS.PACKAGE.value, "isRoot": is_root}
     try:
         resolved_reference: ResolvedReference = resolve_reference(
-            Reference(package["name"], data_source.name),
+            Address(package["name"], data_source.name),
             lambda data_source_name: get_data_source(data_source_name, user),
         )
         if resolved_reference.entity:
