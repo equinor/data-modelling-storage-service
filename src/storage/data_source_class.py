@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Dict, List, Union
 from uuid import uuid4
 
@@ -157,8 +158,16 @@ class DataSource:
                 users=parent_acl.users,
                 others=parent_acl.others,
             )
+            meta = {
+                "created": f"{datetime.now()}",
+            }
             lookup = DocumentLookUp(
-                lookup_id=document["_id"], repository=repo.name, database_id=document["_id"], acl=acl
+                lookup_id=document["_id"],
+                repository=repo.name,
+                database_id=document["_id"],
+                acl=acl,
+                storage_affinity=StorageDataTypes.DEFAULT.value,
+                meta=meta,
             )
             self._update_lookup(lookup)
 
@@ -166,12 +175,24 @@ class DataSource:
         access_control(lookup.acl, AccessLevel.WRITE, self.user)
         repo.update(document["_id"], document)
 
-    def update_blob(self, uid, file) -> None:
+    def update_blob(self, uid: str, filename: str, content_type: str, file) -> None:
         repo = self._get_repo_from_storage_attribute(
             StorageAttribute(name="generic_blob", contained=False, storage_affinity=StorageDataTypes.BLOB),
             strict=True,
         )
-        lookup = DocumentLookUp(lookup_id=uid, repository=repo.name, database_id=uid, acl=create_acl(self.user))
+        meta = {
+            "created": f"{datetime.now()}",
+            "filename": filename,
+            "filetype": content_type,
+        }
+        lookup = DocumentLookUp(
+            lookup_id=uid,
+            repository=repo.name,
+            database_id=uid,
+            acl=create_acl(self.user),
+            storage_affinity=StorageDataTypes.BLOB.value,
+            meta=meta,
+        )
         access_control(lookup.acl, AccessLevel.WRITE, self.user)
         self._update_lookup(lookup)
         repo.update_blob(uid, file.read())
@@ -190,7 +211,6 @@ class DataSource:
             self.repositories[lookup.repository].delete_blob(uid)
         except NotFoundException:
             logger.warning(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
-            pass
 
     def delete(self, uid: str) -> None:
         # If lookup not found, assume it's deleted
@@ -201,4 +221,3 @@ class DataSource:
             self.repositories[lookup.repository].delete(uid)
         except NotFoundException:
             logger.warning(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
-            pass

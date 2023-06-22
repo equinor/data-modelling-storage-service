@@ -20,6 +20,9 @@ from common.utils.encryption import generate_key
 from common.utils.logging import logger
 from common.utils.package_import import import_package
 from config import config
+from features.lookup_table.use_cases.create_lookup_table import (
+    create_lookup_table_use_case,
+)
 from restful.request_types.create_data_source import DataSourceRequest
 from services.database import mongo_client
 from storage.internal.data_source_repository import DataSourceRepository
@@ -36,8 +39,10 @@ def create_app() -> FastAPI:
     from features.document import document_feature
     from features.entity import entity_feature
     from features.export import export_feature
+    from features.file import file_feature
     from features.health_check import health_check_feature
     from features.lookup_table import lookup_table_feature
+    from features.meta import meta_feature
     from features.personal_access_token import personal_access_token_feature
     from features.reference import reference_feature
     from features.search import search_feature
@@ -59,6 +64,8 @@ def create_app() -> FastAPI:
     authenticated_routes.include_router(entity_feature.router)
     authenticated_routes.include_router(lookup_table_feature.router)
     authenticated_routes.include_router(attribute_feature.router)
+    authenticated_routes.include_router(file_feature.router)
+    authenticated_routes.include_router(meta_feature.router)
 
     # Some routes a PAT can not be used to authenticate. For example, to get new access tokens. That would be bad...
     jwt_only_routes = APIRouter()
@@ -142,6 +149,7 @@ def init_application():
     import_package(
         f"{config.APPLICATION_HOME}/system/SIMOS", user, data_source_name=config.CORE_DATA_SOURCE, is_root=True
     )
+    create_lookup_table_use_case(["system/SIMOS/recipe_links"], "DMSS", user)
     logger.debug("DONE")
 
 

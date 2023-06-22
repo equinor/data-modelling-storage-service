@@ -1,3 +1,4 @@
+import mimetypes
 import pprint
 from functools import lru_cache
 from typing import BinaryIO, Callable, Dict, List, Union
@@ -105,7 +106,8 @@ class DocumentService:
             # Get or set the "_blob_id"
             node.entity["_blob_id"] = node.entity["_blob_id"] if node.entity.get("_blob_id") else str(uuid4())
             # Save it
-            repository.update_blob(node.entity["_blob_id"], file)
+            content_type = mimetypes.guess_type(node.name)
+            repository.update_blob(node.entity["_blob_id"], node.name, content_type, file)
             node.entity["size"] = file.seek(0, 2)  # Set the size of the blob
             # Remove the temporary key containing the File
             del node.entity["_blob_"]
@@ -436,7 +438,8 @@ class DocumentService:
 
         if target.type == SIMOS.PACKAGE.value:
             target = target.children[0]  # Set target to be the packages content
-        if isinstance(target, ListNode):
+
+        if isinstance(target, ListNode) or target.parent.type == SIMOS.PACKAGE.value:
             new_node.set_uid()
             new_node.parent = target
             new_node.key = str(len(target.children))

@@ -141,7 +141,7 @@ class NodeBase:
         if len(nodes) > 1:
             nodes.pop(0)  # Remove first node since parent of self cannot be self
         for node in nodes:
-            if not node.storage_contained:
+            if not node.storage_contained and not isinstance(node, ListNode):
                 return node
 
     def __repr__(self):

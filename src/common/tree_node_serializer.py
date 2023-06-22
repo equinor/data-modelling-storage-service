@@ -12,7 +12,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageRecipe
 from domain_classes.tree_node import ListNode, Node
-from enums import REFERENCE_TYPES, SIMOS
+from enums import REFERENCE_TYPES, SIMOS, BuiltinDataTypes
 
 
 def tree_node_to_dict(node: Node | ListNode) -> list[Any] | dict:
@@ -63,6 +63,7 @@ def _create_link_reference_to_node(node: Node):
     }
 
 
+# flake8: noqa: C901
 def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
     """
     Rebuilds the entity as it should be stored based on the passed child entities that can be either contained
@@ -80,9 +81,17 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
     except KeyError:
         raise BadRequestException(f"The node '{node.uid}' is missing the 'type' attributes")
 
+    if node.attribute.attribute_type == BuiltinDataTypes.BINARY.value:
+        # Just return the reference, because binary data is uncontained and should not be resolved.
+        return node.entity
+
     # Primitive
     # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.
-    if node.blueprint is not None:
+    if (
+        node.attribute.attribute_type != BuiltinDataTypes.BINARY.value
+        and node.attribute.attribute_type != BuiltinDataTypes.OBJECT.value
+        and node.blueprint is not None
+    ):
         for attribute in node.blueprint.get_primitive_types():
             if attribute.name in node.entity:
                 data[attribute.name] = node.entity[attribute.name]
@@ -114,6 +123,7 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
                 and child.entity
                 and child.entity["referenceType"] == REFERENCE_TYPES.LINK.value
             )
+            # If not contained, but the entity is not a link or pointer reference, create reference.
             if not child.contained and child.entity and not child_is_link_reference:
                 data[child.key] = _create_link_reference_to_node(child)
             else:
@@ -160,8 +170,14 @@ def tree_node_from_dict(
         recipe_provider=recipe_provider,
     )
 
+    if node.attribute.attribute_type == BuiltinDataTypes.BINARY.value:
+        return node
+
     try:
-        if node.attribute.attribute_type != "object":
+        if (
+            node.attribute.attribute_type != BuiltinDataTypes.OBJECT.value
+            and node.attribute.attribute_type != BuiltinDataTypes.BINARY.value
+        ):
             node.blueprint
     except NotFoundException as e:
         raise ApplicationException(f"Failed to find blueprint with reference '{node.type}'", debug=str(e))
@@ -231,9 +247,14 @@ def tree_node_from_dict(
                     f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
                     + f"should be a dict, but was '{str(type(attribute_data))}'"
                 )
+            # If the child is not contained, get or create it's _id
+            if attribute_data.get("type", "") == SIMOS.REFERENCE.value:
+                child_uid = attribute_data["address"].replace("$", "")
+            else:
+                child_uid = attribute_data.get("_id", "")
+
             child_node = tree_node_from_dict(
-                # If the child is not contained, get or create it's _id
-                uid=attribute_data.get("_id", ""),
+                uid=child_uid,
                 entity=attribute_data,
                 key=child_attribute.name,
                 blueprint_provider=blueprint_provider,

@@ -164,7 +164,11 @@ def _validate_complex_attribute(
 ):
     if type(attribute) != dict:
         raise ValidationException(f"'{attributeDefinition.name}' should be a dict", debug=_get_debug_message(key))
-    if not attribute or attributeDefinition.attribute_type == "object":
+    if (
+        not attribute
+        or attributeDefinition.attribute_type == BuiltinDataTypes.OBJECT.value
+        or attributeDefinition.attribute_type == BuiltinDataTypes.BINARY.value
+    ):
         return
     _validate_entity(
         attribute,

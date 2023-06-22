@@ -1,3 +1,5 @@
+import mimetypes
+
 from behave import given
 
 from storage.data_source_class import DataSource
@@ -9,7 +11,11 @@ def step_impl(context, id, data_source, path):
     data_source: DataSource = get_data_source(data_source_id=data_source, user=context.user)
     try:
         with open(path, "rb") as blob_file:
-            data_source.update_blob(id, blob_file)
+            guess = mimetypes.guess_type(blob_file.name)
+            content_type = ""
+            if guess:
+                content_type = guess[0]
+            data_source.update_blob(id, blob_file.name, content_type, blob_file)
     except FileNotFoundError:
         raise FileNotFoundError(
             f"The file {path}, was not found. Make sure the working directory of the test are set to be the source root (./src)"
