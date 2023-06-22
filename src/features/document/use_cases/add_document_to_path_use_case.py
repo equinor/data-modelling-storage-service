@@ -19,7 +19,7 @@ def add_document_use_case(
     document_service = DocumentService(repository_provider=repository_provider, user=user)
 
     document = document_service.add(
-        address=Address.fromabsolute(address),
+        address=Address.from_absolute(address),
         document=document,
         files={f.filename: f.file for f in files} if files else None,
         update_uncontained=update_uncontained,

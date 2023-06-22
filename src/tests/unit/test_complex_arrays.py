@@ -266,7 +266,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(repository_provider, blueprint_provider=blueprint_provider)
         # fmt: off
         document_service.update_document(
-            address=Address.fromabsolute("dmss://testing/$1"),
+            address=Address.from_absolute("dmss://testing/$1"),
             data={
                 "_id": "1",
                 "name": "complexArraysEntity",

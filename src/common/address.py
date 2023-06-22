@@ -16,7 +16,7 @@ class Address:
         self.path = path
 
     @classmethod
-    def fromabsolute(cls, address: str):
+    def from_absolute(cls, address: str):
         """Returns an instance of the Reference class based on the reference input
 
         @param reference: Must be on one of the following formats
@@ -34,10 +34,10 @@ class Address:
         return cls(path, address, protocol)
 
     @classmethod
-    def fromrelative(cls, address: str, document_id: str | None, data_source: str):
+    def from_relative(cls, address: str, document_id: str | None, data_source: str):
         if "://" in address:
             # Already contains protocol and data source
-            return cls.fromabsolute(address)
+            return cls.from_absolute(address)
         elif address.startswith("^"):
             if not document_id:
                 raise ApplicationException(

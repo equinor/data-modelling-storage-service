@@ -60,12 +60,12 @@ def get_complete_sys_document(
 ) -> dict | list:
     if not reference["address"]:
         raise ApplicationException("Invalid link. Missing 'address'", data=reference)
-    address = Address.fromrelative(reference["address"], current_id, data_source.name)
+    address = Address.from_relative(reference["address"], current_id, data_source.name)
 
     resolved_reference: ResolvedReference = resolve_reference(address, get_data_source)
     if is_reference(resolved_reference.entity) and resolve_links:
         resolved_reference = resolve_reference(
-            Address.fromrelative(
+            Address.from_relative(
                 resolved_reference.entity["address"], resolved_reference.document_id, resolved_reference.data_source_id
             ),
             get_data_source,

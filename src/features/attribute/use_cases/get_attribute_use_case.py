@@ -12,5 +12,5 @@ def get_attribute_use_case(
 ):
     """Get attribute by reference."""
     document_service = DocumentService(repository_provider=repository_provider, user=user)
-    node: Node = document_service.get_document(Address.fromabsolute(address))
+    node: Node = document_service.get_document(Address.from_absolute(address))
     return node.attribute.to_dict()

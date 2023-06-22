@@ -106,7 +106,7 @@ class QueryItem:
     ) -> Tuple[Any, str]:
         if isinstance(entity, dict) and is_reference(entity):
             resolvedRef = resolve_reference(
-                Address.fromrelative(entity["address"], document_id, data_source.name), get_data_source
+                Address.from_relative(entity["address"], document_id, data_source.name), get_data_source
             )
             entity = resolvedRef.entity
             document_id = resolvedRef.document_id
@@ -114,7 +114,7 @@ class QueryItem:
         # Search inside an existing document (need to resolve any references first before trying to compare against filter)
         elements = [
             resolve_reference(
-                Address.fromrelative(f["address"], document_id, data_source.name), get_data_source
+                Address.from_relative(f["address"], document_id, data_source.name), get_data_source
             ).entity
             if is_reference(f)
             else f
@@ -140,7 +140,7 @@ class AttributeItem:
     ) -> tuple[Any, str]:
         if isinstance(entity, dict) and is_reference(entity):
             entity = resolve_reference(
-                Address.fromrelative(entity["address"], document_id, data_source.name), get_data_source
+                Address.from_relative(entity["address"], document_id, data_source.name), get_data_source
             ).entity
         try:
             result = find(entity, [self.path])
@@ -218,7 +218,7 @@ def resolve_reference_items(
         entity, attribute = ref_item.get_child(entity, path[0], data_source, get_data_source)
         if is_reference(entity) and index < len(reference_items) - 2:
             # Found a new document, use that as new starting point for the attribute path
-            address = Address.fromrelative(entity["address"], path[0], data_source.name)
+            address = Address.from_relative(entity["address"], path[0], data_source.name)
             resolved_reference = resolve_reference(address, get_data_source)
             path = [resolved_reference.document_id, *resolved_reference.attribute_path]
         else:

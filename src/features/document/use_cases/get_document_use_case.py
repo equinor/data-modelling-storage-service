@@ -17,6 +17,6 @@ def get_document_use_case(
 ):
     """Get document by reference."""
     document_service = DocumentService(repository_provider=repository_provider, user=user)
-    address_object = Address.fromabsolute(address)
+    address_object = Address.from_absolute(address)
     node: Node | ListNode = document_service.get_document(address_object, depth, resolve_links)
     return tree_node_to_dict(node)

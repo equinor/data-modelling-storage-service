@@ -24,7 +24,7 @@ def resolve_references(values: list, data_source_id: str, user: User) -> list:
     data_source: DataSource = get_data_source(data_source_id, user)
     return [
         resolve_reference(
-            Address.fromrelative(value["address"], None, data_source.name),
+            Address.from_relative(value["address"], None, data_source.name),
             lambda data_source_name: get_data_source(data_source_name, user),
         ).entity
         for value in values
@@ -32,7 +32,7 @@ def resolve_references(values: list, data_source_id: str, user: User) -> list:
 
 
 def resolve_blueprint_use_case(user: User, address: str):
-    address_obj = Address.fromabsolute(address)
+    address_obj = Address.from_absolute(address)
     path_elements = []
     if not address_obj.path or not re.search(r"^\$[a-z0-9]+$", address_obj.path):
         raise ApplicationException(f"Incorrect address {address}. Address should point directly to an id")

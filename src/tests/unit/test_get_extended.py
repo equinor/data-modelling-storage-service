@@ -53,7 +53,7 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        node: Node = document_service.get_document(Address.fromabsolute("testing/$1"))
+        node: Node = document_service.get_document(Address.from_absolute("testing/$1"))
         node.update(doc_1_after)
         document_service.save(node, "testing")
 

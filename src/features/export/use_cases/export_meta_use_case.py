@@ -32,7 +32,7 @@ def concat_meta_data(meta: dict | None, new_meta: dict | None) -> dict:
 def resolve_references(values: list, data_source: DataSource, user: User) -> list:
     return [
         resolve_reference(
-            Address.fromrelative(value["address"], None, data_source.name),
+            Address.from_relative(value["address"], None, data_source.name),
             lambda data_source_name: get_data_source(data_source_name, user),
         ).entity
         for value in values
@@ -81,7 +81,7 @@ def export_meta_use_case(user: User, address: str) -> dict:
     Also, a reference must be on the format PROTOCOL://DATASOURCE_NAME/ROOT_PACKAGE/*path to document or package*.
     (Protocol is optional)
     """
-    address_object = Address.fromabsolute(address)
+    address_object = Address.from_absolute(address)
 
     data_source = get_data_source(address_object.data_source, user)
     if not address_object.path:
