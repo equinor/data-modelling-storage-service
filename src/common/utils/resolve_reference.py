@@ -7,6 +7,7 @@ from common.exceptions import ApplicationException, NotFoundException
 from common.utils.data_structure.find import find
 from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
 from common.utils.is_reference import is_reference
+from enums import REFERENCE_TYPES, SIMOS
 from storage.data_source_class import DataSource
 
 
@@ -59,6 +60,14 @@ class IdItem:
     id: str
 
     def get_entry_point(self, data_source: DataSource) -> Tuple[dict, str]:
+        if data_source._lookup(self.id).storage_affinity == "blob":
+            # Do not resolve any binary data, just return a reference to it.
+            # Getting the binary data needs to be handled by the consumer (e.g frontend).
+            return {
+                "type": SIMOS.REFERENCE.value,
+                "address": f"${self.id}",
+                "referenceType": REFERENCE_TYPES.STORAGE.value,
+            }, self.id
         # Get the document from the data source
         result = data_source.get(self.id)
         if not result:

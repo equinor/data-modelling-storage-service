@@ -73,13 +73,19 @@ class CreateEntity:
     # type is inserted based on the parent attributes type, or the initial type for root entity.
     def _get_entity(self, blueprint: Blueprint, entity):
         for attr in blueprint.attributes:
+            if attr.attribute_type == BuiltinDataTypes.BINARY.value:
+                continue
+
             if attr.attribute_type in PRIMITIVES:
                 if not attr.is_optional and attr.name not in entity:
                     entity[attr.name] = CreateEntity.parse_value(attr=attr, blueprint_provider=self.blueprint_provider)
             else:
                 blueprint = (
                     self.blueprint_provider(attr.attribute_type)
-                    if attr.attribute_type != BuiltinDataTypes.OBJECT.value
+                    if (
+                        attr.attribute_type != BuiltinDataTypes.OBJECT.value
+                        and attr.attribute_type != BuiltinDataTypes.BINARY.value
+                    )
                     else SIMOS.ENTITY.value
                 )
                 if attr.is_array:

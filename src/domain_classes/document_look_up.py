@@ -8,3 +8,5 @@ class DocumentLookUp(BaseModel):
     repository: str
     database_id: str
     acl: ACL
+    storage_affinity: str
+    meta: dict | None = None

@@ -1,4 +1,6 @@
 import json
+import mimetypes
+from pathlib import Path
 from time import sleep
 
 from behave import given, step, then, when
@@ -59,11 +61,38 @@ def step_make_request(context, method):
         context.response = context.test_client.put(context.url, json=json.loads(context.text), headers=context.headers)
     elif method == "POST":
         json_data = json.loads(context.text) if context.text else None
-        context.response = context.test_client.post(context.url, json=json_data, headers=context.headers)
+        if "binary_file" in context:
+            # These requests may contain files, so we use "multipart/form-data".
+            # JSON must then be sent in the 'data' key part of the form
+            form_data = {
+                k: json.dumps(v) if isinstance(v, dict) or isinstance(v, list) else str(v)
+                for k, v in json_data.items()
+            }
+            file_name = Path(context.binary_file.name).name
+            mime_type = ""
+            guess = mimetypes.guess_type(file_name)
+            if guess:
+                mime_type = guess[0]
+            files = {"file": (file_name, context.binary_file, mime_type)}
+            context.response = context.test_client.post(
+                context.url, data=form_data, files=files, headers=context.headers
+            )
+        else:
+            context.response = context.test_client.post(context.url, json=json_data, headers=context.headers)
     elif method == "GET":
         context.response = context.test_client.get(context.url, headers=context.headers)
     elif method == "DELETE":
         context.response = context.test_client.delete(context.url, headers=context.headers)
+
+
+@given('adding a binary file "{path}" to the request')
+def step_impl(context, path: str):
+    try:
+        context.binary_file = open(path, "rb")
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f"The file {path}, was not found. Make sure the working directory of the test are set to be the source root (./src)"
+        )
 
 
 @given('the logged in user is "{user_id}" with roles "{roles}"')
