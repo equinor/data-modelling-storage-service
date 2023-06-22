@@ -54,4 +54,4 @@ def resolve_blueprint_use_case(user: User, address: str):
         root_package_found = package["isRoot"]
         next_document_id = f"${package['_id']}"
     path_elements.reverse()
-    return address_obj.protocol + "://" + address_obj.data_source + "/" + "/".join(path_elements)
+    return f"{address_obj.protocol}://{address_obj.data_source}/{'/'.join(path_elements)}"

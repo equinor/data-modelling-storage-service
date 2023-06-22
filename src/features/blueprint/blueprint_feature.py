@@ -39,6 +39,6 @@ def get_blueprint(
 def resolve_blueprint_id(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     """Resolve address of a blueprint to its type path.
 
-    - **address**: <data_source</<blueprint_uuid>
+    - **address**: <protocol>://<data_source</$<blueprint_uuid>
     """
     return resolve_blueprint_use_case(user=user, address=address)

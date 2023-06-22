@@ -42,7 +42,7 @@ def create_zip_export(document_service: DocumentService, address: Address, user:
     # non-root packages and single documents will inherit the meta information from all parents.
     document_meta = {}
     if not (document_node.entity["type"] == SIMOS.PACKAGE.value and document_node.entity["isRoot"]):
-        document_meta = export_meta_use_case(user=user, address=str(address))
+        document_meta = export_meta_use_case(user=user, path_address=str(address))
     elif "_meta_" in document_node.entity:
         document_meta = document_node.entity["_meta_"]
 
@@ -58,8 +58,8 @@ def create_zip_export(document_service: DocumentService, address: Address, user:
     return archive_path
 
 
-def export_use_case(user: User, document_address: str):
+def export_use_case(user: User, address: str):
     memory_file = create_zip_export(
-        document_service=DocumentService(user=user), address=Address.from_absolute(document_address), user=user
+        document_service=DocumentService(user=user), address=Address.from_absolute(address), user=user
     )
     return memory_file

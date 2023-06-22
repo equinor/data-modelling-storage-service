@@ -208,13 +208,9 @@ class DocumentService:
     # TODO: Dont return Node. Doing this is ~33% slower
     def get_document(self, address: Address, depth: int = 0, resolve_links: bool = False) -> Node | ListNode:
         """
-        Get document by reference.
+        Get document by address.
 
-        :param reference: accepts multiple types of reference:
-            full path. Ex: "dmss://test_data/complex/myCarRental.cars[0]"
-            data source relative path. Ex "/$2.cars[0]"
-            document relative path. Ex "^.cars[0]"
-            path with query. Ex "^.cars[(plateNumber=456,name=Ferrari)]"
+        :param address: Address to the entity you wish to obtain
         :param depth: depth=0 means that the entire entity will be returned, except any references it may contain
             along the tree. depth=1 means that the entity's direct child references will be returned as well.
         :param resolve_links: If false, model uncontained references (ie of type link) will not be resolved, no
@@ -313,7 +309,7 @@ class DocumentService:
         """
         Update a document.
 
-        What to update is referred to with a reference string.
+        What to update is referred to with an address.
         It can either be an entire document or just an attribute inside a document.
         """
         validate_entity_against_self(data, self.get_blueprint)

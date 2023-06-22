@@ -19,10 +19,10 @@ class Address:
     def from_absolute(cls, address: str):
         """Returns an instance of the Reference class based on the reference input
 
-        @param reference: Must be on one of the following formats
-            - dmss://DATA_SOURCE/(PATH|ID).Attribute
-            - DATA_SOURCE/(PATH|ID).Attribute
-            - /DATA_SOURCE/(PATH|ID).Attribute
+        @param reference: Must be on one of the following formats (.Attribute is optional)
+            - dmss://DATA_SOURCE/(PATH|$ID).Attribute
+            - DATA_SOURCE/(PATH|$ID).Attribute
+            - /DATA_SOURCE/(PATH|$ID).Attribute
         """
         protocol = Protocols.DMSS.value
         path = None

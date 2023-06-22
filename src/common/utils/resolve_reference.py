@@ -105,11 +105,11 @@ class QueryItem:
         self, entity: dict | list, document_id: str, data_source: DataSource, get_data_source: Callable
     ) -> Tuple[Any, str]:
         if isinstance(entity, dict) and is_reference(entity):
-            resolvedRef = resolve_reference(
+            resolved_ref = resolve_reference(
                 Address.from_relative(entity["address"], document_id, data_source.name), get_data_source
             )
-            entity = resolvedRef.entity
-            document_id = resolvedRef.document_id
+            entity = resolved_ref.entity
+            document_id = resolved_ref.document_id
 
         # Search inside an existing document (need to resolve any references first before trying to compare against filter)
         elements = [
@@ -239,7 +239,7 @@ class ResolvedReference:
 def resolve_reference(address: Address, get_data_source: Callable) -> ResolvedReference:
     """Resolve the reference into a document."""
     if not address.path:
-        raise ApplicationException("Failed to resolve reference. Got empty reference.")
+        raise ApplicationException("Failed to resolve reference. Got empty address path.")
 
     reference_items = reference_to_reference_items(address.path)
 

@@ -74,18 +74,18 @@ def _collect_entity_meta_by_path(
     return _collect_entity_meta_by_path(next_package, path_elements, data_source, collected_meta, user)
 
 
-def export_meta_use_case(user: User, address: str) -> dict:
+def export_meta_use_case(user: User, path_address: str) -> dict:
     """Export meta.
 
     This function assumes that reference is on a path format, without any id.
     Also, a reference must be on the format PROTOCOL://DATASOURCE_NAME/ROOT_PACKAGE/*path to document or package*.
     (Protocol is optional)
     """
-    address_object = Address.from_absolute(address)
+    address_object = Address.from_absolute(path_address)
 
     data_source = get_data_source(address_object.data_source, user)
     if not address_object.path:
-        raise NotFoundException(f"Could not find a root package from reference '{address}'")
+        raise NotFoundException(f"Could not find a root package from reference '{path_address}'")
     reference_items = reference_to_reference_items(address_object.path)
     if (
         len(reference_items) >= 1
@@ -94,7 +94,7 @@ def export_meta_use_case(user: User, address: str) -> dict:
     ):
         root_package_name = reference_items[0].query_as_dict["name"]
     else:
-        raise NotFoundException(f"Could not find a root package from reference '{address}'")
+        raise NotFoundException(f"Could not find a root package from reference '{path_address}'")
 
     root_package: dict = resolve_reference(
         Address(root_package_name, address_object.data_source),
