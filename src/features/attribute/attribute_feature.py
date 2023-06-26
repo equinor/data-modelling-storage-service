@@ -11,14 +11,14 @@ router = APIRouter(tags=["default", "attribute"], prefix="/attribute")
 
 
 @router.get(
-    "/{reference:path}",
+    "/{address:path}",
     operation_id="attribute_get",
     response_model=dict,
     responses=responses,
 )
 @create_response(JSONResponse)
-def get_attribute(reference: str, user: User = Depends(auth_w_jwt_or_pat)):
+def get_attribute(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     """
-    Fetch the attribute from a reference.
+    Fetch the attribute from a address.
     """
-    return get_attribute_use_case(user=user, reference=reference)
+    return get_attribute_use_case(user=user, address=address)

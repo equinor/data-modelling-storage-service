@@ -34,13 +34,11 @@ def get_blueprint(
     return get_blueprint_use_case(type_ref, context, user)
 
 
-@router.get(
-    "/resolve-path/{absolute_id:path}", operation_id="blueprint_resolve", response_model=str, responses=responses
-)
+@router.get("/resolve-path/{address:path}", operation_id="blueprint_resolve", response_model=str, responses=responses)
 @create_response(PlainTextResponse)
-def resolve_blueprint_id(absolute_id: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """Resolve absolute_id of a blueprint to its type path.
+def resolve_blueprint_id(address: str, user: User = Depends(auth_w_jwt_or_pat)):
+    """Resolve address of a blueprint to its type path.
 
-    - **absolute_id**: <data_source</<blueprint_uuid>
+    - **address**: <protocol>://<data_source</$<blueprint_uuid>
     """
-    return resolve_blueprint_use_case(user=user, absolute_id=absolute_id)
+    return resolve_blueprint_use_case(user=user, address=address)

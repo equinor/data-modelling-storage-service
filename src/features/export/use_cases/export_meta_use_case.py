@@ -1,12 +1,12 @@
 from typing import List, Optional
 
 from authentication.models import User
+from common.address import Address
 from common.exceptions import NotFoundException
 from common.utils.resolve_reference import (
     QueryItem,
     reference_to_reference_items,
     resolve_reference,
-    split_data_source_and_reference,
 )
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
@@ -32,7 +32,8 @@ def concat_meta_data(meta: dict | None, new_meta: dict | None) -> dict:
 def resolve_references(values: list, data_source: DataSource, user: User) -> list:
     return [
         resolve_reference(
-            f"/{data_source.name}/{value['address']}", lambda data_source_name: get_data_source(data_source_name, user)
+            Address.from_relative(value["address"], None, data_source.name),
+            lambda data_source_name: get_data_source(data_source_name, user),
         ).entity
         for value in values
     ]
@@ -73,19 +74,19 @@ def _collect_entity_meta_by_path(
     return _collect_entity_meta_by_path(next_package, path_elements, data_source, collected_meta, user)
 
 
-def export_meta_use_case(user: User, reference: str) -> dict:
+def export_meta_use_case(user: User, path_address: str) -> dict:
     """Export meta.
 
     This function assumes that reference is on a path format, without any id.
     Also, a reference must be on the format PROTOCOL://DATASOURCE_NAME/ROOT_PACKAGE/*path to document or package*.
     (Protocol is optional)
     """
-    if "://" not in reference:
-        reference = f"/{reference}"
+    address_object = Address.from_absolute(path_address)
 
-    data_source_id, reference_path = split_data_source_and_reference(reference)
-    data_source = get_data_source(data_source_id, user)
-    reference_items = reference_to_reference_items(reference_path)
+    data_source = get_data_source(address_object.data_source, user)
+    if not address_object.path:
+        raise NotFoundException(f"Could not find a root package from reference '{path_address}'")
+    reference_items = reference_to_reference_items(address_object.path)
     if (
         len(reference_items) >= 1
         and isinstance(reference_items[0], QueryItem)
@@ -93,13 +94,14 @@ def export_meta_use_case(user: User, reference: str) -> dict:
     ):
         root_package_name = reference_items[0].query_as_dict["name"]
     else:
-        raise NotFoundException(f"Could not find a root package from reference '{reference}'")
+        raise NotFoundException(f"Could not find a root package from reference '{path_address}'")
 
     root_package: dict = resolve_reference(
-        f"/{data_source_id}/{root_package_name}", lambda data_source_name: get_data_source(data_source_name, user)
+        Address(root_package_name, address_object.data_source),
+        lambda data_source_name: get_data_source(data_source_name, user),
     ).entity
 
-    path_without_root_package: List[str] = reference_path.strip("/").split("/")[1:]
+    path_without_root_package: List[str] = address_object.path.strip("/").split("/")[1:]
 
     if not path_without_root_package:
         return root_package.get("_meta_", {})

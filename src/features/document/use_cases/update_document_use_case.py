@@ -3,6 +3,7 @@ from typing import List, Optional, Union
 from fastapi import File, UploadFile
 
 from authentication.models import User
+from common.address import Address
 from enums import SIMOS
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
@@ -10,7 +11,7 @@ from storage.internal.data_source_repository import get_data_source
 
 def update_document_use_case(
     user: User,
-    reference: str,
+    address: str,
     data: Union[dict, list],
     files: Optional[List[UploadFile]] = File(None),
     update_uncontained: Optional[bool] = True,
@@ -18,7 +19,7 @@ def update_document_use_case(
 ):
     document_service = DocumentService(repository_provider=repository_provider, user=user)
     document = document_service.update_document(
-        reference,
+        Address.from_absolute(address),
         data,
         files={f.filename: f.file for f in files} if files else None,
         update_uncontained=update_uncontained,

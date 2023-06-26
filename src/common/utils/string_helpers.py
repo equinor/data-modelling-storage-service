@@ -1,5 +1,4 @@
 import re
-from typing import Tuple, Union
 
 from enums import BuiltinDataTypes
 
@@ -12,23 +11,6 @@ from enums import BuiltinDataTypes
 
 # DMSS_REFERENCE = {PATH_REFERENCE, ID_REFERENCE}
 # ABSOLUTE_REFERENCE = PROTOCOL://ADDRESS
-
-
-def split_dmss_ref(dmss_reference: str) -> Tuple[str, Union[str, None], Union[str, None]]:
-    """Will split 'path_references' and 'id_references' into it's 3 parts.
-    Expects format; DATA_SOURCE/(PATH|ID).Attribute"""
-    dmss_reference = dmss_reference.strip("/. ")  # Remove leading and trailing stuff
-    if "/" not in dmss_reference:  # It's reference to the data_source itself
-        return dmss_reference, None, None
-    data_source, dotted_id = dmss_reference.split("/", 1)
-    document_id, attributes = split_dotted_id(dotted_id)
-    return data_source, document_id, attributes
-
-
-def split_dotted_id(dotted_id: str) -> Tuple[str, str | None]:
-    if "." not in dotted_id:  # No attribute path in the id
-        return dotted_id, None
-    return dotted_id.split(".", 1)  # type: ignore
 
 
 # Convert dmt attribute_types to python types. If complex, return type as string.

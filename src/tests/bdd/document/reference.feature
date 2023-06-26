@@ -54,7 +54,7 @@ Feature: Add and remove references
       "isRoot": true
     }
     """
-    Given i access the resource url "/api/reference/test-DS/$1.content.0"
+    Given i access the resource url "/api/reference/test-DS/$1.content[0]"
     When i make a "DELETE" request
     Then the response status should be "OK"
     And the response should contain

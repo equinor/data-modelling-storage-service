@@ -1,6 +1,7 @@
 import unittest
 from unittest import mock
 
+from common.address import Address
 from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
@@ -52,7 +53,7 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        node: Node = document_service.get_document("testing/$1")
+        node: Node = document_service.get_document(Address.from_absolute("testing/$1"))
         node.update(doc_1_after)
         document_service.save(node, "testing")
 

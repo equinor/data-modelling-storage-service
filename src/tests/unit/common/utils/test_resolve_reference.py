@@ -4,6 +4,7 @@ from unittest import mock
 
 import pytest
 
+from common.address import Address
 from common.exceptions import ApplicationException, NotFoundException
 from common.utils.resolve_reference import resolve_reference
 from enums import REFERENCE_TYPES, SIMOS
@@ -33,7 +34,16 @@ class ResolveReferenceTestCase(unittest.TestCase):
                     "address": "$4",
                     "type": SIMOS.REFERENCE.value,
                     "referenceType": REFERENCE_TYPES.LINK.value,
-                }
+                },
+                {
+                    "type": "test_data/complex/Customer",
+                    "name": "Jon",
+                    "car": {
+                        "address": "^.cars[0]",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
+                    },
+                },
             ],
         }
         self.customer = {
@@ -88,42 +98,59 @@ class ResolveReferenceTestCase(unittest.TestCase):
         return documents
 
     def test_id(self):
-        ref = resolve_reference("datasource/$1", self.document_service.get_data_source)
+        ref = resolve_reference(Address.from_absolute("datasource/$1"), self.document_service.get_data_source)
         assert ref.data_source_id == "datasource"
         assert ref.document_id == "1"
         assert ref.attribute_path == []
         assert ref.entity == self.car_rental_company
 
     def test_with_attributes(self):
-        ref = resolve_reference("datasource/$1.cars[0]", self.document_service.get_data_source)
+        ref = resolve_reference(Address.from_absolute("datasource/$1.cars[0]"), self.document_service.get_data_source)
         assert ref.data_source_id == "datasource"
         assert ref.document_id == "1"
         assert ref.attribute_path == ["cars", "[0]"]
         assert ref.entity == self.car_rental_company["cars"][0]
 
     def test_with_attributes_to_uncontained(self):
-        ref = resolve_reference("datasource/$1.cars[0].engine", self.document_service.get_data_source)
+        ref = resolve_reference(
+            Address.from_absolute("datasource/$1.cars[0].engine"), self.document_service.get_data_source
+        )
         assert ref.data_source_id == "datasource"
         assert ref.document_id == "1"
         assert ref.attribute_path == ["cars", "[0]", "engine"]
         assert ref.entity == self.car_rental_company["cars"][0]["engine"]
 
     def test_with_attributes_to_uncontained_child(self):
-        ref = resolve_reference("datasource/$1.cars[0].engine.fuelPump", self.document_service.get_data_source)
+        ref = resolve_reference(
+            Address.from_absolute("datasource/$1.cars[0].engine.fuelPump"), self.document_service.get_data_source
+        )
         assert ref.data_source_id == "datasource"
         assert ref.document_id == "2"
         assert ref.attribute_path == ["fuelPump"]
         assert ref.entity == self.engine["fuelPump"]
 
+    def test_with_attributes_via_relative_ref(self):
+        ref = resolve_reference(
+            Address.from_absolute("datasource/$1.customers[1].car.engine"), self.document_service.get_data_source
+        )
+        assert ref.data_source_id == "datasource"
+        assert ref.document_id == "1"
+        assert ref.attribute_path == ["cars", "[0]", "engine"]
+        assert ref.entity == self.car_rental_company["cars"][0]["engine"]
+
     def test_with_query_to_uncontained(self):
-        ref = resolve_reference("datasource/$1.customers(name=Jane)", self.document_service.get_data_source)
+        ref = resolve_reference(
+            Address.from_absolute("datasource/$1.customers(name=Jane)"), self.document_service.get_data_source
+        )
         assert ref.data_source_id == "datasource"
         assert ref.document_id == "1"
         assert ref.attribute_path == ["customers", "[0]"]
         assert ref.entity == self.car_rental_company["customers"][0]
 
     def test_with_query_to_uncontained_child(self):
-        ref = resolve_reference("datasource/$1.customers(name=Jane).car", self.document_service.get_data_source)
+        ref = resolve_reference(
+            Address.from_absolute("datasource/$1.customers(name=Jane).car"), self.document_service.get_data_source
+        )
         assert ref.data_source_id == "datasource"
         assert ref.document_id == "4"
         assert ref.attribute_path == ["car"]
@@ -133,18 +160,20 @@ class ResolveReferenceTestCase(unittest.TestCase):
         with pytest.raises(
             NotFoundException, match=re.escape("No document with id '5' could be found in data source 'datasource'.")
         ):
-            resolve_reference("datasource/$5", self.document_service.get_data_source)
+            resolve_reference(Address.from_absolute("datasource/$5"), self.document_service.get_data_source)
 
     def test_invalid_query_no_document(self):
         with pytest.raises(
             NotFoundException,
             match=re.escape("No document that match '_id=5' could be found in data source 'datasource'."),
         ):
-            resolve_reference("datasource/[(_id=5)]", self.document_service.get_data_source)
+            resolve_reference(Address.from_absolute("datasource/[(_id=5)]"), self.document_service.get_data_source)
 
     def test_invalid_query_no_attribute(self):
         with pytest.raises(ApplicationException, match=re.escape("No object matches filter 'name=Peter'")):
-            resolve_reference("datasource/$1.customers[(name=Peter)]", self.document_service.get_data_source)
+            resolve_reference(
+                Address.from_absolute("datasource/$1.customers[(name=Peter)]"), self.document_service.get_data_source
+            )
 
     def test_invalid_attribute(self):
         with pytest.raises(
@@ -153,17 +182,19 @@ class ResolveReferenceTestCase(unittest.TestCase):
                 f"Invalid attribute 'cers'. Valid attributes are '{list(self.car_rental_company.keys())}'."
             ),
         ):
-            resolve_reference("datasource/$1.cers", self.document_service.get_data_source)
+            resolve_reference(Address.from_absolute("datasource/$1.cers"), self.document_service.get_data_source)
 
     def test_invalid_index(self):
         with pytest.raises(
             NotFoundException,
             match=re.escape(f"Invalid index '[1]'. Valid indices are < {len(self.car_rental_company['cars'])}."),
         ):
-            resolve_reference("datasource/$1.cars[1]", self.document_service.get_data_source)
+            resolve_reference(Address.from_absolute("datasource/$1.cars[1]"), self.document_service.get_data_source)
 
     def test_invalid_reference_to_primitive(self):
         with pytest.raises(
             NotFoundException, match=re.escape("Path ['1', 'cars', '[0]', 'plateNumber'] leads to a primitive value.")
         ):
-            resolve_reference("datasource/$1.cars[0].plateNumber", self.document_service.get_data_source)
+            resolve_reference(
+                Address.from_absolute("datasource/$1.cars[0].plateNumber"), self.document_service.get_data_source
+            )

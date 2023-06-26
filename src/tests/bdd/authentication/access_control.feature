@@ -70,7 +70,7 @@ Feature: Access Control
     {
       "data": null,
       "debug": "The requested operation requires 'READ' privileges. Action denied because of insufficient permissions",
-      "message": "Failed to get document referenced with '/test-DS/$1'",
+      "message": "Failed to get document referenced with 'dmss://test-DS/$1'",
       "status": 403,
       "type": "MissingPrivilegeException"
     }

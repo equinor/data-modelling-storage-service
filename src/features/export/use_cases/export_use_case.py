@@ -3,6 +3,7 @@ import tempfile
 import zipfile
 
 from authentication.models import User
+from common.address import Address
 from common.utils.resolve_reference import ResolvedReference, resolve_reference
 from domain_classes.tree_node import Node
 from enums import SIMOS
@@ -31,17 +32,17 @@ def save_node_to_zipfile(
         )
 
 
-def create_zip_export(document_service: DocumentService, reference: str, user: User) -> str:
+def create_zip_export(document_service: DocumentService, address: Address, user: User) -> str:
     """Create a temporary folder on the host that contains a zip file."""
     tmpdir = tempfile.mkdtemp()
     archive_path = os.path.join(tmpdir, "temp_zip_archive.zip")
-    resolved_reference: ResolvedReference = resolve_reference(reference, document_service.get_data_source)
-    document_node: Node = document_service.get_document(reference, depth=999, resolve_links=True)
+    resolved_reference: ResolvedReference = resolve_reference(address, document_service.get_data_source)
+    document_node: Node = document_service.get_document(address, depth=999, resolve_links=True)
 
     # non-root packages and single documents will inherit the meta information from all parents.
     document_meta = {}
     if not (document_node.entity["type"] == SIMOS.PACKAGE.value and document_node.entity["isRoot"]):
-        document_meta = export_meta_use_case(user=user, reference=reference)
+        document_meta = export_meta_use_case(user=user, path_address=str(address))
     elif "_meta_" in document_node.entity:
         document_meta = document_node.entity["_meta_"]
 
@@ -57,8 +58,8 @@ def create_zip_export(document_service: DocumentService, reference: str, user: U
     return archive_path
 
 
-def export_use_case(user: User, document_reference: str):
+def export_use_case(user: User, address: str):
     memory_file = create_zip_export(
-        document_service=DocumentService(user=user), reference=document_reference, user=user
+        document_service=DocumentService(user=user), address=Address.from_absolute(address), user=user
     )
     return memory_file
