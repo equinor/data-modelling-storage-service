@@ -2,7 +2,7 @@ from typing import Callable
 
 from common.address import Address
 from common.exceptions import ApplicationException
-from common.utils.is_reference import is_link, is_reference
+from common.utils.is_reference import is_reference
 from common.utils.resolve_address import ResolvedAddress, resolve_address
 from storage.data_source_class import DataSource
 
@@ -14,7 +14,7 @@ def resolve_reference_list(
     current_id,
     depth: int = 1,
     depth_count: int = 0,
-    resolve_links: bool = False,
+    resolve_references: bool = False,
 ) -> list:
     if not values:  # Return an empty list
         return values
@@ -24,16 +24,16 @@ def resolve_reference_list(
     if isinstance(value_sample, list):  # Call recursively for nested lists
         return [
             resolve_reference_list(
-                value, document_repository, get_data_source, current_id, depth, depth_count, resolve_links
+                value, document_repository, get_data_source, current_id, depth, depth_count, resolve_references
             )
             for value in values
         ]
 
     if is_reference(value_sample):
-        if resolve_links or not is_link(value_sample):
+        if resolve_references:
             return [
                 get_complete_sys_document(
-                    value, document_repository, get_data_source, current_id, depth, depth_count, resolve_links
+                    value, document_repository, get_data_source, current_id, depth, depth_count, resolve_references
                 )
                 for value in values
             ]
@@ -42,7 +42,7 @@ def resolve_reference_list(
     if isinstance(value_sample, dict):
         return [
             resolve_references_in_entity(
-                value, document_repository, get_data_source, current_id, depth, depth_count, resolve_links
+                value, document_repository, get_data_source, current_id, depth, depth_count, resolve_references
             )
             for value in values
         ]
@@ -58,14 +58,14 @@ def get_complete_sys_document(
     current_id: str = None,
     depth: int = 1,
     depth_count: int = 0,
-    resolve_links: bool = False,
+    resolve_references: bool = False,
 ) -> dict | list:
     if not reference["address"]:
         raise ApplicationException("Invalid link. Missing 'address'", data=reference)
     address = Address.from_relative(reference["address"], current_id, data_source.name)
 
     resolved_address: ResolvedAddress = resolve_address(address, get_data_source)
-    if is_reference(resolved_address.entity) and resolve_links:
+    if is_reference(resolved_address.entity) and resolve_references:
         resolved_address = resolve_address(
             Address.from_relative(
                 resolved_address.entity["address"], resolved_address.document_id, resolved_address.data_source_id
@@ -73,13 +73,12 @@ def get_complete_sys_document(
             get_data_source,
         )
 
-    # Only update if the resolved reference has id (since it can point to a document that are contained in another document)
-    if is_link(reference) and "_id" in resolved_address.entity:
-        # For supporting ^ references, update the current document id
+    # For supporting ^ references, update the current document id
+    if "_id" in resolved_address.entity:
         current_id = resolved_address.entity["_id"]
 
     return resolve_references_in_entity(
-        resolved_address.entity, data_source, get_data_source, current_id, depth, depth_count, resolve_links
+        resolved_address.entity, data_source, get_data_source, current_id, depth, depth_count, resolve_references
     )
 
 
@@ -90,14 +89,14 @@ def resolve_references_in_entity(
     current_id: str | None,
     depth: int = 1,
     depth_count: int = 0,
-    resolve_links: bool = False,
+    resolve_references: bool = False,
 ) -> dict:
     """
     Resolve references inside an entity.
 
     Resolving a reference means that a link or storage reference object (of type Reference) is substituted by the full document it refers to (defined in the address part of the reference object).
     The depth parameter determines how far down into the document we want to resolve references.
-    The resolve_links parameter determines whether or not to resolve reference objects with referenceType equal to 'link'
+    The resolve_references parameter determines whether to resolve reference objects
     """
     if depth <= depth_count:
         if depth_count >= 999:
@@ -110,21 +109,19 @@ def resolve_references_in_entity(
                 continue
             if isinstance(value, list):  # If it's a list, resolve any references
                 entity[key] = resolve_reference_list(
-                    value, data_source, get_data_source, current_id, depth, depth_count + 1, resolve_links
+                    value, data_source, get_data_source, current_id, depth, depth_count + 1, resolve_references
                 )
             else:
                 if is_reference(value):
-                    # Only resolve links if 'resolve_links' are passed.
-                    # Always resolve "storage" references
-                    if resolve_links or not is_link(value):
+                    if resolve_references:
                         entity[key] = get_complete_sys_document(
-                            value, data_source, get_data_source, current_id, depth, depth_count + 1, resolve_links
+                            value, data_source, get_data_source, current_id, depth, depth_count + 1, resolve_references
                         )
                         continue
                     entity[key] = value
                 else:
                     entity[key] = resolve_references_in_entity(
-                        value, data_source, get_data_source, current_id, depth, depth_count + 1, resolve_links
+                        value, data_source, get_data_source, current_id, depth, depth_count + 1, resolve_references
                     )
 
     return entity

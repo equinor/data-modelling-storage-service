@@ -22,7 +22,7 @@ router = APIRouter(tags=["default", "document"], prefix="/documents")
 def get(
     address: str,
     depth: conint(gt=-1, lt=1000) = 0,  # type: ignore
-    resolve_links: bool = False,
+    resolve_references: bool = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """
@@ -37,7 +37,7 @@ def get(
 
     - **depth**: Maximum depth for resolving nested documents.
     """
-    return get_document_use_case(user=user, address=address, depth=depth, resolve_links=resolve_links)
+    return get_document_use_case(user=user, address=address, depth=depth, resolve_references=resolve_references)
 
 
 @router.put("/{id_address:path}", operation_id="document_update", responses=responses)

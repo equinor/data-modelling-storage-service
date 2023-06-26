@@ -72,7 +72,7 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
     if node.is_empty():
         return node.entity
     data = {}
-    if node.uid:
+    if node.uid and node.type != SIMOS.REFERENCE.value:
         data = {"_id": node.uid}
 
     # Always add 'type', regardless of blueprint
@@ -108,7 +108,7 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
                         "type": SIMOS.REFERENCE.value,
                         "address": f"${child.uid}",
                         "referenceType": REFERENCE_TYPES.STORAGE.value
-                        if child.contained
+                        if child.contained and not child.storage_contained
                         else REFERENCE_TYPES.LINK.value,
                     }
                     for child in child.children

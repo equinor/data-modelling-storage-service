@@ -23,7 +23,7 @@ def create_lookup_table_use_case(
     combined_lookup = Lookup().dict()
     for path in recipe_package_paths:
         recipe_package = document_service.get_document(
-            Address(*path.split("/", 1)[::-1]), depth=999, resolve_links=True
+            Address(*path.split("/", 1)[::-1]), depth=999, resolve_references=True
         )
 
         lookup: Lookup = Lookup()

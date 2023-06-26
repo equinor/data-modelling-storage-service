@@ -320,11 +320,10 @@ class TreeNodeDictConversion(unittest.TestCase):
     def test_tree_node_to_ref_dict(self):
         engine_package_node = get_engine_package_node()
         engine_package_dict = tree_node_to_ref_dict(engine_package_node)
-        expected_ref = "$123"
         assert engine_package_dict["content"][0] == {
-            "address": expected_ref,
+            "address": "$123",
             "type": SIMOS.REFERENCE.value,
-            "referenceType": REFERENCE_TYPES.LINK.value,
+            "referenceType": REFERENCE_TYPES.STORAGE.value,
         }
 
     def test_tree_node_to_ref_dict_2(self):

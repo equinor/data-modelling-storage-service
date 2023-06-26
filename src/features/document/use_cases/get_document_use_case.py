@@ -12,11 +12,11 @@ def get_document_use_case(
     user: User,
     address: str,
     depth: conint(gt=-1, lt=1000) = 999,  # type: ignore
-    resolve_links: bool = False,
+    resolve_references: bool = False,
     repository_provider=get_data_source,
 ):
     """Get document by reference."""
     document_service = DocumentService(repository_provider=repository_provider, user=user)
     address_object = Address.from_absolute(address)
-    node: Node | ListNode = document_service.get_document(address_object, depth, resolve_links)
+    node: Node | ListNode = document_service.get_document(address_object, depth, resolve_references)
     return tree_node_to_dict(node)
