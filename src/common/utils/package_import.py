@@ -31,7 +31,7 @@ def _add_documents(path, documents, data_source) -> List[Dict]:
             {
                 "address": f"${document['_id']}",
                 "type": SIMOS.REFERENCE.value,
-                "referenceType": REFERENCE_TYPES.LINK.value,
+                "referenceType": REFERENCE_TYPES.STORAGE.value,
             }
         )
 
@@ -75,5 +75,5 @@ def import_package(path: str, user: User, data_source_name: str, is_root: bool =
     return {
         "address": f"${package['_id']}",
         "type": SIMOS.REFERENCE.value,
-        "referenceType": REFERENCE_TYPES.LINK.value,
+        "referenceType": REFERENCE_TYPES.STORAGE.value,
     }

@@ -57,7 +57,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
         document_service = get_mock_document_service(lambda x, y: document_repository)
         with pytest.raises(Exception, match=r"The protocol 'wrong' is not supported"):
             tree_node_to_dict(
-                document_service.get_document(Address.from_absolute("datasource/$1"), resolve_links=True, depth=9)
+                document_service.get_document(Address.from_absolute("datasource/$1"), resolve_references=True, depth=9)
             )
 
     def test_references(self):
@@ -253,10 +253,10 @@ class GetDocumentResolveTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(mock_data_source)
         actual = tree_node_to_dict(
-            document_service.get_document(Address.from_absolute("test_data/$2"), resolve_links=True, depth=99)
+            document_service.get_document(Address.from_absolute("test_data/$2"), resolve_references=True, depth=99)
         )
         complex_package = tree_node_to_dict(
-            document_service.get_document(Address.from_absolute("test_data/$1"), resolve_links=True, depth=99)
+            document_service.get_document(Address.from_absolute("test_data/$1"), resolve_references=True, depth=99)
         )
 
         assert isinstance(actual, dict)

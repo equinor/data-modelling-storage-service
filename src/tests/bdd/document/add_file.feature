@@ -350,7 +350,7 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-    Given I access the resource url "/api/documents/test-DS/$1?resolve_links=true&depth=99"
+    Given I access the resource url "/api/documents/test-DS/$1?resolve_references=true&depth=99"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain

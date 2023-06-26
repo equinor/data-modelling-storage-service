@@ -113,7 +113,7 @@ Feature: Get document
     """
 
   Scenario: when fetching entity by path, optional attributes should not be included
-    Given I access the resource url "/api/documents/test-source-name/TestData/example/?depth=1&resolve_links=true"
+    Given I access the resource url "/api/documents/test-source-name/TestData/example/?depth=1&resolve_references=true"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should be
