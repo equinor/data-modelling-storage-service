@@ -10,46 +10,46 @@ from common.utils.is_reference import is_reference
 from storage.data_source_class import DataSource
 
 
-def split_reference(reference: str) -> list[str]:
-    """Splits a reference into it's string components
+def split_path(path: str) -> list[str]:
+    """Splits a path into it's string components
     e.g. "$123.content[1]" -> ["$123", ".content", "[1]"]"""
     parts = []
-    remaining_ref = reference
-    while remaining_ref:
-        if remaining_ref[0] in "./":
-            prefix_delim = remaining_ref[0]
-            content = re.split(r"[./\[(]", remaining_ref, 2)[1]
+    remaining_path = path
+    while remaining_path:
+        if remaining_path[0] in "./":
+            prefix_delim = remaining_path[0]
+            content = re.split(r"[./\[(]", remaining_path, 2)[1]
             parts.append(f"{prefix_delim}{content}")
-            remaining_ref = remaining_ref.removeprefix(parts[-1])
+            remaining_path = remaining_path.removeprefix(parts[-1])
             continue
-        if remaining_ref[0] in "[(":
-            prefix_delim = remaining_ref[0]
+        if remaining_path[0] in "[(":
+            prefix_delim = remaining_path[0]
             closing_bracket = "]" if prefix_delim == "[" else ")"
-            content = re.split("[" + re.escape(f"{closing_bracket}") + "]", remaining_ref, 2)[0][1:]
+            content = re.split("[" + re.escape(f"{closing_bracket}") + "]", remaining_path, 2)[0][1:]
             parts.append(f"{prefix_delim}{content}{closing_bracket}")
-            remaining_ref = remaining_ref.removeprefix(parts[-1])
+            remaining_path = remaining_path.removeprefix(parts[-1])
             continue
 
-        content = re.split(r"[./]", remaining_ref, 1)[0]
-        remaining_ref = remaining_ref.removeprefix(content)
+        content = re.split(r"[./]", remaining_path, 1)[0]
+        remaining_path = remaining_path.removeprefix(content)
         parts.append(content)
     return parts
 
 
-def _next_reference_part(reference: str) -> Tuple[str, Union[str, None], str]:
-    """Utility to get next reference part."""
-    content = reference  # Default to reference
+def _next_path_part(path: str) -> Tuple[str, Union[str, None], str]:
+    """Utility to get next path part."""
+    content = path  # Default to path
     deliminator = None
-    remaining_reference = ""
+    remaining_path = ""
 
-    search = re.search(r"[.|/|\]|\[]", reference)  # Search for next deliminator
+    search = re.search(r"[.|/|\]|\[]", path)  # Search for next deliminator
     if search:
         deliminator = search.group(0)
         # Extract the content (the text between the two deliminators)
-        content = reference[: search.end() - 1]
+        content = path[: search.end() - 1]
         # Remove the extracted content (including deliminator), so that we don't handle it again.
-        remaining_reference = reference[search.end() :]
-    return content, deliminator, remaining_reference
+        remaining_path = path[search.end() :]
+    return content, deliminator, remaining_path
 
 
 @dataclass
@@ -155,36 +155,36 @@ class AttributeItem:
         return result, self.path
 
 
-def reference_to_reference_items(reference: str) -> list[AttributeItem | QueryItem | IdItem]:
-    """Split up the reference into reference items.
-    The reference used as input to this function should not include protocol or data source.
+def path_to_path_items(path: str) -> list[AttributeItem | QueryItem | IdItem]:
+    """Split up the path into path items.
+    The path used as input to this function should not include protocol or data source.
     """
-    queries = re.findall(r"\(([^\)]+)\)", reference)
+    queries = re.findall(r"\(([^\)]+)\)", path)
     if queries:
-        # Split the reference into the pieces surrounding the queries and remove trailing [( and )]
-        remaining_ref_parts = re.split("|".join([re.escape(q) for q in queries]), reference)
+        # Split the path into the pieces surrounding the queries and remove trailing [( and )]
+        remaining_ref_parts = re.split("|".join([re.escape(q) for q in queries]), path)
         remaining_ref_parts = list(map(lambda x: re.sub(r"\[?\($|^\)\]?", "", x), remaining_ref_parts))
 
-        items = _reference_to_reference_items(remaining_ref_parts[0], [], None)
+        items = _path_to_path_items(remaining_ref_parts[0], [], None)
         for index, query in enumerate(queries):
             items.append(QueryItem(query=query))
-            items = _reference_to_reference_items(remaining_ref_parts[index + 1], [*items], None)
+            items = _path_to_path_items(remaining_ref_parts[index + 1], [*items], None)
         return items
     else:
-        return _reference_to_reference_items(reference, [], None)
+        return _path_to_path_items(path, [], None)
 
 
-def _reference_to_reference_items(reference: str, items, prev_deliminator) -> list[AttributeItem | QueryItem | IdItem]:
-    if len(reference) == 0:
+def _path_to_path_items(path: str, items, prev_deliminator) -> list[AttributeItem | QueryItem | IdItem]:
+    if len(path) == 0:
         return items
 
-    content, deliminator, remaining_reference = _next_reference_part(reference)
+    content, deliminator, remaining_path = _next_path_part(path)
     if content == "":
-        # If the original reference starts with a deliminator (e.g. /)
+        # If the original path starts with a deliminator (e.g. /)
         # then there is no content.
-        # The deliminator is extracted from the remaining reference.
-        # Continue resolve the remaining reference.
-        return _reference_to_reference_items(remaining_reference, items, deliminator)
+        # The deliminator is extracted from the remaining path.
+        # Continue resolve the remaining path.
+        return _path_to_path_items(remaining_path, items, deliminator)
 
     if "$" in content:  # By id
         items.append(IdItem(content[1:]))
@@ -198,25 +198,25 @@ def _reference_to_reference_items(reference: str, items, prev_deliminator) -> li
     elif prev_deliminator == ".":  # By attribute
         items.append(AttributeItem(content))
     else:
-        raise Exception(f"Not supported reference format: {reference}")
+        raise Exception(f"Not supported path format: {path}")
 
-    return _reference_to_reference_items(remaining_reference, items, deliminator)
+    return _path_to_path_items(remaining_path, items, deliminator)
 
 
-def resolve_reference_items(
+def resolve_path_items(
     data_source: DataSource,
-    reference_items: list[AttributeItem | QueryItem | IdItem],
+    path_items: list[AttributeItem | QueryItem | IdItem],
     get_data_source: Callable,
 ) -> tuple[list | dict, list[str]]:
-    if len(reference_items) == 0 or isinstance(reference_items[0], AttributeItem):
-        raise NotFoundException(f"Invalid reference_items {reference_items}.")
-    entity, id = reference_items[0].get_entry_point(data_source)
+    if len(path_items) == 0 or isinstance(path_items[0], AttributeItem):
+        raise NotFoundException(f"Invalid path_items {path_items}.")
+    entity, id = path_items[0].get_entry_point(data_source)
     path = [id]
-    for index, ref_item in enumerate(reference_items[1:]):
+    for index, ref_item in enumerate(path_items[1:]):
         if isinstance(ref_item, IdItem):
-            raise NotFoundException(f"Invalid reference_items {reference_items}.")
+            raise NotFoundException(f"Invalid path_items {path_items}.")
         entity, attribute = ref_item.get_child(entity, path[0], data_source, get_data_source)
-        if is_reference(entity) and index < len(reference_items) - 2:
+        if is_reference(entity) and index < len(path_items) - 2:
             # Found a new document, use that as new starting point for the attribute path
             address = Address.from_relative(entity["address"], path[0], data_source.name)
             resolved_reference = resolve_reference(address, get_data_source)
@@ -241,11 +241,11 @@ def resolve_reference(address: Address, get_data_source: Callable) -> ResolvedRe
     if not address.path:
         raise ApplicationException("Failed to resolve reference. Got empty address path.")
 
-    reference_items = reference_to_reference_items(address.path)
+    path_items = path_to_path_items(address.path)
 
     # The first reference item should always be a DataSourceItem
     data_source = get_data_source(address.data_source)
-    document, path = resolve_reference_items(data_source, reference_items, get_data_source)
+    document, path = resolve_path_items(data_source, path_items, get_data_source)
     return ResolvedReference(
         entity=document,
         data_source_id=address.data_source,
