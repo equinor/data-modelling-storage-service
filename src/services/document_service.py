@@ -26,7 +26,7 @@ from common.utils.logging import logger
 from common.utils.resolve_reference import (
     ResolvedReference,
     resolve_reference,
-    split_reference,
+    split_path,
 )
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.utils.validators import validate_entity, validate_entity_against_self
@@ -255,11 +255,11 @@ class DocumentService:
         Note: if the node specified by reference does not exist, it will be created if and only if the attribute is
         specified as optional in the blueprint.
         """
-        reference_parts = split_reference(address.path)
-        parent_reference = "".join(reference_parts[:-1])
-        parent_node: Node = self.get_document(Address(parent_reference, address.data_source), depth=0)
+        path_parts = split_path(address.path)
+        parent_path = "".join(path_parts[:-1])
+        parent_node: Node = self.get_document(Address(parent_path, address.data_source), depth=0)
         parent_blueprint_attribute_names = [attribute.name for attribute in parent_node.blueprint.attributes]
-        attribute_to_update = reference_parts[-1].strip(".").strip("[]")
+        attribute_to_update = path_parts[-1].strip(".").strip("[]")
         node = parent_node.get_by_ref_part([attribute_to_update])
 
         attribute_to_update_does_not_exist_in_parent_document = node is None
@@ -315,11 +315,11 @@ class DocumentService:
         validate_entity_against_self(data, self.get_blueprint)
         if not address.path:
             raise Exception(f"Could not find the node on '{address}'")
-        reference_parts = split_reference(address.path)
+        path_parts = split_path(address.path)
 
         # Since the node targeted by the reference might not exist (e.g. optional complex attribute)
         # we aim for the parent node first. Then get the child.
-        if len(reference_parts) > 1:
+        if len(path_parts) > 1:
             node: Union[Node, ListNode] = self._get_node_to_update(address=address, node_entity=data)
         else:
             node: Node = self.get_document(address)  # type: ignore

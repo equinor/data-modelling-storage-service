@@ -4,8 +4,8 @@ from common.utils.resolve_reference import (
     AttributeItem,
     IdItem,
     QueryItem,
-    _next_reference_part,
-    reference_to_reference_items,
+    _next_path_part,
+    path_to_path_items,
 )
 
 
@@ -15,26 +15,26 @@ class ReferenceToReferenceItemsTestCase(unittest.TestCase):
 
     def test_next_reference_item(self):
         # Example 0
-        self.assertEqual(_next_reference_part("$1"), ("$1", None, ""))
+        self.assertEqual(_next_path_part("$1"), ("$1", None, ""))
 
         # Example 1
-        self.assertEqual(_next_reference_part("/$1"), ("", "/", "$1"))
-        self.assertEqual(_next_reference_part("$1"), ("$1", None, ""))
+        self.assertEqual(_next_path_part("/$1"), ("", "/", "$1"))
+        self.assertEqual(_next_path_part("$1"), ("$1", None, ""))
 
         # Example 2
-        self.assertEqual(_next_reference_part("/root/package/$1"), ("", "/", "root/package/$1"))
-        self.assertEqual(_next_reference_part("root/package/$1"), ("root", "/", "package/$1"))
-        self.assertEqual(_next_reference_part("package/$1"), ("package", "/", "$1"))
-        self.assertEqual(_next_reference_part("$1"), ("$1", None, ""))
+        self.assertEqual(_next_path_part("/root/package/$1"), ("", "/", "root/package/$1"))
+        self.assertEqual(_next_path_part("root/package/$1"), ("root", "/", "package/$1"))
+        self.assertEqual(_next_path_part("package/$1"), ("package", "/", "$1"))
+        self.assertEqual(_next_path_part("$1"), ("$1", None, ""))
 
     def test_reference_with_id_only_to_reference_items(self):
-        reference = "$1234-1234-1234"
-        items = reference_to_reference_items(reference)
+        path = "$1234-1234-1234"
+        items = path_to_path_items(path)
         self.assertEqual(items, [IdItem("1234-1234-1234")])
 
     def test_reference_with_path_only_to_reference_items(self):
-        reference = "/package/subPackage/document"
-        items = reference_to_reference_items(reference)
+        path = "/package/subPackage/document"
+        items = path_to_path_items(path)
         self.assertEqual(
             items,
             [
@@ -47,8 +47,8 @@ class ReferenceToReferenceItemsTestCase(unittest.TestCase):
         )
 
     def test_reference_with_path_and_simple_attribute_to_reference_items(self):
-        reference = "/package/subPackage/document.attribute"
-        items = reference_to_reference_items(reference)
+        path = "/package/subPackage/document.attribute"
+        items = path_to_path_items(path)
         self.assertEqual(
             items,
             [
@@ -62,8 +62,8 @@ class ReferenceToReferenceItemsTestCase(unittest.TestCase):
         )
 
     def test_reference_with_path_and_list_attribute_to_reference_items(self):
-        reference = "/package/subPackage/document.attribute[0]"
-        items = reference_to_reference_items(reference)
+        path = "/package/subPackage/document.attribute[0]"
+        items = path_to_path_items(path)
         self.assertEqual(
             items,
             [
@@ -78,8 +78,8 @@ class ReferenceToReferenceItemsTestCase(unittest.TestCase):
         )
 
     def test_reference_with_id_and_list_attribute_to_reference_items(self):
-        reference = "/$1.attribute[0]"
-        items = reference_to_reference_items(reference)
+        path = "/$1.attribute[0]"
+        items = path_to_path_items(path)
         self.assertEqual(
             items,
             [
@@ -90,8 +90,8 @@ class ReferenceToReferenceItemsTestCase(unittest.TestCase):
         )
 
     def test_reference_with_query_to_reference_items(self):
-        reference = "/[(_id=1)]"
-        items = reference_to_reference_items(reference)
+        path = "/[(_id=1)]"
+        items = path_to_path_items(path)
         self.assertEqual(
             items,
             [
@@ -100,8 +100,8 @@ class ReferenceToReferenceItemsTestCase(unittest.TestCase):
         )
 
     def test_reference_with_query_and_slash_to_reference_items(self):
-        reference = "/(name=package,isRoot=True)/subPackage"
-        items = reference_to_reference_items(reference)
+        path = "/(name=package,isRoot=True)/subPackage"
+        items = path_to_path_items(path)
         self.assertEqual(
             items,
             [
@@ -112,8 +112,8 @@ class ReferenceToReferenceItemsTestCase(unittest.TestCase):
         )
 
     def test_reference_with_query_2_to_reference_items(self):
-        reference = "/(type=test_data/complex/Customer)"
-        items = reference_to_reference_items(reference)
+        path = "/(type=test_data/complex/Customer)"
+        items = path_to_path_items(path)
         self.assertEqual(
             items,
             [
@@ -122,8 +122,8 @@ class ReferenceToReferenceItemsTestCase(unittest.TestCase):
         )
 
     def test_reference_with_query_and_attribute_query_to_reference_items(self):
-        reference = "/[(_id=1)].attribute(key1=value1,key2=value2)"
-        items = reference_to_reference_items(reference)
+        path = "/[(_id=1)].attribute(key1=value1,key2=value2)"
+        items = path_to_path_items(path)
         self.assertEqual(
             items,
             [

@@ -5,7 +5,7 @@ from common.address import Address
 from common.exceptions import NotFoundException
 from common.utils.resolve_reference import (
     QueryItem,
-    reference_to_reference_items,
+    path_to_path_items,
     resolve_reference,
 )
 from storage.data_source_class import DataSource
@@ -86,13 +86,9 @@ def export_meta_use_case(user: User, path_address: str) -> dict:
     data_source = get_data_source(address_object.data_source, user)
     if not address_object.path:
         raise NotFoundException(f"Could not find a root package from reference '{path_address}'")
-    reference_items = reference_to_reference_items(address_object.path)
-    if (
-        len(reference_items) >= 1
-        and isinstance(reference_items[0], QueryItem)
-        and reference_items[0].query_as_dict["isRoot"]
-    ):
-        root_package_name = reference_items[0].query_as_dict["name"]
+    path_items = path_to_path_items(address_object.path)
+    if len(path_items) >= 1 and isinstance(path_items[0], QueryItem) and path_items[0].query_as_dict["isRoot"]:
+        root_package_name = path_items[0].query_as_dict["name"]
     else:
         raise NotFoundException(f"Could not find a root package from reference '{path_address}'")
 
