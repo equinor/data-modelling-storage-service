@@ -8,8 +8,7 @@
       "name": "plugin",
       "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "optional": true,
-      "default": ""
+      "optional": false
     },
     {
       "name": "category",
@@ -32,7 +31,7 @@
       "contained": true,
       "optional": true
     },
-        {
+    {
       "name": "dimensions",
       "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
