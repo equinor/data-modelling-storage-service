@@ -17,7 +17,6 @@ class CreateEntityTestCase(unittest.TestCase):
 
     def test_blueprint_entity(self):
         expected_entity = {
-            "engine2": {},
             "engine": {
                 "name": "",
                 "description": "",
@@ -27,6 +26,16 @@ class CreateEntityTestCase(unittest.TestCase):
                     "type": "test_data/complex/FuelPumpTest",
                 },
                 "power": 120,
+                "type": "test_data/complex/EngineTest",
+            },
+            "engine3": {
+                "name": "default engine",
+                "fuelPump": {
+                    "name": "fuelPump",
+                    "description": "A standard fuel pump",
+                    "type": "test_data/complex/FuelPumpTest",
+                },
+                "power": 9,
                 "type": "test_data/complex/EngineTest",
             },
             "is_sedan": True,
