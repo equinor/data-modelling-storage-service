@@ -71,7 +71,7 @@ class CreateEntity:
 
     # add all non optional attributes with default value.
     # type is inserted based on the parent attributes type, or the initial type for root entity.
-    def _get_entity(self, blueprint: Blueprint, entity):
+    def _get_entity(self, blueprint: Blueprint, entity: dict):
         for attr in blueprint.attributes:
             if attr.attribute_type == BuiltinDataTypes.BINARY.value:
                 continue
@@ -86,14 +86,14 @@ class CreateEntity:
                         attr.attribute_type != BuiltinDataTypes.OBJECT.value
                         and attr.attribute_type != BuiltinDataTypes.BINARY.value
                     )
-                    else SIMOS.ENTITY.value
+                    else self.blueprint_provider(SIMOS.ENTITY.value)
                 )
                 if attr.is_array:
                     entity[attr.name] = attr.dimensions.create_default_array(self.blueprint_provider, CreateEntity)
                 else:
                     if attr.is_optional:
-                        entity[attr.name] = {}
-
+                        if attr.default:
+                            entity[attr.name] = attr.default
                     elif CreateEntity.is_json(attr):
                         value = attr.default
                         if value is not None and len(value) > 0:

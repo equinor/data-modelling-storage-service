@@ -85,9 +85,7 @@ class DefaultArrayTestCase(unittest.TestCase):
             blueprint_provider, CreateEntity
         )
 
-        assert default_array == [
-            [{"name": "", "type": "dmss://system/SIMOS/Package", "_meta_": {}, "isRoot": False, "content": []}]
-        ]
+        assert default_array == [[{"name": "", "type": "dmss://system/SIMOS/Package", "isRoot": False, "content": []}]]
 
     def test_creation_of_default_array_unfixed_rank2(self):
         default_array = Dimension("*,*", "integer").create_default_array(blueprint_provider, CreateEntity)

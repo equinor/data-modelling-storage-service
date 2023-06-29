@@ -376,6 +376,22 @@ car = {
             "optional": True,
             "attributeType": "test_data/complex/EngineTest",
         },
+        {
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "engine3",
+            "optional": True,
+            "attributeType": "test_data/complex/EngineTest",
+            "default": {
+                "name": "default engine",
+                "fuelPump": {
+                    "name": "fuelPump",
+                    "description": "A standard fuel pump",
+                    "type": "test_data/complex/FuelPumpTest",
+                },
+                "power": 9,
+                "type": "test_data/complex/EngineTest",
+            },
+        },
     ],
 }
 wheel = {
