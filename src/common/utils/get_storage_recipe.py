@@ -23,7 +23,7 @@ default_list_recipe = Recipe(
     **{
         "name": "List",
         "type": SIMOS.UI_RECIPE.value,
-        "plugin": "@development-framework/dm-core-plugins/generic-list",
+        "plugin": "@development-framework/dm-core-plugins/generic_list",
         "dimensions": "*",
     }
 )
@@ -32,13 +32,13 @@ default_initial_ui_recipe = Recipe(
     **{
         "name": "RecipeSelect",
         "type": SIMOS.UI_RECIPE.value,
-        "plugin": "@development-framework/dm-core-plugins/attribute-selector",
+        "plugin": "@development-framework/dm-core-plugins/view_selector",
         "config": {
-            "type": "dmss://system/Plugins/dm-core-plugins/attribute-selector/AttributeSelectorConfig",
+            "type": "dmss://system/Plugins/dm-core-plugins/view_selector/AttributeSelectorConfig",
             "asSidebar": False,
             "items": [
                 {
-                    "type": "dmss://system/Plugins/dm-core-plugins/attribute-selector/AttributeSelectorItem",
+                    "type": "dmss://system/Plugins/dm-core-plugins/view_selector/AttributeSelectorItem",
                     "label": "Yaml",
                     "view": {
                         "type": "dmss://system/SIMOS/InlineRecipeViewConfig",
@@ -53,7 +53,7 @@ default_initial_ui_recipe = Recipe(
                     },
                 },
                 {
-                    "type": "dmss://system/Plugins/dm-core-plugins/attribute-selector/AttributeSelectorItem",
+                    "type": "dmss://system/Plugins/dm-core-plugins/view_selector/AttributeSelectorItem",
                     "label": "Edit",
                     "view": {
                         "type": "dmss://system/SIMOS/InlineRecipeViewConfig",
