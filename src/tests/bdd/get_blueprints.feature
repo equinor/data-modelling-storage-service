@@ -283,7 +283,7 @@ Feature: Get a blueprint
     {
       "name": "List",
       "type": "dmss://system/SIMOS/UiRecipe",
-      "plugin": "@development-framework/dm-core-plugins/generic-list",
+      "plugin": "@development-framework/dm-core-plugins/list",
       "dimensions": "*"
     }
     ],
