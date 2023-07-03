@@ -23,7 +23,7 @@ default_list_recipe = Recipe(
     **{
         "name": "List",
         "type": SIMOS.UI_RECIPE.value,
-        "plugin": "@development-framework/dm-core-plugins/generic_list",
+        "plugin": "@development-framework/dm-core-plugins/list",
         "dimensions": "*",
     }
 )
