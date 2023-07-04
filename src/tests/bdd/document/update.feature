@@ -60,6 +60,12 @@ Feature: Document 2
           "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true,
           "name": "extra"
+        },
+        {
+          "attributeType": "object",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "optional": true,
+          "name": "complexAttribute"
         }
       ]
     }
@@ -317,5 +323,103 @@ Feature: Document 2
             "extra": "extra_1"
           }
         ]
+    }
+    """
+    Given i access the resource url "/api/documents/data-source-name/$7"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should be
+    """
+    {
+      "_id": "7",
+      "name": "document_3",
+      "type": "dmss://test-source-name/TestData/ItemType",
+      "complexList": [
+          {
+            "name": "item_1_contained",
+            "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+            "extra": "extra_1"
+          }
+      ]
+    }
+    """
+    Given i access the resource url "/api/documents/data-source-name/$7.complexList"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should be
+    """
+    [
+          {
+            "name": "item_1_contained",
+            "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+            "extra": "extra_1"
+          }
+      ]
+    """
+    Given i access the resource url "/api/documents/data-source-name/$7.complexList[0]"
+    When I make a "GET" request
+    Then the response status should be "OK"
+        And the response should be
+    """
+    {
+      "name": "item_1_contained",
+      "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+      "extra": "extra_1"
+    }
+    """
+
+
+  Scenario: Update complex attribute
+    Given i access the resource url "/api/documents/data-source-name/$7.complexList"
+    When i make a form-data "PUT" request
+    """
+    { "data":
+      [
+          {
+            "name": "item_1_contained",
+            "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+            "extra": "extra_1"
+          }
+      ]
+    }
+    """
+    Then the response status should be "OK"
+    Given i access the resource url "/api/documents/data-source-name/$7.complexList[0].complexAttribute"
+    When i make a form-data "PUT" request
+    """
+    { "data":
+        {
+          "name": "itemForComplexAttribute",
+          "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+          "extra": "extra_2"
+        }
+    }
+    """
+    Then the response status should be "OK"
+    Given i access the resource url "/api/documents/data-source-name/$7.complexList[0]"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "name": "item_1_contained",
+      "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+      "extra": "extra_1",
+      "complexAttribute": {
+        "name": "itemForComplexAttribute",
+        "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+        "extra": "extra_2"
+      }
+    }
+    """
+    Given i access the resource url "/api/documents/data-source-name/$7.complexList[0].complexAttribute"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "name": "itemForComplexAttribute",
+      "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+      "extra": "extra_2"
     }
     """

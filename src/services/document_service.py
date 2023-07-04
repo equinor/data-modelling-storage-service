@@ -326,13 +326,16 @@ class DocumentService:
         else:
             node: Node = self.get_document(address)  # type: ignore
 
-        validate_entity(data, self.get_blueprint, self.get_blueprint(node.attribute.attribute_type), "extend")
+        if node.attribute.attribute_type != BuiltinDataTypes.OBJECT.value:
+            validate_entity(data, self.get_blueprint, self.get_blueprint(node.attribute.attribute_type), "extend")
         node.update(data)
         if files:
             self._merge_entity_and_files(node, files)
 
         self.save(node, address.data_source, update_uncontained=update_uncontained, initial=True)
-
+        if len(path_parts) > 1:
+            node.parent.children.append(node)
+            self.save(node.parent, address.data_source, update_uncontained=update_uncontained, initial=True)
         logger.info(f"Updated entity '{address}'")
         return {"data": tree_node_to_dict(node)}
 
