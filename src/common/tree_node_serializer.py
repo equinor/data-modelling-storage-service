@@ -87,11 +87,7 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
 
     # Primitive
     # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.
-    if (
-        node.attribute.attribute_type != BuiltinDataTypes.BINARY.value
-        and node.attribute.attribute_type != BuiltinDataTypes.OBJECT.value
-        and node.blueprint is not None
-    ):
+    if node.attribute.attribute_type != BuiltinDataTypes.BINARY.value and node.blueprint is not None:
         for attribute in node.blueprint.get_primitive_types():
             if attribute.name in node.entity:
                 data[attribute.name] = node.entity[attribute.name]
