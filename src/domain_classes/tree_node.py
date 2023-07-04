@@ -55,7 +55,7 @@ class NodeBase:
     def storage_recipes(self, context: str | None = "DMSS") -> list[StorageRecipe]:
         # TODO: support other contexts than "DMSS"
         if not self.recipe_provider:
-            raise ValueError("Tried to access storage recipe, but Node was instantiated without a 'recipe-provider'")
+            return []
 
         if context_recipes := self.recipe_provider(self.type, context):
             return context_recipes
@@ -86,7 +86,9 @@ class NodeBase:
             return False
         if self.parent.is_array():
             return self.parent.parent.storage_recipes[0].is_contained(self.parent.attribute.name)
-        return self.parent.storage_recipes[0].is_contained(self.attribute.name)
+        if self.parent.storage_recipes:
+            return self.parent.storage_recipes[0].is_contained(self.attribute.name)
+        return True
 
     @property
     def contained(self):

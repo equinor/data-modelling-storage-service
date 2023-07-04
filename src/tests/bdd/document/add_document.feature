@@ -40,6 +40,11 @@ Feature: Add document with document_service
                    "referenceType": "link"
               },
               {
+                  "address": "$7",
+                  "type": "dmss://system/SIMOS/Reference",
+                   "referenceType": "link"
+              },
+              {
                   "address": "$101",
                   "type": "dmss://system/SIMOS/Reference",
                   "referenceType": "link"
@@ -127,6 +132,12 @@ Feature: Add document with document_service
             "optional": true,
             "contained": true,
             "dimensions": "*"
+          },
+          {
+            "name": "additionalInfo",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "attributeType": "object",
+            "optional": true
           }
         ]
       }
@@ -168,6 +179,20 @@ Feature: Add document with document_service
               "optional": false
             }
           ]
+        }
+      """
+
+    Given there exist document with id "7" in data source "data-source-name"
+      """
+        {
+        	"name": "PhaseInfo",
+        	"type": "dmss://system/SIMOS/Blueprint",
+        	"extends": ["dmss://system/SIMOS/NamedEntity"],
+        	"attributes": [{
+        		"name": "startDate",
+        		"type": "dmss://system/SIMOS/BlueprintAttribute",
+        		"attributeType": "string"
+        	}]
         }
       """
 
@@ -243,7 +268,7 @@ Feature: Add document with document_service
     """
 
   Scenario: Add document to EntityPackage using id as reference
-    Given i access the resource url "/api/documents/data-source-name/root_package.content[5]"
+    Given i access the resource url "/api/documents/data-source-name/root_package.content[6]"
     When i make a "POST" request with "1" files
     """
     {
@@ -315,7 +340,7 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/data-source-name/root_package.content[6]?resolve_links=true&depth=2"
+    Given i access the resource url "/api/documents/data-source-name/root_package.content[7]?resolve_links=true&depth=2"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -446,4 +471,41 @@ Feature: Add document with document_service
               }
           }
         ]
+    """
+
+  Scenario: object
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage"
+    When I make a "POST" request with "1" files
+    """
+    {
+    	"document": {
+    		"name": "new-phase",
+    		"type": "dmss://data-source-name/root_package/Phase",
+    		"results": [],
+    		"containedResults": [],
+    		"additionalInfo": {
+    			"type": "dmss://data-source-name/root_package/PhaseInfo",
+    			"name": "extra_info",
+    			"startDate": "01.01.2000"
+    		}
+    	}
+    }
+    """
+    Then the response status should be "OK"
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/new-phase?resolve_links=true"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+    		"name": "new-phase",
+    		"type": "dmss://data-source-name/root_package/Phase",
+    		"results": [],
+    		"containedResults": [],
+    		"additionalInfo": {
+    			"type": "dmss://data-source-name/root_package/PhaseInfo",
+    			"name": "extra_info",
+    			"startDate": "01.01.2000"
+    		}
+    	}
     """
