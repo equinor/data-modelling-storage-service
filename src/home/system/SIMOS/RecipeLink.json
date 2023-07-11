@@ -11,6 +11,13 @@
       "optional": false
     },
     {
+      "attributeType": "string",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "name": "_blueprintPath_",
+      "contained": true,
+      "optional": false
+    },
+    {
       "attributeType": "dmss://system/SIMOS/UiRecipe",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "initialUiRecipe",
