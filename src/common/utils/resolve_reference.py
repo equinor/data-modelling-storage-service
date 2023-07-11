@@ -248,7 +248,7 @@ class ResolvedReference:
 def resolve_reference(address: Address, get_data_source: Callable) -> ResolvedReference:
     """Resolve the reference into a document."""
     if not address.path:
-        raise ApplicationException("Failed to resolve reference. Got empty address path.")
+        raise ApplicationException(f"Failed to resolve reference. Got empty address path from {address}")
 
     path_items = path_to_path_items(address.path)
 
