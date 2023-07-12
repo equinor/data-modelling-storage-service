@@ -114,7 +114,7 @@ class QueryItem:
         self, entity: dict | list, document_id: str, data_source: DataSource, get_data_source: Callable
     ) -> Tuple[Any, str]:
         if isinstance(entity, dict) and is_reference(entity):
-            resolved_ref = resolve_reference(
+            resolved_ref = resolve_address(
                 Address.from_relative(entity["address"], document_id, data_source.name), get_data_source
             )
             entity = resolved_ref.entity
@@ -122,9 +122,7 @@ class QueryItem:
 
         # Search inside an existing document (need to resolve any references first before trying to compare against filter)
         elements = [
-            resolve_reference(
-                Address.from_relative(f["address"], document_id, data_source.name), get_data_source
-            ).entity
+            resolve_address(Address.from_relative(f["address"], document_id, data_source.name), get_data_source).entity
             if is_reference(f)
             else f
             for f in entity
@@ -148,7 +146,7 @@ class AttributeItem:
         self, entity: dict | list, document_id: str, data_source: DataSource, get_data_source: Callable
     ) -> tuple[Any, str]:
         if isinstance(entity, dict) and is_reference(entity):
-            entity = resolve_reference(
+            entity = resolve_address(
                 Address.from_relative(entity["address"], document_id, data_source.name), get_data_source
             ).entity
         try:
@@ -228,7 +226,7 @@ def resolve_path_items(
         if is_reference(entity) and index < len(path_items) - 2:
             # Found a new document, use that as new starting point for the attribute path
             address = Address.from_relative(entity["address"], path[0], data_source.name)
-            resolved_reference = resolve_reference(address, get_data_source)
+            resolved_reference = resolve_address(address, get_data_source)
             path = [resolved_reference.document_id, *resolved_reference.attribute_path]
         else:
             path.append(attribute)
@@ -245,8 +243,12 @@ class ResolvedReference:
     entity: dict | list
 
 
-def resolve_reference(address: Address, get_data_source: Callable) -> ResolvedReference:
-    """Resolve the reference into a document."""
+def resolve_address(address: Address, get_data_source: Callable) -> ResolvedReference:
+    """Resolve the address into a document.
+
+    We extract data_source, document_id, attribute_path from the address and also find the document the
+    address refers to. The information is collected into a ResolvedReference object and returned.
+    """
     if not address.path:
         raise ApplicationException(f"Failed to resolve reference. Got empty address path from {address}")
 

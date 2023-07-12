@@ -3,7 +3,7 @@ from typing import Callable
 from common.address import Address
 from common.exceptions import ApplicationException
 from common.utils.is_reference import is_link, is_reference
-from common.utils.resolve_reference import ResolvedReference, resolve_reference
+from common.utils.resolve_reference import ResolvedReference, resolve_address
 from storage.data_source_class import DataSource
 
 
@@ -64,9 +64,9 @@ def get_complete_sys_document(
         raise ApplicationException("Invalid link. Missing 'address'", data=reference)
     address = Address.from_relative(reference["address"], current_id, data_source.name)
 
-    resolved_reference: ResolvedReference = resolve_reference(address, get_data_source)
+    resolved_reference: ResolvedReference = resolve_address(address, get_data_source)
     if is_reference(resolved_reference.entity) and resolve_links:
-        resolved_reference = resolve_reference(
+        resolved_reference = resolve_address(
             Address.from_relative(
                 resolved_reference.entity["address"], resolved_reference.document_id, resolved_reference.data_source_id
             ),
