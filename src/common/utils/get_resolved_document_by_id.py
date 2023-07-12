@@ -1,3 +1,5 @@
+from typing import Callable
+
 from common.address import Address
 from common.exceptions import ApplicationException
 from common.utils.is_reference import is_link, is_reference
@@ -39,7 +41,7 @@ def resolve_reference_list(
 
     if isinstance(value_sample, dict):
         return [
-            resolve_document(
+            resolve_references_in_entity(
                 value, document_repository, get_data_source, current_id, depth, depth_count, resolve_links
             )
             for value in values
@@ -76,14 +78,27 @@ def get_complete_sys_document(
         # For supporting ^ references, update the current document id
         current_id = resolved_reference.entity["_id"]
 
-    return resolve_document(
+    return resolve_references_in_entity(
         resolved_reference.entity, data_source, get_data_source, current_id, depth, depth_count, resolve_links
     )
 
 
-def resolve_document(
-    entity, data_source, get_data_source, current_id, depth: int = 1, depth_count: int = 0, resolve_links: bool = False
+def resolve_references_in_entity(
+    entity: dict,
+    data_source: DataSource,
+    get_data_source: Callable,
+    current_id: str | None,
+    depth: int = 1,
+    depth_count: int = 0,
+    resolve_links: bool = False,
 ) -> dict:
+    """
+    Resolve references inside an entity.
+
+    Resolving a reference means that a link or storage reference object (of type Reference) is substituted by the full document it refers to (defined in the address part of the reference object).
+    The depth parameter determines how far down into the document we want to resolve references.
+    The resolve_links parameter determines whether or not to resolve reference objects with referenceType equal to 'link'
+    """
     if depth <= depth_count:
         if depth_count >= 999:
             raise RecursionError("Reached max-nested-depth (999). Most likely some recursive entities")
@@ -108,7 +123,7 @@ def resolve_document(
                         continue
                     entity[key] = value
                 else:
-                    entity[key] = resolve_document(
+                    entity[key] = resolve_references_in_entity(
                         value, data_source, get_data_source, current_id, depth, depth_count + 1, resolve_links
                     )
 
