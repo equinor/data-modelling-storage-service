@@ -21,7 +21,7 @@ from common.tree_node_serializer import (
 from common.utils.build_complex_search import build_mongo_query
 from common.utils.delete_documents import delete_by_attribute_path, delete_document
 from common.utils.get_blueprint import get_blueprint_provider
-from common.utils.get_resolved_document_by_id import resolve_document
+from common.utils.get_resolved_document_by_id import resolve_references_in_entity
 from common.utils.get_storage_recipe import storage_recipe_provider
 from common.utils.logging import logger
 from common.utils.resolve_reference import (
@@ -223,7 +223,7 @@ class DocumentService:
             data_source: DataSource = self.get_data_source(resolved_reference.data_source_id)
             document: dict = data_source.get(resolved_reference.document_id)
 
-            resolved_document: dict = resolve_document(
+            resolved_document: dict = resolve_references_in_entity(
                 document,
                 data_source,
                 self.get_data_source,
