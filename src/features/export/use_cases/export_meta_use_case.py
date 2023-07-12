@@ -6,7 +6,7 @@ from common.exceptions import NotFoundException
 from common.utils.resolve_reference import (
     QueryItem,
     path_to_path_items,
-    resolve_reference,
+    resolve_address,
 )
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
@@ -31,7 +31,7 @@ def concat_meta_data(meta: dict | None, new_meta: dict | None) -> dict:
 
 def resolve_references(values: list, data_source: DataSource, user: User) -> list:
     return [
-        resolve_reference(
+        resolve_address(
             Address.from_relative(value["address"], None, data_source.name),
             lambda data_source_name: get_data_source(data_source_name, user),
         ).entity
@@ -92,7 +92,7 @@ def export_meta_use_case(user: User, path_address: str) -> dict:
     else:
         raise NotFoundException(f"Could not find a root package from reference '{path_address}'")
 
-    root_package: dict = resolve_reference(
+    root_package: dict = resolve_address(
         Address(root_package_name, address_object.data_source),
         lambda data_source_name: get_data_source(data_source_name, user),
     ).entity

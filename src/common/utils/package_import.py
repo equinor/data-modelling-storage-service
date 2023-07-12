@@ -7,7 +7,7 @@ from authentication.models import User
 from common.address import Address
 from common.exceptions import BadRequestException, NotFoundException
 from common.utils.logging import logger
-from common.utils.resolve_reference import ResolvedReference, resolve_reference
+from common.utils.resolve_reference import ResolvedReference, resolve_address
 from common.utils.string_helpers import url_safe_name
 from enums import REFERENCE_TYPES, SIMOS
 from storage.data_source_class import DataSource
@@ -42,7 +42,7 @@ def import_package(path: str, user: User, data_source_name: str, is_root: bool =
     data_source: DataSource = get_data_source(data_source_id=data_source_name, user=user)
     package = {"name": os.path.basename(path), "type": SIMOS.PACKAGE.value, "isRoot": is_root}
     try:
-        resolved_reference: ResolvedReference = resolve_reference(
+        resolved_reference: ResolvedReference = resolve_address(
             Address(package["name"], data_source.name),
             lambda data_source_name: get_data_source(data_source_name, user),
         )

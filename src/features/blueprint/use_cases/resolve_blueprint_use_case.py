@@ -4,7 +4,7 @@ from typing import List
 from authentication.models import User
 from common.address import Address
 from common.exceptions import ApplicationException, NotFoundException
-from common.utils.resolve_reference import resolve_reference
+from common.utils.resolve_reference import resolve_address
 from enums import SIMOS
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
@@ -23,7 +23,7 @@ def find_package_with_document(data_source: str, document_id: str, user) -> dict
 def resolve_references(values: list, data_source_id: str, user: User) -> list:
     data_source: DataSource = get_data_source(data_source_id, user)
     return [
-        resolve_reference(
+        resolve_address(
             Address.from_relative(value["address"], None, data_source.name),
             lambda data_source_name: get_data_source(data_source_name, user),
         ).entity

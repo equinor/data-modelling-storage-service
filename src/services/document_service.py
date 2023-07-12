@@ -26,7 +26,7 @@ from common.utils.get_storage_recipe import storage_recipe_provider
 from common.utils.logging import logger
 from common.utils.resolve_reference import (
     ResolvedReference,
-    resolve_reference,
+    resolve_address,
     split_path,
 )
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
@@ -219,7 +219,7 @@ class DocumentService:
             matter the depth. If true, they will be resolved if the depth param allows it
         """
         try:
-            resolved_reference: ResolvedReference = resolve_reference(address, self.get_data_source)
+            resolved_reference: ResolvedReference = resolve_address(address, self.get_data_source)
             data_source: DataSource = self.get_data_source(resolved_reference.data_source_id)
             document: dict = data_source.get(resolved_reference.document_id)
 
@@ -342,7 +342,7 @@ class DocumentService:
     def remove(self, address: Address) -> None:
         data_source = self.repository_provider(address.data_source, self.user)
 
-        resolved_reference: ResolvedReference = resolve_reference(address, self.get_data_source)
+        resolved_reference: ResolvedReference = resolve_address(address, self.get_data_source)
         # If the reference goes through a parent, get the parent document
         if resolved_reference.attribute_path:
             document = data_source.get(resolved_reference.document_id)
