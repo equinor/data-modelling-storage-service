@@ -4,7 +4,7 @@ import zipfile
 
 from authentication.models import User
 from common.address import Address
-from common.utils.resolve_reference import ResolvedReference, resolve_address
+from common.utils.resolve_reference import ResolvedAddress, resolve_address
 from domain_classes.tree_node import Node
 from enums import SIMOS
 from features.export.use_cases.export_meta_use_case import export_meta_use_case
@@ -36,7 +36,7 @@ def create_zip_export(document_service: DocumentService, address: Address, user:
     """Create a temporary folder on the host that contains a zip file."""
     tmpdir = tempfile.mkdtemp()
     archive_path = os.path.join(tmpdir, "temp_zip_archive.zip")
-    resolved_reference: ResolvedReference = resolve_address(address, document_service.get_data_source)
+    resolved_address: ResolvedAddress = resolve_address(address, document_service.get_data_source)
     document_node: Node = document_service.get_document(address, depth=999, resolve_links=True)
 
     # non-root packages and single documents will inherit the meta information from all parents.
@@ -52,7 +52,7 @@ def create_zip_export(document_service: DocumentService, address: Address, user:
         document_service=document_service,
         document_node=document_node,
         document_meta=document_meta,
-        data_source_id=resolved_reference.data_source_id,
+        data_source_id=resolved_address.data_source_id,
     )
 
     return archive_path

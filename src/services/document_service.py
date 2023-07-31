@@ -24,11 +24,7 @@ from common.utils.get_blueprint import get_blueprint_provider
 from common.utils.get_resolved_document_by_id import resolve_references_in_entity
 from common.utils.get_storage_recipe import storage_recipe_provider
 from common.utils.logging import logger
-from common.utils.resolve_reference import (
-    ResolvedReference,
-    resolve_address,
-    split_path,
-)
+from common.utils.resolve_reference import ResolvedAddress, resolve_address, split_path
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.utils.validators import validate_entity, validate_entity_against_self
 from config import config, default_user
@@ -219,31 +215,31 @@ class DocumentService:
             matter the depth. If true, they will be resolved if the depth param allows it
         """
         try:
-            resolved_reference: ResolvedReference = resolve_address(address, self.get_data_source)
-            data_source: DataSource = self.get_data_source(resolved_reference.data_source_id)
-            document: dict = data_source.get(resolved_reference.document_id)
+            resolved_address: ResolvedAddress = resolve_address(address, self.get_data_source)
+            data_source: DataSource = self.get_data_source(resolved_address.data_source_id)
+            document: dict = data_source.get(resolved_address.document_id)
 
             resolved_document: dict = resolve_references_in_entity(
                 document,
                 data_source,
                 self.get_data_source,
-                resolved_reference.document_id,
-                depth=depth + len(list(filter(lambda x: x[0] != "[", resolved_reference.attribute_path))),
+                resolved_address.document_id,
+                depth=depth + len(list(filter(lambda x: x[0] != "[", resolved_address.attribute_path))),
                 depth_count=0,
                 resolve_links=resolve_links,
             )
 
             node: Node = tree_node_from_dict(
                 resolved_document,
-                uid=resolved_reference.document_id,
+                uid=resolved_address.document_id,
                 blueprint_provider=self.get_blueprint,
                 recipe_provider=self.get_storage_recipes,
             )
 
-            if resolved_reference.attribute_path:
-                child = node.get_by_path(resolved_reference.attribute_path)
+            if resolved_address.attribute_path:
+                child = node.get_by_path(resolved_address.attribute_path)
                 if not child:
-                    raise NotFoundException(f"Invalid path {resolved_reference.attribute_path}")
+                    raise NotFoundException(f"Invalid path {resolved_address.attribute_path}")
                 return child
             return node
         except (NotFoundException, ApplicationException) as e:
@@ -342,7 +338,7 @@ class DocumentService:
     def remove(self, address: Address) -> None:
         data_source = self.repository_provider(address.data_source, self.user)
 
-        resolved_reference: ResolvedReference = resolve_address(address, self.get_data_source)
+        resolved_reference: ResolvedAddress = resolve_address(address, self.get_data_source)
         # If the reference goes through a parent, get the parent document
         if resolved_reference.attribute_path:
             document = data_source.get(resolved_reference.document_id)
