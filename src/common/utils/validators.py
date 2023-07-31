@@ -200,3 +200,4 @@ def _validate_list(
             _validate_primitive_attribute(attributeDefinition, item, f"{key}.{i}")
         else:
             _validate_complex_attribute(attributeDefinition, item, get_blueprint, f"{key}.{i}", implementation_mode)
+            validate_entity_against_self(entity=item, get_blueprint=get_blueprint, key=f"{key}.{i}")
