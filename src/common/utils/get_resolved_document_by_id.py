@@ -3,7 +3,7 @@ from typing import Callable
 from common.address import Address
 from common.exceptions import ApplicationException
 from common.utils.is_reference import is_link, is_reference
-from common.utils.resolve_reference import ResolvedReference, resolve_address
+from common.utils.resolve_reference import ResolvedAddress, resolve_address
 from storage.data_source_class import DataSource
 
 
@@ -64,22 +64,22 @@ def get_complete_sys_document(
         raise ApplicationException("Invalid link. Missing 'address'", data=reference)
     address = Address.from_relative(reference["address"], current_id, data_source.name)
 
-    resolved_reference: ResolvedReference = resolve_address(address, get_data_source)
-    if is_reference(resolved_reference.entity) and resolve_links:
-        resolved_reference = resolve_address(
+    resolved_address: ResolvedAddress = resolve_address(address, get_data_source)
+    if is_reference(resolved_address.entity) and resolve_links:
+        resolved_address = resolve_address(
             Address.from_relative(
-                resolved_reference.entity["address"], resolved_reference.document_id, resolved_reference.data_source_id
+                resolved_address.entity["address"], resolved_address.document_id, resolved_address.data_source_id
             ),
             get_data_source,
         )
 
     # Only update if the resolved reference has id (since it can point to a document that are contained in another document)
-    if is_link(reference) and "_id" in resolved_reference.entity:
+    if is_link(reference) and "_id" in resolved_address.entity:
         # For supporting ^ references, update the current document id
-        current_id = resolved_reference.entity["_id"]
+        current_id = resolved_address.entity["_id"]
 
     return resolve_references_in_entity(
-        resolved_reference.entity, data_source, get_data_source, current_id, depth, depth_count, resolve_links
+        resolved_address.entity, data_source, get_data_source, current_id, depth, depth_count, resolve_links
     )
 
 

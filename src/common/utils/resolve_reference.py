@@ -236,14 +236,14 @@ def resolve_path_items(
 
 
 @dataclass(frozen=True)
-class ResolvedReference:
+class ResolvedAddress:
     data_source_id: str
     document_id: str
     attribute_path: list[str]
     entity: dict | list
 
 
-def resolve_address(address: Address, get_data_source: Callable) -> ResolvedReference:
+def resolve_address(address: Address, get_data_source: Callable) -> ResolvedAddress:
     """Resolve the address into a document.
 
     We extract data_source, document_id, attribute_path from the address and also find the document the
@@ -257,7 +257,7 @@ def resolve_address(address: Address, get_data_source: Callable) -> ResolvedRefe
     # The first reference item should always be a DataSourceItem
     data_source = get_data_source(address.data_source)
     document, path = resolve_path_items(data_source, path_items, get_data_source)
-    return ResolvedReference(
+    return ResolvedAddress(
         entity=document,
         data_source_id=address.data_source,
         document_id=str(path[0]),
