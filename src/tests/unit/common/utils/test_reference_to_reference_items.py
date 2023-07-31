@@ -1,6 +1,6 @@
 import unittest
 
-from common.utils.resolve_reference import (
+from common.utils.resolve_address import (
     AttributeItem,
     IdItem,
     QueryItem,

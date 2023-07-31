@@ -4,7 +4,7 @@ from typing import List
 from authentication.models import User
 from common.address import Address
 from common.exceptions import ApplicationException, NotFoundException
-from common.utils.resolve_reference import resolve_address
+from common.utils.resolve_address import resolve_address
 from enums import SIMOS
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source

@@ -24,7 +24,7 @@ from common.utils.get_blueprint import get_blueprint_provider
 from common.utils.get_resolved_document_by_id import resolve_references_in_entity
 from common.utils.get_storage_recipe import storage_recipe_provider
 from common.utils.logging import logger
-from common.utils.resolve_reference import ResolvedAddress, resolve_address, split_path
+from common.utils.resolve_address import ResolvedAddress, resolve_address, split_path
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.utils.validators import validate_entity, validate_entity_against_self
 from config import config, default_user

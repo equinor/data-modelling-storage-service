@@ -3,7 +3,7 @@ from functools import lru_cache
 from authentication.models import User
 from common.address import Address
 from common.utils.logging import logger
-from common.utils.resolve_reference import ResolvedAddress, resolve_address
+from common.utils.resolve_address import ResolvedAddress, resolve_address
 from config import config
 from domain_classes.blueprint import Blueprint
 from storage.internal.data_source_repository import get_data_source

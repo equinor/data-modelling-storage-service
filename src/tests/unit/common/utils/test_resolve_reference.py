@@ -6,7 +6,7 @@ import pytest
 
 from common.address import Address
 from common.exceptions import ApplicationException, NotFoundException
-from common.utils.resolve_reference import resolve_address
+from common.utils.resolve_address import resolve_address
 from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_utils import get_mock_document_service
 

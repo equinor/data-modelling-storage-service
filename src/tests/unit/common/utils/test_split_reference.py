@@ -1,6 +1,6 @@
 import unittest
 
-from common.utils.resolve_reference import split_path
+from common.utils.resolve_address import split_path
 
 
 class SplitReferenceTestCase(unittest.TestCase):
