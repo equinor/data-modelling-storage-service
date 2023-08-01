@@ -12,42 +12,42 @@ Feature: Validate entities in database
     Given there exist document with id "1" in data source "data-source-name"
     """
     {
-        "name": "root_package",
-        "description": "",
-        "type": "dmss://system/SIMOS/Package",
-        "isRoot": true,
-        "content": [
-            {
-                "address": "$2",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            },
-            {
-                "address": "$3",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            },
-            {
-                "address": "$4",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            },
-            {
-                "address": "$5",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            },
-            {
-                "address": "$6",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            },
-            {
-                "address": "$7",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            }
-        ]
+      "name": "root_package",
+      "description": "",
+      "type": "dmss://system/SIMOS/Package",
+      "isRoot": true,
+      "content": [
+        {
+          "address": "$2",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "storage"
+        },
+        {
+          "address": "$3",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "storage"
+        },
+        {
+          "address": "$4",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "storage"
+        },
+        {
+          "address": "$5",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "storage"
+        },
+        {
+           "address": "$6",
+           "type": "dmss://system/SIMOS/Reference",
+           "referenceType": "storage"
+        },
+        {
+          "address": "$7",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "storage"
+        }
+      ]
     }
     """
     Given there exist document with id "2" in data source "data-source-name"
@@ -104,16 +104,16 @@ Feature: Validate entities in database
       "name": "Gandalf",
       "isManager": false,
       "colleagues": [
-            {
-                "address": "$3",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            },
-            {
-                "address": "$5",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            }
+        {
+          "address": "$3",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "storage"
+        },
+        {
+          "address": "$5",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "storage"
+        }
       ]
     }
     """
@@ -124,11 +124,11 @@ Feature: Validate entities in database
       "name": "Saruman",
       "isManager": false,
       "colleagues": [
-            {
-                "address": "$4",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            }
+        {
+          "address": "$4",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "storage"
+        }
       ]
     }
     """
