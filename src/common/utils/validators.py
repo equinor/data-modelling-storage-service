@@ -164,10 +164,7 @@ def _validate_complex_attribute(
 ):
     if type(attribute) != dict:
         raise ValidationException(f"'{attributeDefinition.name}' should be a dict", debug=_get_debug_message(key))
-    if (
-        not attribute
-        or attributeDefinition.attribute_type == BuiltinDataTypes.BINARY.value
-    ):
+    if not attribute or attributeDefinition.attribute_type == BuiltinDataTypes.BINARY.value:
         return
     if attributeDefinition.attribute_type == BuiltinDataTypes.OBJECT.value:
         validate_entity_against_self(entity=attribute, get_blueprint=get_blueprint, key=key)
