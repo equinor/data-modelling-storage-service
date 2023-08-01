@@ -104,7 +104,7 @@ Feature: Validate entities not in the database
         {
           "address": "$5",
           "type": "dmss://system/SIMOS/Reference",
-          "referenceType": "storage"
+          "referenceType": "link"
         }
       ]
     }
