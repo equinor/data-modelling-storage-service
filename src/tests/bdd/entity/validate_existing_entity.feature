@@ -107,12 +107,12 @@ Feature: Validate entities in database
         {
           "address": "$3",
           "type": "dmss://system/SIMOS/Reference",
-          "referenceType": "storage"
+          "referenceType": "link"
         },
         {
           "address": "$5",
           "type": "dmss://system/SIMOS/Reference",
-          "referenceType": "storage"
+          "referenceType": "link"
         }
       ]
     }
@@ -127,7 +127,7 @@ Feature: Validate entities in database
         {
           "address": "$4",
           "type": "dmss://system/SIMOS/Reference",
-          "referenceType": "storage"
+          "referenceType": "link"
         }
       ]
     }
