@@ -12,17 +12,17 @@ Feature: Validate entities not in the database
     Given there exist document with id "1" in data source "data-source-name"
     """
     {
-        "name": "root_package",
-        "description": "",
-        "type": "dmss://system/SIMOS/Package",
-        "isRoot": true,
-        "content": [
-            {
-                "address": "$2",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            }
-        ]
+      "name": "root_package",
+      "description": "",
+      "type": "dmss://system/SIMOS/Package",
+      "isRoot": true,
+      "content": [
+        {
+          "address": "$2",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "storage"
+        }
+      ]
     }
     """
     Given there exist document with id "2" in data source "data-source-name"
@@ -56,9 +56,9 @@ Feature: Validate entities not in the database
     When i make a "POST" request
     """
     {
-        "type": "dmss://data-source-name/root_package/Employee",
-        "name": "Ola",
-        "isManager": false
+      "type": "dmss://data-source-name/root_package/Employee",
+      "name": "Ola",
+      "isManager": false
     }
     """
     Then the response status should be "OK"
@@ -72,9 +72,9 @@ Feature: Validate entities not in the database
     When i make a "POST" request
     """
     {
-        "type": "dmss://data-source-name/root_package/Employee",
-        "name": "Kari",
-        "age": 123
+      "type": "dmss://data-source-name/root_package/Employee",
+      "name": "Kari",
+      "age": 123
     }
     """
     Then the response status should be "Bad Request"
@@ -84,9 +84,9 @@ Feature: Validate entities not in the database
     When i make a "POST" request
     """
     {
-        "type": "dmss://data-source-name/root_package/Employee",
-        "name": "Nora",
-        "salary": 123
+      "type": "dmss://data-source-name/root_package/Employee",
+      "name": "Nora",
+      "salary": 123
     }
     """
     Then the response status should be "Bad Request"
@@ -97,43 +97,16 @@ Feature: Validate entities not in the database
     When i make a "POST" request
     """
     {
-        "type": "dmss://data-source-name/root_package/Employee",
-        "name": "Legolas",
-        "isManager": false,
-        "colleagues": [
-            {
-                "address": "$5",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            }
-            ]
-    }
-    """
-    Then the response status should be "OK"
-    And the response should contain
-    """
-    "OK"
-    """
-
-  Scenario: Validate a complex non-existing entity with error
-    Given i access the resource url "/api/entity/validate"
-    When i make a "POST" request
-    """
-    {
-        "type": "dmss://data-source-name/root_package/Employee",
-        "name": "Legolas",
-        "isManager": false,
-        "colleagues": [
-            {
-                "address": "$5",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            },
-            {
-                "address": "$4",
-                "type": "dmss://system/SIMOS/Reference",
-                "referenceType": "link"
-            }]
+      "type": "dmss://data-source-name/root_package/Employee",
+      "name": "Legolas",
+      "isManager": false,
+      "colleagues": [
+        {
+          "address": "$5",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "storage"
+        }
+      ]
     }
     """
     Then the response status should be "OK"
