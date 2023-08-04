@@ -12,7 +12,7 @@ Feature: Validate entities in database
     Given there exist document with id "1" in data source "data-source-name"
     """
     {
-      "name": "root_package",
+      "name": "root_employee_package",
       "description": "",
       "type": "dmss://system/SIMOS/Package",
       "isRoot": true,
@@ -64,7 +64,7 @@ Feature: Validate entities in database
         },
         {
           "name": "colleagues",
-          "attributeType": "dmss://data-source-name/root_package/Employee",
+          "attributeType": "dmss://data-source-name/root_employee_package/Employee",
           "optional": true,
           "dimensions": "*",
           "contained": false,
@@ -76,7 +76,7 @@ Feature: Validate entities in database
     Given there exist document with id "3" in data source "data-source-name"
     """
     {
-      "type": "dmss://data-source-name/root_package/Employee",
+      "type": "dmss://data-source-name/root_employee_package/Employee",
       "name": "Frodo",
       "isManager": false
     }
@@ -84,7 +84,7 @@ Feature: Validate entities in database
     Given there exist document with id "4" in data source "data-source-name"
     """
     {
-      "type": "dmss://data-source-name/root_package/Employee",
+      "type": "dmss://data-source-name/root_employee_package/Employee",
       "name": "John-Error",
       "age": 123
     }
@@ -92,7 +92,7 @@ Feature: Validate entities in database
     Given there exist document with id "5" in data source "data-source-name"
     """
     {
-      "type": "dmss://data-source-name/root_package/Employee",
+      "type": "dmss://data-source-name/root_employee_package/Employee",
       "name": "Sam",
       "isManager": true
     }
@@ -100,7 +100,7 @@ Feature: Validate entities in database
     Given there exist document with id "6" in data source "data-source-name"
     """
     {
-      "type": "dmss://data-source-name/root_package/Employee",
+      "type": "dmss://data-source-name/root_employee_package/Employee",
       "name": "Gandalf",
       "isManager": false,
       "colleagues": [
@@ -120,7 +120,7 @@ Feature: Validate entities in database
     Given there exist document with id "7" in data source "data-source-name"
     """
     {
-      "type": "dmss://data-source-name/root_package/Employee",
+      "type": "dmss://data-source-name/root_employee_package/Employee",
       "name": "Saruman",
       "isManager": false,
       "colleagues": [
@@ -136,7 +136,7 @@ Feature: Validate entities in database
 
 
   Scenario: Validate existing correct entity
-    Given i access the resource url "/api/entity/validate-existing-entity/data-source-name/root_package/Frodo"
+    Given i access the resource url "/api/entity/validate-existing-entity/data-source-name/root_employee_package/Frodo"
     When i make a "POST" request
     Then the response status should be "OK"
     And the response should contain
@@ -145,7 +145,7 @@ Feature: Validate entities in database
     """
 
   Scenario: Validate existing correct, complex entity
-    Given i access the resource url "/api/entity/validate-existing-entity/data-source-name/root_package/Gandalf"
+    Given i access the resource url "/api/entity/validate-existing-entity/data-source-name/root_employee_package/Gandalf"
     When i make a "POST" request
     Then the response status should be "OK"
     And the response should contain
@@ -154,19 +154,19 @@ Feature: Validate entities in database
     """
 
   Scenario: Validate existing entity with errors
-    Given i access the resource url "/api/entity/validate-existing-entity/data-source-name/root_package/John-Error"
+    Given i access the resource url "/api/entity/validate-existing-entity/data-source-name/root_employee_package/John-Error"
     When i make a "POST" request
     Then the response status should be "Bad Request"
 
 
   Scenario: Validate existing, complex entity with errors
-    Given i access the resource url "/api/entity/validate-existing-entity/data-source-name/root_package/Saruman"
+    Given i access the resource url "/api/entity/validate-existing-entity/data-source-name/root_employee_package/Saruman"
     When i make a "POST" request
     Then the response status should be "Bad Request"
 
 
   Scenario: Validate existing Package entity with errors
-    Given i access the resource url "/api/entity/validate-existing-entity/data-source-name/root_package"
+    Given i access the resource url "/api/entity/validate-existing-entity/data-source-name/root_employee_package"
     When i make a "POST" request
     Then the response status should be "Bad Request"
 

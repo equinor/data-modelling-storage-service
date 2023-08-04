@@ -70,7 +70,6 @@ class CreateEntity:
             ""
         ]  # type(attr.default) == dict or type(attr.default) == list
 
-    # add all non optional attributes with default value.
     # type is inserted based on the parent attributes type, or the initial type for root entity.
     def _get_entity(self, blueprint: Blueprint, entity: dict):
         """
@@ -79,16 +78,13 @@ class CreateEntity:
           If the required attribute has a default value, that value will be used.
           If not, an 'empty' value will be used. For example empty string,
           an empty list, the number 0, etc.
-        - optional attributes with a default value are included
-        - optional attributes without a default value are not included.
+        - optional attributes value are not included (also true if default value is provided).
         """
         for attr in blueprint.attributes:
             if attr.attribute_type == BuiltinDataTypes.BINARY.value:
                 continue
-            if attr.is_optional and attr.default is not None:
-                entity[attr.name] = attr.default
-            if attr.is_optional and attr.default is None:
-                # skip attribute if it is optional and does not have default value
+            if attr.is_optional:
+                # skip attribute if it is optional
                 continue
             if attr.attribute_type in PRIMITIVES:
                 if not attr.is_optional and attr.name not in entity:

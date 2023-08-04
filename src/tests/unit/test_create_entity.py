@@ -28,16 +28,6 @@ class CreateEntityTestCase(unittest.TestCase):
                 "power": 120,
                 "type": "test_data/complex/EngineTest",
             },
-            "engine3": {
-                "name": "default engine",
-                "fuelPump": {
-                    "name": "fuelPump",
-                    "description": "A standard fuel pump",
-                    "type": "test_data/complex/FuelPumpTest",
-                },
-                "power": 9,
-                "type": "test_data/complex/EngineTest",
-            },
             "is_sedan": True,
             "name": "CarTest",
             "plateNumber": "",

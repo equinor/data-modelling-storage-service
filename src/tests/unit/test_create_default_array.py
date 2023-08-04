@@ -95,9 +95,7 @@ class DefaultArrayTestCase(unittest.TestCase):
             empty_string_blueprint_attribute,
         )
 
-        assert default_array == [
-            [{"description": "", "name": "", "type": "dmss://system/SIMOS/Package", "isRoot": False}]
-        ]
+        assert default_array == [[{"name": "", "type": "dmss://system/SIMOS/Package", "isRoot": False}]]
 
     def test_creation_of_default_array_unfixed_rank2(self):
         default_array = create_default_array(

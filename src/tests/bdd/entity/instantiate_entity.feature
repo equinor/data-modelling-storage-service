@@ -111,9 +111,7 @@ Feature: Instantiate entity
     """
     {
       "type": "dmss://data-source-name/root_package/Employee",
-      "colleagues": [],
       "isManager": false,
-      "description": "",
       "name": "",
       "managers": [
         {
@@ -121,11 +119,6 @@ Feature: Instantiate entity
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         }
-      ],
-      "bestFriendAtWork": {
-        "type": "dmss://data-source-name/root_package/Employee",
-        "name": "Kari",
-        "isManager": false
-      }
+      ]
     }
     """
