@@ -12,7 +12,7 @@ Feature: Validate entities not in the database
     Given there exist document with id "1" in data source "data-source-name"
     """
     {
-      "name": "root_package",
+      "name": "root_employee_package",
       "description": "",
       "type": "dmss://system/SIMOS/Package",
       "isRoot": true,
@@ -39,7 +39,7 @@ Feature: Validate entities not in the database
         },
         {
           "name": "colleagues",
-          "attributeType": "dmss://data-source-name/root_package/Employee",
+          "attributeType": "dmss://data-source-name/root_employee_package/Employee",
           "optional": true,
           "dimensions": "*",
           "contained": false,
@@ -56,7 +56,7 @@ Feature: Validate entities not in the database
     When i make a "POST" request
     """
     {
-      "type": "dmss://data-source-name/root_package/Employee",
+      "type": "dmss://data-source-name/root_employee_package/Employee",
       "name": "Ola",
       "isManager": false
     }
@@ -72,7 +72,7 @@ Feature: Validate entities not in the database
     When i make a "POST" request
     """
     {
-      "type": "dmss://data-source-name/root_package/Employee",
+      "type": "dmss://data-source-name/root_employee_package/Employee",
       "name": "Kari",
       "age": 123
     }
@@ -84,7 +84,7 @@ Feature: Validate entities not in the database
     When i make a "POST" request
     """
     {
-      "type": "dmss://data-source-name/root_package/Employee",
+      "type": "dmss://data-source-name/root_employee_package/Employee",
       "name": "Nora",
       "salary": 123
     }
@@ -97,7 +97,7 @@ Feature: Validate entities not in the database
     When i make a "POST" request
     """
     {
-      "type": "dmss://data-source-name/root_package/Employee",
+      "type": "dmss://data-source-name/root_employee_package/Employee",
       "name": "Legolas",
       "isManager": false,
       "colleagues": [

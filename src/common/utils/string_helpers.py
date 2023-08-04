@@ -14,7 +14,9 @@ from enums import BuiltinDataTypes
 
 
 # Convert dmt attribute_types to python types. If complex, return type as string.
-def get_data_type_from_dmt_type(attribute_type: str):
+def get_data_type_from_dmt_type(
+    attribute_type: str,
+) -> type[bool] | type[int] | type[float] | type[str] | str:
     try:
         type_enum = BuiltinDataTypes(attribute_type)
         return type_enum.to_py_type()
