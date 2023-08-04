@@ -1,7 +1,9 @@
 import unittest
 
+from common.utils.arrays import create_default_array, remove_first_and_join
 from common.utils.create_entity import CreateEntity
 from domain_classes.blueprint import Blueprint
+from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dimension import Dimension
 from enums import SIMOS
 from services.document_service import DocumentService
@@ -55,6 +57,9 @@ higher_rank_array_blueprint = {
     ],
 }
 
+empty_string_blueprint_attribute = BlueprintAttribute(name="", attribute_type="string")
+empty_integer_blueprint_attribute = BlueprintAttribute(name="", attribute_type="integer")
+
 file_repository_test = LocalFileRepository()
 
 
@@ -76,24 +81,35 @@ blueprint_provider = document_service.get_blueprint
 
 class DefaultArrayTestCase(unittest.TestCase):
     def test_creation_of_default_array_simple(self):
-        default_array = Dimension("*", "integer").create_default_array(blueprint_provider, CreateEntity)
+        default_array = create_default_array(
+            Dimension("*", "integer"), blueprint_provider, CreateEntity, empty_integer_blueprint_attribute
+        )
 
         assert default_array == []
 
     def test_creation_of_default_array_complex_type(self):
-        default_array = Dimension("1,1", "dmss://system/SIMOS/Package").create_default_array(
-            blueprint_provider, CreateEntity
+        default_array = create_default_array(
+            Dimension("1,1", "dmss://system/SIMOS/Package"),
+            blueprint_provider,
+            CreateEntity,
+            empty_string_blueprint_attribute,
         )
 
-        assert default_array == [[{"name": "", "type": "dmss://system/SIMOS/Package", "isRoot": False, "content": []}]]
+        assert default_array == [
+            [{"description": "", "name": "", "type": "dmss://system/SIMOS/Package", "isRoot": False}]
+        ]
 
     def test_creation_of_default_array_unfixed_rank2(self):
-        default_array = Dimension("*,*", "integer").create_default_array(blueprint_provider, CreateEntity)
+        default_array = create_default_array(
+            Dimension("*,*", "integer"), blueprint_provider, CreateEntity, empty_integer_blueprint_attribute
+        )
 
         assert default_array == [[]]
 
     def test_creation_of_default_array_fixed_rank2(self):
-        default_array = Dimension("2,1", "integer").create_default_array(blueprint_provider, CreateEntity)
+        default_array = create_default_array(
+            Dimension("2,1", "integer"), blueprint_provider, CreateEntity, empty_integer_blueprint_attribute
+        )
         # fmt: off
         assert default_array == [
             [0],
@@ -102,7 +118,9 @@ class DefaultArrayTestCase(unittest.TestCase):
         # fmt: on
 
     def test_creation_of_default_array_mixed_rank_string(self):
-        default_array = Dimension("2,*,3", "string").create_default_array(blueprint_provider, CreateEntity)
+        default_array = create_default_array(
+            Dimension("2,*,3", "string"), blueprint_provider, CreateEntity, empty_string_blueprint_attribute
+        )
         # fmt: off
         assert default_array == [
             [["", "", ""]],
@@ -111,16 +129,26 @@ class DefaultArrayTestCase(unittest.TestCase):
         # fmt: on
 
     def test_creation_of_default_array_mixed_rank3_int(self):
-        default_array = Dimension("2,2,*", "integer").create_default_array(blueprint_provider, CreateEntity)
+        default_array = create_default_array(
+            Dimension("2,2,*", "integer"), blueprint_provider, CreateEntity, empty_integer_blueprint_attribute
+        )
         expected = [[[], []], [[], []]]
 
         assert default_array == expected
 
     def test_creation_of_default_array_mixed_rank3_bool(self):
-        default_array = Dimension("1,2,1", "boolean").create_default_array(blueprint_provider, CreateEntity)
+        default_array = create_default_array(
+            Dimension("1,2,1", "boolean"), blueprint_provider, CreateEntity, empty_string_blueprint_attribute
+        )
         expected = [[[False], [False]]]
 
         assert default_array == expected
+
+    def test_remove_first_and_join(self):
+        assert remove_first_and_join(["1", "2", "3", "4"]) == "2,3,4"
+        assert remove_first_and_join(["0", "0"]) == "0"
+        assert remove_first_and_join(["0"]) == ""
+        assert remove_first_and_join([]) == ""
 
 
 if __name__ == "__main__":

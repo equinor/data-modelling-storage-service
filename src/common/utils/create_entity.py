@@ -2,6 +2,7 @@ import json
 from json import JSONDecodeError
 from typing import Callable
 
+from common.utils.arrays import create_default_array
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import PRIMITIVES, SIMOS, BuiltinDataTypes
@@ -47,7 +48,7 @@ class CreateEntity:
 
         if default_value is None:
             if attr.is_array:
-                return attr.dimensions.create_default_array(blueprint_provider, attr)
+                return attr.dimensions.create_default_array_recursive(blueprint_provider, attr)
             if type == "boolean":
                 return False
             if type == "number":
@@ -72,10 +73,23 @@ class CreateEntity:
     # add all non optional attributes with default value.
     # type is inserted based on the parent attributes type, or the initial type for root entity.
     def _get_entity(self, blueprint: Blueprint, entity: dict):
+        """
+        Rules for creating an entity of a given blueprint type:
+        - all required attributes, as defined in the blueprint, are included.
+          If the required attribute has a default value, that value will be used.
+          If not, an 'empty' value will be used. For example empty string,
+          an empty list, the number 0, etc.
+        - optional attributes with a default value are included
+        - optional attributes without a default value are not included.
+        """
         for attr in blueprint.attributes:
             if attr.attribute_type == BuiltinDataTypes.BINARY.value:
                 continue
-
+            if attr.is_optional and attr.default is not None:
+                entity[attr.name] = attr.default
+            if attr.is_optional and attr.default is None:
+                # skip attribute if it is optional and does not have default value
+                continue
             if attr.attribute_type in PRIMITIVES:
                 if not attr.is_optional and attr.name not in entity:
                     entity[attr.name] = CreateEntity.parse_value(attr=attr, blueprint_provider=self.blueprint_provider)
@@ -89,12 +103,11 @@ class CreateEntity:
                     else self.blueprint_provider(SIMOS.ENTITY.value)
                 )
                 if attr.is_array:
-                    entity[attr.name] = attr.dimensions.create_default_array(self.blueprint_provider, CreateEntity)
+                    entity[attr.name] = create_default_array(
+                        attr.dimensions, self.blueprint_provider, CreateEntity, attr
+                    )
                 else:
-                    if attr.is_optional:
-                        if attr.default:
-                            entity[attr.name] = attr.default
-                    elif CreateEntity.is_json(attr):
+                    if CreateEntity.is_json(attr):
                         value = attr.default
                         if value is not None and len(value) > 0:
                             entity[attr.name] = attr.default

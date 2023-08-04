@@ -19,6 +19,13 @@ def instantiate(entity: Entity, user: User = Depends(auth_w_jwt_or_pat)):
     """Create a new entity and return it.
 
     (entity is not saved in DMSS)
+    Rules for instantiation:
+    - all required attributes, as defined in the blueprint, are included.
+      If the required attribute has a default value, that value will be used.
+      If not, an 'empty' value will be used. For example empty string,
+      an empty list, the number 0, etc.
+    - optional attributes with a default value are included
+    - optional attributes without a default value are not included.
     """
     return instantiate_entity_use_case(basic_entity=entity, user=user)
 
