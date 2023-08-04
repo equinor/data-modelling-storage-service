@@ -3,53 +3,31 @@ from common.utils.string_helpers import get_data_type_from_dmt_type
 
 class Dimension:
     def __init__(self, dimensions: str, attribute_type: str):
+        """
+        dimensions: define the structure of the array. For example:
+        - "*" is a one dimensional array of any length.
+        - "*,*" is a two dimensional array of any length.
+        - "2,1" is a 2 dimensional array where inner arrays have length one - for example [[1], [3]]
+
+        type: define what type the values in the array have. Primitive types (bool, int, str, etc)
+        are converted to python types. For complex types, for example "dmss://system/SIMOS/Package",
+        a string value is stored.
+        """
         self.dimensions: list[str] = dimensions.split(",")
-        self.type: str = get_data_type_from_dmt_type(attribute_type)
+        self.type: type[bool] | type[int] | type[float] | type[str] | str = get_data_type_from_dmt_type(attribute_type)
         self.value = None
 
-    def is_array(self):
+    def is_array(self) -> bool:
         return self.dimensions != [""]
 
-    def is_matrix(self):
+    # TODO remove function - it is never used for anything useful
+    def is_matrix(self) -> bool:
         return len(self.dimensions) > 1
 
+    # TODO remove function - it is never used for anything useful
     # If the inner most dimension is "*", the Dimension is unfixed
-    def is_unfixed(self):
+    def is_unfixed(self) -> bool:
         return self.dimensions[-1] == "*"
 
-    def create_default_array(self, blueprint_provider, create_entity_class):
-        def create_default_array_recursive(dimensions: list[str]) -> list:
-            if len(dimensions) == 1:
-                # Return an empty list if size is "*".
-                if dimensions[0] == "*":
-                    return []
-                # Return a list initialized with default values for the size of the array.
-                if not type(self.type) is type:
-                    # For fixed complex types, create the entity with default values. Set name from list index.
-                    return [
-                        create_entity_class(blueprint_provider, self.type).entity for n in range(int(dimensions[0]))
-                    ]
-                if self.type is int:
-                    return [0 for n in range(int(dimensions[0]))]
-                if self.type is float:
-                    return [0.00 for n in range(int(dimensions[0]))]
-                if self.type is str:
-                    return ["" for n in range(int(dimensions[0]))]
-                if self.type is bool:
-                    return [False for n in range(int(dimensions[0]))]
-
-            if dimensions[0] == "*":
-                # If the size of the rank is "*" we only create one nested list.
-                nested_list = [create_default_array_recursive(dimensions[1:])]
-            else:
-                # If the size of the rank in NOT "*", we expect an Integer, and create n number of nested lists.
-                nested_list = [create_default_array_recursive(dimensions[1:]) for n in range(int(dimensions[0]))]
-            return nested_list
-
-        if self.dimensions == [""]:
-            raise Exception("This attribute is not an array!")
-        self.value = create_default_array_recursive(self.dimensions)
-        return self.value
-
-    def to_dict(self):
+    def to_dict(self) -> str:
         return ",".join(self.dimensions)
