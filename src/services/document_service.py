@@ -505,16 +505,31 @@ class DocumentService:
         lookup = data_source.get_access_control(document_id)
         return lookup.acl
 
-    def insert_reference(self, address: Address, reference: ReferenceEntity) -> dict:
-        attribute_node: Node = self.get_document(address)
+    def update_reference(self, attribute_address: Address, reference: ReferenceEntity) -> dict:
+        """
+        Update a reference object to an attribute in a document. The 'address' points to the attribute in the document where the reference should be inserted.
+        The 'attribute_address' needs to point to an existing attribute.
+        """
+        attribute_node: Node = self.get_document(attribute_address)
         root: Node = attribute_node.parent.find_parent()
 
         # Check that target exists and has correct values
         # The SIMOS/Entity type can reference any type (used by Package)
-        referenced_document: Node = self.get_document(Address(reference.address, address.data_source))
+        referenced_document: Node = self.get_document(Address(reference.address, attribute_address.data_source))
+
+        last_attribute_in_address = split_path(attribute_address.path)[-1].replace(".", "")
+        try:
+            expected_type: str = [
+                blueprint_attribute.attribute_type
+                for blueprint_attribute in root.blueprint.attributes
+                if blueprint_attribute.name == last_attribute_in_address
+            ][0]
+        except IndexError:
+            raise ApplicationException(f"Could not find a blueprint attribute with name {last_attribute_in_address}")
+
         if not referenced_document:
-            raise NotFoundException(debug=f"{address.data_source}/{referenced_document['_id']}")
-        if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document.type:
+            raise NotFoundException(debug=f"{attribute_address.data_source}/{referenced_document['_id']}")
+        if BuiltinDataTypes.OBJECT.value != expected_type != referenced_document.type:
             raise BadRequestException(
                 f"The referenced entity should be of type '{attribute_node.type}'"
                 f", but was '{referenced_document.type}'"
@@ -529,9 +544,9 @@ class DocumentService:
             attribute_node.uid = str(referenced_document.uid)
             attribute_node.type = referenced_document.type
 
-        self.save(root, address.data_source, update_uncontained=False)
+        self.save(root, attribute_address.data_source, update_uncontained=False)
 
-        logger.info(f"Inserted reference '{referenced_document.uid}'" f" in '{address}'")
+        logger.info(f"Inserted reference '{referenced_document.uid}'" f" in '{attribute_address}'")
 
         return tree_node_to_dict(root)
 

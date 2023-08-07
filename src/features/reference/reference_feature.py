@@ -7,26 +7,26 @@ from common.responses import create_response, responses
 from restful.request_types.shared import ReferenceEntity
 
 from .use_cases.delete_reference_use_case import delete_reference_use_case
-from .use_cases.insert_reference_use_case import insert_reference_use_case
+from .use_cases.update_reference_use_case import update_reference_use_case
 
 router = APIRouter(tags=["default", "reference"], prefix="/reference")
 
 
-@router.put("/{address:path}", operation_id="reference_insert", response_model=dict, responses=responses)
+@router.put("/{attribute_address:path}", operation_id="update_reference", response_model=dict, responses=responses)
 @create_response(JSONResponse)
-def insert_reference(
-    address: str,
+def update_reference(
+    attribute_address: str,
     reference: ReferenceEntity,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
-    """Add reference to an entity.
+    """Update reference in an entity.
 
-    Used to add uncontained attributes to an entity.
+    Used to update uncontained attributes to an entity.
 
-    - **document_dotted_id**: <data_source>/<path_to_entity>/<entity_name>.<attribute>
+    - **attribute_address**: address to an attribute inside an entity, e.g. <data_source>/<path_to_entity>/<entity_name>.<attribute>
     - **reference**: a reference object in JSON format
     """
-    return insert_reference_use_case(user=user, address=address, reference=reference)
+    return update_reference_use_case(user=user, address=attribute_address, reference=reference)
 
 
 @router.delete("/{address:path}", operation_id="reference_delete", response_model=dict, responses=responses)
