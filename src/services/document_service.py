@@ -93,17 +93,22 @@ class DocumentService:
         self.get_blueprint.cache_clear()
         self._blueprint_provider.invalidate_cache()
 
-    def save_blob_data(self, node, repository) -> dict:
+    def save_blob_data(self, node: Node, repository: DataSource) -> dict:
         """
         Updates the posted blob and unlink the binary file from the Node.
-        Returns a system/SIMOS/Blob entity with the created id
+        Returns a system/SIMOS/Blob entity with the created id.
+
+        This function assumes that the parameter 'node' has an entity of type system/SIMOS/Blob,
+        and assumes that system/SIMOS/Blob blueprint has name as a required attribute.
         """
+        if node.entity["type"] != SIMOS.BLOB.value:
+            raise ApplicationException(f"Cannot save blob data for types other than {SIMOS.BLOB.value}")
         if file := node.entity.get("_blob_"):  # If a file was posted with the same name as this blob, save it
             # Get or set the "_blob_id"
             node.entity["_blob_id"] = node.entity["_blob_id"] if node.entity.get("_blob_id") else str(uuid4())
             # Save it
-            content_type = mimetypes.guess_type(node.name)
-            repository.update_blob(node.entity["_blob_id"], node.name, content_type, file)
+            content_type = mimetypes.guess_type(node.entity.get("name"))
+            repository.update_blob(node.entity["_blob_id"], node.entity.get("name"), content_type, file)
             node.entity["size"] = file.seek(0, 2)  # Set the size of the blob
             # Remove the temporary key containing the File
             del node.entity["_blob_"]
@@ -151,16 +156,19 @@ class DocumentService:
         # If the node is a package, we build the path string to be used by filesystem like repositories.
         # Also, check for duplicate names in the package.
         if node.type == SIMOS.PACKAGE.value:
-            path = f"{path}/{node.name}/" if path else f"{node.name}"
+            path = f"{path}/{node.entity['name']}/" if path else f"{node.entity['name']}"
             if len(node.children) > 0:
                 packageContent = node.children[0]
                 contentListNames = []
                 for child in packageContent.children:
-                    if "name" in child.entity and child.name in contentListNames:
-                        raise BadRequestException(
-                            f"The document '{data_source_id}/{node.name}/{child.name}' already exists"
-                        )
-                    contentListNames.append(child.name)
+                    if "name" in child.entity:
+                        # Content of a package should not have duplicate name, but name is not required for all document
+                        if child.entity["name"] in contentListNames:
+                            raise BadRequestException(
+                                f"The document '{data_source_id}/{node.entity['name']}/{child.entity['name']}' already exists"
+                            )
+
+                        contentListNames.append(child.entity["name"])
 
         if update_uncontained:  # If flag is set, dig down and save uncontained documents
             for child in node.children:
@@ -374,9 +382,9 @@ class DocumentService:
         )
 
         try:
-            if self.get_document(Address(new_node.name, data_source_id), resolve_links=True, depth=99):
+            if self.get_document(Address(new_node.entity["name"], data_source_id), resolve_links=True, depth=99):
                 raise ValidationException(
-                    message=f"A root package named '{new_node.name}' already exists",
+                    message=f"A root package named '{new_node.entity['name']}' already exists",
                     data={"dataSource": data_source_id, "document": document},
                 )
         except NotFoundException:
@@ -427,9 +435,11 @@ class DocumentService:
         if not target.is_array() and target.type != SIMOS.PACKAGE.value:
             required_attribute_names = [attribute.name for attribute in new_node.blueprint.get_required_attributes()]
             # If entity has a name, check if a file/attribute with the same name already exists on the target
-            if "name" in required_attribute_names and target.parent.duplicate_attribute(new_node.name):
+            if "name" in required_attribute_names and target.parent.duplicate_attribute(
+                new_node.entity.get("name", new_node.attribute.name)
+            ):
                 raise BadRequestException(
-                    f"The document at '{address}' already has a child with name '{new_node.name}'"
+                    f"The document at '{address}' already has a child with name '{new_node.entity.get('name', new_node.attribute.name)}'"
                 )
 
         if files:
