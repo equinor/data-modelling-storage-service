@@ -191,6 +191,28 @@ signal_blueprint = {
     ],
 }
 
+reference_blueprint = {
+    "type": "dmss://system/SIMOS/Blueprint",
+    "description": "Can be of type link, pointer or storage.",
+    "name": "Reference",
+    "attributes": [
+        {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "type"},
+        {
+            "attributeType": "string",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "name": "referenceType",
+            "optional": False,
+            "default": "link",
+        },
+        {
+            "attributeType": "string",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "name": "address",
+            "optional": False,
+        },
+    ],
+}
+
 
 def get_blueprint(type: str):
     if type == "all_contained_cases_blueprint":
@@ -213,4 +235,6 @@ def get_blueprint(type: str):
         return Blueprint(case_blueprint)
     if type == "Signal":
         return Blueprint(signal_blueprint)
+    if "system/SIMOS/Reference" in type:
+        return Blueprint(reference_blueprint)
     return None

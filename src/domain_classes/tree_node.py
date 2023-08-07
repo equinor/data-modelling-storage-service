@@ -147,7 +147,7 @@ class NodeBase:
                 return node
 
     def __repr__(self):
-        return f"Name: '{self.name}', Key: '{self.key}', Type: '{self.type}', Node_ID: '{self.node_id}'"
+        return f"Key: '{self.key}', Type: '{self.type}', Node_ID: '{self.node_id}'"
 
     def show_tree(self, level=0):
         print("%s%s" % ("." * level, self))
@@ -258,7 +258,7 @@ class NodeBase:
                 self.children.pop(i)
 
     def duplicate_attribute(self, attribute: str):
-        if next((child for child in self.children if child.name == attribute), None):  # type: ignore
+        if next((child for child in self.children if child.entity.get("name", self.attribute.name) == attribute), None):  # type: ignore
             return True
 
 
@@ -281,12 +281,6 @@ class Node(NodeBase):
 
     def is_root(self):
         return super().is_root()
-
-    @property
-    def name(self):
-        if "targetName" in self.entity and self.entity["type"] == "dmss://system/SIMOS/Link":
-            return self.entity.get("targetName", self.attribute.name)
-        return self.entity.get("name", self.attribute.name)
 
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
     def update(self, data: dict):

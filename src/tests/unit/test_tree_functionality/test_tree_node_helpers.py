@@ -116,9 +116,10 @@ class TreenodeTestCase(unittest.TestCase):
         assert root.depth() == 0
         assert nested.depth() == 1
 
+    # TODO i have no idea how traverse() is supposed to wrok.
     def test_traverse(self):
         document_1 = {
-            "_id": "1",
+            "_id": "parent",
             "name": "Parent",
             "description": "",
             "type": "all_contained_cases_blueprint",
@@ -130,7 +131,7 @@ class TreenodeTestCase(unittest.TestCase):
                     "name": "Nested2",
                     "description": "",
                     "type": "blueprint_3",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
+                    "reference": {"address": "$3", "type": "dmss://system/SIMOS/Reference", "referenceType": "link"},
                 },
             },
         }
@@ -138,10 +139,17 @@ class TreenodeTestCase(unittest.TestCase):
         root = tree_node_from_dict(
             document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
         )
-        result = [node.name for node in root.traverse()]
-        # with error nodes
-        # expected = ["Parent", "Nested1", "Nested2", "Reference", "nested", "reference", "references"]
-        expected = ["Parent", "Nested1", "Nested2", "Reference", "nested", "reference", "nested", "references"]
+        result = [node.node_id for node in root.traverse()]
+        expected = [
+            "parent",
+            "parent.nested",
+            "parent.nested.nested",
+            "parent.nested.nested.reference",
+            "",
+            ".nested",
+            "parent.references",
+        ]
+
         assert result == expected
 
     def test_traverse_reverse(self):
@@ -177,7 +185,7 @@ class TreenodeTestCase(unittest.TestCase):
             attribute=BlueprintAttribute(name="", attribute_type="blueprint_3"),
         )
 
-        result = [node.name for node in nested_2.traverse_reverse()]
+        result = [node.entity["name"] for node in nested_2.traverse_reverse()]
         expected = ["Nested2", "Nested1", "root"]
         assert result == expected
 
