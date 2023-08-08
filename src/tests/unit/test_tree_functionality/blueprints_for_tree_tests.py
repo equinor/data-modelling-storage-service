@@ -38,7 +38,7 @@ basic_blueprint = {
 
 blueprint_3 = {
     "type": "system/SIMOS/Blueprint",
-    "name": "Blueprint3",
+    "name": "blueprint_3",
     "description": "Second blueprint",
     "attributes": [
         {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
