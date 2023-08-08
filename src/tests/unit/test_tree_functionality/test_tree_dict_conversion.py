@@ -40,11 +40,9 @@ class TreeNodeDictConversion(unittest.TestCase):
                     "type": "blueprint_3",
                     "_blueprint": blueprint_3,
                     "reference": {
-                        "_id": "5",
-                        "name": "Reference",
-                        "description": "",
-                        "type": "basic_blueprint",
-                        "_blueprint": basic_blueprint,
+                        "address": "$5",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
             },
@@ -92,11 +90,9 @@ class TreeNodeDictConversion(unittest.TestCase):
                     "description": "",
                     "type": "blueprint_3",
                     "reference": {
-                        "_id": "5",
-                        "name": "Reference",
-                        "description": "",
-                        "type": "basic_blueprint",
-                        "nested": {},
+                        "address": "$5",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
             },
@@ -134,11 +130,9 @@ class TreeNodeDictConversion(unittest.TestCase):
                     "type": "blueprint_3",
                     "_blueprint": blueprint_3,
                     "reference": {
-                        "_id": "5",
-                        "name": "Reference",
-                        "description": "",
-                        "type": "basic_blueprint",
-                        "_blueprint": basic_blueprint,
+                        "address": "$5",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
             },
@@ -182,11 +176,9 @@ class TreeNodeDictConversion(unittest.TestCase):
                     "description": "",
                     "type": "blueprint_3",
                     "reference": {
-                        "_id": "5",
-                        "name": "Reference",
-                        "description": "",
-                        "type": "basic_blueprint",
-                        "nested": {},
+                        "address": "$5",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
             },
@@ -204,7 +196,24 @@ class TreeNodeDictConversion(unittest.TestCase):
         assert get_and_print_diff(actual, tree_node_to_dict(root)) == []
 
     def test_to_dict(self):
-        root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
+        root_data = {
+            "_id": 1,
+            "name": "root",
+            "description": "",
+            "type": "all_contained_cases_blueprint",
+            "reference": {
+                "name": "Reference-1",
+                "description": "",
+                "type": "basic_blueprint",
+            },
+            "nested": {
+                "name": "Nested",
+                "description": "",
+                "type": "basic_blueprint",
+                "nested": {"name": "nested2", "type": "blueprint_3"},
+            },
+            "references": [],
+        }
         root = Node(
             recipe_provider=mock_storage_recipe_provider,
             key="root",
