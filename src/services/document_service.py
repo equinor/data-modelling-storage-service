@@ -33,7 +33,7 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS, BuiltinDataTypes, StorageDataTypes
-from restful.request_types.shared import Entity, ReferenceEntity
+from restful.request_types.shared import Entity
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
@@ -187,11 +187,7 @@ class DocumentService:
         ref_dict = tree_node_to_ref_dict(node)
 
         # If the node is not contained, and has data, save it!
-        if not node.storage_contained and ref_dict:
-            # To ensure the node has a _id
-            if node.uid is None:
-                raise ApplicationException(f"The document with name `{node.name}` is missing uid")
-
+        if not node.storage_contained and ref_dict and node.uid is not None:
             # Expand this when adding new repositories requiring PATH
             if isinstance(repository, ZipFileClient):
                 ref_dict["__path__"] = path
@@ -332,6 +328,8 @@ class DocumentService:
 
         if node.attribute.attribute_type != BuiltinDataTypes.OBJECT.value:
             validate_entity(data, self.get_blueprint, self.get_blueprint(node.attribute.attribute_type), "extend")
+            # TODO consider validating link reference objects if the data parameter is of type system/SIMOS/Reference.
+
         node.update(data)
         if files:
             self._merge_entity_and_files(node, files)
@@ -400,7 +398,7 @@ class DocumentService:
         self,
         address: Address,
         document: dict,
-        files: dict[str, BinaryIO],
+        files: dict[str, BinaryIO] | None = None,
         update_uncontained=False,
     ):
         """Add en entity to path
@@ -514,36 +512,6 @@ class DocumentService:
             document_id = document_id[1:]
         lookup = data_source.get_access_control(document_id)
         return lookup.acl
-
-    def insert_reference(self, address: Address, reference: ReferenceEntity) -> dict:
-        attribute_node: Node = self.get_document(address)
-        root: Node = attribute_node.parent.find_parent()
-
-        # Check that target exists and has correct values
-        # The SIMOS/Entity type can reference any type (used by Package)
-        referenced_document: Node = self.get_document(Address(reference.address, address.data_source))
-        if not referenced_document:
-            raise NotFoundException(debug=f"{address.data_source}/{referenced_document['_id']}")
-        if BuiltinDataTypes.OBJECT.value != attribute_node.type != referenced_document.type:
-            raise BadRequestException(
-                f"The referenced entity should be of type '{attribute_node.type}'"
-                f", but was '{referenced_document.type}'"
-            )
-
-        # If the node to update is a list, append to end
-        if attribute_node.is_array():
-            referenced_document.attribute = attribute_node.attribute
-            attribute_node.add_child(referenced_document)
-        else:
-            attribute_node.entity = tree_node_to_dict(referenced_document)
-            attribute_node.uid = str(referenced_document.uid)
-            attribute_node.type = referenced_document.type
-
-        self.save(root, address.data_source, update_uncontained=False)
-
-        logger.info(f"Inserted reference '{referenced_document.uid}'" f" in '{address}'")
-
-        return tree_node_to_dict(root)
 
     def remove_reference(self, address: Address) -> dict:
         attribute_node: Node = self.get_document(address)

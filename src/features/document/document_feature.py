@@ -78,6 +78,11 @@ def add_document(
       - Reference to package by id: PROTOCOL://DATA SOURCE/$ID
       - Reference to package by path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE
       The PROTOCOL is optional, and the default is dmss.
+
+    This endpoint can be used for:
+    - Adding elements to a list attribute in an entity.
+    - Adding a new document to a package / data source
+    - Adding an object to an entity (for example filling in an optional, complex attribute)
     """
     return add_document_use_case(
         user=user,

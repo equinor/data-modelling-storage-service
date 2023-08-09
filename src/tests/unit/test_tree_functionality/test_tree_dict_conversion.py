@@ -363,3 +363,62 @@ class TreeNodeDictConversion(unittest.TestCase):
         assert "aOptionalNestedObject" not in doc and "aOptionalNestedObject" not in tree_node_to_dict(root)
         assert "optionalNumberList" not in doc and "optionalNumberList" not in tree_node_to_dict(root)
         assert "optionalObjectList" not in doc and "optionalObjectList" not in tree_node_to_dict(root)
+
+    def test_tree_node_to_ref_dict_for_references(self):
+        reference_1 = {
+            "address": "$22",
+            "type": SIMOS.REFERENCE.value,
+            "referenceType": REFERENCE_TYPES.LINK.value,
+        }
+        reference_2 = {
+            "address": "$33",
+            "type": SIMOS.REFERENCE.value,
+            "referenceType": REFERENCE_TYPES.LINK.value,
+        }
+        uncontained_in_every_way = [reference_1, reference_2]
+        document = {
+            "_id": "1",
+            "name": "Parent",
+            "description": "",
+            "type": "uncontained_list_blueprint",
+            "uncontained_in_every_way": [reference_1, reference_2],
+        }
+
+        parent_node: Node = Node(
+            recipe_provider=mock_storage_recipe_provider,
+            key="",
+            uid="1",
+            entity=document,
+            blueprint_provider=get_blueprint,
+            attribute=BlueprintAttribute(name="", attribute_type="uncontained_list_blueprint"),
+        )
+        uncontained_in_every_way_node = ListNode(
+            recipe_provider=mock_storage_recipe_provider,
+            key="uncontained_in_every_way",
+            uid="1.uncontained_in_every_way",
+            entity=uncontained_in_every_way,
+            blueprint_provider=get_blueprint,
+            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+        )
+        reference_1_node = Node(
+            recipe_provider=mock_storage_recipe_provider,
+            key="0",
+            uid="1.uncontained_in_every_way.0",
+            entity=reference_1,
+            blueprint_provider=get_blueprint,
+            attribute=BlueprintAttribute(name="", attribute_type="dmss://system/SIMOS/Reference"),
+        )
+        reference_2_node = Node(
+            recipe_provider=mock_storage_recipe_provider,
+            key="1",
+            uid="1.uncontained_in_every_way.1",
+            entity=reference_2,
+            blueprint_provider=get_blueprint,
+            attribute=BlueprintAttribute(name="", attribute_type="dmss://system/SIMOS/Reference"),
+        )
+        uncontained_in_every_way_node.children.append(reference_1_node)
+        uncontained_in_every_way_node.children.append(reference_2_node)
+        parent_node.children.append(uncontained_in_every_way_node)
+        parent_document = tree_node_to_ref_dict(parent_node)
+        assert parent_document["uncontained_in_every_way"][0] == reference_1
+        assert parent_document["uncontained_in_every_way"][1] == reference_2
