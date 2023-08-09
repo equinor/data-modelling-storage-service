@@ -1,12 +1,10 @@
 import unittest
+from copy import deepcopy
 from unittest import mock
 
-from pydantic import ValidationError
-
 from common.address import Address
-from common.exceptions import BadRequestException, NotFoundException
+from common.exceptions import ValidationException
 from enums import REFERENCE_TYPES, SIMOS
-from restful.request_types.shared import ReferenceEntity
 from tests.unit.mock_utils import get_mock_document_service
 
 
@@ -20,7 +18,11 @@ class ReferenceTestCase(unittest.TestCase):
                 "name": "Parent",
                 "description": "",
                 "type": "uncontained_blueprint",
-                "uncontained_in_every_way": {},
+                "uncontained_in_every_way": {
+                    "address": "$123123123",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.LINK.value,
+                },
             },
             "2d7c3249-985d-43d2-83cf-a887e440825a": {
                 "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
@@ -42,89 +44,10 @@ class ReferenceTestCase(unittest.TestCase):
             "type": SIMOS.REFERENCE.value,
             "referenceType": REFERENCE_TYPES.LINK.value,
         }
-        document_service.insert_reference(
-            Address("$1.uncontained_in_every_way", "testing"),
-            ReferenceEntity.parse_obj(reference),
+        document_service.update_document(
+            Address("$1.uncontained_in_every_way", "testing"), reference, update_uncontained=False
         )
         assert doc_storage["1"]["uncontained_in_every_way"] == reference
-
-    def test_insert_reference_target_does_not_exist(self):
-        repository = mock.Mock()
-
-        doc_storage = {
-            "1": {
-                "_id": "1",
-                "name": "Parent",
-                "description": "",
-                "type": "uncontained_blueprint",
-                "uncontained_in_every_way": {},
-            }
-        }
-
-        def mock_get(document_id: str):
-            try:
-                return doc_storage[str(document_id)]
-            except KeyError:
-                raise NotFoundException(f"{document_id} was not found in the 'test' data-sources lookupTable")
-
-        def mock_update(entity: dict, *args, **kwargs):
-            doc_storage[entity["_id"]] = entity
-            return None
-
-        repository.get = mock_get
-        repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
-
-        with self.assertRaises(NotFoundException):
-            document_service.insert_reference(
-                Address("$1.uncontained_in_every_way", "testing"),
-                ReferenceEntity.parse_obj(
-                    {
-                        "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
-                        "type": SIMOS.REFERENCE.value,
-                        "referenceType": REFERENCE_TYPES.LINK.value,
-                    }
-                ),
-            )
-
-    def test_insert_reference_target_exists_but_wrong_type(self):
-        repository = mock.Mock()
-
-        doc_storage = {
-            "1": {
-                "_id": "1",
-                "name": "Parent",
-                "description": "",
-                "type": "uncontained_blueprint",
-                "uncontained_in_every_way": {},
-            },
-            "2d7c3249-985d-43d2-83cf-a887e440825a": {
-                "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
-                "name": "something",
-                "description": "hgallo",
-                "type": "ExtendedBlueprint",
-                "another_value": "hei du",
-            },
-        }
-
-        def mock_update(entity: dict, *args, **kwargs):
-            doc_storage[entity["_id"]] = entity
-
-        repository.get = lambda x: doc_storage[str(x)]
-        repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
-
-        with self.assertRaises(BadRequestException):
-            document_service.insert_reference(
-                Address("$1.uncontained_in_every_way", "testing"),
-                ReferenceEntity.parse_obj(
-                    {
-                        "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
-                        "type": SIMOS.REFERENCE.value,
-                        "referenceType": REFERENCE_TYPES.LINK.value,
-                    }
-                ),
-            )
 
     def test_insert_reference_too_many_attributes(self):
         repository = mock.Mock()
@@ -135,7 +58,11 @@ class ReferenceTestCase(unittest.TestCase):
                 "name": "Parent",
                 "description": "",
                 "type": "uncontained_blueprint",
-                "uncontained_in_every_way": {},
+                "uncontained_in_every_way": {
+                    "address": "$123123123",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.LINK.value,
+                },
             },
             "2d7c3249-985d-43d2-83cf-a887e440825a": {
                 "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
@@ -156,23 +83,16 @@ class ReferenceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        document_service.insert_reference(
-            Address("$1.uncontained_in_every_way", "testing"),
-            ReferenceEntity.parse_obj(
-                {
-                    "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
-                    "description": "hallO",
-                    "something": "something",
-                    "type": SIMOS.REFERENCE.value,
-                    "referenceType": REFERENCE_TYPES.LINK.value,
-                }
-            ),
-        )
-        assert doc_storage["1"]["uncontained_in_every_way"] == {
+        reference_entity = {
             "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
+            "description": "hallO",
+            "something": "something",
             "type": SIMOS.REFERENCE.value,
             "referenceType": REFERENCE_TYPES.LINK.value,
         }
+
+        with self.assertRaises(ValidationException):
+            document_service.update_document(Address("$1.uncontained_in_every_way", "testing"), reference_entity)
 
     def test_insert_reference_missing_required_attribute(self):
         repository = mock.Mock()
@@ -183,7 +103,11 @@ class ReferenceTestCase(unittest.TestCase):
                 "name": "Parent",
                 "description": "",
                 "type": "uncontained_blueprint",
-                "uncontained_in_every_way": {},
+                "uncontained_in_every_way": {
+                    "address": "$123123123",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.LINK.value,
+                },
             }
         }
 
@@ -198,10 +122,10 @@ class ReferenceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        with self.assertRaises(ValidationError):
-            document_service.insert_reference(
-                Address("$1.uncontained_in_every_way", "testing"),
-                ReferenceEntity.parse_obj({"_id": "something", "type": "something"}),
+        reference_entity_with_missing_attribute = {"address": "$123", "type": SIMOS.REFERENCE.value}
+        with self.assertRaises(ValidationException):
+            document_service.update_document(
+                Address("$1.uncontained_in_every_way", "testing"), reference_entity_with_missing_attribute
             )
 
     def test_remove_reference(self):
@@ -370,8 +294,6 @@ class ReferenceTestCase(unittest.TestCase):
             "type": SIMOS.REFERENCE.value,
             "referenceType": REFERENCE_TYPES.LINK.value,
         }
-        document_service.insert_reference(
-            Address("$1.uncontained_in_every_way", "testing"), ReferenceEntity(**reference)
-        )
+        document_service.add(Address("$1.uncontained_in_every_way", "testing"), reference, update_uncontained=True)
         assert len(doc_storage["1"]["uncontained_in_every_way"]) == 2
         assert doc_storage["1"]["uncontained_in_every_way"][1] == reference

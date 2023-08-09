@@ -29,7 +29,7 @@ def get_engine_package_node() -> Node:
     engine_package_content_bp_attribute = BlueprintAttribute(
         name="content", attribute_type="object", type="dmss://system/SIMOS/BlueprintAttribute"
     )
-    engine_entity_ref = {"address": "123", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value}
+    engine_entity_ref = {"address": "$123", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value}
 
     engine_package_content: ListNode = ListNode(
         key="content",

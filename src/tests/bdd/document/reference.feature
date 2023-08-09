@@ -28,32 +28,18 @@ Feature: Add and remove references
       "attributes": []
     }
     """
-    Given i access the resource url "/api/reference/test-DS/$1.content"
-    When i make a "PUT" request
+    Given i access the resource url "/api/documents/test-DS/$1.content"
+    When i make a "POST" request with "1" files
     """
     {
-      "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
-      "type": "dmss://system/SIMOS/Reference",
-      "referenceType": "link"
+    "document": {
+        "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+        "type": "dmss://system/SIMOS/Reference",
+        "referenceType": "link"
+      }
     }
     """
     Then the response status should be "OK"
-    And the response should contain
-    """
-    {
-      "name": "TestData",
-      "description": "",
-      "type": "dmss://system/SIMOS/Package",
-      "content": [
-        {
-          "name": "some-blueprint",
-          "type": "dmss://system/SIMOS/Blueprint",
-          "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
-        }
-    ],
-      "isRoot": true
-    }
-    """
     Given i access the resource url "/api/reference/test-DS/$1.content[0]"
     When i make a "DELETE" request
     Then the response status should be "OK"
@@ -155,29 +141,18 @@ Feature: Add and remove references
     "Bigness": 10
     }
     """
-    Given i access the resource url "/api/reference/test-DS/$4.Mooring"
-    When i make a "PUT" request
+    Given i access the resource url "/api/documents/test-DS/$4.Mooring"
+    When i make a "POST" request with "1" files
     """
     {
-      "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
-      "type": "dmss://system/SIMOS/Reference",
-      "referenceType": "link"
-    }
-    """
-    Then the response status should be "OK"
-    And the response should contain
-    """
-    {
-      "name": "myTurbine",
-      "type": "dmss://test-DS/TestData/Turbine",
-      "description": "This is a wind turbine demoing uncontained relationships",
-      "Mooring": {
-        "name": "myMooring",
-        "type": "dmss://test-DS/TestData/Mooring",
-        "_id": "3f9ff99f-9cb5-4afc-947b-a3224eee341f"
+      "document": {
+        "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+        "type": "dmss://system/SIMOS/Reference",
+        "referenceType": "link"
       }
     }
     """
+    Then the response status should be "OK"
     Given i access the resource url "/api/reference/test-DS/$4.Mooring"
     When i make a "DELETE" request
     Then the response status should be "OK"

@@ -1,4 +1,5 @@
 from domain_classes.blueprint import Blueprint
+from enums import SIMOS
 
 all_contained_cases_blueprint = {
     "type": "system/SIMOS/Blueprint",
@@ -213,6 +214,22 @@ reference_blueprint = {
     ],
 }
 
+uncontained_list_blueprint = {
+    "type": SIMOS.BLUEPRINT.value,
+    "name": "uncontained_list_blueprint",
+    "description": "uncontained_list_blueprint",
+    "extends": [SIMOS.NAMED_ENTITY.value],
+    "attributes": [
+        {
+            "attributeType": "basic_blueprint",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
+            "name": "uncontained_in_every_way",
+            "contained": False,
+            "dimensions": "*",
+        },
+    ],
+}
+
 
 def get_blueprint(type: str):
     if type == "all_contained_cases_blueprint":
@@ -237,4 +254,6 @@ def get_blueprint(type: str):
         return Blueprint(signal_blueprint)
     if "system/SIMOS/Reference" in type:
         return Blueprint(reference_blueprint)
+    if type == "uncontained_list_blueprint":
+        return Blueprint(uncontained_list_blueprint, type)
     return None

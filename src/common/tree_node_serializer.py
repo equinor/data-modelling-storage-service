@@ -102,7 +102,9 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
             # If the content of the list is not contained, i.e. references.
             if not child.storage_contained:
                 data[child.key] = [
-                    {
+                    child.entity
+                    if child.type == SIMOS.REFERENCE.value
+                    else {
                         "type": SIMOS.REFERENCE.value,
                         "address": f"${child.uid}",
                         "referenceType": REFERENCE_TYPES.STORAGE.value
