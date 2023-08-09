@@ -2,4 +2,4 @@
 # Order matter. If two rules match the same file, only the last one is used
 
 # Repo owners
-*       @KristianKjerstad @netr0m @soofstad @eoaksnes @ingeridhellen
+*       @equinor/development-framework
