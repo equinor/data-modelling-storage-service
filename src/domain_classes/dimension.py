@@ -9,7 +9,7 @@ class Dimension:
         - "*,*" is a two dimensional array of any length.
         - "2,1" is a 2 dimensional array where inner arrays have length one - for example [[1], [3]]
 
-        type: define what type the values in the array have. Primitive types (bool, int, str, etc)
+        attribute_type: define what type the values in the array have. Primitive types: boolean, integer, string and number)
         are converted to python types. For complex types, for example "dmss://system/SIMOS/Package",
         a string value is stored.
         """
