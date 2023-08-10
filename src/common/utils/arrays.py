@@ -28,7 +28,7 @@ def create_default_array(
     For dimension ["*"], default_array_value can be used to create an array with a given default value.
     """
     dimensions = dimension.dimensions
-    if dimensions == [""]:
+    if not dimension.is_array():
         raise Exception("This attribute is not an array!")
     if len(dimensions) == 1:
         if dimensions[0] == "*":
@@ -48,28 +48,15 @@ def create_default_array(
             # For fixed complex types, create the entity with default values. Set name from list index.
             return [create_entity_class(blueprint_provider, dimension.type).entity for n in range(int(dimensions[0]))]
 
-    if dimensions[0] == "*":
-        # If the size of the rank is "*" we only create one nested list.
-        nested_list = [
-            create_default_array(
-                Dimension(remove_first_and_join(dimensions), dimension.type),
-                blueprint_provider,
-                create_entity_class,
-                default_array_value,
-            )
-        ]
-    else:
-        # If the size of the rank in NOT "*", we expect an Integer, and create n number of nested lists.
-        nested_list = [
-            create_default_array(
-                Dimension(remove_first_and_join(dimensions), dimension.type),
-                blueprint_provider,
-                create_entity_class,
-                default_array_value,
-            )
-            for n in range(int(dimensions[0]))
-        ]
-    return nested_list
+    return [
+        create_default_array(
+            Dimension(remove_first_and_join(dimensions), dimension.type),
+            blueprint_provider,
+            create_entity_class,
+            default_array_value,
+        )
+        for n in range(1 if dimensions[0] == "*" else int(dimensions[0]))
+    ]
 
 
 def remove_first_and_join(input_list: list[str]) -> str:
