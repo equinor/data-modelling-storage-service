@@ -57,7 +57,7 @@ class CreateEntity:
 
         if default_value is None:
             if attr.is_array:
-                return attr.dimensions.create_default_array_recursive(blueprint_provider, attr)
+                return create_default_array(attr.dimensions, blueprint_provider, CreateEntity)
             if type == "boolean":
                 return False
             if type == "number":
@@ -88,7 +88,7 @@ class CreateEntity:
                 # skip attribute if it is optional
                 continue
             if attr.attribute_type in PRIMITIVES:
-                if not attr.is_optional and attr.name not in entity:
+                if attr.name not in entity:
                     entity[attr.name] = CreateEntity.parse_value(attr=attr, blueprint_provider=self.blueprint_provider)
             else:
                 blueprint = (
