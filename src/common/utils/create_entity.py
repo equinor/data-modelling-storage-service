@@ -31,6 +31,7 @@ class CreateEntity:
       an empty list, the number 0, etc.
     - optional attributes value are not included (also true if default value is provided).
     """
+
     def __init__(self, blueprint_provider: Callable, type: str):
         if type == BuiltinDataTypes.OBJECT.value:
             type = SIMOS.ENTITY.value

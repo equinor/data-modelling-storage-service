@@ -1,6 +1,5 @@
 from typing import Any, Callable, Type
 
-from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dimension import Dimension
 
 
@@ -10,14 +9,14 @@ def create_default_array(
     create_entity_class: Type[
         Any
     ],  # TODO use Type[CreateEntity]. can't use it now due to circular import. Needs refactoring.
-    blueprint_attribute: BlueprintAttribute,
+    default_array_value: list[Any] = None,
 ) -> list:
     dimensions = dimension.dimensions
     if dimensions == [""]:
         raise Exception("This attribute is not an array!")
     if len(dimensions) == 1:
         if dimensions[0] == "*":
-            return blueprint_attribute.default if blueprint_attribute.default is not None else []
+            return default_array_value if default_array_value is not None else []
 
         # TODO use default value from blueprint if it exists for cases other than dimensions[0] == "*"
         # Return a list initialized with default values for the size of the array.
@@ -40,7 +39,7 @@ def create_default_array(
                 Dimension(remove_first_and_join(dimensions), dimension.type),
                 blueprint_provider,
                 create_entity_class,
-                blueprint_attribute,
+                default_array_value,
             )
         ]
     else:
@@ -50,7 +49,7 @@ def create_default_array(
                 Dimension(remove_first_and_join(dimensions), dimension.type),
                 blueprint_provider,
                 create_entity_class,
-                blueprint_attribute,
+                default_array_value,
             )
             for n in range(int(dimensions[0]))
         ]
