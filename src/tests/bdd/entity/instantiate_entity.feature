@@ -65,7 +65,6 @@ Feature: Instantiate entity
           "optional": false,
           "dimensions": "*",
           "contained": false,
-
           "default": [
             {
               "address": "$5",
@@ -94,7 +93,8 @@ Feature: Instantiate entity
     {
       "type": "dmss://data-source-name/root_package/Employee",
       "name": "BigBossMan",
-      "isManager": true
+      "isManager": true,
+      "managers": []
     }
     """
 
