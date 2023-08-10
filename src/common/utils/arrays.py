@@ -11,6 +11,22 @@ def create_default_array(
     ],  # TODO use Type[CreateEntity]. can't use it now due to circular import. Needs refactoring.
     default_array_value: list[Any] = None,
 ) -> list:
+    """
+    Create an array with default values with a given dimension.
+
+    - Dimension.dimensions = ["2,1"] represents a 2 dimensional array where inner arrays have length one - for example [[1], [3]]
+    - Dimension.dimensions = ["*"] represents a one dimensional array of any length.
+
+    Hard coded default values for different types (type is specified in the Dimension class):
+    - integer: 0
+    - number: 0.00
+    - boolean: False
+    - string: ""
+
+    For complex types (For example dmss://system/SIMOS/Package), default value is found from the 'create_entity_class'.
+
+    For dimension ["*"], default_array_value can be used to create an array with a given default value.
+    """
     dimensions = dimension.dimensions
     if dimensions == [""]:
         raise Exception("This attribute is not an array!")
