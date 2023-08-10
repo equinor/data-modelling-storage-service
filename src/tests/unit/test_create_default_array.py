@@ -59,6 +59,7 @@ higher_rank_array_blueprint = {
 
 empty_string_blueprint_attribute = BlueprintAttribute(name="", attribute_type="string")
 empty_integer_blueprint_attribute = BlueprintAttribute(name="", attribute_type="integer")
+integer_blueprint_attribute_with_default = BlueprintAttribute(name="", attribute_type="integer", default=[22, 33, 44])
 
 file_repository_test = LocalFileRepository()
 
@@ -80,12 +81,20 @@ blueprint_provider = document_service.get_blueprint
 
 
 class DefaultArrayTestCase(unittest.TestCase):
-    def test_creation_of_default_array_simple(self):
-        default_array = create_default_array(
-            Dimension("*", "integer"), blueprint_provider, CreateEntity, empty_integer_blueprint_attribute
-        )
+    def test_creation_of_array_simple(self):
+        default_array = create_default_array(Dimension("*", "integer"), blueprint_provider, CreateEntity)
 
         assert default_array == []
+
+    def test_creation_of_array_simple_with_default_value(self):
+        default_array = create_default_array(
+            Dimension("*", "integer"),
+            blueprint_provider,
+            CreateEntity,
+            integer_blueprint_attribute_with_default.default,
+        )
+
+        assert default_array == integer_blueprint_attribute_with_default.default
 
     def test_creation_of_default_array_complex_type(self):
         default_array = create_default_array(
@@ -98,16 +107,12 @@ class DefaultArrayTestCase(unittest.TestCase):
         assert default_array == [[{"name": "", "type": "dmss://system/SIMOS/Package", "isRoot": False}]]
 
     def test_creation_of_default_array_unfixed_rank2(self):
-        default_array = create_default_array(
-            Dimension("*,*", "integer"), blueprint_provider, CreateEntity, empty_integer_blueprint_attribute
-        )
+        default_array = create_default_array(Dimension("*,*", "integer"), blueprint_provider, CreateEntity)
 
         assert default_array == [[]]
 
     def test_creation_of_default_array_fixed_rank2(self):
-        default_array = create_default_array(
-            Dimension("2,1", "integer"), blueprint_provider, CreateEntity, empty_integer_blueprint_attribute
-        )
+        default_array = create_default_array(Dimension("2,1", "integer"), blueprint_provider, CreateEntity)
         # fmt: off
         assert default_array == [
             [0],
@@ -116,9 +121,7 @@ class DefaultArrayTestCase(unittest.TestCase):
         # fmt: on
 
     def test_creation_of_default_array_mixed_rank_string(self):
-        default_array = create_default_array(
-            Dimension("2,*,3", "string"), blueprint_provider, CreateEntity, empty_string_blueprint_attribute
-        )
+        default_array = create_default_array(Dimension("2,*,3", "string"), blueprint_provider, CreateEntity)
         # fmt: off
         assert default_array == [
             [["", "", ""]],
@@ -127,17 +130,13 @@ class DefaultArrayTestCase(unittest.TestCase):
         # fmt: on
 
     def test_creation_of_default_array_mixed_rank3_int(self):
-        default_array = create_default_array(
-            Dimension("2,2,*", "integer"), blueprint_provider, CreateEntity, empty_integer_blueprint_attribute
-        )
+        default_array = create_default_array(Dimension("2,2,*", "integer"), blueprint_provider, CreateEntity)
         expected = [[[], []], [[], []]]
 
         assert default_array == expected
 
     def test_creation_of_default_array_mixed_rank3_bool(self):
-        default_array = create_default_array(
-            Dimension("1,2,1", "boolean"), blueprint_provider, CreateEntity, empty_string_blueprint_attribute
-        )
+        default_array = create_default_array(Dimension("1,2,1", "boolean"), blueprint_provider, CreateEntity)
         expected = [[[False], [False]]]
 
         assert default_array == expected
