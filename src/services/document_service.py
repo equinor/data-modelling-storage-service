@@ -413,10 +413,67 @@ class DocumentService:
         if not address.path:  # We're adding something to the dataSource itself
             return self._add_document_to_data_source(address.data_source, document, update_uncontained)
 
-        target: Node = self.get_document(address, depth=99)
+        try:
+            target: Node = self.get_document(address, depth=99)
+        except NotFoundException:
+            target = None
 
         if not target:
-            raise NotFoundException(f"Could not find '{address}' in data source '{address.data_source}'")
+            # If target does not exist, there are 2 cases to consider:
+            #   1) the target is an optional attribute that does not exist yet. In that case, we set the target to be
+            #      the parent of entity referenced by 'address'.
+            #   2) the address is wrong. In that case, raise Exception.
+
+            split_address_path: list[str] = address.path.rsplit(".", 1)
+
+            if len(split_address_path) <= 1 and split_address_path[0] == address.path:
+                # Raising NotFoundException, since the get_document() did not find the document
+                # with address=address.path in the above try except statement
+                raise NotFoundException(f"Could not find document {address}")
+
+            last_attribute_in_address: str = split_address_path.pop()
+            parent_address_as_string: str = ".".join(split_address_path)
+
+            parent_address: Address = Address(
+                protocol=address.protocol, path=parent_address_as_string, data_source=address.data_source
+            )
+            parent_node: Node = self.get_document(parent_address, depth=99)
+            parent_blueprint = parent_node.blueprint
+            if (
+                len(
+                    [
+                        blueprint_attribute
+                        for blueprint_attribute in parent_blueprint.attributes
+                        if blueprint_attribute.name == last_attribute_in_address
+                    ]
+                )
+                == 0
+            ):
+                raise NotFoundException(
+                    f"Could not find attribute {last_attribute_in_address} in blueprint for {parent_blueprint.name}"
+                )
+
+            parent_document = parent_node.entity
+            attribute_to_update = [
+                blueprint_attribute
+                for blueprint_attribute in parent_blueprint.attributes
+                if blueprint_attribute.name == last_attribute_in_address
+            ][0]
+            if attribute_to_update.is_array:
+                parent_document[last_attribute_in_address] = [document]
+            else:
+                parent_document[last_attribute_in_address] = document
+
+            target = parent_node
+            new_node = tree_node_from_dict(
+                {**parent_document},
+                blueprint_provider=self.get_blueprint,
+                node_attribute=BlueprintAttribute(name=target.attribute.name, attribute_type=entity.type),
+                recipe_provider=self.get_storage_recipes,
+            )
+            self.save(new_node, address.data_source, update_uncontained=update_uncontained)
+
+            return {"uid": f"{new_node.node_id}.{last_attribute_in_address}"}
 
         if target.type != SIMOS.PACKAGE.value and target.type != "object":
             validate_entity(
