@@ -425,7 +425,7 @@ Feature: Explorer - Add file
     {
     "data": null,
     "debug": "Document with id '-1' was not found in the 'test-DS' data-source. The requested resource could not be found",
-    "message": "Failed to get document referenced with 'dmss://test-DS/$-1.documents'",
+    "message": "Failed to get document referenced with 'dmss://test-DS/$-1'",
     "status": 404,
     "type": "NotFoundException"
     }
