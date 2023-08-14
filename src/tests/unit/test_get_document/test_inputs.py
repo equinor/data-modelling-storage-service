@@ -85,54 +85,28 @@ class GetDocumentInputTestCase(unittest.TestCase):
             documents = list(filter(lambda x: key in x and x[key] == value, documents))
         return documents
 
-    def test_attribute_no_resolve(self):
-        root = tree_node_to_dict(
-            self.document_service.get_document(
-                Address.from_absolute("datasource/$1.cars[0].engine"), 0, resolve_references=False
-            )
-        )
-        assert get_and_print_diff(root, self.car_rental_company["cars"][0]["engine"]) == []
-
-    def test_attribute_resolve(self):
-        root = tree_node_to_dict(
-            self.document_service.get_document(
-                Address.from_absolute("datasource/$1.cars[0].engine"), 0, resolve_references=True
-            )
-        )
-        assert get_and_print_diff(root, self.engine) == []
-
     def test_query_no_resolve(self):
         root = tree_node_to_dict(
-            self.document_service.get_document(
-                Address.from_absolute("datasource/$1.customers(name=Jane)"), 0, resolve_references=False
-            )
+            self.document_service.get_document(Address.from_absolute("datasource/$1.customers(name=Jane)"), 0)
         )
         assert get_and_print_diff(root, self.car_rental_company["customers"][0]) == []
 
     def test_query_resolve(self):
         root = tree_node_to_dict(
-            self.document_service.get_document(
-                Address.from_absolute("datasource/$1.customers(name=Jane)"), 0, resolve_references=True
-            )
+            self.document_service.get_document(Address.from_absolute("datasource/$1.customers(name=Jane)"), 1)
         )
         assert get_and_print_diff(root, self.customer) == []
 
     def test_depth_0(self):
-        root = tree_node_to_dict(
-            self.document_service.get_document(Address.from_absolute("datasource/$1"), 0, resolve_references=True)
-        )
+        root = tree_node_to_dict(self.document_service.get_document(Address.from_absolute("datasource/$1"), 0))
         assert get_and_print_diff(root, self.car_rental_company) == []
 
-    def test_depth_1(self):
-        root = tree_node_to_dict(
-            self.document_service.get_document(Address.from_absolute("datasource/$1"), 1, resolve_references=True)
-        )
+    def test_depth_2(self):
+        root = tree_node_to_dict(self.document_service.get_document(Address.from_absolute("datasource/$1"), 2))
         assert get_and_print_diff(root, {**self.car_rental_company, "customers": [self.customer]}) == []
 
-    def test_depth_2(self):
-        root = tree_node_to_dict(
-            self.document_service.get_document(Address.from_absolute("datasource/$1"), 2, resolve_references=True)
-        )
+    def test_depth_3(self):
+        root = tree_node_to_dict(self.document_service.get_document(Address.from_absolute("datasource/$1"), 3))
         assert (
             get_and_print_diff(
                 root,
@@ -147,29 +121,18 @@ class GetDocumentInputTestCase(unittest.TestCase):
 
     def test_nested_depth_0(self):
         root = tree_node_to_dict(
-            self.document_service.get_document(
-                Address.from_absolute("datasource/$1.cars[0]"), 0, resolve_references=True
-            )
+            self.document_service.get_document(Address.from_absolute("datasource/$1.cars[0].engine"), 0)
         )
-        assert get_and_print_diff(root, self.car_rental_company["cars"][0]) == []
+        assert get_and_print_diff(root, self.car_rental_company["cars"][0]["engine"]) == []
 
     def test_nested_depth_1(self):
         root = tree_node_to_dict(
-            self.document_service.get_document(
-                Address.from_absolute("datasource/$1.cars[0]"), 1, resolve_references=True
-            )
+            self.document_service.get_document(Address.from_absolute("datasource/$1.cars[0].engine"), 1)
         )
-        assert get_and_print_diff(root, {**self.car_rental_company["cars"][0], "engine": self.engine}) == []
+        assert get_and_print_diff(root, self.engine) == []
 
     def test_nested_depth_2(self):
         root = tree_node_to_dict(
-            self.document_service.get_document(
-                Address.from_absolute("datasource/$1.cars[0]"), 2, resolve_references=True
-            )
+            self.document_service.get_document(Address.from_absolute("datasource/$1.cars[0].engine"), 2)
         )
-        assert (
-            get_and_print_diff(
-                root, {**self.car_rental_company["cars"][0], "engine": {**self.engine, "fuelPump": self.fuel_pump}}
-            )
-            == []
-        )
+        assert get_and_print_diff(root, {**self.engine, "fuelPump": self.fuel_pump}) == []

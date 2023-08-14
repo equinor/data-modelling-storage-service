@@ -323,7 +323,7 @@ class TreeNodeDictConversion(unittest.TestCase):
         assert engine_package_dict["content"][0] == {
             "address": "$123",
             "type": SIMOS.REFERENCE.value,
-            "referenceType": REFERENCE_TYPES.STORAGE.value,
+            "referenceType": REFERENCE_TYPES.LINK.value,
         }
 
     def test_tree_node_to_ref_dict_2(self):

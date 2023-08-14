@@ -56,9 +56,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(lambda x, y: document_repository)
         with pytest.raises(Exception, match=r"The protocol 'wrong' is not supported"):
-            tree_node_to_dict(
-                document_service.get_document(Address.from_absolute("datasource/$1"), resolve_references=True, depth=9)
-            )
+            tree_node_to_dict(document_service.get_document(Address.from_absolute("datasource/$1"), depth=9))
 
     def test_references(self):
         my_car_rental = {
@@ -209,7 +207,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
             "name": "engines",
             "isRoot": True,
             "content": [
-                {"address": "$3", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                {"address": "$3", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.STORAGE.value},
             ],
         }
 
@@ -219,7 +217,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                 "name": "parts",
                 "isRoot": True,
                 "content": [
-                    {"address": "$2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                    {"address": "$2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.STORAGE.value},
                 ],
             },
             my_engine,
@@ -252,11 +250,9 @@ class GetDocumentResolveTestCase(unittest.TestCase):
             return document_repository
 
         document_service = get_mock_document_service(mock_data_source)
-        actual = tree_node_to_dict(
-            document_service.get_document(Address.from_absolute("test_data/$2"), resolve_references=True, depth=99)
-        )
+        actual = tree_node_to_dict(document_service.get_document(Address.from_absolute("test_data/$2"), depth=99))
         complex_package = tree_node_to_dict(
-            document_service.get_document(Address.from_absolute("test_data/$1"), resolve_references=True, depth=99)
+            document_service.get_document(Address.from_absolute("test_data/$1"), depth=99)
         )
 
         assert isinstance(actual, dict)
