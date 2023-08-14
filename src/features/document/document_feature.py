@@ -8,10 +8,10 @@ from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.responses import create_response, responses
 
-from .use_cases.add_document_to_path_use_case import add_document_use_case
+from .use_cases.add_document_use_case import add_document_use_case
 from .use_cases.add_raw_use_case import add_raw_use_case
 from .use_cases.get_document_use_case import get_document_use_case
-from .use_cases.remove import remove_use_case
+from .use_cases.remove_use_case import remove_use_case
 from .use_cases.update_document_use_case import update_document_use_case
 
 router = APIRouter(tags=["default", "document"], prefix="/documents")
