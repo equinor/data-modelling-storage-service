@@ -208,15 +208,16 @@ class DocumentService:
         return ref_dict
 
     # TODO: Dont return Node. Doing this is ~33% slower
-    def get_document(self, address: Address, depth: int = 0, resolve_references: bool = False) -> Node | ListNode:
+    def get_document(self, address: Address, depth: int = 0) -> Node | ListNode:
         """
         Get document by address.
 
         :param address: Address to the entity you wish to obtain
-        :param depth: depth=0 means that the entire entity will be returned, except any references it may contain
-            along the tree. depth=1 means that the entity's direct child references will be returned as well.
-        :param resolve_references: If false, references will not be resolved, no
-            matter the depth. If true, they will be resolved if the depth param allows it
+        :param depth:
+            depth is used to control if references (storage and link) should be resolved (it does not affect contained attributes)
+              depth=0 means that if the address is pointing to a reference it will be returned directly without being resolved first.
+              depth=1 means that if the address is pointing to a reference it will be resolved before returned. Child references will not be resolved.
+              depth=2 means that the entity's direct child references will be returned as well.
         """
         try:
             resolved_address: ResolvedAddress = resolve_address(address, self.get_data_source)
@@ -229,8 +230,7 @@ class DocumentService:
                 self.get_data_source,
                 resolved_address.document_id,
                 depth=depth + len(list(filter(lambda x: x[0] != "[", resolved_address.attribute_path))),
-                depth_count=0,
-                resolve_references=resolve_references,
+                depth_count=1,
             )
 
             node: Node = tree_node_from_dict(
@@ -380,7 +380,7 @@ class DocumentService:
         )
 
         try:
-            if self.get_document(Address(new_node.entity["name"], data_source_id), resolve_references=True, depth=99):
+            if self.get_document(Address(new_node.entity["name"], data_source_id), depth=99):
                 raise ValidationException(
                     message=f"A root package named '{new_node.entity['name']}' already exists",
                     data={"dataSource": data_source_id, "document": document},
@@ -413,7 +413,7 @@ class DocumentService:
         if not address.path:  # We're adding something to the dataSource itself
             return self._add_document_to_data_source(address.data_source, document, update_uncontained)
 
-        target: Node = self.get_document(address, resolve_references=True, depth=99)
+        target: Node = self.get_document(address, depth=99)
 
         if not target:
             raise NotFoundException(f"Could not find '{address}' in data source '{address.data_source}'")
@@ -496,7 +496,7 @@ class DocumentService:
 
         # TODO: Updating ACL for Links should only be additive
         # TODO: ACL for StorageReferences should always be identical to parent document
-        root_node = self.get_document(Address(document_id, data_source_id), 99, resolve_references=True)
+        root_node = self.get_document(Address(document_id, data_source_id), 99)
         data_source.update_access_control(root_node.node_id, acl)
         for child in root_node.children:
             for node in child.traverse():

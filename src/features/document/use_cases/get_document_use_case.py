@@ -11,12 +11,11 @@ from storage.internal.data_source_repository import get_data_source
 def get_document_use_case(
     user: User,
     address: str,
-    depth: conint(gt=-1, lt=1000) = 999,  # type: ignore
-    resolve_references: bool = False,
+    depth: conint(gt=-1, lt=1000),  # type: ignore
     repository_provider=get_data_source,
 ):
     """Get document by reference."""
     document_service = DocumentService(repository_provider=repository_provider, user=user)
     address_object = Address.from_absolute(address)
-    node: Node | ListNode = document_service.get_document(address_object, depth, resolve_references)
+    node: Node | ListNode = document_service.get_document(address_object, depth)
     return tree_node_to_dict(node)

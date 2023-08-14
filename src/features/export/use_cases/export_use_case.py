@@ -37,7 +37,7 @@ def create_zip_export(document_service: DocumentService, address: Address, user:
     tmpdir = tempfile.mkdtemp()
     archive_path = os.path.join(tmpdir, "temp_zip_archive.zip")
     resolved_address: ResolvedAddress = resolve_address(address, document_service.get_data_source)
-    document_node: Node = document_service.get_document(address, depth=999, resolve_references=True)
+    document_node: Node = document_service.get_document(address, depth=999)
 
     # non-root packages and single documents will inherit the meta information from all parents.
     document_meta = {}

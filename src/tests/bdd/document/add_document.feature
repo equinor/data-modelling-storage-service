@@ -254,7 +254,7 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation2?resolve_references=true&depth=2"
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation2?depth=2"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -282,7 +282,7 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation3?resolve_references=true&depth=2"
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation3?depth=2"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -311,7 +311,7 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/data-source-name/root_package/operation2?resolve_references=true&depth=2"
+    Given i access the resource url "/api/documents/data-source-name/root_package/operation2?depth=2"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -340,7 +340,7 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/data-source-name/root_package.content[7]?resolve_references=true&depth=2"
+    Given i access the resource url "/api/documents/data-source-name/root_package.content[7]?depth=2"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -384,7 +384,7 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation1?resolve_references=true&depth=2"
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation1?depth=3"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -451,7 +451,7 @@ Feature: Add document with document_service
       }
     """
 #     todo update document add use case such that id contains bracket notation for lists: 11.phases[0].containedResults[0]
-    Given i access the resource url "/api/documents/data-source-name/$11.phases[0].containedResults?resolve_references=true&depth=2"
+    Given i access the resource url "/api/documents/data-source-name/$11.phases[0].containedResults?depth=2"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -492,7 +492,7 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/new-phase?resolve_references=true"
+    Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/new-phase?depth=2"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain

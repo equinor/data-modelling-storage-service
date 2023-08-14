@@ -163,7 +163,7 @@ Feature: Get document
       | 6   | 3          | container_1   |             | dmss://test-source-name/TestData/TestContainer |
 
   Scenario: Get document by id
-    Given I access the resource url "/api/documents/data-source-name/$1?depth=2&resolve_references=true"
+    Given I access the resource url "/api/documents/data-source-name/$1?depth=2"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -184,7 +184,7 @@ Feature: Get document
     """
 
   Scenario: Get document by path
-    Given I access the resource url "/api/documents/dmss://data-source-name/package_1/sub_package_1/document_1?resolve_references=true"
+    Given I access the resource url "/api/documents/dmss://data-source-name/package_1/sub_package_1/document_1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -199,7 +199,7 @@ Feature: Get document
     """
 
   Scenario: Get nested resolved attribute
-    Given I access the resource url "/api/documents/data-source-name/package_1/sub_package_2/container_1?resolve_references=true"
+    Given I access the resource url "/api/documents/data-source-name/package_1/sub_package_2/container_1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -210,8 +210,8 @@ Feature: Get document
     }
     """
 
-  Scenario: Get resolved attribute
-    Given I access the resource url "/api/documents/test-source-name/$1.content[0]?resolve_references=True"
+  Scenario: Get resolved entity
+    Given I access the resource url "/api/documents/test-source-name/$1.content[0]"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -222,8 +222,8 @@ Feature: Get document
     }
     """
 
-  Scenario: Get unresolved attribute
-    Given I access the resource url "/api/documents/test-source-name/$1.content[0]?resolve_references=False"
+  Scenario: Get reference
+    Given I access the resource url "/api/documents/test-source-name/$1.content[0]?depth=0"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
