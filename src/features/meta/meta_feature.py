@@ -19,18 +19,18 @@ router = APIRouter(tags=["default", "meta"], prefix="/meta")
 )
 @create_response(JSONResponse)
 def get_meta_by_id(data_source_id: str, document_id: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """Get Meta Information About a Document. 
-    
+    """Get Meta Information About a Document.
+
     This endpoint returns meta information about a document provided document id and the id of the data source of which it is located.
 
-    Args: 
+    Args:
         data_source_id (str): The ID of the data source.
-        document_id (str): The ID of the document. 
+        document_id (str): The ID of the document.
         user (User): The authenticated user accessing the endpoint.
 
-    Returns: 
+    Returns:
         dict: A dictionary containing the meta infomation about the document
-            Example: 
+            Example:
             {
                 "type": "CORE:Meta",
                 "version": "0.0.1",
