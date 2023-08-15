@@ -31,6 +31,8 @@ def create_lookup(application: str, recipe_package: list[str] = Query(), user: U
         application (str): Name of an application. 
         recipe_package (list[str]): A list of one or more paths to packages that contain recipe links. 
             Example: ["system/SIMOS/recipe_links"]
+        user (User): The authenticated user accessing the endpoint.
+
     Returns: 
         None, with status Code 204 (No Content). 
     """

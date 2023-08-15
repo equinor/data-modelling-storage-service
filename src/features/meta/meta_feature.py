@@ -26,6 +26,7 @@ def get_meta_by_id(data_source_id: str, document_id: str, user: User = Depends(a
     Args: 
         data_source_id (str): The ID of the data source.
         document_id (str): The ID of the document. 
+        user (User): The authenticated user accessing the endpoint.
 
     Returns: 
         dict: A dictionary containing the meta infomation about the document
@@ -42,6 +43,7 @@ def get_meta_by_id(data_source_id: str, document_id: str, user: User = Depends(a
                     "protocol": "dmss"
                     }
                 ]
+
             }
     """
     return get_meta_use_case(user=user, data_source_id=data_source_id, document_id=document_id)
