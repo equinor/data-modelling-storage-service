@@ -58,6 +58,9 @@ async def list_all_pats(user: User = Depends(auth_with_jwt)) -> list[PATData]:
     
     Get a list of all personal access tokens (PATs) for the currently logged in user.
     
+    Args: 
+        user (User): The authenticated user accessing the endpoint.
+
     Returns: 
         list: A list of all personal access tokens for the currently logged in user. 
     """

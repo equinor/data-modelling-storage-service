@@ -17,6 +17,9 @@ async def get():
     This endpoint can be used to check the health status of the service. 
     It always returns a 200 OK response to indicate that the service is up and running. 
 
+    Args: 
+        user (User): The authenticated user accessing the endpoint.
+        
     Returns: 
         string: A string indicating the health status. 
             "OK"
