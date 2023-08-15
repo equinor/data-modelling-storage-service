@@ -19,8 +19,16 @@ async def upload_file(
     file: UploadFile = File(...),
     user: User = Depends(auth_w_jwt_or_pat),
 ):
-    """Upload a new binary file and create a file entity with the binary data as content.
+    """Upload a New Binary File
 
-    **file_id** The data source ID to be used for the file entity that will be created.
+    This endpoint uploads a new file and creates a file entity with the uploaded binary data as content.
+
+    Args: 
+        data_source_id (str): 
+        data (dict with a "file_id" attribute): A dict containing data source ID to be used for the file entity that will be created.
+        user (User): The authenticated user accessing the endpoint.
+
+    Returns: 
+        dict: The file entity that was created to contain the file. 
     """
     return await add_file_use_case(data_source_id, data["file_id"], file, user)
