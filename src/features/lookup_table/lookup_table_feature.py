@@ -22,13 +22,17 @@ router = APIRouter(tags=["default", "lookup-table"])
 )
 @create_response()
 def create_lookup(application: str, recipe_package: list[str] = Query(), user: User = Depends(auth_w_jwt_or_pat)):
-    """
-    Create a recipe lookup table from a package containing RecipeLinks.
-    Associate it with an application.
-    This can be used for setting Ui- and StorageRecipes for specific applications.
-
-    - **application**: name of application
-    - **recipe_package**: List with one or more paths to package(s) that contain recipe links. (Example: 'system/SIMOS/recipe_links')
+    """Creates a Recipe Lookup Table for an Application, given a Package Containing RecipeLinks. 
+    
+    This endpoint creates a lookup table for an application. This lookup table is used to find UI- and Storage recipes given a blueprint. 
+    This recipe is associated with an application, based on application name.
+    
+    Args: 
+        application (str): Name of an application. 
+        recipe_package (list[str]): A list of one or more paths to packages that contain recipe links. 
+            Example: ["system/SIMOS/recipe_links"]
+    Returns: 
+        None, with status Code 204 (No Content). 
     """
     return create_lookup_table_use_case(recipe_package, application, user)
 
@@ -41,9 +45,15 @@ def create_lookup(application: str, recipe_package: list[str] = Query(), user: U
 )
 @create_response(JSONResponse)
 def get_lookup(application: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """
-    Fetch a single lookup table.
+    """Get The Lookup Table for UI- and Storage Recipes the Provided Application
 
-    - **application**: name of application
+    This endpoint fetches the recipe lookup table for the application provided. 
+    This lookup table is used to find UI- and Storage recipes given a blueprint. 
+
+    Args: 
+        application (str): The name of the desired application. 
+    
+    Returns: 
+        dict: The recipe lookup table for the provided application. 
     """
     return get_lookup_table_use_case(application, user)

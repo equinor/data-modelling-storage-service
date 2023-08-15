@@ -12,7 +12,7 @@ router = APIRouter(tags=["default", "health_check"], prefix="/healthcheck")
     response_class=PlainTextResponse,
 )
 async def get():
-    """Health Check Endpoint.
+    """Get the Health Status Of the Service.
 
     This endpoint can be used to check the health status of the service. 
     It always returns a 200 OK response to indicate that the service is up and running. 
