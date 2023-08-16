@@ -1,8 +1,8 @@
 on:
   workflow_dispatch:
   push:
-    branches:
-      - master
+    # branches:
+    #   - master
 
 jobs:
   checks:
@@ -11,13 +11,13 @@ jobs:
   run-tests:
     uses: ./.github/workflows/testing.yml
 
-  publish-latest-docker-image:
-    needs: [checks, run-tests]
-    uses: ./.github/workflows/publish.yml
-    with:
-      image-tags: latest
-    secrets:
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  # publish-latest-docker-image:
+  #   needs: [checks, run-tests]
+  #   uses: ./.github/workflows/publish.yml
+  #   with:
+  #     image-tags: latest
+  #   secrets:
+  #     DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   release-please:
     needs: [checks, run-tests]
