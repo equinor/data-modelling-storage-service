@@ -219,4 +219,17 @@ Feature: Add document with optional attributes
      }
     """
 
+  Scenario: add to a package that does not exist should fail
+    Given i access the resource url "/api/documents/data-source-name/non-existing-package"
+    When I make a "POST" request with "1" files
+    """
+    {
+      "document":
+       {
+        "name": "@",
+        "type": "data-source-name/root_package/KeyboardKey"
+      }
+    }
+    """
+    Then the response status should be "Not Found"
 
