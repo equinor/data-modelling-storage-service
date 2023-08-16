@@ -1,17 +1,15 @@
 on:
   workflow_dispatch:
-  workflow_call:  # Workflow is meant to be called from another workflow, with the image tag as input
+  workflow_call: # Workflow is meant to be called from another workflow, with the image tag as input
     inputs:
-      image-tag:
-        description: 'Which tag to set for the produced docker images'
-        default: 'latest'
+      image-tags:
+        description: "Which tag to give the images. Supports multiple tags if comma separated, ie 'tag1,tag2'"
+        default: "latest"
         required: true
         type: string
     secrets:
       DOCKER_PASSWORD:
         required: true
-
-
 
 env:
   DOCKER_IMAGE: datamodelingtool.azurecr.io/dmss
@@ -25,26 +23,26 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
+
       - name: "Write version file"
         run: echo $(git log -n 1 --format=format:'%C(yellow)%h% %C(blue)%>(12) %cs %C(green)%>(12,mtrunc)%aN%C(auto,reset)  %s%C(auto) %D') > src/version.txt
-      - name: "Build Docker image"
-        run: docker build --tag ${DOCKER_IMAGE}:${{ inputs.image-tag }} .
+
       - name: "Docker Login"
-        if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login ${{ env.IMAGE_REGISTRY }} --password-stdin --username ${{ env.REGISTRY_USER }}
-      - name: "Push Docker image"
-        if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
-        run: docker push ${DOCKER_IMAGE}:${{ inputs.image-tag }}
-      - name: "Determine tag"
-        if: "startsWith(github.ref, 'refs/tags/')"
-        id: "determine-tag"
-        run: "echo \"::set-output name=tag::${GITHUB_REF#refs/tags/}\""
-      - name: "Tag Docker image (versioned)"
-        if: "startsWith(github.ref, 'refs/tags/')"
-        run: docker tag ${{ env.DOCKER_IMAGE }}:${{ inputs.image-tag }} ${{ env.DOCKER_IMAGE }}:${{ steps.determine-tag.outputs.tag }}
-      - name: "Push Docker image (versioned)"
-        if: "startsWith(github.ref, 'refs/tags/')"
-        run: docker push ${{ env.DOCKER_IMAGE }}:${{ steps.determine-tag.outputs.tag }}
+
+      - name: "Build Docker image"
+        run: docker build --tag ${DOCKER_IMAGE} .
+
+      - name: "Tag and push"
+        run: |
+          echo "Tagging with ${{ inputs.image-tags }}"
+          IFS=','
+          for IMAGE_TAG in $(echo ${{ inputs.image-tags }})
+          do
+            echo "Tagging with $IMAGE_TAG"
+            docker tag $DOCKER_IMAGE $DOCKER_IMAGE:$IMAGE_TAG
+            docker push $DOCKER_IMAGE:$IMAGE_TAG
+          done
+
       - name: "Docker Logout"
-        if: "'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/')"
         run: docker logout
