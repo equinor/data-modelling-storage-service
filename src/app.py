@@ -73,6 +73,7 @@ def create_app() -> FastAPI:
 
     app = FastAPI(
         title="Data Modelling Storage Service",
+        version="1.2.3",  # x-release-please-version
         description="API for basic data modelling interaction",
         swagger_ui_init_oauth={"usePkceWithAuthorizationCodeGrant": True, "clientId": config.OAUTH_CLIENT_ID},
     )
