@@ -62,5 +62,8 @@ def delete_document(data_source: DataSource, document_id: str):
     if document_id.startswith("$"):
         document_id = document_id[1:]
     document: dict = data_source.get(document_id)
-    _delete_dict_recursive(document, data_source)
-    data_source.delete(document_id)
+    if data_source._lookup(document_id).storage_affinity == "blob":
+        data_source.delete_blob(document_id)
+    else:
+        _delete_dict_recursive(document, data_source)
+        data_source.delete(document_id)
