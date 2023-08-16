@@ -28,13 +28,13 @@ def create_lookup(application: str, recipe_package: list[str] = Query(), user: U
     This recipe is associated with an application, based on application name.
 
     Args:
-        application (str): Name of an application.
-        recipe_package (list[str]): A list of one or more paths to packages that contain recipe links.
-            Example: ["system/SIMOS/recipe_links"]
-        user (User): The authenticated user accessing the endpoint.
+    - application (str): Name of an application.
+    - recipe_package (list[str]): A list of one or more paths to packages that contain recipe links.
+        - Example: ["system/SIMOS/recipe_links"]
+    - user (User): The authenticated user accessing the endpoint.
 
     Returns:
-        None, with status Code 204 (No Content).
+    - None, with status Code 204 (No Content).
     """
     return create_lookup_table_use_case(recipe_package, application, user)
 

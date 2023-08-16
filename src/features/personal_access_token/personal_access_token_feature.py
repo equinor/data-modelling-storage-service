@@ -25,11 +25,11 @@ async def new_personal_access_token(
     This endpoint creates a PAT token for the currently logged in user, stores it in the database and returns it to the user.
 
     Args:
-        scope (WRITE | READ | NONE): Access level for the PAT.
-        time_to_live (int): Optional parameter specifying the lifespan of the PAT in seconds. Default lifespan is 30 days.
+    - scope (WRITE | READ | NONE): Access level for the PAT.
+    - time_to_live (int): Optional parameter specifying the lifespan of the PAT in seconds. Default lifespan is 30 days.
 
     Returns:
-        str: The generated PAT token
+    - str: The generated PAT token
     """
     return create_personal_access_token(user, scope, time_to_live)
 
