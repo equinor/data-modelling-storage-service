@@ -15,17 +15,9 @@ async def get_information_on_authenticated_user(user: User = Depends(auth_w_jwt_
     This endpoint always responds with a status code of 200 (OK).
 
     Args:
-        user (User): The authenticated user accessing the endpoint.
+    - user (User): The authenticated user accessing the endpoint.
 
     Returns:
-        dict: A dictionary containing information about the user who sent the request.
-        Example:
-        {
-            "user_id": "1234",
-            "email": "johndoe@example.com",
-            "full_name": "John Doe",
-            "roles": [],
-            "scope": "WRITE"¯
-        }
+    - dict: A dictionary containing information about the user who sent the request.
     """
     return user

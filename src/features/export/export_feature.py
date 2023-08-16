@@ -27,6 +27,7 @@ class ExportMetaResponse(BaseModel):
     "/meta/{path_address:path}",
     operation_id="export-meta",
     response_class=JSONResponse,
+    response_model=ExportMetaResponse,
     responses={**responses, 200: {"content": {"application/json": {}}}},
 )
 @create_response(JSONResponse)
@@ -37,11 +38,14 @@ def export_meta(path_address: str, user: User = Depends(auth_w_jwt_or_pat)):
     specified further down.
 
     If no metadata is defined anywhere in the tree, an empty object is returned.
+    The PROTOCOL is optional, and the default is dmss.
 
-    - **address**:
+    Args:
+    - path_address (string): Address of the object of which to get the meta
       - By path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY
 
-      The PROTOCOL is optional, and the default is dmss.
+    Returns:
+
     """
     return ExportMetaResponse(**export_meta_use_case(user=user, path_address=path_address)).dict()
 
@@ -50,16 +54,20 @@ def export_meta(path_address: str, user: User = Depends(auth_w_jwt_or_pat)):
     "/{path_address:path}",
     operation_id="export",
     response_class=FileResponse,
+    response_model=FileResponse,
     responses={**responses, 200: {"content": {"application/zip": {}}}},
 )
 def export(path_address: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """
-    Download a zip-folder with one or more documents as json file(s).
+    """Download a zip-folder Containing One or More Documents as JSON Files.
 
-    - **address**:
-      - By path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY
+    This endpoint creates a zip-folder with the contents of the document and it's children.
 
-      The PROTOCOL is optional, and the default is dmss.
+    Args:
+    - path_address:
+      - Example: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY (PROTOCOL is optional, and the default is dmss.)
+
+    Returns:
+    - FileResponse: A FileResponse containing the zip file.
     """
     # TODO add proper error handling. The create_response() wrapper does not work with FileResponse.
     memory_file_path = export_use_case(user=user, address=path_address)
