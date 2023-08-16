@@ -424,6 +424,7 @@ class DocumentService:
             #      the parent of entity referenced by 'address'.
             #   2) the address is wrong. In that case, raise Exception.
 
+            # It is assumed that address.path is to an attribute, e.g. dataSource/package/document.attribute
             split_address_path: list[str] = address.path.rsplit(".", 1)
 
             if len(split_address_path) <= 1 and split_address_path[0] == address.path:
@@ -431,8 +432,7 @@ class DocumentService:
                 # with address=address.path in the above try except statement
                 raise NotFoundException(f"Could not find document {address}")
 
-            last_attribute_in_address: str = split_address_path.pop()
-            parent_address_as_string: str = ".".join(split_address_path)
+            parent_address_as_string, last_attribute_in_address = split_address_path
 
             parent_address: Address = Address(
                 protocol=address.protocol, path=parent_address_as_string, data_source=address.data_source
