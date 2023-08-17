@@ -18,15 +18,6 @@ router = APIRouter(tags=["default", "entity"], prefix="/entity")
 def instantiate(entity: Entity, user: User = Depends(auth_w_jwt_or_pat)):
     """Returns a default entity of specified type. This entity is not stored in the database.
 
-
-    For storing an entity in the database, see the Post Document endpoint.
-
-    Args:
-    -
-
-    Returns
-    - dict: A JSON dictionary of the specified entity.
-
     Rules for instantiation:
     - all required attributes, as defined in the blueprint, are included.
       If the required attribute has a default value, that value will be used.
