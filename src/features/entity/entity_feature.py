@@ -39,9 +39,7 @@ def instantiate(entity: Entity, user: User = Depends(auth_w_jwt_or_pat)):
 
 @router.post("/validate", operation_id="validate_entity", responses=responses)
 @create_response(JSONResponse)
-def validate(
-    entity: Entity, as_type: TypeConstrainedString | None = None, user: User = Depends(auth_w_jwt_or_pat)
-):
+def validate(entity: Entity, as_type: TypeConstrainedString | None = None, user: User = Depends(auth_w_jwt_or_pat)):
     """Validate an entity.
     Will return detailed error messages and status code 422 if the entity is invalid.
 
