@@ -77,6 +77,10 @@ class DataSource:
             message=f"Document with id '{document_id}' was not found in the '{self.name}' data-source"
         )
 
+    def get_storage_affinity(self, document_id) -> StorageDataTypes:
+        lookup = self._lookup(document_id)
+        return StorageDataTypes(lookup.storage_affinity)
+
     def _update_lookup(self, lookup: DocumentLookUp):
         return self.data_source_collection.update_one(
             filter={"_id": self.name}, update={"$set": {f"documentLookUp.{lookup.lookup_id}": lookup.dict()}}

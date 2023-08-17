@@ -1,7 +1,7 @@
 from typing import Union
 
 from common.utils.data_structure.find import find
-from enums import REFERENCE_TYPES, SIMOS
+from enums import REFERENCE_TYPES, SIMOS, StorageDataTypes
 from storage.data_source_class import DataSource
 
 
@@ -61,9 +61,9 @@ def delete_document(data_source: DataSource, document_id: str):
     """
     if document_id.startswith("$"):
         document_id = document_id[1:]
-    document: dict = data_source.get(document_id)
-    if data_source._lookup(document_id).storage_affinity == "blob":
+    if data_source.get_storage_affinity(document_id) == StorageDataTypes.BLOB:
         data_source.delete_blob(document_id)
     else:
+        document: dict = data_source.get(document_id)
         _delete_dict_recursive(document, data_source)
         data_source.delete(document_id)
