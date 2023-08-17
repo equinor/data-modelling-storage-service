@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.responses import create_response, responses
-from restful.request_types.shared import TypeConstrainedString
+from restful.request_types.shared import common_type_constrained_string
 
 from .use_cases.get_blueprint_use_case import (
     GetBlueprintResponse,
@@ -23,7 +23,7 @@ router = APIRouter(tags=["default", "blueprint"])
 )
 @create_response(JSONResponse)
 def get_blueprint(
-    type_ref: TypeConstrainedString, context: str | None = None, user: User = Depends(auth_w_jwt_or_pat)
+    type_ref: common_type_constrained_string, context: str | None = None, user: User = Depends(auth_w_jwt_or_pat)
 ):
     """
     Fetch the Blueprint and Recipes from a type reference (including inherited attributes).

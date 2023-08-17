@@ -8,7 +8,7 @@ from common.utils.get_storage_recipe import (
     default_yaml_view,
 )
 from domain_classes.lookup import Lookup
-from restful.request_types.shared import TypeConstrainedString
+from restful.request_types.shared import common_type_constrained_string
 from services.document_service import DocumentService
 from storage.internal.lookup_tables import get_lookup
 
@@ -22,7 +22,7 @@ class GetBlueprintResponse(BaseModel):
 default_ui_recipes = [default_form_edit, default_yaml_view, default_list_recipe]
 
 
-def get_blueprint_use_case(type: TypeConstrainedString, context: str | None, user: User) -> dict:
+def get_blueprint_use_case(type: common_type_constrained_string, context: str | None, user: User) -> dict:
     document_service = DocumentService(user=user)
     blueprint = document_service.get_blueprint(type)
 
