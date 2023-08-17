@@ -4,32 +4,32 @@ from pydantic import UUID4, Field, constr, root_validator
 from pydantic.main import BaseModel, Extra
 
 # Only allow characters a-9 and '_' + '-'
-common_name_constrained_string = constr(min_length=1, max_length=128, regex="^[A-Za-z0-9_-]*$", strip_whitespace=True)
+NameConstrainedString = constr(min_length=1, max_length=128, regex="^[A-Za-z0-9_-]*$", strip_whitespace=True)
 
 # Regex only allow characters a-9 and '_' + '-' + '/' for paths
-common_type_constrained_string = constr(
+TypeConstrainedString = constr(
     min_length=3, max_length=128, regex=r"^[A-Z:a-z0-9_\/-]*$", strip_whitespace=True
 )  # noqa
 
 
 class Entity(BaseModel, extra=Extra.allow):
-    type: common_type_constrained_string  # type: ignore
+    type: TypeConstrainedString  # type: ignore
 
 
 class EntityName(BaseModel):
-    name: common_name_constrained_string  # type: ignore
+    name: NameConstrainedString  # type: ignore
 
 
 class OptionalEntityName(BaseModel):
-    name: Optional[common_name_constrained_string]  # type: ignore
+    name: Optional[NameConstrainedString]  # type: ignore
 
 
 class DataSource(BaseModel):
-    data_source_id: common_name_constrained_string  # type: ignore
+    data_source_id: NameConstrainedString  # type: ignore
 
 
 class DataSourceList(BaseModel):
-    data_sources: list[common_name_constrained_string]  # type: ignore
+    data_sources: list[NameConstrainedString]  # type: ignore
 
 
 class EntityUUID(BaseModel):
@@ -38,7 +38,7 @@ class EntityUUID(BaseModel):
 
 class ReferenceEntity(BaseModel):
     address: str
-    type: common_type_constrained_string  # type: ignore
+    type: TypeConstrainedString  # type: ignore
     referenceType: str
 
 
