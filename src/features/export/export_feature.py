@@ -54,7 +54,6 @@ def export_meta(path_address: str, user: User = Depends(auth_w_jwt_or_pat)):
     "/{path_address:path}",
     operation_id="export",
     response_class=FileResponse,
-    response_model=FileResponse,
     responses={**responses, 200: {"content": {"application/zip": {}}}},
 )
 def export(path_address: str, user: User = Depends(auth_w_jwt_or_pat)):
