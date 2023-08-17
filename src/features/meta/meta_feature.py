@@ -1,12 +1,10 @@
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
-
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.responses import create_response, responses
 from features.meta.use_cases.get_meta_use_case import get_meta_use_case
-
 
 router = APIRouter(tags=["default", "meta"], prefix="/meta")
 
