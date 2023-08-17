@@ -19,10 +19,10 @@ router = APIRouter(tags=["default", "meta"], prefix="/meta")
 )
 @create_response(JSONResponse)
 def get_meta_by_id(data_source_id: str, document_id: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """Get Meta Information About a Document.
+    """Get Meta Information About a blob.
 
-    This endpoint returns meta information about a document provided document id and the id of the data source of which
-    it is located. For more information about the meta-object see [the docs](https://equinor.github.io/dm-docs/docs/concepts/meta).
+    This endpoint returns meta information for a blob file provided document id and the id of the data source of which
+    it is located.
 
     Args:
     - data_source_id (str): The ID of the data source.
@@ -30,6 +30,6 @@ def get_meta_by_id(data_source_id: str, document_id: str, user: User = Depends(a
     - user (User): The authenticated user accessing the endpoint.
 
     Returns:
-    - dict: A dictionary containing the meta information about the document
+    - dict: A dictionary containing the meta information about the blob file of the document. s
     """
     return get_meta_use_case(user=user, data_source_id=data_source_id, document_id=document_id)
