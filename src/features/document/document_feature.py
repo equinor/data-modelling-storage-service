@@ -92,7 +92,7 @@ def add_document(
     - update_uncontained (bool): Optional flag specifying whether
     - user (User): The authenticated user accessing the endpoint.
 
-
+    TODO decide if we should support adding an empty list. That is currently not supported.
     """
 
     document_service = DocumentService(
