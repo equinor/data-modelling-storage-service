@@ -9,6 +9,7 @@ from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
 from enums import REFERENCE_TYPES, SIMOS
+from features.document.use_cases.add_document_use_case import add_document_use_case
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_utils import get_mock_document_service
 from tests.unit.test_tree_functionality.get_node_for_tree_tests import (
@@ -232,12 +233,12 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = get_mock_document_service(repository_provider)
-        document_service.add(
-            Address("$1.im_optional", "testing"),
+        add_document_use_case(
+            address=Address("$1.im_optional", "testing"),
             document={"type": "basic_blueprint", "name": "new_entity", "description": "This is my new entity"},
-            files=[],
+            update_uncontained=True,
+            document_service=document_service,
         )
-
         assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
 
     def test_add_invalid_child_type(self):
@@ -325,10 +326,11 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
         document_service = get_mock_document_service(repository_provider)
-        document_service.add(
-            Address("$1.nested_with_optional.im_optional", "testing"),
+        add_document_use_case(
+            address=Address("$1.nested_with_optional.im_optional", "testing"),
             document={"name": "new_entity", "description": "This is my new entity", "type": "basic_blueprint"},
-            files=[],
+            update_uncontained=True,
+            document_service=document_service,
         )
 
         assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
@@ -362,10 +364,11 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(lambda x, y: repository)
 
         with self.assertRaises(BadRequestException):
-            document_service.add(
-                Address("$1.im_optional", "testing"),
+            add_document_use_case(
+                address=Address("$1.im_optional", "testing"),
                 document={"type": "basic_blueprint", "name": "duplicate", "description": "This is my new entity"},
-                files=[],
+                update_uncontained=True,
+                document_service=document_service,
             )
 
     def test_add_valid_specialized_child_type(self):

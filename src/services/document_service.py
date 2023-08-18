@@ -1,7 +1,7 @@
 import mimetypes
 import pprint
 from functools import lru_cache
-from typing import BinaryIO, Callable, Dict, List, Union
+from typing import Callable, Dict, List, Union
 from uuid import uuid4
 
 from authentication.models import ACL
@@ -24,16 +24,15 @@ from common.utils.get_blueprint import get_blueprint_provider
 from common.utils.get_resolved_document_by_id import resolve_references_in_entity
 from common.utils.get_storage_recipe import storage_recipe_provider
 from common.utils.logging import logger
+from common.utils.merge_entity_and_files import merge_entity_and_files
 from common.utils.resolve_address import ResolvedAddress, resolve_address, split_path
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.utils.validators import validate_entity, validate_entity_against_self
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
-from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS, BuiltinDataTypes, StorageDataTypes
-from restful.request_types.shared import Entity
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
@@ -332,7 +331,7 @@ class DocumentService:
 
         node.update(data)
         if files:
-            self._merge_entity_and_files(node, files)
+            merge_entity_and_files(node, files)
 
         self.save(node, address.data_source, update_uncontained=update_uncontained, initial=True)
         if len(path_parts) > 1:
@@ -353,170 +352,6 @@ class DocumentService:
             return
 
         delete_document(data_source, resolved_reference.document_id)
-
-    @staticmethod
-    def _merge_entity_and_files(node: Node, files: Dict[str, BinaryIO]):
-        """
-        Recursively adds the matching posted files to the system/SIMOS/Blob types in the node
-        """
-        for node in node.traverse():  # Traverse the entire Node tree
-            if not node.entity:  # Skipping empty nodes
-                continue
-            if node.type == SIMOS.BLOB.value:
-                try:  # For all Blob Nodes, add the posted file in the Node temporary '_blob_' attribute
-                    node.entity["_blob_"] = files[node.entity["name"]]
-                except KeyError:
-                    raise KeyError(
-                        "File referenced in entity does not match any ",
-                        f"filename posted. Posted files: {tuple(files.keys())}",
-                    )
-
-    def _add_document_to_data_source(self, data_source_id: str, document: dict, update_uncontained: bool = False):
-        if document.get("type") != SIMOS.PACKAGE.value and not document.get("isRoot"):
-            raise BadRequestException("Only root packages may be added without a parent.")
-
-        new_node = tree_node_from_dict(
-            document, blueprint_provider=self.get_blueprint, recipe_provider=self.get_storage_recipes
-        )
-
-        try:
-            if self.get_document(Address(new_node.entity["name"], data_source_id), depth=99):
-                raise ValidationException(
-                    message=f"A root package named '{new_node.entity['name']}' already exists",
-                    data={"dataSource": data_source_id, "document": document},
-                )
-        except NotFoundException:
-            pass
-
-        new_node.set_uid()
-
-        self.save(new_node, data_source_id, update_uncontained=update_uncontained)
-
-        return {"uid": new_node.node_id}
-
-    def add(
-        self,
-        address: Address,
-        document: dict,
-        files: dict[str, BinaryIO] | None = None,
-        update_uncontained=False,
-    ):
-        """Add en entity to path
-        reference: reference to a package or a data source.
-        document: The entity to be added
-        files: Dict with names and files of the files contained in the document
-        update_uncontained: Whether to update uncontained children
-        """
-        validate_entity_against_self(document, self.get_blueprint)
-        entity: Entity = Entity(**document)
-
-        if not address.path:  # We're adding something to the dataSource itself
-            return self._add_document_to_data_source(address.data_source, document, update_uncontained)
-
-        try:
-            target: Node = self.get_document(address, depth=99)
-        except NotFoundException:
-            target = None
-
-        if not target:
-            # If target does not exist, there are 2 cases to consider:
-            #   1) the target is an optional attribute that does not exist yet. In that case, we set the target to be
-            #      the parent of entity referenced by 'address'.
-            #   2) the address is wrong. In that case, raise Exception.
-
-            # It is assumed that address.path is to an attribute, e.g. dataSource/package/document.attribute
-            split_address_path: list[str] = address.path.rsplit(".", 1)
-
-            if len(split_address_path) <= 1 and split_address_path[0] == address.path:
-                # Raising NotFoundException, since the get_document() did not find the document
-                # with address=address.path in the above try except statement
-                raise NotFoundException(f"Could not find document {address}")
-
-            parent_address_as_string, last_attribute_in_address = split_address_path
-
-            parent_address: Address = Address(
-                protocol=address.protocol, path=parent_address_as_string, data_source=address.data_source
-            )
-            parent_node: Node = self.get_document(parent_address, depth=99)
-            parent_blueprint = parent_node.blueprint
-            if (
-                len(
-                    [
-                        blueprint_attribute
-                        for blueprint_attribute in parent_blueprint.attributes
-                        if blueprint_attribute.name == last_attribute_in_address
-                    ]
-                )
-                == 0
-            ):
-                raise NotFoundException(
-                    f"Could not find attribute {last_attribute_in_address} in blueprint for {parent_blueprint.name}"
-                )
-
-            parent_document = parent_node.entity
-            attribute_to_update = [
-                blueprint_attribute
-                for blueprint_attribute in parent_blueprint.attributes
-                if blueprint_attribute.name == last_attribute_in_address
-            ][0]
-            if attribute_to_update.is_array:
-                parent_document[last_attribute_in_address] = [document]
-            else:
-                parent_document[last_attribute_in_address] = document
-
-            target = parent_node
-            new_node = tree_node_from_dict(
-                {**parent_document},
-                blueprint_provider=self.get_blueprint,
-                node_attribute=BlueprintAttribute(name=target.attribute.name, attribute_type=entity.type),
-                recipe_provider=self.get_storage_recipes,
-            )
-            self.save(new_node, address.data_source, update_uncontained=update_uncontained)
-
-            return {"uid": f"{new_node.node_id}.{last_attribute_in_address}"}
-
-        if target.type != SIMOS.PACKAGE.value and target.type != "object":
-            validate_entity(
-                document, self.get_blueprint, self.get_blueprint(target.attribute.attribute_type), "extend"
-            )
-
-        new_node = tree_node_from_dict(
-            {**document},
-            blueprint_provider=self.get_blueprint,
-            node_attribute=BlueprintAttribute(name=target.attribute.name, attribute_type=entity.type),
-            recipe_provider=self.get_storage_recipes,
-        )
-
-        if not target.is_array() and target.type != SIMOS.PACKAGE.value:
-            required_attribute_names = [attribute.name for attribute in new_node.blueprint.get_required_attributes()]
-            # If entity has a name, check if a file/attribute with the same name already exists on the target
-            if "name" in required_attribute_names and target.parent.duplicate_attribute(
-                new_node.entity.get("name", new_node.attribute.name)
-            ):
-                raise BadRequestException(
-                    f"The document at '{address}' already has a child with name '{new_node.entity.get('name', new_node.attribute.name)}'"
-                )
-
-        if files:
-            self._merge_entity_and_files(new_node, files)
-
-        if target.type == SIMOS.PACKAGE.value:
-            target = target.children[0]  # Set target to be the packages content
-
-        if isinstance(target, ListNode) or target.parent.type == SIMOS.PACKAGE.value:
-            new_node.set_uid()
-            new_node.parent = target
-            new_node.key = str(len(target.children))
-            target.add_child(new_node)
-            self.save(target.find_parent(), address.data_source, update_uncontained=False)
-        else:
-            new_node.parent = target.parent
-            target.parent.replace(new_node.node_id, new_node)
-            self.save(target.find_parent(), address.data_source, update_uncontained=False)
-
-        self.save(new_node, address.data_source, update_uncontained=update_uncontained)
-
-        return {"uid": new_node.node_id}
 
     def search(self, data_source_id, search_data, dotted_attribute_path):
         repository: DataSource = self.repository_provider(data_source_id, self.user)
