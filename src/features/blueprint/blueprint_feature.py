@@ -25,11 +25,16 @@ router = APIRouter(tags=["default", "blueprint"])
 def get_blueprint(
     type_ref: TypeConstrainedString, context: str | None = None, user: User = Depends(auth_w_jwt_or_pat)
 ):
-    """
-    Fetch the Blueprint and Recipes from a type reference (including inherited attributes).
+    """Get a Blueprint and all Ui- and StorageRecipes connected to it, given a Blueprint address.
 
-    - **type_ref**: <protocol>://<data_source>/<path_to_blueprint>
-    - **context**: name of application that has Ui-/StorageRecipe lookup table (optional attribute)
+    Args:
+    - type_ref (str): The address of the blueprint.
+        Example: PROTOCOL://<DATA-SOURCE>/<PACKAGE>/<FOLDER>/<NAME>
+    - context (str): Optional name of application that has Ui-/StorageRecipe lookup table.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
+
+    Returns:
+    - GetBlueprintResponse: An object containing the blueprint, a list of all UI- recipes and a list of all StorageRecipes.
     """
     return get_blueprint_use_case(type_ref, context, user)
 
@@ -37,8 +42,16 @@ def get_blueprint(
 @router.get("/resolve-path/{address:path}", operation_id="blueprint_resolve", response_model=str, responses=responses)
 @create_response(PlainTextResponse)
 def resolve_blueprint_id(address: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """Resolve address of a blueprint to its type path.
+    """Resolve path address of a blueprint given id address.
 
-    - **address**: <protocol>://<data_source</$<blueprint_uuid>
+    This endpoint takes in an ID-address of a blueprint and finds the full path address to the blueprint.
+
+    Args:
+    - address (str): The ID address of the blueprint.
+        - Example: PROTOCOL://<DATA-SOURCE>/$<UUID>
+
+    Returns:
+    - str: the path address of the blueprint.
+        - Example:  PROTOCOL://<DATA-SOURCE>/<PACKAGE>/<FOLDER>/<NAME>
     """
     return resolve_blueprint_use_case(user=user, address=address)
