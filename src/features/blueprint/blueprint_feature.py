@@ -29,7 +29,7 @@ def get_blueprint(
 
     Args:
     - type_ref (str): The address of the blueprint.
-        Example: PROTOCOL://<DATA-SOURCE>/<PACKAGE>/<FOLDER>/<NAME>
+        - Example: PROTOCOL://<DATA-SOURCE>/<PACKAGE>/<FOLDER>/<NAME>
     - context (str): Optional name of application that has Ui-/StorageRecipe lookup table.
     - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
