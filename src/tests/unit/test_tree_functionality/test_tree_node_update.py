@@ -10,6 +10,9 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
 from enums import REFERENCE_TYPES, SIMOS
 from features.document.use_cases.add_document_use_case import add_document_use_case
+from features.document.use_cases.update_document_use_case import (
+    update_document_use_case,
+)
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_utils import get_mock_document_service
 from tests.unit.test_tree_functionality.get_node_for_tree_tests import (
@@ -267,9 +270,10 @@ class DocumentServiceTestCase(unittest.TestCase):
             blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
         )
         with self.assertRaises(ValidationException) as error:
-            document_service.update_document(
-                address=Address("$1.SomeChild", "testing"),
+            update_document_use_case(
                 data={"name": "whatever", "type": "special_child_no_inherit", "AnExtraValue": "Hallo there!"},
+                address=Address("$1.SomeChild", "testing"),
+                document_service=document_service,
             )
         assert (
             error.exception.message
@@ -387,10 +391,12 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(
             lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
         )
-        document_service.update_document(
-            address=Address("$1.SomeChild", "testing"),
+        update_document_use_case(
             data={"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
+            address=Address("$1.SomeChild", "testing"),
+            document_service=document_service,
         )
+
         assert doc_storage["1"]["SomeChild"] == {
             "name": "whatever",
             "type": "special_child",
@@ -414,8 +420,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(
             lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
         )
-        document_service.update_document(
-            address=Address("$1.SomeChild", "testing"),
+        update_document_use_case(
             data={
                 "name": "whatever",
                 "type": "extra_special_child",
@@ -423,6 +428,8 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "AnotherExtraValue": True,
                 "AValue": 13,
             },
+            address=Address("$1.SomeChild", "testing"),
+            document_service=document_service,
         )
         assert doc_storage["1"]["SomeChild"] == {
             "name": "whatever",
@@ -450,8 +457,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_service = get_mock_document_service(
             lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
         )
-        document_service.update_document(
-            address=Address("$1.SomeChild", "testing"),
+        update_document_use_case(
             data=[
                 {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
                 {
@@ -462,7 +468,10 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "AValue": 13,
                 },
             ],
+            address=Address("$1.SomeChild", "testing"),
+            document_service=document_service,
         )
+
         assert doc_storage["1"]["SomeChild"] == [
             {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
             {
@@ -494,8 +503,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         with self.assertRaises(ValidationException) as error:
-            document_service.update_document(
-                address=Address("$1.SomeChild", "testing"),
+            update_document_use_case(
                 data=[
                     {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
                     {
@@ -504,6 +512,8 @@ class DocumentServiceTestCase(unittest.TestCase):
                         "AnExtraValue": "Hallo there!",
                     },
                 ],
+                address=Address("$1.SomeChild", "testing"),
+                document_service=document_service,
             )
         assert (
             error.exception.message
@@ -530,16 +540,15 @@ class DocumentServiceTestCase(unittest.TestCase):
             lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
         )
 
-        document_service.update_document(
-            address=Address("$1", "testing"),
-            data={
-                "_id": "1",
-                "name": "parent",
-                "description": "",
-                "type": "wrapps_parent_w_list",
-                "Parent-w-list": {"name": "whatever", "type": "parent_w_list", "SomeChild": []},
-            },
-        )
+        data = {
+            "_id": "1",
+            "name": "parent",
+            "description": "",
+            "type": "wrapps_parent_w_list",
+            "Parent-w-list": {"name": "whatever", "type": "parent_w_list", "SomeChild": []},
+        }
+        update_document_use_case(data=data, address=Address("$1", "testing"), document_service=document_service)
+
         assert doc_storage["1"]["Parent-w-list"]["SomeChild"] == []
 
     def test_set_update_uncontained_child(self):

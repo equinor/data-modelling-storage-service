@@ -11,7 +11,6 @@ from common.exceptions import (
     BadRequestException,
     MissingPrivilegeException,
     NotFoundException,
-    ValidationException,
 )
 from common.tree_node_serializer import (
     tree_node_from_dict,
@@ -24,15 +23,14 @@ from common.utils.get_blueprint import get_blueprint_provider
 from common.utils.get_resolved_document_by_id import resolve_references_in_entity
 from common.utils.get_storage_recipe import storage_recipe_provider
 from common.utils.logging import logger
-from common.utils.merge_entity_and_files import merge_entity_and_files
-from common.utils.resolve_address import ResolvedAddress, resolve_address, split_path
+from common.utils.resolve_address import ResolvedAddress, resolve_address
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
-from common.utils.validators import validate_entity, validate_entity_against_self
+from common.utils.validators import validate_entity_against_self
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from domain_classes.tree_node import ListNode, Node
-from enums import REFERENCE_TYPES, SIMOS, BuiltinDataTypes, StorageDataTypes
+from enums import REFERENCE_TYPES, SIMOS, StorageDataTypes
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
@@ -249,92 +247,6 @@ class DocumentService:
             e.debug = f"{e.message}. {e.debug}"
             e.message = f"Failed to get document referenced with '{address}'"
             raise e
-
-    def _get_node_to_update(self, address: Address, node_entity: Union[dict, list]) -> Union[Node, ListNode]:
-        """
-        Updating a document is done by fetching the node. This functions returns a node specified by reference.
-        Note: if the node specified by reference does not exist, it will be created if and only if the attribute is
-        specified as optional in the blueprint.
-        """
-        path_parts = split_path(address.path)
-        parent_path = "".join(path_parts[:-1])
-        parent_node: Node = self.get_document(Address(parent_path, address.data_source), depth=0)
-        parent_blueprint_attribute_names = [attribute.name for attribute in parent_node.blueprint.attributes]
-        attribute_to_update = path_parts[-1].strip(".").strip("[]")
-        node = parent_node.get_by_ref_part([attribute_to_update])
-
-        attribute_to_update_does_not_exist_in_parent_document = node is None
-
-        if (
-            attribute_to_update_does_not_exist_in_parent_document
-            and attribute_to_update in parent_blueprint_attribute_names
-        ):
-            attribute = [
-                attribute for attribute in parent_node.blueprint.attributes if attribute.name == attribute_to_update
-            ][0]
-
-            # We only want to add the attribute if it does not already exist AND is optional.
-            if not attribute.is_optional:
-                raise ValidationException(f"Could not update node. attribute '{attribute.name}' is not optional.")
-            if attribute.is_array:
-                node = ListNode(
-                    key=attribute_to_update,
-                    attribute=attribute,
-                    blueprint_provider=self.get_blueprint,
-                    entity=node_entity,
-                )
-            else:
-                node = Node(
-                    key=attribute_to_update,
-                    entity=node_entity,
-                    attribute=attribute,
-                    blueprint_provider=self.get_blueprint,
-                )
-        elif (
-            attribute_to_update_does_not_exist_in_parent_document
-            and attribute_to_update not in parent_blueprint_attribute_names
-        ):
-            raise ApplicationException(
-                f"Could not get node to update. Attribute {attribute_to_update} was not found in the list of attributes on the parents blueprint ({parent_blueprint_attribute_names})."
-            )
-        node.parent = parent_node
-        return node
-
-    def update_document(
-        self,
-        address: Address,
-        data: Union[dict, list],
-        files: dict = None,
-        update_uncontained: bool = True,  # TODO: Remove this flag
-    ):
-        """
-        Update a document.
-
-        What to update is referred to with an address.
-        It can either be an entire document or just an attribute inside a document.
-        """
-        validate_entity_against_self(data, self.get_blueprint)
-        if not address.path:
-            raise Exception(f"Could not find the node on '{address}'")
-
-        try:
-            node: Node = self.get_document(address)  # type: ignore
-        except NotFoundException:
-            raise ValidationException(
-                f"Can not update document with address {address}, since that document does not exist. If the goal is to add a document, use the document add use instead"
-            )
-
-        if node.attribute.attribute_type != BuiltinDataTypes.OBJECT.value:
-            validate_entity(data, self.get_blueprint, self.get_blueprint(node.attribute.attribute_type), "extend")
-            # TODO consider validating link reference objects if the data parameter is of type system/SIMOS/Reference.
-
-        node.update(data)
-        if files:
-            merge_entity_and_files(node, files)
-
-        self.save(node, address.data_source, update_uncontained=update_uncontained, initial=True)
-        logger.info(f"Updated entity '{address}'")
-        return {"data": tree_node_to_dict(node)}
 
     def remove(self, address: Address) -> None:
         data_source = self.repository_provider(address.data_source, self.user)

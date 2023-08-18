@@ -7,6 +7,9 @@ from common.address import Address
 from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from enums import SIMOS
+from features.document.use_cases.update_document_use_case import (
+    update_document_use_case,
+)
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_utils import get_mock_document_service
 
@@ -265,77 +268,79 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(repository_provider, blueprint_provider=blueprint_provider)
         # fmt: off
-        document_service.update_document(
+        data = {
+            "_id": "1",
+            "name": "complexArraysEntity",
+            "type": "higher_rank_array",
+            "1_dim-unfixed": [45, 65, 999999999999999999, 0, -12],
+            "1_dim-fixed_complex_type": [
+                {
+                    "name": "0",
+                    "type": "basic_blueprint",
+                    "description": "",
+                    "length": 1
+                },
+                {
+                    "name": "1",
+                    "type": "basic_blueprint",
+                    "description": "",
+                    "length": 23
+                },
+                {
+                    "name": "2",
+                    "type": "basic_blueprint",
+                    "description": "",
+                    "length": 200
+                },
+                {
+                    "name": "3",
+                    "type": "basic_blueprint",
+                    "description": "",
+                    "length": 345
+                },
+                {
+                    "name": "4",
+                    "type": "basic_blueprint",
+                    "description": "some other description",
+                    "length": 1
+                },
+            ],
+            "2_dim-unfixed": [[23, 234, 123], [1, 1, 1, 1, 1, 1]],
+            "3_dim-mix": [
+                [
+                    [
+                        11, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 22
+                    ]
+                ],
+                [
+                    [
+                        33, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 44
+                    ]
+                ],
+            ],
+        }
+        update_document_use_case(
+            data=data,
             address=Address.from_absolute("dmss://testing/$1"),
-            data={
-                "_id": "1",
-                "name": "complexArraysEntity",
-                "type": "higher_rank_array",
-                "1_dim-unfixed": [45, 65, 999999999999999999, 0, -12],
-                "1_dim-fixed_complex_type": [
-                    {
-                        "name": "0",
-                        "type": "basic_blueprint",
-                        "description": "",
-                        "length": 1
-                    },
-                    {
-                        "name": "1",
-                        "type": "basic_blueprint",
-                        "description": "",
-                        "length": 23
-                    },
-                    {
-                        "name": "2",
-                        "type": "basic_blueprint",
-                        "description": "",
-                        "length": 200
-                    },
-                    {
-                        "name": "3",
-                        "type": "basic_blueprint",
-                        "description": "",
-                        "length": 345
-                    },
-                    {
-                        "name": "4",
-                        "type": "basic_blueprint",
-                        "description": "some other description",
-                        "length": 1
-                    },
-                ],
-                "2_dim-unfixed": [[23, 234, 123], [1, 1, 1, 1, 1, 1]],
-                "3_dim-mix": [
-                    [
-                        [
-                            11, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 22
-                        ]
-                    ],
-                    [
-                        [
-                            33, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 44
-                        ]
-                    ],
-                ],
-            },
+            document_service=document_service
         )
 
         expected_1 = {
