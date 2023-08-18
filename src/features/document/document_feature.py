@@ -69,19 +69,25 @@ def add_document(
     update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
-    """
-    Add a document to a package (or a data source) using an address.
-
-    - **address**:
-      - Reference to data source: PROTOCOL://DATA SOURCE
-      - Reference to package by id: PROTOCOL://DATA SOURCE/$ID
-      - Reference to package by path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE
-      The PROTOCOL is optional, and the default is dmss.
+    """Add a document to a package or a data source using an address.
 
     This endpoint can be used for:
-    - Adding elements to a list attribute in an entity.
-    - Adding a new document to a package / data source
+    - Adding a new document to a package / data source.
     - Adding an object to an entity (for example filling in an optional, complex attribute)
+    - Adding elements to a list attribute in an entity.
+
+    Args:
+    - address: path address to where the document should be stored.
+      - Example: Reference to data source: PROTOCOL://DATA SOURCE
+      - Example: Reference to package by id: PROTOCOL://DATA SOURCE/$ID
+      - Example: Reference to package by path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE
+      - The PROTOCOL is optional, and the default is dmss.
+    - document (dict): The document that is to be stored.
+    - files: Optional list of files to be stored as part of this document.
+    - update_uncontained (bool): Optional flag specifying whether
+    - user (User): The authenticated user accessing the endpoint.
+
+
     """
     return add_document_use_case(
         user=user,
@@ -109,5 +115,12 @@ def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt
 @router.delete("/{address:path}", operation_id="document_remove", responses=responses)
 @create_response(PlainTextResponse)
 def remove(address: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """Remove a document from DMSS."""
+    """Remove a document from the database.
+
+    Args:
+    - address (str): path address to the document that is to be deleted.
+
+    Returns:
+    - str: "OK" (200)
+    """
     return remove_use_case(user=user, address=address)

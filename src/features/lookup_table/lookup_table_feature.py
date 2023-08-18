@@ -31,7 +31,7 @@ def create_lookup(application: str, recipe_package: list[str] = Query(), user: U
     - application (str): Name of an application.
     - recipe_package (list[str]): A list of one or more paths to packages that contain recipe links.
         - Example: ["system/SIMOS/recipe_links"]
-    - user (User): The authenticated user accessing the endpoint.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:
     - None, with status Code 204 (No Content).
@@ -53,9 +53,10 @@ def get_lookup(application: str, user: User = Depends(auth_w_jwt_or_pat)):
     This lookup table is used to find UI- and Storage recipes given a blueprint.
 
     Args:
-        application (str): The name of the desired application.
+    - application (str): The name of the desired application.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:
-        dict: The recipe lookup table for the provided application.
+    - dict: The recipe lookup table for the provided application.
     """
     return get_lookup_table_use_case(application, user)

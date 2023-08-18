@@ -27,9 +27,9 @@ def get_meta_by_id(data_source_id: str, document_id: str, user: User = Depends(a
     Args:
     - data_source_id (str): The ID of the data source.
     - document_id (str): The ID of the document.
-    - user (User): The authenticated user accessing the endpoint.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:
-    - dict: A dictionary containing the meta information about the blob file of the document. s
+    - dict: A dictionary containing the meta information about the blob file of the document.
     """
     return get_meta_use_case(user=user, data_source_id=data_source_id, document_id=document_id)

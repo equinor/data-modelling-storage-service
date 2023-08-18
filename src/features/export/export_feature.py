@@ -32,20 +32,19 @@ class ExportMetaResponse(BaseModel):
 )
 @create_response(JSONResponse)
 def export_meta(path_address: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """
-    Export only the metadata of an entity.
-    An entities metadata is concatenated from the "top down". Inheriting parents meta, and overriding for any
-    specified further down.
+    """Get Meta Information About a Document
 
-    If no metadata is defined anywhere in the tree, an empty object is returned.
-    The PROTOCOL is optional, and the default is dmss.
+    This endpoint returns meta information about a document provided document id and data source id in which it is
+    located.
+    For more information about the meta-object, see [the docs](https://equinor.github.io/dm-docs/docs/concepts/meta)
 
     Args:
-    - path_address (string): Address of the object of which to get the meta
-      - By path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY
+    - path_address (str): Address of the object for which to get the meta-information.
+        - Example: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY (PROTOCOL is optional, and the default is dmss.)
+    - user (User): The authenticated user accessing the endpoint.
 
     Returns:
-
+    - dict: A dictionary containing the meta information for the object.
     """
     return ExportMetaResponse(**export_meta_use_case(user=user, path_address=path_address)).dict()
 
@@ -62,8 +61,9 @@ def export(path_address: str, user: User = Depends(auth_w_jwt_or_pat)):
     This endpoint creates a zip-folder with the contents of the document and it's children.
 
     Args:
-    - path_address:
+    - path_address: Address to the entity or package that should be exported.
       - Example: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY (PROTOCOL is optional, and the default is dmss.)
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:
     - FileResponse: A FileResponse containing the zip file.
