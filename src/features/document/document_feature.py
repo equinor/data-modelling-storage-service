@@ -6,7 +6,12 @@ from pydantic import Json, conint
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
+from common.address import Address
 from common.responses import create_response, responses
+from common.utils.get_blueprint import get_blueprint_provider
+from common.utils.get_storage_recipe import storage_recipe_provider
+from services.document_service import DocumentService
+from storage.internal.data_source_repository import get_data_source
 
 from .use_cases.add_document_use_case import add_document_use_case
 from .use_cases.add_raw_use_case import add_raw_use_case
@@ -89,12 +94,20 @@ def add_document(
 
 
     """
-    return add_document_use_case(
+
+    document_service = DocumentService(
+        repository_provider=get_data_source,
         user=user,
-        address=address,
+        blueprint_provider=get_blueprint_provider(user),
+        recipe_provider=storage_recipe_provider,
+    )
+
+    return add_document_use_case(
+        address=Address.from_absolute(address),
         document=document,
         files=files,
         update_uncontained=update_uncontained,
+        document_service=document_service,
     )
 
 

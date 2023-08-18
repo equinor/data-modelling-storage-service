@@ -5,6 +5,7 @@ from unittest import mock
 from common.address import Address
 from common.exceptions import ValidationException
 from enums import REFERENCE_TYPES, SIMOS
+from features.document.use_cases.add_document_use_case import add_document_use_case
 from tests.unit.mock_utils import get_mock_document_service
 
 
@@ -294,6 +295,11 @@ class ReferenceTestCase(unittest.TestCase):
             "type": SIMOS.REFERENCE.value,
             "referenceType": REFERENCE_TYPES.LINK.value,
         }
-        document_service.add(Address("$1.uncontained_in_every_way", "testing"), reference, update_uncontained=True)
+        add_document_use_case(
+            address=Address("$1.uncontained_in_every_way", "testing"),
+            document=reference,
+            update_uncontained=True,
+            document_service=document_service,
+        )
         assert len(doc_storage["1"]["uncontained_in_every_way"]) == 2
         assert doc_storage["1"]["uncontained_in_every_way"][1] == reference
