@@ -316,14 +316,13 @@ class DocumentService:
         validate_entity_against_self(data, self.get_blueprint)
         if not address.path:
             raise Exception(f"Could not find the node on '{address}'")
-        path_parts = split_path(address.path)
 
-        # Since the node targeted by the reference might not exist (e.g. optional complex attribute)
-        # we aim for the parent node first. Then get the child.
-        if len(path_parts) > 1:
-            node: Union[Node, ListNode] = self._get_node_to_update(address=address, node_entity=data)
-        else:
+        try:
             node: Node = self.get_document(address)  # type: ignore
+        except NotFoundException:
+            raise ValidationException(
+                f"Can not update document with address {address}, since that document does not exist. If the goal is to add a document, use the document add use instead"
+            )
 
         if node.attribute.attribute_type != BuiltinDataTypes.OBJECT.value:
             validate_entity(data, self.get_blueprint, self.get_blueprint(node.attribute.attribute_type), "extend")
@@ -334,9 +333,6 @@ class DocumentService:
             merge_entity_and_files(node, files)
 
         self.save(node, address.data_source, update_uncontained=update_uncontained, initial=True)
-        if len(path_parts) > 1:
-            node.parent.children.append(node)
-            self.save(node.parent, address.data_source, update_uncontained=update_uncontained, initial=True)
         logger.info(f"Updated entity '{address}'")
         return {"data": tree_node_to_dict(node)}
 

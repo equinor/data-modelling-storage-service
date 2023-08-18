@@ -1,6 +1,7 @@
 from typing import Callable, List, Union
 from uuid import uuid4
 
+from common.exceptions import ValidationException
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
@@ -422,6 +423,8 @@ class ListNode(NodeBase):
 
     def update(self, data: list):
         # Replaces the whole list with the new one
+        if not isinstance(data, list):
+            raise ValidationException(f"Cannot replace a list with a dictionary. Got data: {data}")
         self.children = []
         for i, item in enumerate(data):
             # Set self.type from posted type, and validate against parent blueprint

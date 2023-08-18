@@ -155,172 +155,44 @@ Feature: Document 2
     }
     """
 
-  Scenario: Update document (only contained)
-    Given i access the resource url "/api/documents/data-source-name/$1"
-    When i make a form-data "PUT" request
-    """
-    { "data":{
-      "name": "package_1",
-      "type": "dmss://system/SIMOS/Package",
-      "description": "new description",
-      "isRoot": true
-    }}
-    """
-    Then the response status should be "OK"
-    And the response should contain
-    """
-    {
-      "data": {
-        "name": "package_1",
-        "type": "dmss://system/SIMOS/Package",
-        "description": "new description",
-        "isRoot": true
-      }
-    }
-    """
 
-  Scenario: Update document (both contained and not contained)
-    Given i access the resource url "/api/documents/data-source-name/$6"
-    When i make a form-data "PUT" request
-    """
-    { "data":{
-      "name": "new_name",
-      "type": "dmss://test-source-name/TestData/TestContainer",
-      "description": "some description",
-      "itemContained": {
-          "name": "item_contained",
-          "type": "dmss://test-source-name/TestData/ItemType",
-           "extra": "extra_1"
-      },
-      "itemsContained": [
-        {
-          "name": "item_1_contained",
-          "type": "dmss://test-source-name/TestData/ItemType",
-          "list": ["a", "b", "c"],
-          "complexList": [
-              {
-                "name": "item_1_contained",
-                "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-                "extra": "extra_1"
-              }
-            ]
-        }
-      ],
-      "itemNotContained": {
-          "name": "item_single",
-          "type": "dmss://test-source-name/TestData/ItemType",
-           "extra": "extra_1"
-      },
-      "itemsNotContained": [
-        {
-          "name": "item_1",
-          "type": "dmss://test-source-name/TestData/ItemType",
-          "list": ["a", "b"],
-          "complexList": [
-              {
-                "name": "item_1",
-                "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-                "extra": "extra_1"
-              }
-            ]
-        }
-      ]
-    }}
-    """
-    Then the response status should be "OK"
-    And the response should contain
-    """
-    {
-      "data": {
-        "name": "new_name",
-        "type": "dmss://test-source-name/TestData/TestContainer",
-        "description": "some description",
-        "itemContained": {
-          "name": "item_contained",
-          "type": "dmss://test-source-name/TestData/ItemType",
-           "extra": "extra_1"
-        },
-        "itemsContained": [
-        {
-            "name": "item_1_contained",
-            "type": "dmss://test-source-name/TestData/ItemType",
-            "list": ["a", "b", "c"],
-            "complexList": [
-                {
-                  "name": "item_1_contained",
-                  "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-                  "extra": "extra_1"
-                }
-              ]
-          }
-        ],
-        "itemNotContained": {
-            "name": "item_single",
-            "type": "dmss://test-source-name/TestData/ItemType",
-            "extra": "extra_1"
-        },
-        "itemsNotContained": [
-          {
-            "name": "item_1",
-            "type": "dmss://test-source-name/TestData/ItemType",
-            "list": ["a", "b"],
-            "complexList": [
-              {
-                "name": "item_1",
-                "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-                "extra": "extra_1"
-              }
-            ]
-          }
-        ]
-      }
-    }
-    """
-
-  Scenario: Update document (attribute and not contained)
-    Given i access the resource url "/api/documents/data-source-name/$6.itemNotContained"
-    When i make a form-data "PUT" request
-    """
-    { "data": {
-        "name": "item_single",
-        "type": "dmss://test-source-name/TestData/ItemType"
-      }
-    }
-    """
-    Then the response status should be "OK"
-    And the response should contain
-    """
-    {
-      "data": {
-        "name": "item_single",
-        "type": "dmss://test-source-name/TestData/ItemType"
-      }
-    }
-    """
 
   Scenario: Update complex list attribute
+    Given i access the resource url "/api/documents/data-source-name/$7.complexList"
+    When I make a "POST" request with "1" files
+      """
+      {
+        "document":
+       {
+          "name": "item_1_contained",
+          "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+          "extra": "extra_1"
+        }
+      }
+      """
+    Then the response status should be "OK"
     Given i access the resource url "/api/documents/data-source-name/$7.complexList"
     When i make a form-data "PUT" request
     """
     { "data":
     [
         {
-          "name": "item_1_contained",
+          "name": "item_1_contained_modified",
           "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-          "extra": "extra_1"
+          "extra": "extra_1_modified"
         }
     ]
     }
     """
     Then the response status should be "OK"
-    And the response should contain
+    And the response should be
     """
     {
       "data": [
           {
-            "name": "item_1_contained",
+            "name": "item_1_contained_modified",
             "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-            "extra": "extra_1"
+            "extra": "extra_1_modified"
           }
         ]
     }
@@ -336,9 +208,9 @@ Feature: Document 2
       "type": "dmss://test-source-name/TestData/ItemType",
       "complexList": [
           {
-            "name": "item_1_contained",
+            "name": "item_1_contained_modified",
             "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-            "extra": "extra_1"
+            "extra": "extra_1_modified"
           }
       ]
     }
@@ -350,51 +222,55 @@ Feature: Document 2
     """
     [
           {
-            "name": "item_1_contained",
+            "name": "item_1_contained_modified",
             "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-            "extra": "extra_1"
+            "extra": "extra_1_modified"
           }
       ]
     """
     Given i access the resource url "/api/documents/data-source-name/$7.complexList[0]"
     When I make a "GET" request
     Then the response status should be "OK"
-        And the response should be
+    And the response should be
     """
     {
-      "name": "item_1_contained",
+      "name": "item_1_contained_modified",
       "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-      "extra": "extra_1"
+      "extra": "extra_1_modified"
     }
     """
 
 
   Scenario: Update complex attribute
     Given i access the resource url "/api/documents/data-source-name/$7.complexList"
-    When i make a form-data "PUT" request
-    """
-    { "data":
-      [
-          {
-            "name": "item_1_contained",
+    When I make a "POST" request with "1" files
+      """
+      {
+        "document":
+       {
+          "name": "item_1_contained",
+          "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+          "extra": "extra_1",
+          "complexAttribute": {
+            "name": "itemForComplexAttribute",
             "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-            "extra": "extra_1"
+            "extra": "extra_2"
           }
-      ]
-    }
-    """
-    Then the response status should be "OK"
+        }
+      }
+      """
     Given i access the resource url "/api/documents/data-source-name/$7.complexList[0].complexAttribute"
     When i make a form-data "PUT" request
     """
     { "data":
-        {
-          "name": "itemForComplexAttribute",
-          "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-          "extra": "extra_2"
-        }
+      {
+        "name": "itemForComplexAttributeModified",
+        "type": "dmss://test-source-name/TestData/ItemTypeTwo",
+        "extra": "extra_2_modified"
+      }
     }
     """
+
     Then the response status should be "OK"
     Given i access the resource url "/api/documents/data-source-name/$7.complexList[0]"
     When I make a "GET" request
@@ -406,9 +282,9 @@ Feature: Document 2
       "type": "dmss://test-source-name/TestData/ItemTypeTwo",
       "extra": "extra_1",
       "complexAttribute": {
-        "name": "itemForComplexAttribute",
+        "name": "itemForComplexAttributeModified",
         "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-        "extra": "extra_2"
+        "extra": "extra_2_modified"
       }
     }
     """
@@ -418,8 +294,8 @@ Feature: Document 2
     And the response should contain
     """
     {
-      "name": "itemForComplexAttribute",
+      "name": "itemForComplexAttributeModified",
       "type": "dmss://test-source-name/TestData/ItemTypeTwo",
-      "extra": "extra_2"
+      "extra": "extra_2_modified"
     }
     """
