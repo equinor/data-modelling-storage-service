@@ -90,10 +90,12 @@ def add_document(
     - document (dict): The document that is to be stored.
     - files: Optional list of files to be stored as part of this document.
     - update_uncontained (bool): Optional flag specifying whether
-    - user (User): The authenticated user accessing the endpoint.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
-    TODO decide if we should support adding an empty list. That is currently not supported.
+    Returns:
+    - dict: A dictionary with one element, "uid", which is the ID of the created document.
     """
+    #     TODO decide if we should support adding an empty list. That is currently not supported.
 
     document_service = DocumentService(
         repository_provider=get_data_source,
@@ -115,12 +117,18 @@ def add_document(
 @router.post("-add-raw/{data_source_id}", operation_id="document_add_simple", response_model=str, responses=responses)
 @create_response(PlainTextResponse)
 def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt_or_pat)):
-    """
-    Adds the document 'as-is' to the datasource.
-    NOTE: The 'explorer-add' operation is to be preferred.
-    This is mainly for bootstrapping and imports.
-    Blueprint need not exist, and so there is no validation or splitting of entities.
-    Posted document must be a valid Entity.
+    """Adding a document 'as-is' to the data source, mainly used for bootstrapping and imports.
+
+    This endpoint adds a document to the data source, without any validation or splitting up of entities.
+    A blueprint for the entity need not exist. Posted document must be a valid Entity, with a "type" defined.
+
+    Args:
+    - data_source_id (str): The ID of the data source where the document should be added.
+    - document (dict): The document to add to the data source.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
+
+    Returns:
+    - str: ID of the document that was uploaded.
     """
     return add_raw_use_case(user=user, document=document, data_source_id=data_source_id)
 
@@ -132,6 +140,7 @@ def remove(address: str, user: User = Depends(auth_w_jwt_or_pat)):
 
     Args:
     - address (str): path address to the document that is to be deleted.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:
     - str: "OK" (200)
