@@ -13,17 +13,22 @@ from .use_cases.validate_existing_entity import validate_existing_entity_use_cas
 router = APIRouter(tags=["default", "entity"], prefix="/entity")
 
 
-@router.post("", operation_id="instantiate_entity", response_model=Entity, responses=responses)
+@router.post("", operation_id="instantiate_entity", response_model=dict, responses=responses)
 @create_response(JSONResponse)
 def instantiate(entity: Entity, user: User = Depends(auth_w_jwt_or_pat)):
     """Returns a default entity of specified type. This entity is not stored in the database.
 
-    Rules for instantiation:
-    - all required attributes, as defined in the blueprint, are included.
-      If the required attribute has a default value, that value will be used.
-      If not, an 'empty' value will be used. For example empty string,
-      an empty list, the number 0, etc.
-    - optional attributes are not included (also true if optional attribute has a default value)
+    This endpoint creates a default entity of the specified type. A default entity of that type is
+    specified to contain all the required fields with their default values. If no default value is set for the field,
+    then an 'empty' value will be set for that field. For an int that would be 0, and for a string that would be "".
+    Optional attributes are not filled in, even if a default value is specified for that optional field.
+
+    Args:
+    - entity (Entity): A JSON object with only a "type" parameter. Any other fields will be ignored.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
+
+    Returns:
+    - dict: A default entity of the specified type.
     """
     return instantiate_entity_use_case(basic_entity=entity, user=user)
 
@@ -31,10 +36,19 @@ def instantiate(entity: Entity, user: User = Depends(auth_w_jwt_or_pat)):
 @router.post("/validate", operation_id="validate_entity", responses=responses)
 @create_response(JSONResponse)
 def validate(entity: Entity, as_type: TypeConstrainedString | None = None, user: User = Depends(auth_w_jwt_or_pat)):
-    """Validate an entity.
-    Will return detailed error messages and status code 422 if the entity is invalid.
+    """Validate an entity according to its blueprint.
 
-    "as_type": Optional. Validate the root entity against this type instead of the one defined in the entity.
+    This endpoint compares the entity to the specifications of its blueprint. The entity's blueprint is specified
+    as the 'type' parameter. The entity is required to have all attributes that are specified as required in the
+    blueprint, and they must be on the correct format.
+
+    This endpoint returns a detailed error messages and status code 422 if the entity is invalid.
+
+    Args:
+    - entity (Entity): a dict object with "type" specified.
+
+    Returns:
+    - str: "OK" (200)
     """
     return validate_entity_use_case(entity=entity, as_type=as_type, user=user)
 
@@ -42,8 +56,18 @@ def validate(entity: Entity, as_type: TypeConstrainedString | None = None, user:
 @router.post("/validate-existing-entity/{address:path}", operation_id="validate_existing_entity", responses=responses)
 @create_response(JSONResponse)
 def validate_existing(address: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """Validate an existing entity in dmss.
-    Will return detailed error messages and status code 422 if an entity is invalid.
+    """Validate an entity stored in the database according to its blueprint .
 
+    This endpoint compares the entity to the specifications of its blueprint. The entity's blueprint is specified
+    as the 'type' parameter. The entity is required to have all attributes that are specified as required in the
+    blueprint, and they must be on the correct format.
+
+    This endpoint returns a detailed error messages and status code 422 if the entity is invalid.
+
+    Args:
+    - address (str): address path to the entity that is to be validated.
+
+    Returns:
+    - str: "OK" (200)
     """
     return validate_existing_entity_use_case(address=address, user=user)

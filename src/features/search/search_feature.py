@@ -35,7 +35,7 @@ def search(
         }
     - data_sources (List[str]): Optional list of data source id's of which to search. If left empty it will search all available databases.
     - sort_by_attribute (str): Optional attribute of which to sort the results. Default is "name".
-    - user (User): The authenticated user accessing the endpoint.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:
     - dict: The sorted search results.
