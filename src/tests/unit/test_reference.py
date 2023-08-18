@@ -6,6 +6,9 @@ from common.address import Address
 from common.exceptions import ValidationException
 from enums import REFERENCE_TYPES, SIMOS
 from features.document.use_cases.add_document_use_case import add_document_use_case
+from features.document.use_cases.update_document_use_case import (
+    update_document_use_case,
+)
 from tests.unit.mock_utils import get_mock_document_service
 
 
@@ -45,8 +48,10 @@ class ReferenceTestCase(unittest.TestCase):
             "type": SIMOS.REFERENCE.value,
             "referenceType": REFERENCE_TYPES.LINK.value,
         }
-        document_service.update_document(
-            Address("$1.uncontained_in_every_way", "testing"), reference, update_uncontained=False
+        update_document_use_case(
+            data=reference,
+            address=Address("$1.uncontained_in_every_way", "testing"),
+            document_service=document_service,
         )
         assert doc_storage["1"]["uncontained_in_every_way"] == reference
 
@@ -93,7 +98,11 @@ class ReferenceTestCase(unittest.TestCase):
         }
 
         with self.assertRaises(ValidationException):
-            document_service.update_document(Address("$1.uncontained_in_every_way", "testing"), reference_entity)
+            update_document_use_case(
+                data=reference_entity,
+                address=Address("$1.uncontained_in_every_way", "testing"),
+                document_service=document_service,
+            )
 
     def test_insert_reference_missing_required_attribute(self):
         repository = mock.Mock()
@@ -125,8 +134,10 @@ class ReferenceTestCase(unittest.TestCase):
 
         reference_entity_with_missing_attribute = {"address": "$123", "type": SIMOS.REFERENCE.value}
         with self.assertRaises(ValidationException):
-            document_service.update_document(
-                Address("$1.uncontained_in_every_way", "testing"), reference_entity_with_missing_attribute
+            update_document_use_case(
+                data=reference_entity_with_missing_attribute,
+                address=Address("$1.uncontained_in_every_way", "testing"),
+                document_service=document_service,
             )
 
     def test_remove_reference(self):

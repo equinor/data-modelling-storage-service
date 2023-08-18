@@ -9,6 +9,9 @@ from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import Node
 from enums import REFERENCE_TYPES, SIMOS
+from features.document.use_cases.update_document_use_case import (
+    update_document_use_case,
+)
 from tests.unit.mock_utils import (
     get_mock_document_service,
     mock_storage_recipe_provider,
@@ -300,26 +303,24 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        document_service.update_document(
-            Address("$1", "test"),
-            data={
-                "_id": "1",
-                "name": "Root",
-                "description": "I'm the root document",
-                "type": "blueprint_with_second_level_nested_uncontained_attribute",
-                "i_have_a_uncontained_attribute": {
-                    "type": "uncontained_blueprint",
-                    "name": "first",
-                    "description": "This has changed!",
-                    "uncontained_in_every_way": {
-                        "type": SIMOS.REFERENCE.value,
-                        "referenceType": REFERENCE_TYPES.LINK.value,
-                        "address": "$2",
-                    },
+        data = {
+            "_id": "1",
+            "name": "Root",
+            "description": "I'm the root document",
+            "type": "blueprint_with_second_level_nested_uncontained_attribute",
+            "i_have_a_uncontained_attribute": {
+                "type": "uncontained_blueprint",
+                "name": "first",
+                "description": "This has changed!",
+                "uncontained_in_every_way": {
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.LINK.value,
+                    "address": "$2",
                 },
             },
-            update_uncontained=False,
-        )
+        }
+
+        update_document_use_case(data=data, address=Address("$1", "test"), document_service=document_service)
         # Test that the "2" document has not been overwritten
         assert doc_storage["2"].get("description") == "I'm the second nested document, uncontained"
         assert doc_storage["1"]["i_have_a_uncontained_attribute"]["description"] == "This has changed!"
@@ -370,7 +371,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "nested": {},
             "references": [],
         }
-        document_service.update_document(Address("$1.a", "testing"), new_data, update_uncontained=True)
+        update_document_use_case(data=new_data, address=Address("$1.a", "testing"), document_service=document_service)
 
         assert doc_storage["1"]["a"]["description"] == "SOME DESCRIPTION"
         assert doc_storage["1"]["a"]["reference"]["description"] == "A NEW DESCRIPTION HERE"

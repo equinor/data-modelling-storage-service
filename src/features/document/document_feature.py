@@ -56,12 +56,20 @@ def update(
     """Update document
     - **id_address**: <protocol>://<data_source>/$<document_uuid> (can also include an optional .<attribute> after <document_uuid>)
     """
-    return update_document_use_case(
+
+    document_service = DocumentService(
+        repository_provider=get_data_source,
         user=user,
-        address=id_address,
+        blueprint_provider=get_blueprint_provider(user),
+        recipe_provider=storage_recipe_provider,
+    )
+
+    return update_document_use_case(
+        address=Address.from_absolute(id_address),
         data=data,
         files=files,
         update_uncontained=update_uncontained,
+        document_service=document_service,
     )
 
 
