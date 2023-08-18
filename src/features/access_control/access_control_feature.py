@@ -18,6 +18,15 @@ def set_acl(
 ):
     """Update access control list (ACL) for a document.
 
+    Args:
+    - data_source_id (str): The ID of the data source which the document resides in.
+    - document_id (str): The ID of the document for which to set the ACL.
+    - acl (ACL): An access control list.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
+
+    Returns:
+    - str: "OK" (200)
+
     The ACL determines which access a given user has for a document (Read, Write or None).
     """
     return set_acl_use_case(
@@ -28,8 +37,16 @@ def set_acl(
 @router.get("/{data_source_id}/{document_id}", operation_id="get_acl", response_model=ACL, responses=responses)
 @create_response(JSONResponse)
 def get_acl(data_source_id: str, document_id: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """get access control list (ACL) for a document.
+    """GET the access control list (ACL) for a document.
 
     The ACL determines which access a given user has for a document (Read, Write or None).
+
+    Args:
+    - data_source_id (str): The ID of the data source which the document resides in.
+    - document_id (str): The ID of the document for which to check the ACL.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
+
+    Returns:
+    - ACL: The access control list requested.
     """
     return get_acl_use_case(user=user, data_source_id=data_source_id, document_id=document_id).dict()
