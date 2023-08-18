@@ -66,6 +66,7 @@ def validate_existing(address: str, user: User = Depends(auth_w_jwt_or_pat)):
 
     Args:
     - address (str): address path to the entity that is to be validated.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:
     - str: "OK" (200)
