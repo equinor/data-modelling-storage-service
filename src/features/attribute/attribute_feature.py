@@ -18,7 +18,15 @@ router = APIRouter(tags=["default", "attribute"], prefix="/attribute")
 )
 @create_response(JSONResponse)
 def get_attribute(address: str, user: User = Depends(auth_w_jwt_or_pat)):
-    """
-    Fetch the attribute from a address.
+    """Fetch the BlueprintAttribute which is the container for the addressed object.
+
+    This endpoint is used for fetching a BlueprintAttribute in which the addressed entity is contained.
+
+    Args:
+    - address (str): The address to the entity.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
+
+    Returns:
+    - dict: The blueprint-attribute object.
     """
     return get_attribute_use_case(user=user, address=address)
