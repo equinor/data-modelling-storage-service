@@ -26,8 +26,6 @@ def set_acl(
 
     Returns:
     - str: "OK" (200)
-
-    The ACL determines which access a given user has for a document (Read, Write or None).
     """
     return set_acl_use_case(
         user=user, data_source_id=data_source_id, document_id=document_id, acl=acl, recursively=recursively
