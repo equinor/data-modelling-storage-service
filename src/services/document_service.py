@@ -404,19 +404,3 @@ class DocumentService:
             document_id = document_id[1:]
         lookup = data_source.get_access_control(document_id)
         return lookup.acl
-
-    def remove_reference(self, address: Address) -> dict:
-        attribute_node: Node = self.get_document(address)
-        if not address.path:
-            raise Exception(f"Could not find the node on '{address}'")
-        document: Node = attribute_node.parent.find_parent()
-
-        # If we are removing a reference from a list, pop child with posted index
-        if attribute_node.parent.is_array():
-            attribute_node.parent.children.pop(int(attribute_node.key))
-        else:
-            attribute_node.entity = {}
-        self.save(document, address.data_source)
-        logger.info(f"Removed reference from '{address}'")
-
-        return tree_node_to_dict(document)
