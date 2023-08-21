@@ -102,7 +102,7 @@ def _add_document_to_entity_or_list(
         parent_address: Address = Address(
             protocol=address.protocol, path=parent_address_as_string, data_source=address.data_source
         )
-        parent_node: Node = document_service.get_document(parent_address, depth=99)
+        parent_node: Node = document_service.get_document(parent_address, depth=1)
         parent_blueprint = parent_node.blueprint
         if (
             len(
