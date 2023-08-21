@@ -29,19 +29,23 @@ Feature: Add and remove references
     }
     """
     Given i access the resource url "/api/documents/test-DS/$1.content"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
-    "document": {
-        "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
-        "type": "dmss://system/SIMOS/Reference",
-        "referenceType": "link"
-      }
+      "document":
+        {
+          "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
+        }
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/reference/test-DS/$1.content[0]"
+    Given i access the resource url "/api/documents/test-DS/$1.content[0]"
     When i make a "DELETE" request
+    Then the response status should be "OK"
+    Given i access the resource url "/api/documents/test-DS/$1"
+    When i make a "GET" request
     Then the response status should be "OK"
     And the response should contain
     """
@@ -128,8 +132,7 @@ Feature: Add and remove references
     {
       "name": "myTurbine",
       "type": "dmss://test-DS/TestData/Turbine",
-      "description": "This is a wind turbine demoing uncontained relationships",
-      "Mooring": {}
+      "description": "This is a wind turbine demoing uncontained relationships"
     }
     """
     Given there exist document with id "3f9ff99f-9cb5-4afc-947b-a3224eee341f" in data source "test-DS"
@@ -142,7 +145,7 @@ Feature: Add and remove references
     }
     """
     Given i access the resource url "/api/documents/test-DS/$4.Mooring"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document": {
@@ -153,15 +156,17 @@ Feature: Add and remove references
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/reference/test-DS/$4.Mooring"
+    Given i access the resource url "/api/documents/test-DS/$4.Mooring"
     When i make a "DELETE" request
+    Then the response status should be "OK"
+    Given i access the resource url "/api/documents/test-DS/$4"
+    When i make a "GET" request
     Then the response status should be "OK"
     And the response should contain
     """
     {
       "name": "myTurbine",
       "type": "dmss://test-DS/TestData/Turbine",
-      "description": "This is a wind turbine demoing uncontained relationships",
-      "Mooring": {}
+      "description": "This is a wind turbine demoing uncontained relationships"
     }
     """
