@@ -4,7 +4,7 @@ from functools import lru_cache
 from typing import Callable, Dict, List, Union
 from uuid import uuid4
 
-from authentication.models import ACL
+from authentication.models import AccessControlList
 from common.address import Address
 from common.exceptions import (
     ApplicationException,
@@ -370,7 +370,7 @@ class DocumentService:
 
         return result_list
 
-    def set_acl(self, data_source_id: str, document_id: str, acl: ACL, recursively: bool = True):
+    def set_acl(self, data_source_id: str, document_id: str, acl: AccessControlList, recursively: bool = True):
         if "." in document_id:
             raise Exception(
                 f"set_acl() function got document_id: {document_id}. "
@@ -394,7 +394,7 @@ class DocumentService:
                     except MissingPrivilegeException:  # The user might not have permission on a referenced document
                         logger.warning(f"Failed to update ACL on {node.node_id}. Permission denied.")
 
-    def get_acl(self, data_source_id, document_id) -> ACL:
+    def get_access_control_list(self, data_source_id, document_id) -> AccessControlList:
         data_source: DataSource = self.repository_provider(data_source_id, self.user)
         if document_id.startswith("$"):
             document_id = document_id[1:]

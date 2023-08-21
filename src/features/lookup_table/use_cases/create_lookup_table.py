@@ -1,4 +1,7 @@
-from authentication.access_control import DEFAULT_ACL, access_control
+from authentication.access_control import (
+    DEFAULT_ACCESS_CONTROL_LIST,
+    assert_user_has_access,
+)
 from authentication.models import AccessLevel, User
 from common.address import Address
 from domain_classes.lookup import Lookup
@@ -16,7 +19,7 @@ def create_lookup_table_use_case(
     """
     Create lookup table. If the lookup table already exist, the lookup table will be updated.
     """
-    access_control(DEFAULT_ACL, AccessLevel.WRITE, user)
+    assert_user_has_access(DEFAULT_ACCESS_CONTROL_LIST, AccessLevel.WRITE, user)
 
     document_service = DocumentService(repository_provider=repository_provider, user=user)
     lookup_class_attributes = list(Lookup.__annotations__.keys())
