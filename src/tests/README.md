@@ -3,11 +3,11 @@
 ## Unit tests
 
 ```bash
-docker-compose run dmss pytest
+docker-compose run --rm dmss pytest
 ```
 
 ## BDD Tests
 
 ```bash
-docker-compose run dmss behave
+docker-compose run --rm dmss behave
 ```
