@@ -172,8 +172,8 @@ class ReferenceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        document_service.remove_reference(Address("$1.uncontained_in_every_way", "testing"))
-        assert doc_storage["1"]["uncontained_in_every_way"] == {}
+        document_service.remove(Address("$1.uncontained_in_every_way", "testing"))
+        assert "uncontained_in_every_way" not in doc_storage["1"]
 
     def test_remove_nested_reference(self):
         repository = mock.Mock()
@@ -212,10 +212,8 @@ class ReferenceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        document_service.remove_reference(
-            Address("$1.i_have_a_uncontained_attribute.uncontained_in_every_way", "testing")
-        )
-        assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"] == {}
+        document_service.remove(Address("$1.i_have_a_uncontained_attribute.uncontained_in_every_way", "testing"))
+        assert "uncontained_in_every_way" not in doc_storage["1"]["i_have_a_uncontained_attribute"]
 
     def test_remove_reference_in_list(self):
         repository = mock.Mock()
@@ -258,7 +256,7 @@ class ReferenceTestCase(unittest.TestCase):
         repository.update = mock_update
         document_service = get_mock_document_service(lambda x, y: repository)
 
-        document_service.remove_reference(Address("$1.uncontained_in_every_way[0]", "testing"))
+        document_service.remove(Address("$1.uncontained_in_every_way[0]", "testing"))
         assert len(doc_storage["1"]["uncontained_in_every_way"]) == 1
         assert doc_storage["1"]["uncontained_in_every_way"][0] == {
             "address": "$42dbe4a5-0eb0-4ee2-826c-695172c3c35a",

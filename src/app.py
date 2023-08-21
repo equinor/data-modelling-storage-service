@@ -44,7 +44,6 @@ def create_app() -> FastAPI:
     from features.lookup_table import lookup_table_feature
     from features.meta import meta_feature
     from features.personal_access_token import personal_access_token_feature
-    from features.reference import reference_feature
     from features.search import search_feature
     from features.whoami import whoami_feature
 
@@ -58,7 +57,6 @@ def create_app() -> FastAPI:
     authenticated_routes.include_router(datasource_feature.router)
     authenticated_routes.include_router(document_feature.router)
     authenticated_routes.include_router(export_feature.router)
-    authenticated_routes.include_router(reference_feature.router)
     authenticated_routes.include_router(search_feature.router)
     authenticated_routes.include_router(whoami_feature.router)
     authenticated_routes.include_router(entity_feature.router)
