@@ -15,30 +15,23 @@ class SearchRequest(DataSourceList):
     dotted_attribute_path: str
 
 
-def get_search_result(output_dict: dict, data_source_id: str, document_service: DocumentService, req: SearchRequest):
-    results = document_service.search(
-        data_source_id=data_source_id,
-        search_data=deepcopy(req.data),
-        dotted_attribute_path=req.dotted_attribute_path,
-    )
-    return output_dict.update(results)
-
-
 def search_use_case(user: User, request: SearchRequest, repository_provider=get_data_source):
     document_service: DocumentService = DocumentService(repository_provider=repository_provider, user=user)
-    all_data_sources = DataSourceRepository(user).list()
+    all_data_source_ids = [ds["id"] for ds in DataSourceRepository(user).list()]
+    search_data_sources = all_data_source_ids
+
+    if request.data_sources:
+        # If user has specified any data sources, check that they exist, then select only through them for search.
+        if invalid_search_data_sources := set(request.data_sources) - set(all_data_source_ids):
+            raise BadRequestException(f"Data source {invalid_search_data_sources.pop()} not found")
+        search_data_sources = request.data_sources
 
     search_results: dict = {}
-
-    if not len(request.data_sources):
-        # search all data sources when data_sources list in request is empty.
-        for index, data_source in enumerate(all_data_sources):
-            data_source_id = data_source["id"]
-            get_search_result(search_results, data_source_id, document_service, request)
-    else:
-        all_data_source_ids: list = [ds["id"] for ds in all_data_sources]
-        for data_source in request.data_sources:
-            if data_source not in all_data_source_ids:
-                raise BadRequestException(f"Data source {data_source} not found")
-            get_search_result(search_results, data_source, document_service, request)
+    for data_source_id in search_data_sources:
+        results = document_service.search(
+            data_source_id=data_source_id,
+            search_data=deepcopy(request.data),
+            dotted_attribute_path=request.dotted_attribute_path,
+        )
+        search_results.update(results)
     return search_results
