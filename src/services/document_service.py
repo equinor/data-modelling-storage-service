@@ -398,7 +398,7 @@ class DocumentService:
         data_source: DataSource = self.repository_provider(data_source_id, self.user)
         if document_id.startswith("$"):
             document_id = document_id[1:]
-        lookup = data_source.get_access_control(document_id)
+        lookup = data_source.get_lookup(document_id)
         return lookup.acl
 
     def remove_reference(self, address: Address) -> dict:
