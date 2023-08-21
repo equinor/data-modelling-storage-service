@@ -33,8 +33,7 @@ API documentation can be found at [http://localhost:5000/docs](http://localhost:
 To refresh the database after first-time:
 
 ```bash
-docker-compose exec dmss reset-app
-
+docker-compose run --rm dmss reset-app
 ```
 
 ## Available client APIs
