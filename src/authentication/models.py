@@ -54,7 +54,7 @@ class User(BaseModel):
         return hash(self.user_id)
 
 
-class ACL(BaseModel):
+class AccessControlList(BaseModel):
     """
     acl:
       owner: 'user_id'

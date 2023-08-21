@@ -3,8 +3,11 @@ from typing import Dict, List, Optional
 from pydantic import BaseModel
 from pymongo.errors import DuplicateKeyError, ServerSelectionTimeoutError
 
-from authentication.access_control import DEFAULT_ACL, access_control
-from authentication.models import ACL, AccessLevel, User
+from authentication.access_control import (
+    DEFAULT_ACCESS_CONTROL_LIST,
+    assert_user_has_access,
+)
+from authentication.models import AccessControlList, AccessLevel, User
 from common.exceptions import (
     ApplicationException,
     BadRequestException,
@@ -70,7 +73,7 @@ class DataSourceRepository:
         return all_sources
 
     def create(self, id: str, document: DataSourceRequest):
-        access_control(DEFAULT_ACL, AccessLevel.WRITE, self.user)
+        assert_user_has_access(DEFAULT_ACCESS_CONTROL_LIST, AccessLevel.WRITE, self.user)
         document = document.dict()
         document["_id"] = id
         try:
@@ -98,9 +101,9 @@ class DataSourceRepository:
             )
         return DataSource.from_dict(data_source, user=self.user)
 
-    def update_access_control(self, data_source_id: str, acl: ACL) -> None:
+    def update_access_control(self, data_source_id: str, acl: AccessControlList) -> None:
         data_source: DataSource = self.get(data_source_id)
-        access_control(data_source.acl, AccessLevel.WRITE, self.user)
+        assert_user_has_access(data_source.acl, AccessLevel.WRITE, self.user)
         data_source_collection.update_one(filter={"_id": data_source.name}, update={"$set": {"acl": acl.dict()}})
 
 

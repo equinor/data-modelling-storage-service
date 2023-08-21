@@ -1,9 +1,9 @@
-from authentication.models import ACL, AccessLevel, User
+from authentication.models import AccessControlList, AccessLevel, User
 from common.exceptions import MissingPrivilegeException
 from config import config
 
 
-def access_control(acl: ACL, access_level_required: AccessLevel, user: User):
+def assert_user_has_access(acl: AccessControlList, access_level_required: AccessLevel, user: User):
     """
     This is the main access control function.
     It will either return True or an MissingPrivilegeException.
@@ -36,9 +36,13 @@ def access_control(acl: ACL, access_level_required: AccessLevel, user: User):
     raise MissingPrivilegeException(f"The requested operation requires '{access_level_required.name}' privileges")
 
 
-def create_acl(user: User) -> ACL:
+def create_access_control_list(user: User) -> AccessControlList:
     """Used when there is no ACL to inherit. Sets the current user as owner, and rest copies DEFAULT_ACL"""
-    return ACL(owner=user.user_id, roles=DEFAULT_ACL.roles, others=DEFAULT_ACL.others)
+    return AccessControlList(
+        owner=user.user_id, roles=DEFAULT_ACCESS_CONTROL_LIST.roles, others=DEFAULT_ACCESS_CONTROL_LIST.others
+    )
 
 
-DEFAULT_ACL = ACL(owner=config.DMSS_ADMIN, roles={config.DMSS_ADMIN_ROLE: AccessLevel.WRITE}, others=AccessLevel.READ)
+DEFAULT_ACCESS_CONTROL_LIST = AccessControlList(
+    owner=config.DMSS_ADMIN, roles={config.DMSS_ADMIN_ROLE: AccessLevel.WRITE}, others=AccessLevel.READ
+)
