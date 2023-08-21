@@ -92,7 +92,7 @@ class DataSource:
         old_lookup.acl = acl
         self._update_lookup(old_lookup)
 
-    def get_access_control(self, document_id: str) -> DocumentLookUp:
+    def get_lookup(self, document_id: str) -> DocumentLookUp:
         lookup = self._lookup(document_id)
         access_control(lookup.acl, AccessLevel.READ, self.user)
         return lookup
