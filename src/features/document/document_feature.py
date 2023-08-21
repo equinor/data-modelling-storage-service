@@ -29,17 +29,22 @@ def get(
     depth: conint(gt=-1, lt=1000) = 1,  # type: ignore
     user: User = Depends(auth_w_jwt_or_pat),
 ):
-    """
-    Get document as JSON string.
+    """Get a Document as JSON String
 
-    - **address**: An address to a package or a data source
-      - By id: PROTOCOL://DATA SOURCE/$ID.Attribute
-      - By path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE/ENTITY.Attribute
-      - By query: PROTOCOL://DATA SOURCE/$ID.list(key=value)
+    This endpoint can be used for getting entities, blueprints or other json documents from the database.
 
-    The PROTOCOL is optional, and the default is dmss.
+    Args:
+    - address: path address to where the document should be stored.
+      - Example: Reference to data source: PROTOCOL://DATA SOURCE
+      - Example: Reference to package by id: PROTOCOL://DATA SOURCE/$ID
+      - Example: Reference to package by path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE
+      - The PROTOCOL is optional, and the default is dmss.
+    - document (dict): The document that is to be stored.
+    - depth (int): The maximum depth for resolving nested documents.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
-    - **depth**: Maximum depth for resolving nested documents.
+    Returns:
+    - dict: The document requested.
     """
     return get_document_use_case(user=user, address=address, depth=depth)
 
@@ -53,8 +58,23 @@ def update(
     update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
-    """Update document
-    - **id_address**: <protocol>://<data_source>/$<document_uuid> (can also include an optional .<attribute> after <document_uuid>)
+    """Update an Existing Document in the Database.
+
+    This endpoint can be used for updating an existing document
+
+    Args:
+    - address: Path address to the document that should be updated.
+      - Example: Reference to data source: PROTOCOL://DATA SOURCE
+      - Example: Reference to package by id: PROTOCOL://DATA SOURCE/$ID
+      - Example: Reference to package by path: PROTOCOL://DATA SOURCE/ROOT PACKAGE/SUB PACKAGE
+      - The PROTOCOL is optional, and the default is dmss.
+    - document (dict): The document to replace the previous version.
+    - files: Optional list of files to be stored as part of this document.
+    - update_uncontained (bool): Optional flag specifying whether to also update uncontained attributes in the document.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
+
+    Returns:
+    - dict: The updated document.
     """
     return update_document_use_case(
         user=user,
@@ -89,7 +109,7 @@ def add_document(
       - The PROTOCOL is optional, and the default is dmss.
     - document (dict): The document that is to be stored.
     - files: Optional list of files to be stored as part of this document.
-    - update_uncontained (bool): Optional flag specifying whether
+    - update_uncontained (bool): Optional flag specifying whether to also update uncontained attributes in the document.
     - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:
