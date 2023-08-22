@@ -513,7 +513,7 @@ Feature: Explorer - Search entity
     {
     "data": null,
     "debug": "Unable to complete the requested operation with the given input values.",
-    "message": "Data source DOESNOTEXIST not found",
+    "message": "Data sources not found:\n\tDOESNOTEXIST",
     "status": 400,
     "type": "BadRequestException"
     }
