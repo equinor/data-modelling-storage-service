@@ -3,14 +3,14 @@
   "_blueprintPath_": "dmss://system/SIMOS/Entity",
   "uiRecipes": [
     {
-      "type": "dmss://system/SIMOS/UiRecipe",
       "name": "DEFAULT_CREATE",
+      "type": "dmss://system/SIMOS/UiRecipe",
       "description": "",
       "attributes": [
         {
           "name": "type",
-          "attributeType": "string",
           "type": "dmss://system/SIMOS/UiAttribute",
+          "attributeType": "string",
           "field": "blueprint",
           "label": "Type"
         }

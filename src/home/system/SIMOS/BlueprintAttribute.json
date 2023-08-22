@@ -1,62 +1,64 @@
 {
-  "type": "dmss://system/SIMOS/Blueprint",
-  "extends": ["dmss://system/SIMOS/NamedEntity"],
   "name": "BlueprintAttribute",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "This describes a blueprint attribute",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
   "attributes": [
     {
       "name": "type",
-      "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
       "label": "Type",
       "default": "dmss://system/SIMOS/BlueprintAttribute",
       "optional": false
     },
     {
-      "attributeType": "string",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "attributeType",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
       "optional": false,
       "default": "string"
     },
     {
-      "attributeType": "string",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "dimensions",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
       "optional": true,
       "default": ""
     },
     {
       "name": "label",
-      "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
       "optional": true,
       "default": ""
     },
     {
       "name": "default",
-      "attributeType": "any",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "any",
       "optional": true
     },
     {
-      "attributeType": "boolean",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "optional",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "boolean",
       "default": false,
       "optional": true
     },
     {
       "name": "contained",
-      "attributeType": "boolean",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "boolean",
       "default": true,
       "optional": true
     },
     {
       "name": "enumType",
-      "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
       "optional": true,
       "default": ""
     }

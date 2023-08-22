@@ -3,8 +3,8 @@
   "_blueprintPath_": "dmss://system/SIMOS/Package",
   "storageRecipes": [
     {
-      "type": "dmss://system/SIMOS/StorageRecipe",
       "name": "DEFAULT",
+      "type": "dmss://system/SIMOS/StorageRecipe",
       "description": "",
       "attributes": [
         {
@@ -17,10 +17,10 @@
   ],
   "uiRecipes": [
     {
-      "type": "dmss://system/SIMOS/UiRecipe",
       "name": "DEFAULT_CREATE",
-      "plugin": "DEFAULT_CREATE",
+      "type": "dmss://system/SIMOS/UiRecipe",
       "description": "",
+      "plugin": "DEFAULT_CREATE",
       "attributes": [
         {
           "name": "isRoot",

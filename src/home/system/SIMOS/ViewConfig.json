@@ -1,29 +1,29 @@
 {
-  "type": "dmss://system/SIMOS/Blueprint",
   "name": "ViewConfig",
+  "type": "dmss://system/SIMOS/Blueprint",
   "attributes": [
     {
       "name": "type",
-      "attributeType": "string",
-      "type": "dmss://system/SIMOS/BlueprintAttribute"
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
     },
     {
+      "name": "scope",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
-      "name": "scope",
       "optional": true,
       "default": "self"
     },
-     {
+    {
+      "name": "label",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
-      "name": "label",
       "optional": true
     },
-         {
+    {
+      "name": "eds_icon",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
-      "name": "eds_icon",
       "optional": true
     }
   ]

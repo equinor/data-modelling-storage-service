@@ -1,6 +1,8 @@
-  {
-  "type": "dmss://system/SIMOS/Blueprint",
-  "extends": ["dmss://system/SIMOS/NamedEntity"],
+{
   "name": "Application",
-  "description": "This describes an application"
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "This describes an application",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ]
 }

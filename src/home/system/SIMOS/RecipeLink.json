@@ -1,42 +1,42 @@
 {
-  "type": "dmss://system/SIMOS/Blueprint",
   "name": "RecipeLink",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "Blueprint for a RecipeLink. Used to associate types with a set of Storage- and UiRecipes",
   "attributes": [
     {
-      "attributeType": "string",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "type",
-      "contained": true,
-      "optional": false
-    },
-    {
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "_blueprintPath_",
       "contained": true,
       "optional": false
     },
     {
-      "attributeType": "dmss://system/SIMOS/UiRecipe",
+      "name": "_blueprintPath_",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "contained": true,
+      "optional": false
+    },
+    {
       "name": "initialUiRecipe",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/UiRecipe",
       "contained": true,
       "optional": true,
       "dimensions": ""
     },
     {
-      "attributeType": "dmss://system/SIMOS/UiRecipe",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "uiRecipes",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/UiRecipe",
       "contained": true,
       "optional": true,
       "dimensions": "*"
     },
     {
-      "attributeType": "dmss://system/SIMOS/StorageRecipe",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "storageRecipes",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/StorageRecipe",
       "contained": true,
       "optional": true,
       "dimensions": "*"

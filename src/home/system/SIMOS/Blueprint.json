@@ -1,57 +1,70 @@
 {
-  "type": "dmss://system/SIMOS/Blueprint",
   "name": "Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "This describes a blueprint",
   "_meta_": {
     "type": "dmss://system/SIMOS/Meta",
     "version": "0.0.1"
   },
   "attributes": [
-        {
-      "attributeType": "dmss://system/SIMOS/Meta",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
+    {
       "name": "_meta_",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/Meta",
       "contained": true,
       "optional": true
     },
     {
-      "attributeType": "boolean",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "abstract",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "boolean",
       "default": false,
       "optional": true
     },
     {
-      "attributeType": "string",
+      "name": "name",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "name"
+      "attributeType": "string"
     },
     {
-      "attributeType": "string",
+      "name": "type",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "type"
+      "attributeType": "string"
     },
     {
-      "attributeType": "string",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "extends",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
       "default": [],
       "optional": true,
       "dimensions": "*"
     },
     {
-      "attributeType": "string",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "description",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
       "default": "",
       "optional": true
     },
     {
-      "attributeType": "dmss://system/SIMOS/BlueprintAttribute",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "dimensions": "*",
       "name": "attributes",
-      "default": [{"name": "name", "type": "string"}, {"name": "type", "type": "string"}, {"name": "description", "type": "string"}],
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/BlueprintAttribute",
+      "dimensions": "*",
+      "default": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        }
+      ],
       "contained": true,
       "optional": true
     }
