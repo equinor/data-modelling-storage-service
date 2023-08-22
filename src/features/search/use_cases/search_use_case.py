@@ -15,7 +15,7 @@ class SearchRequest(DataSourceList):
     dotted_attribute_path: str
 
 
-def search_use_case(user: User, request: SearchRequest, repository_provider=get_data_source):
+def search_use_case(user: User, request: SearchRequest, repository_provider=get_data_source) -> dict:
     document_service: DocumentService = DocumentService(repository_provider=repository_provider, user=user)
     all_data_source_ids = [ds["id"] for ds in DataSourceRepository(user).list()]
     search_data_sources = all_data_source_ids
