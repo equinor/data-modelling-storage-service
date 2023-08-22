@@ -336,7 +336,17 @@ class DocumentService:
         logger.info(f"Updated entity '{address}'")
         return {"data": tree_node_to_dict(node)}
 
+    def get_parent_document(self, address: Address):
+        path_split = address.path.rsplit(".", 1)
+        return self.get_document(Address(path_split[0], address.data_source, address.protocol))
+
     def remove(self, address: Address) -> None:
+        if "." in address.path:
+            name = address.path.rsplit('.', 1)[1]
+            parent_blueprint = self.get_parent_document(address).blueprint
+            attribute = [attribute for attribute in parent_blueprint.attributes if attribute.name == name][0]
+            if not attribute.is_optional:
+                raise ValidationException("Tried to remove a required attribute")
         data_source = self.repository_provider(address.data_source, self.user)
 
         resolved_reference: ResolvedAddress = resolve_address(address, self.get_data_source)
