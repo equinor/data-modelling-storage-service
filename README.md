@@ -16,15 +16,16 @@ In order to run the commands described below, you need:
 
 ## Running
 
-```bash
-docker-compose build
-# Repository secrets are encrypted at rest. Therefore, an encryption key is needed.
-KEY=$(docker-compose run --rm dmss create-key)
-echo $KEY
-cp .env-template .env
-echo "SECRET_KEY=$KEY" >> .env
-docker-compose up
-```
+1. Copy the .env-template and name it .env with the command: `cp .env-template .env`
+2. Generate a secret key. Repository secrets are encrypted at rest. Therefore, an encryption key is needed. 
+    ```bash
+    docker-compose build
+    KEY=$(docker-compose run --rm dmss create-key)
+    echo $KEY
+    ```
+3. Copy the secret key and paste it .env under the name `SECRET_KEY`
+4. Run `docker compose up`
+
 
 API documentation can be found at [http://localhost:5000/docs](http://localhost:5000/docs).
 
