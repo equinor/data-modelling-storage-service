@@ -23,7 +23,8 @@ def search_use_case(user: User, request: SearchRequest, repository_provider=get_
     if request.data_sources:
         # If user has specified any data sources, check that they exist, then select only through them for search.
         if invalid_search_data_sources := set(request.data_sources) - set(all_data_source_ids):
-            raise BadRequestException(f"Data source {invalid_search_data_sources.pop()} not found")
+            formatted_ids = "\n\t" + "\n\t".join(invalid_search_data_sources)
+            raise BadRequestException(f"Data sources not found:{formatted_ids}")
         search_data_sources = request.data_sources
 
     search_results: dict = {}
