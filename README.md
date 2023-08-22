@@ -50,24 +50,27 @@ The project provides a `.pre-commit-config.yaml`-file that is used to setup git 
 
 Alternative pre-commit installations can be found [here](https://pre-commit.com/#install).
 
-#### 1) Install pre-commit
 
-Optionally create a virtualenv (recommended)
-
-```shell script
-pip install pre-commit
-pre-commit install
-```
-
-### 2) Install virtual environment
+### 1) Install a Python virtual environment
 
 Virtual environment is used for running unit tests with pre-commit.
+Note: to be able to run unit tests with pre-commit, a virtual environment is needed.
 
+From the repository root folder, run the following commands:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 poetry install
 ```
+
+#### 2) Install pre-commit
+
+From the repository root folder, after virtual environment is activated, run the following commands:
+```shell script
+pip install pre-commit
+pre-commit install
+```
+
 
 ### Testing
 
