@@ -26,7 +26,6 @@ In order to run the commands described below, you need:
 3. Copy the secret key and paste it .env under the name `SECRET_KEY`
 4. Run `docker compose up`
 
-
 API documentation can be found at [http://localhost:5000/docs](http://localhost:5000/docs).
 
 ### Database
