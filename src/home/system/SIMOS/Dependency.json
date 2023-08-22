@@ -1,32 +1,32 @@
 {
-  "type": "dmss://system/SIMOS/Blueprint",
   "name": "Dependency",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "This describes a blueprint",
   "attributes": [
     {
-      "attributeType": "string",
+      "name": "type",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "type"
+      "attributeType": "string"
     },
     {
-      "attributeType": "string",
+      "name": "version",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "version"
+      "attributeType": "string"
     },
     {
-      "attributeType": "string",
+      "name": "alias",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "alias"
+      "attributeType": "string"
     },
     {
-      "attributeType": "string",
+      "name": "protocol",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "protocol"
+      "attributeType": "string"
     },
-     {
-      "attributeType": "string",
+    {
+      "name": "address",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "address"
+      "attributeType": "string"
     }
   ]
 }

@@ -1,26 +1,28 @@
 {
-  "type": "dmss://system/SIMOS/Blueprint",
-  "extends": ["dmss://system/SIMOS/NamedEntity"],
   "name": "UiRecipe",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "This describes uiRecipes",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
   "attributes": [
     {
       "name": "plugin",
-      "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
       "optional": false
     },
     {
       "name": "category",
-      "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
       "optional": true,
       "default": ""
     },
     {
       "name": "roles",
-      "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
       "optional": true,
       "dimensions": "*"
     },
@@ -33,8 +35,8 @@
     },
     {
       "name": "dimensions",
-      "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
       "optional": true,
       "default": ""
     }

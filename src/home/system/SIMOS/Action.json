@@ -1,37 +1,39 @@
 {
-  "type": "dmss://system/SIMOS/Blueprint",
-  "extends": ["dmss://system/SIMOS/NamedEntity"],
   "name": "Action",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "This describes an action",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
   "attributes": [
     {
       "name": "actionType",
-      "attributeType": "string",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "description": "The type of the action.",
+      "attributeType": "string",
       "enumType": "dmss://system/SIMOS/enums/ActionTypes",
       "default": "resultInEntity",
-      "optional": true,
-      "description": "The type of the action."
+      "optional": true
     },
     {
-      "attributeType": "string",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "input",
-      "label": "Input",
-      "description": "Reference to a Blueprint (Path without Datasource prefix)."
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "description": "Reference to a Blueprint (Path without Datasource prefix).",
+      "attributeType": "string",
+      "label": "Input"
     },
     {
-      "attributeType": "string",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "output",
-      "label": "Output",
-      "description": "Reference to a Blueprint (Path without Datasource prefix)."
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "description": "Reference to a Blueprint (Path without Datasource prefix).",
+      "attributeType": "string",
+      "label": "Output"
     },
     {
-      "attributeType": "string",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
       "name": "method",
-      "description": "What method to call inside runnable.tsx"
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "description": "What method to call inside runnable.tsx",
+      "attributeType": "string"
     }
   ]
 }

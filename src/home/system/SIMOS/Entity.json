@@ -1,6 +1,8 @@
 {
+  "name": "Entity",
   "type": "dmss://system/SIMOS/Blueprint",
-  "extends": ["dmss://system/SIMOS/NamedEntity"],
   "description": "Blueprint for a DMT reference",
-  "name": "Entity"
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ]
 }

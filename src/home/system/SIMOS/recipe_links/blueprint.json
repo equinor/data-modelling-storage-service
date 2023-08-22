@@ -8,8 +8,8 @@
       "plugin": "@development-framework/dm-core-plugins/yaml"
     },
     {
-      "type": "dmss://system/SIMOS/UiRecipe",
       "name": "Edit",
+      "type": "dmss://system/SIMOS/UiRecipe",
       "description": "Default blueprint edit",
       "plugin": "@development-framework/dm-core-plugins/blueprint"
     },
@@ -20,9 +20,9 @@
     }
   ],
   "storageRecipes": [
-        {
-      "type": "dmss://system/SIMOS/StorageRecipe",
+    {
       "name": "DefaultStorageRecipe",
+      "type": "dmss://system/SIMOS/StorageRecipe",
       "description": "",
       "attributes": [
         {

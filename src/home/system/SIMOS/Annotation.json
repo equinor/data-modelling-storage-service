@@ -1,13 +1,15 @@
 {
-  "type": "dmss://system/SIMOS/Blueprint",
-  "extends": ["dmss://system/SIMOS/NamedEntity"],
   "name": "Annotation",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "This describes an annotation",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
   "attributes": [
     {
-      "attributeType": "string",
+      "name": "value",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "name": "value"
+      "attributeType": "string"
     }
   ]
 }
