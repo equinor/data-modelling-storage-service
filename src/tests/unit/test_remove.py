@@ -50,14 +50,21 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         self.storage = {"1": doc_1}
 
-        self.assertRaises(ValidationException, self.document_service.remove, Address("$1.uncontained_in_every_way", "testing"))
+        self.assertRaises(
+            ValidationException, self.document_service.remove, Address("$1.uncontained_in_every_way", "testing")
+        )
 
     def test_remove_document_wo_existing_blueprint(self):
         self.storage = {
-            "1": {"_id": "1", "name": "Parent", "description": "", "type": "dmss://testing/this_blueprint_does_not_exist"}
+            "1": {
+                "_id": "1",
+                "name": "Parent",
+                "description": "",
+                "type": "dmss://testing/this_blueprint_does_not_exist",
+            }
         }
 
-        #class NoBlueprints:
+        # class NoBlueprints:
         #    def get_blueprint(self, type):
         #        raise FileNotFoundError
 
@@ -165,23 +172,22 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "name": "Nested",
                     "description": "",
                     "type": "all_contained_cases_blueprint",
-                    "nested":
-                        {
-                            "name": "Parent",
-                            "type": "all_contained_cases_blueprint",
-                            "references": [
-                                {
-                                    "address": "2",
-                                    "type": SIMOS.REFERENCE.value,
-                                    "referenceType": REFERENCE_TYPES.STORAGE.value,
-                                },
-                                {
-                                    "address": "3",
-                                    "type": SIMOS.REFERENCE.value,
-                                    "referenceType": REFERENCE_TYPES.STORAGE.value,
-                                }
-                            ],
-                        },
+                    "nested": {
+                        "name": "Parent",
+                        "type": "all_contained_cases_blueprint",
+                        "references": [
+                            {
+                                "address": "2",
+                                "type": SIMOS.REFERENCE.value,
+                                "referenceType": REFERENCE_TYPES.STORAGE.value,
+                            },
+                            {
+                                "address": "3",
+                                "type": SIMOS.REFERENCE.value,
+                                "referenceType": REFERENCE_TYPES.STORAGE.value,
+                            },
+                        ],
+                    },
                 },
             },
             "2": {
