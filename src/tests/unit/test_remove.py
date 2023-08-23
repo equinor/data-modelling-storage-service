@@ -41,18 +41,33 @@ class DocumentServiceTestCase(unittest.TestCase):
 
     def test_remove_required_attribute(self):
         doc_1 = {
-            "uid": "1",
-            "name": "Parent",
-            "description": "",
-            "type": "uncontained_blueprint",
-            "uncontained_in_every_way": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
+            "_id": "1",
+            "name": "Car rental",
+            "type": "test_data/complex/CarRental",
+            "cars": [
+                {
+                    "address": "2",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.STORAGE.value,
+                }
+            ],
+            "customers": [
+                {
+                    "name": "Jane",
+                    "type": "test_data/complex/Customer",
+                    "car": {
+                        "address": "2",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.STORAGE.value,
+                    },
+                }
+            ],
         }
+        doc_2 = {"_id": "2", "name": "car1", "type": "test_data/complex/RentalCar", "plateNumber": "xyz"}
 
-        self.storage = {"1": doc_1}
+        self.storage = {"1": doc_1, "2": doc_2}
 
-        self.assertRaises(
-            ValidationException, self.document_service.remove, Address("$1.uncontained_in_every_way", "testing")
-        )
+        self.assertRaises(ValidationException, self.document_service.remove, Address("$1.cars", "testing"))
 
     def test_remove_document_wo_existing_blueprint(self):
         self.storage = {
@@ -100,9 +115,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         self.assertRaises(ValidationException, self.document_service.remove, Address("$1.nested", "testing", "dmss"))
-        # TODO Test fails due to modelling error in blueprint. Cannot delete required attribute
-        # assert self.storage["1"].get("nested") is None
-        # assert self.storage.get("2") is None
 
     def test_remove_child_list(self):
         self.storage = {
@@ -123,9 +135,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         self.assertRaises(ValidationException, self.document_service.remove, Address("$1.references", "testing"))
-        # TODO Test fails due to modelling error in blueprint. Cannot delete required attribute
-        # assert self.storage["1"].get("references") is None
-        # assert self.storage.get("2") is None
 
     def test_remove_second_level_nested(self):
         self.storage = {
@@ -222,14 +231,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         self.assertRaises(ValidationException, self.document_service.remove, Address("$1.reference", "testing"))
-        # TODO Test fails due to modelling error in blueprint. Cannot delete required attribute
-        # assert self.storage["1"] == {
-        #     "_id": "1",
-        #     "name": "Parent",
-        #     "description": "",
-        #     "type": "all_contained_cases_blueprint",
-        # }
-        # assert self.storage.get("2")
 
     def test_remove_optional(self):
         self.storage = {

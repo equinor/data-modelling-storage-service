@@ -11,6 +11,7 @@ from common.exceptions import (
     BadRequestException,
     MissingPrivilegeException,
     NotFoundException,
+    ValidationException,
 )
 from common.tree_node_serializer import (
     tree_node_from_dict,

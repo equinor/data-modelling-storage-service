@@ -27,8 +27,16 @@ all_contained_cases_blueprint = {
     "description": "First blueprint",
     "extends": [SIMOS.NAMED_ENTITY.value],
     "attributes": [
-        {"attributeType": "basic_blueprint", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "nested"},
-        {"attributeType": "basic_blueprint", "type": SIMOS.BLUEPRINT_ATTRIBUTE.value, "name": "reference"},
+        {
+            "attributeType": "basic_blueprint",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
+            "name": "nested",
+        },
+        {
+            "attributeType": "basic_blueprint",
+            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
+            "name": "reference",
+        },
         {
             "attributeType": "basic_blueprint",
             "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
