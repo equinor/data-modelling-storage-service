@@ -57,7 +57,7 @@ def get_graph_api_access_token(credentials: CredentialRequest):
     )
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     try:
-        res = post(url, headers=headers, data=payload)
+        res = post(url, headers=headers, data=payload, timeout=5)
         res.raise_for_status()
         auth_response = res.json()
         return auth_response["access_token"]
