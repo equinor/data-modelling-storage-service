@@ -60,7 +60,7 @@ class IdItem:
     id: str
 
     def get_entry_point(self, data_source: DataSource) -> Tuple[dict, str]:
-        if data_source._lookup(self.id).storage_affinity == "blob":
+        if data_source.get_lookup(self.id).storage_affinity == "blob":
             # Do not resolve any binary data, just return a reference to it.
             # Getting the binary data needs to be handled by the consumer (e.g frontend).
             return {
