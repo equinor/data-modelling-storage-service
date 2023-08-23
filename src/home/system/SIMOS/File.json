@@ -37,8 +37,7 @@
       "name": "content",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "binary",
-      "optional": true,
-      "contained": false
+      "optional": true
     }
   ]
 }
