@@ -48,11 +48,11 @@ def replace_absolute_references_in_entity_with_alias(entity: dict, dependencies:
             ]
         elif attribute in attributes_to_update:
             entity[attribute] = replace_reference_with_alias_if_possible(attribute_value, dependencies)
-        elif type(attribute_value) == dict:
+        elif isinstance(attribute_value, dict):
             entity[attribute] = replace_absolute_references_in_entity_with_alias(attribute_value, dependencies)
-        elif type(attribute_value) == list:
+        elif isinstance(attribute_value, list):
             for index, new_entity in enumerate(attribute_value):
-                if type(new_entity) == dict:
+                if isinstance(new_entity, dict):
                     entity[attribute][index] = replace_absolute_references_in_entity_with_alias(
                         new_entity, dependencies
                     )
