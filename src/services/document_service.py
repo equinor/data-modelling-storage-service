@@ -309,10 +309,3 @@ class DocumentService:
                         data_source.update_access_control(node.entity["_id"], acl)
                     except MissingPrivilegeException:  # The user might not have permission on a referenced document
                         logger.warning(f"Failed to update ACL on {node.node_id}. Permission denied.")
-
-    def get_access_control_list(self, data_source_id, document_id) -> AccessControlList:
-        data_source: DataSource = self.repository_provider(data_source_id, self.user)
-        if document_id.startswith("$"):
-            document_id = document_id[1:]
-        lookup = data_source.get_lookup(document_id)
-        return lookup.acl
