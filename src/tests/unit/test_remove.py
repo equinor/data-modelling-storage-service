@@ -54,19 +54,17 @@ class DocumentServiceTestCase(unittest.TestCase):
 
     def test_remove_document_wo_existing_blueprint(self):
         self.storage = {
-            "1": {"_id": "1", "name": "Parent", "description": "", "type": "all_contained_cases_blueprint"}
+            "1": {"_id": "1", "name": "Parent", "description": "", "type": "dmss://testing/this_blueprint_does_not_exist"}
         }
 
-        class NoBlueprints:
-            def get_blueprint(self, type):
-                raise FileNotFoundError
+        #class NoBlueprints:
+        #    def get_blueprint(self, type):
+        #        raise FileNotFoundError
 
         self.document_service = get_mock_document_service(
-            blueprint_provider=NoBlueprints(),
             repository_provider=lambda x, y: self.repository,
         )
-        self.document_service.remove(Address("$1", "testing"))
-        assert self.storage == {}
+        self.assertRaises(FileNotFoundError, self.document_service.remove, Address("$1", "testing"))
 
     def test_remove_document_with_model_and_storage_uncontained_children(self):
         doc_1 = {
@@ -167,22 +165,16 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "name": "Nested",
                     "description": "",
                     "type": "all_contained_cases_blueprint",
-                    "nested": [
+                    "nested":
                         {
                             "name": "Parent",
                             "type": "all_contained_cases_blueprint",
-                            "nested": [
+                            "references": [
                                 {
                                     "address": "2",
                                     "type": SIMOS.REFERENCE.value,
                                     "referenceType": REFERENCE_TYPES.STORAGE.value,
-                                }
-                            ],
-                        },
-                        {
-                            "name": "Parent",
-                            "type": "all_contained_cases_blueprint",
-                            "nested": [
+                                },
                                 {
                                     "address": "3",
                                     "type": SIMOS.REFERENCE.value,
@@ -190,20 +182,19 @@ class DocumentServiceTestCase(unittest.TestCase):
                                 }
                             ],
                         },
-                    ],
                 },
             },
             "2": {
                 "_id": "2",
                 "name": "Parent",
                 "description": "",
-                "type": "all_contained_cases_blueprint",
+                "type": "basic_blueprint",
             },
             "3": {
                 "_id": "3",
                 "name": "Parent",
                 "description": "",
-                "type": "all_contained_cases_blueprint",
+                "type": "basic_blueprint",
             },
         }
 
