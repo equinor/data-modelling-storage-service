@@ -249,8 +249,11 @@ class DocumentService:
             raise e
 
     def remove(self, address: Address) -> None:
-        data_source = self.repository_provider(address.data_source, self.user)
+        node = self.get_document(address)
+        if node.parent and not node.attribute.is_optional:
+            raise ValidationException("Tried to remove a required attribute")
 
+        data_source = self.repository_provider(address.data_source, self.user)
         resolved_reference: ResolvedAddress = resolve_address(address, self.get_data_source)
         # If the reference goes through a parent, get the parent document
         if resolved_reference.attribute_path:
