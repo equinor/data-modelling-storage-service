@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import AccessControlList, User
 from common.responses import create_response, responses
+from storage.internal.data_source_repository import DataSourceRepository
 
 from .use_cases.get_acl_use_case import get_acl_use_case
 from .use_cases.set_acl_use_case import set_acl_use_case
@@ -53,4 +54,6 @@ def get_acl(data_source_id: str, document_id: str, user: User = Depends(auth_w_j
     Returns:
     - ACL: The access control list requested.
     """
-    return get_acl_use_case(user=user, data_source_id=data_source_id, document_id=document_id).dict()
+    return get_acl_use_case(
+        data_source_id=data_source_id, document_id=document_id, data_source_repository=DataSourceRepository(user)
+    ).dict()
