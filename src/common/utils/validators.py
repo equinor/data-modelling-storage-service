@@ -35,9 +35,11 @@ def is_blueprint_instance_of(
 
 def _validate_primitive_attribute(attribute: BlueprintAttribute, value: bool | int | float | str, key: str):
     python_type = BuiltinDataTypes(attribute.attribute_type).to_py_type()
-    if attribute.attribute_type == "number" and type(value) == int:  # float is considered a superset containing int
+    if attribute.attribute_type == "number" and isinstance(
+        value, int
+    ):  # float is considered a superset containing int
         return
-    if type(value) != python_type:
+    if not python_type or not isinstance(value, python_type):
         raise ValidationException(
             f"Attribute '{attribute.name}' should be type '{python_type.__name__}'. Got '{type(value).__name__}'. Value: {value}",
             debug=_get_debug_message(key),
@@ -162,7 +164,7 @@ def _validate_complex_attribute(
     key: str,
     implementation_mode: Literal["exact", "extend", "minimum"],
 ):
-    if type(attribute) != dict:
+    if not isinstance(attribute, dict):
         raise ValidationException(f"'{attributeDefinition.name}' should be a dict", debug=_get_debug_message(key))
     if not attribute or attributeDefinition.attribute_type == BuiltinDataTypes.BINARY.value:
         return
@@ -190,7 +192,7 @@ def _validate_list(
     dimensions: int,
     implementation_mode: Literal["exact", "extend", "minimum"],
 ):
-    if type(attribute) != list:
+    if not isinstance(attribute, list):
         raise ValidationException(f"'{attributeDefinition.name}' should be a list", debug=_get_debug_message(key))
     for i, item in enumerate(attribute):
         if dimensions > 1:
