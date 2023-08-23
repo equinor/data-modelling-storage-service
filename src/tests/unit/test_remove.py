@@ -64,7 +64,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             }
         }
 
-
         self.document_service = get_mock_document_service(
             repository_provider=lambda x, y: self.repository,
         )
