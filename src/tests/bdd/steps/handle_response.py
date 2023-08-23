@@ -114,8 +114,8 @@ def step_impl_should_be(context):
         assert actual == data
     else:
         actual = context.response.json()
-        data = json.loads(context.text) or json.loads(context.data)
-        assert get_and_print_diff(actual, data) == []
+        data = context.text or context.data
+        assert get_and_print_diff(actual, json.loads(data)) == []
 
 
 @then("the length of the response should not be zero")

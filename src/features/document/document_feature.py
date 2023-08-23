@@ -15,6 +15,7 @@ from storage.internal.data_source_repository import get_data_source
 
 from .use_cases.add_document_use_case import add_document_use_case
 from .use_cases.add_raw_use_case import add_raw_use_case
+from .use_cases.check_exsistence_use_case import check_existence_use_case
 from .use_cases.get_document_use_case import get_document_use_case
 from .use_cases.remove_use_case import remove_use_case
 from .use_cases.update_document_use_case import update_document_use_case
@@ -174,3 +175,18 @@ def remove(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     - str: "OK" (200)
     """
     return remove_use_case(user=user, address=address)
+
+
+@router.get("-existence/{address:path}", operation_id="document_check", response_model=bool, responses=responses)
+@create_response(JSONResponse)
+def check_existence(address: str, user: User = Depends(auth_w_jwt_or_pat)):
+    """Checks if an entity exists, given an address.
+
+    Args:
+    - Address
+
+    Returns:
+    - bool: 'true' if the address points to an existing document, else 'false'.
+    """
+    document_service = DocumentService(repository_provider=get_data_source, user=user)
+    return check_existence_use_case(address=Address.from_absolute(address), document_service=document_service)
