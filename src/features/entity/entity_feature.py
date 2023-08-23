@@ -13,9 +13,9 @@ from .use_cases.validate_existing_entity import validate_existing_entity_use_cas
 router = APIRouter(tags=["default", "entity"], prefix="/entity")
 
 
-@router.post("", operation_id="instantiate_entity", response_model=dict, responses=responses)
+@router.get("/{blueprint_type:path}", operation_id="create_default_entity", response_model=dict, responses=responses)
 @create_response(JSONResponse)
-def instantiate(entity: Entity, user: User = Depends(auth_w_jwt_or_pat)):
+def default_entity(blueprint_type: str, user: User = Depends(auth_w_jwt_or_pat)):
     """Returns a default entity of specified type. This entity is not stored in the database.
 
     This endpoint creates a default entity of the specified type. A default entity of that type is
@@ -30,7 +30,7 @@ def instantiate(entity: Entity, user: User = Depends(auth_w_jwt_or_pat)):
     Returns:
     - dict: A default entity of the specified type.
     """
-    return instantiate_entity_use_case(basic_entity=entity, user=user)
+    return instantiate_entity_use_case(blueprint_type=blueprint_type, user=user)
 
 
 @router.post("/validate", operation_id="validate_entity", responses=responses)

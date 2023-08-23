@@ -99,13 +99,8 @@ Feature: Instantiate entity
     """
 
   Scenario: instantiate entity
-    Given i access the resource url "/api/entity"
-    When i make a "POST" request
-    """
-    {
-      "type": "dmss://data-source-name/root_package/Employee"
-    }
-    """
+    Given i access the resource url "/api/entity/dmss://data-source-name/root_package/Employee"
+    When i make a "GET" request
     Then the response status should be "OK"
     And the response should be
     """
