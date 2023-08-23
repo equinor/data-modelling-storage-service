@@ -1,5 +1,4 @@
 import unittest
-from copy import deepcopy
 from unittest import mock
 
 from common.address import Address
@@ -20,7 +19,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.document_service = get_mock_document_service(lambda x, y: self.repository)
 
     def mock_get(self, document_id: str):
-        return deepcopy(self.storage[document_id])
+        return self.storage[document_id]
 
     def mock_update(self, entity: dict, *args, **kwargs):
         self.storage[entity["_id"]] = entity
