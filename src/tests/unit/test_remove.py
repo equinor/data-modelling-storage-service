@@ -64,9 +64,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             }
         }
 
-        # class NoBlueprints:
-        #    def get_blueprint(self, type):
-        #        raise FileNotFoundError
 
         self.document_service = get_mock_document_service(
             repository_provider=lambda x, y: self.repository,
