@@ -4,7 +4,13 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import AccessControlList, User
 from common.responses import create_response, responses
-from storage.internal.data_source_repository import DataSourceRepository
+from common.utils.get_blueprint import get_blueprint_provider
+from common.utils.get_storage_recipe import storage_recipe_provider
+from services.document_service import DocumentService
+from storage.internal.data_source_repository import (
+    DataSourceRepository,
+    get_data_source,
+)
 
 from .use_cases.get_acl_use_case import get_acl_use_case
 from .use_cases.set_acl_use_case import set_acl_use_case
@@ -32,8 +38,20 @@ def set_acl(
     Returns:
     - str: "OK" (200)
     """
+    document_service = DocumentService(
+        repository_provider=get_data_source,
+        user=user,
+        blueprint_provider=get_blueprint_provider(user),
+        recipe_provider=storage_recipe_provider,
+    )
+
     return set_acl_use_case(
-        user=user, data_source_id=data_source_id, document_id=document_id, acl=acl, recursively=recursively
+        data_source_id=data_source_id,
+        document_id=document_id,
+        acl=acl,
+        recursively=recursively,
+        data_source_repository=DataSourceRepository(user),
+        document_service=document_service,
     )
 
 
