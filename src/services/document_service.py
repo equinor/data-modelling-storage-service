@@ -4,12 +4,10 @@ from functools import lru_cache
 from typing import Callable, Dict, List, Union
 from uuid import uuid4
 
-from authentication.models import AccessControlList
 from common.address import Address
 from common.exceptions import (
     ApplicationException,
     BadRequestException,
-    MissingPrivilegeException,
     NotFoundException,
     ValidationException,
 )
@@ -285,27 +283,3 @@ class DocumentService:
             result_list[f"{data_source_id}/{document['_id']}"] = document
 
         return result_list
-
-    def set_acl(self, data_source_id: str, document_id: str, acl: AccessControlList, recursively: bool = True):
-        if "." in document_id:
-            raise Exception(
-                f"set_acl() function got document_id: {document_id}. "
-                f"The set_acl() function can only be used on root documents. You cannot use a dotted document id."
-            )
-        data_source: DataSource = self.repository_provider(data_source_id, self.user)
-
-        if not recursively:  # Only update acl on the one document
-            data_source.update_access_control(document_id, acl)
-            return
-
-        # TODO: Updating ACL for Links should only be additive
-        # TODO: ACL for StorageReferences should always be identical to parent document
-        root_node = self.get_document(Address(document_id, data_source_id), 99)
-        data_source.update_access_control(root_node.node_id, acl)
-        for child in root_node.children:
-            for node in child.traverse():
-                if not node.storage_contained and not node.is_array():
-                    try:
-                        data_source.update_access_control(node.entity["_id"], acl)
-                    except MissingPrivilegeException:  # The user might not have permission on a referenced document
-                        logger.warning(f"Failed to update ACL on {node.node_id}. Permission denied.")
