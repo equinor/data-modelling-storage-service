@@ -18,7 +18,7 @@ Feature: Add and remove references
     }
     """
 
-    Given there exist document with id "3f9ff99f-9cb5-4afc-947b-a3224eee341f" in data source "test-DS"
+    Given there exist document with id "5" in data source "test-DS"
     """
     {
       "type": "dmss://system/SIMOS/Blueprint",
@@ -28,22 +28,45 @@ Feature: Add and remove references
       "attributes": []
     }
     """
+
     Given i access the resource url "/api/documents/test-DS/$1.content"
     When i make a form-data "POST" request
     """
     {
       "document":
         {
-          "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+          "address": "$5",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         }
     }
     """
     Then the response status should be "OK"
+
+    Given i access the resource url "/api/documents/test-DS/$1"
+    When i make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "name": "TestData",
+      "description": "",
+      "type": "dmss://system/SIMOS/Package",
+      "content": [
+        {
+          "address": "$5",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
+        }
+      ],
+      "isRoot": true
+    }
+    """
+
     Given i access the resource url "/api/documents/test-DS/$1.content[0]"
     When i make a "DELETE" request
     Then the response status should be "OK"
+
     Given i access the resource url "/api/documents/test-DS/$1"
     When i make a "GET" request
     Then the response status should be "OK"
@@ -67,22 +90,27 @@ Feature: Add and remove references
       "type": "dmss://system/SIMOS/Package",
       "content": [
         {
-          "address": "$2",
+          "address": "$turbineBlueprint",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         },
         {
-          "address": "$3",
+          "address": "$mooringBlueprint",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         },
         {
-          "address": "$4",
+          "address": "$turbineEntity",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         },
         {
-          "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+          "address": "$mooringEntity1",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
+        },
+        {
+          "address": "$mooringEntity2",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         }
@@ -91,7 +119,7 @@ Feature: Add and remove references
     }
     """
 
-    Given there exist document with id "2" in data source "test-DS"
+    Given there exist document with id "turbineBlueprint" in data source "test-DS"
     """
     {
       "name": "Turbine",
@@ -109,7 +137,8 @@ Feature: Add and remove references
       ]
     }
     """
-    Given there exist document with id "3" in data source "test-DS"
+
+    Given there exist document with id "mooringBlueprint" in data source "test-DS"
     """
     {
       "name": "Mooring",
@@ -127,7 +156,8 @@ Feature: Add and remove references
       ]
     }
     """
-    Given there exist document with id "4" in data source "test-DS"
+
+    Given there exist document with id "turbineEntity" in data source "test-DS"
     """
     {
       "name": "myTurbine",
@@ -135,31 +165,92 @@ Feature: Add and remove references
       "description": "This is a wind turbine demoing uncontained relationships"
     }
     """
-    Given there exist document with id "3f9ff99f-9cb5-4afc-947b-a3224eee341f" in data source "test-DS"
+
+    Given there exist document with id "mooringEntity1" in data source "test-DS"
     """
     {
-    "name": "myMooring",
+    "name": "mooring1",
     "type": "dmss://test-DS/TestData/Mooring",
     "description": "",
     "Bigness": 10
     }
     """
-    Given i access the resource url "/api/documents/test-DS/$4.Mooring"
+
+    Given there exist document with id "mooringEntity2" in data source "test-DS"
+    """
+    {
+    "name": "mooring2",
+    "type": "dmss://test-DS/TestData/Mooring",
+    "description": "",
+    "Bigness": 100
+    }
+    """
+
+    Given i access the resource url "/api/documents/test-DS/$turbineEntity.Mooring"
     When i make a form-data "POST" request
     """
     {
       "document": {
-        "address": "$3f9ff99f-9cb5-4afc-947b-a3224eee341f",
+        "address": "$mooringEntity1",
         "type": "dmss://system/SIMOS/Reference",
         "referenceType": "link"
       }
     }
     """
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/test-DS/$4.Mooring"
+
+    Given i access the resource url "/api/documents/test-DS/$turbineEntity"
+    When i make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "name": "myTurbine",
+      "type": "dmss://test-DS/TestData/Turbine",
+      "description": "This is a wind turbine demoing uncontained relationships",
+      "Mooring": {
+        "address": "$mooringEntity1",
+        "type": "dmss://system/SIMOS/Reference",
+        "referenceType": "link"
+      }
+    }
+    """
+
+    Given i access the resource url "/api/documents/test-DS/$turbineEntity.Mooring"
+    When i make a form-data "PUT" request
+    """
+    {
+      "data": {
+        "address": "$mooringEntity2",
+        "type": "dmss://system/SIMOS/Reference",
+        "referenceType": "link"
+      }
+    }
+    """
+    Then the response status should be "OK"
+
+    Given i access the resource url "/api/documents/test-DS/$turbineEntity"
+    When i make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "name": "myTurbine",
+      "type": "dmss://test-DS/TestData/Turbine",
+      "description": "This is a wind turbine demoing uncontained relationships",
+      "Mooring": {
+        "address": "$mooringEntity2",
+        "type": "dmss://system/SIMOS/Reference",
+        "referenceType": "link"
+      }
+    }
+    """
+
+    Given i access the resource url "/api/documents/test-DS/$turbineEntity.Mooring"
     When i make a "DELETE" request
     Then the response status should be "OK"
-    Given i access the resource url "/api/documents/test-DS/$4"
+
+    Given i access the resource url "/api/documents/test-DS/$turbineEntity"
     When i make a "GET" request
     Then the response status should be "OK"
     And the response should contain
