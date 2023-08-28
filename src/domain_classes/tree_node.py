@@ -2,6 +2,7 @@ from typing import Callable, List, Union
 from uuid import uuid4
 
 from common.exceptions import ValidationException
+from common.utils.get_storage_recipe import create_default_storage_recipe
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
@@ -55,21 +56,9 @@ class NodeBase:
     @property
     def storage_recipes(self, context: str | None = "DMSS") -> list[StorageRecipe]:
         # TODO: support other contexts than "DMSS"
-        if not self.recipe_provider:
-            return []
-
-        if context_recipes := self.recipe_provider(self.type, context):
-            return context_recipes
-        # No storage recipes found, creating a default
-        return [
-            StorageRecipe(
-                name="Default",
-                storage_affinity=StorageDataTypes.DEFAULT.value,
-                attributes={
-                    a.name: StorageAttribute(name=a.name, contained=a.contained) for a in self.blueprint.attributes
-                },
-            )
-        ]
+        if not self.recipe_provider or not (context_recipes := self.recipe_provider(self.type, context)):
+            return create_default_storage_recipe()
+        return context_recipes
 
     def is_empty(self):
         return not self.entity

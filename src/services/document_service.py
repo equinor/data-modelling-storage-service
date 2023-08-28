@@ -22,16 +22,19 @@ from common.utils.build_complex_search import build_mongo_query
 from common.utils.delete_documents import delete_by_attribute_path, delete_document
 from common.utils.get_blueprint import get_blueprint_provider
 from common.utils.get_resolved_document_by_id import resolve_references_in_entity
-from common.utils.get_storage_recipe import storage_recipe_provider
+from common.utils.get_storage_recipe import (
+    create_default_storage_recipe,
+    storage_recipe_provider,
+)
 from common.utils.logging import logger
 from common.utils.resolve_address import ResolvedAddress, resolve_address
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.utils.validators import validate_entity_against_self
 from config import config, default_user
 from domain_classes.blueprint import Blueprint
-from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
+from domain_classes.storage_recipe import StorageRecipe
 from domain_classes.tree_node import ListNode, Node
-from enums import REFERENCE_TYPES, SIMOS, StorageDataTypes
+from enums import REFERENCE_TYPES, SIMOS
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
@@ -62,29 +65,17 @@ class DocumentService:
         blueprint.realize_extends(self._blueprint_provider.get_blueprint)
         return blueprint
 
-    def _create_default_storage_recipe(self, type: str) -> list[StorageRecipe]:
-        blueprint_attributes = self.get_blueprint(type).attributes
-        return [
-            StorageRecipe(
-                name="Default",
-                storage_affinity=StorageDataTypes.DEFAULT.value,
-                attributes={
-                    a.name: StorageAttribute(name=a.name, contained=a.contained) for a in blueprint_attributes
-                },
-            )
-        ]
-
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def get_storage_recipes(self, type: str, context: str | None = None) -> list[StorageRecipe]:
         if not context:
-            return self._create_default_storage_recipe(type)
+            return create_default_storage_recipe()
 
         # TODO: Support other contexts
         if context_recipes := self._recipe_provider(type, context=context):
             return context_recipes
 
         # No storage recipes created for contex. Creating defaults
-        return self._create_default_storage_recipe(type)
+        return create_default_storage_recipe()
 
     def invalidate_cache(self):
         logger.warning("Clearing blueprint cache")

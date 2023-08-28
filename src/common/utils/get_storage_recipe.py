@@ -2,7 +2,7 @@ from common.exceptions import NotFoundException
 from domain_classes.lookup import Lookup
 from domain_classes.storage_recipe import StorageRecipe
 from domain_classes.ui_recipe import Recipe
-from enums import SIMOS
+from enums import SIMOS, StorageDataTypes
 from storage.internal.lookup_tables import get_lookup
 
 default_yaml_view = Recipe(
@@ -90,3 +90,13 @@ def storage_recipe_provider(type: str, context: str | None = None) -> list[Stora
         storage_recipes = lookup.storage_recipes.get("_default_", [])
 
     return storage_recipes
+
+
+def create_default_storage_recipe() -> list[StorageRecipe]:
+    return [
+        StorageRecipe(
+            name="Default",
+            storage_affinity=StorageDataTypes.DEFAULT,
+            attributes={},
+        )
+    ]
