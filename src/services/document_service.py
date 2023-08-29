@@ -170,7 +170,8 @@ class DocumentService:
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
 
-        node.set_uid()  # Ensure the node has a _id
+        if isinstance(node, Node) and node.should_have_id():
+            node.set_uid(node.generate_id())  # Ensure the node has a _id
         ref_dict = tree_node_to_ref_dict(node)
 
         # If the node is not contained, and has data, save it!

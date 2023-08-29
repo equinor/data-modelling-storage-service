@@ -51,7 +51,7 @@ def _add_document_to_data_source(
     except NotFoundException:
         pass
 
-    new_node.set_uid()
+    new_node.set_uid(new_node.generate_id())
 
     document_service.save(new_node, data_source_id, update_uncontained=update_uncontained)
 
@@ -172,9 +172,10 @@ def _add_document_to_entity_or_list(
         target = target.children[0]  # Set target to be the packages content
 
     if isinstance(target, ListNode) or target.parent.type == SIMOS.PACKAGE.value:
-        new_node.set_uid()
         new_node.parent = target
         new_node.key = str(len(target.children))
+        if new_node.should_have_id():
+            new_node.set_uid(new_node.generate_id())
         target.add_child(new_node)
         document_service.save(target.find_parent(), address.data_source, update_uncontained=False)
     else:

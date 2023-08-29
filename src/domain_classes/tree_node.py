@@ -6,7 +6,7 @@ from common.utils.get_storage_recipe import create_default_storage_recipe
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
-from enums import REFERENCE_TYPES, SIMOS, BuiltinDataTypes, StorageDataTypes
+from enums import SIMOS, BuiltinDataTypes, StorageDataTypes
 
 
 class NodeBase:
@@ -95,7 +95,7 @@ class NodeBase:
             return self.uid
         if not self.parent:
             return self.uid
-        if self.contained and not self.storage_contained and not self.is_array():
+        if not self.storage_contained and not self.is_array():
             return self.uid
         return ".".join((self.parent.node_id, self.key))
 
@@ -251,6 +251,15 @@ class NodeBase:
         if next((child for child in self.children if child.entity.get("name", self.attribute.name) == attribute), None):  # type: ignore
             return True
 
+    def should_have_id(self):
+        if isinstance(self, ListNode):
+            return False
+        if self.type == SIMOS.REFERENCE.value:
+            return False
+        if self.storage_contained and self.contained:
+            return False
+        return True
+
 
 class Node(NodeBase):
     def __init__(
@@ -274,7 +283,8 @@ class Node(NodeBase):
 
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
     def update(self, data: dict):
-        self.set_uid(data.get("_id"))  # type: ignore
+        if data.get("_id"):
+            self.set_uid(data.get("_id"))
         # Set self.type from posted type, and validate against parent blueprint
         self.type = data.get("type", self.attribute.attribute_type)
 
@@ -352,29 +362,19 @@ class Node(NodeBase):
             name=self.type, contained=True, storage_affinity=self.storage_recipes[0].storage_affinity
         )
 
+    def generate_id(self):
+        if self.entity.get("_id"):
+            return self.entity.get("_id")
+        if self.uid:
+            return self.uid
+        return str(uuid4())
+
     def set_uid(self, new_id: str | None = None):
-        """
-        Based on storage contained, sets, or removes the documents uid. Creates new if missing.
-        """
-        if not self.entity and not new_id:
-            return
-
-        node_is_uncontained_reference_and_should_not_be_updated: bool = (
-            new_id is None
-            and not self.storage_contained
-            and self.type == SIMOS.REFERENCE.value
-            and self.entity["referenceType"] == REFERENCE_TYPES.LINK.value
-        )
-
-        if self.storage_contained or node_is_uncontained_reference_and_should_not_be_updated:
-            self.uid = None
+        self.uid = new_id
+        if new_id:
+            self.entity["_id"] = new_id
+        else:
             self.entity.pop("_id", None)
-            return
-        entity_id = self.entity.get("_id", None)
-
-        current_id = new_id if new_id else (entity_id if entity_id else self.uid if self.uid else str(uuid4()))
-        self.uid = current_id
-        self.entity["_id"] = self.uid
 
 
 class ListNode(NodeBase):
@@ -407,9 +407,6 @@ class ListNode(NodeBase):
     def blueprint(self):
         return self.blueprint_provider(self.attribute.attribute_type)  # TODO: blueprint_provider is required now...
 
-    def set_uid(self, new_id: str | None = None):
-        self.uid = None
-
     def update(self, data: list):
         # Replaces the whole list with the new one
         if not isinstance(data, list):
@@ -421,7 +418,7 @@ class ListNode(NodeBase):
 
             # Set uid base on containment and existing(lack of) uid
             # This requires the existing _id to be posted
-            uid = "" if self.storage_contained else item.get("_id", str(uuid4()))
+            uid = "" if self.storage_contained and self.contained else item.get("_id", str(uuid4()))
             child = Node(
                 entity={},
                 uid=uid,
