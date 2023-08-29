@@ -7,13 +7,6 @@
   ],
   "attributes": [
     {
-      "name": "name",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "description": "Which attribute this StorageAttribute applies to.",
-      "attributeType": "string",
-      "default": "root"
-    },
-    {
       "name": "contained",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "description": "WARNING: Change how the entity is stored. Changing this value will make current entities unavailable. If True, storageTypeAffinity will have no effect",
@@ -28,7 +21,7 @@
       "attributeType": "string",
       "default": "default",
       "enumType": "dmss://system/SIMOS/enums/StorageTypes",
-      "optional": "true"
+      "optional": true
     },
     {
       "name": "label",
@@ -37,14 +30,6 @@
       "attributeType": "string",
       "optional": true,
       "default": ""
-    },
-    {
-      "name": "description",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "description": "Description for the StoreAttribute",
-      "attributeType": "string",
-      "default": "",
-      "optional": true
     }
   ]
 }

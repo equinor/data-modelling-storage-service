@@ -9,7 +9,7 @@
       "attributes": [
         {
           "name": "content",
-          "type": "object",
+          "type": "dmss://system/SIMOS/StorageAttribute",
           "contained": false
         }
       ]

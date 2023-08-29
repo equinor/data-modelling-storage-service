@@ -6,5 +6,19 @@
     "type": "dmss://system/SIMOS/UiRecipe",
     "description": "",
     "plugin": "@development-framework/dm-core-plugins/yaml"
-  }
+  },
+  "storageRecipes": [
+    {
+      "name": "DEFAULT",
+      "type": "dmss://system/SIMOS/StorageRecipe",
+      "description": "",
+      "attributes": [
+        {
+          "name": "content",
+          "type": "dmss://system/SIMOS/StorageAttribute",
+          "contained": false
+        }
+      ]
+    }
+  ]
 }
