@@ -4,7 +4,6 @@ from unittest import mock
 
 from authentication.models import User
 from common.address import Address
-from common.tree_node_serializer import tree_node_from_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import Node
@@ -12,10 +11,7 @@ from enums import REFERENCE_TYPES, SIMOS
 from features.document.use_cases.update_document_use_case import (
     update_document_use_case,
 )
-from tests.unit.mock_utils import (
-    get_mock_document_service,
-    mock_storage_recipe_provider,
-)
+from tests.unit.mock_utils import get_mock_document_service
 
 
 class DocumentServiceTestCase(unittest.TestCase):
@@ -223,12 +219,17 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "name": "first",
                     "description": "I'm the first nested document, contained",
                     "uncontained_in_every_way": {
-                        "_id": "2",
-                        "name": "im_a_uncontained_attribute",
-                        "type": "basic_blueprint",
-                        "description": "I'm the second nested document, uncontained",
+                        "type": SIMOS.REFERENCE.value,
+                        "address": "$2",
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
+            },
+            "2": {
+                "_id": "2",
+                "name": "im_a_uncontained_attribute",
+                "type": "basic_blueprint",
+                "description": "I'm the second nested document, uncontained",
             },
             "3": {
                 "_id": "3",
@@ -245,16 +246,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
 
         document_service = get_mock_document_service(lambda x, y: repository)
-
-        node: Node = tree_node_from_dict(
-            doc_storage["1"], document_service.get_blueprint, uid="1", recipe_provider=mock_storage_recipe_provider
-        )
-        document_service.save(node, "testing", update_uncontained=True)
-
-        assert doc_storage["2"]["description"] == "I'm the second nested document, uncontained"
-        assert (
-            doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"].get("description") == None
-        )
 
         # Testing updating the reference
         node: Node = document_service.get_document(Address("$1", "testing"))

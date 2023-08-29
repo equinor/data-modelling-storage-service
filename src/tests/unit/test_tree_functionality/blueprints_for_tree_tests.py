@@ -256,4 +256,4 @@ def get_blueprint(type: str):
         return Blueprint(reference_blueprint)
     if type == "uncontained_list_blueprint":
         return Blueprint(uncontained_list_blueprint, type)
-    return None
+    raise Exception(f"Invalid type {type}")

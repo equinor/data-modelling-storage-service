@@ -100,7 +100,7 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
     for child in node.children:
         if child.is_array():
             # If the content of the list is not contained, i.e. references.
-            if not child.storage_contained:
+            if not child.storage_contained or not child.contained:
                 data[child.key] = [
                     child.entity
                     if child.type == SIMOS.REFERENCE.value
@@ -217,18 +217,12 @@ def tree_node_from_dict(
                     content_attribute.attribute_type = child["type"]
                     list_child_attribute = content_attribute
 
-                if child["type"] == SIMOS.REFERENCE.value:
-                    # TODO: Resolve to get uid?
-                    child_uid = child["address"].replace("$", "")
-                else:
-                    child_uid = child.get("_id", "")
-
                 # The child inside a list is identical to the attribute in the parent,
                 # except it does not have dimensions *
                 list_child_attribute.dimensions.dimensions = ""
 
                 list_child_node = tree_node_from_dict(
-                    uid=child_uid,
+                    uid=None if child["type"] == SIMOS.REFERENCE.value else child.get("_id", ""),
                     entity=child,
                     key=str(i),
                     blueprint_provider=blueprint_provider,
@@ -245,14 +239,9 @@ def tree_node_from_dict(
                     f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
                     + f"should be a dict, but was '{str(type(attribute_data))}'"
                 )
-            # If the child is not contained, get or create it's _id
-            if attribute_data.get("type", "") == SIMOS.REFERENCE.value:
-                child_uid = attribute_data["address"].replace("$", "")
-            else:
-                child_uid = attribute_data.get("_id", "")
 
             child_node = tree_node_from_dict(
-                uid=child_uid,
+                uid=None if attribute_data.get("type", "") == SIMOS.REFERENCE.value else attribute_data.get("_id", ""),
                 entity=attribute_data,
                 key=child_attribute.name,
                 blueprint_provider=blueprint_provider,
