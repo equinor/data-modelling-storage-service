@@ -195,7 +195,7 @@ Feature: Add document with optional attributes
     """
     {
       "document":
-       {
+      {
         "name": "7",
         "type": "data-source-name/root_package/KeyboardKey"
       }

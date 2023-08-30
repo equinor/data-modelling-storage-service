@@ -118,27 +118,42 @@ def _add_document_to_entity_or_list(
                 f"Could not find attribute {last_attribute_in_address} in blueprint for {parent_blueprint.name}"
             )
 
-        parent_document = parent_node.entity
         attribute_to_update = [
             blueprint_attribute
             for blueprint_attribute in parent_blueprint.attributes
             if blueprint_attribute.name == last_attribute_in_address
         ][0]
-        if attribute_to_update.is_array:
-            parent_document[last_attribute_in_address] = [document]
-        else:
-            parent_document[last_attribute_in_address] = document
 
-        target = parent_node
         new_node = tree_node_from_dict(
-            {**parent_document},
+            {**document},
             blueprint_provider=document_service.get_blueprint,
-            node_attribute=BlueprintAttribute(name=target.attribute.name, attribute_type=entity.type),
+            node_attribute=BlueprintAttribute(name=attribute_to_update.name, attribute_type=entity.type),
             recipe_provider=document_service.get_storage_recipes,
         )
-        document_service.save(new_node, address.data_source, update_uncontained=update_uncontained)
 
-        return {"uid": f"{new_node.node_id}.{last_attribute_in_address}"}
+        if attribute_to_update.is_array:
+            list_node = ListNode(
+                attribute_to_update.name,
+                attribute_to_update,
+                None,
+                None,
+                parent_node,
+                document_service.get_blueprint,
+                recipe_provider=document_service.get_storage_recipes,
+            )
+            parent_node.add_child(list_node)
+            list_node.add_child(new_node)
+            document_service.save(
+                parent_node, address.data_source, update_uncontained=update_uncontained, initial=True
+            )
+            return {"uid": f"{list_node.node_id}"}
+        else:
+            parent_node.add_child(new_node)
+
+            document_service.save(
+                parent_node, address.data_source, update_uncontained=update_uncontained, initial=True
+            )
+            return {"uid": f"{new_node.node_id}"}
 
     if target.type != SIMOS.PACKAGE.value and target.type != "object":
         validate_entity(
