@@ -103,26 +103,14 @@ def _add_document_to_entity_or_list(
             protocol=address.protocol, path=parent_address_as_string, data_source=address.data_source
         )
         parent_node: Node = document_service.get_document(parent_address, depth=1)
-        parent_blueprint = parent_node.blueprint
-        if (
-            len(
-                [
-                    blueprint_attribute
-                    for blueprint_attribute in parent_blueprint.attributes
-                    if blueprint_attribute.name == last_attribute_in_address
-                ]
-            )
-            == 0
-        ):
-            raise NotFoundException(
-                f"Could not find attribute {last_attribute_in_address} in blueprint for {parent_blueprint.name}"
-            )
 
-        attribute_to_update = [
-            blueprint_attribute
-            for blueprint_attribute in parent_blueprint.attributes
-            if blueprint_attribute.name == last_attribute_in_address
-        ][0]
+        attribute_to_update: BlueprintAttribute = parent_node.blueprint.get_attribute_by_name(
+            last_attribute_in_address
+        )
+        if not attribute_to_update:
+            raise NotFoundException(
+                f"Could not find attribute {last_attribute_in_address} in blueprint for {parent_node.blueprint.name}"
+            )
 
         new_node = tree_node_from_dict(
             {**document},
