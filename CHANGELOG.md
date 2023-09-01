@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.3.0...v1.3.1) (2023-09-01)
+
+
+### Bug Fixes
+
+* add job to case ([eec8ee4](https://github.com/equinor/data-modelling-storage-service/commit/eec8ee4a565fe3ac48152eb2ae3d1d4020fc5b87))
+
+
+### Code Refactoring
+
+* use method to find attribute ([8ea896d](https://github.com/equinor/data-modelling-storage-service/commit/8ea896d12c259fc6ff2a8704f8f957bbc8a8d161))
+
 ## [1.3.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.2.3...v1.3.0) (2023-08-29)
 
 
