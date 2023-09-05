@@ -3,10 +3,10 @@ import unittest
 from common.utils.resolve_address import split_path
 
 
-class SplitReferenceTestCase(unittest.TestCase):
+class SplitPathTestCase(unittest.TestCase):
     def test_remove_last_reference_part(self):
-        path = "$123-65435634-123.content[1](name=test)(name=test,isRoot=True,yyz=rush)"
-        self.assertEqual("$123-65435634-123.content[1](name=test)", "".join(split_path(path)[:-1]))
+        path = "$1-2-3.content[1](name=test)(name=test,isRoot=True,yyz=rush)"
+        self.assertEqual("$1-2-3.content[1](name=test)", "".join(split_path(path)[:-1]))
 
     def test_split_complex_reference(self):
         path = "/[(_id=1)].content[(name=myCarRental)].cars[0]"
@@ -14,9 +14,9 @@ class SplitReferenceTestCase(unittest.TestCase):
         self.assertEqual(["/", "[(_id=1)]", ".content", "[(name=myCarRental)]", ".cars", "[0]"], path_parts)
 
     def test_split_complex_reference2(self):
-        path = "$1234-1234-1234"
+        path = "$1-2-3"
         path_parts = split_path(path)
-        self.assertEqual(["$1234-1234-1234"], path_parts)
+        self.assertEqual(["$1-2-3"], path_parts)
 
     def test_split_complex_reference3(self):
         path = "/package/subPackage/document"
