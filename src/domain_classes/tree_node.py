@@ -276,7 +276,6 @@ class Node(NodeBase):
             key, attribute, uid, parent, blueprint_provider, entity=entity, recipe_provider=recipe_provider
         )
         self.entity: dict = entity if entity else {}
-        self.error_message = None
 
     def is_root(self):
         return super().is_root()
