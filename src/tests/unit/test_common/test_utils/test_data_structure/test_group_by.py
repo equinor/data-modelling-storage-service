@@ -9,8 +9,10 @@ class GroupByTestCase(unittest.TestCase):
 
     def test_simple(self):
         items = [{"id": 1, "type": "string"}, {"id": 2, "type": "string"}]
-        expected = {"string": [{"id": 1, "type": "string"}, {"id": 2, "type": "string"}]}
+
         actual = group_by(items=items, grouping_function=lambda item: item["type"])
+
+        expected = {"string": [{"id": 1, "type": "string"}, {"id": 2, "type": "string"}]}
         self.assertEqual(expected, actual)
 
     def test_expanded(self):

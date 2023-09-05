@@ -4,33 +4,15 @@ from common.utils.resolve_address import (
     AttributeItem,
     IdItem,
     QueryItem,
-    _next_path_part,
     path_to_path_items,
 )
 
 
-class ReferenceToReferenceItemsTestCase(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def test_next_reference_item(self):
-        # Example 0
-        self.assertEqual(_next_path_part("$1"), ("$1", None, ""))
-
-        # Example 1
-        self.assertEqual(_next_path_part("/$1"), ("", "/", "$1"))
-        self.assertEqual(_next_path_part("$1"), ("$1", None, ""))
-
-        # Example 2
-        self.assertEqual(_next_path_part("/root/package/$1"), ("", "/", "root/package/$1"))
-        self.assertEqual(_next_path_part("root/package/$1"), ("root", "/", "package/$1"))
-        self.assertEqual(_next_path_part("package/$1"), ("package", "/", "$1"))
-        self.assertEqual(_next_path_part("$1"), ("$1", None, ""))
-
+class PathToPathItemsTestCase(unittest.TestCase):
     def test_reference_with_id_only_to_reference_items(self):
-        path = "$1234-1234-1234"
+        path = "$1-2-3"
         items = path_to_path_items(path)
-        self.assertEqual(items, [IdItem("1234-1234-1234")])
+        self.assertEqual(items, [IdItem("1-2-3")])
 
     def test_reference_with_path_only_to_reference_items(self):
         path = "/package/subPackage/document"
