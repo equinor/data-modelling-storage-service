@@ -1,0 +1,15 @@
+{
+  "name": "BaseChild",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "AValue",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "integer"
+    }
+  ]
+}

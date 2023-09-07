@@ -6,7 +6,7 @@ from common.address import Address
 from features.document.use_cases.check_exsistence_use_case import (
     check_existence_use_case,
 )
-from tests.unit.mock_utils import get_mock_document_service
+from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
 class CheckExistenceTestCase(unittest.TestCase):

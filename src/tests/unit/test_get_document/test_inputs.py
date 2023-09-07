@@ -5,7 +5,7 @@ from common.address import Address
 from common.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.mock_utils import get_mock_document_service
+from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
 class GetDocumentInputTestCase(unittest.TestCase):

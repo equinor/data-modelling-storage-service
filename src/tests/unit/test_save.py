@@ -11,7 +11,7 @@ from enums import REFERENCE_TYPES, SIMOS
 from features.document.use_cases.update_document_use_case import (
     update_document_use_case,
 )
-from tests.unit.mock_utils import get_mock_document_service
+from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
 class DocumentServiceTestCase(unittest.TestCase):

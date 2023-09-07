@@ -1,0 +1,15 @@
+{
+  "name": "Blueprint_with_blob",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "blob",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/Blob"
+    }
+  ]
+}

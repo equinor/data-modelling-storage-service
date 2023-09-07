@@ -9,7 +9,7 @@ from common.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
 from enums import REFERENCE_TYPES, SIMOS, Protocols
-from tests.unit.mock_utils import get_mock_document_service
+from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
 class GetDocumentResolveTestCase(unittest.TestCase):

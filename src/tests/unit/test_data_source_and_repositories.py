@@ -7,10 +7,8 @@ from config import config
 from domain_classes.tree_node import Node
 from enums import StorageDataTypes
 from storage.data_source_class import DataSource
-from tests.unit.mock_utils import (
-    get_mock_document_service,
-    mock_storage_recipe_provider,
-)
+from tests.unit.mock_data.mock_document_service import get_mock_document_service
+from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
 
 config.AUTH_ENABLED = False
 test_user = User(**{"user_id": "unit-test", "full_name": "Unit Test", "email": "unit-test@example.com"})

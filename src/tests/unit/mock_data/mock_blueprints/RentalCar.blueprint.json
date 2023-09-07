@@ -1,0 +1,29 @@
+{
+  "name": "RentalCar",
+  "type": "system/SIMOS/Blueprint",
+  "attributes": [
+    {
+      "name": "name",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "default": "RentalCar"
+    },
+    {
+      "name": "type",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "default": "test_data/complex/RentalCar"
+    },
+    {
+      "name": "plateNumber",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "engine",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "test_data/complex/EngineTest",
+      "optional": true
+    }
+  ]
+}

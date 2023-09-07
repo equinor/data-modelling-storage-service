@@ -4,11 +4,24 @@ from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
-from tests.unit.mock_utils import flatten_dict, mock_storage_recipe_provider
+from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
 from tests.unit.test_tree_functionality.blueprints_for_tree_tests import get_blueprint
 from tests.unit.test_tree_functionality.get_node_for_tree_tests import (
     get_engine_package_node,
 )
+
+
+# https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys
+def flatten_dict(dd, separator="_", prefix=""):
+    return (
+        {
+            prefix + separator + k if prefix else k: v
+            for kk, vv in dd.items()
+            for k, v in flatten_dict(vv, separator, kk).items()
+        }
+        if isinstance(dd, dict)
+        else {prefix: dd}
+    )
 
 
 class TreenodeTestCase(unittest.TestCase):

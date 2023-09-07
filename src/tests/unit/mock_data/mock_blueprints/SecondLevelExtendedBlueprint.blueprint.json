@@ -1,0 +1,17 @@
+{
+  "name": "SecondLevelExtendedBlueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "This Blueprint extends 'ExtendedBlueprint'",
+  "extends": [
+    "ExtendedBlueprint"
+  ],
+  "attributes": [
+    {
+      "name": "a_third_value",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    }
+  ],
+  "storageRecipes": [],
+  "uiRecipes": []
+}
