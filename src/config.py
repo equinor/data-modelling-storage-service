@@ -29,6 +29,7 @@ class Config(BaseSettings):
     OAUTH_CLIENT_ID: str = Field("dmss", env="OAUTH_CLIENT_ID")
     OAUTH_CLIENT_SECRET: str = Field("", env="OAUTH_CLIENT_SECRET")
     AUTH_AUDIENCE: str = Field("dmss", env="OAUTH_AUDIENCE")
+    OAUTH_AUTH_SCOPE: str = Field("", env="OAUTH_AUTH_SCOPE")
     MICROSOFT_AUTH_PROVIDER: str = "login.microsoftonline.com"
     AUTH_PROVIDER_FOR_ROLE_CHECK: AuthProviderForRoleCheck = Field(None, env="AUTH_PROVIDER_FOR_ROLE_CHECK")
     AAD_ENTERPRISE_APP_OID: str = Field(
