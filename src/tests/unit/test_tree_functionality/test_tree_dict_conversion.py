@@ -9,7 +9,7 @@ from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.mock_utils import mock_storage_recipe_provider
+from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
 from tests.unit.test_tree_functionality.blueprints_for_tree_tests import (
     all_contained_cases_blueprint,
     basic_blueprint,

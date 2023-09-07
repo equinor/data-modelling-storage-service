@@ -8,7 +8,7 @@ from common.address import Address
 from common.exceptions import ApplicationException, NotFoundException
 from common.utils.resolve_address import resolve_address
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.mock_utils import get_mock_document_service
+from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
 class ResolveReferenceTestCase(unittest.TestCase):

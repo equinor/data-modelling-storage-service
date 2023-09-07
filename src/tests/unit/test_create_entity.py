@@ -3,7 +3,7 @@ import unittest
 from common.utils.create_entity import CreateEntity
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from storage.repositories.file import LocalFileRepository
-from tests.unit.mock_utils import get_mock_document_service
+from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 file_repository_test = LocalFileRepository()
 

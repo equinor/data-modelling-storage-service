@@ -1,0 +1,15 @@
+{
+  "name": "Blueprint with second level reference",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "Blueprint with second level reference",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "contained_with_child_references",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "all_contained_cases_blueprint"
+    }
+  ]
+}

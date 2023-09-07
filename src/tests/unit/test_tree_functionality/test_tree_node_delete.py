@@ -3,7 +3,7 @@ import unittest
 from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import Node
-from tests.unit.mock_utils import mock_storage_recipe_provider
+from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
 from tests.unit.test_tree_functionality.blueprints_for_tree_tests import get_blueprint
 
 

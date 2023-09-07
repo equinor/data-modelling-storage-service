@@ -14,7 +14,7 @@ from features.document.use_cases.update_document_use_case import (
     update_document_use_case,
 )
 from storage.repositories.file import LocalFileRepository
-from tests.unit.mock_utils import get_mock_document_service
+from tests.unit.mock_data.mock_document_service import get_mock_document_service
 from tests.unit.test_tree_functionality.get_node_for_tree_tests import (
     get_form_example_node,
 )
