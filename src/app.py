@@ -73,7 +73,13 @@ def create_app() -> FastAPI:
         title="Data Modelling Storage Service",
         version="1.3.1",  # x-release-please-version
         description="API for basic data modelling interaction",
-        swagger_ui_init_oauth={"usePkceWithAuthorizationCodeGrant": True, "clientId": config.OAUTH_CLIENT_ID},
+        swagger_ui_init_oauth={
+            "clientId": config.OAUTH_CLIENT_ID,
+            "appName": "DMSS",
+            "usePkceWithAuthorizationCodeGrant": True,
+            "scopes": config.OAUTH_AUTH_SCOPE,
+            "useBasicAuthenticationWithAccessCodeGrant": True,
+        },
     )
     app.include_router(authenticated_routes, prefix=server_root, dependencies=[Security(auth_w_jwt_or_pat)])
     app.include_router(jwt_only_routes, prefix=server_root, dependencies=[Security(auth_with_jwt)])
