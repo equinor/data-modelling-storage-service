@@ -8,11 +8,6 @@ file_repository_test = LocalFileRepository()
 _FILE_PATH = "src/tests/unit/mock_data/mock_blueprints/"
 
 
-def _create_blueprint_from_file_name(file_name: str, type: str):
-    with open(_FILE_PATH + file_name) as f:
-        return Blueprint(json.load(f), file_name)
-
-
 class BlueprintProvider:
     @staticmethod
     def get_blueprint(type: str):
