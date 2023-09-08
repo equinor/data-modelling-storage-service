@@ -1,0 +1,16 @@
+{
+  "name": "Parent",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "SomeChild",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "BaseChild",
+      "optional": true,
+      "dimensions": "*"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "recursive",
+  "type": "system/SIMOS/Blueprint",
+  "description": "Second blueprint",
+  "extends": [
+    "system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "im_me!",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "recursive_blueprint"
+    }
+  ]
+}

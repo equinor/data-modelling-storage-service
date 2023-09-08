@@ -5,9 +5,11 @@ from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
-from tests.unit.test_tree_functionality.blueprints_for_tree_tests import get_blueprint
 from tests.unit.test_tree_functionality.get_node_for_tree_tests import (
     get_engine_package_node,
+)
+from tests.unit.test_tree_functionality.mock_document_service_for_tree_tests import (
+    get_mock_document_service_for_tree_tests,
 )
 
 
@@ -31,19 +33,19 @@ class TreenodeTestCase(unittest.TestCase):
             key="root",
             uid="1",
             entity=root_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
             recipe_provider=mock_storage_recipe_provider,
         )
 
-        nested_data = {"name": "Nested", "description": "", "type": "basic_blueprint"}
+        nested_data = {"name": "Nested", "description": "", "type": "Garden"}
         nested = Node(
             key="nested",
             uid="",
             entity=nested_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=root,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
             recipe_provider=mock_storage_recipe_provider,
         )
 
@@ -56,29 +58,29 @@ class TreenodeTestCase(unittest.TestCase):
             key="",
             uid="1",
             entity=root_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
             recipe_provider=mock_storage_recipe_provider,
         )
 
-        nested_1_data = {"name": "Nested1", "description": "", "type": "basic_blueprint"}
+        nested_1_data = {"name": "Nested1", "description": "", "type": "Garden"}
         nested_1 = Node(
             key="nested",
             uid="",
             entity=nested_1_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=root,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
             recipe_provider=mock_storage_recipe_provider,
         )
 
-        nested_2_data = {"name": "Nested2", "description": "", "type": "basic_blueprint"}
+        nested_2_data = {"name": "Nested2", "description": "", "type": "Garden"}
         nested_2 = Node(
             key="nested",
             uid="",
             entity=nested_2_data,
-            blueprint_provider=get_blueprint,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
             recipe_provider=mock_storage_recipe_provider,
         )
 
@@ -87,7 +89,7 @@ class TreenodeTestCase(unittest.TestCase):
             "name": "root",
             "description": "",
             "type": "all_contained_cases_blueprint",
-            "nested": {"name": "Nested1", "description": "", "type": "basic_blueprint"},
+            "nested": {"name": "Nested1", "description": "", "type": "Garden"},
         }
 
         assert actual_before == tree_node_to_dict(root)
@@ -99,7 +101,7 @@ class TreenodeTestCase(unittest.TestCase):
             "name": "root",
             "description": "",
             "type": "all_contained_cases_blueprint",
-            "nested": {"name": "Nested2", "description": "", "type": "basic_blueprint"},
+            "nested": {"name": "Nested2", "description": "", "type": "Garden"},
         }
 
         assert actual_after_replaced == tree_node_to_dict(root)
@@ -111,19 +113,19 @@ class TreenodeTestCase(unittest.TestCase):
             key="root",
             uid="1",
             entity=root_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
         )
 
-        nested_data = {"name": "Nested", "description": "", "type": "basic_blueprint"}
+        nested_data = {"name": "Nested", "description": "", "type": "Garden"}
         nested = Node(
             recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=root,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
 
         assert root.depth() == 0
@@ -139,18 +141,21 @@ class TreenodeTestCase(unittest.TestCase):
             "nested": {
                 "name": "Nested1",
                 "description": "",
-                "type": "basic_blueprint",
+                "type": "Garden",
                 "nested": {
-                    "name": "Nested2",
+                    "name": "My_Best_Bush",
                     "description": "",
-                    "type": "blueprint_3",
+                    "type": "Bush",
                     "reference": {"address": "$3", "type": "dmss://system/SIMOS/Reference", "referenceType": "link"},
                 },
             },
         }
 
         root = tree_node_from_dict(
-            document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
+            document_1,
+            get_mock_document_service_for_tree_tests().get_blueprint,
+            uid=document_1.get("_id"),
+            recipe_provider=mock_storage_recipe_provider,
         )
         result = [node.node_id for node in root.traverse()]
         expected = [
@@ -172,30 +177,30 @@ class TreenodeTestCase(unittest.TestCase):
             key="root",
             uid="1",
             entity=root_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
         )
 
-        nested_data = {"name": "Nested1", "description": "", "type": "basic_blueprint"}
+        nested_data = {"name": "Nested1", "description": "", "type": "Garden"}
         nested = Node(
             recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=root,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
 
-        nested_2_data = {"name": "Nested2", "description": "", "type": "blueprint_3"}
+        nested_2_data = {"name": "Nested2", "description": "", "type": "Bush"}
         nested_2 = Node(
             recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_2_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=nested,
-            attribute=BlueprintAttribute(name="", attribute_type="blueprint_3"),
+            attribute=BlueprintAttribute(name="", attribute_type="Bush"),
         )
 
         result = [node.entity["name"] for node in nested_2.traverse_reverse()]
@@ -209,63 +214,63 @@ class TreenodeTestCase(unittest.TestCase):
             key="",
             uid="1",
             entity=root_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
         )
 
-        nested_data = {"name": "Nested", "description": "", "type": "basic_blueprint"}
+        nested_data = {"name": "Nested", "description": "", "type": "Garden"}
         nested = Node(
             recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=root,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
 
-        nested_2_data = {"name": "Nested", "description": "", "type": "blueprint_3"}
+        nested_2_data = {"name": "Nested", "description": "", "type": "Bush"}
         nested_2 = Node(
             recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_2_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=nested,
-            attribute=BlueprintAttribute(name="", attribute_type="blueprint_3"),
+            attribute=BlueprintAttribute(name="", attribute_type="Bush"),
         )
 
-        nested_2_reference_data = {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"}
+        nested_2_reference_data = {"_id": "2", "name": "Reference", "description": "", "type": "Garden"}
         reference = Node(
             recipe_provider=mock_storage_recipe_provider,
             key="reference",
             uid="2",
             entity=nested_2_reference_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=nested_2,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
 
-        list_data = {"name": "List", "type": "blueprint_3"}
+        list_data = {"name": "List", "type": "Bush"}
         list_node = ListNode(
             recipe_provider=mock_storage_recipe_provider,
             key="list",
             uid="",
             entity=list_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=root,
-            attribute=BlueprintAttribute(name="", attribute_type="blueprint_3"),
+            attribute=BlueprintAttribute(name="", attribute_type="Bush"),
         )
 
-        item_1_data = {"name": "Item1", "description": "", "type": "basic_blueprint"}
+        item_1_data = {"name": "Item1", "description": "", "type": "Garden"}
         item_1 = Node(
             recipe_provider=mock_storage_recipe_provider,
             key="0",
             uid="",
             entity=item_1_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=list_node,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
 
         assert root.node_id == "1"
@@ -285,12 +290,12 @@ class TreenodeTestCase(unittest.TestCase):
             "nested": {
                 "name": "Nested",
                 "description": "",
-                "type": "basic_blueprint",
+                "type": "Garden",
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "blueprint_3",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
+                    "type": "Bush",
+                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
                 },
                 "reference": {},
                 "references": [],
@@ -298,7 +303,10 @@ class TreenodeTestCase(unittest.TestCase):
         }
 
         root = tree_node_from_dict(
-            document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
+            document_1,
+            get_mock_document_service_for_tree_tests().get_blueprint,
+            uid=document_1.get("_id"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         child_1 = root.search("1.nested.nested")
@@ -318,18 +326,21 @@ class TreenodeTestCase(unittest.TestCase):
             "nested": {
                 "name": "Nested",
                 "description": "",
-                "type": "basic_blueprint",
+                "type": "Garden",
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "blueprint_3",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
+                    "type": "Bush",
+                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
                 },
             },
         }
 
         root = tree_node_from_dict(
-            document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
+            document_1,
+            get_mock_document_service_for_tree_tests().get_blueprint,
+            uid=document_1.get("_id"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         child_1 = root.get_by_path(["nested", "nested"])
@@ -349,20 +360,23 @@ class TreenodeTestCase(unittest.TestCase):
             "nested": {
                 "name": "Nested",
                 "description": "",
-                "type": "basic_blueprint",
+                "type": "Garden",
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "blueprint_3",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
+                    "type": "Bush",
+                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
                 },
             },
-            "reference": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
+            "reference": {"_id": "2", "name": "a_reference", "type": "Garden"},
             "references": [],
         }
 
         root = tree_node_from_dict(
-            document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
+            document_1,
+            get_mock_document_service_for_tree_tests().get_blueprint,
+            uid=document_1.get("_id"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         update_0 = {
@@ -372,15 +386,15 @@ class TreenodeTestCase(unittest.TestCase):
             "nested": {
                 "name": "Nested",
                 "description": "Some description",
-                "type": "basic_blueprint",
+                "type": "Garden",
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "blueprint_3",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
+                    "type": "Bush",
+                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
                 },
             },
-            "reference": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
+            "reference": {"_id": "2", "name": "a_reference", "type": "Garden"},
             "references": [],
         }
 
@@ -395,15 +409,15 @@ class TreenodeTestCase(unittest.TestCase):
             "nested": {
                 "name": "Nested",
                 "description": "Some description",
-                "type": "basic_blueprint",
+                "type": "Garden",
                 "nested": {
                     "name": "New-name",
                     "description": "",
-                    "type": "blueprint_3",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
+                    "type": "Bush",
+                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
                 },
             },
-            "reference": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
+            "reference": {"_id": "2", "name": "a_reference", "type": "Garden"},
             "references": [],
         }
 
@@ -418,15 +432,15 @@ class TreenodeTestCase(unittest.TestCase):
             "nested": {
                 "name": "Nested",
                 "description": "Some description",
-                "type": "basic_blueprint",
+                "type": "Garden",
                 "nested": {
                     "name": "New-name",
                     "description": "",
-                    "type": "blueprint_3",
-                    "reference": {"_id": "2", "name": "New-name", "description": "", "type": "basic_blueprint"},
+                    "type": "Bush",
+                    "reference": {"_id": "2", "name": "New-name", "description": "", "type": "Garden"},
                 },
             },
-            "reference": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
+            "reference": {"_id": "2", "name": "a_reference", "type": "Garden"},
             "references": [],
         }
 
@@ -441,16 +455,16 @@ class TreenodeTestCase(unittest.TestCase):
             "description": "",
             "nested": {
                 "name": "Nested",
-                "type": "basic_blueprint",
+                "type": "Garden",
                 "description": "Some description",
                 "nested": {
                     "name": "New-name",
-                    "type": "blueprint_3",
+                    "type": "Bush",
                     "description": "",
-                    "reference": {"_id": "2", "name": "New-name", "type": "basic_blueprint", "description": ""},
+                    "reference": {"_id": "2", "name": "New-name", "type": "Garden", "description": ""},
                 },
             },
-            "reference": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
+            "reference": {"_id": "2", "name": "a_reference", "type": "Garden"},
             "references": [],
         }
 

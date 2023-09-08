@@ -1,3 +1,4 @@
+import json
 import unittest
 
 from common.tree_node_serializer import (
@@ -9,17 +10,27 @@ from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
-from tests.unit.test_tree_functionality.blueprints_for_tree_tests import (
-    all_contained_cases_blueprint,
-    basic_blueprint,
-    blueprint_3,
-    get_blueprint,
-)
 from tests.unit.test_tree_functionality.get_node_for_tree_tests import (
     get_engine_package_node,
     get_form_example_node,
 )
+from tests.unit.test_tree_functionality.mock_blueprint_provider_for_tree_tests import (
+    BlueprintProvider,
+)
+from tests.unit.test_tree_functionality.mock_storage_recipe_provider import (
+    mock_storage_recipe_provider,
+)
+
+FILE_PATH = "src/tests/unit/test_tree_functionality/mock_blueprints_for_tree_tests/"
+
+with open(FILE_PATH + "Garden.blueprint.json") as f:
+    Garden = json.load(f)
+
+with open(FILE_PATH + "Garden.blueprint.json") as f:
+    all_contained_cases_blueprint = json.load(f)
+
+with open(FILE_PATH + "Garden.blueprint.json") as f:
+    Bush = json.load(f)
 
 
 class TreeNodeDictConversion(unittest.TestCase):
@@ -32,13 +43,13 @@ class TreeNodeDictConversion(unittest.TestCase):
             "nested": {
                 "name": "Nested",
                 "description": "",
-                "type": "basic_blueprint",
-                "_blueprint": basic_blueprint,
+                "type": "Garden",
+                "_blueprint": Garden,
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "blueprint_3",
-                    "_blueprint": blueprint_3,
+                    "type": "Bush",
+                    "_blueprint": Bush,
                     "reference": {
                         "address": "$5",
                         "type": SIMOS.REFERENCE.value,
@@ -50,30 +61,33 @@ class TreeNodeDictConversion(unittest.TestCase):
                 "_id": "2",
                 "name": "Reference",
                 "description": "",
-                "type": "basic_blueprint",
-                "_blueprint": basic_blueprint,
+                "type": "Garden",
+                "_blueprint": Garden,
             },
             "references": [
                 {
                     "_id": "3",
                     "name": "Reference-1",
                     "description": "",
-                    "type": "basic_blueprint",
-                    "_blueprint": basic_blueprint,
+                    "type": "Garden",
+                    "_blueprint": Garden,
                 },
                 {
                     "_id": "4",
                     "name": "Reference-2",
                     "description": "",
-                    "type": "basic_blueprint",
-                    "_blueprint": basic_blueprint,
+                    "type": "Garden",
+                    "_blueprint": Garden,
                 },
             ],
             "_blueprint": all_contained_cases_blueprint,
         }
 
         root = tree_node_from_dict(
-            document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
+            document_1,
+            BlueprintProvider.get_blueprint,
+            uid=document_1.get("_id"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         actual = {
@@ -84,11 +98,11 @@ class TreeNodeDictConversion(unittest.TestCase):
             "nested": {
                 "name": "Nested",
                 "description": "",
-                "type": "basic_blueprint",
+                "type": "Garden",
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "blueprint_3",
+                    "type": "Bush",
                     "reference": {
                         "address": "$5",
                         "type": SIMOS.REFERENCE.value,
@@ -96,10 +110,10 @@ class TreeNodeDictConversion(unittest.TestCase):
                     },
                 },
             },
-            "reference": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint", "nested": {}},
+            "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden", "nested": {}},
             "references": [
-                {"_id": "3", "name": "Reference-1", "description": "", "type": "basic_blueprint", "nested": {}},
-                {"_id": "4", "name": "Reference-2", "description": "", "type": "basic_blueprint", "nested": {}},
+                {"_id": "3", "name": "Reference-1", "description": "", "type": "Garden", "nested": {}},
+                {"_id": "4", "name": "Reference-2", "description": "", "type": "Garden", "nested": {}},
             ],
         }
 
@@ -110,7 +124,10 @@ class TreeNodeDictConversion(unittest.TestCase):
 
         with self.assertRaises(RecursionError):
             tree_node_from_dict(
-                document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
+                document_1,
+                BlueprintProvider.get_blueprint,
+                uid=document_1.get("_id"),
+                recipe_provider=mock_storage_recipe_provider,
             )
 
     def test_from_dict_using_dict_importer(self):
@@ -122,13 +139,13 @@ class TreeNodeDictConversion(unittest.TestCase):
             "nested": {
                 "name": "Nested",
                 "description": "",
-                "type": "basic_blueprint",
-                "_blueprint": basic_blueprint,
+                "type": "Garden",
+                "_blueprint": Garden,
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "blueprint_3",
-                    "_blueprint": blueprint_3,
+                    "type": "Bush",
+                    "_blueprint": Bush,
                     "reference": {
                         "address": "$5",
                         "type": SIMOS.REFERENCE.value,
@@ -140,23 +157,23 @@ class TreeNodeDictConversion(unittest.TestCase):
                 "_id": "2",
                 "name": "Reference",
                 "description": "",
-                "type": "basic_blueprint",
-                "_blueprint": basic_blueprint,
+                "type": "Garden",
+                "_blueprint": Garden,
             },
             "references": [
                 {
                     "_id": "3",
                     "name": "Reference-1",
                     "description": "",
-                    "type": "basic_blueprint",
-                    "_blueprint": basic_blueprint,
+                    "type": "Garden",
+                    "_blueprint": Garden,
                 },
                 {
                     "_id": "4",
                     "name": "Reference-2",
                     "description": "",
-                    "type": "basic_blueprint",
-                    "_blueprint": basic_blueprint,
+                    "type": "Garden",
+                    "_blueprint": Garden,
                 },
             ],
             "_blueprint": all_contained_cases_blueprint,
@@ -170,11 +187,11 @@ class TreeNodeDictConversion(unittest.TestCase):
             "nested": {
                 "name": "Nested",
                 "description": "",
-                "type": "basic_blueprint",
+                "type": "Garden",
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "blueprint_3",
+                    "type": "Bush",
                     "reference": {
                         "address": "$5",
                         "type": SIMOS.REFERENCE.value,
@@ -182,15 +199,18 @@ class TreeNodeDictConversion(unittest.TestCase):
                     },
                 },
             },
-            "reference": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint", "nested": {}},
+            "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden", "nested": {}},
             "references": [
-                {"_id": "3", "name": "Reference-1", "description": "", "type": "basic_blueprint", "nested": {}},
-                {"_id": "4", "name": "Reference-2", "description": "", "type": "basic_blueprint", "nested": {}},
+                {"_id": "3", "name": "Reference-1", "description": "", "type": "Garden", "nested": {}},
+                {"_id": "4", "name": "Reference-2", "description": "", "type": "Garden", "nested": {}},
             ],
         }
 
         root = tree_node_from_dict(
-            document_1, get_blueprint, uid=document_1.get("_id"), recipe_provider=mock_storage_recipe_provider
+            document_1,
+            BlueprintProvider.get_blueprint,
+            uid=document_1.get("_id"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         assert get_and_print_diff(actual, tree_node_to_dict(root)) == []
@@ -204,13 +224,13 @@ class TreeNodeDictConversion(unittest.TestCase):
             "reference": {
                 "name": "Reference-1",
                 "description": "",
-                "type": "basic_blueprint",
+                "type": "Garden",
             },
             "nested": {
                 "name": "Nested",
                 "description": "",
-                "type": "basic_blueprint",
-                "nested": {"name": "nested2", "type": "blueprint_3"},
+                "type": "Garden",
+                "nested": {"name": "nested2", "type": "Bush"},
             },
             "references": [],
         }
@@ -219,63 +239,63 @@ class TreeNodeDictConversion(unittest.TestCase):
             key="root",
             uid="1",
             entity=root_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=BlueprintProvider.get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
         )
 
-        nested_data = {"name": "Nested", "description": "", "type": "basic_blueprint"}
+        nested_data = {"name": "Nested", "description": "", "type": "Garden"}
         nested = Node(
             recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=BlueprintProvider.get_blueprint,
             parent=root,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
 
-        nested_2_data = {"name": "Nested", "description": "", "type": "blueprint_3"}
+        nested_2_data = {"name": "Nested", "description": "", "type": "Bush"}
         nested_2 = Node(
             recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_2_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=BlueprintProvider.get_blueprint,
             parent=nested,
-            attribute=BlueprintAttribute(name="", attribute_type="blueprint_3"),
+            attribute=BlueprintAttribute(name="", attribute_type="Bush"),
         )
 
-        nested_2_reference_data = {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"}
+        nested_2_reference_data = {"_id": "2", "name": "Reference", "description": "", "type": "Garden"}
         Node(
             recipe_provider=mock_storage_recipe_provider,
             key="reference",
             uid="2",
             entity=nested_2_reference_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=BlueprintProvider.get_blueprint,
             parent=nested_2,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
 
-        list_data = {"name": "List", "type": "blueprint_3"}
+        list_data = {"name": "List", "type": "Bush"}
         list_node = ListNode(
             recipe_provider=mock_storage_recipe_provider,
             key="list",
             uid="",
             entity=list_data,
             parent=root,
-            blueprint_provider=get_blueprint,
-            attribute=BlueprintAttribute(name="", attribute_type="blueprint_3"),
+            blueprint_provider=BlueprintProvider.get_blueprint,
+            attribute=BlueprintAttribute(name="", attribute_type="Bush"),
         )
 
-        item_1_data = {"name": "Item1", "description": "", "type": "basic_blueprint"}
+        item_1_data = {"name": "Item1", "description": "", "type": "Garden"}
         item_1 = Node(
             recipe_provider=mock_storage_recipe_provider,
             key="0",
             uid="",
             entity=item_1_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=BlueprintProvider.get_blueprint,
             parent=list_node,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
 
         actual_root = {
@@ -286,15 +306,15 @@ class TreeNodeDictConversion(unittest.TestCase):
             "nested": {
                 "name": "Nested",
                 "description": "",
-                "type": "basic_blueprint",
+                "type": "Garden",
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "blueprint_3",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
+                    "type": "Bush",
+                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
                 },
             },
-            "list": [{"name": "Item1", "description": "", "type": "basic_blueprint"}],
+            "list": [{"name": "Item1", "description": "", "type": "Garden"}],
         }
 
         self.assertEqual(actual_root, tree_node_to_dict(root))
@@ -302,18 +322,18 @@ class TreeNodeDictConversion(unittest.TestCase):
         actual_nested = {
             "name": "Nested",
             "description": "",
-            "type": "basic_blueprint",
+            "type": "Garden",
             "nested": {
                 "name": "Nested",
                 "description": "",
-                "type": "blueprint_3",
-                "reference": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
+                "type": "Bush",
+                "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
             },
         }
 
         self.assertEqual(actual_nested, tree_node_to_dict(nested))
 
-        item_1_actual = {"name": "Item1", "description": "", "type": "basic_blueprint"}
+        item_1_actual = {"name": "Item1", "description": "", "type": "Garden"}
 
         self.assertEqual(item_1_actual, tree_node_to_dict(item_1))
 
@@ -348,7 +368,7 @@ class TreeNodeDictConversion(unittest.TestCase):
         }
 
         root = tree_node_from_dict(
-            doc, get_blueprint, uid=doc.get("_id"), recipe_provider=mock_storage_recipe_provider
+            doc, BlueprintProvider.get_blueprint, uid=doc.get("_id"), recipe_provider=mock_storage_recipe_provider
         )
         case_list_attribute = root.children[0].attribute
         single_case_attribute = root.children[0].children[0].attribute
@@ -365,7 +385,7 @@ class TreeNodeDictConversion(unittest.TestCase):
         }
 
         root = tree_node_from_dict(
-            doc, get_blueprint, uid=doc.get("_id"), recipe_provider=mock_storage_recipe_provider
+            doc, BlueprintProvider.get_blueprint, uid=doc.get("_id"), recipe_provider=mock_storage_recipe_provider
         )
 
         assert "aOptionalNestedObject" not in doc and "aOptionalNestedObject" not in tree_node_to_dict(root)
@@ -397,7 +417,7 @@ class TreeNodeDictConversion(unittest.TestCase):
             key="",
             uid="1",
             entity=document,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=BlueprintProvider.get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="uncontained_list_blueprint"),
         )
         uncontained_in_every_way_node = ListNode(
@@ -405,15 +425,15 @@ class TreeNodeDictConversion(unittest.TestCase):
             key="uncontained_in_every_way",
             uid="1.uncontained_in_every_way",
             entity=uncontained_in_every_way,
-            blueprint_provider=get_blueprint,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            blueprint_provider=BlueprintProvider.get_blueprint,
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
         reference_1_node = Node(
             recipe_provider=mock_storage_recipe_provider,
             key="0",
             uid="1.uncontained_in_every_way.0",
             entity=reference_1,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=BlueprintProvider.get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="dmss://system/SIMOS/Reference"),
         )
         reference_2_node = Node(
@@ -421,7 +441,7 @@ class TreeNodeDictConversion(unittest.TestCase):
             key="1",
             uid="1.uncontained_in_every_way.1",
             entity=reference_2,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=BlueprintProvider.get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="dmss://system/SIMOS/Reference"),
         )
         uncontained_in_every_way_node.children.append(reference_1_node)

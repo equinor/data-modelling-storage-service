@@ -1,0 +1,17 @@
+{
+  "name": "RoomWithOptionalChestInside",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "A room which may or may not contain a chest. The chest may or may not contain a Box.",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "chest",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "ChestWithOptionalBoxInside",
+      "optional": true,
+      "contained": true
+    }
+  ]
+}

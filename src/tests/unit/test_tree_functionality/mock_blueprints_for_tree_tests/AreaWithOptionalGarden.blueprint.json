@@ -1,0 +1,17 @@
+{
+  "name": "AreaWithOptionalGarden",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "im_optional",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "Garden",
+      "optional": true,
+      "contained": true
+    }
+  ]
+}

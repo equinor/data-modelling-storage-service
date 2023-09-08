@@ -1,0 +1,23 @@
+{
+  "name": "Box",
+  "type": "system/SIMOS/Blueprint",
+  "description": "Blueprint for a normal box. There is nothing interesting about this box.",
+  "attributes": [
+    {
+      "name": "name",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "type",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "description",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "optional": true
+    }
+  ]
+}

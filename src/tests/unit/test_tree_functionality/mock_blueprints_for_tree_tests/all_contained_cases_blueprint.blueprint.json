@@ -1,0 +1,38 @@
+{
+  "name": "all_contained_cases_blueprint",
+  "type": "system/SIMOS/Blueprint",
+  "description": "First blueprint",
+  "attributes": [
+    {
+      "name": "name",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "type",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "description",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "nested",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "Garden"
+    },
+    {
+      "name": "reference",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "Garden"
+    },
+    {
+      "name": "references",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "Garden",
+      "dimensions": "*"
+    }
+  ]
+}
