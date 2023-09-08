@@ -11,19 +11,5 @@
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "blob"
     }
-  ],
-  "storageRecipes": [
-    {
-      "name": "default",
-      "type": "dmss://system/SIMOS/StorageRecipe",
-      "description": "",
-      "attributes": [
-        {
-          "name": "blob",
-          "type": "does_this_matter?",
-          "contained": false
-        }
-      ]
-    }
   ]
 }
