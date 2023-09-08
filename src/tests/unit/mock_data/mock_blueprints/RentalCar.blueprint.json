@@ -12,7 +12,7 @@
       "name": "type",
       "type": "system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
-      "default": "test_data/complex/RentalCar"
+      "default": "RentalCar"
     },
     {
       "name": "plateNumber",
@@ -22,7 +22,7 @@
     {
       "name": "engine",
       "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "test_data/complex/EngineTest",
+      "attributeType": "EngineTest",
       "optional": true
     }
   ]

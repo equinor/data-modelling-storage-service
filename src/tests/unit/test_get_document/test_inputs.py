@@ -12,11 +12,11 @@ class GetDocumentInputTestCase(unittest.TestCase):
     def setUp(self):
         self.car_rental_company = {
             "_id": "1",
-            "type": "test_data/complex/CarRental",
+            "type": "CarRental",
             "name": "myCarRentalCompany",
             "cars": [
                 {
-                    "type": "test_data/complex/RentalCar",
+                    "type": "RentalCar",
                     "name": "Volvo 240",
                     "plateNumber": "123",
                     "engine": {
@@ -36,7 +36,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
         }
         self.customer = {
             "_id": "4",
-            "type": "test_data/complex/Customer",
+            "type": "Customer",
             "name": "Jane",
             "car": {
                 "address": "$1.cars[0]",
@@ -46,7 +46,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
         }
         self.engine = {
             "_id": "2",
-            "type": "test_data/complex/EngineTest",
+            "type": "EngineTest",
             "name": "myEngine",
             "description": "",
             "fuelPump": {
@@ -58,7 +58,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
         }
         self.fuel_pump = {
             "_id": "3",
-            "type": "test_data/complex/FuelPumpTest",
+            "type": "FuelPumpTest",
             "name": "fuelPump",
             "description": "A standard fuel pump",
         }
