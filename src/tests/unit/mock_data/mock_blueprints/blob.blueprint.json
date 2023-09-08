@@ -11,14 +11,5 @@
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string"
     }
-  ],
-  "storageRecipes": [
-    {
-      "name": "default",
-      "type": "dmss://system/SIMOS/StorageRecipe",
-      "description": "",
-      "storageAffinity": "blob",
-      "attributes": []
-    }
   ]
 }
