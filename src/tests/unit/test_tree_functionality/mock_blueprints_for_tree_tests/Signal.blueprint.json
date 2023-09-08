@@ -1,0 +1,12 @@
+{
+  "name": "Signal",
+  "type": "system/SIMOS/Blueprint",
+  "attributes": [
+    {
+      "name": "values",
+      "type": "CORE:BlueprintAttribute",
+      "attributeType": "number",
+      "dimensions": "*"
+    }
+  ]
+}

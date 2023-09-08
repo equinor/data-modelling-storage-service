@@ -1,0 +1,28 @@
+{
+  "name": "Garden",
+  "type": "system/SIMOS/Blueprint",
+  "description": "Blueprint for a nice garden.",
+  "attributes": [
+    {
+      "name": "name",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "type",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "description",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "optional": true
+    },
+    {
+      "name": "nested",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "Bush"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Case",
+  "type": "system/SIMOS/Blueprint",
+  "extends": [
+    "system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "signal",
+      "type": "CORE:BlueprintAttribute",
+      "attributeType": "Signal"
+    }
+  ]
+}

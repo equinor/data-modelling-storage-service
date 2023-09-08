@@ -1,0 +1,45 @@
+{
+  "name": "FormBlueprint",
+  "type": "system/SIMOS/Blueprint",
+  "attributes": [
+    {
+      "name": "type",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "aNestedObject",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "NestedField",
+      "label": "A nested object"
+    },
+    {
+      "name": "aOptionalNestedObject",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "NestedField",
+      "label": "A optional nested object",
+      "optional": true
+    },
+    {
+      "name": "inputEntity",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "description": "Generic input entity",
+      "attributeType": "object",
+      "contained": false
+    },
+    {
+      "name": "optionalNumberList",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "number",
+      "dimensions": "*",
+      "optional": true
+    },
+    {
+      "name": "optionalObjectList",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "object",
+      "dimensions": "*",
+      "optional": true
+    }
+  ]
+}

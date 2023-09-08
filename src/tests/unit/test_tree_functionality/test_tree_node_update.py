@@ -6,171 +6,36 @@ from authentication.models import User
 from common.address import Address
 from common.exceptions import BadRequestException, ValidationException
 from common.utils.data_structure.compare import get_and_print_diff
-from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
 from enums import REFERENCE_TYPES, SIMOS
 from features.document.use_cases.add_document_use_case import add_document_use_case
 from features.document.use_cases.update_document_use_case import (
     update_document_use_case,
 )
-from storage.repositories.file import LocalFileRepository
-from tests.unit.mock_data.mock_document_service import get_mock_document_service
 from tests.unit.test_tree_functionality.get_node_for_tree_tests import (
     get_form_example_node,
 )
-
-
-class MultiTypeBlueprintProvider:
-    @staticmethod
-    def get_blueprint(type: str):
-        blueprint = None
-        if type == "parent":  # Just a container
-            blueprint = Blueprint(
-                {
-                    "name": "Parent",
-                    "type": SIMOS.BLUEPRINT.value,
-                    "extends": [SIMOS.NAMED_ENTITY.value],
-                    "attributes": [
-                        {
-                            "name": "SomeChild",
-                            "attributeType": "base_child",
-                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
-                            "optional": True,
-                        },
-                    ],
-                }
-            )
-        elif type == "parent_w_list":  # Just a container with a list
-            blueprint = Blueprint(
-                {
-                    "name": "Parent",
-                    "type": SIMOS.BLUEPRINT.value,
-                    "extends": [SIMOS.NAMED_ENTITY.value],
-                    "attributes": [
-                        {
-                            "name": "SomeChild",
-                            "attributeType": "base_child",
-                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
-                            "optional": True,
-                            "dimensions": "*",
-                        },
-                    ],
-                }
-            )
-        elif type == "wrapps_parent_w_list":  # Wrapps a uncontained parent_w_list
-            blueprint = Blueprint(
-                {
-                    "name": "wrapps_parent_w_list",
-                    "type": SIMOS.BLUEPRINT.value,
-                    "extends": [SIMOS.NAMED_ENTITY.value],
-                    "attributes": [
-                        {
-                            "name": "Parent-w-list",
-                            "attributeType": "parent_w_list",
-                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
-                        },
-                    ],
-                }
-            )
-        elif type == "base_child":  # A very basic blueprint, extends from NamedEntity
-            blueprint = Blueprint(
-                {
-                    "name": "BaseChild",
-                    "type": SIMOS.BLUEPRINT.value,
-                    "extends": [SIMOS.NAMED_ENTITY.value],
-                    "attributes": [
-                        {
-                            "name": "AValue",
-                            "attributeType": "integer",
-                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
-                        },
-                    ],
-                }
-            )
-        elif type == "special_child":  # A blueprint that extends from 'base_child', and adds an extra attribute
-            blueprint = Blueprint(
-                {
-                    "name": "SpecialChild",
-                    "type": SIMOS.BLUEPRINT.value,
-                    "extends": ["base_child"],
-                    "attributes": [
-                        {
-                            "name": "AnExtraValue",
-                            "attributeType": "string",
-                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
-                        },
-                    ],
-                }
-            )
-        elif type == "extra_special_child":  # A blueprint that extends from 'base_child', and adds an extra attribute
-            blueprint = Blueprint(
-                {
-                    "name": "ExtraSpecialChild",
-                    "type": SIMOS.BLUEPRINT.value,
-                    "extends": [SIMOS.NAMED_ENTITY.value, "special_child"],
-                    "attributes": [
-                        {
-                            "name": "AnotherExtraValue",
-                            "attributeType": "boolean",
-                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
-                        },
-                    ],
-                }
-            )
-        elif (
-            type == "special_child_no_inherit"
-        ):  # A duplicate of the 'special_child', but does not extends 'base_child'
-            blueprint = Blueprint(
-                {
-                    "name": "SpecialChild",
-                    "type": SIMOS.BLUEPRINT.value,
-                    "extends": [SIMOS.NAMED_ENTITY.value],
-                    "attributes": [
-                        {
-                            "name": "AnExtraValue",
-                            "attributeType": "string",
-                            "type": SIMOS.BLUEPRINT_ATTRIBUTE.value,
-                        },
-                    ],
-                }
-            )
-        elif type == "FormBlueprint":
-            return Blueprint(
-                {
-                    "name": "FormBlueprint",
-                    "type": "system/SIMOS/Blueprint",
-                    "attributes": [
-                        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-                        {
-                            "type": "system/SIMOS/BlueprintAttribute",
-                            "name": "inputEntity",
-                            "description": "Generic input entity",
-                            "attributeType": "object",
-                            "contained": False,
-                        },
-                    ],
-                }
-            )
-        else:
-            blueprint = Blueprint(LocalFileRepository().get(type))
-
-        blueprint.path = type
-        return blueprint
+from tests.unit.test_tree_functionality.mock_blueprint_provider_for_tree_tests import (
+    BlueprintProvider,
+)
+from tests.unit.test_tree_functionality.mock_document_service_for_tree_tests import (
+    get_mock_document_service_for_tree_tests,
+)
 
 
 class DocumentServiceTestCase(unittest.TestCase):
     def test_update_single_optional_complex(self):
         repository = mock.Mock()
 
-        doc_storage = {
-            "1": {
-                "_id": "1",
-                "name": "Parent",
-                "description": "",
-                "type": "blueprint_with_optional_attr",
-                "im_optional": {},
-            }
+        chest = {
+            "_id": "1",
+            "name": "TreasureChest",
+            "description": "",
+            "type": "ChestWithOptionalBoxInside",
+            "im_optional": {},
         }
+
+        doc_storage = {"1": chest}
 
         def mock_get(document_id: str):
             return deepcopy(doc_storage[document_id])
@@ -185,7 +50,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(repository_provider)
+        document_service = get_mock_document_service_for_tree_tests(repository_provider)
 
         node: Node = document_service.get_document(Address("$1", "testing"))
         node.update(
@@ -193,13 +58,13 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "Test",
-                "type": "blueprint_with_optional_attr",
-                "im_optional": {},
+                "type": "ChestWithOptionalBoxInside",
+                "box": {},
             }
         )
         document_service.save(node, "testing")
 
-        assert doc_storage["1"]["im_optional"] == {}
+        assert doc_storage["1"]["box"] == {}
 
     def test_add_optional(self):
         repository = mock.Mock()
@@ -209,8 +74,8 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_with_optional_attr",
-                "im_optional": {},
+                "type": "ChestWithOptionalBoxInside",
+                "box": {},
             }
         }
 
@@ -218,8 +83,8 @@ class DocumentServiceTestCase(unittest.TestCase):
             "_id": "1",
             "name": "Parent",
             "description": "",
-            "type": "blueprint_with_optional_attr",
-            "im_optional": {"name": "new_entity", "type": "basic_blueprint", "description": "This is my new entity"},
+            "type": "ChestWithOptionalBoxInside",
+            "box": {"name": "box", "type": "Box", "description": "box"},
         }
 
         def mock_get(document_id: str):
@@ -235,10 +100,10 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(repository_provider)
+        document_service = get_mock_document_service_for_tree_tests(repository_provider)
         add_document_use_case(
-            address=Address("$1.im_optional", "testing"),
-            document={"type": "basic_blueprint", "name": "new_entity", "description": "This is my new entity"},
+            address=Address("$1.box", "testing"),
+            document={"type": "Box", "name": "box", "description": "box"},
             update_uncontained=True,
             document_service=document_service,
         )
@@ -252,7 +117,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "parent",
                 "description": "",
-                "type": "parent",
+                "type": "Parent",
                 "SomeChild": {},
             }
         }
@@ -266,18 +131,18 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            blueprint_provider=MultiTypeBlueprintProvider(), repository_provider=lambda x, y: repository
+        document_service = get_mock_document_service_for_tree_tests(
+            blueprint_provider=BlueprintProvider, repository_provider=lambda x, y: repository
         )
         with self.assertRaises(ValidationException) as error:
             update_document_use_case(
-                data={"name": "whatever", "type": "special_child_no_inherit", "AnExtraValue": "Hallo there!"},
+                data={"name": "whatever", "type": "SpecialChildNoInherit", "AnExtraValue": "Hallo there!"},
                 address=Address("$1.SomeChild", "testing"),
                 document_service=document_service,
             )
         assert (
             error.exception.message
-            == "Entity should be of type 'base_child' (or extending from it). Got 'special_child_no_inherit'"
+            == "Entity should be of type 'BaseChild' (or extending from it). Got 'SpecialChildNoInherit'"
         )
         assert not doc_storage["1"]["SomeChild"]
 
@@ -289,12 +154,12 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Parent",
                 "description": "",
-                "type": "blueprint_with_nested_optional_attr",
-                "nested_with_optional": {
-                    "name": "Parent",
+                "type": "RoomWithOptionalChestInside",
+                "chest": {
+                    "name": "chest",
                     "description": "",
-                    "type": "blueprint_with_optional_attr",
-                    "im_optional": {},
+                    "type": "ChestWithOptionalBoxInside",
+                    "box": {},
                 },
             }
         }
@@ -303,15 +168,15 @@ class DocumentServiceTestCase(unittest.TestCase):
             "_id": "1",
             "name": "Parent",
             "description": "",
-            "type": "blueprint_with_nested_optional_attr",
-            "nested_with_optional": {
-                "name": "Parent",
+            "type": "RoomWithOptionalChestInside",
+            "chest": {
+                "name": "chest",
                 "description": "",
-                "type": "blueprint_with_optional_attr",
-                "im_optional": {
-                    "name": "new_entity",
-                    "type": "basic_blueprint",
-                    "description": "This is my new entity",
+                "type": "ChestWithOptionalBoxInside",
+                "box": {
+                    "name": "box",
+                    "type": "Box",
+                    "description": "box",
                 },
             },
         }
@@ -329,10 +194,10 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(repository_provider)
+        document_service = get_mock_document_service_for_tree_tests(repository_provider)
         add_document_use_case(
-            address=Address("$1.nested_with_optional.im_optional", "testing"),
-            document={"name": "new_entity", "description": "This is my new entity", "type": "basic_blueprint"},
+            address=Address("$1.chest.box", "testing"),
+            document={"name": "box", "description": "box", "type": "Box"},
             update_uncontained=True,
             document_service=document_service,
         )
@@ -345,13 +210,13 @@ class DocumentServiceTestCase(unittest.TestCase):
         doc_storage = {
             "1": {
                 "_id": "1",
-                "name": "Parent",
+                "name": "chest",
                 "description": "",
-                "type": "blueprint_with_optional_attr",
-                "im_optional": {
+                "type": "ChestWithOptionalBoxInside",
+                "box": {
                     "name": "duplicate",
                     "description": "",
-                    "type": "basic_blueprint",
+                    "type": "Box",
                 },
             }
         }
@@ -365,12 +230,12 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service_for_tree_tests(lambda x, y: repository)
 
         with self.assertRaises(BadRequestException):
             add_document_use_case(
-                address=Address("$1.im_optional", "testing"),
-                document={"type": "basic_blueprint", "name": "duplicate", "description": "This is my new entity"},
+                address=Address("$1.box", "testing"),
+                document={"type": "Box", "name": "duplicate", "description": "box"},
                 update_uncontained=True,
                 document_service=document_service,
             )
@@ -378,7 +243,7 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_add_valid_specialized_child_type(self):
         repository = mock.Mock()
 
-        doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "parent", "SomeChild": {}}}
+        doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "Parent", "SomeChild": {}}}
 
         def mock_get(document_id: str):
             return deepcopy(doc_storage[document_id])
@@ -388,18 +253,18 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
+        document_service = get_mock_document_service_for_tree_tests(
+            lambda id, user: repository, blueprint_provider=BlueprintProvider()
         )
         update_document_use_case(
-            data={"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
+            data={"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
             address=Address("$1.SomeChild", "testing"),
             document_service=document_service,
         )
 
         assert doc_storage["1"]["SomeChild"] == {
             "name": "whatever",
-            "type": "special_child",
+            "type": "SpecialChild",
             "AnExtraValue": "Hallo there!",
             "AValue": 13,
         }
@@ -407,7 +272,7 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_add_valid_second_level_specialized_child_type(self):
         repository = mock.Mock()
 
-        doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "parent", "SomeChild": {}}}
+        doc_storage = {"1": {"_id": "1", "name": "Parent", "description": "", "type": "Parent", "SomeChild": {}}}
 
         def mock_get(document_id: str):
             return deepcopy(doc_storage[document_id])
@@ -417,13 +282,13 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
+        document_service = get_mock_document_service_for_tree_tests(
+            lambda id, user: repository, blueprint_provider=BlueprintProvider()
         )
         update_document_use_case(
             data={
                 "name": "whatever",
-                "type": "extra_special_child",
+                "type": "ExtraSpecialChild",
                 "AnExtraValue": "Hallo there!",
                 "AnotherExtraValue": True,
                 "AValue": 13,
@@ -433,7 +298,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
         assert doc_storage["1"]["SomeChild"] == {
             "name": "whatever",
-            "type": "extra_special_child",
+            "type": "ExtraSpecialChild",
             "AnExtraValue": "Hallo there!",
             "AnotherExtraValue": True,
             "AValue": 13,
@@ -443,7 +308,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository = mock.Mock()
 
         doc_storage = {
-            "1": {"_id": "1", "name": "parent", "description": "", "type": "parent_w_list", "SomeChild": []}
+            "1": {"_id": "1", "name": "parent", "description": "", "type": "ParentWithListOfChildren", "SomeChild": []}
         }
 
         def mock_get(document_id: str):
@@ -454,15 +319,15 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
+        document_service = get_mock_document_service_for_tree_tests(
+            lambda id, user: repository, blueprint_provider=BlueprintProvider()
         )
         update_document_use_case(
             data=[
-                {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
+                {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
                 {
                     "name": "whatever",
-                    "type": "extra_special_child",
+                    "type": "ExtraSpecialChild",
                     "AnExtraValue": "Hallo there!",
                     "AnotherExtraValue": True,
                     "AValue": 13,
@@ -473,10 +338,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         assert doc_storage["1"]["SomeChild"] == [
-            {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
+            {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
             {
                 "name": "whatever",
-                "type": "extra_special_child",
+                "type": "ExtraSpecialChild",
                 "AnExtraValue": "Hallo there!",
                 "AnotherExtraValue": True,
                 "AValue": 13,
@@ -487,7 +352,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository = mock.Mock()
 
         doc_storage = {
-            "1": {"_id": "1", "name": "parent", "description": "", "type": "parent_w_list", "SomeChild": []}
+            "1": {"_id": "1", "name": "parent", "description": "", "type": "ParentWithListOfChildren", "SomeChild": []}
         }
 
         def mock_get(document_id: str):
@@ -498,17 +363,17 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
+        document_service = get_mock_document_service_for_tree_tests(
+            lambda id, user: repository, blueprint_provider=BlueprintProvider()
         )
 
         with self.assertRaises(ValidationException) as error:
             update_document_use_case(
                 data=[
-                    {"name": "whatever", "type": "special_child", "AnExtraValue": "Hallo there!", "AValue": 13},
+                    {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
                     {
                         "name": "whatever",
-                        "type": "special_child_no_inherit",
+                        "type": "SpecialChildNoInherit",
                         "AnExtraValue": "Hallo there!",
                     },
                 ],
@@ -517,7 +382,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             )
         assert (
             error.exception.message
-            == "Entity should be of type 'base_child' (or extending from it). Got 'special_child_no_inherit'"
+            == "Entity should be of type 'BaseChild' (or extending from it). Got 'SpecialChildNoInherit'"
         )
         assert doc_storage["1"]["SomeChild"] == []
 
@@ -525,7 +390,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository = mock.Mock()
 
         doc_storage = {
-            "1": {"_id": "1", "name": "parent", "description": "", "type": "wrapps_parent_w_list", "Parent-w-list": {}}
+            "1": {"_id": "1", "name": "parent", "description": "", "type": "WrappsParentWithList", "Parent-w-list": {}}
         }
 
         def mock_get(document_id: str):
@@ -536,16 +401,16 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            lambda id, user: repository, blueprint_provider=MultiTypeBlueprintProvider()
+        document_service = get_mock_document_service_for_tree_tests(
+            lambda id, user: repository, blueprint_provider=BlueprintProvider()
         )
 
         data = {
             "_id": "1",
             "name": "parent",
             "description": "",
-            "type": "wrapps_parent_w_list",
-            "Parent-w-list": {"name": "whatever", "type": "parent_w_list", "SomeChild": []},
+            "type": "WrappsParentWithList",
+            "Parent-w-list": {"name": "whatever", "type": "ParentWithListOfChildren", "SomeChild": []},
         }
         update_document_use_case(data=data, address=Address("$1", "testing"), document_service=document_service)
 

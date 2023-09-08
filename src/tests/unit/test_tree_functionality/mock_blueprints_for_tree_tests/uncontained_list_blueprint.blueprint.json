@@ -1,0 +1,17 @@
+{
+  "name": "uncontained_list_blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "uncontained_list_blueprint",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "uncontained_in_every_way",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "basic_blueprint",
+      "contained": false,
+      "dimensions": "*"
+    }
+  ]
+}

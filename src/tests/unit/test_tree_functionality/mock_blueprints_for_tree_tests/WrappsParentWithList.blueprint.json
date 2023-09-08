@@ -1,0 +1,14 @@
+{
+  "name": "WrappsParentWithList",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "Parent-w-list",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "ParentWithListOfChildren"
+    }
+  ]
+}

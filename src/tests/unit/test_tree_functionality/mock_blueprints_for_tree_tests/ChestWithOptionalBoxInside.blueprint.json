@@ -1,0 +1,17 @@
+{
+  "name": "ChestWithOptionalBoxInside",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "box",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "Box",
+      "optional": true,
+      "contained": true
+    }
+  ]
+}

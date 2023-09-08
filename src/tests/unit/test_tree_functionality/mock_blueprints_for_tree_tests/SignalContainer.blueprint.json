@@ -1,0 +1,15 @@
+{
+  "name": "SignalContainer",
+  "type": "system/SIMOS/Blueprint",
+  "extends": [
+    "system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "cases",
+      "type": "CORE:BlueprintAttribute",
+      "attributeType": "Case",
+      "dimensions": "*"
+    }
+  ]
+}

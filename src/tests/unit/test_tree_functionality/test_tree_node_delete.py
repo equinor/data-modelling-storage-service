@@ -4,7 +4,9 @@ from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import Node
 from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
-from tests.unit.test_tree_functionality.blueprints_for_tree_tests import get_blueprint
+from tests.unit.test_tree_functionality.mock_document_service_for_tree_tests import (
+    get_mock_document_service_for_tree_tests,
+)
 
 
 class TreeNodeDeleteTest(unittest.TestCase):
@@ -14,19 +16,19 @@ class TreeNodeDeleteTest(unittest.TestCase):
             key="root",
             uid="1",
             entity=root_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
             recipe_provider=mock_storage_recipe_provider,
         )
 
-        nested_1_data = {"name": "Nested1", "description": "", "type": "basic_blueprint"}
+        nested_1_data = {"name": "Nested1", "description": "", "type": "Garden"}
         nested_1 = Node(
             key="nested",
             uid="",
             entity=nested_1_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=root,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
             recipe_provider=mock_storage_recipe_provider,
         )
 
@@ -35,7 +37,7 @@ class TreeNodeDeleteTest(unittest.TestCase):
             "name": "root",
             "description": "",
             "type": "all_contained_cases_blueprint",
-            "nested": {"name": "Nested1", "description": "", "type": "basic_blueprint"},
+            "nested": {"name": "Nested1", "description": "", "type": "Garden"},
         }
 
         assert actual_before == tree_node_to_dict(root)
@@ -52,29 +54,29 @@ class TreeNodeDeleteTest(unittest.TestCase):
             key="root",
             uid="1",
             entity=root_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
             recipe_provider=mock_storage_recipe_provider,
         )
 
-        nested_1_data = {"name": "Nested1", "description": "", "type": "basic_blueprint"}
+        nested_1_data = {"name": "Nested1", "description": "", "type": "Garden"}
         nested_1 = Node(
             key="nested",
             uid="",
             entity=nested_1_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=root,
-            attribute=BlueprintAttribute(name="", attribute_type="basic_blueprint"),
+            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
             recipe_provider=mock_storage_recipe_provider,
         )
-        nested_2_data = {"name": "Nested2", "description": "", "type": "blueprint_3"}
+        nested_2_data = {"name": "Nested2", "description": "", "type": "Bush"}
         nested_2 = Node(
             key="nested2",
             uid="",
             entity=nested_2_data,
-            blueprint_provider=get_blueprint,
+            blueprint_provider=get_mock_document_service_for_tree_tests().get_blueprint,
             parent=nested_1,
-            attribute=BlueprintAttribute(name="", attribute_type="blueprint_3"),
+            attribute=BlueprintAttribute(name="", attribute_type="Bush"),
             recipe_provider=mock_storage_recipe_provider,
         )
 
@@ -86,8 +88,8 @@ class TreeNodeDeleteTest(unittest.TestCase):
             "nested": {
                 "name": "Nested1",
                 "description": "",
-                "type": "basic_blueprint",
-                "nested2": {"name": "Nested2", "description": "", "type": "blueprint_3"},
+                "type": "Garden",
+                "nested2": {"name": "Nested2", "description": "", "type": "Bush"},
             },
         }
 
@@ -100,7 +102,7 @@ class TreeNodeDeleteTest(unittest.TestCase):
             "name": "root",
             "description": "",
             "type": "all_contained_cases_blueprint",
-            "nested": {"name": "Nested1", "description": "", "type": "basic_blueprint"},
+            "nested": {"name": "Nested1", "description": "", "type": "Garden"},
         }
 
         assert actual_after_delete == tree_node_to_dict(root)
@@ -124,7 +126,10 @@ class TreeNodeDeleteTest(unittest.TestCase):
             ],
         }
         root = tree_node_from_dict(
-            document, get_blueprint, uid=document.get("_id"), recipe_provider=mock_storage_recipe_provider
+            document,
+            get_mock_document_service_for_tree_tests().get_blueprint,
+            uid=document.get("_id"),
+            recipe_provider=mock_storage_recipe_provider,
         )
 
         actual_before = {
