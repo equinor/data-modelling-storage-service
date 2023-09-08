@@ -12,7 +12,7 @@
       "name": "type",
       "type": "system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
-      "default": "test_data/complex/CarTest"
+      "default": "CarTest"
     },
     {
       "name": "plateNumber",
@@ -22,12 +22,12 @@
     {
       "name": "wheel",
       "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "test_data/complex/WheelTest"
+      "attributeType": "WheelTest"
     },
     {
       "name": "wheels",
       "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "test_data/complex/WheelTest",
+      "attributeType": "WheelTest",
       "dimensions": "*"
     },
     {
@@ -90,25 +90,25 @@
     {
       "name": "engine",
       "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "test_data/complex/EngineTest"
+      "attributeType": "EngineTest"
     },
     {
       "name": "engine2",
       "type": "system/SIMOS/BlueprintAttribute",
       "optional": true,
-      "attributeType": "test_data/complex/EngineTest"
+      "attributeType": "EngineTest"
     },
     {
       "name": "engine3",
       "type": "system/SIMOS/BlueprintAttribute",
       "optional": true,
-      "attributeType": "test_data/complex/EngineTest",
+      "attributeType": "EngineTest",
       "default": {
         "name": "default engine",
-        "type": "test_data/complex/EngineTest",
+        "type": "EngineTest",
         "fuelPump": {
           "name": "fuelPump",
-          "type": "test_data/complex/FuelPumpTest",
+          "type": "FuelPumpTest",
           "description": "A standard fuel pump"
         },
         "power": 9

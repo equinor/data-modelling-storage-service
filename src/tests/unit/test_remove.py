@@ -42,7 +42,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         doc_1 = {
             "_id": "1",
             "name": "Car rental",
-            "type": "test_data/complex/CarRental",
+            "type": "CarRental",
             "cars": [
                 {
                     "address": "2",
@@ -53,7 +53,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "customers": [
                 {
                     "name": "Jane",
-                    "type": "test_data/complex/Customer",
+                    "type": "Customer",
                     "car": {
                         "address": "2",
                         "type": SIMOS.REFERENCE.value,
@@ -62,7 +62,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 }
             ],
         }
-        doc_2 = {"_id": "2", "name": "car1", "type": "test_data/complex/RentalCar", "plateNumber": "xyz"}
+        doc_2 = {"_id": "2", "name": "car1", "type": "RentalCar", "plateNumber": "xyz"}
 
         self.storage = {"1": doc_1, "2": doc_2}
 

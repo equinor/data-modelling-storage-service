@@ -15,11 +15,11 @@ class ResolveReferenceTestCase(unittest.TestCase):
     def setUp(self):
         self.car_rental_company = {
             "_id": "car_rental_company_id",
-            "type": "test_data/complex/CarRental",
+            "type": "CarRental",
             "name": "myCarRentalCompany",
             "cars": [
                 {
-                    "type": "test_data/complex/RentalCar",
+                    "type": "RentalCar",
                     "name": "Volvo 240",
                     "plateNumber": "123",
                     "engine": {
@@ -36,7 +36,7 @@ class ResolveReferenceTestCase(unittest.TestCase):
                     "referenceType": REFERENCE_TYPES.LINK.value,
                 },
                 {
-                    "type": "test_data/complex/Customer",
+                    "type": "Customer",
                     "name": "Jon",
                     "car": {
                         "address": "^.cars[0]",
@@ -48,7 +48,7 @@ class ResolveReferenceTestCase(unittest.TestCase):
         }
         self.customer = {
             "_id": "customer_id",
-            "type": "test_data/complex/Customer",
+            "type": "Customer",
             "name": "Jane",
             "car": {
                 "address": "$car_rental_company_id.cars[0]",
@@ -58,7 +58,7 @@ class ResolveReferenceTestCase(unittest.TestCase):
         }
         self.engine = {
             "_id": "engine_id",
-            "type": "test_data/complex/EngineTest",
+            "type": "EngineTest",
             "name": "myEngine",
             "description": "",
             "fuelPump": {
@@ -70,7 +70,7 @@ class ResolveReferenceTestCase(unittest.TestCase):
         }
         self.fuel_pump = {
             "_id": "fuel_pump_id",
-            "type": "test_data/complex/FuelPumpTest",
+            "type": "FuelPumpTest",
             "name": "fuelPump",
             "description": "A standard fuel pump",
         }

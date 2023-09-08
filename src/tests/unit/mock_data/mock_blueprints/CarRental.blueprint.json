@@ -16,13 +16,13 @@
       "name": "cars",
       "type": "system/SIMOS/BlueprintAttribute",
       "dimensions": "*",
-      "attributeType": "test_data/complex/RentalCar"
+      "attributeType": "RentalCar"
     },
     {
       "name": "customers",
       "type": "system/SIMOS/BlueprintAttribute",
       "dimensions": "*",
-      "attributeType": "test_data/complex/Customer"
+      "attributeType": "Customer"
     }
   ]
 }

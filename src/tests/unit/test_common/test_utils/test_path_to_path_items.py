@@ -94,12 +94,12 @@ class PathToPathItemsTestCase(unittest.TestCase):
         )
 
     def test_reference_with_query_2_to_reference_items(self):
-        path = "/(type=test_data/complex/Customer)"
+        path = "/(type=Customer)"
         items = path_to_path_items(path)
         self.assertEqual(
             items,
             [
-                QueryItem(query="type=test_data/complex/Customer"),
+                QueryItem(query="type=Customer"),
             ],
         )
 

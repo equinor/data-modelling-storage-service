@@ -23,17 +23,17 @@ class CreateEntityTestCase(unittest.TestCase):
                 "fuelPump": {
                     "name": "fuelPump",
                     "description": "A standard fuel pump",
-                    "type": "test_data/complex/FuelPumpTest",
+                    "type": "FuelPumpTest",
                 },
                 "power": 120,
-                "type": "test_data/complex/EngineTest",
+                "type": "EngineTest",
             },
             "is_sedan": True,
             "name": "CarTest",
             "plateNumber": "",
             "seats": 2,
-            "type": "test_data/complex/CarTest",
-            "wheel": {"name": "Wheel", "power": 0.0, "type": "test_data/complex/WheelTest"},
+            "type": "CarTest",
+            "wheel": {"name": "Wheel", "power": 0.0, "type": "WheelTest"},
             "wheels": [],
             "floatValues": [2.1, 3.1, 4.2],
             "intValues": [1, 5, 4, 2],
@@ -41,7 +41,7 @@ class CreateEntityTestCase(unittest.TestCase):
             "stringValues": ["one", "two", "three"],
         }
 
-        entity = CreateEntity(blueprint_provider=blueprint_provider, type="test_data/complex/CarTest").entity
+        entity = CreateEntity(blueprint_provider=blueprint_provider, type="CarTest").entity
 
         self.assertEqual(expected_entity, entity)
 

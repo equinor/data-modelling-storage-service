@@ -29,29 +29,15 @@ class BlueprintProvider:
             "two_contained_deep_attributes",
             "uncontained_blueprint",
             "uncontained_list_blueprint",
+            "FuelPumpTest",
+            "CarTest",
+            "WheelTest",
+            "EngineTest",
+            "CarRental",
+            "Customer",
+            "RentalCar",
         ]:
             with open(_FILE_PATH + type + ".blueprint.json") as f:
-                return Blueprint(json.load(f), type)
-        if type == "test_data/complex/FuelPumpTest":
-            with open(_FILE_PATH + "FuelPumpTest.blueprint.json") as f:
-                return Blueprint(json.load(f), type)
-        if type == "test_data/complex/EngineTest":
-            with open(_FILE_PATH + "EngineTest.blueprint.json") as f:
-                return Blueprint(json.load(f), type)
-        if type == "test_data/complex/CarTest":
-            with open(_FILE_PATH + "CarTest.blueprint.json") as f:
-                return Blueprint(json.load(f), type)
-        if type == "test_data/complex/WheelTest":
-            with open(_FILE_PATH + "WheelTest.blueprint.json") as f:
-                return Blueprint(json.load(f), type)
-        if type == "test_data/complex/CarRental":
-            with open(_FILE_PATH + "CarRental.blueprint.json") as f:
-                return Blueprint(json.load(f), type)
-        if type == "test_data/complex/RentalCar":
-            with open(_FILE_PATH + "RentalCar.blueprint.json") as f:
-                return Blueprint(json.load(f), type)
-        if type == "test_data/complex/Customer":
-            with open(_FILE_PATH + "Customer.blueprint.json") as f:
                 return Blueprint(json.load(f), type)
         else:
             return Blueprint(file_repository_test.get(type), type)

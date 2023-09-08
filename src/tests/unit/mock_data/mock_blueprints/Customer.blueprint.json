@@ -10,7 +10,7 @@
     {
       "name": "car",
       "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "test_data/complex/RentalCar",
+      "attributeType": "RentalCar",
       "contained": false
     }
   ]

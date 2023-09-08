@@ -27,10 +27,10 @@
     {
       "name": "fuelPump",
       "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "test_data/complex/FuelPumpTest",
+      "attributeType": "FuelPumpTest",
       "default": {
         "name": "fuelPump",
-        "type": "test_data/complex/FuelPumpTest",
+        "type": "FuelPumpTest",
         "description": "A standard fuel pump"
       }
     }

@@ -16,15 +16,15 @@ class GetDocumentResolveTestCase(unittest.TestCase):
     def test_references_that_uses_wrong_protocol(self):
         my_car_rental = {
             "_id": "1",
-            "type": "test_data/complex/CarRental",
+            "type": "CarRental",
             "name": "myCarRental",
             "cars": [
-                {"type": "test_data/complex/RentalCar", "name": "Volvo 240", "plateNumber": "123"},
-                {"type": "test_data/complex/RentalCar", "name": "Ferrari", "plateNumber": "456"},
+                {"type": "RentalCar", "name": "Volvo 240", "plateNumber": "123"},
+                {"type": "RentalCar", "name": "Ferrari", "plateNumber": "456"},
             ],
             "customers": [
                 {
-                    "type": "test_data/complex/Customer",
+                    "type": "Customer",
                     "name": "Wrong protocol",
                     "car": {
                         "address": "wrong://$1.cars[0]",
@@ -61,11 +61,11 @@ class GetDocumentResolveTestCase(unittest.TestCase):
     def test_references(self):
         my_car_rental = {
             "_id": "2",
-            "type": "test_data/complex/CarRental",
+            "type": "CarRental",
             "name": "myCarRental",
             "cars": [
                 {
-                    "type": "test_data/complex/RentalCar",
+                    "type": "RentalCar",
                     "name": "Volvo 240",
                     "plateNumber": "123",
                     "engine": {
@@ -75,7 +75,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     },
                 },
                 {
-                    "type": "test_data/complex/RentalCar",
+                    "type": "RentalCar",
                     "name": "Ferrari",
                     "plateNumber": "456",
                     "engine": {
@@ -87,7 +87,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
             ],
             "customers": [
                 {
-                    "type": "test_data/complex/Customer",
+                    "type": "Customer",
                     "name": "Full absolute path prefixed with protocol",
                     "car": {
                         "address": f"{Protocols.DMSS.value}://test_data/complex/myCarRental.cars[0]",
@@ -96,7 +96,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     },
                 },
                 {
-                    "type": "test_data/complex/Customer",
+                    "type": "Customer",
                     "name": "Relative from the destination data source by id",
                     "car": {
                         "address": f"/$2.cars[0]",
@@ -105,7 +105,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     },
                 },
                 {
-                    "type": "test_data/complex/Customer",
+                    "type": "Customer",
                     "name": "Relative from the destination data source by path",
                     "car": {
                         "address": f"/complex/myCarRental.cars[0]",
@@ -114,7 +114,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     },
                 },
                 {
-                    "type": "test_data/complex/Customer",
+                    "type": "Customer",
                     "name": "Relative from the destination data source by query",
                     "car": {
                         "address": f"/[(_id=1)].content[(name=myCarRental)].cars[0]",
@@ -123,7 +123,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     },
                 },
                 {
-                    "type": "test_data/complex/Customer",
+                    "type": "Customer",
                     "name": "Relative from the destination data source by query on array",
                     "car": {
                         "address": f"/[(_id=1)].content[(name=myCarRental)].cars[(name=Volvo 240)]",
@@ -132,7 +132,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     },
                 },
                 {
-                    "type": "test_data/complex/Customer",
+                    "type": "Customer",
                     "name": "Test",
                     "car": {
                         "address": f"/complex.content[(name=myCarRental)].cars[0]",
@@ -141,7 +141,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     },
                 },
                 {
-                    "type": "test_data/complex/Customer",
+                    "type": "Customer",
                     "name": "Test2",
                     "car": {
                         "address": f"/complex.content[0].cars[0]",
@@ -150,7 +150,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     },
                 },
                 {
-                    "type": "test_data/complex/Customer",
+                    "type": "Customer",
                     "name": "Relative from the document",
                     "car": {
                         "address": f"^.cars[0]",
@@ -159,7 +159,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     },
                 },
                 {
-                    "type": "test_data/complex/Customer",
+                    "type": "Customer",
                     "name": "Relative from the document with query on plate number",
                     "car": {
                         "address": f"^.cars[(plateNumber=456,name=Ferrari)]",
@@ -196,10 +196,10 @@ class GetDocumentResolveTestCase(unittest.TestCase):
             "fuelPump": {
                 "name": "fuelPump",
                 "description": "A standard fuel pump",
-                "type": "test_data/complex/FuelPumpTest",
+                "type": "FuelPumpTest",
             },
             "power": 120,
-            "type": "test_data/complex/EngineTest",
+            "type": "EngineTest",
         }
 
         engines = {
