@@ -11,7 +11,5 @@
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string"
     }
-  ],
-  "storageRecipes": [],
-  "uiRecipes": []
+  ]
 }
