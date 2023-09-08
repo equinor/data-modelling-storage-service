@@ -5,13 +5,5 @@
   "extends": [
     "dmss://system/SIMOS/NamedEntity"
   ],
-  "attributes": [],
-  "storageRecipes": [],
-  "uiRecipes": [
-    {
-      "name": "default",
-      "description": "",
-      "plugin": "edit1"
-    }
-  ]
+  "attributes": []
 }
