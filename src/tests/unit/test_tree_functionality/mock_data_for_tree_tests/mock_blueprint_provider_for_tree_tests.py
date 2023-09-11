@@ -39,8 +39,9 @@ class BlueprintProvider:
                 return Blueprint(json.load(f), type)
         if type in ["dmss://system/SIMOS/Reference", "dmss://system/SIMOS/Package", "dmss://system/SIMOS/NamedEntity"]:
             return Blueprint(file_repository_test.get(type), type)
-
-        raise Exception(f"Invalid type {type}")
+        raise FileNotFoundError(
+            f"Invalid type {type} provided to the MockBlueprintProvider. No such blueprint found in the test data."
+        )
 
 
 blueprint_provider = BlueprintProvider()
