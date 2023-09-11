@@ -112,15 +112,15 @@ class TreeNodeDeleteTest(unittest.TestCase):
             "_id": "1",
             "name": "root",
             "description": "",
-            "type": "blueprint_4",
+            "type": "Blueprint4",
             "a_list": [
                 {
                     "name": "Nested1",
                     "description": "",
-                    "type": "blueprint_4",
+                    "type": "Blueprint4",
                     "a_list": [
-                        {"name": "Nested2-index-0", "description": "", "type": "blueprint_4", "a_list": []},
-                        {"name": "Nested2-index-1", "description": "", "type": "blueprint_4", "a_list": []},
+                        {"name": "Nested2-index-0", "description": "", "type": "Blueprint4", "a_list": []},
+                        {"name": "Nested2-index-1", "description": "", "type": "Blueprint4", "a_list": []},
                     ],
                 }
             ],
@@ -136,15 +136,15 @@ class TreeNodeDeleteTest(unittest.TestCase):
             "_id": "1",
             "name": "root",
             "description": "",
-            "type": "blueprint_4",
+            "type": "Blueprint4",
             "a_list": [
                 {
                     "name": "Nested1",
                     "description": "",
-                    "type": "blueprint_4",
+                    "type": "Blueprint4",
                     "a_list": [
-                        {"name": "Nested2-index-0", "description": "", "type": "blueprint_4", "a_list": []},
-                        {"name": "Nested2-index-1", "description": "", "type": "blueprint_4", "a_list": []},
+                        {"name": "Nested2-index-0", "description": "", "type": "Blueprint4", "a_list": []},
+                        {"name": "Nested2-index-1", "description": "", "type": "Blueprint4", "a_list": []},
                     ],
                 }
             ],
@@ -158,13 +158,13 @@ class TreeNodeDeleteTest(unittest.TestCase):
             "_id": "1",
             "name": "root",
             "description": "",
-            "type": "blueprint_4",
+            "type": "Blueprint4",
             "a_list": [
                 {
                     "name": "Nested1",
                     "description": "",
-                    "type": "blueprint_4",
-                    "a_list": [{"name": "Nested2-index-0", "description": "", "type": "blueprint_4", "a_list": []}],
+                    "type": "Blueprint4",
+                    "a_list": [{"name": "Nested2-index-0", "description": "", "type": "Blueprint4", "a_list": []}],
                 }
             ],
         }
