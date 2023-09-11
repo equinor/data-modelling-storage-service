@@ -33,12 +33,13 @@ class BlueprintProvider:
             "uncontained_list_blueprint",
             "RoomWithOptionalChestInside",
             "ExtraSpecialChild",
+            "Blueprint4",
         ]:
             with open(FILE_PATH + type + ".blueprint.json") as f:
                 return Blueprint(json.load(f), type)
-        if type == "blueprint_4":
-            with open(FILE_PATH + "Blueprint4.blueprint.json") as f:
-                return Blueprint(json.load(f))
+        # if type == "blueprint_4":
+        #     with open(FILE_PATH + "Blueprint4.blueprint.json") as f:
+        #         return Blueprint(json.load(f))
         if "system/SIMOS/Reference" in type:
             with open(FILE_PATH + "Reference.blueprint.json") as f:
                 return Blueprint(json.load(f))
