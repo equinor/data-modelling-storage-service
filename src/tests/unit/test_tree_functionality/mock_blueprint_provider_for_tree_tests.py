@@ -34,17 +34,12 @@ class BlueprintProvider:
             "RoomWithOptionalChestInside",
             "ExtraSpecialChild",
             "Blueprint4",
+            "Recursive",
         ]:
             with open(FILE_PATH + type + ".blueprint.json") as f:
                 return Blueprint(json.load(f), type)
-        # if type == "blueprint_4":
-        #     with open(FILE_PATH + "Blueprint4.blueprint.json") as f:
-        #         return Blueprint(json.load(f))
         if "system/SIMOS/Reference" in type:
             with open(FILE_PATH + "Reference.blueprint.json") as f:
-                return Blueprint(json.load(f))
-        if "recursive_blueprint" in type:
-            with open(FILE_PATH + "recursive.blueprint.json") as f:
                 return Blueprint(json.load(f))
         if type in ["dmss://system/SIMOS/Package", "dmss://system/SIMOS/NamedEntity"]:
             return Blueprint(file_repository_test.get(type), type)
