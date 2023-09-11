@@ -120,7 +120,7 @@ class TreeNodeDictConversion(unittest.TestCase):
         assert get_and_print_diff(actual, tree_node_to_dict(root)) == []
 
     def test_recursive_from_dict(self):
-        document_1 = {"_id": "1", "name": "Parent", "description": "", "type": "recursive_blueprint", "im_me!": {}}
+        document_1 = {"_id": "1", "name": "Parent", "description": "", "type": "Recursive", "im_me!": {}}
 
         with self.assertRaises(RecursionError):
             tree_node_from_dict(
