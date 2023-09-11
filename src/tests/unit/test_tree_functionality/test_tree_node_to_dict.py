@@ -1,14 +1,16 @@
 import unittest
+from unittest import skip
 
+from common.exceptions import BadRequestException
 from common.tree_node_serializer import tree_node_to_dict, tree_node_to_ref_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.test_tree_functionality.mock_data_for_tree_tests.get_node_for_tree_tests import (
-    get_form_example_node,
-)
 from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_blueprint_provider_for_tree_tests import (
     BlueprintProvider,
+)
+from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_document_service_for_tree_tests import (
+    mock_document_service,
 )
 from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_storage_recipe_provider import (
     mock_storage_recipe_provider,
@@ -16,6 +18,46 @@ from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_storage_re
 
 
 class TreeNodeToDictTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        self.attribute = BlueprintAttribute(name="a", attribute_type="dmss://system/SIMOS/BlueprintAttribute")
+        self.node = Node(key="1", attribute=self.attribute, blueprint_provider=mock_document_service.get_blueprint)
+
+    def test_to_dict_on_node_with_no_entity_returns_empty_dict(self):
+        node_dict = tree_node_to_dict(self.node)
+        assert len(node_dict.items()) == 0
+
+    def test_to_dict_when_node_entity_has_no_type_raises_BadRequestException(self):
+        self.node.entity = {"name": "entity-without-type"}
+        with self.assertRaises(BadRequestException):
+            tree_node_to_dict(self.node)
+
+    def test_to_dict_when_node_contains_a_simple_entity_returns_dict_with_the_entity(self):
+        self.node.entity = {"type": "Flower"}
+
+        node_dict = tree_node_to_dict(self.node)
+        assert len(node_dict.items()) == 1
+        assert node_dict["type"] == "Flower"
+
+    @skip
+    def test_to_dict_when_node_contains_entity_of_invalid_type_throws(self):
+        raise NotImplementedError
+
+    @skip
+    def test_to_dict_when_node_is_array_returns_list_of_dicts(self):
+        raise NotImplementedError
+
+    @skip
+    def test_to_dict_when_node_is_array_returns_list_of_dicts_with_correct_type_and_attributes(self):
+        raise NotImplementedError
+
+    @skip
+    def test_to_dict_when_node_contains_no_blueprint_only_type_is_in_dict(self):
+        raise NotImplementedError
+
+    @skip
+    def test_to_dict_when_node_contains_blueprint_all_attributes_are_in_dict(self):
+        raise NotImplementedError
+
     def test_to_dict(self):
         root_data = {
             "_id": 1,
@@ -139,8 +181,66 @@ class TreeNodeToDictTestCase(unittest.TestCase):
         self.assertEqual(item_1_actual, tree_node_to_dict(item_1))
 
     def test_tree_node_to_ref_dict_2(self):
-        form_node = get_form_example_node()
+        input_entity = {
+            "type": "dmss://system/SIMOS/Reference",
+            "referenceType": "link",
+            "address": "dmss://DemoDataSource/$product1",
+        }
+        a_nested_object = ({"type": "system/SIMOS/NamedEntity", "name": "nested obj", "description": "a description"},)
+        form_example_entity = {
+            "_id": "formExample",
+            "type": "FormBlueprint",
+            "aNestedObject": a_nested_object,
+            "inputEntity": input_entity,
+        }
+        form_example_blueprint_attribute = BlueprintAttribute(
+            name="?",
+            attribute_type="FormBlueprint",
+            type="dmss://system/SIMOS/BlueprintAttribute",
+            contained=True,
+        )
+
+        input_entity_attribute = BlueprintAttribute(
+            name="?",
+            attribute_type="dmss://system/SIMOS/Reference",
+            type="dmss://system/SIMOS/BlueprintAttribute",
+            contained=False,
+        )
+        a_nested_object_attribute = BlueprintAttribute(
+            name="?",
+            attribute_type="dmss://system/SIMOS/NamedEntity",
+            type="dmss://system/SIMOS/BlueprintAttribute",
+            contained=True,
+        )
+
+        input_entity_node = Node(
+            key="inputEntity",
+            entity=input_entity,
+            attribute=input_entity_attribute,
+            blueprint_provider=mock_document_service.get_blueprint,
+            recipe_provider=mock_storage_recipe_provider,
+        )
+        a_nested_object_node = Node(
+            key="aNestedObject",
+            entity=a_nested_object,
+            attribute=a_nested_object_attribute,
+            blueprint_provider=mock_document_service.get_blueprint,
+            recipe_provider=mock_storage_recipe_provider,
+        )
+
+        form_node = Node(
+            key="",
+            entity=form_example_entity,
+            attribute=form_example_blueprint_attribute,
+            blueprint_provider=mock_document_service.get_blueprint,
+            recipe_provider=mock_storage_recipe_provider,
+        )
+        form_node.children = [a_nested_object_node, input_entity_node]
+
+        # Act
         form_dict = tree_node_to_ref_dict(form_node)
+
+        # Assert
         assert form_dict["inputEntity"] == {
             "type": SIMOS.REFERENCE.value,
             "referenceType": REFERENCE_TYPES.LINK.value,
