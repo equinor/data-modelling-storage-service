@@ -10,18 +10,18 @@ from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.test_tree_functionality.get_node_for_tree_tests import (
+from tests.unit.test_tree_functionality.mock_data_for_tree_tests.get_node_for_tree_tests import (
     get_engine_package_node,
     get_form_example_node,
 )
-from tests.unit.test_tree_functionality.mock_blueprint_provider_for_tree_tests import (
+from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_blueprint_provider_for_tree_tests import (
     BlueprintProvider,
 )
-from tests.unit.test_tree_functionality.mock_storage_recipe_provider import (
+from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_storage_recipe_provider import (
     mock_storage_recipe_provider,
 )
 
-FILE_PATH = "src/tests/unit/test_tree_functionality/mock_blueprints_for_tree_tests/"
+FILE_PATH = "src/tests/unit/test_tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests/"
 
 with open(FILE_PATH + "Garden.blueprint.json") as f:
     Garden = json.load(f)

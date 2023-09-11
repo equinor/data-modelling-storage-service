@@ -1,10 +1,10 @@
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.test_tree_functionality.mock_document_service_for_tree_tests import (
+from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_document_service_for_tree_tests import (
     get_mock_document_service_for_tree_tests,
 )
-from tests.unit.test_tree_functionality.mock_storage_recipe_provider import (
+from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_storage_recipe_provider import (
     mock_storage_recipe_provider,
 )
 
@@ -68,7 +68,6 @@ def get_engine_package_node() -> Node:
         blueprint_provider=document_service.get_blueprint,
         recipe_provider=None,
     )
-
     """
     Node structure:
     * EnginePackage

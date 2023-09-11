@@ -12,13 +12,13 @@ from features.document.use_cases.add_document_use_case import add_document_use_c
 from features.document.use_cases.update_document_use_case import (
     update_document_use_case,
 )
-from tests.unit.test_tree_functionality.get_node_for_tree_tests import (
+from tests.unit.test_tree_functionality.mock_data_for_tree_tests.get_node_for_tree_tests import (
     get_form_example_node,
 )
-from tests.unit.test_tree_functionality.mock_blueprint_provider_for_tree_tests import (
+from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_blueprint_provider_for_tree_tests import (
     BlueprintProvider,
 )
-from tests.unit.test_tree_functionality.mock_document_service_for_tree_tests import (
+from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_document_service_for_tree_tests import (
     get_mock_document_service_for_tree_tests,
 )
 
