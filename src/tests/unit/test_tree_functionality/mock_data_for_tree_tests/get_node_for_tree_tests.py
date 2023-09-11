@@ -2,7 +2,7 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_document_service_for_tree_tests import (
-    get_mock_document_service_for_tree_tests,
+    mock_document_service,
 )
 from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_storage_recipe_provider import (
     mock_storage_recipe_provider,
@@ -11,7 +11,6 @@ from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_storage_re
 
 def get_engine_package_node() -> Node:
     """return a Node object for engine package that contains a single Blueprint called Engine."""
-    document_service = get_mock_document_service_for_tree_tests()
 
     # Engine is a blueprint in a package called EnginePackage.
     # We need to create 3 nodes: engine package, content list in engine package and the engine.
@@ -36,7 +35,7 @@ def get_engine_package_node() -> Node:
         key="content",
         attribute=engine_package_content_bp_attribute,
         entity=[engine_entity_ref],
-        blueprint_provider=document_service.get_blueprint,
+        blueprint_provider=mock_document_service.get_blueprint,
         recipe_provider=None,
     )
 
@@ -44,7 +43,7 @@ def get_engine_package_node() -> Node:
         key="0",
         entity=engine_entity_ref,
         attribute=engine_blueprint_attribute,
-        blueprint_provider=document_service.get_blueprint,
+        blueprint_provider=mock_document_service.get_blueprint,
         recipe_provider=None,
         uid=engine_entity_ref["address"],
     )
@@ -65,7 +64,7 @@ def get_engine_package_node() -> Node:
         key="Package",
         entity=engine_package_entity,
         attribute=engine_package_blueprint_attribute,
-        blueprint_provider=document_service.get_blueprint,
+        blueprint_provider=mock_document_service.get_blueprint,
         recipe_provider=None,
     )
     """
@@ -82,8 +81,6 @@ def get_engine_package_node() -> Node:
 
 
 def get_form_example_node() -> Node:
-    document_service = get_mock_document_service_for_tree_tests()
-
     input_entity = {
         "type": "dmss://system/SIMOS/Reference",
         "referenceType": "link",
@@ -120,14 +117,14 @@ def get_form_example_node() -> Node:
         key="inputEntity",
         entity=input_entity,
         attribute=input_entity_attribute,
-        blueprint_provider=document_service.get_blueprint,
+        blueprint_provider=mock_document_service.get_blueprint,
         recipe_provider=mock_storage_recipe_provider,
     )
     a_nested_object_node = Node(
         key="aNestedObject",
         entity=a_nested_object,
         attribute=a_nested_object_attribute,
-        blueprint_provider=document_service.get_blueprint,
+        blueprint_provider=mock_document_service.get_blueprint,
         recipe_provider=mock_storage_recipe_provider,
     )
 
@@ -135,7 +132,7 @@ def get_form_example_node() -> Node:
         key="",
         entity=form_example_entity,
         attribute=form_example_blueprint_attribute,
-        blueprint_provider=document_service.get_blueprint,
+        blueprint_provider=mock_document_service.get_blueprint,
         recipe_provider=mock_storage_recipe_provider,
     )
     form_node.children = [a_nested_object_node, input_entity_node]
