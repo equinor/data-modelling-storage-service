@@ -146,7 +146,32 @@ def _validate_entity(
                 attributeDefinition, entity[attributeDefinition.name], f"{key}.{attributeDefinition.name}"
             )
         elif attributeDefinition.attribute_type == "any" and attributeDefinition.name == "default":
-            continue
+            default_attribute_definition = BlueprintAttribute(
+                name=attributeDefinition.name,
+                attribute_type=entity["attributeType"],
+                dimensions=entity.get("dimensions", None),
+            )
+            if default_attribute_definition.is_array:
+                _validate_list(
+                    entity["default"],
+                    default_attribute_definition,
+                    get_blueprint,
+                    f"{key}.{default_attribute_definition.name}",
+                    len(default_attribute_definition.dimensions.dimensions),
+                    "extend",
+                )
+            elif default_attribute_definition.is_primitive:
+                _validate_primitive_attribute(
+                    default_attribute_definition, entity["default"], f"{key}.{default_attribute_definition.name}"
+                )
+            else:
+                _validate_complex_attribute(
+                    default_attribute_definition,
+                    entity["default"],
+                    get_blueprint,
+                    f"{key}.{default_attribute_definition.name}",
+                    "extend",
+                )
         else:
             _validate_complex_attribute(
                 attributeDefinition,
@@ -165,7 +190,9 @@ def _validate_complex_attribute(
     implementation_mode: Literal["exact", "extend", "minimum"],
 ):
     if not isinstance(attribute, dict):
-        raise ValidationException(f"'{attributeDefinition.name}' should be a dict", debug=_get_debug_message(key))
+        raise ValidationException(
+            f"'{attributeDefinition.name}' should be a dict, got {attribute}", debug=_get_debug_message(key)
+        )
     if not attribute or attributeDefinition.attribute_type == BuiltinDataTypes.BINARY.value:
         return
     if attributeDefinition.attribute_type == BuiltinDataTypes.OBJECT.value:
