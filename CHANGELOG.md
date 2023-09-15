@@ -1,5 +1,43 @@
 # Changelog
 
+## [1.4.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.3.1...v1.4.0) (2023-09-15)
+
+
+### Features
+
+* error handling in has-key-value-pair ([ea77488](https://github.com/equinor/data-modelling-storage-service/commit/ea7748850d9ea11b5e76a69af884981c8dafcf21))
+* extend testing coverage of scrypt method to be complete ([a9c8739](https://github.com/equinor/data-modelling-storage-service/commit/a9c873935f1185c985cef285f9a769d74d19613e))
+
+
+### Code Refactoring
+
+* add oauth scope to swagger ([3a5a30a](https://github.com/equinor/data-modelling-storage-service/commit/3a5a30a7dc0a3d56d46319ec6ce08aa96f387c1c))
+* remove unused attribute node.error_message ([ea7fc43](https://github.com/equinor/data-modelling-storage-service/commit/ea7fc43806bcc301452ff1dbc3791fa793b6622d))
+* remove unused test for attribute Node.error_message ([0207d6f](https://github.com/equinor/data-modelling-storage-service/commit/0207d6f979c5f5110beafb2eea83341fe1174af1))
+* removed unused method ([48ff4f2](https://github.com/equinor/data-modelling-storage-service/commit/48ff4f25ac5ff0509e1e9cd901bb21badf05fdda))
+* Removed unused methods and their tests ([8c1b6f8](https://github.com/equinor/data-modelling-storage-service/commit/8c1b6f8600dbc708a2431489065044b252c8fa80))
+* renamed or moved files ([6f1a07b](https://github.com/equinor/data-modelling-storage-service/commit/6f1a07ba1a9ab094476cd46d1a058d66f944517a))
+* split up mocking in the unit tests ([08d7374](https://github.com/equinor/data-modelling-storage-service/commit/08d7374e8efe980157e2503154cc26205c9b79bc))
+
+
+### Tests
+
+* added test cases so that the hashing is secure ([c9e9af8](https://github.com/equinor/data-modelling-storage-service/commit/c9e9af88ce67ece86904c17f4cc23649f88dd371))
+* be explicit about which SIMOS blueprints are allowed in test-data ([cb2c37c](https://github.com/equinor/data-modelling-storage-service/commit/cb2c37c26419e2eaaa291fdacb2400e0a485691b))
+* clean up mock blueprint provider, and also simpler blueprintNames ([50a8954](https://github.com/equinor/data-modelling-storage-service/commit/50a8954d9157e1e597d9079d1d5ad02377dfd86c))
+* import mock_document_service directly ([88dcf63](https://github.com/equinor/data-modelling-storage-service/commit/88dcf63cfd13c965aa9f4a6608e3cc590aea1eed))
+* moved check_existance into feauture folder ([e9a5410](https://github.com/equinor/data-modelling-storage-service/commit/e9a5410322d60e42ed369578375bb4f0dc19ecb2))
+* moved into more nested folder ([40f4ec1](https://github.com/equinor/data-modelling-storage-service/commit/40f4ec1907872568ab92c657f5b7b3fa9dd14821))
+* refactored get_blueprint to be less hard-coded ([06e9cbd](https://github.com/equinor/data-modelling-storage-service/commit/06e9cbdf29c3736e6d915639ebfde583ba42c564))
+* remove unused parameters in testing file ([b83eb6f](https://github.com/equinor/data-modelling-storage-service/commit/b83eb6f31ca2c8edbcd5395aa08da72b533d475b))
+* remove unused recipes in testing blueprint ([d18037e](https://github.com/equinor/data-modelling-storage-service/commit/d18037ef898439ea404f637bde5225032250b9ae))
+* remove unused recipes in testing blueprint ([79ef90e](https://github.com/equinor/data-modelling-storage-service/commit/79ef90e36e249cdce3d18cf6ba6dbc31929e65f3))
+* remove unused recipes in testing blueprint ([18eeeb9](https://github.com/equinor/data-modelling-storage-service/commit/18eeeb9e522dc9b91866a8df17e42e20bcf6a33d))
+* renamed blueprint_4 to Blueprint4 ([4fc2742](https://github.com/equinor/data-modelling-storage-service/commit/4fc274226a20f5b46aac2a8e8314a32d55a8685f))
+* renamed recursive_blueprint to Recursive ([6cb4686](https://github.com/equinor/data-modelling-storage-service/commit/6cb4686b837523a0f1e84098c1ffb767a98ad817))
+* split up test file into two separate files ([3085947](https://github.com/equinor/data-modelling-storage-service/commit/3085947f1bce0509a30c98980829baf18706785e))
+* tree tests refactor ([0785b9d](https://github.com/equinor/data-modelling-storage-service/commit/0785b9d6042a966b5e81a821a44505284478f925))
+
 ## [1.3.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.3.0...v1.3.1) (2023-09-01)
 
 
