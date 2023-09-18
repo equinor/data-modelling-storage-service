@@ -9,7 +9,7 @@ file_repository_test = LocalFileRepository()
 class BlueprintProvider:
     @staticmethod
     def get_blueprint(type: str):
-        FILE_PATH = "src/tests/unit/test_tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests/"
+        FILE_PATH = "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests/"
         if type in [
             "AreaWithOptionalGarden",
             "BaseChild",

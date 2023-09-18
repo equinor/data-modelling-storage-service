@@ -1,8 +1,8 @@
 from services.document_service import DocumentService
-from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_blueprint_provider_for_tree_tests import (
+from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_blueprint_provider_for_tree_tests import (
     blueprint_provider,
 )
-from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_storage_recipe_provider import (
+from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_storage_recipe_provider import (
     mock_storage_recipe_provider,
 )
 
