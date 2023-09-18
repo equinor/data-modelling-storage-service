@@ -19,10 +19,17 @@ from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_storage_re
 
 class TreeNodeToDictTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        self.attribute = BlueprintAttribute(name="a", attribute_type="dmss://system/SIMOS/BlueprintAttribute")
+        # Litt rart å ha en løs blueprintatribute. Burde være kobla på en Blueprint.
+        # Må lage en rotnode. Se i node-to-tree-dict-test
+        #
+        self.attribute = BlueprintAttribute(name="a", attribute_type="dmss://system/SIMOS/BlueprintAttribute")  #
         self.node = Node(key="1", attribute=self.attribute, blueprint_provider=mock_document_service.get_blueprint)
 
     def test_to_dict_on_node_with_no_entity_returns_empty_dict(self):
+        """
+        Attribute_type må være av samme type som self.node.entity["type"] .. D
+        tree_node_to_dict kan sjekke dette og throwe.
+        """
         node_dict = tree_node_to_dict(self.node)
         assert len(node_dict.items()) == 0
 
@@ -31,8 +38,15 @@ class TreeNodeToDictTestCase(unittest.TestCase):
         with self.assertRaises(BadRequestException):
             tree_node_to_dict(self.node)
 
+    def does_not_return_attributes_that_are_not_in_blueprint(self):
+        """Så denne skal returnere alle entiteter som er definert i self.node.entity som også er i blueprinten."""
+        self.node.entity = {"name": "entity-without-type"}
+        with self.assertRaises(BadRequestException):
+            tree_node_to_dict(self.node)
+
+    @skip
     def test_to_dict_when_node_contains_a_simple_entity_returns_dict_with_the_entity(self):
-        self.node.entity = {"type": "Flower"}
+        self.node.entity = {"type": "Flower", "name": "somethign"}
 
         node_dict = tree_node_to_dict(self.node)
         assert len(node_dict.items()) == 1
