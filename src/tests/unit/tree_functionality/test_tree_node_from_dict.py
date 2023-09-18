@@ -4,14 +4,14 @@ import unittest
 from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_blueprint_provider_for_tree_tests import (
+from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_blueprint_provider_for_tree_tests import (
     BlueprintProvider,
 )
-from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_storage_recipe_provider import (
+from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_storage_recipe_provider import (
     mock_storage_recipe_provider,
 )
 
-FILE_PATH = "src/tests/unit/test_tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests/"
+FILE_PATH = "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests/"
 
 with open(FILE_PATH + "Garden.blueprint.json") as f:
     Garden = json.load(f)

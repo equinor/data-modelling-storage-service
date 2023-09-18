@@ -1,10 +1,10 @@
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_document_service_for_tree_tests import (
+from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_document_service_for_tree_tests import (
     mock_document_service,
 )
-from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_storage_recipe_provider import (
+from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_storage_recipe_provider import (
     mock_storage_recipe_provider,
 )
 

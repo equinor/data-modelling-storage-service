@@ -5,10 +5,10 @@ from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
-from tests.unit.test_tree_functionality.mock_data_for_tree_tests.get_node_for_tree_tests import (
+from tests.unit.tree_functionality.mock_data_for_tree_tests.get_node_for_tree_tests import (
     get_engine_package_node,
 )
-from tests.unit.test_tree_functionality.mock_data_for_tree_tests.mock_document_service_for_tree_tests import (
+from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_document_service_for_tree_tests import (
     mock_document_service,
 )
 
