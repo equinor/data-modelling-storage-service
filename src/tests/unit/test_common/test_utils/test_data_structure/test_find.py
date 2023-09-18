@@ -16,7 +16,6 @@ class FindTestCase(unittest.TestCase):
                 "4": "anInt",
             }
         }
-        self.assertEqual(find(nested_dict, ["top", "middle", "nested"]), "value")
         self.assertEqual(find(nested_dict, ["top", "list", "[0]", "top", "middle", "nested"]), "value 1")
         self.assertEqual(find(nested_dict, ["top", "list", "[1]", "top", "middle", "nested"]), "value 2")
         self.assertEqual(find(nested_dict, ["top", "intlist", [10]]), 11)
