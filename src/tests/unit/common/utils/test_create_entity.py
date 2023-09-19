@@ -14,8 +14,16 @@ class CreateEntityTestCase(unittest.TestCase):
             "dmss://system/SIMOS/NamedEntity",
         ]
         mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
+        mock_blueprints_and_file_names = {
+            "CarTest": "CarTest.blueprint.json",
+            "WheelTest": "WheelTest.blueprint.json",
+            "EngineTest": "EngineTest.blueprint.json",
+            "FuelPumpTest": "FuelPumpTest.blueprint.json",
+        }
         self.mock_blueprint_provider = MockBlueprintProvider(
-            mock_blueprint_folder=mock_blueprint_folder, simos_blueprints_available_for_test=simos_blueprints
+            mock_blueprints_and_file_names=mock_blueprints_and_file_names,
+            mock_blueprint_folder=mock_blueprint_folder,
+            simos_blueprints_available_for_test=simos_blueprints,
         )
         self.mock_document_service = get_mock_document_service(blueprint_provider=self.mock_blueprint_provider)
         self.maxDiff = None

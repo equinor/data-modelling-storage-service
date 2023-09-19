@@ -16,10 +16,23 @@ class ValidateEntityTestCase(unittest.TestCase):
             "dmss://system/SIMOS/BlueprintAttribute",
         ]
         mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
-        self.mock_blueprint_provider = MockBlueprintProvider(
-            mock_blueprint_folder=mock_blueprint_folder, simos_blueprints_available_for_test=simos_blueprints
+        mock_blueprints_and_file_names = {
+            "CarRental": "CarRental.blueprint.json",
+            "RentalCar": "RentalCar.blueprint.json",
+            "CarTest": "CarTest.blueprint.json",
+            "BaseChild": "BaseChild.blueprint.json",
+            "WheelTest": "WheelTest.blueprint.json",
+            "SpecialChild": "SpecialChild.blueprint.json",
+            "Parent": "Parent.blueprint.json",
+            "FuelPumpTest": "FuelPumpTest.blueprint.json",
+            "EngineTest": "EngineTest.blueprint.json",
+        }
+        mock_blueprint_provider = MockBlueprintProvider(
+            mock_blueprints_and_file_names=mock_blueprints_and_file_names,
+            mock_blueprint_folder=mock_blueprint_folder,
+            simos_blueprints_available_for_test=simos_blueprints,
         )
-        self.mock_document_service = get_mock_document_service(blueprint_provider=self.mock_blueprint_provider)
+        self.mock_document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
 
     def test_a_simple_valid_entity(self):
         test_entity = {
