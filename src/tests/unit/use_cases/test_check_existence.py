@@ -25,8 +25,11 @@ class CheckExistenceTestCase(unittest.TestCase):
 
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
         mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
+        mock_blueprints_and_file_names = {"basic_blueprint": "basic_blueprint.blueprint.json"}
         mock_blueprint_provider = MockBlueprintProvider(
-            mock_blueprint_folder=mock_blueprint_folder, simos_blueprints_available_for_test=simos_blueprints
+            mock_blueprints_and_file_names=mock_blueprints_and_file_names,
+            mock_blueprint_folder=mock_blueprint_folder,
+            simos_blueprints_available_for_test=simos_blueprints,
         )
         self.document_service = get_mock_document_service(
             repository_provider=lambda x, y: self.repository, blueprint_provider=mock_blueprint_provider

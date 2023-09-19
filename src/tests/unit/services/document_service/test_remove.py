@@ -24,8 +24,19 @@ class DocumentServiceTestCase(unittest.TestCase):
             "dmss://system/SIMOS/Blob",
         ]
         mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
+        mock_blueprints_and_file_names = {
+            "basic_blueprint": "basic_blueprint.blueprint.json",
+            "uncontained_blueprint": "uncontained_blueprint.blueprint.json",
+            "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",
+            "blueprint_with_blob": "blueprint_with_blob.blueprint.json",
+            "blueprint_with_optional_attr": "blueprint_with_optional_attr.blueprint.json",
+            "CarRental": "CarRental.blueprint.json",
+            "Customer": "Customer.blueprint.json",
+        }
         self.mock_blueprint_provider = MockBlueprintProvider(
-            mock_blueprint_folder=mock_blueprint_folder, simos_blueprints_available_for_test=simos_blueprints
+            mock_blueprints_and_file_names=mock_blueprints_and_file_names,
+            mock_blueprint_folder=mock_blueprint_folder,
+            simos_blueprints_available_for_test=simos_blueprints,
         )
         self.mock_document_service = get_mock_document_service(
             repository_provider=lambda x, y: self.repository, blueprint_provider=self.mock_blueprint_provider

@@ -13,10 +13,17 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
     def setUp(self):
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
         mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
-        self.mock_blueprint_provider = MockBlueprintProvider(
-            mock_blueprint_folder=mock_blueprint_folder, simos_blueprints_available_for_test=simos_blueprints
+        mock_blueprints_and_file_names = {
+            "basic_blueprint": "basic_blueprint.blueprint.json",
+            "SecondLevelExtendedBlueprint": "SecondLevelExtendedBlueprint.blueprint.json",
+            "ExtendedBlueprint": "ExtendedBlueprint.blueprint.json",
+        }
+        mock_blueprint_provider = MockBlueprintProvider(
+            mock_blueprints_and_file_names=mock_blueprints_and_file_names,
+            mock_blueprint_folder=mock_blueprint_folder,
+            simos_blueprints_available_for_test=simos_blueprints,
         )
-        self.document_service = get_mock_document_service(blueprint_provider=self.mock_blueprint_provider)
+        self.document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
 
     def test_get_simple_extended(self):
         full_blueprint: Blueprint = self.document_service.get_blueprint("ExtendedBlueprint")
