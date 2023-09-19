@@ -16,7 +16,8 @@ from tests.unit.mock_data.mock_document_service import get_mock_document_service
 class GetDocumentResolveTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = ["dmss://system/SIMOS/Package", "dmss://system/SIMOS/NamedEntity"]
-        self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        self.mock_document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
 
     def test_references_that_uses_wrong_protocol(self):
         my_car_rental = {
@@ -59,11 +60,9 @@ class GetDocumentResolveTestCase(unittest.TestCase):
         document_repository.get = mock_get
         document_repository.find = mock_find
 
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: document_repository, blueprint_provider=self.mock_blueprint_provider
-        )
+        self.mock_document_service.repository_provider = lambda x, y: document_repository
         with pytest.raises(Exception, match=r"The protocol 'wrong' is not supported"):
-            tree_node_to_dict(document_service.get_document(Address.from_absolute("datasource/$1"), depth=9))
+            tree_node_to_dict(self.mock_document_service.get_document(Address.from_absolute("datasource/$1"), depth=9))
 
     def test_references(self):
         my_car_rental = {
@@ -256,12 +255,12 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                 document_repository.find = lambda target: find(target, another_data_source)
             return document_repository
 
-        document_service = get_mock_document_service(
-            repository_provider=mock_data_source, blueprint_provider=self.mock_blueprint_provider
+        self.mock_document_service.repository_provider = mock_data_source
+        actual = tree_node_to_dict(
+            self.mock_document_service.get_document(Address.from_absolute("test_data/$2"), depth=99)
         )
-        actual = tree_node_to_dict(document_service.get_document(Address.from_absolute("test_data/$2"), depth=99))
         complex_package = tree_node_to_dict(
-            document_service.get_document(Address.from_absolute("test_data/$1"), depth=99)
+            self.mock_document_service.get_document(Address.from_absolute("test_data/$1"), depth=99)
         )
 
         assert isinstance(actual, dict)

@@ -76,7 +76,7 @@ higher_rank_array_blueprint = {
 file_repository_test = LocalFileRepository()
 
 
-class BlueprintProvider:
+class _BlueprintProvider:
     def get_blueprint(self, template_type: str):
         if template_type == "higher_rank_array":
             blueprint = Blueprint(higher_rank_array_blueprint)
@@ -90,10 +90,11 @@ class BlueprintProvider:
         return blueprint
 
 
-blueprint_provider = BlueprintProvider()
-
-
 class ArraysDocumentServiceTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        blueprint_provider = _BlueprintProvider()
+        self.mock_document_service = get_mock_document_service(blueprint_provider=blueprint_provider)
+
     @skip
     def test_create_complex_array(self):
         doc_storage = {
@@ -120,10 +121,8 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return document_repository
 
-        document_service = get_mock_document_service(
-            repository_provider=repository_provider, blueprint_provider=blueprint_provider
-        )
-        document_service.add_document(
+        self.mock_document_service.repository_provider = repository_provider
+        self.mock_document_service.add_document(
             data_source_id="testing",
             parent_id="1",
             data={"type": "higher_rank_array", "name": "complexArraysEntity"},
@@ -268,9 +267,8 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return document_repository
 
-        document_service = get_mock_document_service(
-            repository_provider=repository_provider, blueprint_provider=blueprint_provider
-        )
+        self.mock_document_service.repository_provider = repository_provider
+
         # fmt: off
         data = {
             "_id": "1",
@@ -344,7 +342,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         update_document_use_case(
             data=data,
             address=Address.from_absolute("dmss://testing/$1"),
-            document_service=document_service
+            document_service=self.mock_document_service
         )
 
         expected_1 = {

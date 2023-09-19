@@ -19,7 +19,7 @@ class DocumentServiceTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
         self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
-        self.document_service = get_mock_document_service(blueprint_provider=self.mock_blueprint_provider)
+        self.mock_document_service = get_mock_document_service(blueprint_provider=self.mock_blueprint_provider)
 
     def test_save_update(self):
         repository = mock.Mock()
@@ -52,13 +52,11 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
 
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
-        node: Node = document_service.get_document(Address("$1", "testing"))
+        self.mock_document_service.repository_provider = lambda x, y: repository
+        node: Node = self.mock_document_service.get_document(Address("$1", "testing"))
         contained_node: Node = node.get_by_path("references.1".split("."))
         contained_node.update({"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "basic_blueprint"})
-        document_service.save(node, "testing", update_uncontained=True)
+        self.mock_document_service.save(node, "testing", update_uncontained=True)
 
         assert doc_storage["4"] == {
             "_id": "4",
@@ -89,13 +87,11 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
+        self.mock_document_service.repository_provider = lambda x, y: repository
 
-        contained_node: Node = document_service.get_document(Address("$1.nested", "testing"))
+        contained_node: Node = self.mock_document_service.get_document(Address("$1.nested", "testing"))
         contained_node.update({"name": "RENAMED", "description": "TEST_MODIFY", "type": "basic_blueprint"})
-        document_service.save(contained_node, "testing", update_uncontained=True, initial=True)
+        self.mock_document_service.save(contained_node, "testing", update_uncontained=True, initial=True)
 
         assert doc_storage["1"]["nested"]["description"] == "TEST_MODIFY"
 
@@ -125,22 +121,20 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
 
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
+        self.mock_document_service.repository_provider = lambda x, y: repository
 
-        node: Node = document_service.get_document(Address("$1", "testing"))
+        node: Node = self.mock_document_service.get_document(Address("$1", "testing"))
         contained_node: Node = node.search("1.references")
         contained_node.children.append(
             Node(
                 "0",
                 uid="2",
                 entity=doc_storage["2"],
-                blueprint_provider=document_service.get_blueprint,
+                blueprint_provider=self.mock_document_service.get_blueprint,
                 attribute=BlueprintAttribute(name="references", attribute_type="basic_blueprint"),
             )
         )
-        document_service.save(node, "testing")
+        self.mock_document_service.save(node, "testing")
 
         assert doc_storage["1"]["references"] == [
             {
@@ -207,14 +201,12 @@ class DocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return repository
 
-        document_service = get_mock_document_service(
-            repository_provider=repository_provider, blueprint_provider=self.mock_blueprint_provider
-        )
+        self.mock_document_service.repository_provider = repository_provider
 
-        node: Node = document_service.get_document(Address("$1", "testing"))
+        node: Node = self.mock_document_service.get_document(Address("$1", "testing"))
         contained_node: Node = node.search("1.references")
         contained_node.remove_by_path(["1"])
-        document_service.save(node, "testing")
+        self.mock_document_service.save(node, "testing")
 
         assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
         assert doc_storage["3"] is not None
@@ -259,15 +251,13 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
 
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
+        self.mock_document_service.repository_provider = lambda x, y: repository
 
         # Testing updating the reference
-        node: Node = document_service.get_document(Address("$1", "testing"))
+        node: Node = self.mock_document_service.get_document(Address("$1", "testing"))
         target_node = node.get_by_path(["i_have_a_uncontained_attribute", "uncontained_in_every_way"])
         target_node.update(doc_storage["3"])
-        document_service.save(node, "testing")
+        self.mock_document_service.save(node, "testing")
         assert doc_storage["1"]["i_have_a_uncontained_attribute"]["uncontained_in_every_way"] == {
             "address": "$3",
             "type": SIMOS.REFERENCE.value,
@@ -308,9 +298,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda id: deepcopy(doc_storage[id])
         repository.update = mock_update
 
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
+        self.mock_document_service.repository_provider = lambda x, y: repository
 
         data = {
             "_id": "1",
@@ -329,7 +317,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             },
         }
 
-        update_document_use_case(data=data, address=Address("$1", "test"), document_service=document_service)
+        update_document_use_case(data=data, address=Address("$1", "test"), document_service=self.mock_document_service)
         # Test that the "2" document has not been overwritten
         assert doc_storage["2"].get("description") == "I'm the second nested document, uncontained"
         assert doc_storage["1"]["i_have_a_uncontained_attribute"]["description"] == "This has changed!"
@@ -366,9 +354,8 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
+
+        self.mock_document_service.repository_provider = lambda x, y: repository
         new_data = {
             "name": "A-contained_attribute",
             "type": "all_contained_cases_blueprint",
@@ -382,7 +369,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             "nested": {},
             "references": [],
         }
-        update_document_use_case(data=new_data, address=Address("$1.a", "testing"), document_service=document_service)
+        update_document_use_case(
+            data=new_data, address=Address("$1.a", "testing"), document_service=self.mock_document_service
+        )
 
         assert doc_storage["1"]["a"]["description"] == "SOME DESCRIPTION"
         assert doc_storage["1"]["a"]["reference"]["description"] == "A NEW DESCRIPTION HERE"

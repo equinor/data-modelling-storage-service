@@ -55,12 +55,11 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
 
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
 
-        node: Node = document_service.get_document(Address.from_absolute("testing/$1"))
+        self.document_service.repository_provider = lambda x, y: repository
+
+        node: Node = self.document_service.get_document(Address.from_absolute("testing/$1"))
         node.update(doc_1_after)
-        document_service.save(node, "testing")
+        self.document_service.save(node, "testing")
 
         assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
