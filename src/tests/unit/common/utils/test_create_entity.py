@@ -2,17 +2,19 @@ import unittest
 
 from common.utils.create_entity import CreateEntity
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from storage.repositories.file import LocalFileRepository
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
-
-file_repository_test = LocalFileRepository()
-
-document_service = get_mock_document_service()
-blueprint_provider = document_service.get_blueprint
 
 
 class CreateEntityTestCase(unittest.TestCase):
     def setUp(self):
+        simos_blueprints = [
+            "dmss://system/SIMOS/AttributeTypes",
+            "dmss://system/SIMOS/BlueprintAttribute",
+            "dmss://system/SIMOS/NamedEntity",
+        ]
+        self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        self.mock_document_service = get_mock_document_service(blueprint_provider=self.mock_blueprint_provider)
         self.maxDiff = None
 
     def test_blueprint_entity(self):
@@ -41,7 +43,7 @@ class CreateEntityTestCase(unittest.TestCase):
             "stringValues": ["one", "two", "three"],
         }
 
-        entity = CreateEntity(blueprint_provider=blueprint_provider, type="CarTest").entity
+        entity = CreateEntity(blueprint_provider=self.mock_document_service.get_blueprint, type="CarTest").entity
 
         self.assertEqual(expected_entity, entity)
 

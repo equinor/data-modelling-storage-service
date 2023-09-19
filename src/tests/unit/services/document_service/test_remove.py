@@ -5,6 +5,7 @@ from common.address import Address
 from common.exceptions import ValidationException
 from common.utils.data_structure.compare import get_and_print_diff
 from enums import REFERENCE_TYPES, SIMOS
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
@@ -16,7 +17,16 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.repository.update = self.mock_update
         self.repository.delete = self.mock_delete
         self.repository.delete_blob = self.mock_delete
-        self.document_service = get_mock_document_service(lambda x, y: self.repository)
+
+        simos_blueprints = [
+            "dmss://system/SIMOS/NamedEntity",
+            "dmss://system/SIMOS/Reference",
+            "dmss://system/SIMOS/Blob",
+        ]
+        self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        self.document_service = get_mock_document_service(
+            repository_provider=lambda x, y: self.repository, blueprint_provider=self.mock_blueprint_provider
+        )
 
     def mock_get(self, document_id: str):
         return self.storage[document_id]
@@ -34,7 +44,9 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_repository.get = lambda id: document_1.copy()
 
-        document_service = get_mock_document_service(lambda id, user: document_repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda id, user: document_repository, blueprint_provider=self.mock_blueprint_provider
+        )
         document_service.remove(Address("$1", "testing"))
         document_repository.delete.assert_called_with("1")
 
@@ -79,7 +91,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         self.document_service = get_mock_document_service(
-            repository_provider=lambda x, y: self.repository,
+            repository_provider=lambda x, y: self.repository, blueprint_provider=self.mock_blueprint_provider
         )
         self.assertRaises(FileNotFoundError, self.document_service.remove, Address("$1", "testing"))
 

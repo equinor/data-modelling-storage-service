@@ -11,10 +11,16 @@ from enums import REFERENCE_TYPES, SIMOS
 from features.document.use_cases.update_document_use_case import (
     update_document_use_case,
 )
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
 class DocumentServiceTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
+        self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        self.document_service = get_mock_document_service(blueprint_provider=self.mock_blueprint_provider)
+
     def test_save_update(self):
         repository = mock.Mock()
 
@@ -45,8 +51,10 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
 
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
         node: Node = document_service.get_document(Address("$1", "testing"))
         contained_node: Node = node.get_by_path("references.1".split("."))
         contained_node.update({"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "basic_blueprint"})
@@ -81,7 +89,9 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
 
         contained_node: Node = document_service.get_document(Address("$1.nested", "testing"))
         contained_node.update({"name": "RENAMED", "description": "TEST_MODIFY", "type": "basic_blueprint"})
@@ -115,7 +125,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
 
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
 
         node: Node = document_service.get_document(Address("$1", "testing"))
         contained_node: Node = node.search("1.references")
@@ -195,7 +207,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return repository
 
-        document_service = get_mock_document_service(repository_provider)
+        document_service = get_mock_document_service(
+            repository_provider=repository_provider, blueprint_provider=self.mock_blueprint_provider
+        )
 
         node: Node = document_service.get_document(Address("$1", "testing"))
         contained_node: Node = node.search("1.references")
@@ -245,7 +259,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
 
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
 
         # Testing updating the reference
         node: Node = document_service.get_document(Address("$1", "testing"))
@@ -292,7 +308,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda id: deepcopy(doc_storage[id])
         repository.update = mock_update
 
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
 
         data = {
             "_id": "1",
@@ -348,7 +366,9 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
         new_data = {
             "name": "A-contained_attribute",
             "type": "all_contained_cases_blueprint",
