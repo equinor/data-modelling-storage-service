@@ -18,7 +18,10 @@ test_user = User(**{"user_id": "unit-test", "full_name": "Unit Test", "email": "
 class DataSourceTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
-        mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
+        mock_blueprint_provider = MockBlueprintProvider(
+            mock_blueprint_folder=mock_blueprint_folder, simos_blueprints_available_for_test=simos_blueprints
+        )
         self.mock_document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
 
     def test_save_into_multiple_repositories(self):

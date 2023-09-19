@@ -16,7 +16,10 @@ from tests.unit.mock_data.mock_document_service import get_mock_document_service
 class ReferenceTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
-        mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
+        mock_blueprint_provider = MockBlueprintProvider(
+            mock_blueprint_folder=mock_blueprint_folder, simos_blueprints_available_for_test=simos_blueprints
+        )
         self.document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
 
     def test_insert_reference(self):

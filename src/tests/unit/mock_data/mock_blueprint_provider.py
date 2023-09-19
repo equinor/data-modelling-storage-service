@@ -10,14 +10,14 @@ file_repository_test = LocalFileRepository()
 class MockBlueprintProvider:
     def __init__(
         self,
-        test_blueprint_data_path: str = "src/tests/unit/mock_data/mock_blueprints",
+        mock_blueprint_folder: str,
         simos_blueprints_available_for_test: List[str] = None,
     ):
         if simos_blueprints_available_for_test is None:
             simos_blueprints_available_for_test = []
-        if test_blueprint_data_path.endswith("/"):
-            test_blueprint_data_path = test_blueprint_data_path[:-1]
-        self.test_blueprint_data_path = test_blueprint_data_path
+        if mock_blueprint_folder.endswith("/"):
+            mock_blueprint_folder = mock_blueprint_folder[:-1]
+        self.mock_blueprint_folder = mock_blueprint_folder
         self.simos_blueprints_available_for_test = simos_blueprints_available_for_test
 
     def get_blueprint(self, type: str):
@@ -47,7 +47,7 @@ class MockBlueprintProvider:
             "Customer",
             "RentalCar",
         ]:
-            with open(f"{self.test_blueprint_data_path}/{type}.blueprint.json") as f:
+            with open(f"{self.mock_blueprint_folder}/{type}.blueprint.json") as f:
                 return Blueprint(json.load(f), type)
         if type in self.simos_blueprints_available_for_test:
             return Blueprint(file_repository_test.get(type), type)

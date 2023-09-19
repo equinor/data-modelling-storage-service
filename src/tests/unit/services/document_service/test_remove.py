@@ -23,7 +23,10 @@ class DocumentServiceTestCase(unittest.TestCase):
             "dmss://system/SIMOS/Reference",
             "dmss://system/SIMOS/Blob",
         ]
-        self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
+        self.mock_blueprint_provider = MockBlueprintProvider(
+            mock_blueprint_folder=mock_blueprint_folder, simos_blueprints_available_for_test=simos_blueprints
+        )
         self.mock_document_service = get_mock_document_service(
             repository_provider=lambda x, y: self.repository, blueprint_provider=self.mock_blueprint_provider
         )
