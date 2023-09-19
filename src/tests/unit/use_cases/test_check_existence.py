@@ -24,7 +24,10 @@ class CheckExistenceTestCase(unittest.TestCase):
         self.repository.delete = self.mock_delete
 
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
-        mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
+        mock_blueprint_provider = MockBlueprintProvider(
+            mock_blueprint_folder=mock_blueprint_folder, simos_blueprints_available_for_test=simos_blueprints
+        )
         self.document_service = get_mock_document_service(
             repository_provider=lambda x, y: self.repository, blueprint_provider=mock_blueprint_provider
         )
