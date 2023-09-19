@@ -24,7 +24,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "dmss://system/SIMOS/Blob",
         ]
         self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
-        self.document_service = get_mock_document_service(
+        self.mock_document_service = get_mock_document_service(
             repository_provider=lambda x, y: self.repository, blueprint_provider=self.mock_blueprint_provider
         )
 
@@ -44,10 +44,8 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_repository.get = lambda id: document_1.copy()
 
-        document_service = get_mock_document_service(
-            repository_provider=lambda id, user: document_repository, blueprint_provider=self.mock_blueprint_provider
-        )
-        document_service.remove(Address("$1", "testing"))
+        self.mock_document_service.repository_provider = lambda id, user: document_repository
+        self.mock_document_service.remove(Address("$1", "testing"))
         document_repository.delete.assert_called_with("1")
 
     def test_remove_required_attribute(self):
@@ -78,7 +76,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         self.storage = {"1": doc_1, "2": doc_2}
 
-        self.assertRaises(ValidationException, self.document_service.remove, Address("$1.cars", "testing"))
+        self.assertRaises(ValidationException, self.mock_document_service.remove, Address("$1.cars", "testing"))
 
     def test_remove_document_wo_existing_blueprint(self):
         self.storage = {
@@ -89,11 +87,8 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "dmss://testing/this_blueprint_does_not_exist",
             }
         }
-
-        self.document_service = get_mock_document_service(
-            repository_provider=lambda x, y: self.repository, blueprint_provider=self.mock_blueprint_provider
-        )
-        self.assertRaises(FileNotFoundError, self.document_service.remove, Address("$1", "testing"))
+        self.mock_document_service.repository_provider = repository_provider = lambda x, y: self.repository
+        self.assertRaises(FileNotFoundError, self.mock_document_service.remove, Address("$1", "testing"))
 
     def test_remove_document_with_model_and_storage_uncontained_children(self):
         doc_1 = {
@@ -106,7 +101,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         doc_2 = {"uid": "2", "_id": "2", "name": "a_reference", "description": "", "type": "basic_blueprint"}
         self.storage = {"1": doc_1, "2": doc_2}
 
-        self.document_service.remove(Address("$1", "testing"))
+        self.mock_document_service.remove(Address("$1", "testing"))
         assert get_and_print_diff(self.storage, {"2": doc_2}) == []
 
     def test_remove_child_dict(self):
@@ -125,7 +120,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {"name": "Nested", "description": "", "type": "basic_blueprint"},
         }
 
-        self.assertRaises(ValidationException, self.document_service.remove, Address("$1.nested", "testing", "dmss"))
+        self.assertRaises(
+            ValidationException, self.mock_document_service.remove, Address("$1.nested", "testing", "dmss")
+        )
 
     def test_remove_child_list(self):
         self.storage = {
@@ -145,7 +142,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {"name": "Nested", "description": "", "type": "basic_blueprint"},
         }
 
-        self.assertRaises(ValidationException, self.document_service.remove, Address("$1.references", "testing"))
+        self.assertRaises(ValidationException, self.mock_document_service.remove, Address("$1.references", "testing"))
 
     def test_remove_second_level_nested(self):
         self.storage = {
@@ -173,7 +170,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             },
         }
 
-        self.document_service.remove(Address("$1", "testing"))
+        self.mock_document_service.remove(Address("$1", "testing"))
         assert self.storage.get("1") is None
         assert self.storage.get("2") is None
 
@@ -220,7 +217,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             },
         }
 
-        self.document_service.remove(Address("$1", "testing"))
+        self.mock_document_service.remove(Address("$1", "testing"))
         assert self.storage.get("1") is None
         assert self.storage.get("2") is None
         assert self.storage.get("3") is None
@@ -241,7 +238,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
         }
 
-        self.assertRaises(ValidationException, self.document_service.remove, Address("$1.reference", "testing"))
+        self.assertRaises(ValidationException, self.mock_document_service.remove, Address("$1.reference", "testing"))
 
     def test_remove_optional(self):
         self.storage = {
@@ -258,7 +255,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             }
         }
 
-        self.document_service.remove(Address("$1.im_optional", "testing"))
+        self.mock_document_service.remove(Address("$1.im_optional", "testing"))
         assert {
             "_id": "1",
             "name": "Parent",
@@ -278,5 +275,5 @@ class DocumentServiceTestCase(unittest.TestCase):
             "blob_object": "someData",
         }
 
-        self.document_service.remove(Address("$1", "testing"))
+        self.mock_document_service.remove(Address("$1", "testing"))
         assert self.storage.get("blob_object") is None

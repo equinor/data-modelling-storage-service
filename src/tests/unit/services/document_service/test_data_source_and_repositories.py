@@ -18,8 +18,8 @@ test_user = User(**{"user_id": "unit-test", "full_name": "Unit Test", "email": "
 class DataSourceTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
-        self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
-        pass
+        mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        self.mock_document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
 
     def test_save_into_multiple_repositories(self):
         uncontained_doc = {
@@ -73,20 +73,17 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: data_source,
-            blueprint_provider=self.mock_blueprint_provider,
-            user=test_user,
-        )
+        self.mock_document_service.repository_provider = lambda x, y: data_source
+        self.mock_document_service.user = test_user
 
         node: Node = tree_node_from_dict(
             uncontained_doc,
             uid="1",
-            blueprint_provider=document_service.get_blueprint,
+            blueprint_provider=self.mock_document_service.get_blueprint,
             recipe_provider=mock_storage_recipe_provider,
         )
 
-        document_service.save(node, "testing", update_uncontained=True)
+        self.mock_document_service.save(node, "testing", update_uncontained=True)
 
         # Test that both repos gets written into
         assert blob_doc_storage and default_doc_storage
@@ -138,20 +135,17 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: data_source,
-            blueprint_provider=self.mock_blueprint_provider,
-            user=test_user,
-        )
+        self.mock_document_service.repository_provider = lambda x, y: data_source
+        self.mock_document_service.user = test_user
 
         node: Node = tree_node_from_dict(
             blob_doc,
             uid="1",
-            blueprint_provider=document_service.get_blueprint,
+            blueprint_provider=self.mock_document_service.get_blueprint,
             recipe_provider=mock_storage_recipe_provider,
         )
 
-        document_service.save(node, "testing")
+        self.mock_document_service.save(node, "testing")
 
         # Test that only the blob storage is written into
         assert blob_doc_storage and not default_doc_storage
@@ -207,18 +201,14 @@ class DataSourceTestCase(unittest.TestCase):
             repositories={"default": default_repo, "blob": blob_repo},
             data_source_collection=data_source_collection,
         )
-
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: data_source,
-            blueprint_provider=self.mock_blueprint_provider,
-            user=test_user,
-        )
+        self.mock_document_service.repository_provider = lambda x, y: data_source
+        self.mock_document_service.user = test_user
 
         node: Node = tree_node_from_dict(
-            blob_doc, document_service.get_blueprint, uid="1", recipe_provider=mock_storage_recipe_provider
+            blob_doc, self.mock_document_service.get_blueprint, uid="1", recipe_provider=mock_storage_recipe_provider
         )
 
-        document_service.save(node, "testing", update_uncontained=True)
+        self.mock_document_service.save(node, "testing", update_uncontained=True)
 
         # Test that both repos gets written into
         assert blob_doc_storage and default_doc_storage

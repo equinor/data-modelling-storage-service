@@ -9,14 +9,14 @@ from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provid
 
 
 class ValidateEntityTestCase(unittest.TestCase):
-    simos_blueprints = [
-        "dmss://system/SIMOS/Blueprint",
-        "dmss://system/SIMOS/NamedEntity",
-        "dmss://system/SIMOS/BlueprintAttribute",
-    ]
-    mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
-    mock_document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
-    get_blueprint = mock_document_service.get_blueprint
+    def setUp(self) -> None:
+        simos_blueprints = [
+            "dmss://system/SIMOS/Blueprint",
+            "dmss://system/SIMOS/NamedEntity",
+            "dmss://system/SIMOS/BlueprintAttribute",
+        ]
+        self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        self.mock_document_service = get_mock_document_service(blueprint_provider=self.mock_blueprint_provider)
 
     def test_a_simple_valid_entity(self):
         test_entity = {
@@ -47,7 +47,7 @@ class ValidateEntityTestCase(unittest.TestCase):
                 {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "type"},
             ],
         }
-        validate_entity_against_self(test_entity, self.get_blueprint)
+        validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)
 
     def test_a_deeply_nested_valid_entity(self):
         test_entity = {
@@ -75,7 +75,7 @@ class ValidateEntityTestCase(unittest.TestCase):
             "boolValues": [True, False, True],
             "stringValues": ["one", "two", "three"],
         }
-        validate_entity_against_self(test_entity, self.get_blueprint)
+        validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)
 
     def test_an_entity_with_an_attribute_which_does_not_belong(self):
         test_entity = {
@@ -99,7 +99,7 @@ class ValidateEntityTestCase(unittest.TestCase):
             ],
         }
         with self.assertRaises(ValidationException) as error:
-            validate_entity_against_self(test_entity, self.get_blueprint)
+            validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)
         assert (
             error.exception.message
             == "Attributes '['do-not-belong']' are not specified in the blueprint 'dmss://system/SIMOS/BlueprintAttribute'"
@@ -121,7 +121,7 @@ class ValidateEntityTestCase(unittest.TestCase):
             ],
         }
         with self.assertRaises(ValidationException) as error:
-            validate_entity_against_self(test_entity, self.get_blueprint)
+            validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)
         assert error.exception.message == "Missing required attribute 'name'"
 
     def test_an_entity_with_a_wrong_primitive_typed_value(self):
@@ -141,7 +141,7 @@ class ValidateEntityTestCase(unittest.TestCase):
             ],
         }
         with self.assertRaises(ValidationException) as error:
-            validate_entity_against_self(test_entity, self.get_blueprint)
+            validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)
         assert error.exception.message == "Attribute 'name' should be type 'str'. Got 'bool'. Value: True"
 
     def test_an_entity_with_a_wrong_typed_value_that_is_list(self):
@@ -161,7 +161,7 @@ class ValidateEntityTestCase(unittest.TestCase):
             ],
         }
         with self.assertRaises(ValidationException) as error:
-            validate_entity_against_self(test_entity, self.get_blueprint)
+            validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)
         assert (
             error.exception.message
             == "Attribute 'name' should be type 'str'. Got 'list'. Value: ['this', 'is', 'wrong']"
@@ -180,7 +180,7 @@ class ValidateEntityTestCase(unittest.TestCase):
                 "AnExtraValue": "extra value",
             },
         }
-        validate_entity_against_self(test_entity, self.get_blueprint)
+        validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)
 
     def test_an_entity_with_a_wrong_typed_complex_value(self):
         test_entity = {
@@ -196,7 +196,7 @@ class ValidateEntityTestCase(unittest.TestCase):
             },
         }
         with self.assertRaises(ValidationException) as error:
-            validate_entity_against_self(test_entity, self.get_blueprint)
+            validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)
         assert (
             error.exception.message
             == "Entity should be of type 'BaseChild' (or extending from it). Got 'dmss://system/SIMOS/Blueprint'"
@@ -229,7 +229,7 @@ class ValidateEntityTestCase(unittest.TestCase):
             "stringValues": ["one", "two", "three"],
         }
         with self.assertRaises(ValidationException) as error:
-            validate_entity_against_self(test_entity, self.get_blueprint)
+            validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)
         assert error.exception.message == "Missing required attribute 'name'"
         assert error.exception.debug == "Location: Entity in key '^.engine.fuelPump'"
 
@@ -260,12 +260,17 @@ class ValidateEntityTestCase(unittest.TestCase):
         }
 
         parent_node = tree_node_from_dict(
-            test_entity, self.get_blueprint, recipe_provider=mock_storage_recipe_provider
+            test_entity, self.mock_document_service.get_blueprint, recipe_provider=mock_storage_recipe_provider
         )
         new_node = parent_node.get_by_path(["cars"])
         blueprint = new_node.blueprint
 
-        validate_entity(tree_node_to_dict(new_node), self.get_blueprint, blueprint, implementation_mode="exact")
+        validate_entity(
+            tree_node_to_dict(new_node),
+            self.mock_document_service.get_blueprint,
+            blueprint,
+            implementation_mode="exact",
+        )
 
     def test_an_entity_with_an_invalid_primitive_element_in_list(self):
         test_entity = {
@@ -294,7 +299,7 @@ class ValidateEntityTestCase(unittest.TestCase):
             "stringValues": ["one", "two", "three"],
         }
         with self.assertRaises(ValidationException) as error:
-            validate_entity_against_self(test_entity, self.get_blueprint)
+            validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)
         assert error.exception.message == "Attribute 'floatValues' should be type 'float'. Got 'str'. Value: string"
         assert error.exception.debug == "Location: Entity in key '^.floatValues.1'"
 
@@ -310,8 +315,8 @@ class ValidateEntityTestCase(unittest.TestCase):
         }
 
         # Validate against the master blueprint
-        blueprint = self.get_blueprint("dmss://system/SIMOS/Blueprint")
-        validate_entity(test_entity, self.get_blueprint, blueprint, "minimum")
+        blueprint = self.mock_document_service.get_blueprint("dmss://system/SIMOS/Blueprint")
+        validate_entity(test_entity, self.mock_document_service.get_blueprint, blueprint, "minimum")
 
     def test_validate_against_base_type_not_inherited_invalid(self):
         test_entity = {
@@ -325,7 +330,7 @@ class ValidateEntityTestCase(unittest.TestCase):
         }
         with self.assertRaises(ValidationException) as error:
             # Validate against the master blueprint
-            blueprint = self.get_blueprint("dmss://system/SIMOS/Blueprint")
-            validate_entity(test_entity, self.get_blueprint, blueprint, "minimum")
+            blueprint = self.mock_document_service.get_blueprint("dmss://system/SIMOS/Blueprint")
+            validate_entity(test_entity, self.mock_document_service.get_blueprint, blueprint, "minimum")
         assert error.exception.message == "Attribute 'attributeType' should be type 'str'. Got 'int'. Value: 132"
         assert error.exception.debug == "Location: Entity in key '^.attributes.0.attributeType'"

@@ -16,7 +16,8 @@ from tests.unit.mock_data.mock_document_service import get_mock_document_service
 class ReferenceTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
-        self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        self.document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
 
     def test_insert_reference(self):
         repository = mock.Mock()
@@ -47,9 +48,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
+        self.document_service.repository_provider = lambda x, y: repository
         reference = {
             "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
             "type": SIMOS.REFERENCE.value,
@@ -58,7 +57,7 @@ class ReferenceTestCase(unittest.TestCase):
         update_document_use_case(
             data=reference,
             address=Address("$1.uncontained_in_every_way", "testing"),
-            document_service=document_service,
+            document_service=self.document_service,
         )
         assert doc_storage["1"]["uncontained_in_every_way"] == reference
 
@@ -94,9 +93,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
+        self.document_service.repository_provider = lambda x, y: repository
 
         reference_entity = {
             "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
@@ -110,7 +107,7 @@ class ReferenceTestCase(unittest.TestCase):
             update_document_use_case(
                 data=reference_entity,
                 address=Address("$1.uncontained_in_every_way", "testing"),
-                document_service=document_service,
+                document_service=self.document_service,
             )
 
     def test_insert_reference_missing_required_attribute(self):
@@ -139,16 +136,14 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
+        self.document_service.repository_provider = lambda x, y: repository
 
         reference_entity_with_missing_attribute = {"address": "$123", "type": SIMOS.REFERENCE.value}
         with self.assertRaises(ValidationException):
             update_document_use_case(
                 data=reference_entity_with_missing_attribute,
                 address=Address("$1.uncontained_in_every_way", "testing"),
-                document_service=document_service,
+                document_service=self.document_service,
             )
 
     def test_remove_reference(self):
@@ -181,12 +176,10 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
+        self.document_service.repository_provider = lambda x, y: repository
 
         self.assertRaises(
-            ValidationException, document_service.remove, Address("$1.uncontained_in_every_way", "testing")
+            ValidationException, self.document_service.remove, Address("$1.uncontained_in_every_way", "testing")
         )
 
     def test_remove_nested_reference(self):
@@ -224,13 +217,11 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
+        self.document_service.repository_provider = lambda x, y: repository
 
         self.assertRaises(
             ValidationException,
-            document_service.remove,
+            self.document_service.remove,
             Address("$1.i_have_a_uncontained_attribute.uncontained_in_every_way", "testing"),
         )
 
@@ -273,12 +264,9 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
-
+        self.document_service.repository_provider = lambda x, y: repository
         self.assertRaises(
-            ValidationException, document_service.remove, Address("$1.uncontained_in_every_way[0]", "testing")
+            ValidationException, self.document_service.remove, Address("$1.uncontained_in_every_way[0]", "testing")
         )
 
     def test_add_reference_in_list(self):
@@ -315,9 +303,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        document_service = get_mock_document_service(
-            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
-        )
+        self.document_service.repository_provider = lambda x, y: repository
         reference = {
             "address": "$42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
             "type": SIMOS.REFERENCE.value,
@@ -327,7 +313,7 @@ class ReferenceTestCase(unittest.TestCase):
             address=Address("$1.uncontained_in_every_way", "testing"),
             document=reference,
             update_uncontained=True,
-            document_service=document_service,
+            document_service=self.document_service,
         )
         assert len(doc_storage["1"]["uncontained_in_every_way"]) == 2
         assert doc_storage["1"]["uncontained_in_every_way"][1] == reference
