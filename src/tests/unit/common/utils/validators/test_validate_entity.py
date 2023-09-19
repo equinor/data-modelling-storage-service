@@ -3,12 +3,20 @@ import unittest
 from common.exceptions import ValidationException
 from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from common.utils.validators import validate_entity, validate_entity_against_self
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
 from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
 
 
 class ValidateEntityTestCase(unittest.TestCase):
-    get_blueprint = get_mock_document_service().get_blueprint
+    simos_blueprints = [
+        "dmss://system/SIMOS/Blueprint",
+        "dmss://system/SIMOS/NamedEntity",
+        "dmss://system/SIMOS/BlueprintAttribute",
+    ]
+    mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+    mock_document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
+    get_blueprint = mock_document_service.get_blueprint
 
     def test_a_simple_valid_entity(self):
         test_entity = {

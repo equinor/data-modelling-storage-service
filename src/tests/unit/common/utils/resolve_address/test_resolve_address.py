@@ -8,6 +8,7 @@ from common.address import Address
 from common.exceptions import ApplicationException, NotFoundException
 from common.utils.resolve_address import resolve_address
 from enums import REFERENCE_TYPES, SIMOS
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
@@ -78,7 +79,11 @@ class ResolveReferenceTestCase(unittest.TestCase):
         self.document_repository.name = "datasource"
         self.document_repository.get = self.mock_get
         self.document_repository.find = self.mock_find
-        self.document_service = get_mock_document_service(lambda x, y: self.document_repository)
+        simos_blueprints = []
+        mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        self.document_service = get_mock_document_service(
+            repository_provider=lambda x, y: self.document_repository, blueprint_provider=mock_blueprint_provider
+        )
 
     def mock_get(self, document_id: str):
         if document_id == "car_rental_company_id":

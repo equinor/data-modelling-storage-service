@@ -6,6 +6,7 @@ from common.address import Address
 from features.document.use_cases.check_exsistence_use_case import (
     check_existence_use_case,
 )
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
@@ -21,7 +22,12 @@ class CheckExistenceTestCase(unittest.TestCase):
         self.repository = mock.Mock()
         self.repository.get = self.mock_get
         self.repository.delete = self.mock_delete
-        self.document_service = get_mock_document_service(lambda x, y: self.repository)
+
+        simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
+        mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        self.document_service = get_mock_document_service(
+            repository_provider=lambda x, y: self.repository, blueprint_provider=mock_blueprint_provider
+        )
 
     def mock_get(self, document_id: str):
         return deepcopy(self.storage.get(document_id))

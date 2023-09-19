@@ -9,10 +9,15 @@ from common.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
 from enums import REFERENCE_TYPES, SIMOS, Protocols
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
 class GetDocumentResolveTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        simos_blueprints = ["dmss://system/SIMOS/Package", "dmss://system/SIMOS/NamedEntity"]
+        self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+
     def test_references_that_uses_wrong_protocol(self):
         my_car_rental = {
             "_id": "1",
@@ -54,7 +59,9 @@ class GetDocumentResolveTestCase(unittest.TestCase):
         document_repository.get = mock_get
         document_repository.find = mock_find
 
-        document_service = get_mock_document_service(lambda x, y: document_repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: document_repository, blueprint_provider=self.mock_blueprint_provider
+        )
         with pytest.raises(Exception, match=r"The protocol 'wrong' is not supported"):
             tree_node_to_dict(document_service.get_document(Address.from_absolute("datasource/$1"), depth=9))
 
@@ -249,7 +256,9 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                 document_repository.find = lambda target: find(target, another_data_source)
             return document_repository
 
-        document_service = get_mock_document_service(mock_data_source)
+        document_service = get_mock_document_service(
+            repository_provider=mock_data_source, blueprint_provider=self.mock_blueprint_provider
+        )
         actual = tree_node_to_dict(document_service.get_document(Address.from_absolute("test_data/$2"), depth=99))
         complex_package = tree_node_to_dict(
             document_service.get_document(Address.from_absolute("test_data/$1"), depth=99)

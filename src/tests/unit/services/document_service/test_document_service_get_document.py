@@ -5,6 +5,7 @@ from common.address import Address
 from common.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from enums import REFERENCE_TYPES, SIMOS
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
@@ -66,7 +67,12 @@ class GetDocumentInputTestCase(unittest.TestCase):
         self.document_repository.name = "datasource"
         self.document_repository.get = self.mock_get
         self.document_repository.find = self.mock_find
-        self.document_service = get_mock_document_service(lambda x, y: self.document_repository)
+
+        simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
+        mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        self.document_service = get_mock_document_service(
+            repository_provider=lambda x, y: self.document_repository, blueprint_provider=mock_blueprint_provider
+        )
 
     def mock_get(self, document_id: str):
         if document_id == "1":

@@ -5,19 +5,23 @@ from common.address import Address
 from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from domain_classes.tree_node import Node
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
 class GetExtendedBlueprintTestCase(unittest.TestCase):
+    def setUp(self):
+        simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
+        self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        self.document_service = get_mock_document_service(blueprint_provider=self.mock_blueprint_provider)
+
     def test_get_simple_extended(self):
-        document_service = get_mock_document_service()
-        full_blueprint: Blueprint = document_service.get_blueprint("ExtendedBlueprint")
+        full_blueprint: Blueprint = self.document_service.get_blueprint("ExtendedBlueprint")
 
         assert next((attr for attr in full_blueprint.attributes if attr.name == "description"), None) is not None
 
     def test_get_second_level_extended(self):
-        document_service = get_mock_document_service()
-        full_blueprint: Blueprint = document_service.get_blueprint("SecondLevelExtendedBlueprint")
+        full_blueprint: Blueprint = self.document_service.get_blueprint("SecondLevelExtendedBlueprint")
 
         assert next((attr for attr in full_blueprint.attributes if attr.name == "description"), None) is not None
         assert next((attr for attr in full_blueprint.attributes if attr.name == "another_value"), None) is not None
@@ -51,7 +55,9 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
 
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
 
         node: Node = document_service.get_document(Address.from_absolute("testing/$1"))
         node.update(doc_1_after)

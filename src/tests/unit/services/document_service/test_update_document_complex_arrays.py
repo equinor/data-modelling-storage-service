@@ -120,7 +120,9 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return document_repository
 
-        document_service = get_mock_document_service(repository_provider, blueprint_provider=blueprint_provider)
+        document_service = get_mock_document_service(
+            repository_provider=repository_provider, blueprint_provider=blueprint_provider
+        )
         document_service.add_document(
             data_source_id="testing",
             parent_id="1",
@@ -266,7 +268,9 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return document_repository
 
-        document_service = get_mock_document_service(repository_provider, blueprint_provider=blueprint_provider)
+        document_service = get_mock_document_service(
+            repository_provider=repository_provider, blueprint_provider=blueprint_provider
+        )
         # fmt: off
         data = {
             "_id": "1",

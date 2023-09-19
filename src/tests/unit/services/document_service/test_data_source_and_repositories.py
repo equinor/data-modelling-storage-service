@@ -7,6 +7,7 @@ from config import config
 from domain_classes.tree_node import Node
 from enums import StorageDataTypes
 from storage.data_source_class import DataSource
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
 from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
 
@@ -15,6 +16,11 @@ test_user = User(**{"user_id": "unit-test", "full_name": "Unit Test", "email": "
 
 
 class DataSourceTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
+        self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+        pass
+
     def test_save_into_multiple_repositories(self):
         uncontained_doc = {
             "name": "Parent",
@@ -67,7 +73,11 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        document_service = get_mock_document_service(lambda x, y: data_source, user=test_user)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: data_source,
+            blueprint_provider=self.mock_blueprint_provider,
+            user=test_user,
+        )
 
         node: Node = tree_node_from_dict(
             uncontained_doc,
@@ -128,7 +138,11 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        document_service = get_mock_document_service(lambda x, y: data_source, user=test_user)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: data_source,
+            blueprint_provider=self.mock_blueprint_provider,
+            user=test_user,
+        )
 
         node: Node = tree_node_from_dict(
             blob_doc,
@@ -194,7 +208,11 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        document_service = get_mock_document_service(lambda x, y: data_source, user=test_user)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: data_source,
+            blueprint_provider=self.mock_blueprint_provider,
+            user=test_user,
+        )
 
         node: Node = tree_node_from_dict(
             blob_doc, document_service.get_blueprint, uid="1", recipe_provider=mock_storage_recipe_provider

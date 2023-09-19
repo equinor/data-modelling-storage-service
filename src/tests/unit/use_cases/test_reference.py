@@ -9,10 +9,15 @@ from features.document.use_cases.add_document_use_case import add_document_use_c
 from features.document.use_cases.update_document_use_case import (
     update_document_use_case,
 )
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
 
 class ReferenceTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
+        self.mock_blueprint_provider = MockBlueprintProvider(simos_blueprints_available_for_test=simos_blueprints)
+
     def test_insert_reference(self):
         repository = mock.Mock()
 
@@ -42,7 +47,9 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
         reference = {
             "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
             "type": SIMOS.REFERENCE.value,
@@ -87,7 +94,9 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
 
         reference_entity = {
             "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
@@ -130,7 +139,9 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
 
         reference_entity_with_missing_attribute = {"address": "$123", "type": SIMOS.REFERENCE.value}
         with self.assertRaises(ValidationException):
@@ -170,7 +181,9 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
 
         self.assertRaises(
             ValidationException, document_service.remove, Address("$1.uncontained_in_every_way", "testing")
@@ -211,7 +224,9 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
 
         self.assertRaises(
             ValidationException,
@@ -258,7 +273,9 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
 
         self.assertRaises(
             ValidationException, document_service.remove, Address("$1.uncontained_in_every_way[0]", "testing")
@@ -298,7 +315,9 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        document_service = get_mock_document_service(lambda x, y: repository)
+        document_service = get_mock_document_service(
+            repository_provider=lambda x, y: repository, blueprint_provider=self.mock_blueprint_provider
+        )
         reference = {
             "address": "$42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
             "type": SIMOS.REFERENCE.value,
