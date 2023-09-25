@@ -128,7 +128,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         self.assertRaises(ValidationException, self.mock_document_service.remove, Address("$1.references", "testing"))
 
-    def test_remove_second_level_nested(self):
+    def test_remove_document_also_removes_storage_uncontained_children(self):
         self.storage = {
             "1": {
                 "_id": "1",
@@ -158,7 +158,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert self.storage.get("1") is None
         assert self.storage.get("2") is None
 
-    def test_remove_third_level_nested_list(self):
+    def test_remove_document_also_removes_storage_uncontained_grand_children(self):
         self.storage = {
             "1": {
                 "_id": "1",
