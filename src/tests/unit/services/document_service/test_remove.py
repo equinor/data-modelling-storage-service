@@ -232,7 +232,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "type": "blueprint_with_optional_attr",
         } == self.storage["1"]
 
-    def test_remove_blob(self):
+    def test_remove_document_with_blob_removes_referenced_blob_object_as_well(self):
         self.storage = {
             "1": {
                 "_id": "1",
