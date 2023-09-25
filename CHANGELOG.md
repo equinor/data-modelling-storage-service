@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.5.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.4.0...v1.5.0) (2023-09-25)
+
+
+### Features
+
+* populate data source at startup using environment variable ([ed5534f](https://github.com/equinor/data-modelling-storage-service/commit/ed5534f973073c107162d14af962296b5d00ae53))
+* support app registration with a Federated Credential to login ([7e1f7c7](https://github.com/equinor/data-modelling-storage-service/commit/7e1f7c72dee1b1d80c0b02db0fe75ddbd31a8c9a))
+* validate blueprint attribute default ([e1e69a7](https://github.com/equinor/data-modelling-storage-service/commit/e1e69a75285c08ca135ccde298658c5d4e4ed2fa))
+
+
+### Tests
+
+* made get_mock_document_service only used in setUps ([41b9b25](https://github.com/equinor/data-modelling-storage-service/commit/41b9b256a87e03c1d025a5999b0d0ff67df110bb))
+* made simos blueprints explicit ([e5d3335](https://github.com/equinor/data-modelling-storage-service/commit/e5d3335c65290dd2ca12e9e4957fd7c7e4d9ea40))
+* make it explicit ([b940e6c](https://github.com/equinor/data-modelling-storage-service/commit/b940e6cb4aa70e05497c9b71e18d344d00be53d8))
+* move into folders ([145932a](https://github.com/equinor/data-modelling-storage-service/commit/145932aa6b5b307c1a376dfe425e087f0b14c2aa))
+* moved a test into correct folder ([7c5a5a4](https://github.com/equinor/data-modelling-storage-service/commit/7c5a5a4a83c00395ca5297fe4cf299369aa50bb0))
+* moved a test utils into the test_uitls folder ([ec60a2a](https://github.com/equinor/data-modelling-storage-service/commit/ec60a2ac176340a1446e53c528e7696c90f032b0))
+* moving tests into neat folders ([9996fdd](https://github.com/equinor/data-modelling-storage-service/commit/9996fdd36d7edcef8a35b9596000acd14b13e448))
+* require a list of blueprints, to make the mocker data-less ([aab7af0](https://github.com/equinor/data-modelling-storage-service/commit/aab7af08c03e49f7c85b536c260cfc4a2f063338))
+* revert one little change ([5a8e2df](https://github.com/equinor/data-modelling-storage-service/commit/5a8e2df221a4fc39d8afc109f754b4ec143e4722))
+* split up two tests into two classes ([f1dc67e](https://github.com/equinor/data-modelling-storage-service/commit/f1dc67e8d7443e6ec02a116dd4f46672846a03de))
+
 ## [1.4.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.3.1...v1.4.0) (2023-09-15)
 
 
