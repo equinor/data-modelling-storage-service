@@ -108,7 +108,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             ValidationException, self.mock_document_service.remove, Address("$1.nested", "testing", "dmss")
         )
 
-    def test_remove_child_list(self):
+    def test_remove_required_child_list_raises_validation_exception(self):
         self.storage = {
             "1": {
                 "_id": "1",
