@@ -16,7 +16,7 @@ from tests.unit.mock_data.mock_document_service import get_mock_document_service
 class GetDocumentResolveTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = ["dmss://system/SIMOS/Package", "dmss://system/SIMOS/NamedEntity"]
-        mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
+        mock_blueprint_folder = "src/tests/unit/services/document_service/mock_blueprints/car_rental_blueprints"
         mock_blueprints_and_file_names = {
             "CarRental": "CarRental.blueprint.json",
             "EngineTest": "EngineTest.blueprint.json",

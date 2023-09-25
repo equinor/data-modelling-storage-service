@@ -69,7 +69,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
         self.document_repository.find = self.mock_find
 
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
-        mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
+        mock_blueprint_folder = "src/tests/unit/services/document_service/mock_blueprints/car_rental_blueprints"
         mock_blueprints_and_file_names = {
             "CarRental": "CarRental.blueprint.json",
             "RentalCar": "RentalCar.blueprint.json",

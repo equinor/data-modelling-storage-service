@@ -1,0 +1,15 @@
+{
+  "name": "ExtendedBlueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "This Blueprint extends namedEntity",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "another_value",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    }
+  ]
+}

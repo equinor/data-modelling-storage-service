@@ -1,0 +1,15 @@
+{
+  "name": "blob",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "Test for a blueprint with storageAffinity in storageRecipe",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "someData",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    }
+  ]
+}
