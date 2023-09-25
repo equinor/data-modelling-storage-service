@@ -49,6 +49,12 @@
       "optional": true
     },
     {
+      "name": "description",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "optional": true
+    },
+    {
       "name": "contained",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "boolean",
