@@ -62,36 +62,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.mock_document_service.remove(Address("$1", "testing"))
         document_repository.delete.assert_called_with("1")
 
-    def test_remove_required_attribute(self):
-        doc_1 = {
-            "_id": "1",
-            "name": "Car rental",
-            "type": "CarRental",
-            "cars": [
-                {
-                    "address": "2",
-                    "type": SIMOS.REFERENCE.value,
-                    "referenceType": REFERENCE_TYPES.STORAGE.value,
-                }
-            ],
-            "customers": [
-                {
-                    "name": "Jane",
-                    "type": "Customer",
-                    "car": {
-                        "address": "2",
-                        "type": SIMOS.REFERENCE.value,
-                        "referenceType": REFERENCE_TYPES.STORAGE.value,
-                    },
-                }
-            ],
-        }
-        doc_2 = {"_id": "2", "name": "car1", "type": "RentalCar", "plateNumber": "xyz"}
-
-        self.storage = {"1": doc_1, "2": doc_2}
-
-        self.assertRaises(ValidationException, self.mock_document_service.remove, Address("$1.cars", "testing"))
-
     def test_remove_document_wo_existing_blueprint(self):
         self.storage = {
             "1": {
@@ -118,7 +88,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.mock_document_service.remove(Address("$1", "testing"))
         assert get_and_print_diff(self.storage, {"2": doc_2}) == []
 
-    def test_remove_child_dict(self):
+    def test_remove_required_child_dict_raises_validation_exception(self):
         self.storage = {
             "1": {
                 "_id": "1",
