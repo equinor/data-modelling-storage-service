@@ -1,0 +1,15 @@
+{
+  "name": "blobContainer",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "A basic blueprint that has a non-storageContained blob, none specified storageAffinity ",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "blob",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "blob"
+    }
+  ]
+}

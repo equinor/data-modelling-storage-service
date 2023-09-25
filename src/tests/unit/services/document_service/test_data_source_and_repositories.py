@@ -18,11 +18,10 @@ test_user = User(**{"user_id": "unit-test", "full_name": "Unit Test", "email": "
 class DataSourceTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
-        mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
+        mock_blueprint_folder = "src/tests/unit/services/document_service/mock_blueprints/blob_blueprints"
         mock_blueprints_and_file_names = {
             "blobContainer": "blobContainer.blueprint.json",
             "blob": "blob.blueprint.json",
-            "basic_blueprint": "basic_blueprint.blueprint.json",
             "uncontained_blueprint": "uncontained_blueprint.blueprint.json",
         }
         mock_blueprint_provider = MockBlueprintProvider(
@@ -37,7 +36,7 @@ class DataSourceTestCase(unittest.TestCase):
             "name": "Parent",
             "description": "",
             "type": "uncontained_blueprint",
-            "uncontained_in_every_way": {"name": "a_reference", "type": "basic_blueprint"},
+            "uncontained_in_every_way": {"name": "a_reference", "type": "dmss://system/SIMOS/NamedEntity"},
         }
 
         default_doc_storage = {}

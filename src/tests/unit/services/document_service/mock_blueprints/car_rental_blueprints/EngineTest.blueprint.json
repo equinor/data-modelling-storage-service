@@ -1,0 +1,38 @@
+{
+  "name": "EngineTest",
+  "type": "system/SIMOS/Blueprint",
+  "description": "This describes an engine",
+  "attributes": [
+    {
+      "name": "name",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "type",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "description",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "power",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "integer",
+      "default": 120
+    },
+    {
+      "name": "fuelPump",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "FuelPumpTest",
+      "default": {
+        "name": "fuelPump",
+        "type": "FuelPumpTest",
+        "description": "A standard fuel pump"
+      }
+    }
+  ]
+}
