@@ -65,7 +65,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             "1": {
                 "_id": "1",
                 "name": "Parent",
-                "description": "",
                 "type": "dmss://testing/this_blueprint_does_not_exist",
             }
         }
@@ -76,11 +75,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         doc_1 = {
             "uid": "1",
             "name": "Parent",
-            "description": "",
             "type": "uncontained_blueprint",
             "uncontained_in_every_way": {"_id": "2", "name": "a_reference", "type": "basic_blueprint"},
         }
-        doc_2 = {"uid": "2", "_id": "2", "name": "a_reference", "description": "", "type": "basic_blueprint"}
+        doc_2 = {"uid": "2", "_id": "2", "name": "a_reference", "type": "basic_blueprint"}
         self.storage = {"1": doc_1, "2": doc_2}
 
         self.mock_document_service.remove(Address("$1", "testing"))
@@ -91,7 +89,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             "1": {
                 "_id": "1",
                 "name": "Parent",
-                "description": "",
                 "type": "all_contained_cases_blueprint",
                 "nested": {
                     "address": "2",
@@ -111,7 +108,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             "1": {
                 "_id": "1",
                 "name": "Parent",
-                "description": "",
                 "type": "all_contained_cases_blueprint",
                 "references": [
                     {
@@ -131,11 +127,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             "1": {
                 "_id": "1",
                 "name": "Parent",
-                "description": "",
                 "type": "all_contained_cases_blueprint",
                 "nested": {
                     "name": "Nested",
-                    "description": "",
                     "type": "all_contained_cases_blueprint",
                     "nested": {
                         "address": "2",
@@ -147,7 +141,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {
                 "_id": "2",
                 "name": "Parent",
-                "description": "",
                 "type": "all_contained_cases_blueprint",
             },
         }
@@ -161,11 +154,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             "1": {
                 "_id": "1",
                 "name": "Parent",
-                "description": "",
                 "type": "all_contained_cases_blueprint",
                 "nested": {
                     "name": "Nested",
-                    "description": "",
                     "type": "all_contained_cases_blueprint",
                     "nested": {
                         "name": "Parent",
@@ -188,13 +179,11 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {
                 "_id": "2",
                 "name": "Parent",
-                "description": "",
                 "type": "basic_blueprint",
             },
             "3": {
                 "_id": "3",
                 "name": "Parent",
-                "description": "",
                 "type": "basic_blueprint",
             },
         }
@@ -204,12 +193,11 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert self.storage.get("2") is None
         assert self.storage.get("3") is None
 
-    def test_remove_reference(self):
+    def test_remove_required_reference_raises_validation_exception(self):
         self.storage = {
             "1": {
                 "_id": "1",
                 "name": "Parent",
-                "description": "",
                 "type": "all_contained_cases_blueprint",
                 "reference": {
                     "address": "2",
@@ -217,17 +205,16 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "referenceType": REFERENCE_TYPES.LINK.value,
                 },
             },
-            "2": {"_id": "2", "name": "Reference", "description": "", "type": "basic_blueprint"},
+            "2": {"_id": "2", "name": "Reference", "type": "basic_blueprint"},
         }
 
         self.assertRaises(ValidationException, self.mock_document_service.remove, Address("$1.reference", "testing"))
 
-    def test_remove_optional(self):
+    def test_remove_optional_attribute_is_removed_successfully(self):
         self.storage = {
             "1": {
                 "_id": "1",
                 "name": "Parent",
-                "description": "",
                 "type": "blueprint_with_optional_attr",
                 "im_optional": {
                     "name": "old_entity",
@@ -238,10 +225,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
         self.mock_document_service.remove(Address("$1.im_optional", "testing"))
+
         assert {
             "_id": "1",
             "name": "Parent",
-            "description": "",
             "type": "blueprint_with_optional_attr",
         } == self.storage["1"]
 
@@ -250,7 +237,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             "1": {
                 "_id": "1",
                 "name": "Parent",
-                "description": "",
                 "type": "blueprint_with_blob",
                 "blob": {"type": SIMOS.BLOB.value, "_blob_id": "blob_object"},
             },
