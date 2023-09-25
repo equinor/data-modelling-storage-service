@@ -30,8 +30,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",
             "blueprint_with_blob": "blueprint_with_blob.blueprint.json",
             "blueprint_with_optional_attr": "blueprint_with_optional_attr.blueprint.json",
-            "CarRental": "CarRental.blueprint.json",
-            "Customer": "Customer.blueprint.json",
         }
         self.mock_blueprint_provider = MockBlueprintProvider(
             mock_blueprints_and_file_names=mock_blueprints_and_file_names,
