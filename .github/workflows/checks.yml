@@ -47,4 +47,4 @@ jobs:
       - name: "Build dev image"
         run: docker build -t devimage --target development .
       - name: "Generate API"
-        run: docker run -d -p "5000:5000" devimage && ./generate-python-package.sh
+        run: docker run -d -p "5000:5000" -e RESET_DATA_SOURCE=off devimage && ./generate-python-package.sh
