@@ -49,6 +49,9 @@ def auth_with_jwt(jwt_token: str = Security(oauth2_scheme)) -> User:
     try:
         payload = jwt.decode(jwt_token, key, algorithms=["RS256"], audience=config.AUTH_AUDIENCE)
         if config.MICROSOFT_AUTH_PROVIDER in payload["iss"]:
+            # To support app registration with a Federated Credential to login
+            if config.AAD_ENTERPRISE_APP_OID == payload["sub"]:
+                return User(user_id=payload["sub"], roles=[config.DMSS_ADMIN_ROLE], **payload)
             # Azure AD uses an oid string to uniquely identify users. Each user has a unique oid value.
             user = User(user_id=payload["oid"], **payload)
         else:
