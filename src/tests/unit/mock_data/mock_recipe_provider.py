@@ -5,10 +5,13 @@ from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from enums import StorageDataTypes
 
 
-def mock_storage_recipe_provider_generator(path_to_mock_storage_recipes: str = None):
-    def mock_storage_recipe_provider(type: str, context: str) -> list[StorageRecipe]:
+class MockStorageRecipeProvider:
+    def __init__(self, path_to_mock_storage_recipes: str):
+        self.path_to_mock_storage_recipes = path_to_mock_storage_recipes
+
+    def provider(self, type: str, context: str) -> list[StorageRecipe]:
         all_storage_recipes = defaultdict(list)
-        with open(path_to_mock_storage_recipes) as f:
+        with open(self.path_to_mock_storage_recipes) as f:
             all_storage_recipes.update(json.load(f))
         return [
             StorageRecipe(
@@ -23,5 +26,3 @@ def mock_storage_recipe_provider_generator(path_to_mock_storage_recipes: str = N
             )
             for sr in all_storage_recipes[type]
         ]
-
-    return mock_storage_recipe_provider

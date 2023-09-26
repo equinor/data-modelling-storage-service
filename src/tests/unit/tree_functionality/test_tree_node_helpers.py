@@ -4,9 +4,7 @@ from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
-from tests.unit.mock_data.mock_recipe_provider import (
-    mock_storage_recipe_provider_generator,
-)
+from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
 from tests.unit.tree_functionality.mock_data_for_tree_tests.get_node_for_tree_tests import (
     get_engine_package_node,
 )
@@ -30,9 +28,9 @@ def flatten_dict(dd, separator="_", prefix=""):
 
 class TreenodeTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        self.mock_storage_recipe_provider = mock_storage_recipe_provider_generator(
-            "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
-        )
+        self.mock_storage_recipe_provider = MockStorageRecipeProvider(
+            path_to_mock_storage_recipes="src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
+        ).provider
 
     def test_is_root(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
