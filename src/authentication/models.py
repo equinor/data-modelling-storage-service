@@ -48,7 +48,9 @@ class User(BaseModel):
     email: Optional[str] = None
     full_name: Optional[str] = None
     roles: List[str] = []
-    scope: AccessLevel = AccessLevel.WRITE
+    scope: AccessLevel = (
+        AccessLevel.WRITE
+    )  # This is the 'maximum' AccessLevel this user can have, but is not what is actually set as the access level.
 
     def __hash__(self):
         return hash(self.user_id)
