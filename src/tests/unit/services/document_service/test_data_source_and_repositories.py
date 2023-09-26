@@ -29,9 +29,8 @@ class DataSourceTestCase(unittest.TestCase):
             mock_blueprint_folder=mock_blueprint_folder,
             simos_blueprints_available_for_test=simos_blueprints,
         )
-        self.mock_storage_recipe_provider = MockStorageRecipeProvider(
-            path_to_mock_storage_recipes="src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
-        ).provider
+        mock_recipe_folder = "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
+        self.mock_storage_recipe_provider = MockStorageRecipeProvider(mock_recipe_folder).provider
         self.mock_document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
 
     def test_save_into_multiple_repositories(self):

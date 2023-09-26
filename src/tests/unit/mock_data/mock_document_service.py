@@ -6,7 +6,7 @@ def get_mock_document_service(
     blueprint_provider,
     repository_provider=None,
     recipe_provider=MockStorageRecipeProvider(
-        path_to_mock_storage_recipes="src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
+        "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
     ).provider,
     user=None,
     context=None,
