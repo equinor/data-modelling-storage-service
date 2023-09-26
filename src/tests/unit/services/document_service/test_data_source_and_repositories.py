@@ -9,7 +9,9 @@ from enums import StorageDataTypes
 from storage.data_source_class import DataSource
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
-from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_data.mock_recipe_provider import (
+    mock_storage_recipe_provider_generator,
+)
 
 config.AUTH_ENABLED = False
 test_user = User(**{"user_id": "unit-test", "full_name": "Unit Test", "email": "unit-test@example.com"})
@@ -28,6 +30,9 @@ class DataSourceTestCase(unittest.TestCase):
             mock_blueprints_and_file_names=mock_blueprints_and_file_names,
             mock_blueprint_folder=mock_blueprint_folder,
             simos_blueprints_available_for_test=simos_blueprints,
+        )
+        self.mock_storage_recipe_provider = mock_storage_recipe_provider_generator(
+            path_to_mock_storage_recipes="src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
         )
         self.mock_document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
 
@@ -90,7 +95,7 @@ class DataSourceTestCase(unittest.TestCase):
             uncontained_doc,
             uid="1",
             blueprint_provider=self.mock_document_service.get_blueprint,
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
         )
 
         self.mock_document_service.save(node, "testing", update_uncontained=True)
@@ -152,7 +157,7 @@ class DataSourceTestCase(unittest.TestCase):
             blob_doc,
             uid="1",
             blueprint_provider=self.mock_document_service.get_blueprint,
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
         )
 
         self.mock_document_service.save(node, "testing")
@@ -215,7 +220,10 @@ class DataSourceTestCase(unittest.TestCase):
         self.mock_document_service.user = test_user
 
         node: Node = tree_node_from_dict(
-            blob_doc, self.mock_document_service.get_blueprint, uid="1", recipe_provider=mock_storage_recipe_provider
+            blob_doc,
+            self.mock_document_service.get_blueprint,
+            uid="1",
+            recipe_provider=self.mock_storage_recipe_provider,
         )
 
         self.mock_document_service.save(node, "testing", update_uncontained=True)

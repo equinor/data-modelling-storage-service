@@ -4,7 +4,9 @@ from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
-from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
+from tests.unit.mock_data.mock_recipe_provider import (
+    mock_storage_recipe_provider_generator,
+)
 from tests.unit.tree_functionality.mock_data_for_tree_tests.get_node_for_tree_tests import (
     get_engine_package_node,
 )
@@ -27,6 +29,11 @@ def flatten_dict(dd, separator="_", prefix=""):
 
 
 class TreenodeTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        self.mock_storage_recipe_provider = mock_storage_recipe_provider_generator(
+            "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
+        )
+
     def test_is_root(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
         root = Node(
@@ -35,7 +42,7 @@ class TreenodeTestCase(unittest.TestCase):
             entity=root_data,
             blueprint_provider=mock_document_service.get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
         )
 
         nested_data = {"name": "Nested", "description": "", "type": "Garden"}
@@ -46,7 +53,7 @@ class TreenodeTestCase(unittest.TestCase):
             blueprint_provider=mock_document_service.get_blueprint,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
         )
 
         assert root.is_root()
@@ -60,7 +67,7 @@ class TreenodeTestCase(unittest.TestCase):
             entity=root_data,
             blueprint_provider=mock_document_service.get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
         )
 
         nested_1_data = {"name": "Nested1", "description": "", "type": "Garden"}
@@ -71,7 +78,7 @@ class TreenodeTestCase(unittest.TestCase):
             blueprint_provider=mock_document_service.get_blueprint,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
         )
 
         nested_2_data = {"name": "Nested2", "description": "", "type": "Garden"}
@@ -81,7 +88,7 @@ class TreenodeTestCase(unittest.TestCase):
             entity=nested_2_data,
             blueprint_provider=mock_document_service.get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
         )
 
         actual_before = {
@@ -109,7 +116,7 @@ class TreenodeTestCase(unittest.TestCase):
     def test_depth(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
         root = Node(
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
             key="root",
             uid="1",
             entity=root_data,
@@ -119,7 +126,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_data = {"name": "Nested", "description": "", "type": "Garden"}
         nested = Node(
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_data,
@@ -155,7 +162,7 @@ class TreenodeTestCase(unittest.TestCase):
             document_1,
             mock_document_service.get_blueprint,
             uid=document_1.get("_id"),
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
         )
         result = [node.node_id for node in root.traverse()]
         expected = [
@@ -173,7 +180,7 @@ class TreenodeTestCase(unittest.TestCase):
     def test_traverse_reverse(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
         root = Node(
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
             key="root",
             uid="1",
             entity=root_data,
@@ -183,7 +190,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_data = {"name": "Nested1", "description": "", "type": "Garden"}
         nested = Node(
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_data,
@@ -194,7 +201,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_2_data = {"name": "Nested2", "description": "", "type": "Bush"}
         nested_2 = Node(
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_2_data,
@@ -210,7 +217,7 @@ class TreenodeTestCase(unittest.TestCase):
     def test_node_id(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
         root = Node(
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
             key="",
             uid="1",
             entity=root_data,
@@ -220,7 +227,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_data = {"name": "Nested", "description": "", "type": "Garden"}
         nested = Node(
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_data,
@@ -231,7 +238,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_2_data = {"name": "Nested", "description": "", "type": "Bush"}
         nested_2 = Node(
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_2_data,
@@ -242,7 +249,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         nested_2_reference_data = {"_id": "2", "name": "Reference", "description": "", "type": "Garden"}
         reference = Node(
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
             key="reference",
             uid="2",
             entity=nested_2_reference_data,
@@ -253,7 +260,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         list_data = {"name": "List", "type": "Bush"}
         list_node = ListNode(
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
             key="list",
             uid="",
             entity=list_data,
@@ -264,7 +271,7 @@ class TreenodeTestCase(unittest.TestCase):
 
         item_1_data = {"name": "Item1", "description": "", "type": "Garden"}
         item_1 = Node(
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
             key="0",
             uid="",
             entity=item_1_data,
@@ -306,7 +313,7 @@ class TreenodeTestCase(unittest.TestCase):
             document_1,
             mock_document_service.get_blueprint,
             uid=document_1.get("_id"),
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
         )
 
         child_1 = root.search("1.nested.nested")
@@ -340,7 +347,7 @@ class TreenodeTestCase(unittest.TestCase):
             document_1,
             mock_document_service.get_blueprint,
             uid=document_1.get("_id"),
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
         )
 
         child_1 = root.get_by_path(["nested", "nested"])
@@ -376,7 +383,7 @@ class TreenodeTestCase(unittest.TestCase):
             document_1,
             mock_document_service.get_blueprint,
             uid=document_1.get("_id"),
-            recipe_provider=mock_storage_recipe_provider,
+            recipe_provider=self.mock_storage_recipe_provider,
         )
 
         update_0 = {
