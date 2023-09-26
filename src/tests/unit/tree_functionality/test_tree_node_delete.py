@@ -3,7 +3,6 @@ import unittest
 from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import Node
-from tests.unit.mock_data.mock_recipe_provider import mock_storage_recipe_provider
 from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_document_service_for_tree_tests import (
     mock_document_service,
 )
@@ -18,7 +17,6 @@ class TreeNodeDeleteTest(unittest.TestCase):
             entity=root_data,
             blueprint_provider=mock_document_service.get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
-            recipe_provider=mock_storage_recipe_provider,
         )
 
         nested_1_data = {"name": "Nested1", "description": "", "type": "Garden"}
@@ -29,7 +27,6 @@ class TreeNodeDeleteTest(unittest.TestCase):
             blueprint_provider=mock_document_service.get_blueprint,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
-            recipe_provider=mock_storage_recipe_provider,
         )
 
         actual_before = {
@@ -56,7 +53,6 @@ class TreeNodeDeleteTest(unittest.TestCase):
             entity=root_data,
             blueprint_provider=mock_document_service.get_blueprint,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
-            recipe_provider=mock_storage_recipe_provider,
         )
 
         nested_1_data = {"name": "Nested1", "description": "", "type": "Garden"}
@@ -67,7 +63,6 @@ class TreeNodeDeleteTest(unittest.TestCase):
             blueprint_provider=mock_document_service.get_blueprint,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
-            recipe_provider=mock_storage_recipe_provider,
         )
         nested_2_data = {"name": "Nested2", "description": "", "type": "Bush"}
         nested_2 = Node(
@@ -77,7 +72,6 @@ class TreeNodeDeleteTest(unittest.TestCase):
             blueprint_provider=mock_document_service.get_blueprint,
             parent=nested_1,
             attribute=BlueprintAttribute(name="", attribute_type="Bush"),
-            recipe_provider=mock_storage_recipe_provider,
         )
 
         actual_before = {
@@ -129,7 +123,6 @@ class TreeNodeDeleteTest(unittest.TestCase):
             document,
             mock_document_service.get_blueprint,
             uid=document.get("_id"),
-            recipe_provider=mock_storage_recipe_provider,
         )
 
         actual_before = {
