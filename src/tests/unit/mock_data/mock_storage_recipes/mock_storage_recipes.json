@@ -1,0 +1,68 @@
+{
+  "all_contained_cases_blueprint": [
+    {
+      "name": "DefaultStorageRecipe",
+      "type": "dmss://system/SIMOS/StorageRecipe",
+      "description": "",
+      "attributes": [
+        {
+          "name": "reference",
+          "type": "dmss://system/SIMOS/Entity",
+          "contained": false
+        },
+        {
+          "name": "references",
+          "type": "dmss://system/SIMOS/Entity",
+          "contained": false
+        }
+      ]
+    }
+  ],
+  "uncontained_blueprint": [
+    {
+      "name": "DefaultStorageRecipe",
+      "type": "dmss://system/SIMOS/StorageRecipe",
+      "description": "",
+      "attributes": [
+        {
+          "name": "uncontained_in_every_way",
+          "type": "does_this_matter?",
+          "contained": false,
+          "storageAffinity": "blob"
+        }
+      ]
+    }
+  ],
+  "ExtendedBlueprint": [
+    {
+      "name": "default",
+      "type": "dmss://system/SIMOS/StorageRecipe",
+      "description": "",
+      "storageAffinity": "blob",
+      "attributes": []
+    }
+  ],
+  "blob": [
+    {
+      "name": "default",
+      "type": "dmss://system/SIMOS/StorageRecipe",
+      "description": "",
+      "storageAffinity": "blob",
+      "attributes": []
+    }
+  ],
+  "blobContainer": [
+    {
+      "name": "default",
+      "type": "dmss://system/SIMOS/StorageRecipe",
+      "description": "",
+      "attributes": [
+        {
+          "name": "blob",
+          "type": "does_this_matter?",
+          "contained": false
+        }
+      ]
+    }
+  ]
+}
