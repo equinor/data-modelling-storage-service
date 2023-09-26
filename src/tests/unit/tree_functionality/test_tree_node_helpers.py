@@ -28,9 +28,8 @@ def flatten_dict(dd, separator="_", prefix=""):
 
 class TreenodeTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        self.mock_storage_recipe_provider = MockStorageRecipeProvider(
-            path_to_mock_storage_recipes="src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
-        ).provider
+        mock_recipe_folder = "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
+        self.mock_storage_recipe_provider = MockStorageRecipeProvider(mock_recipe_folder).provider
 
     def test_is_root(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
