@@ -1,15 +1,13 @@
 from services.document_service import DocumentService
-from tests.unit.mock_data.mock_recipe_provider import (
-    mock_storage_recipe_provider_generator,
-)
+from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
 
 
 def get_mock_document_service(
     blueprint_provider,
     repository_provider=None,
-    recipe_provider=mock_storage_recipe_provider_generator(
-        "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
-    ),
+    recipe_provider=MockStorageRecipeProvider(
+        path_to_mock_storage_recipes="src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
+    ).provider,
     user=None,
     context=None,
 ):
