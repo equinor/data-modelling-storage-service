@@ -36,6 +36,13 @@ class TestUser(unittest.TestCase):
         user = User(user_id="123", scope=AccessLevel.READ)
         self.assertEqual(user.scope, AccessLevel.READ)
 
+    def test_default(self):
+        user = User.default()
+
+        self.assertEqual(user.user_id, "nologin")
+        self.assertEqual(user.full_name, "Not Authenticated")
+        self.assertEqual(user.email, "nologin@example.com")
+
 
 if __name__ == "__main__":
     unittest.main()
