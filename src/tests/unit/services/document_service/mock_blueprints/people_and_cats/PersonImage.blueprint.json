@@ -1,0 +1,21 @@
+{
+  "name": "PersonImage",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "A blueprint",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "optionalImageText",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/NamedEntity",
+      "optional": true
+    },
+    {
+      "name": "imageBlob",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "blob"
+    }
+  ]
+}

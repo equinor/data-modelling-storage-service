@@ -30,7 +30,7 @@ class DataSourceTestCase(unittest.TestCase):
             simos_blueprints_available_for_test=simos_blueprints,
         )
         mock_recipe_folder = "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
-        self.mock_storage_recipe_provider = MockStorageRecipeProvider(mock_recipe_folder).provider
+        self.recipe_provider = MockStorageRecipeProvider(mock_recipe_folder).provider
         self.mock_document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
 
     def test_save_into_multiple_repositories(self):
@@ -92,7 +92,7 @@ class DataSourceTestCase(unittest.TestCase):
             uncontained_doc,
             uid="1",
             blueprint_provider=self.mock_document_service.get_blueprint,
-            recipe_provider=self.mock_storage_recipe_provider,
+            recipe_provider=self.recipe_provider,
         )
 
         self.mock_document_service.save(node, "testing", update_uncontained=True)
@@ -154,7 +154,7 @@ class DataSourceTestCase(unittest.TestCase):
             blob_doc,
             uid="1",
             blueprint_provider=self.mock_document_service.get_blueprint,
-            recipe_provider=self.mock_storage_recipe_provider,
+            recipe_provider=self.recipe_provider,
         )
 
         self.mock_document_service.save(node, "testing")
@@ -217,10 +217,7 @@ class DataSourceTestCase(unittest.TestCase):
         self.mock_document_service.user = test_user
 
         node: Node = tree_node_from_dict(
-            blob_doc,
-            self.mock_document_service.get_blueprint,
-            uid="1",
-            recipe_provider=self.mock_storage_recipe_provider,
+            blob_doc, self.mock_document_service.get_blueprint, uid="1", recipe_provider=self.recipe_provider
         )
 
         self.mock_document_service.save(node, "testing", update_uncontained=True)

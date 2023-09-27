@@ -1,0 +1,16 @@
+{
+  "name": "Cat",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "A cat has an owner, but the owner is both storage and model uncontained.",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "owner",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/NamedEntity",
+      "contained": false
+    }
+  ]
+}
