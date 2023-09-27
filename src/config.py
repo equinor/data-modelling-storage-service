@@ -2,7 +2,6 @@ from pathlib import Path
 
 from pydantic import BaseSettings, Field
 
-from authentication.models import User
 from enums import AuthProviderForRoleCheck
 
 
@@ -67,5 +66,3 @@ if config.AUTH_PROVIDER_FOR_ROLE_CHECK:
         and not config.AAD_ENTERPRISE_APP_OID
     ):
         raise EnvironmentError("Missing required environment variable 'AAD_ENTERPRISE_APP_OID'")
-
-default_user: User = User(**{"user_id": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})

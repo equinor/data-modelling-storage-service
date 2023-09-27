@@ -11,7 +11,7 @@ from authentication.personal_access_token import get_user_from_pat
 from common.exceptions import credentials_exception
 from common.utils.logging import logger
 from common.utils.mock_token_generator import mock_rsa_public_key
-from config import config, default_user
+from config import config
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
     authorizationUrl=config.OAUTH_AUTH_ENDPOINT, tokenUrl=config.OAUTH_TOKEN_ENDPOINT
@@ -42,7 +42,7 @@ def fetch_openid_configuration() -> dict:
 
 def auth_with_jwt(jwt_token: str = Security(oauth2_scheme)) -> User:
     if not config.AUTH_ENABLED:
-        return default_user
+        return User.default()
     # If TEST_TOKEN is true, we are running tests. Use the self-signed keys. If not, get keys from auth server.
     key = mock_rsa_public_key if config.TEST_TOKEN else {"keys": fetch_openid_configuration()["jwks"]}
 
@@ -72,7 +72,7 @@ async def auth_w_jwt_or_pat(
     personal_access_token: str = Security(APIKeyHeader(name="Access-Key", auto_error=False)),
 ) -> User:
     if not config.AUTH_ENABLED:
-        return default_user
+        return User.default()
 
     if personal_access_token:
         return get_user_from_pat(personal_access_token)
