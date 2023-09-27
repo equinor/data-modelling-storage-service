@@ -34,15 +34,3 @@ def assert_user_has_access(acl: AccessControlList, access_level_required: Access
 
     # No access high enough granted neither as 'owner', 'roles', 'users', nor 'others'.
     raise MissingPrivilegeException(f"The requested operation requires '{access_level_required.name}' privileges")
-
-
-def create_access_control_list(user: User) -> AccessControlList:
-    """Used when there is no ACL to inherit. Sets the current user as owner, and rest copies DEFAULT_ACL"""
-    return AccessControlList(
-        owner=user.user_id, roles=DEFAULT_ACCESS_CONTROL_LIST.roles, others=DEFAULT_ACCESS_CONTROL_LIST.others
-    )
-
-
-DEFAULT_ACCESS_CONTROL_LIST = AccessControlList(
-    owner=config.DMSS_ADMIN, roles={config.DMSS_ADMIN_ROLE: AccessLevel.WRITE}, others=AccessLevel.READ
-)

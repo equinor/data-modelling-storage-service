@@ -3,10 +3,7 @@ from typing import Dict, List, Optional
 from pydantic import BaseModel
 from pymongo.errors import DuplicateKeyError, ServerSelectionTimeoutError
 
-from authentication.access_control import (
-    DEFAULT_ACCESS_CONTROL_LIST,
-    assert_user_has_access,
-)
+from authentication.access_control import assert_user_has_access
 from authentication.models import AccessControlList, AccessLevel, User
 from common.exceptions import (
     ApplicationException,
@@ -73,7 +70,7 @@ class DataSourceRepository:
         return all_sources
 
     def create(self, id: str, document: DataSourceRequest):
-        assert_user_has_access(DEFAULT_ACCESS_CONTROL_LIST, AccessLevel.WRITE, self.user)
+        assert_user_has_access(AccessControlList.default(), AccessLevel.WRITE, self.user)
         document = document.dict()
         document["_id"] = id
         try:

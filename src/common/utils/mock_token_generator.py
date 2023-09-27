@@ -1,7 +1,6 @@
 from jose import jwt
 
 from authentication.models import User
-from config import default_user
 
 # Generated with: 'openssl req  -nodes -new -x509  -keyout server.key -out server.cert'
 mock_rsa_private_key = """
@@ -50,7 +49,7 @@ gwIDAQAB
 """
 
 
-def generate_mock_token(user: User = default_user):
+def generate_mock_token(user: User = User.default()):
     """
     This function is for testing purposes only
     Used for behave testing

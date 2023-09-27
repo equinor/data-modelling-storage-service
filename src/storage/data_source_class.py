@@ -4,11 +4,7 @@ from uuid import uuid4
 
 from pydantic import UUID4
 
-from authentication.access_control import (
-    DEFAULT_ACCESS_CONTROL_LIST,
-    assert_user_has_access,
-    create_access_control_list,
-)
+from authentication.access_control import assert_user_has_access
 from authentication.models import AccessControlList, AccessLevel, User
 from common.exceptions import (
     BadRequestException,
@@ -34,7 +30,7 @@ class DataSource:
         self,
         name: str,
         user: User,
-        acl: AccessControlList = DEFAULT_ACCESS_CONTROL_LIST,
+        acl: AccessControlList = AccessControlList.default(),
         repositories=None,
         data_source_collection=data_source_collection,
     ):
@@ -50,7 +46,7 @@ class DataSource:
         return cls(
             a_dict["name"],
             user,
-            AccessControlList(**a_dict.get("acl", DEFAULT_ACCESS_CONTROL_LIST.dict())),
+            AccessControlList(**a_dict.get("acl", AccessControlList.default().dict())),
             {key: Repository(name=key, **value) for key, value in a_dict["repositories"].items()},
         )
 
@@ -197,7 +193,7 @@ class DataSource:
             lookup_id=uid,
             repository=repo.name,
             database_id=uid,
-            acl=create_access_control_list(self.user),
+            acl=AccessControlList.default_with_owner(self.user),
             storage_affinity=StorageDataTypes.BLOB.value,
             meta=meta,
         )

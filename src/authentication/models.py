@@ -5,6 +5,8 @@ from uuid import uuid4
 
 from pydantic import UUID4, BaseModel
 
+from config import config
+
 
 class AccessLevel(str, Enum):
     WRITE = "WRITE"
@@ -52,6 +54,10 @@ class User(BaseModel):
         AccessLevel.WRITE
     )  # This is the 'maximum' AccessLevel this user can have, but is not what is actually set as the access level.
 
+    @classmethod
+    def default(cls):
+        return cls(**{"user_id": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})
+
     def __hash__(self):
         return hash(self.user_id)
 
@@ -79,6 +85,17 @@ class AccessControlList(BaseModel):
             "users": {k: v.name for k, v in self.users.items()},
             "others": self.others.name,
         }
+
+    @classmethod
+    def default(cls):
+        return cls(owner=config.DMSS_ADMIN, roles={config.DMSS_ADMIN_ROLE: AccessLevel.WRITE}, others=AccessLevel.READ)
+
+    @classmethod
+    def default_with_owner(cls, user: User):
+        """Used when there is no ACL to inherit. Sets the current user as owner, and rest copies DEFAULT_ACL"""
+        acl = cls.default()
+        acl.owner = user.user_id
+        return acl
 
 
 class PATData(BaseModel):

@@ -4,6 +4,7 @@ from functools import lru_cache
 from typing import Callable, Dict, List, Union
 from uuid import uuid4
 
+from authentication.models import User
 from common.address import Address
 from common.exceptions import (
     ApplicationException,
@@ -28,7 +29,7 @@ from common.utils.logging import logger
 from common.utils.resolve_address import ResolvedAddress, resolve_address
 from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.utils.validators import validate_entity_against_self
-from config import config, default_user
+from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.storage_recipe import StorageRecipe
 from domain_classes.tree_node import ListNode, Node
@@ -46,7 +47,7 @@ class DocumentService:
         self,
         repository_provider=get_data_source,
         blueprint_provider=None,
-        user=default_user,
+        user=User.default(),
         context: str = None,
         recipe_provider=None,
     ):
