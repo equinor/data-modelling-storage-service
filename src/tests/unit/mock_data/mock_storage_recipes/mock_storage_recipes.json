@@ -42,6 +42,25 @@
       "attributes": []
     }
   ],
+  "Person": [
+    {
+      "name": "DefaultStorageRecipe",
+      "type": "dmss://system/SIMOS/StorageRecipe",
+      "description": "",
+      "attributes": [
+        {
+          "name": "storageUncontainedBestFriend",
+          "type": "dmss://system/SIMOS/Entity",
+          "contained": false
+        },
+        {
+          "name": "storageUncontainedListOfFriends",
+          "type": "dmss://system/SIMOS/Entity",
+          "contained": false
+        }
+      ]
+    }
+  ],
   "blob": [
     {
       "name": "default",

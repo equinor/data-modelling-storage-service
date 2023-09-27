@@ -1,0 +1,15 @@
+{
+  "name": "CatCage",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "This is a cage that contains a cat. The cat is model and storage contained in the cage. If the cage is removed, so is the cat.",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "cat",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "Cat"
+    }
+  ]
+}

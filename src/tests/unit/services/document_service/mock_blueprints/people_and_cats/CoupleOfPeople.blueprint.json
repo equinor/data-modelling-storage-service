@@ -1,0 +1,20 @@
+{
+  "name": "CoupleOfPeople",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "Two People ",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "a",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "Person"
+    },
+    {
+      "name": "b",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "Person"
+    }
+  ]
+}

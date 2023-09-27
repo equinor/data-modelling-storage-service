@@ -5,6 +5,7 @@ from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from common.utils.validators import validate_entity, validate_entity_against_self
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
+from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
 
 
 class ValidateEntityTestCase(unittest.TestCase):
@@ -274,7 +275,13 @@ class ValidateEntityTestCase(unittest.TestCase):
             "customers": [],
         }
 
-        parent_node = tree_node_from_dict(test_entity, self.mock_document_service.get_blueprint)
+        parent_node = tree_node_from_dict(
+            test_entity,
+            self.mock_document_service.get_blueprint,
+            recipe_provider=MockStorageRecipeProvider(
+                "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
+            ).provider,
+        )
         new_node = parent_node.get_by_path(["cars"])
         blueprint = new_node.blueprint
 

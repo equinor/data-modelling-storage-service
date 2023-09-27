@@ -8,6 +8,7 @@ from domain_classes.dimension import Dimension
 from enums import SIMOS
 from services.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
+from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
 
 basic_blueprint = {
     "type": SIMOS.BLUEPRINT.value,
@@ -73,7 +74,12 @@ class BlueprintProvider:
             return Blueprint(file_repository_test.get(template_type))
 
 
-document_service = DocumentService(repository_provider=None, blueprint_provider=BlueprintProvider())
+recipe_provider = MockStorageRecipeProvider(
+    "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
+).provider
+document_service = DocumentService(
+    recipe_provider=recipe_provider, repository_provider=None, blueprint_provider=BlueprintProvider()
+)
 blueprint_provider = document_service.get_blueprint
 
 
