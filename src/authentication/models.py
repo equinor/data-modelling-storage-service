@@ -56,7 +56,7 @@ class User(BaseModel):
 
     @classmethod
     def default(cls):
-        return cls(**{"user_id": "nologin", "full_name": "Not Authenticated", "email": "nologin@example.com"})
+        return cls(user_id="nologin", full_name="Not Authenticated", email="nologin@example.com")
 
     def __hash__(self):
         return hash(self.user_id)
