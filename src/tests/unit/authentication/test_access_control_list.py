@@ -1,6 +1,7 @@
 import unittest
 
-from authentication.models import AccessControlList, AccessLevel
+from authentication.models import AccessControlList, AccessLevel, User
+from config import config
 
 
 class AccessControlListTestCase(unittest.TestCase):
@@ -30,6 +31,18 @@ class AccessControlListTestCase(unittest.TestCase):
         }
         acl_dict = self.acl.dict()
         self.assertEqual(acl_dict, expected_dict)
+
+    def test_default(self):
+        acl = AccessControlList.default()
+
+        self.assertEqual(acl.owner, config.DMSS_ADMIN)
+        self.assertEqual(acl.roles, {config.DMSS_ADMIN_ROLE: AccessLevel.WRITE})
+        self.assertEqual(acl.others, AccessLevel.READ)
+
+    def test_default_with_owner_returns_acl_with_user_as_owner(self):
+        user = User(user_id="123")
+        acl = AccessControlList.default_with_owner(user)
+        self.assertEqual(acl.owner, user.user_id)
 
 
 if __name__ == "__main__":
