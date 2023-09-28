@@ -7,11 +7,12 @@ from starlette import status
 from starlette.exceptions import HTTPException
 
 from authentication.models import User
-from authentication.personal_access_token import get_user_from_pat
+from authentication.personal_access_token import extract_user_from_pat_data
 from common.exceptions import credentials_exception
 from common.utils.logging import logger
 from common.utils.mock_token_generator import mock_rsa_public_key
 from config import config
+from storage.internal.personal_access_tokens import get_pat
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
     authorizationUrl=config.OAUTH_AUTH_ENDPOINT, tokenUrl=config.OAUTH_TOKEN_ENDPOINT
@@ -75,7 +76,8 @@ async def auth_w_jwt_or_pat(
         return User.default()
 
     if personal_access_token:
-        return get_user_from_pat(personal_access_token)
+        pat_data = get_pat(personal_access_token)
+        return extract_user_from_pat_data(pat_data)
     if jwt_token:
         return auth_with_jwt(jwt_token)
 
