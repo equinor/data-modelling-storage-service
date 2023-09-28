@@ -5,14 +5,14 @@ from cachetools import TTLCache, cached
 from fastapi import HTTPException
 from starlette import status
 
-from authentication import pat_role_checker
+from authentication import get_app_role_assignments
 from authentication.models import AccessLevel, PATData, User
 from common.exceptions import credentials_exception
 from common.utils.encryption import generate_key, scrypt
 from common.utils.logging import logger
 from config import config
 from enums import AuthProviderForRoleCheck
-from storage.internal.personal_access_tokens import get_pat, insert_pat
+from storage.internal.personal_access_tokens import insert_pat
 
 MAX_TOKEN_TTL = datetime.timedelta(days=365).total_seconds()
 
@@ -21,7 +21,7 @@ MAX_TOKEN_TTL = datetime.timedelta(days=365).total_seconds()
 def get_active_roles() -> Dict[str, Set[str]]:
     match config.AUTH_PROVIDER_FOR_ROLE_CHECK:
         case AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY:
-            return pat_role_checker.get_app_role_assignments_azure_ad()
+            return get_app_role_assignments.get_app_role_assignments_azure_ad()
     return {}
 
 
@@ -50,8 +50,7 @@ def create_personal_access_token(
     return pat  # Return the secret
 
 
-def get_user_from_pat(pat: str) -> User:
-    pat_data = get_pat(pat)
+def extract_user_from_pat_data(pat_data: PATData) -> User:
     if not pat_data:
         raise credentials_exception
     if datetime.datetime.now() > pat_data.expire:
