@@ -1,9 +1,6 @@
-import datetime
 from typing import Dict, Set
 
 from cachetools import TTLCache, cached
-from fastapi import HTTPException
-from starlette import status
 
 from authentication.models import PATData, User
 from common.utils.logging import logger
@@ -21,12 +18,6 @@ def _get_active_roles() -> Dict[str, Set[str]]:
 
 
 def extract_user_from_pat_data(pat_data: PATData) -> User:
-    if datetime.datetime.now() > pat_data.expire:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Personal Access Token expired",
-            headers={"WWW-Authenticate": "Access-Key"},
-        )
     if not config.AUTH_PROVIDER_FOR_ROLE_CHECK:
         logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
     elif config.TEST_TOKEN:
