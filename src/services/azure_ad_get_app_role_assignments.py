@@ -7,7 +7,7 @@ from common.utils.graph_api_client import (
 )
 
 
-def get_app_role_assignments_azure_ad() -> Dict[str, Set[str]]:
+def get_azure_ad_app_role_assignments() -> Dict[str, Set[str]]:
     """
     Get a dictionary of assigned app roles for the Azure AD enterprise app,
     where the key is a user's user_id and the value is a list of currently assigned roles

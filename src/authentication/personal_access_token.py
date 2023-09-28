@@ -6,14 +6,14 @@ from authentication.models import PATData, User
 from common.utils.logging import logger
 from config import config
 from enums import AuthProviderForRoleCheck
-from services.azure_ad_get_app_role_assignments import get_app_role_assignments_azure_ad
+from services.azure_ad_get_app_role_assignments import get_azure_ad_app_role_assignments
 
 
 @cached(cache=TTLCache(maxsize=32, ttl=600))
 def _get_active_roles() -> Dict[str, Set[str]]:
     match config.AUTH_PROVIDER_FOR_ROLE_CHECK:
         case AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY:
-            return get_app_role_assignments_azure_ad()
+            return get_azure_ad_app_role_assignments()
     return {}
 
 
