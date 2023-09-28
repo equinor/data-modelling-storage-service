@@ -21,6 +21,12 @@
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "dmss://system/SIMOS/NamedEntity",
       "dimensions": "*"
+    },
+    {
+      "name": "bestFriend",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/NamedEntity",
+      "optional": true
     }
   ]
 }

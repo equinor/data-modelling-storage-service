@@ -139,11 +139,11 @@ class DocumentServiceTestCase(unittest.TestCase):
             "1": {
                 "_id": "1",
                 "name": "John",
-                "type": "dmss://system/SIMOS/NamedEntity",
-                "not-in-blueprint": {
+                "type": "Person",
+                "bestFriend": {
                     "name": "Lisa",
                     "type": "Person",
-                    "not-in-blueprint": {
+                    "storageUncontainedBestFriend": {
                         "address": "2",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.STORAGE.value,
