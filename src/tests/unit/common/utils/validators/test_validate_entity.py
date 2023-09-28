@@ -32,6 +32,11 @@ class ValidateEntityTestCase(unittest.TestCase):
             mock_blueprint_folder=mock_blueprint_folder,
             simos_blueprints_available_for_test=simos_blueprints,
         )
+
+        self.recipe_provider = MockStorageRecipeProvider(
+            "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
+        ).provider
+
         self.mock_document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
 
     def test_a_simple_valid_entity(self):
@@ -278,9 +283,7 @@ class ValidateEntityTestCase(unittest.TestCase):
         parent_node = tree_node_from_dict(
             test_entity,
             self.mock_document_service.get_blueprint,
-            recipe_provider=MockStorageRecipeProvider(
-                "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
-            ).provider,
+            recipe_provider=self.recipe_provider,
         )
         new_node = parent_node.get_by_path(["cars"])
         blueprint = new_node.blueprint
