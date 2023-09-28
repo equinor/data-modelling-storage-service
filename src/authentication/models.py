@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
-from pydantic import UUID4, BaseModel
+from pydantic import BaseModel
 
 from config import config
 
@@ -100,7 +100,7 @@ class AccessControlList(BaseModel):
 
 class PATData(BaseModel):
     pat_hash: str | None = None
-    uuid: UUID4 = str(uuid4())
+    uuid: str = str(uuid4())
     user_id: str
     # TODO: Roles should be checked on every request, as they mey be updated after the PAT has been created
     roles: List[str] = []
