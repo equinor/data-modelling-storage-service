@@ -77,6 +77,8 @@ async def auth_w_jwt_or_pat(
 
     if personal_access_token:
         pat_data = get_pat(personal_access_token)
+        if not pat_data:
+            raise credentials_exception
         return extract_user_from_pat_data(pat_data)
     if jwt_token:
         return auth_with_jwt(jwt_token)

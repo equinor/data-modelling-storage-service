@@ -7,7 +7,6 @@ from starlette import status
 
 from authentication import get_app_role_assignments
 from authentication.models import AccessLevel, PATData, User
-from common.exceptions import credentials_exception
 from common.utils.encryption import generate_key, scrypt
 from common.utils.logging import logger
 from config import config
@@ -51,8 +50,6 @@ def create_personal_access_token(
 
 
 def extract_user_from_pat_data(pat_data: PATData) -> User:
-    if not pat_data:
-        raise credentials_exception
     if datetime.datetime.now() > pat_data.expire:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
