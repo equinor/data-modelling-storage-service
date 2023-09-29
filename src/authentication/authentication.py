@@ -9,7 +9,7 @@ from starlette import status
 from starlette.exceptions import HTTPException
 
 from authentication.models import User
-from authentication.personal_access_token import extract_user_from_pat_data
+from authentication.utils import extract_user_from_pat_data
 from common.utils.logging import logger
 from common.utils.mock_token_generator import mock_rsa_public_key
 from config import config
