@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from pydantic import BaseModel
 from starlette import status as request_status
 
@@ -92,10 +91,3 @@ class ValidationException(ApplicationException):
         super().__init__(message, debug, data)
         self.type = self.__class__.__name__
         self.status = request_status.HTTP_400_BAD_REQUEST
-
-
-credentials_exception = HTTPException(
-    status_code=request_status.HTTP_401_UNAUTHORIZED,
-    detail="Token validation failed",
-    headers={"WWW-Authenticate": "Bearer"},
-)

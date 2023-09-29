@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import requests
 from cachetools import TTLCache, cached
 from fastapi import Security
@@ -9,11 +7,13 @@ from starlette import status
 from starlette.exceptions import HTTPException
 
 from authentication.models import User
-from authentication.personal_access_token import extract_user_from_pat_data
-from common.exceptions import credentials_exception
+from authentication.utils import remove_pat_roles_not_assigned_by_auth_provider
 from common.utils.logging import logger
 from common.utils.mock_token_generator import mock_rsa_public_key
 from config import config
+from services.azure_ad_get_app_role_assignments import (
+    get_role_assignments_from_auth_provider,
+)
 from storage.internal.personal_access_tokens import get_pat
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
@@ -22,6 +22,12 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
 
 oauth2_scheme_optional_header = OAuth2AuthorizationCodeBearer(
     authorizationUrl=config.OAUTH_AUTH_ENDPOINT, tokenUrl=config.OAUTH_TOKEN_ENDPOINT, auto_error=False
+)
+
+credentials_exception = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Token validation failed",
+    headers={"WWW-Authenticate": "Bearer"},
 )
 
 
@@ -68,6 +74,22 @@ def auth_with_jwt(jwt_token: str = Security(oauth2_scheme)) -> User:
     return user
 
 
+def auth_with_pat(personal_access_token: str) -> User:
+    pat_data = get_pat(personal_access_token)
+    if not pat_data:
+        raise credentials_exception
+    if pat_data.is_expired():
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Personal Access Token expired",
+            headers={"WWW-Authenticate": "Access-Key"},
+        )
+    application_role_assignments = get_role_assignments_from_auth_provider()
+    pat_with_updated_roles = remove_pat_roles_not_assigned_by_auth_provider(pat_data, application_role_assignments)
+    user = User(**pat_with_updated_roles.dict())
+    return user
+
+
 # This dependency function will try to use one of 'Access-Key' or 'Authorization' headers for authentication.
 # 'Access-Key' takes precedence.
 async def auth_w_jwt_or_pat(
@@ -76,19 +98,8 @@ async def auth_w_jwt_or_pat(
 ) -> User:
     if not config.AUTH_ENABLED:
         return User.default()
-
     if personal_access_token:
-        pat_data = get_pat(personal_access_token)
-        if not pat_data:
-            raise credentials_exception
-        if datetime.now() > pat_data.expire:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Personal Access Token expired",
-                headers={"WWW-Authenticate": "Access-Key"},
-            )
-        return extract_user_from_pat_data(pat_data)
+        return auth_with_pat(personal_access_token)
     if jwt_token:
         return auth_with_jwt(jwt_token)
-
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
