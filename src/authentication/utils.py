@@ -12,5 +12,5 @@ def remove_pat_roles_not_assigned_by_auth_provider(pat_data: PATData, active_rol
         logger.warn("PAT role assignment validation skipped due to 'TEST_TOKEN=True'")
     else:
         pat_roles: Set[str] = set(pat_data.roles)
-        pat_data.roles = list(pat_roles.intersection(active_roles[pat_data.user_id]))
+        pat_data.roles = list(pat_roles & active_roles[pat_data.user_id])
     return pat_data
