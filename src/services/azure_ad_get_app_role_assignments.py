@@ -1,10 +1,22 @@
 from typing import Dict, List, Set
 
+from cachetools import TTLCache, cached
+
 from common.utils.graph_api_client import (
     AppRoleAssignment,
     get_app_roles,
     get_app_roles_assigned_to,
 )
+from config import config
+from enums import AuthProviderForRoleCheck
+
+
+@cached(cache=TTLCache(maxsize=32, ttl=600))
+def get_role_assignments_from_auth_provider() -> Dict[str, Set[str]]:
+    match config.AUTH_PROVIDER_FOR_ROLE_CHECK:
+        case AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY:
+            return get_azure_ad_app_role_assignments()
+    return {}
 
 
 def get_azure_ad_app_role_assignments() -> Dict[str, Set[str]]:

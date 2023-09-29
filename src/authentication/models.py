@@ -117,3 +117,6 @@ class PATData(BaseModel):
             "scope": self.scope.name,
             "expire": str(self.expire),
         }
+
+    def is_expired(self):
+        return datetime.now() > self.expire
