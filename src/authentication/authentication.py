@@ -84,9 +84,10 @@ def auth_with_pat(personal_access_token: str) -> User:
             detail="Personal Access Token expired",
             headers={"WWW-Authenticate": "Access-Key"},
         )
-    application_role_assignments = get_role_assignments_from_auth_provider()
-    pat_with_updated_roles = remove_pat_roles_not_assigned_by_auth_provider(pat_data, application_role_assignments)
-    user = User(**pat_with_updated_roles.dict())
+    if not config.TEST_TOKEN and config.AUTH_PROVIDER_FOR_ROLE_CHECK:
+        active_roles = get_role_assignments_from_auth_provider()
+        pat_data = remove_pat_roles_not_assigned_by_auth_provider(pat_data, active_roles)
+    user = User(**pat_data.dict())
     return user
 
 
