@@ -4,8 +4,16 @@
 
 ### Using docker
 
+First spin up DMSS with
+
 ```
-docker-compose run --rm api behave
+docker-compose up
+```
+
+and then run
+
+```
+docker-compose run --rm dmss behave
 ```
 
 ### Using PyCharm
