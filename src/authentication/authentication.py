@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import requests
 from cachetools import TTLCache, cached
 from fastapi import Security
@@ -86,7 +84,7 @@ async def auth_w_jwt_or_pat(
         pat_data = get_pat(personal_access_token)
         if not pat_data:
             raise credentials_exception
-        if datetime.now() > pat_data.expire:
+        if pat_data.is_expired():
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Personal Access Token expired",
