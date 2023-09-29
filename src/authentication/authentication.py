@@ -71,6 +71,19 @@ def auth_with_jwt(jwt_token: str = Security(oauth2_scheme)) -> User:
     return user
 
 
+def auth_with_pat(personal_access_token: str) -> User:
+    pat_data = get_pat(personal_access_token)
+    if not pat_data:
+        raise credentials_exception
+    if pat_data.is_expired():
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Personal Access Token expired",
+            headers={"WWW-Authenticate": "Access-Key"},
+        )
+    return extract_user_from_pat_data(pat_data)
+
+
 # This dependency function will try to use one of 'Access-Key' or 'Authorization' headers for authentication.
 # 'Access-Key' takes precedence.
 async def auth_w_jwt_or_pat(
@@ -81,16 +94,7 @@ async def auth_w_jwt_or_pat(
         return User.default()
 
     if personal_access_token:
-        pat_data = get_pat(personal_access_token)
-        if not pat_data:
-            raise credentials_exception
-        if pat_data.is_expired():
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Personal Access Token expired",
-                headers={"WWW-Authenticate": "Access-Key"},
-            )
-        return extract_user_from_pat_data(pat_data)
+        return auth_with_pat(personal_access_token)
     if jwt_token:
         return auth_with_jwt(jwt_token)
 
