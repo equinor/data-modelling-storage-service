@@ -7,7 +7,7 @@ from starlette import status
 from starlette.exceptions import HTTPException
 
 from authentication.models import User
-from authentication.utils import extract_user_from_pat_data
+from authentication.utils import remove_pat_roles_not_assigned_by_auth_provider
 from common.utils.logging import logger
 from common.utils.mock_token_generator import mock_rsa_public_key
 from config import config
@@ -81,7 +81,9 @@ def auth_with_pat(personal_access_token: str) -> User:
             detail="Personal Access Token expired",
             headers={"WWW-Authenticate": "Access-Key"},
         )
-    return extract_user_from_pat_data(pat_data)
+    updated_pat_data = remove_pat_roles_not_assigned_by_auth_provider(pat_data)
+    user = User(**updated_pat_data.dict())
+    return user
 
 
 # This dependency function will try to use one of 'Access-Key' or 'Authorization' headers for authentication.
