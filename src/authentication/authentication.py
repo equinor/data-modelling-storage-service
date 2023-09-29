@@ -11,6 +11,7 @@ from authentication.utils import remove_pat_roles_not_assigned_by_auth_provider
 from common.utils.logging import logger
 from common.utils.mock_token_generator import mock_rsa_public_key
 from config import config
+from services.azure_ad_get_app_role_assignments import get_active_roles
 from storage.internal.personal_access_tokens import get_pat
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
@@ -81,7 +82,8 @@ def auth_with_pat(personal_access_token: str) -> User:
             detail="Personal Access Token expired",
             headers={"WWW-Authenticate": "Access-Key"},
         )
-    updated_pat_data = remove_pat_roles_not_assigned_by_auth_provider(pat_data)
+    active_roles = get_active_roles()
+    updated_pat_data = remove_pat_roles_not_assigned_by_auth_provider(pat_data, active_roles=active_roles)
     user = User(**updated_pat_data.dict())
     return user
 
