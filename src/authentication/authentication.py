@@ -10,7 +10,6 @@ from starlette.exceptions import HTTPException
 
 from authentication.models import User
 from authentication.personal_access_token import extract_user_from_pat_data
-from common.exceptions import credentials_exception
 from common.utils.logging import logger
 from common.utils.mock_token_generator import mock_rsa_public_key
 from config import config
@@ -22,6 +21,12 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
 
 oauth2_scheme_optional_header = OAuth2AuthorizationCodeBearer(
     authorizationUrl=config.OAUTH_AUTH_ENDPOINT, tokenUrl=config.OAUTH_TOKEN_ENDPOINT, auto_error=False
+)
+
+credentials_exception = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Token validation failed",
+    headers={"WWW-Authenticate": "Bearer"},
 )
 
 
