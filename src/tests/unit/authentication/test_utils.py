@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime
-from unittest import mock, skip
+from unittest import mock
 
 from authentication.models import AccessLevel, PATData
 from authentication.utils import remove_pat_roles_not_assigned_by_auth_provider
@@ -22,7 +22,6 @@ class RemovePatRolesNotAssignedByAuthProviderTestCase(unittest.TestCase):
         config.TEST_TOKEN = self.original_config.TEST_TOKEN
         config.AUTH_PROVIDER_FOR_ROLE_CHECK = self.original_config.AUTH_PROVIDER_FOR_ROLE_CHECK
 
-    @skip(reason="Now throws due to keyError. Trying to fetch roleAssignments['user_id'] which does not exist.")
     def test_assert_returns_no_roles_when_roles_from_auth_provider_is_empty(self):
         self.mock_role_provider.get_assignments.return_value = {}
 
