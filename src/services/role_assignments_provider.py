@@ -2,13 +2,13 @@ from typing import Dict, List, Set
 
 from cachetools import TTLCache, cached
 
-from common.utils.graph_api_client import (
+from config import config
+from enums import AuthProviderForRoleCheck
+from services.graph_api_client import (
     AppRoleAssignment,
     get_app_roles,
     get_app_roles_assigned_to,
 )
-from config import config
-from enums import AuthProviderForRoleCheck
 
 
 class RoleAssignmentsProvider:
