@@ -19,8 +19,6 @@ def remove_pat_roles_not_assigned_by_auth_provider(
     else:
         pat_roles: Set[str] = set(pat_data.roles)
         application_role_assignments: dict[str, set[str]] = role_assignments_provider.get_assignments()
-        app_role_assignments_for_user = application_role_assignments.get(
-            pat_data.user_id, set()
-        )  # default is empty set
+        app_role_assignments_for_user = application_role_assignments.get(pat_data.user_id, set())
         pat_data.roles = list(pat_roles & app_role_assignments_for_user)
     return pat_data
