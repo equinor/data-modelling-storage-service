@@ -43,7 +43,7 @@ def _add_document_to_data_source(
     )
 
     try:
-        if document_service.get_document(Address(new_node.entity["name"], data_source_id), depth=99):
+        if document_service.get_document(Address(new_node.entity["name"], data_source_id), depth=2):
             raise ValidationException(
                 message=f"A root package named '{new_node.entity['name']}' already exists",
                 data={"dataSource": data_source_id, "document": document},
@@ -79,7 +79,7 @@ def _add_document_to_entity_or_list(
     entity: Entity = Entity(**document)
 
     try:
-        target: Node = document_service.get_document(address, depth=99)
+        target: Node = document_service.get_document(address, depth=2)
     except NotFoundException:
         target = None
 
