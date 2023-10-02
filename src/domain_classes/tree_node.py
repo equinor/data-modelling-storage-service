@@ -147,20 +147,8 @@ class NodeBase:
     def is_array(self):
         return isinstance(self, ListNode)
 
-    def is_complex_array(self):
-        return self.attribute.is_matrix
-
-    def is_single(self):
-        return isinstance(self, Node)
-
     def is_root(self):
         if self.parent is None:
-            return True
-        else:
-            return False
-
-    def is_leaf(self):
-        if len(self.children) == 0:
             return True
         else:
             return False
@@ -191,13 +179,6 @@ class NodeBase:
                     new_node.parent = node
                     node.children[i] = new_node
 
-    def has_children(self):
-        return len(self.children) > 0
-
-    def contains(self, name: str):
-        keys = [child.key for child in self.children]
-        return name in keys
-
     def get_by_path(self, keys: List[str]):
         """
         Uses a list of keys to find and return the correct child node
@@ -208,18 +189,6 @@ class NodeBase:
             return self
 
         next_node = next((x for x in self.children if x.key == keys[0].strip("[]")), None)
-        if not next_node:
-            return
-        keys.pop(0)
-        next_node = next_node.get_by_path(keys)
-        return next_node
-
-    def get_by_ref_part(self, keys: List[str]):
-        # TODO: Only supports AttributeItems now
-        if len(keys) == 0:
-            return self
-
-        next_node = next((x for x in self.children if x.key == keys[0]), None)
         if not next_node:
             return
         keys.pop(0)
