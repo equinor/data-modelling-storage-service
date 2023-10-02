@@ -26,36 +26,11 @@ def flatten_dict(dd, separator="_", prefix=""):
     )
 
 
-class TreenodeTestCase(unittest.TestCase):
+class TreeNodeHelpersTestCase(unittest.TestCase):
     def setUp(self) -> None:
         self.recipe_provider = MockStorageRecipeProvider(
             "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
         ).provider
-
-    def test_is_root(self):
-        root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
-        root = Node(
-            key="root",
-            uid="1",
-            entity=root_data,
-            blueprint_provider=mock_document_service.get_blueprint,
-            attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
-            recipe_provider=self.recipe_provider,
-        )
-
-        nested_data = {"name": "Nested", "description": "", "type": "Garden"}
-        nested = Node(
-            key="nested",
-            uid="",
-            entity=nested_data,
-            blueprint_provider=mock_document_service.get_blueprint,
-            parent=root,
-            attribute=BlueprintAttribute(name="", attribute_type="Garden"),
-            recipe_provider=self.recipe_provider,
-        )
-
-        assert root.is_root()
-        assert not nested.is_root()
 
     def test_replace(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
