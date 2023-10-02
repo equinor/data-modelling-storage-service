@@ -2,8 +2,6 @@ import logging
 
 from config import config
 
-uvicorn_logger = logging.getLogger("uvicorn")
-
 logger = logging.getLogger("DMSS-API")
 logger.setLevel(config.LOGGER_LEVEL.upper())
 formatter = logging.Formatter("%(levelname)s:%(asctime)s %(message)s")
