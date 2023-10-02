@@ -10,7 +10,7 @@ def remove_pat_roles_not_assigned_by_auth_provider(
     pat_data: PATData, role_assignments_provider: RoleAssignmentsProvider
 ) -> PATData:
     """
-    Takes app role assignments and removes roles in patData that are not defined by app role assignments.
+    Takes app role assignments and removes roles in pat_data that are not defined by app role assignments.
     """
     if not config.AUTH_PROVIDER_FOR_ROLE_CHECK:
         logger.warn("PAT role assignment validation is not supported with the current OAuth provider.")
