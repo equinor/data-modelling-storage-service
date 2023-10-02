@@ -60,16 +60,6 @@ class NodeBase:
             return create_default_storage_recipe()
         return context_recipes
 
-    def is_empty(self):
-        return not self.entity
-
-    @property
-    def parent_node_id(self):
-        if not self.parent:
-            return None
-
-        return self.parent.node_id
-
     @property
     def storage_contained(self):
         if not self.parent or self.parent.type == SIMOS.DATASOURCE.value:
@@ -147,19 +137,13 @@ class NodeBase:
     def is_array(self):
         return isinstance(self, ListNode)
 
-    def is_root(self):
-        if self.parent is None:
-            return True
-        else:
-            return False
-
     def add_child(self, child_node):
         child_node.parent = self
         self.children.append(child_node)
 
     def depth(self):
         """Depth of current node"""
-        if self.is_root():
+        if self.parent is None:
             return 0
         else:
             return 1 + self.parent.depth()
@@ -245,9 +229,6 @@ class Node(NodeBase):
             key, attribute, uid, parent, blueprint_provider, entity=entity, recipe_provider=recipe_provider
         )
         self.entity: dict = entity if entity else {}
-
-    def is_root(self):
-        return super().is_root()
 
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
     def update(self, data: dict):

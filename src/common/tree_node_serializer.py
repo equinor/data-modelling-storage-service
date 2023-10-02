@@ -69,8 +69,8 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
     Rebuilds the entity as it should be stored based on the passed child entities that can be either contained
     documents, or references.
     """
-    if node.is_empty():
-        return node.entity
+    if not node.entity:
+        return {}
     data = {}
     if node.uid and node.type != SIMOS.REFERENCE.value:
         data = {"_id": node.uid}
