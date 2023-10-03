@@ -1,16 +1,12 @@
 import unittest
 
 from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
-from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
 from tests.unit.tree_functionality.mock_data_for_tree_tests.get_node_for_tree_tests import (
     get_engine_package_node,
-)
-from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_document_service_for_tree_tests import (
-    mock_document_service,
 )
 
 
@@ -168,7 +164,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="root",
             uid="1",
             entity=root_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
         )
 
@@ -177,7 +173,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="nested",
             uid="",
             entity=nested_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
@@ -187,7 +183,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="nested",
             uid="",
             entity=nested_2_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=nested,
             attribute=BlueprintAttribute(name="", attribute_type="Bush"),
         )
@@ -202,7 +198,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="",
             uid="1",
             entity=root_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
         )
 
@@ -211,7 +207,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="nested",
             uid="",
             entity=nested_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
@@ -221,7 +217,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="nested",
             uid="",
             entity=nested_2_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=nested,
             attribute=BlueprintAttribute(name="", attribute_type="Bush"),
         )
@@ -231,7 +227,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="reference",
             uid="2",
             entity=nested_2_reference_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=nested_2,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
@@ -241,7 +237,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="list",
             uid="",
             entity=list_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="Bush"),
         )
@@ -251,18 +247,18 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="0",
             uid="",
             entity=item_1_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=list_node,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
 
-        assert root.node_id == "1"
-        assert nested.node_id == "1.nested"
-        assert nested_2.node_id == "1.nested.nested"
-        assert nested_2.node_id == "1.nested.nested"
-        assert reference.node_id == "1.nested.nested.reference"
-        assert list_node.node_id == "1.list"
-        assert item_1.node_id == "1.list.0"
+        self.assertEqual(root.node_id, "1")
+        self.assertEqual(nested.node_id, "1.nested")
+        self.assertEqual(nested_2.node_id, "1.nested.nested")
+        self.assertEqual(nested_2.node_id, "1.nested.nested")
+        self.assertEqual(reference.node_id, "1.nested.nested.reference")
+        self.assertEqual(list_node.node_id, "1.list")
+        self.assertEqual(item_1.node_id, "1.list.0")
 
     def test_search(self):
         document_1 = {
@@ -293,11 +289,11 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
 
         child_1 = root.search("1.nested.nested")
 
-        assert child_1.node_id == "1.nested.nested"
+        self.assertEqual(child_1.node_id, "1.nested.nested")
 
         child_2 = root.search("1.nested.nested.reference")
 
-        assert child_2.node_id == "1.nested.nested.reference"
+        self.assertEqual(child_2.node_id, "1.nested.nested.reference")
 
     def test_get_by_keys(self):
         document_1 = {
@@ -326,11 +322,11 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
 
         child_1 = root.get_by_path(["nested", "nested"])
 
-        assert child_1.node_id == "1.nested.nested"
+        self.assertEqual(child_1.node_id, "1.nested.nested")
 
         child_2 = root.get_by_path(["nested", "nested", "reference"])
 
-        assert child_2.uid == "2"
+        self.assertEqual(child_2.uid, "2")
 
     def test_update(self):
         document_1 = {
@@ -380,7 +376,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
 
         root.update(update_0)
 
-        assert get_and_print_diff(tree_node_to_dict(root), {**update_0, "_id": "1"}) == []
+        self.assertDictEqual(tree_node_to_dict(root), {**update_0, "_id": "1"})
 
         update_1 = {
             "name": "New-name",
@@ -403,7 +399,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
 
         root.update(update_1)
 
-        assert get_and_print_diff(tree_node_to_dict(root), {**update_1, "_id": "1"}) == []
+        self.assertDictEqual(tree_node_to_dict(root), {**update_1, "_id": "1"})
 
         update_2 = {
             "name": "New-name",
@@ -426,7 +422,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
 
         root.update(update_2)
 
-        assert get_and_print_diff(tree_node_to_dict(root), {**update_2, "_id": "1"}) == []
+        self.assertDictEqual(tree_node_to_dict(root), {**update_2, "_id": "1"})
 
         expected = {
             "_id": "1",
@@ -454,11 +450,11 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         expected_flat = flatten_dict(expected)
         actual_flat = flatten_dict(tree_node_to_dict(root))
         # less than only works on flat dictionaries.
-        assert expected_flat.items() <= actual_flat.items()
+        self.assertTrue(expected_flat.items() <= actual_flat.items())
 
     def test_is_storage_contained(self):
         engine_package_node = get_engine_package_node()
         engine_ref_node = engine_package_node.children[0].children[0]
 
-        assert engine_ref_node.storage_contained is True
-        assert engine_ref_node.parent.storage_recipes[0].is_contained(engine_ref_node.attribute.name) is True
+        self.assertTrue(engine_ref_node.storage_contained)
+        self.assertTrue(engine_ref_node.parent.storage_recipes[0].is_contained(engine_ref_node.attribute.name))
