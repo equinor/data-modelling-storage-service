@@ -56,7 +56,6 @@ def update(
     id_address: str,
     data: Json = Form(...),
     files: Optional[List[UploadFile]] = File(None),
-    update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Update an Existing Document in the Database.
@@ -71,7 +70,6 @@ def update(
       - The PROTOCOL is optional, and the default is dmss.
     - document (dict): The document to replace the previous version.
     - files: Optional list of files to be stored as part of this document.
-    - update_uncontained (bool): Optional flag specifying whether to also update uncontained attributes in the document.
     - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:
@@ -89,7 +87,6 @@ def update(
         address=Address.from_absolute(id_address),
         data=data,
         files=files,
-        update_uncontained=update_uncontained,
         document_service=document_service,
     )
 
@@ -100,7 +97,6 @@ def add_document(
     address: str,
     document: Json = Form(...),
     files: Optional[List[UploadFile]] = File(None),
-    update_uncontained: Optional[bool] = False,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Add a document to a package or a data source using an address.
@@ -118,7 +114,6 @@ def add_document(
       - The PROTOCOL is optional, and the default is dmss.
     - document (dict): The document that is to be stored.
     - files: Optional list of files to be stored as part of this document.
-    - update_uncontained (bool): Optional flag specifying whether to also update uncontained attributes in the document.
     - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:
@@ -137,7 +132,6 @@ def add_document(
         address=Address.from_absolute(address),
         document=document,
         files=files,
-        update_uncontained=update_uncontained,
         document_service=document_service,
     )
 

@@ -109,14 +109,12 @@ class DocumentService:
         data_source_id: str,
         repository=None,
         path="",
-        update_uncontained: bool = False,
         combined_document_meta: dict | None = None,
         initial: bool = False,
     ) -> Dict:
         """
-        Recursively saves a Node.
-        Digs down to the leaf children, and based on storageContained,
-        either saves the entity and returns the Reference, OR returns the entire entity.
+        Saves a Node.
+        Converting uncontained child entities to references.
 
         node: The Node to save
         path: A Filesystem equivalent path for this node. Used when writing zip-files.
@@ -132,9 +130,7 @@ class DocumentService:
 
         """
         if initial and node.storage_contained:
-            self.save(
-                node.parent, data_source_id, repository, path, update_uncontained, combined_document_meta, initial
-            )
+            self.save(node.parent, data_source_id, repository, path, combined_document_meta, initial)
         if not node.entity:
             return {}
         # If not passed a custom repository to save into, use the DocumentService's storage
@@ -144,7 +140,6 @@ class DocumentService:
         # If the node is a package, we build the path string to be used by filesystem like repositories.
         # Also, check for duplicate names in the package.
         if node.type == SIMOS.PACKAGE.value:
-            path = f"{path}/{node.entity['name']}/" if path else f"{node.entity['name']}"
             if len(node.children) > 0:
                 packageContent = node.children[0]
                 contentListNames = []
@@ -157,16 +152,6 @@ class DocumentService:
                             )
 
                         contentListNames.append(child.entity["name"])
-
-        if update_uncontained:  # If flag is set, dig down and save uncontained documents
-            for child in node.children:
-                if child.is_array():
-                    [
-                        self.save(x, data_source_id, repository, path, update_uncontained, combined_document_meta)
-                        for x in child.children
-                    ]
-                else:
-                    self.save(child, data_source_id, repository, path, update_uncontained, combined_document_meta)
 
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)

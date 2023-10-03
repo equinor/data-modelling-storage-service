@@ -104,7 +104,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         add_document_use_case(
             address=Address("$1.box", "testing"),
             document={"type": "Box", "name": "box", "description": "box"},
-            update_uncontained=True,
             document_service=document_service,
         )
         assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
@@ -198,7 +197,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         add_document_use_case(
             address=Address("$1.chest.box", "testing"),
             document={"name": "box", "description": "box", "type": "Box"},
-            update_uncontained=True,
             document_service=document_service,
         )
 
@@ -236,7 +234,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             add_document_use_case(
                 address=Address("$1.box", "testing"),
                 document={"type": "Box", "name": "duplicate", "description": "box"},
-                update_uncontained=True,
                 document_service=document_service,
             )
 
