@@ -4,6 +4,7 @@ from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
 from tests.unit.tree_functionality.mock_data_for_tree_tests.get_node_for_tree_tests import (
     get_engine_package_node,
@@ -31,6 +32,23 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         self.recipe_provider = MockStorageRecipeProvider(
             "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
         ).provider
+        simos_blueprints = [
+            "dmss://system/SIMOS/NamedEntity",
+            "dmss://system/SIMOS/Reference",
+            "dmss://system/SIMOS/Blob",
+        ]
+        mock_blueprint_folder = (
+            "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests"
+        )
+        mock_blueprints_and_file_names = {
+            "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",
+            "Garden": "Garden.blueprint.json",
+        }
+        self.mock_blueprint_provider = MockBlueprintProvider(
+            mock_blueprints_and_file_names=mock_blueprints_and_file_names,
+            mock_blueprint_folder=mock_blueprint_folder,
+            simos_blueprints_available_for_test=simos_blueprints,
+        ).get_blueprint
 
     def test_replace(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
@@ -38,7 +56,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="",
             uid="1",
             entity=root_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
             recipe_provider=self.recipe_provider,
         )
@@ -48,7 +66,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="nested",
             uid="",
             entity=nested_1_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
             recipe_provider=self.recipe_provider,
@@ -59,7 +77,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="nested",
             uid="",
             entity=nested_2_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
             recipe_provider=self.recipe_provider,
         )
