@@ -12,13 +12,20 @@ from tests.unit.tree_functionality.mock_data_for_tree_tests.get_node_for_tree_te
 
 class TreeNodeToRefDictTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        simos_blueprints = ["dmss://system/SIMOS/Package", "dmss://system/SIMOS/Reference"]
+        simos_blueprints = [
+            "dmss://system/SIMOS/Package",
+            "dmss://system/SIMOS/Reference",
+            "dmss://system/SIMOS/NamedEntity",
+        ]
         mock_blueprint_folder = (
             "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests"
         )
         mock_blueprints_and_file_names = {
             "uncontained_list_blueprint": "uncontained_list_blueprint.blueprint.json",
+            "FormBlueprint": "FormBlueprint.blueprint.json",
         }
+        self.form_node = get_form_example_node(mock_blueprint_folder, mock_blueprints_and_file_names, simos_blueprints)
+
         self.mock_blueprint_provider = MockBlueprintProvider(
             mock_blueprints_and_file_names=mock_blueprints_and_file_names,
             mock_blueprint_folder=mock_blueprint_folder,
@@ -98,15 +105,14 @@ class TreeNodeToRefDictTestCase(unittest.TestCase):
         )
 
     def test_tree_node_to_ref_dict_2(self):
-        form_node = get_form_example_node()
-        form_dict = tree_node_to_ref_dict(form_node)
+        form_dict = tree_node_to_ref_dict(self.form_node)
         assert form_dict["inputEntity"] == {
             "type": SIMOS.REFERENCE.value,
             "referenceType": REFERENCE_TYPES.LINK.value,
             "address": "dmss://DemoDataSource/$product1",
         }
         # Check that optional attributes that don't exist on the node entity are not added by tree_node_to_ref_dict()
-        assert "aOptionalNestedObject" not in form_node.entity
+        assert "aOptionalNestedObject" not in self.form_node.entity
         assert "aOptionalNestedObject" not in form_dict
 
     def test_tree_node_to_ref_dict_for_references(self):
