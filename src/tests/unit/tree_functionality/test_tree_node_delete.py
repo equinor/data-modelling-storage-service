@@ -3,98 +3,99 @@ import unittest
 from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import Node
-from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
-from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_document_service_for_tree_tests import (
-    mock_document_service,
-)
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 
 
 class TreeNodeDeleteTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.recipe_provider = MockStorageRecipeProvider(
-            "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
-        ).provider
+        simos_blueprints = []
+        mock_blueprint_folder = (
+            "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests"
+        )
+        mock_blueprints_and_file_names = {
+            "Blueprint4": "Blueprint4.blueprint.json",
+            "Bush": "Bush.blueprint.json",
+            "Garden": "Garden.blueprint.json",
+            "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",
+        }
+        self.mock_blueprint_provider = MockBlueprintProvider(
+            mock_blueprints_and_file_names=mock_blueprints_and_file_names,
+            mock_blueprint_folder=mock_blueprint_folder,
+            simos_blueprints_available_for_test=simos_blueprints,
+        ).get_blueprint
 
     def test_delete_root_child(self):
-        root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
+        root_data = {"_id": 1, "name": "root", "type": "all_contained_cases_blueprint"}
         root = Node(
             key="root",
             uid="1",
             entity=root_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
-            recipe_provider=self.recipe_provider,
         )
 
-        nested_1_data = {"name": "Nested1", "description": "", "type": "Garden"}
+        nested_1_data = {"name": "Nested1", "type": "Garden"}
         nested_1 = Node(
             key="nested",
             uid="",
             entity=nested_1_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
-            recipe_provider=self.recipe_provider,
         )
 
         actual_before = {
             "_id": "1",
             "name": "root",
-            "description": "",
             "type": "all_contained_cases_blueprint",
-            "nested": {"name": "Nested1", "description": "", "type": "Garden"},
+            "nested": {"name": "Nested1", "type": "Garden"},
         }
 
         assert actual_before == tree_node_to_dict(root)
 
         root.remove_by_path(["nested"])
 
-        actual_after_delete = {"_id": "1", "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
+        actual_after_delete = {"_id": "1", "name": "root", "type": "all_contained_cases_blueprint"}
 
         assert actual_after_delete == tree_node_to_dict(root)
 
     def test_delete_nested_child(self):
-        root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
+        root_data = {"_id": 1, "name": "root", "type": "all_contained_cases_blueprint"}
         root = Node(
             key="root",
             uid="1",
             entity=root_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
-            recipe_provider=self.recipe_provider,
         )
 
-        nested_1_data = {"name": "Nested1", "description": "", "type": "Garden"}
+        nested_1_data = {"name": "Nested1", "type": "Garden"}
         nested_1 = Node(
             key="nested",
             uid="",
             entity=nested_1_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
-            recipe_provider=self.recipe_provider,
         )
-        nested_2_data = {"name": "Nested2", "description": "", "type": "Bush"}
+        nested_2_data = {"name": "Nested2", "type": "Bush"}
         nested_2 = Node(
             key="nested2",
             uid="",
             entity=nested_2_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=nested_1,
             attribute=BlueprintAttribute(name="", attribute_type="Bush"),
-            recipe_provider=self.recipe_provider,
         )
 
         actual_before = {
             "_id": "1",
             "name": "root",
-            "description": "",
             "type": "all_contained_cases_blueprint",
             "nested": {
                 "name": "Nested1",
-                "description": "",
                 "type": "Garden",
-                "nested2": {"name": "Nested2", "description": "", "type": "Bush"},
+                "nested2": {"name": "Nested2", "type": "Bush"},
             },
         }
 
@@ -105,9 +106,8 @@ class TreeNodeDeleteTest(unittest.TestCase):
         actual_after_delete = {
             "_id": "1",
             "name": "root",
-            "description": "",
             "type": "all_contained_cases_blueprint",
-            "nested": {"name": "Nested1", "description": "", "type": "Garden"},
+            "nested": {"name": "Nested1", "type": "Garden"},
         }
 
         assert actual_after_delete == tree_node_to_dict(root)
@@ -116,40 +116,35 @@ class TreeNodeDeleteTest(unittest.TestCase):
         document = {
             "_id": "1",
             "name": "root",
-            "description": "",
             "type": "Blueprint4",
             "a_list": [
                 {
                     "name": "Nested1",
-                    "description": "",
                     "type": "Blueprint4",
                     "a_list": [
-                        {"name": "Nested2-index-0", "description": "", "type": "Blueprint4", "a_list": []},
-                        {"name": "Nested2-index-1", "description": "", "type": "Blueprint4", "a_list": []},
+                        {"name": "Nested2-index-0", "type": "Blueprint4", "a_list": []},
+                        {"name": "Nested2-index-1", "type": "Blueprint4", "a_list": []},
                     ],
                 }
             ],
         }
         root = tree_node_from_dict(
             document,
-            mock_document_service.get_blueprint,
+            self.mock_blueprint_provider,
             uid=document.get("_id"),
-            recipe_provider=self.recipe_provider,
         )
 
         actual_before = {
             "_id": "1",
             "name": "root",
-            "description": "",
             "type": "Blueprint4",
             "a_list": [
                 {
                     "name": "Nested1",
-                    "description": "",
                     "type": "Blueprint4",
                     "a_list": [
-                        {"name": "Nested2-index-0", "description": "", "type": "Blueprint4", "a_list": []},
-                        {"name": "Nested2-index-1", "description": "", "type": "Blueprint4", "a_list": []},
+                        {"name": "Nested2-index-0", "type": "Blueprint4", "a_list": []},
+                        {"name": "Nested2-index-1", "type": "Blueprint4", "a_list": []},
                     ],
                 }
             ],
@@ -162,14 +157,12 @@ class TreeNodeDeleteTest(unittest.TestCase):
         actual_after_delete = {
             "_id": "1",
             "name": "root",
-            "description": "",
             "type": "Blueprint4",
             "a_list": [
                 {
                     "name": "Nested1",
-                    "description": "",
                     "type": "Blueprint4",
-                    "a_list": [{"name": "Nested2-index-0", "description": "", "type": "Blueprint4", "a_list": []}],
+                    "a_list": [{"name": "Nested2-index-0", "type": "Blueprint4", "a_list": []}],
                 }
             ],
         }
