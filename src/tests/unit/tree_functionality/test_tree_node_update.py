@@ -12,64 +12,84 @@ from features.document.use_cases.add_document_use_case import add_document_use_c
 from features.document.use_cases.update_document_use_case import (
     update_document_use_case,
 )
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
+from tests.unit.mock_data.mock_document_service import get_mock_document_service
 from tests.unit.tree_functionality.mock_data_for_tree_tests.get_node_for_tree_tests import (
     get_form_example_node,
-)
-from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_blueprint_provider_for_tree_tests import (
-    BlueprintProvider,
-)
-from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_document_service_for_tree_tests import (
-    get_mock_document_service_for_tree_tests,
 )
 
 
 class DocumentServiceTestCase(unittest.TestCase):
-    def test_update_single_optional_complex(self):
-        repository = mock.Mock()
+    def setUp(self) -> None:
+        simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
+        mock_blueprint_folder = (
+            "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests"
+        )
+        mock_blueprints_and_file_names = {
+            "Bush": "Bush.blueprint.json",
+            "Box": "Box.blueprint.json",
+            "ChestWithOptionalBoxInside": "ChestWithOptionalBoxInside.blueprint.json",
+            "RoomWithOptionalChestInside": "RoomWithOptionalChestInside.blueprint.json",
+            "SpecialChild": "SpecialChild.blueprint.json",
+            "SpecialChildNoInherit": "SpecialChildNoInherit.blueprint.json",
+            "ExtraSpecialChild": "ExtraSpecialChild.blueprint.json",
+            "Parent": "Parent.blueprint.json",
+            "ParentWithListOfChildren": "ParentWithListOfChildren.blueprint.json",
+            "WrappsParentWithList": "WrappsParentWithList.blueprint.json",
+            "BaseChild": "BaseChild.blueprint.json",
+        }
 
+        def mock_get(document_id: str):
+            return deepcopy(self.doc_storage[document_id])
+
+        def mock_update(entity: dict, *args, **kwargs):
+            self.doc_storage[entity["_id"]] = entity
+            return None
+
+        self.repository = mock.Mock()
+        self.repository.get = mock_get
+        self.repository.update = mock_update
+        self.doc_storage = {}
+
+        self.mock_blueprint_provider = MockBlueprintProvider(
+            mock_blueprints_and_file_names=mock_blueprints_and_file_names,
+            mock_blueprint_folder=mock_blueprint_folder,
+            simos_blueprints_available_for_test=simos_blueprints,
+        )
+
+        def repository_provider(data_source_id, user: User):
+            return self.repository
+
+        self.mock_document_service = get_mock_document_service(
+            blueprint_provider=self.mock_blueprint_provider, repository_provider=repository_provider
+        )
+
+    def test_update_single_optional_complex(self):
         chest = {
             "_id": "1",
             "name": "TreasureChest",
             "description": "",
             "type": "ChestWithOptionalBoxInside",
-            "im_optional": {},
         }
-
-        doc_storage = {"1": chest}
-
-        def mock_get(document_id: str):
-            return deepcopy(doc_storage[document_id])
-
-        def mock_update(entity: dict, *args, **kwargs):
-            doc_storage[entity["_id"]] = entity
-            return None
-
-        def repository_provider(data_source_id, user: User):
-            if data_source_id == "testing":
-                return repository
-
-        repository.get = mock_get
-        repository.update = mock_update
-        document_service = get_mock_document_service_for_tree_tests(repository_provider)
-
-        node: Node = document_service.get_document(Address("$1", "testing"))
+        self.doc_storage = {"1": chest}
+        node: Node = self.mock_document_service.get_document(Address("$1", "data-source"))
         node.update(
             {
                 "_id": "1",
-                "name": "Parent",
+                "name": "Updated",
                 "description": "Test",
                 "type": "ChestWithOptionalBoxInside",
                 "box": {},
             }
         )
-        document_service.save(node, "testing")
+        self.mock_document_service.save(node, "data-source")
 
-        assert doc_storage["1"]["box"] == {}
+        assert self.doc_storage["1"]["type"] == "ChestWithOptionalBoxInside"
+        assert self.doc_storage["1"]["name"] == "Updated"
+        assert len(self.doc_storage) == 1
 
     def test_add_optional(self):
-        repository = mock.Mock()
-
-        doc_storage = {
+        self.doc_storage = {
             "1": {
                 "_id": "1",
                 "name": "Parent",
@@ -87,31 +107,15 @@ class DocumentServiceTestCase(unittest.TestCase):
             "box": {"name": "box", "type": "Box", "description": "box"},
         }
 
-        def mock_get(document_id: str):
-            return deepcopy(doc_storage[document_id])
-
-        def mock_update(entity: dict, *args, **kwargs):
-            doc_storage[entity["_id"]] = entity
-            return None
-
-        def repository_provider(data_source_id, user: User):
-            if data_source_id == "testing":
-                return repository
-
-        repository.get = mock_get
-        repository.update = mock_update
-        document_service = get_mock_document_service_for_tree_tests(repository_provider)
         add_document_use_case(
             address=Address("$1.box", "testing"),
             document={"type": "Box", "name": "box", "description": "box"},
-            document_service=document_service,
+            document_service=self.mock_document_service,
         )
-        assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
+        assert get_and_print_diff(self.doc_storage["1"], doc_1_after) == []
 
     def test_add_invalid_child_type(self):
-        repository = mock.Mock()
-
-        doc_storage = {
+        self.doc_storage = {
             "1": {
                 "_id": "1",
                 "name": "parent",
@@ -121,34 +125,20 @@ class DocumentServiceTestCase(unittest.TestCase):
             }
         }
 
-        def mock_get(document_id: str):
-            return deepcopy(doc_storage[document_id])
-
-        def mock_update(entity: dict, *args, **kwargs):
-            doc_storage[entity["_id"]] = entity
-            return None
-
-        repository.get = mock_get
-        repository.update = mock_update
-        document_service = get_mock_document_service_for_tree_tests(
-            blueprint_provider=BlueprintProvider, repository_provider=lambda x, y: repository
-        )
         with self.assertRaises(ValidationException) as error:
             update_document_use_case(
                 data={"name": "whatever", "type": "SpecialChildNoInherit", "AnExtraValue": "Hallo there!"},
                 address=Address("$1.SomeChild", "testing"),
-                document_service=document_service,
+                document_service=self.mock_document_service,
             )
         assert (
             error.exception.message
             == "Entity should be of type 'BaseChild' (or extending from it). Got 'SpecialChildNoInherit'"
         )
-        assert not doc_storage["1"]["SomeChild"]
+        assert not self.doc_storage["1"]["SomeChild"]
 
     def test_add_optional_nested(self):
-        repository = mock.Mock()
-
-        doc_storage = {
+        self.doc_storage = {
             "1": {
                 "_id": "1",
                 "name": "Parent",
@@ -179,33 +169,16 @@ class DocumentServiceTestCase(unittest.TestCase):
                 },
             },
         }
-
-        def mock_get(document_id: str):
-            return deepcopy(doc_storage[document_id])
-
-        def mock_update(entity: dict, *args, **kwargs):
-            doc_storage[entity["_id"]] = entity
-            return None
-
-        def repository_provider(data_source_id, user: User):
-            if data_source_id == "testing":
-                return repository
-
-        repository.get = mock_get
-        repository.update = mock_update
-        document_service = get_mock_document_service_for_tree_tests(repository_provider)
         add_document_use_case(
             address=Address("$1.chest.box", "testing"),
             document={"name": "box", "description": "box", "type": "Box"},
-            document_service=document_service,
+            document_service=self.mock_document_service,
         )
 
-        assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
+        assert get_and_print_diff(self.doc_storage["1"], doc_1_after) == []
 
     def test_add_duplicate(self):
-        repository = mock.Mock()
-
-        doc_storage = {
+        self.doc_storage = {
             "1": {
                 "_id": "1",
                 "name": "chest",
@@ -219,47 +192,23 @@ class DocumentServiceTestCase(unittest.TestCase):
             }
         }
 
-        def mock_get(document_id: str):
-            return deepcopy(doc_storage[document_id])
-
-        def mock_update(entity: dict, *args, **kwargs):
-            doc_storage[entity["_id"]] = entity
-            return None
-
-        repository.get = mock_get
-        repository.update = mock_update
-        document_service = get_mock_document_service_for_tree_tests(lambda x, y: repository)
-
         with self.assertRaises(BadRequestException):
             add_document_use_case(
                 address=Address("$1.box", "testing"),
                 document={"type": "Box", "name": "duplicate", "description": "box"},
-                document_service=document_service,
+                document_service=self.mock_document_service,
             )
 
     def test_add_valid_specialized_child_type(self):
-        repository = mock.Mock()
+        self.doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "Parent", "SomeChild": {}}}
 
-        doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "Parent", "SomeChild": {}}}
-
-        def mock_get(document_id: str):
-            return deepcopy(doc_storage[document_id])
-
-        def mock_update(entity: dict, *args, **kwargs):
-            doc_storage[entity["_id"]] = entity
-
-        repository.get = mock_get
-        repository.update = mock_update
-        document_service = get_mock_document_service_for_tree_tests(
-            lambda id, user: repository, blueprint_provider=BlueprintProvider()
-        )
         update_document_use_case(
             data={"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
             address=Address("$1.SomeChild", "testing"),
-            document_service=document_service,
+            document_service=self.mock_document_service,
         )
 
-        assert doc_storage["1"]["SomeChild"] == {
+        assert self.doc_storage["1"]["SomeChild"] == {
             "name": "whatever",
             "type": "SpecialChild",
             "AnExtraValue": "Hallo there!",
@@ -267,21 +216,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
     def test_add_valid_second_level_specialized_child_type(self):
-        repository = mock.Mock()
+        self.doc_storage = {"1": {"_id": "1", "name": "Parent", "description": "", "type": "Parent", "SomeChild": {}}}
 
-        doc_storage = {"1": {"_id": "1", "name": "Parent", "description": "", "type": "Parent", "SomeChild": {}}}
-
-        def mock_get(document_id: str):
-            return deepcopy(doc_storage[document_id])
-
-        def mock_update(entity: dict, *args, **kwargs):
-            doc_storage[entity["_id"]] = entity
-
-        repository.get = mock_get
-        repository.update = mock_update
-        document_service = get_mock_document_service_for_tree_tests(
-            lambda id, user: repository, blueprint_provider=BlueprintProvider()
-        )
         update_document_use_case(
             data={
                 "name": "whatever",
@@ -291,9 +227,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "AValue": 13,
             },
             address=Address("$1.SomeChild", "testing"),
-            document_service=document_service,
+            document_service=self.mock_document_service,
         )
-        assert doc_storage["1"]["SomeChild"] == {
+        assert self.doc_storage["1"]["SomeChild"] == {
             "name": "whatever",
             "type": "ExtraSpecialChild",
             "AnExtraValue": "Hallo there!",
@@ -302,23 +238,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         }
 
     def test_add_valid_second_level_specialized_child_type_to_list_attribute(self):
-        repository = mock.Mock()
-
-        doc_storage = {
+        self.doc_storage = {
             "1": {"_id": "1", "name": "parent", "description": "", "type": "ParentWithListOfChildren", "SomeChild": []}
         }
 
-        def mock_get(document_id: str):
-            return deepcopy(doc_storage[document_id])
-
-        def mock_update(entity: dict, *args, **kwargs):
-            doc_storage[entity["_id"]] = entity
-
-        repository.get = mock_get
-        repository.update = mock_update
-        document_service = get_mock_document_service_for_tree_tests(
-            lambda id, user: repository, blueprint_provider=BlueprintProvider()
-        )
         update_document_use_case(
             data=[
                 {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
@@ -331,10 +254,10 @@ class DocumentServiceTestCase(unittest.TestCase):
                 },
             ],
             address=Address("$1.SomeChild", "testing"),
-            document_service=document_service,
+            document_service=self.mock_document_service,
         )
 
-        assert doc_storage["1"]["SomeChild"] == [
+        assert self.doc_storage["1"]["SomeChild"] == [
             {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
             {
                 "name": "whatever",
@@ -346,23 +269,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         ]
 
     def test_add_invalid_child_type_to_list_attribute(self):
-        repository = mock.Mock()
-
-        doc_storage = {
+        self.doc_storage = {
             "1": {"_id": "1", "name": "parent", "description": "", "type": "ParentWithListOfChildren", "SomeChild": []}
         }
-
-        def mock_get(document_id: str):
-            return deepcopy(doc_storage[document_id])
-
-        def mock_update(entity: dict, *args, **kwargs):
-            doc_storage[entity["_id"]] = entity
-
-        repository.get = mock_get
-        repository.update = mock_update
-        document_service = get_mock_document_service_for_tree_tests(
-            lambda id, user: repository, blueprint_provider=BlueprintProvider()
-        )
 
         with self.assertRaises(ValidationException) as error:
             update_document_use_case(
@@ -375,32 +284,18 @@ class DocumentServiceTestCase(unittest.TestCase):
                     },
                 ],
                 address=Address("$1.SomeChild", "testing"),
-                document_service=document_service,
+                document_service=self.mock_document_service,
             )
         assert (
             error.exception.message
             == "Entity should be of type 'BaseChild' (or extending from it). Got 'SpecialChildNoInherit'"
         )
-        assert doc_storage["1"]["SomeChild"] == []
+        assert self.doc_storage["1"]["SomeChild"] == []
 
     def test_add_child_with_empty_list(self):
-        repository = mock.Mock()
-
-        doc_storage = {
+        self.doc_storage = {
             "1": {"_id": "1", "name": "parent", "description": "", "type": "WrappsParentWithList", "Parent-w-list": {}}
         }
-
-        def mock_get(document_id: str):
-            return deepcopy(doc_storage[document_id])
-
-        def mock_update(entity: dict, *args, **kwargs):
-            doc_storage[entity["_id"]] = entity
-
-        repository.get = mock_get
-        repository.update = mock_update
-        document_service = get_mock_document_service_for_tree_tests(
-            lambda id, user: repository, blueprint_provider=BlueprintProvider()
-        )
 
         data = {
             "_id": "1",
@@ -409,9 +304,11 @@ class DocumentServiceTestCase(unittest.TestCase):
             "type": "WrappsParentWithList",
             "Parent-w-list": {"name": "whatever", "type": "ParentWithListOfChildren", "SomeChild": []},
         }
-        update_document_use_case(data=data, address=Address("$1", "testing"), document_service=document_service)
+        update_document_use_case(
+            data=data, address=Address("$1", "testing"), document_service=self.mock_document_service
+        )
 
-        assert doc_storage["1"]["Parent-w-list"]["SomeChild"] == []
+        assert self.doc_storage["1"]["Parent-w-list"]["SomeChild"] == []
 
     def test_set_update_uncontained_child(self):
         form_node = get_form_example_node()
