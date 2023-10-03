@@ -72,7 +72,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         contained_node.update(
             {"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "dmss://system/SIMOS/NamedEntity"}
         )
-        self.mock_document_service.save(node, "testing", update_uncontained=True)
+        for sub_node in node.traverse():
+            if not sub_node.storage_contained and not sub_node.is_array():
+                self.mock_document_service.save(node=sub_node, data_source_id="testing")
 
         assert doc_storage["4"] == {
             "_id": "4",
@@ -108,7 +110,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         contained_node.update(
             {"name": "RENAMED", "description": "TEST_MODIFY", "type": "dmss://system/SIMOS/NamedEntity"}
         )
-        self.mock_document_service.save(contained_node, "testing", update_uncontained=True, initial=True)
+        self.mock_document_service.save(contained_node, "testing", initial=True)
 
         assert doc_storage["1"]["containedPersonInfo"]["description"] == "TEST_MODIFY"
 

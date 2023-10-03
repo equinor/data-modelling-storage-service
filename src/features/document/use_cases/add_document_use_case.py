@@ -18,15 +18,12 @@ from restful.request_types.shared import Entity
 from services.document_service import DocumentService
 
 
-def _add_document_to_data_source(
-    data_source_id: str, document: dict, update_uncontained: Optional[bool], document_service: DocumentService
-) -> dict:
+def _add_document_to_data_source(data_source_id: str, document: dict, document_service: DocumentService) -> dict:
     """Add the document to an existing data source.
 
     Args:
        data_source_id: The data source ID
        document: The entity to be added
-       update_uncontained: Whether to update uncontained children (deprecated)
        document_service: The document service
 
     Returns:
@@ -53,7 +50,7 @@ def _add_document_to_data_source(
 
     new_node.set_uid(new_node.generate_id())
 
-    document_service.save(new_node, data_source_id, update_uncontained=update_uncontained)
+    document_service.save(new_node, data_source_id)
 
     return {"uid": new_node.node_id}
 
@@ -62,7 +59,6 @@ def _add_document_to_entity_or_list(
     address: Address,
     document: dict,
     files: dict[str, BinaryIO] | None,
-    update_uncontained: Optional[bool],
     document_service: DocumentService,
 ) -> dict:
     """Add the document to an existing entity.
@@ -71,7 +67,6 @@ def _add_document_to_entity_or_list(
        address: Reference to an existing entity or to an attribute (complex or list attribute) inside an entity.
        document: The entity to be added
        files: Dict with names and files of the files contained in the document
-       update_uncontained: Whether to update uncontained children (deprecated)
 
     Returns:
        A dict that contains the ID of the added document.
@@ -131,16 +126,12 @@ def _add_document_to_entity_or_list(
             )
             parent_node.add_child(list_node)
             list_node.add_child(new_node)
-            document_service.save(
-                parent_node, address.data_source, update_uncontained=update_uncontained, initial=True
-            )
+            document_service.save(parent_node, address.data_source, initial=True)
             return {"uid": f"{list_node.node_id}"}
         else:
             parent_node.add_child(new_node)
 
-            document_service.save(
-                parent_node, address.data_source, update_uncontained=update_uncontained, initial=True
-            )
+            document_service.save(parent_node, address.data_source, initial=True)
             return {"uid": f"{new_node.node_id}"}
 
     if target.type != SIMOS.PACKAGE.value and target.type != "object":
@@ -180,13 +171,13 @@ def _add_document_to_entity_or_list(
         if new_node.should_have_id():
             new_node.set_uid(new_node.generate_id())
         target.add_child(new_node)
-        document_service.save(target.find_parent(), address.data_source, update_uncontained=False)
+        document_service.save(target.find_parent(), address.data_source)
     else:
         new_node.parent = target.parent
         target.parent.replace(new_node.node_id, new_node)
-        document_service.save(target.find_parent(), address.data_source, update_uncontained=False)
+        document_service.save(target.find_parent(), address.data_source)
 
-    document_service.save(new_node, address.data_source, update_uncontained=update_uncontained)
+    document_service.save(new_node, address.data_source)
 
     return {"uid": new_node.node_id}
 
@@ -196,7 +187,6 @@ def add_document_use_case(
     address: Address,
     document_service: DocumentService,
     files: Optional[List[UploadFile]] = None,
-    update_uncontained: Optional[bool] = False,
 ) -> dict:
     """Add document to a data source or existing entity. Can also be used to add (complex) items to a list.
 
@@ -205,7 +195,6 @@ def add_document_use_case(
         address: Reference to a package, attribute inside an entity (either a list or a complex attribute) or a data source
         document_service: The document service
         files: Dict with names and files of the files contained in the document
-        update_uncontained: Whether to update uncontained children (deprecated)
 
     Returns:
         A dict that contains the ID of the added document.
@@ -213,12 +202,11 @@ def add_document_use_case(
     validate_entity_against_self(document, document_service.get_blueprint)
 
     if not address.path:
-        return _add_document_to_data_source(address.data_source, document, update_uncontained, document_service)
+        return _add_document_to_data_source(address.data_source, document, document_service)
 
     return _add_document_to_entity_or_list(
         address=address,
         document=document,
         files={f.filename: f.file for f in files} if files else None,
-        update_uncontained=update_uncontained,
         document_service=document_service,
     )

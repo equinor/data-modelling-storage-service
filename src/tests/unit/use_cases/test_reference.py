@@ -323,7 +323,6 @@ class ReferenceTestCase(unittest.TestCase):
         add_document_use_case(
             address=Address("$1.uncontained_in_every_way", "testing"),
             document=reference,
-            update_uncontained=True,
             document_service=self.document_service,
         )
         assert len(doc_storage["1"]["uncontained_in_every_way"]) == 2

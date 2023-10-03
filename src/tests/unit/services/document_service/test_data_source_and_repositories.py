@@ -38,7 +38,11 @@ class DataSourceTestCase(unittest.TestCase):
             "name": "Parent",
             "description": "",
             "type": "uncontained_blueprint",
-            "uncontained_in_every_way": {"name": "a_reference", "type": "dmss://system/SIMOS/NamedEntity"},
+            "uncontained_in_every_way": {
+                "name": "a_reference",
+                "type": "dmss://system/SIMOS/NamedEntity",
+                "_id": "$2",
+            },
         }
 
         default_doc_storage = {}
@@ -95,7 +99,9 @@ class DataSourceTestCase(unittest.TestCase):
             recipe_provider=self.recipe_provider,
         )
 
-        self.mock_document_service.save(node, "testing", update_uncontained=True)
+        for sub_node in node.traverse():
+            if not sub_node.storage_contained and not sub_node.is_array():
+                self.mock_document_service.save(node=sub_node, data_source_id="testing")
 
         # Test that both repos gets written into
         assert blob_doc_storage and default_doc_storage
@@ -220,7 +226,9 @@ class DataSourceTestCase(unittest.TestCase):
             blob_doc, self.mock_document_service.get_blueprint, uid="1", recipe_provider=self.recipe_provider
         )
 
-        self.mock_document_service.save(node, "testing", update_uncontained=True)
+        for sub_node in node.traverse():
+            if not sub_node.storage_contained and not sub_node.is_array():
+                self.mock_document_service.save(node=sub_node, data_source_id="testing")
 
         # Test that both repos gets written into
         assert blob_doc_storage and default_doc_storage

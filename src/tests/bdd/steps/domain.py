@@ -93,7 +93,9 @@ def step_impl_documents(context, data_source_id: str, collection: str):
     document_service = DocumentService(get_data_source, user=context.user)
     tree: Node = generate_tree(data_source_id, context.table, document_service)
     tree.show_tree()
-    document_service.save(node=tree, data_source_id=data_source_id, update_uncontained=True)
+    for node in tree.traverse():
+        if not node.storage_contained and not node.is_array():
+            document_service.save(node=node, data_source_id=data_source_id)
 
 
 @given('AccessControlList for document "{document_id}" in data-source "{data_source}" is')

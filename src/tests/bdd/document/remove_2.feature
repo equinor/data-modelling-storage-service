@@ -13,7 +13,7 @@ Feature: Explorer - Remove by path
       | 4   | 1          | sub_package_2 |             | dmss://system/SIMOS/Package   |
       | 3   | 2          | document_1    |             | dmss://system/SIMOS/Blueprint |
 
-  Scenario: Remove root package
+  Scenario: Remove root package by name
     Given i access the resource url "/api/documents/data-source-name/blueprints"
     When i make a "DELETE" request
     Then the response status should be "OK"

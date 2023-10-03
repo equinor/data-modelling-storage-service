@@ -23,13 +23,17 @@ def save_node_to_zipfile(
         if document_meta:
             document_node.entity["_meta_"] = document_meta
         storage_client = ZipFileClient(zip_file)
-        document_service.save(
-            document_node,
-            data_source_id,
-            storage_client,
-            update_uncontained=True,
-            combined_document_meta=document_meta,
-        )
+        path = ""  # Path here is used to get the proper file structure in the zip file
+        for node in document_node.traverse():
+            if not node.storage_contained and not node.is_array():
+                path = f"{path}/{node.entity['name']}/" if path else f"{node.entity['name']}"
+                document_service.save(
+                    node=node,
+                    data_source_id=data_source_id,
+                    path=path,
+                    repository=storage_client,
+                    combined_document_meta=document_meta,
+                )
 
 
 def create_zip_export(document_service: DocumentService, address: Address, user: User) -> str:

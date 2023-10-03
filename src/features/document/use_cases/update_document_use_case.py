@@ -18,7 +18,6 @@ def _update_document(
     data: Union[dict, list],
     document_service: DocumentService,
     files: dict[str, BinaryIO] | None,
-    update_uncontained: Optional[bool],
 ):
     """
     Update a document.
@@ -50,7 +49,7 @@ def _update_document(
     if files:
         merge_entity_and_files(node, files)
 
-    document_service.save(node, address.data_source, update_uncontained=update_uncontained, initial=True)
+    document_service.save(node, address.data_source, initial=True)
     logger.info(f"Updated entity '{address}'")
     return {"data": tree_node_to_dict(node)}
 
@@ -60,7 +59,6 @@ def update_document_use_case(
     data: Union[dict, list],
     document_service: DocumentService,
     files: Optional[List[UploadFile]] = None,
-    update_uncontained: Optional[bool] = True,
 ):
     """Update document.
 
@@ -69,7 +67,6 @@ def update_document_use_case(
         data: The data to be updated
         document_service: The document service
         files: Dict with names and files of the files contained in the document
-        update_uncontained: Whether to update uncontained children (deprecated)
     Returns:
         A dict that contains the updated document.
     """
@@ -79,7 +76,6 @@ def update_document_use_case(
         data=data,
         document_service=document_service,
         files={f.filename: f.file for f in files} if files else None,
-        update_uncontained=update_uncontained,
     )
     # Do not invalidate the blueprint cache if it was not a blueprint that was changed
     if "type" in document["data"] and document["data"]["type"] == SIMOS.BLUEPRINT.value:
