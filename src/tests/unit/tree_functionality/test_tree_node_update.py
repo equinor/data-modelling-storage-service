@@ -5,7 +5,6 @@ from unittest import mock
 from authentication.models import User
 from common.address import Address
 from common.exceptions import BadRequestException, ValidationException
-from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.tree_node import Node
 from enums import REFERENCE_TYPES, SIMOS
 from features.document.use_cases.add_document_use_case import add_document_use_case
@@ -89,30 +88,23 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert len(self.doc_storage) == 1
 
     def test_add_optional(self):
-        self.doc_storage = {
-            "1": {
-                "_id": "1",
-                "name": "Parent",
-                "description": "",
-                "type": "ChestWithOptionalBoxInside",
-                "box": {},
-            }
-        }
-
-        doc_1_after = {
+        entity = {
             "_id": "1",
             "name": "Parent",
             "description": "",
             "type": "ChestWithOptionalBoxInside",
-            "box": {"name": "box", "type": "Box", "description": "box"},
         }
+        self.doc_storage = {"1": deepcopy(entity)}
+
+        entity_after = deepcopy(entity)
+        entity_after["box"] = {"name": "box", "type": "Box", "description": "box"}
 
         add_document_use_case(
             address=Address("$1.box", "testing"),
             document={"type": "Box", "name": "box", "description": "box"},
             document_service=self.mock_document_service,
         )
-        assert get_and_print_diff(self.doc_storage["1"], doc_1_after) == []
+        self.assertEqual(self.doc_storage["1"], entity_after)
 
     def test_add_invalid_child_type(self):
         self.doc_storage = {
@@ -131,29 +123,14 @@ class DocumentServiceTestCase(unittest.TestCase):
                 address=Address("$1.SomeChild", "testing"),
                 document_service=self.mock_document_service,
             )
-        assert (
-            error.exception.message
-            == "Entity should be of type 'BaseChild' (or extending from it). Got 'SpecialChildNoInherit'"
+        self.assertEqual(
+            error.exception.message,
+            "Entity should be of type 'BaseChild' (or extending from it). Got 'SpecialChildNoInherit'",
         )
-        assert not self.doc_storage["1"]["SomeChild"]
+        self.assertDictEqual(self.doc_storage["1"]["SomeChild"], {})
 
     def test_add_optional_nested(self):
-        self.doc_storage = {
-            "1": {
-                "_id": "1",
-                "name": "Parent",
-                "description": "",
-                "type": "RoomWithOptionalChestInside",
-                "chest": {
-                    "name": "chest",
-                    "description": "",
-                    "type": "ChestWithOptionalBoxInside",
-                    "box": {},
-                },
-            }
-        }
-
-        doc_1_after = {
+        entity = {
             "_id": "1",
             "name": "Parent",
             "description": "",
@@ -162,20 +139,25 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "name": "chest",
                 "description": "",
                 "type": "ChestWithOptionalBoxInside",
-                "box": {
-                    "name": "box",
-                    "type": "Box",
-                    "description": "box",
-                },
             },
         }
+
+        self.doc_storage = {"1": deepcopy(entity)}
+
+        entity_after = deepcopy(entity)
+        entity_after["chest"]["box"] = {
+            "name": "box",
+            "type": "Box",
+            "description": "box",
+        }
+
         add_document_use_case(
             address=Address("$1.chest.box", "testing"),
             document={"name": "box", "description": "box", "type": "Box"},
             document_service=self.mock_document_service,
         )
 
-        assert get_and_print_diff(self.doc_storage["1"], doc_1_after) == []
+        self.assertDictEqual(self.doc_storage["1"], entity_after)
 
     def test_add_duplicate(self):
         self.doc_storage = {
@@ -200,64 +182,43 @@ class DocumentServiceTestCase(unittest.TestCase):
             )
 
     def test_add_valid_specialized_child_type(self):
-        self.doc_storage = {"1": {"_id": "1", "name": "parent", "description": "", "type": "Parent", "SomeChild": {}}}
+        entity = {"_id": "1", "name": "parent", "description": "", "type": "Parent", "SomeChild": {}}
+        child = {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13}
+
+        self.doc_storage = {"1": deepcopy(entity)}
 
         update_document_use_case(
-            data={"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
+            data=deepcopy(child),
             address=Address("$1.SomeChild", "testing"),
             document_service=self.mock_document_service,
         )
 
-        assert self.doc_storage["1"]["SomeChild"] == {
-            "name": "whatever",
-            "type": "SpecialChild",
-            "AnExtraValue": "Hallo there!",
-            "AValue": 13,
-        }
+        self.assertDictEqual(
+            self.doc_storage["1"]["SomeChild"],
+            child,
+        )
 
     def test_add_valid_second_level_specialized_child_type(self):
         self.doc_storage = {"1": {"_id": "1", "name": "Parent", "description": "", "type": "Parent", "SomeChild": {}}}
-
-        update_document_use_case(
-            data={
-                "name": "whatever",
-                "type": "ExtraSpecialChild",
-                "AnExtraValue": "Hallo there!",
-                "AnotherExtraValue": True,
-                "AValue": 13,
-            },
-            address=Address("$1.SomeChild", "testing"),
-            document_service=self.mock_document_service,
-        )
-        assert self.doc_storage["1"]["SomeChild"] == {
+        child = {
             "name": "whatever",
             "type": "ExtraSpecialChild",
             "AnExtraValue": "Hallo there!",
             "AnotherExtraValue": True,
             "AValue": 13,
         }
+        update_document_use_case(
+            data=deepcopy(child),
+            address=Address("$1.SomeChild", "testing"),
+            document_service=self.mock_document_service,
+        )
+        self.assertDictEqual(self.doc_storage["1"]["SomeChild"], child)
 
     def test_add_valid_second_level_specialized_child_type_to_list_attribute(self):
         self.doc_storage = {
             "1": {"_id": "1", "name": "parent", "description": "", "type": "ParentWithListOfChildren", "SomeChild": []}
         }
-
-        update_document_use_case(
-            data=[
-                {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
-                {
-                    "name": "whatever",
-                    "type": "ExtraSpecialChild",
-                    "AnExtraValue": "Hallo there!",
-                    "AnotherExtraValue": True,
-                    "AValue": 13,
-                },
-            ],
-            address=Address("$1.SomeChild", "testing"),
-            document_service=self.mock_document_service,
-        )
-
-        assert self.doc_storage["1"]["SomeChild"] == [
+        child_list = [
             {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
             {
                 "name": "whatever",
@@ -267,37 +228,43 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "AValue": 13,
             },
         ]
+        update_document_use_case(
+            data=deepcopy(child_list),
+            address=Address("$1.SomeChild", "testing"),
+            document_service=self.mock_document_service,
+        )
+
+        self.assertListEqual(self.doc_storage["1"]["SomeChild"], child_list)
 
     def test_add_invalid_child_type_to_list_attribute(self):
         self.doc_storage = {
             "1": {"_id": "1", "name": "parent", "description": "", "type": "ParentWithListOfChildren", "SomeChild": []}
         }
-
+        invalid_child_list = [
+            {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
+            {
+                "name": "whatever",
+                "type": "SpecialChildNoInherit",
+                "AnExtraValue": "Hallo there!",
+            },
+        ]
         with self.assertRaises(ValidationException) as error:
             update_document_use_case(
-                data=[
-                    {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
-                    {
-                        "name": "whatever",
-                        "type": "SpecialChildNoInherit",
-                        "AnExtraValue": "Hallo there!",
-                    },
-                ],
+                data=invalid_child_list,
                 address=Address("$1.SomeChild", "testing"),
                 document_service=self.mock_document_service,
             )
-        assert (
-            error.exception.message
-            == "Entity should be of type 'BaseChild' (or extending from it). Got 'SpecialChildNoInherit'"
+        self.assertEqual(
+            error.exception.message,
+            "Entity should be of type 'BaseChild' (or extending from it). Got 'SpecialChildNoInherit'",
         )
-        assert self.doc_storage["1"]["SomeChild"] == []
+        self.assertListEqual(self.doc_storage["1"]["SomeChild"], [])
 
     def test_add_child_with_empty_list(self):
         self.doc_storage = {
             "1": {"_id": "1", "name": "parent", "description": "", "type": "WrappsParentWithList", "Parent-w-list": {}}
         }
-
-        data = {
+        child = {
             "_id": "1",
             "name": "parent",
             "description": "",
@@ -305,10 +272,10 @@ class DocumentServiceTestCase(unittest.TestCase):
             "Parent-w-list": {"name": "whatever", "type": "ParentWithListOfChildren", "SomeChild": []},
         }
         update_document_use_case(
-            data=data, address=Address("$1", "testing"), document_service=self.mock_document_service
+            data=child, address=Address("$1", "testing"), document_service=self.mock_document_service
         )
-
-        assert self.doc_storage["1"]["Parent-w-list"]["SomeChild"] == []
+        self.assertEqual(self.doc_storage["1"]["Parent-w-list"]["type"], "ParentWithListOfChildren")
+        self.assertListEqual(self.doc_storage["1"]["Parent-w-list"]["SomeChild"], [])
 
     def test_set_update_uncontained_child(self):
         form_node = get_form_example_node()
