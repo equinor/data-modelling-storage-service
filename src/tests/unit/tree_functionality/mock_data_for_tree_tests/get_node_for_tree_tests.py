@@ -3,29 +3,20 @@ from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 
-_mock_blueprint_provider = MockBlueprintProvider(
-    mock_blueprints_and_file_names={
-        "FormBlueprint": "FormBlueprint.blueprint.json",
-    },
-    mock_blueprint_folder="src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests",
-    simos_blueprints_available_for_test=[
-        "dmss://system/SIMOS/Reference",
-        "dmss://system/SIMOS/NamedEntity",
-    ],
-).get_blueprint
 
-
-def get_engine_package_node() -> Node:
+def get_engine_package_node(
+    mock_blueprint_folder, mock_blueprints_and_file_names, simos_blueprints_available_for_test
+) -> Node:
     """return a Node object for engine package that contains a single Blueprint called Engine."""
+
+    mock_blueprint_provider = MockBlueprintProvider(
+        mock_blueprints_and_file_names=mock_blueprints_and_file_names,
+        mock_blueprint_folder=mock_blueprint_folder,
+        simos_blueprints_available_for_test=simos_blueprints_available_for_test,
+    ).get_blueprint
 
     # Engine is a blueprint in a package called EnginePackage.
     # We need to create 3 nodes: engine package, content list in engine package and the engine.
-    engine_entity = {
-        "name": "Engine",
-        "type": "dmss://system/SIMOS/Blueprint",
-        "extends": ["dmss://system/SIMOS/NamedEntity"],
-        "attributes": [{"name": "hp", "type": "dmss://system/SIMOS/BlueprintAttribute", "attributeType": "string"}],
-    }
     engine_blueprint_attribute = BlueprintAttribute(
         name="content",
         attribute_type=SIMOS.REFERENCE.value,
@@ -41,7 +32,7 @@ def get_engine_package_node() -> Node:
         key="content",
         attribute=engine_package_content_bp_attribute,
         entity=[engine_entity_ref],
-        blueprint_provider=_mock_blueprint_provider,
+        blueprint_provider=mock_blueprint_provider,
         recipe_provider=None,
     )
 
@@ -49,7 +40,7 @@ def get_engine_package_node() -> Node:
         key="0",
         entity=engine_entity_ref,
         attribute=engine_blueprint_attribute,
-        blueprint_provider=_mock_blueprint_provider,
+        blueprint_provider=mock_blueprint_provider,
         recipe_provider=None,
         uid=engine_entity_ref["address"],
     )
@@ -70,7 +61,7 @@ def get_engine_package_node() -> Node:
         key="Package",
         entity=engine_package_entity,
         attribute=engine_package_blueprint_attribute,
-        blueprint_provider=_mock_blueprint_provider,
+        blueprint_provider=mock_blueprint_provider,
         recipe_provider=None,
     )
     """
@@ -86,7 +77,14 @@ def get_engine_package_node() -> Node:
     return engine_package_node
 
 
-def get_form_example_node() -> Node:
+def get_form_example_node(
+    mock_blueprint_folder, mock_blueprints_and_file_names, simos_blueprints_available_for_test
+) -> Node:
+    mock_blueprint_provider = MockBlueprintProvider(
+        mock_blueprints_and_file_names=mock_blueprints_and_file_names,
+        mock_blueprint_folder=mock_blueprint_folder,
+        simos_blueprints_available_for_test=simos_blueprints_available_for_test,
+    ).get_blueprint
     input_entity = {
         "type": "dmss://system/SIMOS/Reference",
         "referenceType": "link",
@@ -123,20 +121,20 @@ def get_form_example_node() -> Node:
         key="inputEntity",
         entity=input_entity,
         attribute=input_entity_attribute,
-        blueprint_provider=_mock_blueprint_provider,
+        blueprint_provider=mock_blueprint_provider,
     )
     a_nested_object_node = Node(
         key="aNestedObject",
         entity=a_nested_object,
         attribute=a_nested_object_attribute,
-        blueprint_provider=_mock_blueprint_provider,
+        blueprint_provider=mock_blueprint_provider,
     )
 
     form_node = Node(
         key="",
         entity=form_example_entity,
         attribute=form_example_blueprint_attribute,
-        blueprint_provider=_mock_blueprint_provider,
+        blueprint_provider=mock_blueprint_provider,
     )
     form_node.children = [a_nested_object_node, input_entity_node]
     return form_node

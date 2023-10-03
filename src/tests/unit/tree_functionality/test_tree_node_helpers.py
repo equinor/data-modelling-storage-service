@@ -45,6 +45,10 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             simos_blueprints_available_for_test=simos_blueprints,
         ).get_blueprint
 
+        self.engine_package_node = get_engine_package_node(
+            mock_blueprint_folder, mock_blueprints_and_file_names, simos_blueprints
+        )
+
     def test_replace(self):
         root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
         root = Node(
@@ -453,8 +457,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         self.assertTrue(expected_flat.items() <= actual_flat.items())
 
     def test_is_storage_contained(self):
-        engine_package_node = get_engine_package_node()
-        engine_ref_node = engine_package_node.children[0].children[0]
+        engine_ref_node = self.engine_package_node.children[0].children[0]
 
         self.assertTrue(engine_ref_node.storage_contained)
         self.assertTrue(engine_ref_node.parent.storage_recipes[0].is_contained(engine_ref_node.attribute.name))

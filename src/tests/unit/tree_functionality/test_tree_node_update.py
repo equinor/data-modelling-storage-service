@@ -20,7 +20,7 @@ from tests.unit.tree_functionality.mock_data_for_tree_tests.get_node_for_tree_te
 
 class DocumentServiceTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
+        simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
         mock_blueprint_folder = (
             "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests"
         )
@@ -37,6 +37,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "WrappsParentWithList": "WrappsParentWithList.blueprint.json",
             "BaseChild": "BaseChild.blueprint.json",
         }
+        self.form_node = get_form_example_node(mock_blueprint_folder, mock_blueprints_and_file_names, simos_blueprints)
 
         def mock_get(document_id: str):
             return deepcopy(self.doc_storage[document_id])
@@ -264,8 +265,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertListEqual(self.doc_storage["1"]["Parent-w-list"]["SomeChild"], [])
 
     def test_set_update_uncontained_child(self):
-        form_node = get_form_example_node()
-        target_node = form_node.children[1]
+        target_node = self.form_node.children[1]
         new_reference = {"type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value, "address": "$new"}
         target_node.update(new_reference)
         assert "_id" not in target_node.entity and target_node.entity["address"] == "$new"
