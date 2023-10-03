@@ -43,6 +43,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         mock_blueprints_and_file_names = {
             "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",
             "Garden": "Garden.blueprint.json",
+            "Bush": "Bush.blueprint.json",
         }
         self.mock_blueprint_provider = MockBlueprintProvider(
             mock_blueprints_and_file_names=mock_blueprints_and_file_names,
@@ -151,7 +152,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
 
         root = tree_node_from_dict(
             document_1,
-            mock_document_service.get_blueprint,
+            self.mock_blueprint_provider,
             uid=document_1.get("_id"),
             recipe_provider=self.recipe_provider,
         )
@@ -302,7 +303,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
 
         root = tree_node_from_dict(
             document_1,
-            mock_document_service.get_blueprint,
+            self.mock_blueprint_provider,
             uid=document_1.get("_id"),
             recipe_provider=self.recipe_provider,
         )
@@ -336,7 +337,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
 
         root = tree_node_from_dict(
             document_1,
-            mock_document_service.get_blueprint,
+            self.mock_blueprint_provider,
             uid=document_1.get("_id"),
             recipe_provider=self.recipe_provider,
         )
@@ -372,7 +373,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
 
         root = tree_node_from_dict(
             document_1,
-            mock_document_service.get_blueprint,
+            self.mock_blueprint_provider,
             uid=document_1.get("_id"),
             recipe_provider=self.recipe_provider,
         )
