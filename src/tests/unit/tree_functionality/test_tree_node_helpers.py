@@ -33,9 +33,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
         ).provider
         simos_blueprints = [
-            "dmss://system/SIMOS/NamedEntity",
             "dmss://system/SIMOS/Reference",
-            "dmss://system/SIMOS/Blob",
         ]
         mock_blueprint_folder = (
             "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests"
