@@ -3,15 +3,26 @@ import unittest
 from common.tree_node_serializer import tree_node_to_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.tree_node import ListNode, Node
-from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_blueprint_provider_for_tree_tests import (
-    BlueprintProvider,
-)
-from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_storage_recipe_provider import (
-    mock_storage_recipe_provider,
-)
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 
 
 class TreeNodeToDictTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        simos_blueprints = []
+        mock_blueprint_folder = (
+            "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests"
+        )
+        mock_blueprints_and_file_names = {
+            "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",
+            "Garden": "Garden.blueprint.json",
+            "Bush": "Bush.blueprint.json",
+        }
+        self.mock_blueprint_provider = MockBlueprintProvider(
+            mock_blueprints_and_file_names=mock_blueprints_and_file_names,
+            mock_blueprint_folder=mock_blueprint_folder,
+            simos_blueprints_available_for_test=simos_blueprints,
+        ).get_blueprint
+
     def test_to_dict(self):
         root_data = {
             "_id": 1,
@@ -32,65 +43,59 @@ class TreeNodeToDictTestCase(unittest.TestCase):
             "references": [],
         }
         root = Node(
-            recipe_provider=mock_storage_recipe_provider,
             key="root",
             uid="1",
             entity=root_data,
-            blueprint_provider=BlueprintProvider.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
         )
 
         nested_data = {"name": "Nested", "description": "", "type": "Garden"}
         nested = Node(
-            recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_data,
-            blueprint_provider=BlueprintProvider.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
 
         nested_2_data = {"name": "Nested", "description": "", "type": "Bush"}
         nested_2 = Node(
-            recipe_provider=mock_storage_recipe_provider,
             key="nested",
             uid="",
             entity=nested_2_data,
-            blueprint_provider=BlueprintProvider.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=nested,
             attribute=BlueprintAttribute(name="", attribute_type="Bush"),
         )
 
         nested_2_reference_data = {"_id": "2", "name": "Reference", "description": "", "type": "Garden"}
         Node(
-            recipe_provider=mock_storage_recipe_provider,
             key="reference",
             uid="2",
             entity=nested_2_reference_data,
-            blueprint_provider=BlueprintProvider.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=nested_2,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
 
         list_data = {"name": "List", "type": "Bush"}
         list_node = ListNode(
-            recipe_provider=mock_storage_recipe_provider,
             key="list",
             uid="",
             entity=list_data,
             parent=root,
-            blueprint_provider=BlueprintProvider.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             attribute=BlueprintAttribute(name="", attribute_type="Bush"),
         )
 
         item_1_data = {"name": "Item1", "description": "", "type": "Garden"}
         item_1 = Node(
-            recipe_provider=mock_storage_recipe_provider,
             key="0",
             uid="",
             entity=item_1_data,
-            blueprint_provider=BlueprintProvider.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=list_node,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
@@ -126,11 +131,9 @@ class TreeNodeToDictTestCase(unittest.TestCase):
                 "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
             },
         }
-
-        self.assertEqual(actual_nested, tree_node_to_dict(nested))
-
         item_1_actual = {"name": "Item1", "description": "", "type": "Garden"}
 
+        self.assertEqual(actual_nested, tree_node_to_dict(nested))
         self.assertEqual(item_1_actual, tree_node_to_dict(item_1))
 
 

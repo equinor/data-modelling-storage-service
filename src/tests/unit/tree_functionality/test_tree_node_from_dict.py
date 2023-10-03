@@ -2,7 +2,6 @@ import json
 import unittest
 
 from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
-from common.utils.data_structure.compare import get_and_print_diff
 from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_blueprint_provider_for_tree_tests import (
     BlueprintProvider,
@@ -107,92 +106,92 @@ class TreeNodeFromDictTestCase(unittest.TestCase):
             ],
         }
 
-        assert get_and_print_diff(actual, tree_node_to_dict(root)) == []
+        self.assertDictEqual(actual, tree_node_to_dict(root))
 
-        def test_from_dict_using_dict_importer(self):
-            document_1 = {
-                "_id": "1",
-                "name": "Parent",
+    def test_from_dict_using_dict_importer(self):
+        document_1 = {
+            "_id": "1",
+            "name": "Parent",
+            "description": "",
+            "type": "all_contained_cases_blueprint",
+            "nested": {
+                "name": "Nested",
                 "description": "",
-                "type": "all_contained_cases_blueprint",
+                "type": "Garden",
+                "_blueprint": Garden,
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "Garden",
-                    "_blueprint": Garden,
-                    "nested": {
-                        "name": "Nested",
-                        "description": "",
-                        "type": "Bush",
-                        "_blueprint": Bush,
-                        "reference": {
-                            "address": "$5",
-                            "type": SIMOS.REFERENCE.value,
-                            "referenceType": REFERENCE_TYPES.LINK.value,
-                        },
+                    "type": "Bush",
+                    "_blueprint": Bush,
+                    "reference": {
+                        "address": "$5",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
-                "reference": {
-                    "_id": "2",
-                    "name": "Reference",
+            },
+            "reference": {
+                "_id": "2",
+                "name": "Reference",
+                "description": "",
+                "type": "Garden",
+                "_blueprint": Garden,
+            },
+            "references": [
+                {
+                    "_id": "3",
+                    "name": "Reference-1",
                     "description": "",
                     "type": "Garden",
                     "_blueprint": Garden,
                 },
-                "references": [
-                    {
-                        "_id": "3",
-                        "name": "Reference-1",
-                        "description": "",
-                        "type": "Garden",
-                        "_blueprint": Garden,
-                    },
-                    {
-                        "_id": "4",
-                        "name": "Reference-2",
-                        "description": "",
-                        "type": "Garden",
-                        "_blueprint": Garden,
-                    },
-                ],
-                "_blueprint": all_contained_cases_blueprint,
-            }
+                {
+                    "_id": "4",
+                    "name": "Reference-2",
+                    "description": "",
+                    "type": "Garden",
+                    "_blueprint": Garden,
+                },
+            ],
+            "_blueprint": all_contained_cases_blueprint,
+        }
 
-            actual = {
-                "_id": "1",
-                "name": "Parent",
+        actual = {
+            "_id": "1",
+            "name": "Parent",
+            "description": "",
+            "type": "all_contained_cases_blueprint",
+            "nested": {
+                "name": "Nested",
                 "description": "",
-                "type": "all_contained_cases_blueprint",
+                "type": "Garden",
                 "nested": {
                     "name": "Nested",
                     "description": "",
-                    "type": "Garden",
-                    "nested": {
-                        "name": "Nested",
-                        "description": "",
-                        "type": "Bush",
-                        "reference": {
-                            "address": "$5",
-                            "type": SIMOS.REFERENCE.value,
-                            "referenceType": REFERENCE_TYPES.LINK.value,
-                        },
+                    "type": "Bush",
+                    "reference": {
+                        "address": "$5",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
                     },
                 },
-                "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden", "nested": {}},
-                "references": [
-                    {"_id": "3", "name": "Reference-1", "description": "", "type": "Garden", "nested": {}},
-                    {"_id": "4", "name": "Reference-2", "description": "", "type": "Garden", "nested": {}},
-                ],
-            }
+            },
+            "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden", "nested": {}},
+            "references": [
+                {"_id": "3", "name": "Reference-1", "description": "", "type": "Garden", "nested": {}},
+                {"_id": "4", "name": "Reference-2", "description": "", "type": "Garden", "nested": {}},
+            ],
+        }
 
-            root = tree_node_from_dict(
-                document_1,
-                BlueprintProvider.get_blueprint,
-                uid=document_1.get("_id"),
-                recipe_provider=mock_storage_recipe_provider,
-            )
+        root = tree_node_from_dict(
+            document_1,
+            BlueprintProvider.get_blueprint,
+            uid=document_1.get("_id"),
+            recipe_provider=mock_storage_recipe_provider,
+        )
 
-            assert get_and_print_diff(actual, tree_node_to_dict(root)) == []
+        self.assertDictEqual(actual, tree_node_to_dict(root))
 
     def test_from_dict_optional_values(self):
         doc = {
