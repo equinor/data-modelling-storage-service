@@ -111,7 +111,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="root",
             uid="1",
             entity=root_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             attribute=BlueprintAttribute(name="", attribute_type="all_contained_cases_blueprint"),
         )
 
@@ -121,7 +121,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             key="nested",
             uid="",
             entity=nested_data,
-            blueprint_provider=mock_document_service.get_blueprint,
+            blueprint_provider=self.mock_blueprint_provider,
             parent=root,
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
