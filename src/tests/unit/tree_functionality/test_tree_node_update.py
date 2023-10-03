@@ -67,7 +67,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         chest = {
             "_id": "1",
             "name": "TreasureChest",
-            "description": "",
             "type": "ChestWithOptionalBoxInside",
         }
         self.doc_storage = {"1": chest}
@@ -91,7 +90,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         entity = {
             "_id": "1",
             "name": "Parent",
-            "description": "",
             "type": "ChestWithOptionalBoxInside",
         }
         self.doc_storage = {"1": deepcopy(entity)}
@@ -111,7 +109,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             "1": {
                 "_id": "1",
                 "name": "parent",
-                "description": "",
                 "type": "Parent",
                 "SomeChild": {},
             }
@@ -133,11 +130,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         entity = {
             "_id": "1",
             "name": "Parent",
-            "description": "",
             "type": "RoomWithOptionalChestInside",
             "chest": {
                 "name": "chest",
-                "description": "",
                 "type": "ChestWithOptionalBoxInside",
             },
         }
@@ -164,11 +159,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             "1": {
                 "_id": "1",
                 "name": "chest",
-                "description": "",
                 "type": "ChestWithOptionalBoxInside",
                 "box": {
                     "name": "duplicate",
-                    "description": "",
                     "type": "Box",
                 },
             }
@@ -182,7 +175,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             )
 
     def test_add_valid_specialized_child_type(self):
-        entity = {"_id": "1", "name": "parent", "description": "", "type": "Parent", "SomeChild": {}}
+        entity = {"_id": "1", "name": "parent", "type": "Parent", "SomeChild": {}}
         child = {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13}
 
         self.doc_storage = {"1": deepcopy(entity)}
@@ -199,7 +192,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
     def test_add_valid_second_level_specialized_child_type(self):
-        self.doc_storage = {"1": {"_id": "1", "name": "Parent", "description": "", "type": "Parent", "SomeChild": {}}}
+        self.doc_storage = {"1": {"_id": "1", "name": "Parent", "type": "Parent", "SomeChild": {}}}
         child = {
             "name": "whatever",
             "type": "ExtraSpecialChild",
@@ -215,9 +208,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertDictEqual(self.doc_storage["1"]["SomeChild"], child)
 
     def test_add_valid_second_level_specialized_child_type_to_list_attribute(self):
-        self.doc_storage = {
-            "1": {"_id": "1", "name": "parent", "description": "", "type": "ParentWithListOfChildren", "SomeChild": []}
-        }
+        self.doc_storage = {"1": {"_id": "1", "name": "parent", "type": "ParentWithListOfChildren", "SomeChild": []}}
         child_list = [
             {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
             {
@@ -237,9 +228,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertListEqual(self.doc_storage["1"]["SomeChild"], child_list)
 
     def test_add_invalid_child_type_to_list_attribute(self):
-        self.doc_storage = {
-            "1": {"_id": "1", "name": "parent", "description": "", "type": "ParentWithListOfChildren", "SomeChild": []}
-        }
+        self.doc_storage = {"1": {"_id": "1", "name": "parent", "type": "ParentWithListOfChildren", "SomeChild": []}}
         invalid_child_list = [
             {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
             {
@@ -261,13 +250,10 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertListEqual(self.doc_storage["1"]["SomeChild"], [])
 
     def test_add_child_with_empty_list(self):
-        self.doc_storage = {
-            "1": {"_id": "1", "name": "parent", "description": "", "type": "WrappsParentWithList", "Parent-w-list": {}}
-        }
+        self.doc_storage = {"1": {"_id": "1", "name": "parent", "type": "WrappsParentWithList", "Parent-w-list": {}}}
         child = {
             "_id": "1",
             "name": "parent",
-            "description": "",
             "type": "WrappsParentWithList",
             "Parent-w-list": {"name": "whatever", "type": "ParentWithListOfChildren", "SomeChild": []},
         }
