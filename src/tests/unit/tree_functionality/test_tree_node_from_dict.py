@@ -3,12 +3,7 @@ import unittest
 
 from common.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_blueprint_provider_for_tree_tests import (
-    BlueprintProvider,
-)
-from tests.unit.tree_functionality.mock_data_for_tree_tests.mock_storage_recipe_provider import (
-    mock_storage_recipe_provider,
-)
+from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 
 FILE_PATH = "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests/"
 
@@ -23,6 +18,28 @@ with open(FILE_PATH + "Bush.blueprint.json") as f:
 
 
 class TreeNodeFromDictTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        simos_blueprints = ["dmss://system/SIMOS/Reference"]
+        mock_blueprint_folder = (
+            "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests"
+        )
+        mock_blueprints_and_file_names = {
+            "SignalContainer": "SignalContainer.blueprint.json",
+            "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",
+            "FormBlueprint": "FormBlueprint.blueprint.json",
+            "Recursive": "Recursive.blueprint.json",
+            "Garden": "Garden.blueprint.json",
+            "Bush": "Bush.blueprint.json",
+            "Signal": "Signal.blueprint.json",
+            "NestedField": "NestedField.blueprint.json",
+            "Case": "Case.blueprint.json",
+        }
+        self.mock_blueprint_provider = MockBlueprintProvider(
+            mock_blueprints_and_file_names=mock_blueprints_and_file_names,
+            mock_blueprint_folder=mock_blueprint_folder,
+            simos_blueprints_available_for_test=simos_blueprints,
+        ).get_blueprint
+
     def test_from_dict(self):
         document_1 = {
             "_id": "1",
@@ -74,9 +91,8 @@ class TreeNodeFromDictTestCase(unittest.TestCase):
 
         root = tree_node_from_dict(
             document_1,
-            BlueprintProvider.get_blueprint,
+            self.mock_blueprint_provider,
             uid=document_1.get("_id"),
-            recipe_provider=mock_storage_recipe_provider,
         )
 
         actual = {
@@ -186,9 +202,8 @@ class TreeNodeFromDictTestCase(unittest.TestCase):
 
         root = tree_node_from_dict(
             document_1,
-            BlueprintProvider.get_blueprint,
+            self.mock_blueprint_provider,
             uid=document_1.get("_id"),
-            recipe_provider=mock_storage_recipe_provider,
         )
 
         self.assertDictEqual(actual, tree_node_to_dict(root))
@@ -202,9 +217,7 @@ class TreeNodeFromDictTestCase(unittest.TestCase):
             "inputEntity": {"type": "NestedField", "bar": "..."},
         }
 
-        root = tree_node_from_dict(
-            doc, BlueprintProvider.get_blueprint, uid=doc.get("_id"), recipe_provider=mock_storage_recipe_provider
-        )
+        root = tree_node_from_dict(doc, self.mock_blueprint_provider, uid=doc.get("_id"))
 
         assert "aOptionalNestedObject" not in doc and "aOptionalNestedObject" not in tree_node_to_dict(root)
         assert "optionalNumberList" not in doc and "optionalNumberList" not in tree_node_to_dict(root)
@@ -216,9 +229,8 @@ class TreeNodeFromDictTestCase(unittest.TestCase):
         with self.assertRaises(RecursionError):
             tree_node_from_dict(
                 document_1,
-                BlueprintProvider.get_blueprint,
+                self.mock_blueprint_provider,
                 uid=document_1.get("_id"),
-                recipe_provider=mock_storage_recipe_provider,
             )
 
     def test_from_dict_dimensions(self):
@@ -231,9 +243,7 @@ class TreeNodeFromDictTestCase(unittest.TestCase):
             ],
         }
 
-        root = tree_node_from_dict(
-            doc, BlueprintProvider.get_blueprint, uid=doc.get("_id"), recipe_provider=mock_storage_recipe_provider
-        )
+        root = tree_node_from_dict(doc, self.mock_blueprint_provider, uid=doc.get("_id"))
         case_list_attribute = root.children[0].attribute
         single_case_attribute = root.children[0].children[0].attribute
         assert case_list_attribute.dimensions.dimensions == ["*"]
