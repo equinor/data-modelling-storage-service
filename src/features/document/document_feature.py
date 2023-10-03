@@ -8,7 +8,7 @@ from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.address import Address
 from common.responses import create_response, responses
-from common.utils.get_blueprint import get_blueprint_provider
+from common.utils.blueprint_provider import get_blueprint_provider
 from common.utils.get_storage_recipe import storage_recipe_provider
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
