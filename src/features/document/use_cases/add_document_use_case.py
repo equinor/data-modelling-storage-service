@@ -3,6 +3,7 @@ from typing import BinaryIO, List, Optional
 from fastapi import UploadFile
 
 from common.address import Address
+from common.entity.validators import validate_entity, validate_entity_against_self
 from common.exceptions import (
     BadRequestException,
     NotFoundException,
@@ -11,7 +12,6 @@ from common.exceptions import (
 from common.tree.merge_entity_and_files import merge_entity_and_files
 from common.tree.tree_node import ListNode, Node
 from common.tree.tree_node_serializer import tree_node_from_dict
-from common.utils.validators import validate_entity, validate_entity_against_self
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import SIMOS
 from restful.request_types.shared import Entity

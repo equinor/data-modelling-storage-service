@@ -1,5 +1,5 @@
 from authentication.models import User
-from common.utils.wipe_db import wipe_db
+from common.test_helpers.wipe_db import wipe_db
 from config import config
 from tests.bdd.results import print_overview_errors, print_overview_features
 

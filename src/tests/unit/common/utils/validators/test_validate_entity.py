@@ -1,8 +1,8 @@
 import unittest
 
+from common.entity.validators import validate_entity, validate_entity_against_self
 from common.exceptions import ValidationException
 from common.tree.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
-from common.utils.validators import validate_entity, validate_entity_against_self
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
 from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider

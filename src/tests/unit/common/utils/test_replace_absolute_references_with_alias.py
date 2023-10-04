@@ -1,6 +1,6 @@
 import unittest
 
-from common.utils.replace_reference_with_alias import (
+from common.entity.replace_reference_with_alias import (
     replace_absolute_references_in_entity_with_alias,
     replace_reference_with_alias_if_possible,
 )

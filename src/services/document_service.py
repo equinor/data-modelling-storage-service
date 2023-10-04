@@ -6,6 +6,8 @@ from uuid import uuid4
 
 from authentication.models import User
 from common.address import Address
+from common.entity.sort_entities_by_attribute import sort_dtos_by_attribute
+from common.entity.validators import validate_entity_against_self
 from common.exceptions import (
     ApplicationException,
     BadRequestException,
@@ -28,8 +30,6 @@ from common.utils.get_storage_recipe import (
 )
 from common.utils.logging import logger
 from common.utils.resolve_address import ResolvedAddress, resolve_address
-from common.utils.sort_entities_by_attribute import sort_dtos_by_attribute
-from common.utils.validators import validate_entity_against_self
 from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.storage_recipe import StorageRecipe
