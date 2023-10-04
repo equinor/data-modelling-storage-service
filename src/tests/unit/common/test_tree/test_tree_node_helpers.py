@@ -3,11 +3,9 @@ import unittest
 from common.tree.tree_node import ListNode, Node
 from common.tree.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
+from tests.unit.common.test_tree.mock_data.get_mock_nodes import get_engine_package_node
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
-from tests.unit.tree_functionality.mock_data_for_tree_tests.get_node_for_tree_tests import (
-    get_engine_package_node,
-)
 
 
 # https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys
@@ -31,9 +29,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         simos_blueprints = [
             "dmss://system/SIMOS/Reference",
         ]
-        mock_blueprint_folder = (
-            "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests"
-        )
+        mock_blueprint_folder = "src/tests/unit/common/test_tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
             "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",
             "Garden": "Garden.blueprint.json",

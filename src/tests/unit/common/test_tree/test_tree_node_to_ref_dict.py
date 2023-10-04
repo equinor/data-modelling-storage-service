@@ -4,10 +4,8 @@ from common.tree.tree_node import ListNode, Node
 from common.tree.tree_node_serializer import tree_node_to_ref_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import REFERENCE_TYPES, SIMOS
+from tests.unit.common.test_tree.mock_data.get_mock_nodes import get_form_example_node
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
-from tests.unit.tree_functionality.mock_data_for_tree_tests.get_node_for_tree_tests import (
-    get_form_example_node,
-)
 
 
 class TreeNodeToRefDictTestCase(unittest.TestCase):
@@ -17,9 +15,7 @@ class TreeNodeToRefDictTestCase(unittest.TestCase):
             "dmss://system/SIMOS/Reference",
             "dmss://system/SIMOS/NamedEntity",
         ]
-        mock_blueprint_folder = (
-            "src/tests/unit/tree_functionality/mock_data_for_tree_tests/mock_blueprints_for_tree_tests"
-        )
+        mock_blueprint_folder = "src/tests/unit/common/test_tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
             "uncontained_list_blueprint": "uncontained_list_blueprint.blueprint.json",
             "FormBlueprint": "FormBlueprint.blueprint.json",
