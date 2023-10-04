@@ -1,5 +1,5 @@
 from authentication.models import User
-from common.utils.validators import validate_entity, validate_entity_against_self
+from common.entity.validators import validate_entity, validate_entity_against_self
 from restful.request_types.shared import Entity, TypeConstrainedString
 from services.document_service import DocumentService
 

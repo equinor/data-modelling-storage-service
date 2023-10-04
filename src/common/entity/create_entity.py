@@ -2,7 +2,7 @@ import json
 from json import JSONDecodeError
 from typing import Callable
 
-from common.utils.arrays import create_default_array
+from common.entity.create_entity_arrays import create_default_array
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import PRIMITIVES, SIMOS, BuiltinDataTypes

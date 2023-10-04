@@ -1,5 +1,5 @@
 from authentication.models import User
-from common.utils.create_entity import CreateEntity
+from common.entity.create_entity import CreateEntity
 from restful.request_types.shared import Entity
 from services.document_service import DocumentService
 

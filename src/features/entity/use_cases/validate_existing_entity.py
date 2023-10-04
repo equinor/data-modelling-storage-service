@@ -1,7 +1,7 @@
 from authentication.models import User
 from common.address import Address
+from common.entity.validators import validate_entity_against_self
 from common.tree.tree_node import Node
-from common.utils.validators import validate_entity_against_self
 from services.document_service import DocumentService
 
 

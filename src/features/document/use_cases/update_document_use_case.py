@@ -3,12 +3,12 @@ from typing import BinaryIO, List, Optional, Union
 from fastapi import UploadFile
 
 from common.address import Address
+from common.entity.validators import validate_entity, validate_entity_against_self
 from common.exceptions import NotFoundException, ValidationException
 from common.tree.merge_entity_and_files import merge_entity_and_files
 from common.tree.tree_node import Node
 from common.tree.tree_node_serializer import tree_node_to_dict
 from common.utils.logging import logger
-from common.utils.validators import validate_entity, validate_entity_against_self
 from enums import SIMOS, BuiltinDataTypes
 from services.document_service import DocumentService
 
