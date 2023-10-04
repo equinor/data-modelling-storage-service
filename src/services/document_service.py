@@ -227,7 +227,7 @@ class DocumentService:
 
     def remove(self, address: Address) -> None:
         node = self.get_document(address)
-        if node.parent and not node.attribute.is_optional:
+        if node.parent and not node.is_optional:
             raise ValidationException("Tried to remove a required attribute")
 
         data_source = self.repository_provider(address.data_source, self.user)

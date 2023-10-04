@@ -17,7 +17,7 @@
       "attributeType": "object",
       "contained": true,
       "dimensions": "*",
-      "optional": true
+      "optional": false
     }
   ]
 }
