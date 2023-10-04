@@ -98,6 +98,14 @@ Feature: Explorer - Remove by path
     }
     """
 
+  Scenario: Remove item from list
+    Given i access the resource url "/api/documents/data-source-name/blueprints.content[1]"
+    When i make a "DELETE" request
+    Then the response status should be "OK"
+    Given I access the resource url "/api/documents/data-source-name/$4"
+    When I make a "GET" request
+    Then the response status should be "Not Found"
+
   Scenario: Remove file with children
     Given i access the resource url "/api/documents/data-source-name/blueprints/sub_package_1"
     When i make a "DELETE" request

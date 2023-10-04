@@ -47,6 +47,14 @@ class NodeBase:
         self._type = value
 
     @property
+    def is_optional(self):
+        if not self.parent:
+            return True
+        if self.parent.is_array():
+            return True
+        return self.attribute.is_optional
+
+    @property
     def blueprint(self) -> Blueprint:
         if self.type == BuiltinDataTypes.OBJECT.value:
             return self.blueprint_provider(SIMOS.ENTITY.value)

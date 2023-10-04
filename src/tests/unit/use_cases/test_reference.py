@@ -276,9 +276,6 @@ class ReferenceTestCase(unittest.TestCase):
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
         self.document_service.repository_provider = lambda x, y: repository
-        self.assertRaises(
-            ValidationException, self.document_service.remove, Address("$1.uncontained_in_every_way[0]", "testing")
-        )
 
     def test_add_reference_in_list(self):
         repository = mock.Mock()
