@@ -8,11 +8,11 @@ from common.exceptions import (
     NotFoundException,
     ValidationException,
 )
-from common.tree_node_serializer import tree_node_from_dict
-from common.utils.merge_entity_and_files import merge_entity_and_files
+from common.tree.merge_entity_and_files import merge_entity_and_files
+from common.tree.tree_node import ListNode, Node
+from common.tree.tree_node_serializer import tree_node_from_dict
 from common.utils.validators import validate_entity, validate_entity_against_self
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from domain_classes.tree_node import ListNode, Node
 from enums import SIMOS
 from restful.request_types.shared import Entity
 from services.document_service import DocumentService

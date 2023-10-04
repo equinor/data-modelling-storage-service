@@ -2,9 +2,9 @@ import unittest
 from unittest import mock
 
 from authentication.models import User
-from common.tree_node_serializer import tree_node_from_dict
+from common.tree.tree_node import Node
+from common.tree.tree_node_serializer import tree_node_from_dict
 from config import config
-from domain_classes.tree_node import Node
 from enums import StorageDataTypes
 from storage.data_source_class import DataSource
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider

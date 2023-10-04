@@ -1,6 +1,6 @@
 from typing import BinaryIO, Dict
 
-from domain_classes.tree_node import Node
+from common.tree.tree_node import Node
 from enums import SIMOS
 
 
