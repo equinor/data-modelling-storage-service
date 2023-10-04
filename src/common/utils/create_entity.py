@@ -8,20 +8,6 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import PRIMITIVES, SIMOS, BuiltinDataTypes
 
 
-class CreateEntityException(Exception):
-    def __init__(self, message: str):
-        super()
-        self.message = message
-
-    def __str__(self):
-        return repr(self.message)
-
-
-class InvalidDefaultValue(CreateEntityException):
-    def __init__(self, attr: BlueprintAttribute, blueprint_name: str):
-        super().__init__(message=f"blueprint: {blueprint_name}, attribute: {attr.name} has empty default value.")
-
-
 class CreateEntity:
     """
     Rules for creating an entity of a given blueprint type:
