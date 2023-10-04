@@ -4,7 +4,6 @@ from unittest import mock, skip
 
 from authentication.models import User
 from common.address import Address
-from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from enums import SIMOS
 from features.document.use_cases.update_document_use_case import (
@@ -187,9 +186,8 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
             ],
         }
         # fmt: on
-
-        assert get_and_print_diff(doc_storage["1"], expected_1) == []
-        assert get_and_print_diff(doc_storage[list(doc_storage)[1]], expected_2) == []
+        self.assertDictEqual(doc_storage["1"], expected_1)
+        self.assertDictEqual(doc_storage[list(doc_storage)[1]], expected_2)
 
     def test_update_complex_array(self):
         # fmt: off

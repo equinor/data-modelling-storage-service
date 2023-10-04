@@ -4,7 +4,6 @@ from unittest import mock
 import common.exceptions
 from common.address import Address
 from common.exceptions import ValidationException
-from common.utils.data_structure.compare import get_and_print_diff
 from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
@@ -79,7 +78,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.storage = {"1": doc_1, "2": doc_2}
 
         self.mock_document_service.remove(Address("$1", "testing"))
-        assert get_and_print_diff(self.storage, {"2": doc_2}) == []
+        self.assertDictEqual(self.storage, {"2": doc_2})
 
     def test_remove_required_child_dict_raises_ValidationException(self):
         self.storage = {

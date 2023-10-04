@@ -3,7 +3,6 @@ from unittest import mock
 
 from common.address import Address
 from common.tree.tree_node import Node
-from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint import Blueprint
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
@@ -71,4 +70,4 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
         node.update(doc_1_after)
         self.document_service.save(node, "testing")
 
-        assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
+        self.assertDictEqual(doc_storage["1"], doc_1_after)

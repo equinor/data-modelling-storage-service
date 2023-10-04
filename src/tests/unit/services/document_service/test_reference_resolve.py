@@ -6,7 +6,6 @@ import pytest
 
 from common.address import Address
 from common.tree.tree_node_serializer import tree_node_to_dict
-from common.utils.data_structure.compare import get_and_print_diff
 from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
 from enums import REFERENCE_TYPES, SIMOS, Protocols
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
@@ -293,5 +292,5 @@ class GetDocumentResolveTestCase(unittest.TestCase):
         ]
         expected = {**my_car_rental, "cars": [expected_volvo, expected_ferrari], "customers": expected_customers}
 
-        assert get_and_print_diff(actual, expected) == []
-        assert get_and_print_diff(complex_package["content"][0], expected) == []
+        self.assertDictEqual(actual, expected)
+        self.assertDictEqual(complex_package["content"][0], expected)

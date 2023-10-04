@@ -3,7 +3,6 @@ from unittest import mock
 
 from common.address import Address
 from common.tree.tree_node_serializer import tree_node_to_dict
-from common.utils.data_structure.compare import get_and_print_diff
 from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
@@ -107,50 +106,47 @@ class GetDocumentInputTestCase(unittest.TestCase):
         root = tree_node_to_dict(
             self.document_service.get_document(Address.from_absolute("datasource/$1.customers(name=Jane)"), 0)
         )
-        assert get_and_print_diff(root, self.car_rental_company["customers"][0]) == []
+        self.assertDictEqual(root, self.car_rental_company["customers"][0])
 
     def test_query_resolve(self):
         root = tree_node_to_dict(
             self.document_service.get_document(Address.from_absolute("datasource/$1.customers(name=Jane)"), 1)
         )
-        assert get_and_print_diff(root, self.customer) == []
+        self.assertDictEqual(root, self.customer)
 
     def test_depth_0(self):
         root = tree_node_to_dict(self.document_service.get_document(Address.from_absolute("datasource/$1"), 0))
-        assert get_and_print_diff(root, self.car_rental_company) == []
+        self.assertDictEqual(root, self.car_rental_company)
 
     def test_depth_2(self):
         root = tree_node_to_dict(self.document_service.get_document(Address.from_absolute("datasource/$1"), 2))
-        assert get_and_print_diff(root, {**self.car_rental_company, "customers": [self.customer]}) == []
+        self.assertDictEqual(root, {**self.car_rental_company, "customers": [self.customer]})
 
     def test_depth_3(self):
         root = tree_node_to_dict(self.document_service.get_document(Address.from_absolute("datasource/$1"), 3))
-        assert (
-            get_and_print_diff(
-                root,
-                {
-                    **self.car_rental_company,
-                    "cars": [{**self.car_rental_company["cars"][0], "engine": self.engine}],
-                    "customers": [{**self.customer, "car": self.car_rental_company["cars"][0]}],
-                },
-            )
-            == []
+        self.assertDictEqual(
+            root,
+            {
+                **self.car_rental_company,
+                "cars": [{**self.car_rental_company["cars"][0], "engine": self.engine}],
+                "customers": [{**self.customer, "car": self.car_rental_company["cars"][0]}],
+            },
         )
 
     def test_nested_depth_0(self):
         root = tree_node_to_dict(
             self.document_service.get_document(Address.from_absolute("datasource/$1.cars[0].engine"), 0)
         )
-        assert get_and_print_diff(root, self.car_rental_company["cars"][0]["engine"]) == []
+        self.assertDictEqual(root, self.car_rental_company["cars"][0]["engine"])
 
     def test_nested_depth_1(self):
         root = tree_node_to_dict(
             self.document_service.get_document(Address.from_absolute("datasource/$1.cars[0].engine"), 1)
         )
-        assert get_and_print_diff(root, self.engine) == []
+        self.assertDictEqual(root, self.engine)
 
     def test_nested_depth_2(self):
         root = tree_node_to_dict(
             self.document_service.get_document(Address.from_absolute("datasource/$1.cars[0].engine"), 2)
         )
-        assert get_and_print_diff(root, {**self.engine, "fuelPump": self.fuel_pump}) == []
+        self.assertDictEqual(root, {**self.engine, "fuelPump": self.fuel_pump})
