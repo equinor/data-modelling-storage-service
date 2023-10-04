@@ -5,7 +5,6 @@ from unittest import mock
 from authentication.models import User
 from common.address import Address
 from common.tree.tree_node import Node
-from common.utils.data_structure.compare import get_and_print_diff
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import REFERENCE_TYPES, SIMOS
 from features.document.use_cases.update_document_use_case import (
@@ -246,8 +245,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         contained_node.remove_by_path(["1"])
         self.mock_document_service.save(node, "testing")
 
-        assert get_and_print_diff(doc_storage["1"], doc_1_after) == []
-        assert doc_storage["3"] is not None
+        self.assertDictEqual(doc_storage["1"], doc_1_after)
+        self.assertIsNotNone(doc_storage["3"])
 
     def test_save_nested_uncontained(self):
         repository = mock.Mock()
