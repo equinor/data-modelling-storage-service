@@ -1,8 +1,8 @@
 import unittest
 
-from common.tree_node_serializer import tree_node_to_dict
+from common.tree.tree_node import ListNode, Node
+from common.tree.tree_node_serializer import tree_node_to_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from domain_classes.tree_node import ListNode, Node
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 
 

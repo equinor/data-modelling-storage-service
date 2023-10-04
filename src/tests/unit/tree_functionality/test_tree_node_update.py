@@ -5,7 +5,7 @@ from unittest import mock
 from authentication.models import User
 from common.address import Address
 from common.exceptions import BadRequestException, ValidationException
-from domain_classes.tree_node import Node
+from common.tree.tree_node import Node
 from enums import REFERENCE_TYPES, SIMOS
 from features.document.use_cases.add_document_use_case import add_document_use_case
 from features.document.use_cases.update_document_use_case import (

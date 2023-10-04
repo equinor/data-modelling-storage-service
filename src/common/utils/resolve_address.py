@@ -6,7 +6,7 @@ from common.address import Address
 from common.exceptions import ApplicationException, NotFoundException
 from common.utils.data_structure.find import find
 from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
-from common.utils.is_reference import is_reference
+from common.utils.data_structure.is_reference import is_reference
 from enums import REFERENCE_TYPES, SIMOS
 from storage.data_source_class import DataSource
 

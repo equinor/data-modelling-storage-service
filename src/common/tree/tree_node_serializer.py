@@ -6,12 +6,12 @@ from common.exceptions import (
     BadRequestException,
     NotFoundException,
 )
+from common.tree.tree_node import ListNode, Node
 from common.utils.logging import logger
 from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageRecipe
-from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS, BuiltinDataTypes
 
 

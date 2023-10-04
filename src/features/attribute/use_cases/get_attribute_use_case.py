@@ -1,6 +1,6 @@
 from authentication.models import User
 from common.address import Address
-from domain_classes.tree_node import Node
+from common.tree.tree_node import Node
 from services.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 

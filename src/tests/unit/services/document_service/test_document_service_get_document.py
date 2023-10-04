@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 from common.address import Address
-from common.tree_node_serializer import tree_node_to_dict
+from common.tree.tree_node_serializer import tree_node_to_dict
 from common.utils.data_structure.compare import get_and_print_diff
 from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider

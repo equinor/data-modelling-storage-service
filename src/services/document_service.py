@@ -12,7 +12,8 @@ from common.exceptions import (
     NotFoundException,
     ValidationException,
 )
-from common.tree_node_serializer import (
+from common.tree.tree_node import ListNode, Node
+from common.tree.tree_node_serializer import (
     tree_node_from_dict,
     tree_node_to_dict,
     tree_node_to_ref_dict,
@@ -32,7 +33,6 @@ from common.utils.validators import validate_entity_against_self
 from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.storage_recipe import StorageRecipe
-from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source

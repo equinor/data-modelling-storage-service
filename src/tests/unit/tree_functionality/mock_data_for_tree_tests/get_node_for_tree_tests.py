@@ -1,5 +1,5 @@
+from common.tree.tree_node import ListNode, Node
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from domain_classes.tree_node import ListNode, Node
 from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 
