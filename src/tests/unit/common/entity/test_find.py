@@ -1,6 +1,6 @@
 import unittest
 
-from common.utils.data_structure.find import find
+from common.entity.find import find
 
 
 class FindTestCase(unittest.TestCase):

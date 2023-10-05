@@ -3,10 +3,10 @@ from dataclasses import dataclass
 from typing import Any, Callable, Tuple, Union
 
 from common.address import Address
+from common.entity.find import find
+from common.entity.has_key_value_pairs import has_key_value_pairs
+from common.entity.is_reference import is_reference
 from common.exceptions import ApplicationException, NotFoundException
-from common.utils.data_structure.find import find
-from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
-from common.utils.data_structure.is_reference import is_reference
 from enums import REFERENCE_TYPES, SIMOS
 from storage.data_source_class import DataSource
 

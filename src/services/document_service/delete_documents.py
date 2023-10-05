@@ -1,6 +1,6 @@
 from typing import Union
 
-from common.utils.data_structure.find import find
+from common.entity.find import find
 from enums import REFERENCE_TYPES, SIMOS, StorageDataTypes
 from storage.data_source_class import DataSource
 

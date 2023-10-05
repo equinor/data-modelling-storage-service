@@ -1,9 +1,9 @@
 from typing import Callable
 
 from common.address import Address
+from common.entity.is_reference import is_reference
 from common.exceptions import ApplicationException
 from common.providers.address_resolver import ResolvedAddress, resolve_address
-from common.utils.data_structure.is_reference import is_reference
 from storage.data_source_class import DataSource
 
 
