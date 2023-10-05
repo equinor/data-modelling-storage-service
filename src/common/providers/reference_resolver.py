@@ -7,7 +7,7 @@ from common.providers.address_resolver import ResolvedAddress, resolve_address
 from storage.data_source_class import DataSource
 
 
-def resolve_reference_list(
+def _resolve_reference_list(
     values: list, document_repository: DataSource, get_data_source, current_id, depth: int = 1, depth_count: int = 0
 ) -> list:
     if not values:  # Return an empty list
@@ -17,13 +17,13 @@ def resolve_reference_list(
 
     if isinstance(value_sample, list):  # Call recursively for nested lists
         return [
-            resolve_reference_list(value, document_repository, get_data_source, current_id, depth, depth_count)
+            _resolve_reference_list(value, document_repository, get_data_source, current_id, depth, depth_count)
             for value in values
         ]
 
     if is_reference(value_sample):
         return [
-            get_complete_sys_document(value, document_repository, get_data_source, current_id, depth, depth_count)
+            _get_complete_sys_document(value, document_repository, get_data_source, current_id, depth, depth_count)
             for value in values
         ]
 
@@ -37,7 +37,7 @@ def resolve_reference_list(
     return values
 
 
-def get_complete_sys_document(
+def _get_complete_sys_document(
     reference: dict,
     data_source: DataSource,
     get_data_source,
@@ -91,13 +91,13 @@ def resolve_references_in_entity(
             if not value:
                 continue
             if isinstance(value, list):  # If it's a list, resolve any references
-                entity[key] = resolve_reference_list(
+                entity[key] = _resolve_reference_list(
                     value, data_source, get_data_source, current_id, depth, depth_count + 1
                 )
             else:
                 if is_reference(value):
                     if depth_count <= depth:
-                        entity[key] = get_complete_sys_document(
+                        entity[key] = _get_complete_sys_document(
                             value, data_source, get_data_source, current_id, depth, depth_count + 1
                         )
                         continue
