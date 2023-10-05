@@ -4,11 +4,15 @@ from fastapi.responses import JSONResponse
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.responses import create_response, responses
+from features.entity.use_cases.instantiate_entity_use_case.instantiate_entity_use_case import (
+    instantiate_entity_use_case,
+)
 from restful.request_types.shared import Entity, TypeConstrainedString
 
-from .use_cases.instantiate_entity import instantiate_entity_use_case
-from .use_cases.validate_entity import validate_entity_use_case
-from .use_cases.validate_existing_entity import validate_existing_entity_use_case
+from .use_cases.validate_entity_use_case import validate_entity_use_case
+from .use_cases.validate_existing_entity_use_case import (
+    validate_existing_entity_use_case,
+)
 
 router = APIRouter(tags=["default", "entity"], prefix="/entity")
 

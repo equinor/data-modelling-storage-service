@@ -2,10 +2,12 @@ import json
 from json import JSONDecodeError
 from typing import Callable
 
-from common.entity.create_entity_arrays import create_default_array
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import PRIMITIVES, SIMOS, BuiltinDataTypes
+from features.entity.use_cases.instantiate_entity_use_case.create_entity_arrays import (
+    create_default_array,
+)
 
 
 class CreateEntity:

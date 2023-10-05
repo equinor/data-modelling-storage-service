@@ -1,14 +1,16 @@
 import unittest
 
-from common.entity.create_entity import CreateEntity
-from common.entity.create_entity_arrays import (
-    create_default_array,
-    remove_first_and_join,
-)
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dimension import Dimension
 from enums import SIMOS
+from features.entity.use_cases.instantiate_entity_use_case.create_entity import (
+    CreateEntity,
+)
+from features.entity.use_cases.instantiate_entity_use_case.create_entity_arrays import (
+    create_default_array,
+    remove_first_and_join,
+)
 from services.document_service.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
