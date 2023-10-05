@@ -10,11 +10,7 @@ def scrypt(value: str, salt: str = config.SECRET_KEY) -> str:
     return digest.hex()
 
 
-def sha256(value: str) -> str:
-    return hashlib.sha256(value.encode()).hexdigest()
-
-
-def key_loaded():
+def _key_loaded():
     if not config.SECRET_KEY:
         raise EnvironmentError(
             "The encryption/decryption was attempted without supplying the 'SECRET_KEY' environment variable"
@@ -27,7 +23,7 @@ def generate_key():
 
 
 def encrypt(message: str) -> str:
-    key_loaded()
+    _key_loaded()
     fernet = Fernet(config.SECRET_KEY)
     message_as_bytes = message.encode()
     token = fernet.encrypt(message_as_bytes)
@@ -37,7 +33,7 @@ def encrypt(message: str) -> str:
 def decrypt(token: str) -> str:
     if not token:
         return ""
-    key_loaded()
+    _key_loaded()
     fernet = Fernet(config.SECRET_KEY)
     token_as_bytes = token.encode()
     message_as_bytes = fernet.decrypt(token_as_bytes)

@@ -3,12 +3,12 @@ from pathlib import Path
 from uuid import uuid4
 from zipfile import ZipFile
 
-from common.entity.replace_reference_with_alias import (
-    replace_absolute_references_in_entity_with_alias,
-)
 from common.utils.logging import logger
 from domain_classes.dependency import Dependency
 from enums import SIMOS
+from storage.repositories.zip.replace_reference_with_alias import (
+    replace_absolute_references_in_entity_with_alias,
+)
 from storage.repository_interface import RepositoryInterface
 
 

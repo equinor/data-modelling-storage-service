@@ -7,8 +7,8 @@ from behave import given, step, then, when
 from fastapi.testclient import TestClient
 
 from authentication.models import User
-from common.utils.mock_token_generator import generate_mock_token
 from config import config
+from tests.test_helpers.mock_token_generator import generate_mock_token
 
 
 @step('i access the resource url "{url}"')

@@ -9,10 +9,10 @@ from starlette.exceptions import HTTPException
 from authentication.models import User
 from authentication.utils import remove_pat_roles_not_assigned_by_auth_provider
 from common.utils.logging import logger
-from common.utils.mock_token_generator import mock_rsa_public_key
 from config import config
 from services.role_assignments_provider import RoleAssignmentsProvider
 from storage.internal.personal_access_tokens import get_pat
+from tests.test_helpers.mock_token_generator import mock_rsa_public_key
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
     authorizationUrl=config.OAUTH_AUTH_ENDPOINT, tokenUrl=config.OAUTH_TOKEN_ENDPOINT

@@ -1,10 +1,10 @@
 import unittest
 
-from common.entity.replace_reference_with_alias import (
-    replace_absolute_references_in_entity_with_alias,
-    replace_reference_with_alias_if_possible,
-)
 from domain_classes.dependency import Dependency
+from storage.repositories.zip.replace_reference_with_alias import (
+    _replace_reference_with_alias_if_possible,
+    replace_absolute_references_in_entity_with_alias,
+)
 
 example_entity: dict = {
     "_id": "25cdcef6-ee7c-4377-9487-2f4b8496e7c9",
@@ -97,11 +97,11 @@ class ReplaceWithAliasTest(unittest.TestCase):
         }
         dependencies: list[Dependency] = [Dependency(**car_package_dependency), Dependency(**wheel_package_dependency)]
         reference = "dmss://DemoApplicationDataSource/models/CarPackage/Wheel/SubPackage/Pressure"
-        alias = replace_reference_with_alias_if_possible(reference=reference, dependencies=dependencies)
+        alias = _replace_reference_with_alias_if_possible(reference=reference, dependencies=dependencies)
         assert alias == "WHEEL:SubPackage/Pressure"
 
         reference = "dmss://DemoApplicationDataSource/models"
-        alias = replace_reference_with_alias_if_possible(reference=reference, dependencies=dependencies)
+        alias = _replace_reference_with_alias_if_possible(reference=reference, dependencies=dependencies)
         assert alias == reference
 
     def test_replace_absolute_references_in_entity_with_alias(self):
