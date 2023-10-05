@@ -9,7 +9,7 @@ from common.tree.tree_node import Node
 from enums import SIMOS
 from features.export.use_cases.export_meta_use_case import export_meta_use_case
 from services.document_service.document_service import DocumentService
-from storage.repositories.zip.zip import ZipFileClient
+from storage.repositories.zip.zip_file_client import ZipFileClient
 
 
 def save_node_to_zipfile(
