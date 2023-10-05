@@ -1,5 +1,5 @@
-default_stages: [pre-commit]
-default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [ pre-commit ]
+default_install_hook_types: [ pre-commit, commit-msg ]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -11,7 +11,7 @@ repos:
       - id: mixed-line-ending
         exclude: ^.*\.(lock)$||^docs\/
       - id: detect-private-key
-        exclude: src/common/utils/mock_token_generator.py
+        exclude: src/tests/test_helpers/mock_token_generator.py
       - id: check-ast
         language_version: python3.11
       - id: check-merge-conflict
@@ -21,16 +21,16 @@ repos:
       - id: check-toml
       - id: pretty-format-json
         args:
-          [--autofix, --no-sort-keys, "--top-keys=_id,name,type,description"]
+          [ --autofix, --no-sort-keys, "--top-keys=_id,name,type,description" ]
       - id: no-commit-to-branch
-        args: [--branch, master]
-        stages: [commit-msg]
+        args: [ --branch, master ]
+        stages: [ commit-msg ]
 
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v2.4.0
     hooks:
       - id: conventional-pre-commit
-        stages: [commit-msg]
+        stages: [ commit-msg ]
 
   - repo: https://github.com/ambv/black
     rev: 23.7.0
@@ -43,7 +43,7 @@ repos:
     rev: v2.2.2
     hooks:
       - id: pycln
-        args: [./src, --all]
+        args: [ ./src, --all ]
         pass_filenames: false
 
   - repo: https://github.com/pycqa/isort
@@ -57,7 +57,7 @@ repos:
     rev: 1.7.5
     hooks:
       - id: bandit
-        args: [-l, --recursive, -x, tests]
+        args: [ -l, --recursive, -x, tests ]
         files: ^src/.*\.py$
 
   - repo: https://github.com/pycqa/flake8
@@ -77,7 +77,7 @@ repos:
     rev: v1.5.1
     hooks:
       - id: mypy
-        args: [--config-file=./pyproject.toml]
+        args: [ --config-file=./pyproject.toml ]
         exclude: src/tests
         additional_dependencies:
           - types-cachetools == 5.2.0

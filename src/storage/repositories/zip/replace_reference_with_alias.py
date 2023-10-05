@@ -3,7 +3,7 @@ import math
 from domain_classes.dependency import Dependency
 
 
-def has_dependency_alias(reference: str, dependencies: list[Dependency]) -> bool:
+def _has_dependency_alias(reference: str, dependencies: list[Dependency]) -> bool:
     """Check if a given reference string on the format <protocol>://<datasource>/<path> can be
     substituted with an alias on the format <alias>:<path>.
     """
@@ -13,13 +13,13 @@ def has_dependency_alias(reference: str, dependencies: list[Dependency]) -> bool
     return False
 
 
-def replace_reference_with_alias_if_possible(reference: str, dependencies: list[Dependency]) -> str | None:
+def _replace_reference_with_alias_if_possible(reference: str, dependencies: list[Dependency]) -> str | None:
     """Replace the reference string with an alias.
     The reference string on the format <protocol>://<datasource>/<path>.
 
     If the reference does not have an alias that match, the original reference is returned.
     """
-    if not has_dependency_alias(reference, dependencies):
+    if not _has_dependency_alias(reference, dependencies):
         return reference
     best_alias_match = None
     longest_path_length_after_alias = math.inf
@@ -44,10 +44,10 @@ def replace_absolute_references_in_entity_with_alias(entity: dict, dependencies:
     for attribute, attribute_value in entity.items():
         if attribute == EXTENDS:
             entity[EXTENDS] = [
-                replace_reference_with_alias_if_possible(reference, dependencies) for reference in attribute_value
+                _replace_reference_with_alias_if_possible(reference, dependencies) for reference in attribute_value
             ]
         elif attribute in attributes_to_update:
-            entity[attribute] = replace_reference_with_alias_if_possible(attribute_value, dependencies)
+            entity[attribute] = _replace_reference_with_alias_if_possible(attribute_value, dependencies)
         elif isinstance(attribute_value, dict):
             entity[attribute] = replace_absolute_references_in_entity_with_alias(attribute_value, dependencies)
         elif isinstance(attribute_value, list):

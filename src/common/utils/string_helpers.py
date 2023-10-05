@@ -1,7 +1,5 @@
 import re
 
-from enums import BuiltinDataTypes
-
 # Some terminology;
 
 # PATH_REFERENCE = datasource/package/folder/entity.attribute
@@ -11,19 +9,6 @@ from enums import BuiltinDataTypes
 
 # DMSS_REFERENCE = {PATH_REFERENCE, ID_REFERENCE}
 # ABSOLUTE_REFERENCE = PROTOCOL://ADDRESS
-
-
-# Convert dmt attribute_types to python types. If complex, return type as string.
-def get_data_type_from_dmt_type(
-    attribute_type: str,
-) -> type[bool] | type[int] | type[float] | type[str] | str:
-    try:
-        type_enum = BuiltinDataTypes(attribute_type)
-        return type_enum.to_py_type()
-    except ValueError:
-        return attribute_type
-    except Exception as error:
-        raise Exception(f"Something went wrong trying to fetch data type: {error}")
 
 
 def url_safe_name(name: str) -> bool:

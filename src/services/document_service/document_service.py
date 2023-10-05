@@ -40,7 +40,7 @@ from services.document_service.delete_documents import (
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient
-from storage.repositories.zip import ZipFileClient
+from storage.repositories.zip.zip import ZipFileClient
 
 pretty_printer = pprint.PrettyPrinter()
 

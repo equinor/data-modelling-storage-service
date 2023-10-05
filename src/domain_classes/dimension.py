@@ -1,4 +1,17 @@
-from common.utils.string_helpers import get_data_type_from_dmt_type
+# Convert dmt attribute_types to python types. If complex, return type as string.
+from enums import BuiltinDataTypes
+
+
+def _get_data_type_from_dmt_type(
+    attribute_type: str,
+) -> type[bool] | type[int] | type[float] | type[str] | str:
+    try:
+        type_enum = BuiltinDataTypes(attribute_type)
+        return type_enum.to_py_type()
+    except ValueError:
+        return attribute_type
+    except Exception as error:
+        raise Exception(f"Something went wrong trying to fetch data type: {error}")
 
 
 class Dimension:
@@ -14,7 +27,9 @@ class Dimension:
         a string value is stored.
         """
         self.dimensions: list[str] = dimensions.split(",")
-        self.type: type[bool] | type[int] | type[float] | type[str] | str = get_data_type_from_dmt_type(attribute_type)
+        self.type: type[bool] | type[int] | type[float] | type[str] | str = _get_data_type_from_dmt_type(
+            attribute_type
+        )
         self.value = None
 
     def is_array(self) -> bool:
