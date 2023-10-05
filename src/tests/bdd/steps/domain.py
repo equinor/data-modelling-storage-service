@@ -3,11 +3,13 @@ import json
 from behave import given, then
 
 from authentication.models import AccessControlList
-from common.entity.create_entity import CreateEntity
 from common.providers.storage_recipe_provider import storage_recipe_provider
 from common.tree.tree_node import ListNode, Node
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import SIMOS, BuiltinDataTypes
+from features.entity.use_cases.instantiate_entity_use_case.create_entity import (
+    CreateEntity,
+)
 from services.database import data_source_collection
 from services.document_service.document_service import DocumentService
 from storage.internal.data_source_repository import (
