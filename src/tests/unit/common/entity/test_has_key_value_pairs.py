@@ -1,6 +1,6 @@
 import unittest
 
-from common.utils.data_structure.has_key_value_pairs import has_key_value_pairs
+from common.entity.has_key_value_pairs import has_key_value_pairs
 
 
 class HasKeyValuePairsTestCase(unittest.TestCase):
