@@ -1,6 +1,6 @@
 import unittest
 
-from common.utils.resolve_address import _next_path_part
+from common.providers.address_resolver import _next_path_part
 
 
 class NextPartPathTestCase(unittest.TestCase):

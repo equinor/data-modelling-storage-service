@@ -1,6 +1,6 @@
 import unittest
 
-from common.utils.resolve_address import split_path
+from common.providers.address_resolver import split_path
 
 
 class SplitPathTestCase(unittest.TestCase):

@@ -10,7 +10,7 @@ from common.tree.tree_node import Node
 from common.tree.tree_node_serializer import tree_node_to_dict
 from common.utils.logging import logger
 from enums import SIMOS, BuiltinDataTypes
-from services.document_service import DocumentService
+from services.document_service.document_service import DocumentService
 
 
 def _update_document(

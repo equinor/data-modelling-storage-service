@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from authentication.models import User
-from common.utils.get_storage_recipe import (
+from common.providers.storage_recipe_provider import (
     default_form_edit,
     default_initial_ui_recipe,
     default_list_recipe,
@@ -9,7 +9,7 @@ from common.utils.get_storage_recipe import (
 )
 from domain_classes.lookup import Lookup
 from restful.request_types.shared import TypeConstrainedString
-from services.document_service import DocumentService
+from services.document_service.document_service import DocumentService
 from storage.internal.lookup_tables import get_lookup
 
 

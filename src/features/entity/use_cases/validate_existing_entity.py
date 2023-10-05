@@ -2,7 +2,7 @@ from authentication.models import User
 from common.address import Address
 from common.entity.validators import validate_entity_against_self
 from common.tree.tree_node import Node
-from services.document_service import DocumentService
+from services.document_service.document_service import DocumentService
 
 
 def validate_existing_entity_use_case(address: str, user: User) -> str:

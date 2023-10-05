@@ -4,7 +4,7 @@ from authentication.models import User
 from common.address import Address
 from common.tree.tree_node import ListNode, Node
 from common.tree.tree_node_serializer import tree_node_to_dict
-from services.document_service import DocumentService
+from services.document_service.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 
 

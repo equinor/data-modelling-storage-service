@@ -5,7 +5,7 @@ from domain_classes.lookup import Lookup
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from domain_classes.ui_recipe import Recipe
 from enums import SIMOS, StorageDataTypes
-from services.document_service import DocumentService
+from services.document_service.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 from storage.internal.lookup_tables import get_lookup, insert_lookup
 

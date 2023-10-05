@@ -2,7 +2,7 @@ from typing import Callable, List, Union
 from uuid import uuid4
 
 from common.exceptions import ValidationException
-from common.utils.get_storage_recipe import create_default_storage_recipe
+from common.providers.storage_recipe_provider import create_default_storage_recipe
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe

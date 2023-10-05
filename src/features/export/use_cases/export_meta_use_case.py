@@ -3,7 +3,11 @@ from typing import List, Optional
 from authentication.models import User
 from common.address import Address
 from common.exceptions import NotFoundException
-from common.utils.resolve_address import QueryItem, path_to_path_items, resolve_address
+from common.providers.address_resolver import (
+    QueryItem,
+    path_to_path_items,
+    resolve_address,
+)
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 

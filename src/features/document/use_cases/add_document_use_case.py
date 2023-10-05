@@ -15,7 +15,7 @@ from common.tree.tree_node_serializer import tree_node_from_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import SIMOS
 from restful.request_types.shared import Entity
-from services.document_service import DocumentService
+from services.document_service.document_service import DocumentService
 
 
 def _add_document_to_data_source(data_source_id: str, document: dict, document_service: DocumentService) -> dict:
