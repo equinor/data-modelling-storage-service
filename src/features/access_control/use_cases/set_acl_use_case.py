@@ -2,7 +2,7 @@ from authentication.models import AccessControlList
 from common.address import Address
 from common.exceptions import MissingPrivilegeException
 from common.utils.logging import logger
-from services.document_service import DocumentService
+from services.document_service.document_service import DocumentService
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import DataSourceRepository
 

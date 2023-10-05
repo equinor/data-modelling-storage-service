@@ -9,7 +9,7 @@ from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dimension import Dimension
 from enums import SIMOS
-from services.document_service import DocumentService
+from services.document_service.document_service import DocumentService
 from storage.repositories.file import LocalFileRepository
 from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
 

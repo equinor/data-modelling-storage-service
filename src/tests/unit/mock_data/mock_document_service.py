@@ -1,4 +1,4 @@
-from services.document_service import DocumentService
+from services.document_service.document_service import DocumentService
 from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
 
 

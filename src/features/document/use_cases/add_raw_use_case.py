@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from authentication.models import User
 from enums import SIMOS
-from services.document_service import DocumentService
+from services.document_service.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 
 

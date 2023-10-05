@@ -1,6 +1,6 @@
 from authentication.models import User
 from common.address import Address
-from services.document_service import DocumentService
+from services.document_service.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
 
 

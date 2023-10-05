@@ -14,26 +14,29 @@ from common.exceptions import (
     NotFoundException,
     ValidationException,
 )
+from common.providers.address_resolver import ResolvedAddress, resolve_address
+from common.providers.blueprint_provider import get_blueprint_provider
+from common.providers.reference_resolver import resolve_references_in_entity
+from common.providers.storage_recipe_provider import (
+    create_default_storage_recipe,
+    storage_recipe_provider,
+)
 from common.tree.tree_node import ListNode, Node
 from common.tree.tree_node_serializer import (
     tree_node_from_dict,
     tree_node_to_dict,
     tree_node_to_ref_dict,
 )
-from common.utils.blueprint_provider import get_blueprint_provider
 from common.utils.build_complex_search import build_mongo_query
-from common.utils.delete_documents import delete_by_attribute_path, delete_document
-from common.utils.get_resolved_document_by_id import resolve_references_in_entity
-from common.utils.get_storage_recipe import (
-    create_default_storage_recipe,
-    storage_recipe_provider,
-)
 from common.utils.logging import logger
-from common.utils.resolve_address import ResolvedAddress, resolve_address
 from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.storage_recipe import StorageRecipe
 from enums import REFERENCE_TYPES, SIMOS
+from services.document_service.delete_documents import (
+    delete_by_attribute_path,
+    delete_document,
+)
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.mongo import MongoDBClient

@@ -4,12 +4,12 @@ from behave import given, then
 
 from authentication.models import AccessControlList
 from common.entity.create_entity import CreateEntity
+from common.providers.storage_recipe_provider import storage_recipe_provider
 from common.tree.tree_node import ListNode, Node
-from common.utils.get_storage_recipe import storage_recipe_provider
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import SIMOS, BuiltinDataTypes
 from services.database import data_source_collection
-from services.document_service import DocumentService
+from services.document_service.document_service import DocumentService
 from storage.internal.data_source_repository import (
     DataSourceRepository,
     get_data_source,
