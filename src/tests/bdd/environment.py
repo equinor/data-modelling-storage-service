@@ -1,7 +1,7 @@
 from authentication.models import User
-from common.test_helpers.wipe_db import wipe_db
 from config import config
 from tests.bdd.results import print_overview_errors, print_overview_features
+from tests.test_helpers.wipe_db import wipe_db
 
 test_user = User(**{"user_id": "behave-test", "full_name": "Behave Test", "email": "behave-test@example.com"})
 

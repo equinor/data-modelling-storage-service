@@ -6,8 +6,8 @@ from behave import then
 from deepdiff import DeepDiff
 from dictdiffer import diff
 
-from common.test_helpers.print_pygments import print_pygments
 from common.utils.data_structure.find import find
+from tests.test_helpers.print_pygments import print_pygments
 
 STATUS_CODES = {
     "OK": 200,
