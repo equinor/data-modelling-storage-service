@@ -3,7 +3,10 @@ from typing import Callable
 
 from authentication.models import User
 from common.address import Address
-from common.providers.address_resolver import ResolvedAddress, resolve_address
+from common.providers.address_resolver.address_resolver import (
+    ResolvedAddress,
+    resolve_address,
+)
 from common.utils.logging import logger
 from config import config
 from domain_classes.blueprint import Blueprint

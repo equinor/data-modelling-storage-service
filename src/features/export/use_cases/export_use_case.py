@@ -4,7 +4,10 @@ import zipfile
 
 from authentication.models import User
 from common.address import Address
-from common.providers.address_resolver import ResolvedAddress, resolve_address
+from common.providers.address_resolver.address_resolver import (
+    ResolvedAddress,
+    resolve_address,
+)
 from common.tree.tree_node import Node
 from enums import SIMOS
 from features.export.use_cases.export_meta_use_case import export_meta_use_case

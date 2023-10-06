@@ -3,7 +3,7 @@ from typing import List, Optional
 from authentication.models import User
 from common.address import Address
 from common.exceptions import NotFoundException
-from common.providers.address_resolver import (
+from common.providers.address_resolver.address_resolver import (
     QueryItem,
     path_to_path_items,
     resolve_address,

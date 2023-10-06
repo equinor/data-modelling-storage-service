@@ -6,7 +6,10 @@ from uuid import uuid4
 from authentication.models import User
 from common.address import Address
 from common.exceptions import BadRequestException, NotFoundException
-from common.providers.address_resolver import ResolvedAddress, resolve_address
+from common.providers.address_resolver.address_resolver import (
+    ResolvedAddress,
+    resolve_address,
+)
 from common.utils.logging import logger
 from common.utils.string_helpers import url_safe_name
 from enums import REFERENCE_TYPES, SIMOS

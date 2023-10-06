@@ -13,7 +13,10 @@ from common.exceptions import (
     NotFoundException,
     ValidationException,
 )
-from common.providers.address_resolver import ResolvedAddress, resolve_address
+from common.providers.address_resolver.address_resolver import (
+    ResolvedAddress,
+    resolve_address,
+)
 from common.providers.blueprint_provider import get_blueprint_provider
 from common.providers.reference_resolver import resolve_references_in_entity
 from common.providers.storage_recipe_provider import (
