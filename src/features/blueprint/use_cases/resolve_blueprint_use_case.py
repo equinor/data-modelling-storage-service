@@ -35,7 +35,7 @@ def resolve_blueprint_use_case(user: User, address: str):
     address_obj = Address.from_absolute(address)
     path_elements = []
     try:
-        UUID(address_obj.path.replace("$", ""))
+        UUID(address_obj.path.replace("$", ""), version=4)
     except ValueError:
         raise ValidationException(f"Id {address_obj.path} is not correct UUIDv4 format.")
 
