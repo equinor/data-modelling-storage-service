@@ -3,7 +3,7 @@ from uuid import UUID
 
 from authentication.models import User
 from common.address import Address
-from common.exceptions import ApplicationException, NotFoundException
+from common.exceptions import NotFoundException, ValidationException
 from common.providers.address_resolver import resolve_address
 from enums import SIMOS
 from storage.data_source_class import DataSource
@@ -34,9 +34,11 @@ def resolve_references(values: list, data_source_id: str, user: User) -> list:
 def resolve_blueprint_use_case(user: User, address: str):
     address_obj = Address.from_absolute(address)
     path_elements = []
+    try:
+        UUID(address_obj.path.replace("$", ""))
+    except ValueError:
+        raise ValidationException(f"Id {address_obj.path} is not correct UUIDv4 format.")
 
-    if not UUID(address_obj.path.replace("$", "")):
-        raise ApplicationException(f"Incorrect address {address}. Address should point directly to an UUIDv4 id ")
     package = find_package_with_document(address_obj.data_source, address_obj.path, user)
     root_package_found = package["isRoot"]
     blueprint_name = next(

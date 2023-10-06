@@ -32,4 +32,9 @@ Feature: Blueprint - Resolve path to document use case
     When I make a "GET" request
     Then the response status should be "Not Found"
 
+  Scenario: resolve path to document fails when document with id is not uuid convertible
+    Given I access the resource url "/api/resolve-path/data-source-name/$123"
+    When I make a "GET" request
+    Then the response status should be "Bad Request"
+
 
