@@ -11,32 +11,6 @@ from enums import REFERENCE_TYPES, SIMOS
 from storage.data_source_class import DataSource
 
 
-def split_path(path: str) -> list[str]:
-    """Splits a path into it's string components
-    e.g. "$123.content[1]" -> ["$123", ".content", "[1]"]"""
-    parts = []
-    remaining_path = path
-    while remaining_path:
-        if remaining_path[0] in "./":
-            prefix_delim = remaining_path[0]
-            content = re.split(r"[./\[(]", remaining_path, 2)[1]
-            parts.append(f"{prefix_delim}{content}")
-            remaining_path = remaining_path.removeprefix(parts[-1])
-            continue
-        if remaining_path[0] in "[(":
-            prefix_delim = remaining_path[0]
-            closing_bracket = "]" if prefix_delim == "[" else ")"
-            content = re.split("[" + re.escape(f"{closing_bracket}") + "]", remaining_path, 2)[0][1:]
-            parts.append(f"{prefix_delim}{content}{closing_bracket}")
-            remaining_path = remaining_path.removeprefix(parts[-1])
-            continue
-
-        content = re.split(r"[./]", remaining_path, 1)[0]
-        remaining_path = remaining_path.removeprefix(content)
-        parts.append(content)
-    return parts
-
-
 def _next_path_part(path: str) -> Tuple[str, Union[str, None], str]:
     """Utility to get next path part."""
     content = path  # Default to path
