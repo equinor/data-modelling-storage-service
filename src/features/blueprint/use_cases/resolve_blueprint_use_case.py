@@ -1,5 +1,5 @@
-import re
 from typing import List
+from uuid import UUID
 
 from authentication.models import User
 from common.address import Address
@@ -34,8 +34,9 @@ def resolve_references(values: list, data_source_id: str, user: User) -> list:
 def resolve_blueprint_use_case(user: User, address: str):
     address_obj = Address.from_absolute(address)
     path_elements = []
-    if not address_obj.path or not re.search(r"^\$[a-z0-9]+$", address_obj.path):
-        raise ApplicationException(f"Incorrect address {address}. Address should point directly to an id")
+
+    if not UUID(address_obj.path.replace("$", "")):
+        raise ApplicationException(f"Incorrect address {address}. Address should point directly to an UUIDv4 id ")
     package = find_package_with_document(address_obj.data_source, address_obj.path, user)
     root_package_found = package["isRoot"]
     blueprint_name = next(
