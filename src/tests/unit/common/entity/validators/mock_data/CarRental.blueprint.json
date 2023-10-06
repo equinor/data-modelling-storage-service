@@ -1,0 +1,28 @@
+{
+  "name": "CarRental",
+  "type": "system/SIMOS/Blueprint",
+  "attributes": [
+    {
+      "name": "name",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "type",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "cars",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "dimensions": "*",
+      "attributeType": "RentalCar"
+    },
+    {
+      "name": "customers",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "dimensions": "*",
+      "attributeType": "Customer"
+    }
+  ]
+}
