@@ -1,6 +1,6 @@
 import unittest
 
-from common.providers.address_resolver import (
+from common.providers.address_resolver.address_resolver import (
     AttributeItem,
     IdItem,
     QueryItem,

@@ -4,7 +4,7 @@ from uuid import UUID
 from authentication.models import User
 from common.address import Address
 from common.exceptions import NotFoundException, ValidationException
-from common.providers.address_resolver import resolve_address
+from common.providers.address_resolver.address_resolver import resolve_address
 from enums import SIMOS
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
