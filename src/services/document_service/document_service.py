@@ -1,12 +1,11 @@
 import mimetypes
 import pprint
 from functools import lru_cache
-from typing import Callable, Dict, List, Union
+from typing import Callable, Dict, Union
 from uuid import uuid4
 
 from authentication.models import User
 from common.address import Address
-from common.entity.sort_entities_by_attribute import sort_dtos_by_attribute
 from common.entity.validators import validate_entity_against_self
 from common.exceptions import (
     ApplicationException,
@@ -27,7 +26,6 @@ from common.tree.tree_node_serializer import (
     tree_node_to_dict,
     tree_node_to_ref_dict,
 )
-from common.utils.build_complex_search import build_mongo_query
 from common.utils.logging import logger
 from config import config
 from domain_classes.blueprint import Blueprint
@@ -39,7 +37,6 @@ from services.document_service.delete_documents import (
 )
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
-from storage.repositories.mongo import MongoDBClient
 from storage.repositories.zip.zip_file_client import ZipFileClient
 
 pretty_printer = pprint.PrettyPrinter()
@@ -81,8 +78,8 @@ class DocumentService:
 
     def invalidate_cache(self):
         logger.warning("Clearing blueprint cache")
-        self.get_blueprint.cache_clear()
         self._blueprint_provider.invalidate_cache()
+        self.get_blueprint.cache_clear()
 
     def save_blob_data(self, node: Node, repository: DataSource) -> dict:
         """
@@ -243,24 +240,3 @@ class DocumentService:
             return
 
         delete_document(data_source, resolved_reference.document_id)
-
-    def search(self, data_source_id, search_data, dotted_attribute_path):
-        repository: DataSource = self.repository_provider(data_source_id, self.user)
-
-        if not isinstance(repository.get_default_repository().client, MongoDBClient):
-            raise ApplicationException(
-                f"Search is not supported on this repository type; {type(repository.repository).__name__}"
-            )
-
-        try:
-            process_search_data = build_mongo_query(self.get_blueprint, search_data)
-        except ValueError as error:
-            logger.warning(f"Failed to build mongo query; {error}")
-            raise BadRequestException("Failed to build mongo query")
-        result: List[dict] = repository.find(process_search_data)
-        result_sorted: List[dict] = sort_dtos_by_attribute(result, dotted_attribute_path)
-        result_list = {}
-        for document in result_sorted:
-            result_list[f"{data_source_id}/{document['_id']}"] = document
-
-        return result_list
