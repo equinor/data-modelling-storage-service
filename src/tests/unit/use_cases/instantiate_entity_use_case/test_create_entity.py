@@ -15,7 +15,7 @@ class CreateEntityTestCase(unittest.TestCase):
             "dmss://system/SIMOS/BlueprintAttribute",
             "dmss://system/SIMOS/NamedEntity",
         ]
-        mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
+        mock_blueprint_folder = "src/tests/unit/use_cases/instantiate_entity_use_case/mock_data/"
         mock_blueprints_and_file_names = {
             "CarTest": "CarTest.blueprint.json",
             "WheelTest": "WheelTest.blueprint.json",
