@@ -3,7 +3,7 @@ import unittest
 from common.tree.tree_node import ListNode, Node
 from common.tree.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from tests.unit.common.test_tree.mock_data.get_mock_nodes import get_engine_package_node
+from tests.unit.common.tree.mock_data.get_mock_nodes import get_engine_package_node
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
 
@@ -29,7 +29,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         simos_blueprints = [
             "dmss://system/SIMOS/Reference",
         ]
-        mock_blueprint_folder = "src/tests/unit/common/test_tree/mock_data/mock_blueprints"
+        mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
             "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",
             "Garden": "Garden.blueprint.json",
