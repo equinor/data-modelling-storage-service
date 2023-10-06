@@ -1,0 +1,15 @@
+{
+  "name": "SpecialChild",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "",
+  "extends": [
+    "BaseChild"
+  ],
+  "attributes": [
+    {
+      "name": "AnExtraValue",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    }
+  ]
+}
