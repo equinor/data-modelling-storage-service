@@ -16,7 +16,7 @@ from tests.unit.mock_data.mock_document_service import get_mock_document_service
 class ReferenceTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
-        mock_blueprint_folder = "src/tests/unit/mock_data/mock_blueprints"
+        mock_blueprint_folder = "src/tests/unit/use_cases/add_document/mock_data"
         mock_blueprints_and_file_names = {
             "basic_blueprint": "basic_blueprint.blueprint.json",
             "uncontained_blueprint": "uncontained_blueprint.blueprint.json",

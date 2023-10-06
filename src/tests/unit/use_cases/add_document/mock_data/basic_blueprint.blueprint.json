@@ -1,0 +1,9 @@
+{
+  "name": "Blueprint 2",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "Second blueprint",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": []
+}
