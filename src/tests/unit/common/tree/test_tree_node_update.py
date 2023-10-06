@@ -11,7 +11,7 @@ from features.document.use_cases.add_document_use_case import add_document_use_c
 from features.document.use_cases.update_document_use_case import (
     update_document_use_case,
 )
-from tests.unit.common.test_tree.mock_data.get_mock_nodes import get_form_example_node
+from tests.unit.common.tree.mock_data.get_mock_nodes import get_form_example_node
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 from tests.unit.mock_data.mock_document_service import get_mock_document_service
 
@@ -19,7 +19,7 @@ from tests.unit.mock_data.mock_document_service import get_mock_document_service
 class DocumentServiceTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
-        mock_blueprint_folder = "src/tests/unit/common/test_tree/mock_data/mock_blueprints"
+        mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
             "Bush": "Bush.blueprint.json",
             "Box": "Box.blueprint.json",

@@ -5,7 +5,7 @@ from common.tree.tree_node_serializer import tree_node_from_dict, tree_node_to_d
 from enums import REFERENCE_TYPES, SIMOS
 from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 
-FILE_PATH = "src/tests/unit/common/test_tree/mock_data/mock_blueprints/"
+FILE_PATH = "src/tests/unit/common/tree/mock_data/mock_blueprints/"
 
 with open(FILE_PATH + "Garden.blueprint.json") as f:
     Garden = json.load(f)
@@ -20,7 +20,7 @@ with open(FILE_PATH + "Bush.blueprint.json") as f:
 class TreeNodeFromDictTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = ["dmss://system/SIMOS/Reference"]
-        mock_blueprint_folder = "src/tests/unit/common/test_tree/mock_data/mock_blueprints"
+        mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
             "SignalContainer": "SignalContainer.blueprint.json",
             "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",

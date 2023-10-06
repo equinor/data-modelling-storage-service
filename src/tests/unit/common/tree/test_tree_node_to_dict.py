@@ -9,7 +9,7 @@ from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
 class TreeNodeToDictTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = []
-        mock_blueprint_folder = "src/tests/unit/common/test_tree/mock_data/mock_blueprints"
+        mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
             "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",
             "Garden": "Garden.blueprint.json",
