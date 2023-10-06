@@ -1,6 +1,8 @@
 import unittest
 
-from common.entity.sort_entities_by_attribute import sort_dtos_by_attribute
+from features.search.use_cases.search_use_case.sort_dtos_by_attribute import (
+    sort_dtos_by_attribute,
+)
 
 
 class TestSortDTOsByAttribute(unittest.TestCase):

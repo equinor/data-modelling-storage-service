@@ -14,6 +14,12 @@ class BlueprintProvider:
         self.user = user
 
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)
+    def get_blueprint_with_extended_attributes(self, type: str) -> Blueprint:
+        blueprint: Blueprint = self.get_blueprint(type)
+        blueprint.realize_extends(self.get_blueprint)
+        return blueprint
+
+    @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def get_blueprint(self, type: str) -> Blueprint:
         logger.debug(f"Cache miss! Fetching blueprint '{type}'")
         resolved_address: ResolvedAddress = resolve_address(
@@ -31,6 +37,7 @@ class BlueprintProvider:
         try:
             logger.debug("invalidate cache")
             self.get_blueprint.cache_clear()
+            self.get_blueprint_with_extended_attributes.cache_clear()
         except Exception as error:
             logger.warning("function is not instance of lru cache.", error)
 

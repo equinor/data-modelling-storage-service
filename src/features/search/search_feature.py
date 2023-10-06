@@ -6,8 +6,10 @@ from starlette.responses import JSONResponse
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
 from common.responses import create_response, responses
-
-from .use_cases.search_use_case import SearchRequest, search_use_case
+from features.search.use_cases.search_use_case.search_use_case import (
+    SearchRequest,
+    search_use_case,
+)
 
 router = APIRouter(tags=["default", "search"], prefix="/search")
 
