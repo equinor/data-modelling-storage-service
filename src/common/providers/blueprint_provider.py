@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import Callable
 
 from authentication.models import User
 from common.address import Address
@@ -10,8 +11,12 @@ from storage.internal.data_source_repository import get_data_source
 
 
 class BlueprintProvider:
-    def __init__(self, user: User):
+    def __init__(
+        self, user: User, get_data_source: Callable = get_data_source, resolve_address: Callable = resolve_address
+    ):
         self.user = user
+        self.get_data_source = get_data_source
+        self.resolve_address = resolve_address
 
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def get_blueprint_with_extended_attributes(self, type: str) -> Blueprint:
@@ -22,14 +27,14 @@ class BlueprintProvider:
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def get_blueprint(self, type: str) -> Blueprint:
         logger.debug(f"Cache miss! Fetching blueprint '{type}'")
-        resolved_address: ResolvedAddress = resolve_address(
-            Address.from_absolute(type), lambda data_source_name: get_data_source(data_source_name, self.user)
+        resolved_address: ResolvedAddress = self.resolve_address(
+            Address.from_absolute(type), lambda data_source_name: self.get_data_source(data_source_name, self.user)
         )
-        resolved_address = resolve_address(
+        resolved_address = self.resolve_address(
             Address.from_relative(
                 resolved_address.entity["address"], resolved_address.document_id, resolved_address.data_source_id
             ),
-            lambda data_source_name: get_data_source(data_source_name, self.user),
+            lambda data_source_name: self.get_data_source(data_source_name, self.user),
         )
         return Blueprint(resolved_address.entity, type)
 
