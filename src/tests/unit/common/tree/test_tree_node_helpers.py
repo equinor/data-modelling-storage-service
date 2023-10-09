@@ -26,9 +26,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         self.recipe_provider = MockStorageRecipeProvider(
             "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
         ).provider
-        simos_blueprints = [
-            "dmss://system/SIMOS/Reference",
-        ]
+        simos_blueprints = ["dmss://system/SIMOS/Reference", "dmss://system/SIMOS/NamedEntity"]
         mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
             "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",

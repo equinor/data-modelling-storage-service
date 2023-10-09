@@ -2,7 +2,7 @@
   "name": "SignalContainer",
   "type": "system/SIMOS/Blueprint",
   "extends": [
-    "system/SIMOS/NamedEntity"
+    "dmss://system/SIMOS/NamedEntity"
   ],
   "attributes": [
     {
