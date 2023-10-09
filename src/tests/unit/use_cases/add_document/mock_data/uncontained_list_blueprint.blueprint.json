@@ -9,7 +9,7 @@
     {
       "name": "uncontained_in_every_way",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "basic_blueprint",
+      "attributeType": "dmss://system/SIMOS/NamedEntity",
       "contained": false,
       "dimensions": "*"
     }

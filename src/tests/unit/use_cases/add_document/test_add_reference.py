@@ -18,7 +18,6 @@ class ReferenceTestCase(unittest.TestCase):
         simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
         mock_blueprint_folder = "src/tests/unit/use_cases/add_document/mock_data"
         mock_blueprints_and_file_names = {
-            "basic_blueprint": "basic_blueprint.blueprint.json",
             "uncontained_blueprint": "uncontained_blueprint.blueprint.json",
             "blueprint_with_second_level_nested_uncontained_attribute": "blueprint_with_second_level_nested_uncontained_attribute.blueprint.json",
             "uncontained_list_blueprint": "uncontained_list_blueprint.blueprint.json",
@@ -49,7 +48,7 @@ class ReferenceTestCase(unittest.TestCase):
                 "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
                 "name": "something",
                 "description": "",
-                "type": "basic_blueprint",
+                "type": "dmss://system/SIMOS/NamedEntity",
             },
         }
 
@@ -91,7 +90,7 @@ class ReferenceTestCase(unittest.TestCase):
                 "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
                 "name": "something",
                 "description": "",
-                "type": "basic_blueprint",
+                "type": "dmss://system/SIMOS/NamedEntity",
             },
         }
 
@@ -170,14 +169,14 @@ class ReferenceTestCase(unittest.TestCase):
                     "_id": "something",
                     "name": "something",
                     "description": "",
-                    "type": "basic_blueprint",
+                    "type": "dmss://system/SIMOS/NamedEntity",
                 },
             },
             "something": {
                 "_id": "something",
                 "name": "something",
                 "description": "",
-                "type": "basic_blueprint",
+                "type": "dmss://system/SIMOS/NamedEntity",
             },
         }
 
@@ -210,7 +209,7 @@ class ReferenceTestCase(unittest.TestCase):
                         "_id": "something",
                         "name": "something",
                         "description": "",
-                        "type": "basic_blueprint",
+                        "type": "dmss://system/SIMOS/NamedEntity",
                     },
                 },
             },
@@ -218,7 +217,7 @@ class ReferenceTestCase(unittest.TestCase):
                 "_id": "something",
                 "name": "something",
                 "description": "",
-                "type": "basic_blueprint",
+                "type": "dmss://system/SIMOS/NamedEntity",
             },
         }
 
@@ -261,12 +260,12 @@ class ReferenceTestCase(unittest.TestCase):
             "2d7c3249-985d-43d2-83cf-a887e440825a": {
                 "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
                 "name": "something",
-                "type": "basic_blueprint",
+                "type": "dmss://system/SIMOS/NamedEntity",
             },
             "42dbe4a5-0eb0-4ee2-826c-695172c3c35a": {
                 "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
                 "name": "something",
-                "type": "basic_blueprint",
+                "type": "dmss://system/SIMOS/NamedEntity",
             },
         }
 
@@ -297,12 +296,12 @@ class ReferenceTestCase(unittest.TestCase):
             "2d7c3249-985d-43d2-83cf-a887e440825a": {
                 "_id": "2d7c3249-985d-43d2-83cf-a887e440825a",
                 "name": "something",
-                "type": "basic_blueprint",
+                "type": "dmss://system/SIMOS/NamedEntity",
             },
             "42dbe4a5-0eb0-4ee2-826c-695172c3c35a": {
                 "_id": "42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
                 "name": "something",
-                "type": "basic_blueprint",
+                "type": "dmss://system/SIMOS/NamedEntity",
             },
         }
 
