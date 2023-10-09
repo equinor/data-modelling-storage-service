@@ -1,12 +1,10 @@
 {
   "name": "Customer",
   "type": "system/SIMOS/Blueprint",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
   "attributes": [
-    {
-      "name": "name",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "string"
-    },
     {
       "name": "car",
       "type": "system/SIMOS/BlueprintAttribute",
