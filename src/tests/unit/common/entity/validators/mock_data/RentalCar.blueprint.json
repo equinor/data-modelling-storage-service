@@ -1,19 +1,10 @@
 {
   "name": "RentalCar",
   "type": "system/SIMOS/Blueprint",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
   "attributes": [
-    {
-      "name": "name",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "string",
-      "default": "RentalCar"
-    },
-    {
-      "name": "type",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "string",
-      "default": "RentalCar"
-    },
     {
       "name": "plateNumber",
       "type": "system/SIMOS/BlueprintAttribute",
