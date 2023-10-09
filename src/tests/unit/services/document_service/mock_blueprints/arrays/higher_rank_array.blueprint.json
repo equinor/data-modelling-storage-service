@@ -1,0 +1,34 @@
+{
+  "name": "Higher rank integer arrays",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "First blueprint",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "1_dim-unfixed",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "integer",
+      "dimensions": "*"
+    },
+    {
+      "name": "1_dim-fixed_complex_type",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "basic",
+      "dimensions": "5"
+    },
+    {
+      "name": "2_dim-unfixed",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "integer",
+      "dimensions": "*,*"
+    },
+    {
+      "name": "3_dim-mix",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "integer",
+      "dimensions": "*,1,100"
+    }
+  ]
+}
