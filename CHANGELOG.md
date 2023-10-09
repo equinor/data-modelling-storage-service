@@ -1,5 +1,117 @@
 # Changelog
 
+## [1.6.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.5.0...v1.6.0) (2023-10-09)
+
+
+### Features
+
+* roles attribute on view config ([b6ebf9e](https://github.com/equinor/data-modelling-storage-service/commit/b6ebf9ec1127e58d4b688988dce0f8743e1c87b3))
+
+
+### Bug Fixes
+
+* adding init to fix a import error in pat ([bd42ce0](https://github.com/equinor/data-modelling-storage-service/commit/bd42ce0b860e09ad25d3ef660db2b870457600b6))
+* adjust depth to avoid resolve more than needed ([29d9c85](https://github.com/equinor/data-modelling-storage-service/commit/29d9c85fae1c751db6454294e821c08e258ab576))
+* cast to v4 ([d1bd3f2](https://github.com/equinor/data-modelling-storage-service/commit/d1bd3f2f51cd391dc5ba40bc90531da012e65a88))
+* not throw on empty role assignments ([e4ce92a](https://github.com/equinor/data-modelling-storage-service/commit/e4ce92a8081a54e15f72d8460a4f1dde165509a4))
+* remove $ from uuid to make it work ([c47b74e](https://github.com/equinor/data-modelling-storage-service/commit/c47b74e5da42deace2ea8d81866e424501e930f0))
+* remove item from required list attribute ([91c774b](https://github.com/equinor/data-modelling-storage-service/commit/91c774b0706a54ba9534a5e1ec7649a0c58acc69))
+* returns Bad Request on invalid id ([138db67](https://github.com/equinor/data-modelling-storage-service/commit/138db676bd71eefc1c3ba92d3235ce93168190c2))
+
+
+### Documentation
+
+* how to run bdd file ([8417e03](https://github.com/equinor/data-modelling-storage-service/commit/8417e03bcb26bce2085c66e33c5d54419fdd823d))
+
+
+### Code Refactoring
+
+* add parameters to blueprint_provider so that it can be tested ([6af84f0](https://github.com/equinor/data-modelling-storage-service/commit/6af84f002b6e6db08b63da0db4ca3e0a8ebebcb0))
+* also move into entity ([b131aa5](https://github.com/equinor/data-modelling-storage-service/commit/b131aa5127103805b0e985da3eeea8ce2d04354f))
+* delete dot notation and tests, unused ([0cced85](https://github.com/equinor/data-modelling-storage-service/commit/0cced856dc74f5f8f047e2f72f555fa0e104bf55))
+* docstrings ([6c16312](https://github.com/equinor/data-modelling-storage-service/commit/6c163124f57861c8b9917b664ae654e87648e8fa))
+* get and print diff ([1790f6a](https://github.com/equinor/data-modelling-storage-service/commit/1790f6a96b7ba3548e1dba4649ddc1feef0b5ea0))
+* merge ([01f3b6b](https://github.com/equinor/data-modelling-storage-service/commit/01f3b6b271ba0f52f633f02babca26e4c7c5adf7))
+* move and stuff ([7b4f07d](https://github.com/equinor/data-modelling-storage-service/commit/7b4f07df411231188fbdf6551c965f8000c6097c))
+* move create pat into use case ([c2c0868](https://github.com/equinor/data-modelling-storage-service/commit/c2c0868f2d73aba5b43edcc978a3b58dc290937c))
+* move date-time-checking into the auth method, and not in the extract user method ([6861bd6](https://github.com/equinor/data-modelling-storage-service/commit/6861bd678c0515738ced70a4cfaf9fd1248e0752))
+* move into providers folder ([470c08c](https://github.com/equinor/data-modelling-storage-service/commit/470c08ceaaf3c327fd57ef7d885217aa9cb74ccf))
+* move into screaming folders ([7013414](https://github.com/equinor/data-modelling-storage-service/commit/7013414cfaf868c2741519ee673c29f6257e06dd))
+* move into use cases ([87a0d2d](https://github.com/equinor/data-modelling-storage-service/commit/87a0d2d974b099883e2a18efc317b3ab3cab81c4))
+* move test helpers under src/tests ([dd9fbe3](https://github.com/equinor/data-modelling-storage-service/commit/dd9fbe36f6ef4a430b2381318d1150fb0bdc8845))
+* rebase ([322e838](https://github.com/equinor/data-modelling-storage-service/commit/322e8388cd1d23cf5e947ad2cf2c42235e8e5f65))
+* remove get and print diff ([00c8c37](https://github.com/equinor/data-modelling-storage-service/commit/00c8c37d00d7013a70c9e4efe8334365204313bf))
+* remove last traces of 'update_uncontained' ([25eac2f](https://github.com/equinor/data-modelling-storage-service/commit/25eac2f3c59ec6350a2b9a9de766049b4bf1fc37))
+* remove more unused methods for tree node ([b1808fe](https://github.com/equinor/data-modelling-storage-service/commit/b1808feb5bf4039996428f8673904952fc1e68c9))
+* remove uneccesary comment ([192395b](https://github.com/equinor/data-modelling-storage-service/commit/192395b4e8e1c603c316b4eee12e8baceff2c5f0))
+* remove unused ([0b1c8c7](https://github.com/equinor/data-modelling-storage-service/commit/0b1c8c7c305ce9365349c87a3643aef008d988e0))
+* remove unused methods in tree node ([40f31b2](https://github.com/equinor/data-modelling-storage-service/commit/40f31b20e4768773ed66a4a3cac2b62e5b01a79c))
+* remove unused stuff in create_entity.py ([d46924f](https://github.com/equinor/data-modelling-storage-service/commit/d46924fc0c0b27935dca0e4fb5d57af505354ecb))
+* rename file to blueprint_provider ([004a8f2](https://github.com/equinor/data-modelling-storage-service/commit/004a8f2cb727027fafe2d0bf874327e42da43cd3))
+* rename method to something more readable ([c9c59db](https://github.com/equinor/data-modelling-storage-service/commit/c9c59dbbe5d8774a37d2b324014f067bed04807a))
+* rename zip to zip file client ([5006d9a](https://github.com/equinor/data-modelling-storage-service/commit/5006d9a88d94d442eb21715b036bbb506f3ac679))
+* simpler constructor ([9ee5a19](https://github.com/equinor/data-modelling-storage-service/commit/9ee5a1945574916121e37d13007bc0d058483474))
+* stuf ([93b2ff9](https://github.com/equinor/data-modelling-storage-service/commit/93b2ff9856f70bf06b08c49aaccceaae431b01fe))
+* test ([6a55035](https://github.com/equinor/data-modelling-storage-service/commit/6a55035c771d66dfc764e47b63e1844f014cb4dd))
+
+
+### Tests
+
+* add bestFriend to person ([a4bbe82](https://github.com/equinor/data-modelling-storage-service/commit/a4bbe828baf236579b6945a1febcae06f5ada129))
+* added test for access control, also a comment ([b93f6ef](https://github.com/equinor/data-modelling-storage-service/commit/b93f6ef24c82f26a6e27099af68b4828703038d1))
+* added test for access control, also a comment ([7e9abe0](https://github.com/equinor/data-modelling-storage-service/commit/7e9abe0f3598bee7b903d683e31acc5627da0c19))
+* added test for the USER class ([81e5a1c](https://github.com/equinor/data-modelling-storage-service/commit/81e5a1c856909f2c7b03bda0f58f4008532e4f6d))
+* added tests for pat data, also fixed type hinting to be correct ([d1192b9](https://github.com/equinor/data-modelling-storage-service/commit/d1192b9ae1e4d7c8365510a875d6fedd0e01ee66))
+* added tests for the access control list ([317a57e](https://github.com/equinor/data-modelling-storage-service/commit/317a57ee75237106cd28b1564a39296e8148dba8))
+* adding more tests for the access level comparison, and fix typo in name ([416ddd0](https://github.com/equinor/data-modelling-storage-service/commit/416ddd02b811290483da166f14dea859557bf2e0))
+* also changed name of other methods ([3757e9f](https://github.com/equinor/data-modelling-storage-service/commit/3757e9f49bc090125b9c19a6fe927e4aa0c2d2a0))
+* also changed name of other methods ([b3dbc5a](https://github.com/equinor/data-modelling-storage-service/commit/b3dbc5a14e845a6be7f37352024db735154e5466))
+* better name for test method ([f4ee77f](https://github.com/equinor/data-modelling-storage-service/commit/f4ee77fa4807b218318a67d8c0dbb288fd465c6d))
+* better name for testing method ([657334b](https://github.com/equinor/data-modelling-storage-service/commit/657334b1b803243ad6876e1404c64a6255386a7e))
+* chagned one file tree node helpers to use the general mocker instead ([bba6481](https://github.com/equinor/data-modelling-storage-service/commit/bba64819a6fc719b3a4c6efbf631b6dc1eefb624))
+* chagned one file tree node helpers to use the general mocker instead ([fa69474](https://github.com/equinor/data-modelling-storage-service/commit/fa69474ce355cc20478cdcb4b12320207cd6636f))
+* clean up a bit for readability ([4a0470d](https://github.com/equinor/data-modelling-storage-service/commit/4a0470d5fb7e59c411b513f9147786389d3110f6))
+* finish test tree node helpers ([c7d0974](https://github.com/equinor/data-modelling-storage-service/commit/c7d0974e42916d3baa580b0edc1a39a7bf87ee21))
+* finish test_tree_node_to_dict refactor ([5d0a572](https://github.com/equinor/data-modelling-storage-service/commit/5d0a57211dff8e7eb58920ff7d01e85889adfd2b))
+* fix namedEntity should be person ([7f25cb1](https://github.com/equinor/data-modelling-storage-service/commit/7f25cb1b0085d381de32415a516c47874c369733))
+* for some test, moving blueprints 'down' ([59e74d8](https://github.com/equinor/data-modelling-storage-service/commit/59e74d87f95bb5b23ac591fbc367e33f4d460f74))
+* make is simpler, clear away code ([95ddcb7](https://github.com/equinor/data-modelling-storage-service/commit/95ddcb7b476f528f06d7c2f13ad110bf1c7d4686))
+* make the node helpers more explicit also ([baf6501](https://github.com/equinor/data-modelling-storage-service/commit/baf6501606eb5d0d52503b28a5c33862d8837663))
+* merge ([149cd83](https://github.com/equinor/data-modelling-storage-service/commit/149cd836d24934bce1eebc633b1666775481c3c1))
+* mock storage recipe provicer data-less ([12d75ca](https://github.com/equinor/data-modelling-storage-service/commit/12d75ca157336f240db6f45e8185e0e636497f4b))
+* move blueprints 'down' into reference use case ([aafa20b](https://github.com/equinor/data-modelling-storage-service/commit/aafa20bbfa7d2d3765244c07bda64f7b9450a71f))
+* move blueprints 'down' to validator ([8ec1368](https://github.com/equinor/data-modelling-storage-service/commit/8ec13687e9554e7762bcc71ebc6aae2c89c702f0))
+* move into folders to reflect changes done in src/ ([9ab12ba](https://github.com/equinor/data-modelling-storage-service/commit/9ab12bac32dd31a867c2742a74e287fadbd7735b))
+* move into setup ([daaaea2](https://github.com/equinor/data-modelling-storage-service/commit/daaaea2efa3b6ceb09f0aeccdf7bfaae32bd8d25))
+* move raising no credentials out ([412a59f](https://github.com/equinor/data-modelling-storage-service/commit/412a59fe6ea6f64cee88d08e567a824a777edbbb))
+* move responsability up ([fd572e3](https://github.com/equinor/data-modelling-storage-service/commit/fd572e377aba237ab60c84b8ba9a08689b35db6c))
+* moved down for create_entity ([bbf3e76](https://github.com/equinor/data-modelling-storage-service/commit/bbf3e76246aaa25ff39bd5b84421d0baf9a3588c))
+* moving default into classes ([b482a67](https://github.com/equinor/data-modelling-storage-service/commit/b482a677beed57607506b7d7d1c645cc8a70478a))
+* must specify path to storage recipes location ([4f566cd](https://github.com/equinor/data-modelling-storage-service/commit/4f566cd628cd08ab34eca30d6a39422e13665aa5))
+* rebase 1 ([fafa326](https://github.com/equinor/data-modelling-storage-service/commit/fafa3269d1dc82ed2f1c365dc99e348813c8c2d0))
+* rebasing ([0f00f74](https://github.com/equinor/data-modelling-storage-service/commit/0f00f74068a05ae84ad5c06a31ea0273eeffd27f))
+* refactor tree node update further to make it more clean and readable ([8ab3ab8](https://github.com/equinor/data-modelling-storage-service/commit/8ab3ab81ce69f8d0c61ff511ecd23add08a8319e))
+* remove aclc ([caeeeaf](https://github.com/equinor/data-modelling-storage-service/commit/caeeeaf63e64ecab8c929a0bd473f639fc7c19a7))
+* remove all common blueprints, not used ([53bd8b8](https://github.com/equinor/data-modelling-storage-service/commit/53bd8b829da2b8efffe4a1a9b4d77e8642c0f9a5))
+* remove duplicate mockers ([9418e40](https://github.com/equinor/data-modelling-storage-service/commit/9418e40eeb9d2af8cf60fcc4f9055679c79979cb))
+* remove roles ([bfb065f](https://github.com/equinor/data-modelling-storage-service/commit/bfb065f141d6c5d43abe471669a05bcbfbe8719d))
+* remove uneccesary parameters ([2691d42](https://github.com/equinor/data-modelling-storage-service/commit/2691d4213e479967547a5911bc4608a268380af0))
+* removed duplicate methods testing the same thing, but with different blueprints ([962937b](https://github.com/equinor/data-modelling-storage-service/commit/962937bee02d7a78080d114eaa9ca5e7413c4502))
+* removed empty optional descriptions everywhere in the test_remove ([5ac9744](https://github.com/equinor/data-modelling-storage-service/commit/5ac974418d5d06763634f223dc1e1c61cbc967fb))
+* removed unused blueprint reference after deleted test ([60871a9](https://github.com/equinor/data-modelling-storage-service/commit/60871a92fed182b982dac9002dddab838906a853))
+* replaced method-in-method with method-in-class ([9d41545](https://github.com/equinor/data-modelling-storage-service/commit/9d4154550ca405a58621a766448311ebbdf83b76))
+* started replacing custom with general mocker ([a09b811](https://github.com/equinor/data-modelling-storage-service/commit/a09b8116cb401a1d6ebf3e62f35022afe2f9a338))
+* started replacing custom with general mocker ([5e87072](https://github.com/equinor/data-modelling-storage-service/commit/5e8707205919590a11552c92e35551aad35c6d2b))
+* test for address class and classMethods ([785224f](https://github.com/equinor/data-modelling-storage-service/commit/785224fadb8b949c4169d4fd9a4d8b3b20882841))
+* test for the user default() ([5c7216b](https://github.com/equinor/data-modelling-storage-service/commit/5c7216b7aeec8103c9a51062c7dbc46c794406c0))
+* test utils ([321fc69](https://github.com/equinor/data-modelling-storage-service/commit/321fc693eabe94ef50abbcd78d6f7da16f8b482a))
+* testing removing of roles ([89a5fe5](https://github.com/equinor/data-modelling-storage-service/commit/89a5fe53ce0693bf29894f342b3c341d466c55ff))
+* tests for the new default acl ([e72a888](https://github.com/equinor/data-modelling-storage-service/commit/e72a8889ef074bc391aa21d548193ec3af3b688d))
+* tree node to ref dict ([ee7fa49](https://github.com/equinor/data-modelling-storage-service/commit/ee7fa4910b8040d25b2bac6b0766b6b752f7d802))
+* trying git stuff ([01402b5](https://github.com/equinor/data-modelling-storage-service/commit/01402b594e9339ea89c4f6fa865e096addc3ec35))
+* unit tests for is_reference ([f40e7da](https://github.com/equinor/data-modelling-storage-service/commit/f40e7da82dbeae95239d7158ef56287c19bcf293))
+* unit tests for sort dtos ([8ba2d59](https://github.com/equinor/data-modelling-storage-service/commit/8ba2d5910ff68df99f2257421d2a4855a15ed7e5))
+
 ## [1.5.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.4.0...v1.5.0) (2023-09-25)
 
 
