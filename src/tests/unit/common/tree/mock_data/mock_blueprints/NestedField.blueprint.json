@@ -1,12 +1,10 @@
 {
   "name": "NestedField",
   "type": "CORE:Blueprint",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
   "attributes": [
-    {
-      "name": "type",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "string"
-    },
     {
       "name": "foo",
       "type": "CORE:BlueprintAttribute",
