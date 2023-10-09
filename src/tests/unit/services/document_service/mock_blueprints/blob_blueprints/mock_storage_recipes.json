@@ -1,0 +1,40 @@
+{
+  "blob": [
+    {
+      "name": "default",
+      "type": "dmss://system/SIMOS/StorageRecipe",
+      "description": "",
+      "storageAffinity": "blob",
+      "attributes": []
+    }
+  ],
+  "uncontained_blueprint": [
+    {
+      "name": "DefaultStorageRecipe",
+      "type": "dmss://system/SIMOS/StorageRecipe",
+      "description": "",
+      "attributes": [
+        {
+          "name": "uncontained_in_every_way",
+          "type": "does_this_matter?",
+          "contained": false,
+          "storageAffinity": "blob"
+        }
+      ]
+    }
+  ],
+  "blobContainer": [
+    {
+      "name": "default",
+      "type": "dmss://system/SIMOS/StorageRecipe",
+      "description": "",
+      "attributes": [
+        {
+          "name": "blob",
+          "type": "does_this_matter?",
+          "contained": false
+        }
+      ]
+    }
+  ]
+}

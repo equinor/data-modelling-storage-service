@@ -7,9 +7,9 @@ from common.tree.tree_node_serializer import tree_node_from_dict
 from config import config
 from enums import StorageDataTypes
 from storage.data_source_class import DataSource
-from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
-from tests.unit.mock_data.mock_document_service import get_mock_document_service
-from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
+from tests.unit.mocks.mock_blueprint_provider import MockBlueprintProvider
+from tests.unit.mocks.mock_document_service import get_mock_document_service
+from tests.unit.mocks.mock_recipe_provider import MockStorageRecipeProvider
 
 config.AUTH_ENABLED = False
 test_user = User(**{"user_id": "unit-test", "full_name": "Unit Test", "email": "unit-test@example.com"})
@@ -29,7 +29,9 @@ class DataSourceTestCase(unittest.TestCase):
             mock_blueprint_folder=mock_blueprint_folder,
             simos_blueprints_available_for_test=simos_blueprints,
         )
-        mock_recipe_folder = "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
+        mock_recipe_folder = (
+            "src/tests/unit/services/document_service/mock_blueprints/blob_blueprints/mock_storage_recipes.json"
+        )
         self.recipe_provider = MockStorageRecipeProvider(mock_recipe_folder).provider
         self.mock_document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
 

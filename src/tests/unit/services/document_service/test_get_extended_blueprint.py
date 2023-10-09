@@ -4,8 +4,9 @@ from unittest import mock
 from common.address import Address
 from common.tree.tree_node import Node
 from domain_classes.blueprint import Blueprint
-from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
-from tests.unit.mock_data.mock_document_service import get_mock_document_service
+from tests.unit.mocks.mock_blueprint_provider import MockBlueprintProvider
+from tests.unit.mocks.mock_document_service import get_mock_document_service
+from tests.unit.mocks.mock_recipe_provider import MockStorageRecipeProvider
 
 
 class GetExtendedBlueprintTestCase(unittest.TestCase):
@@ -21,7 +22,12 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
             mock_blueprint_folder=mock_blueprint_folder,
             simos_blueprints_available_for_test=simos_blueprints,
         )
-        self.document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
+        recipe_provider = MockStorageRecipeProvider(
+            "src/tests/unit/services/document_service/mock_blueprints/extended_blueprints/mock_storage_recipes.json"
+        ).provider
+        self.document_service = get_mock_document_service(
+            blueprint_provider=mock_blueprint_provider, recipe_provider=recipe_provider
+        )
 
     def test_get_simple_extended(self):
         full_blueprint: Blueprint = self.document_service.get_blueprint("ExtendedBlueprint")
