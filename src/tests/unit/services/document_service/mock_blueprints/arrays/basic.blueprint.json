@@ -1,0 +1,15 @@
+{
+  "name": "A box",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "First blueprint",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "length",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "integer"
+    }
+  ]
+}
