@@ -19,7 +19,7 @@ with open(FILE_PATH + "Bush.blueprint.json") as f:
 
 class TreeNodeFromDictTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        simos_blueprints = ["dmss://system/SIMOS/Reference"]
+        simos_blueprints = ["dmss://system/SIMOS/Reference", "dmss://system/SIMOS/NamedEntity"]
         mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
             "SignalContainer": "SignalContainer.blueprint.json",

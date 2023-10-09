@@ -25,9 +25,13 @@ class MockBlueprintProvider:
     def get_blueprint(self, type: str):
         if file_name := self.mock_blueprints_and_file_names.get(type):
             with open(f"{self.mock_blueprint_folder}/{file_name}") as f:
-                return Blueprint(json.load(f), type)
+                bp = Blueprint(json.load(f), type)
+                bp.realize_extends(self.get_blueprint)
+                return bp
         if type in self.simos_blueprints_available_for_test:
-            return Blueprint(file_repository_test.get(type), type)
+            bp = Blueprint(file_repository_test.get(type), type)
+            bp.realize_extends(self.get_blueprint)
+            return bp
         raise FileNotFoundError(
             f"Invalid type {type} asked for from the MockBlueprintProvider. No such blueprint were provided as available blueprints as parameters in the initialisation of the MockBlueprintProvider."
         )

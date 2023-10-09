@@ -2,22 +2,10 @@
   "name": "all_contained_cases_blueprint",
   "type": "system/SIMOS/Blueprint",
   "description": "First blueprint",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
   "attributes": [
-    {
-      "name": "name",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "string"
-    },
-    {
-      "name": "type",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "string"
-    },
-    {
-      "name": "description",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "string"
-    },
     {
       "name": "nested",
       "type": "system/SIMOS/BlueprintAttribute",
