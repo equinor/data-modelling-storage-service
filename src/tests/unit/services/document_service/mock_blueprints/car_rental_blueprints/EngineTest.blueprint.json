@@ -2,22 +2,10 @@
   "name": "EngineTest",
   "type": "system/SIMOS/Blueprint",
   "description": "This describes an engine",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
   "attributes": [
-    {
-      "name": "name",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "string"
-    },
-    {
-      "name": "type",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "string"
-    },
-    {
-      "name": "description",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "string"
-    },
     {
       "name": "power",
       "type": "system/SIMOS/BlueprintAttribute",
