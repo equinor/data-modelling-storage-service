@@ -12,8 +12,9 @@ from features.document.use_cases.update_document_use_case import (
     update_document_use_case,
 )
 from tests.unit.common.tree.mock_data.get_mock_nodes import get_form_example_node
-from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
-from tests.unit.mock_data.mock_document_service import get_mock_document_service
+from tests.unit.mocks.mock_blueprint_provider import MockBlueprintProvider
+from tests.unit.mocks.mock_document_service import get_mock_document_service
+from tests.unit.mocks.mock_recipe_provider import MockStorageRecipeProvider
 
 
 class DocumentServiceTestCase(unittest.TestCase):
@@ -56,8 +57,12 @@ class DocumentServiceTestCase(unittest.TestCase):
         def repository_provider(data_source_id, user: User):
             return self.repository
 
+        mock_recipe_folder = "src/tests/unit/common/tree/mock_data/mock_storage_recipes.json"
+        recipe_provider = MockStorageRecipeProvider(mock_recipe_folder).provider
         self.mock_document_service = get_mock_document_service(
-            blueprint_provider=self.mock_blueprint_provider, repository_provider=repository_provider
+            blueprint_provider=self.mock_blueprint_provider,
+            repository_provider=repository_provider,
+            recipe_provider=recipe_provider,
         )
 
     def test_update_single_optional_complex(self):

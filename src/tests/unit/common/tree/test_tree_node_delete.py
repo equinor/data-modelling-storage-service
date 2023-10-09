@@ -3,7 +3,7 @@ import unittest
 from common.tree.tree_node import Node
 from common.tree.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
+from tests.unit.mocks.mock_blueprint_provider import MockBlueprintProvider
 
 
 class TreeNodeDeleteTest(unittest.TestCase):

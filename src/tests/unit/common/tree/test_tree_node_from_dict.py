@@ -3,7 +3,7 @@ import unittest
 
 from common.tree.tree_node_serializer import tree_node_from_dict, tree_node_to_dict
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
+from tests.unit.mocks.mock_blueprint_provider import MockBlueprintProvider
 
 FILE_PATH = "src/tests/unit/common/tree/mock_data/mock_blueprints/"
 

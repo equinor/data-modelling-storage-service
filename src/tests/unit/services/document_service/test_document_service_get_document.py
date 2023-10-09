@@ -4,8 +4,8 @@ from unittest import mock
 from common.address import Address
 from common.tree.tree_node_serializer import tree_node_to_dict
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
-from tests.unit.mock_data.mock_document_service import get_mock_document_service
+from tests.unit.mocks.mock_blueprint_provider import MockBlueprintProvider
+from tests.unit.mocks.mock_document_service import get_mock_document_service
 
 
 class GetDocumentInputTestCase(unittest.TestCase):

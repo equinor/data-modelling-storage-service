@@ -7,8 +7,9 @@ from common.address import Address
 from features.document.use_cases.update_document_use_case import (
     update_document_use_case,
 )
-from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
-from tests.unit.mock_data.mock_document_service import get_mock_document_service
+from tests.unit.mocks.mock_blueprint_provider import MockBlueprintProvider
+from tests.unit.mocks.mock_document_service import get_mock_document_service
+from tests.unit.mocks.mock_recipe_provider import MockStorageRecipeProvider
 
 
 class ArraysDocumentServiceTestCase(unittest.TestCase):
@@ -25,7 +26,12 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
             mock_blueprint_folder=mock_blueprint_folder,
             simos_blueprints_available_for_test=simos_blueprints,
         )
-        self.mock_document_service = get_mock_document_service(blueprint_provider=mock_blueprint_provider)
+        recipe_provider = MockStorageRecipeProvider(
+            "src/tests/unit/services/document_service/mock_blueprints/arrays/mock_storage_recipes.json"
+        ).provider
+        self.mock_document_service = get_mock_document_service(
+            blueprint_provider=mock_blueprint_provider, recipe_provider=recipe_provider
+        )
 
     def test_update_complex_array(self):
         # fmt: off

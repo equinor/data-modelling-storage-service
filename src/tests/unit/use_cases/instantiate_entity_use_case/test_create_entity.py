@@ -4,8 +4,8 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 from features.entity.use_cases.instantiate_entity_use_case.create_entity import (
     CreateEntity,
 )
-from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
-from tests.unit.mock_data.mock_document_service import get_mock_document_service
+from tests.unit.mocks.mock_blueprint_provider import MockBlueprintProvider
+from tests.unit.mocks.mock_document_service import get_mock_document_service
 
 
 class CreateEntityTestCase(unittest.TestCase):

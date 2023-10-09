@@ -10,8 +10,8 @@ from features.entity.use_cases.instantiate_entity_use_case.create_entity_arrays 
     remove_first_and_join,
 )
 from services.document_service.document_service import DocumentService
-from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
-from tests.unit.mock_data.mock_recipe_provider import MockStorageRecipeProvider
+from tests.unit.mocks.mock_blueprint_provider import MockBlueprintProvider
+from tests.unit.mocks.mock_recipe_provider import MockStorageRecipeProvider
 
 
 class DefaultArrayTestCase(unittest.TestCase):
@@ -29,7 +29,7 @@ class DefaultArrayTestCase(unittest.TestCase):
             simos_blueprints_available_for_test=simos_blueprints,
         )
         recipe_provider = MockStorageRecipeProvider(
-            "src/tests/unit/mock_data/mock_storage_recipes/mock_storage_recipes.json"
+            "src/tests/unit/mocks/mock_storage_recipes/mock_storage_recipes.json"
         ).provider
         document_service = DocumentService(
             recipe_provider=recipe_provider, repository_provider=None, blueprint_provider=mock_blueprint_provider

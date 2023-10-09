@@ -1,7 +1,7 @@
 from common.tree.tree_node import ListNode, Node
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import REFERENCE_TYPES, SIMOS
-from tests.unit.mock_data.mock_blueprint_provider import MockBlueprintProvider
+from tests.unit.mocks.mock_blueprint_provider import MockBlueprintProvider
 
 
 def get_engine_package_node(
