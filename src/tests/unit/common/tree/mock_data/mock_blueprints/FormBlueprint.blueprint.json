@@ -1,12 +1,10 @@
 {
   "name": "FormBlueprint",
   "type": "system/SIMOS/Blueprint",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
   "attributes": [
-    {
-      "name": "type",
-      "type": "system/SIMOS/BlueprintAttribute",
-      "attributeType": "string"
-    },
     {
       "name": "aNestedObject",
       "type": "system/SIMOS/BlueprintAttribute",

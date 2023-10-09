@@ -2,12 +2,10 @@
   "name": "Reference",
   "type": "dmss://system/SIMOS/Blueprint",
   "description": "Can be of type link, pointer or storage.",
+  "extends": [
+    "dmss://system/SIMOS/NamedEntity"
+  ],
   "attributes": [
-    {
-      "name": "type",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "string"
-    },
     {
       "name": "referenceType",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
