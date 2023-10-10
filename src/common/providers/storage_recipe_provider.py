@@ -32,15 +32,14 @@ default_initial_ui_recipe = Recipe(
     **{
         "name": "RecipeSelect",
         "type": SIMOS.UI_RECIPE.value,
-        "plugin": "@development-framework/dm-core-plugins/view_selector",
+        "plugin": "@development-framework/dm-core-plugins/view_selector/tabs",
         "config": {
-            "type": "dmss://system/Plugins/dm-core-plugins/view_selector/AttributeSelectorConfig",
-            "asSidebar": False,
+            "type": "dmss://system/Plugins/dm-core-plugins/view_selector/ViewSelectorConfig",
             "items": [
                 {
-                    "type": "dmss://system/Plugins/dm-core-plugins/view_selector/AttributeSelectorItem",
+                    "type": "dmss://system/Plugins/dm-core-plugins/view_selector/ViewSelectorItem",
                     "label": "Yaml",
-                    "view": {
+                    "viewConfig": {
                         "type": "dmss://system/SIMOS/InlineRecipeViewConfig",
                         "recipe": {
                             "type": "dmss://system/SIMOS/UiRecipe",
@@ -53,9 +52,9 @@ default_initial_ui_recipe = Recipe(
                     },
                 },
                 {
-                    "type": "dmss://system/Plugins/dm-core-plugins/view_selector/AttributeSelectorItem",
+                    "type": "dmss://system/Plugins/dm-core-plugins/view_selector/ViewSelectorItem",
                     "label": "Edit",
-                    "view": {
+                    "viewConfig": {
                         "type": "dmss://system/SIMOS/InlineRecipeViewConfig",
                         "recipe": {
                             "type": "dmss://system/SIMOS/UiRecipe",
