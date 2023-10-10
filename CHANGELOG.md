@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.6.0...v1.6.1) (2023-10-10)
+
+
+### Bug Fixes
+
+* update default initial uiRecipe from attribute selector ([6c4da8d](https://github.com/equinor/data-modelling-storage-service/commit/6c4da8da89c2b94b96ae0a7c6c25a732070e6bff))
+
 ## [1.6.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.5.0...v1.6.0) (2023-10-09)
 
 
