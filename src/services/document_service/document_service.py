@@ -17,8 +17,10 @@ from common.providers.address_resolver.address_resolver import (
     ResolvedAddress,
     resolve_address,
 )
+from common.providers.address_resolver.deep_address_resolver import (
+    deep_address_resolver,
+)
 from common.providers.blueprint_provider import get_blueprint_provider
-from common.providers.reference_resolver import resolve_references_in_entity
 from common.providers.storage_recipe_provider import (
     create_default_storage_recipe,
     storage_recipe_provider,
@@ -198,17 +200,7 @@ class DocumentService:
         """
         try:
             resolved_address: ResolvedAddress = resolve_address(address, self.get_data_source)
-            data_source: DataSource = self.get_data_source(resolved_address.data_source_id)
-            document: dict = data_source.get(resolved_address.document_id)
-
-            resolved_document: dict = resolve_references_in_entity(
-                document,
-                data_source,
-                self.get_data_source,
-                resolved_address.document_id,
-                depth=depth + len(list(filter(lambda x: x[0] != "[", resolved_address.attribute_path))),
-                depth_count=1,
-            )
+            resolved_document = deep_address_resolver(resolved_address, self.get_data_source, depth)
 
             node: Node = tree_node_from_dict(
                 resolved_document,
