@@ -199,11 +199,10 @@ class DocumentService:
               depth=2 means that the entity's direct child references will be returned as well.
         """
         try:
-            resolved_address: ResolvedAddress = resolve_address(address, self.get_data_source)
-            resolved_document = deep_address_resolver(resolved_address, self.get_data_source, depth)
+            resolved_address: ResolvedAddress = deep_address_resolver(address, self.get_data_source, depth)
 
             node: Node = tree_node_from_dict(
-                resolved_document,
+                resolved_address.entity,
                 uid=resolved_address.document_id,
                 blueprint_provider=self.get_blueprint,
                 recipe_provider=self.get_storage_recipes,
