@@ -5,7 +5,9 @@ from common.providers.address_resolver.address_resolver import (
     ResolvedAddress,
     resolve_address,
 )
-from common.providers.reference_resolver import resolve_references_in_entity
+from common.providers.address_resolver.reference_resolver import (
+    resolve_references_in_entity,
+)
 from storage.data_source_class import DataSource
 
 
