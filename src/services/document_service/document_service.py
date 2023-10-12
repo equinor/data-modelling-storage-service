@@ -185,7 +185,7 @@ class DocumentService:
         return ref_dict
 
     # TODO: Dont return Node. Doing this is ~33% slower
-    def get_document(self, address: Address, depth: int = 0) -> Node | ListNode:
+    def get_document(self, address: Address, depth: int = 1) -> Node | ListNode:
         """
         Get document by address.
 

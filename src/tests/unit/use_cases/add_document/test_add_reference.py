@@ -44,7 +44,7 @@ class ReferenceTestCase(unittest.TestCase):
                 "description": "",
                 "type": "uncontained_blueprint",
                 "uncontained_in_every_way": {
-                    "address": "$123123123",
+                    "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
                     "type": SIMOS.REFERENCE.value,
                     "referenceType": REFERENCE_TYPES.LINK.value,
                 },

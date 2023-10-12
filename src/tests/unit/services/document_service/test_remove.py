@@ -18,6 +18,12 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.repository.delete = self.mock_delete
         self.repository.delete_blob = self.mock_delete
 
+        def mock_find(target: dict):
+            # Used when resolving reference using paths.
+            return [{"_id": "2", "name": "", "description": "", "type": "dmss://system/SIMOS/NamedEntity"}]
+
+        self.repository.find = mock_find
+
         simos_blueprints = [
             "dmss://system/SIMOS/NamedEntity",
             "dmss://system/SIMOS/Reference",
