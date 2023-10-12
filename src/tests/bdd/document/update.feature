@@ -299,3 +299,206 @@ Feature: Document 2
       "extra": "extra_2_modified"
     }
     """
+
+    Scenario: Validation errors if the address pointing to something that does not match the data type
+    Given there exist document with id "10" in data source "test-source-name"
+    """
+    {
+      "name": "TestReplace",
+      "description": "",
+      "type": "dmss://system/SIMOS/Package",
+      "content": [
+        {
+          "address": "$Company",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
+        },
+        {
+          "address": "$Person",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
+        },
+        {
+          "address": "$companyEntity",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "link"
+        }
+      ],
+      "isRoot": true
+    }
+    """
+
+    Given there exist document with id "Company" in data source "test-source-name"
+    """
+    {
+      "name": "Company",
+      "type": "dmss://system/SIMOS/Blueprint",
+      "attributes": [
+        {
+          "name": "type",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "string"
+        },
+        {
+          "name": "name",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "string"
+        },
+        {
+          "name": "employees",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-source-name/TestReplace/Person",
+          "dimensions": "*",
+          "label": "Employees"
+        },
+        {
+          "name": "ceo",
+          "type": "CORE:BlueprintAttribute",
+          "attributeType": "dmss://test-source-name/TestReplace/Person",
+          "label": "CEO",
+          "contained": false,
+          "optional": false
+        },
+        {
+          "name": "accountant",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-source-name/TestReplace/Person",
+          "label": "Accountant",
+          "contained": false,
+          "optional": false
+        }
+      ]
+    }
+    """
+
+    Given there exist document with id "Person" in data source "test-source-name"
+    """
+    {
+      "name": "Person",
+      "type": "dmss://system/SIMOS/Blueprint",
+      "attributes": [
+        {
+          "name": "type",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "string",
+          "optional": false
+        },
+        {
+          "name": "name",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "string",
+          "label": "Name",
+          "optional": false
+        },
+        {
+          "name": "phoneNumber",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "number",
+          "label": "Phone Number",
+          "optional": true
+        }
+      ]
+    }
+    """
+
+    Given there exist document with id "companyEntity" in data source "test-source-name"
+    """
+    {
+      "name": "myCompany",
+      "type": "dmss://test-source-name/TestReplace/Company",
+      "employees": [
+        {
+          "name": "Miranda",
+          "type": "dmss://test-source-name/TestReplace/Person",
+          "phoneNumber": 1337
+        },
+        {
+          "name": "John",
+          "type": "dmss://test-source-name/TestReplace/Person",
+          "phoneNumber": 1234
+        }
+      ],
+      "ceo": {
+        "type": "dmss://system/SIMOS/Reference",
+        "address": "^.employees[0]",
+        "referenceType": "link"
+      },
+      "accountant": {
+        "type": "dmss://system/SIMOS/Reference",
+        "address": "^.employees[0]",
+        "referenceType": "link"
+      }
+    }
+    """
+
+    Given i access the resource url "/api/documents/test-source-name/$companyEntity.employees[0]"
+    When i make a form-data "PUT" request
+    """
+    {
+      "data": {
+        "name": "Miranda",
+        "type": "dmss://test-source-name/TestReplace/Person",
+        "phoneNumber": 13371
+      }
+    }
+    """
+    Then the response status should be "OK"
+
+    Given i access the resource url "/api/documents/test-source-name/$companyEntity.employees[0]"
+    When i make a form-data "PUT" request
+    """
+    {
+      "data": {
+        "address": "$companyEntity.employees[1]",
+        "type": "dmss://system/SIMOS/Reference",
+        "referenceType": "link"
+      }
+    }
+    """
+    Then the response status should be "Bad Request"
+    And the response should be
+    """
+    {
+    "status": 400,
+    "type": "ValidationException",
+    "message": "Can not update the document with address dmss://test-source-name/$companyEntity.employees[0], since the address is not pointing to a reference, but the data is a reference.",
+    "debug": "Values are invalid for requested operation.",
+    "data": null
+    }
+    """
+
+    Given i access the resource url "/api/documents/test-source-name/$companyEntity.accountant"
+    When i make a form-data "PUT" request
+    """
+    {
+      "data": {
+        "address": "$companyEntity.employees[1]",
+        "type": "dmss://system/SIMOS/Reference",
+        "referenceType": "link"
+      }
+    }
+    """
+    Then the response status should be "OK"
+
+    Given i access the resource url "/api/documents/test-source-name/$companyEntity.accountant"
+    When i make a form-data "PUT" request
+    """
+    {
+      "data": {
+        "name": "Miranda",
+        "type": "dmss://test-source-name/TestReplace/Person",
+        "phoneNumber": 13371
+      }
+    }
+    """
+    Then the response status should be "Bad Request"
+    And the response should be
+    """
+    {
+    "status": 400,
+    "type": "ValidationException",
+    "message": "Can not update the document with address dmss://test-source-name/$companyEntity.accountant, since the the address is pointing to a reference, but the data is not a reference.",
+    "debug": "Values are invalid for requested operation.",
+    "data": null
+    }
+    """

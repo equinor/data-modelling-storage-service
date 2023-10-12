@@ -27,7 +27,7 @@ router = APIRouter(tags=["default", "document"], prefix="/documents")
 @create_response(JSONResponse)
 def get(
     address: str,
-    depth: conint(gt=-1, lt=1000) = 1,  # type: ignore
+    depth: conint(gt=-1, lt=1000) = 0,  # type: ignore
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Get a Document as JSON String

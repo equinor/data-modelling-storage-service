@@ -30,11 +30,22 @@ def _update_document(
         raise Exception(f"Could not find the node on '{address}'")
 
     try:
-        node: Node = document_service.get_document(address)  # type: ignore
+        node: Node = document_service.get_document(address)
     except NotFoundException:
         raise ValidationException(
             f"Can not update document with address {address}, since that document does not exist. If the goal is to add a document, use the document add use instead"
         )
+
+    if isinstance(data, dict):
+        if node.attribute.attribute_type == SIMOS.REFERENCE.value and data["type"] != SIMOS.REFERENCE.value:
+            raise ValidationException(
+                f"Can not update the document with address {address}, since the the address is pointing to a reference, but the data is not a reference."
+            )
+
+        if node.attribute.attribute_type != SIMOS.REFERENCE.value and data["type"] == SIMOS.REFERENCE.value:
+            raise ValidationException(
+                f"Can not update the document with address {address}, since the address is not pointing to a reference, but the data is a reference."
+            )
 
     if node.attribute.attribute_type != BuiltinDataTypes.OBJECT.value:
         validate_entity(

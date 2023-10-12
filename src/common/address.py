@@ -1,3 +1,5 @@
+import re
+
 from common.exceptions import ApplicationException
 from enums import Protocols
 
@@ -46,3 +48,10 @@ class Address:
             return cls(address.replace("^", f"${document_id}"), data_source)
         else:
             return cls(address, data_source)
+
+    def is_by_package(self) -> bool:
+        if not self.path:
+            return False
+        # This checks if the path is by package path format,
+        # then the last part of that part points directly to an entity.
+        return len(re.findall("/([A-Za-z0-9_-]*)$", self.path)) > 0
