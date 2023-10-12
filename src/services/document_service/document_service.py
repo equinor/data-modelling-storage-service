@@ -184,8 +184,7 @@ class DocumentService:
             return result
         return ref_dict
 
-    # TODO: Dont return Node. Doing this is ~33% slower
-    def get_document(self, address: Address, depth: int = 1) -> Node | ListNode:
+    def get_document(self, address: Address, depth: int = 0) -> Node | ListNode:
         """
         Get document by address.
 
@@ -198,6 +197,21 @@ class DocumentService:
         """
         try:
             resolved_address: ResolvedAddress = resolve_address(address, self.get_data_source)
+
+            if address.is_by_package():
+                # If the address is by package (package/sub-package/entity),
+                # then the entity in the resolved address will be a reference to the entity.
+                # This reference needs to be resolved before continue, since by package means (by definition),
+                # that the entity should be resolved.
+                resolved_address = resolve_address(
+                    Address.from_relative(
+                        resolved_address.entity["address"],
+                        resolved_address.document_id,
+                        resolved_address.data_source_id,
+                    ),
+                    self.get_data_source,
+                )
+
             data_source: DataSource = self.get_data_source(resolved_address.data_source_id)
             document: dict = data_source.get(resolved_address.document_id)
 

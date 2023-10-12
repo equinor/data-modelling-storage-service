@@ -211,7 +211,7 @@ Feature: Get document
     """
 
   Scenario: Get resolved entity
-    Given I access the resource url "/api/documents/test-source-name/$1.content[0]"
+    Given I access the resource url "/api/documents/test-source-name/$1.content[0]?depth=1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain
@@ -223,7 +223,7 @@ Feature: Get document
     """
 
   Scenario: Get reference
-    Given I access the resource url "/api/documents/test-source-name/$1.content[0]?depth=0"
+    Given I access the resource url "/api/documents/test-source-name/$1.content[0]"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain

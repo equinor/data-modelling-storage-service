@@ -62,6 +62,7 @@ def resolve_address(address: Address, get_data_source: Callable) -> ResolvedAddr
     # The first reference item should always be a DataSourceItem
     data_source = get_data_source(address.data_source)
     document, path = _resolve_path_items(data_source, path_items, get_data_source)
+
     return ResolvedAddress(
         entity=document,
         data_source_id=address.data_source,
