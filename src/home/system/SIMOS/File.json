@@ -16,7 +16,8 @@
     {
       "name": "author",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "string"
+      "attributeType": "string",
+      "optional": true
     },
     {
       "name": "date",
