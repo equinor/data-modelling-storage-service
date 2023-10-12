@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.6.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.6.1...v1.6.2) (2023-10-12)
+
+
+### Code Refactoring
+
+* make author optional ([4110d17](https://github.com/equinor/data-modelling-storage-service/commit/4110d170c681301991b73f1245cda978965dab74))
+
+
+### Tests
+
+* did it for add_document ([a53e160](https://github.com/equinor/data-modelling-storage-service/commit/a53e160d8a30552e15b40938e818faa39034a07d))
+* did it for car rental blueprints ([0a527d9](https://github.com/equinor/data-modelling-storage-service/commit/0a527d9cb0e980d09faaa272122997fa5a4e472c))
+* did it for rest of blueprints ([65b0806](https://github.com/equinor/data-modelling-storage-service/commit/65b0806c28b922905a74f09abd9a9c9ef4e986be))
+* did it for validators ([62c0cb0](https://github.com/equinor/data-modelling-storage-service/commit/62c0cb0f74923ad5cc7e2d1b960236543a25171a))
+* finished moving storage recipes down ([9ac8adf](https://github.com/equinor/data-modelling-storage-service/commit/9ac8adf272646b1cb4118c18b87663979bdd9d9c))
+* made extension actually work ([746683a](https://github.com/equinor/data-modelling-storage-service/commit/746683ad378fc2c0fffccd6acb61c2ff85bb4fbd))
+* refactor complex arrays ([10c4529](https://github.com/equinor/data-modelling-storage-service/commit/10c4529a8f3fe69074b639f5c19d63f498bb8ebd))
+* removed all common storage recipes ([6f99e51](https://github.com/equinor/data-modelling-storage-service/commit/6f99e515625926a063e23ffb33cbf09fbe910957))
+
 ## [1.6.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.6.0...v1.6.1) (2023-10-10)
 
 
