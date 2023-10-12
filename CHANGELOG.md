@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.6.2...v1.6.3) (2023-10-12)
+
+
+### Bug Fixes
+
+* A validation check should raise a ValidationException ([5991fc6](https://github.com/equinor/data-modelling-storage-service/commit/5991fc6ab0c29ba1155985a376d0d45acb128519))
+* update entities inside packages ([08a370d](https://github.com/equinor/data-modelling-storage-service/commit/08a370d08b1d16b463898c8a7f52c8540bf7d066))
+
 ## [1.6.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.6.1...v1.6.2) (2023-10-12)
 
 
