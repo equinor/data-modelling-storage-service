@@ -5,6 +5,7 @@ from common.exceptions import (
     ApplicationException,
     BadRequestException,
     NotFoundException,
+    ValidationException,
 )
 from common.tree.tree_node import ListNode, Node
 from common.utils.logging import logger
@@ -235,7 +236,7 @@ def tree_node_from_dict(
         else:
             attribute_data = entity.get(child_attribute.name, {})
             if not isinstance(attribute_data, dict):
-                raise ValueError(
+                raise ValidationException(
                     f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
                     + f"should be a dict, but was '{str(type(attribute_data))}'"
                 )
