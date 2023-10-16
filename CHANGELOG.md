@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.6.4](https://github.com/equinor/data-modelling-storage-service/compare/v1.6.3...v1.6.4) (2023-10-16)
+
+
+### Miscellaneous Chores
+
+* **deps:** bump cryptography from 41.0.3 to 41.0.4 ([434c750](https://github.com/equinor/data-modelling-storage-service/commit/434c750121599f1c010637f5dfb4b944c327e5fa))
+
+
+### Code Refactoring
+
+* change default value to 0 for depth ([e1829ed](https://github.com/equinor/data-modelling-storage-service/commit/e1829edda6e13751d1ec9df5842509d624e4a5eb))
+
+
+### Build System
+
+* **deps-dev:** bump gitpython from 3.1.32 to 3.1.37 ([3220966](https://github.com/equinor/data-modelling-storage-service/commit/32209665292c3ddd38601038c55845108ce76a66))
+* **deps:** bump urllib3 from 2.0.4 to 2.0.6 ([3d2e0e0](https://github.com/equinor/data-modelling-storage-service/commit/3d2e0e02d947b861ae2ea74dd7982944bd8263a0))
+
 ## [1.6.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.6.2...v1.6.3) (2023-10-12)
 
 
