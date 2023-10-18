@@ -28,7 +28,7 @@
       "attributeType": "string",
       "default": "default",
       "enumType": "dmss://system/SIMOS/enums/StorageTypes",
-      "optional": "true"
+      "optional": true
     },
     {
       "name": "label",

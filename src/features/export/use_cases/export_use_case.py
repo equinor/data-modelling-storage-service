@@ -29,7 +29,7 @@ def save_node_to_zipfile(
         path = ""  # Path here is used to get the proper file structure in the zip file
         for node in document_node.traverse():
             if not node.storage_contained and not node.is_array():
-                path = f"{path}/{node.entity['name']}/" if path else f"{node.entity['name']}"
+                path = f"{path}/{node.entity.get('name', 'noname')}/" if path else node.entity.get("name", "noname")
                 document_service.save(
                     node=node,
                     data_source_id=data_source_id,

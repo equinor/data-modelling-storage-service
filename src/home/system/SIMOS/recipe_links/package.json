@@ -9,7 +9,7 @@
       "attributes": [
         {
           "name": "content",
-          "type": "object",
+          "type": "dmss://system/SIMOS/StorageAttribute",
           "contained": false
         }
       ]
@@ -20,7 +20,7 @@
       "name": "DEFAULT_CREATE",
       "type": "dmss://system/SIMOS/UiRecipe",
       "description": "",
-      "plugin": "DEFAULT_CREATE",
+      "plugin": "@development-framework/dm-core-plugins/form",
       "attributes": [
         {
           "name": "isRoot",

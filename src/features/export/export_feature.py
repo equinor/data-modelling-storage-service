@@ -1,4 +1,6 @@
+import logging
 import shutil
+import traceback
 from pathlib import Path
 from typing import List
 
@@ -9,7 +11,9 @@ from starlette.responses import FileResponse, JSONResponse
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
+from common.exceptions import ApplicationException
 from common.responses import create_response, responses
+from common.utils.logging import logger
 from domain_classes.dependency import Dependency
 from features.export.use_cases.export_meta_use_case import export_meta_use_case
 from features.export.use_cases.export_use_case import export_use_case
@@ -68,12 +72,18 @@ def export(path_address: str, user: User = Depends(auth_w_jwt_or_pat)):
     Returns:
     - FileResponse: A FileResponse containing the zip file.
     """
-    # TODO add proper error handling. The create_response() wrapper does not work with FileResponse.
-    memory_file_path = export_use_case(user=user, address=path_address)
-    directory_to_remove = Path(memory_file_path).parent
-    response = FileResponse(
-        memory_file_path, media_type="application/zip", background=BackgroundTask(shutil.rmtree, directory_to_remove)
-    )
-    response.headers["Content-Disposition"] = "attachment; filename=dmt-export.zip"
+    try:
+        memory_file_path = export_use_case(user=user, address=path_address)
+        directory_to_remove = Path(memory_file_path).parent
+        response = FileResponse(
+            memory_file_path,
+            media_type="application/zip",
+            background=BackgroundTask(shutil.rmtree, directory_to_remove),
+        )
+        response.headers["Content-Disposition"] = "attachment; filename=dmt-export.zip"
+    except ApplicationException as error:
+        if logger.level <= logging.DEBUG:
+            traceback.print_exc()
+        return JSONResponse(error.dict(), status_code=error.status)
 
     return response
