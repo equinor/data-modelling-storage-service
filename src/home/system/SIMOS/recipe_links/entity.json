@@ -6,6 +6,7 @@
       "name": "DEFAULT_CREATE",
       "type": "dmss://system/SIMOS/UiRecipe",
       "description": "",
+      "plugin": "@development-framework/dm-core-plugins/form",
       "attributes": [
         {
           "name": "type",
