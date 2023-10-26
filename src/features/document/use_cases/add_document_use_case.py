@@ -74,7 +74,7 @@ def _add_document_to_entity_or_list(
     entity: Entity = Entity(**document)
 
     try:
-        target: Node = document_service.get_document(address, depth=2)
+        target: Node = document_service.get_document(address)
     except NotFoundException:
         target = None
 
@@ -97,7 +97,7 @@ def _add_document_to_entity_or_list(
         parent_address: Address = Address(
             protocol=address.protocol, path=parent_address_as_string, data_source=address.data_source
         )
-        parent_node: Node = document_service.get_document(parent_address, depth=1)
+        parent_node: Node = document_service.get_document(parent_address)
 
         attribute_to_update: BlueprintAttribute = parent_node.blueprint.get_attribute_by_name(
             last_attribute_in_address

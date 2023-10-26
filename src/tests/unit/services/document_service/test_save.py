@@ -180,9 +180,9 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "Person",
                 "containedPersonInfo": {"name": "Nested", "type": "dmss://system/SIMOS/NamedEntity"},
                 "storageUncontainedBestFriend": {
-                    "_id": "2",
-                    "name": "Mary",
-                    "type": "dmss://system/SIMOS/NamedEntity",
+                    "address": "$5",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.STORAGE.value,
                 },
                 "storageUncontainedListOfFriends": [
                     {
@@ -218,6 +218,11 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "4",
                 "name": "Patricia",
                 "description": "Index 3",
+                "type": "dmss://system/SIMOS/NamedEntity",
+            },
+            "5": {
+                "_id": "5",
+                "name": "Mary",
                 "type": "dmss://system/SIMOS/NamedEntity",
             },
         }
@@ -300,7 +305,13 @@ class DocumentServiceTestCase(unittest.TestCase):
         # Testing updating the reference
         node: Node = self.mock_document_service.get_document(Address("$1", "testing"))
         target_node = node.get_by_path(["cat", "owner"])
-        target_node.update(doc_storage["3"])
+        target_node.update(
+            {
+                "address": "$3",
+                "type": SIMOS.REFERENCE.value,
+                "referenceType": REFERENCE_TYPES.LINK.value,
+            }
+        )
         self.mock_document_service.save(node, "testing")
         assert doc_storage["1"]["cat"]["owner"] == {
             "address": "$3",
@@ -413,5 +424,6 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         assert doc_storage["1"]["a"]["description"] == "SOME DESCRIPTION"
-        assert doc_storage["1"]["a"]["storageUncontainedBestFriend"]["description"] == "A NEW DESCRIPTION HERE"
+        assert doc_storage["1"]["a"]["storageUncontainedBestFriend"].get("referenceType") == "storage"
+        assert doc_storage["1"]["a"]["storageUncontainedBestFriend"].get("description") is None
         assert doc_storage["1"]["b"] == {}
