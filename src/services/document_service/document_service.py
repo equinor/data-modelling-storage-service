@@ -144,18 +144,30 @@ class DocumentService:
         # Also, check for duplicate names in the package.
         if node.type == SIMOS.PACKAGE.value:
             if len(node.children) > 0:
-                packageContent = node.children[0]
                 contentListNames = []
-                for child in packageContent.children:
-                    if "name" in child.entity:
+                for child in node.children[0].children:
+                    package_item = (
+                        self.get_document(Address(child.entity["address"], repository.name), depth=0).entity
+                        if child.type == SIMOS.REFERENCE.value
+                        else child.entity
+                    )
+                    if item_name := package_item.get("name"):
                         # Content of a package should not have duplicate name, but name is not required for all document
-                        if child.entity["name"] in contentListNames:
+                        if item_name in contentListNames:
                             raise BadRequestException(
                                 f"The document '{data_source_id}/{node.entity['name']}/{child.entity['name']}' already exists"
                             )
 
-                        contentListNames.append(child.entity["name"])
-
+                        contentListNames.append(item_name)
+        for child in node.children:
+            if child.is_array():
+                [
+                    self.save(x, data_source_id, repository, path, combined_document_meta)
+                    for x in child.children
+                    if x.type != SIMOS.REFERENCE.value
+                ]
+            elif child.type != SIMOS.REFERENCE.value:
+                self.save(child, data_source_id, repository, path, combined_document_meta)
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
 
@@ -164,7 +176,7 @@ class DocumentService:
         ref_dict = tree_node_to_ref_dict(node)
 
         # If the node is not contained, and has data, save it!
-        if not node.storage_contained and ref_dict and node.uid is not None:
+        if not node.storage_contained and node.contained:
             # Expand this when adding new repositories requiring PATH
             if isinstance(repository, ZipFileClient):
                 ref_dict["__path__"] = path

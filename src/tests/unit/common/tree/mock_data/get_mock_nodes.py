@@ -90,7 +90,7 @@ def get_form_example_node(
         "referenceType": "link",
         "address": "dmss://DemoDataSource/$product1",
     }
-    a_nested_object = ({"type": "system/SIMOS/NamedEntity", "name": "nested obj", "description": "a description"},)
+    a_nested_object = {"type": "system/SIMOS/NamedEntity", "name": "nested obj", "description": "a description"}
     form_example_entity = {
         "_id": "formExample",
         "type": "FormBlueprint",

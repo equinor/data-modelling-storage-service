@@ -10,7 +10,7 @@
       "name": "uncontained_in_every_way",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "dmss://system/SIMOS/NamedEntity",
-      "contained": false
+      "contained": true
     }
   ]
 }
