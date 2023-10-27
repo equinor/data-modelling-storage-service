@@ -23,7 +23,7 @@ class TestSortDTOsByAttribute(unittest.TestCase):
             sorted_data = sort_dtos_by_attribute(data, "info")
 
     def test_empty_list(self):
-        data = []
+        data: list[dict] = []
         sorted_data = sort_dtos_by_attribute(data, "age")
         self.assertEqual(sorted_data, [])
 

@@ -124,12 +124,12 @@ def step_impl(context):
 
 
 @then("response node should not be empty")
-def step_impl(context):
+def step_not_empty_response(context):
     response = context.response
     assert response.headers["content-type"] == "application/zip" and len(response.content) > 200
 
 
 @then('response should contain a zip file with name "{filename}"')
-def step_impl(context, filename: str):
+def step_contain_zip_file_with_name(context, filename: str):
     response = context.response
     assert response.headers["Content-Disposition"] == f"attachment; filename={filename}"

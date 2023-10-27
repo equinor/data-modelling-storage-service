@@ -47,7 +47,7 @@ class DataSourceTestCase(unittest.TestCase):
             },
         }
 
-        default_doc_storage = {}
+        default_doc_storage: dict = {}
 
         def default_get(document_id: str):
             return default_doc_storage[document_id]
@@ -56,7 +56,7 @@ class DataSourceTestCase(unittest.TestCase):
             default_doc_storage[uid] = data
             return None
 
-        blob_doc_storage = {}
+        blob_doc_storage: dict = {}
 
         def blob_get(document_id: str):
             return blob_doc_storage[document_id]
@@ -111,7 +111,7 @@ class DataSourceTestCase(unittest.TestCase):
     def test_save_based_on_root_storageRecipe(self):
         blob_doc = {"name": "some_entity", "description": "", "type": "blob", "someData": "test"}
 
-        default_doc_storage = {}
+        default_doc_storage: dict = {}
 
         def default_get(document_id: str):
             return default_doc_storage[document_id]
@@ -120,7 +120,7 @@ class DataSourceTestCase(unittest.TestCase):
             default_doc_storage[uid] = data
             return None
 
-        blob_doc_storage = {}
+        blob_doc_storage: dict = {}
 
         def blob_get(document_id: str):
             return blob_doc_storage[document_id]
@@ -178,7 +178,7 @@ class DataSourceTestCase(unittest.TestCase):
             "blob": {"name": "test", "type": "blob", "description": "", "someData": "Hallo World!"},
         }
 
-        default_doc_storage = {}
+        default_doc_storage: dict = {}
 
         def default_get(document_id: str):
             return default_doc_storage[document_id]
@@ -187,7 +187,7 @@ class DataSourceTestCase(unittest.TestCase):
             default_doc_storage[uid] = data
             return None
 
-        blob_doc_storage = {}
+        blob_doc_storage: dict = {}
 
         def blob_get(document_id: str):
             return blob_doc_storage[document_id]

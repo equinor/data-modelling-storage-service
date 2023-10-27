@@ -37,7 +37,7 @@ class ReferenceTestCase(unittest.TestCase):
     def test_insert_reference(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "Parent",
@@ -79,7 +79,7 @@ class ReferenceTestCase(unittest.TestCase):
     def test_insert_reference_too_many_attributes(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "Parent",
@@ -128,7 +128,7 @@ class ReferenceTestCase(unittest.TestCase):
     def test_insert_reference_missing_required_attribute(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "Parent",
@@ -164,7 +164,7 @@ class ReferenceTestCase(unittest.TestCase):
     def test_remove_reference(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "Parent",
@@ -200,7 +200,7 @@ class ReferenceTestCase(unittest.TestCase):
     def test_remove_nested_reference(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "Parent",
@@ -243,7 +243,7 @@ class ReferenceTestCase(unittest.TestCase):
     def test_remove_reference_in_list(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "Parent",
@@ -284,7 +284,7 @@ class ReferenceTestCase(unittest.TestCase):
     def test_add_reference_in_list(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "Parent",

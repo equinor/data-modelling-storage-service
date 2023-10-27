@@ -76,7 +76,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
             tree_node_to_dict(self.mock_document_service.get_document(Address.from_absolute("datasource/$1"), depth=9))
 
     def test_references(self):
-        my_car_rental = {
+        my_car_rental: dict = {
             "_id": "2",
             "type": "CarRental",
             "name": "myCarRental",
@@ -249,11 +249,12 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                 return deepcopy(my_engine)
             return None
 
-        def find(target: dict, data_source: list) -> dict:
+        def find(target: dict, data_source: list) -> list[dict]:
             """Utility method to be able to search for a document inside a test data source."""
             hit = next((f for f in data_source if has_key_value_pairs(f, target)), None)
             if hit:
                 return [deepcopy(hit)]
+            return []
 
         def mock_data_source(data_source_id: str, user: dict):
             document_repository = mock.Mock()

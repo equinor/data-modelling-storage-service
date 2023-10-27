@@ -43,10 +43,14 @@ class BlueprintAttribute(BaseModel):
 
     @property
     def is_array(self):
+        if not self.dimensions:
+            return False
         return self.dimensions.is_array()
 
     @property
     def is_matrix(self):
+        if not self.dimensions:
+            return False
         return self.dimensions.is_matrix()
 
     @property

@@ -90,7 +90,7 @@ class DefaultArrayTestCase(unittest.TestCase):
 
     def test_creation_of_default_array_mixed_rank3_int(self):
         default_array = create_default_array(Dimension("2,2,*", "integer"), self.blueprint_provider, CreateEntity)
-        expected = [[[], []], [[], []]]
+        expected: list = [[[], []], [[], []]]
 
         assert default_array == expected
 

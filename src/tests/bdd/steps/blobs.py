@@ -12,7 +12,7 @@ def step_impl(context, id, data_source, path):
     try:
         with open(path, "rb") as blob_file:
             guess = mimetypes.guess_type(blob_file.name)
-            content_type = ""
+            content_type: str | None = ""
             if guess:
                 content_type = guess[0]
             data_source.update_blob(id, blob_file.name, content_type, blob_file)
