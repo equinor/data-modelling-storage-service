@@ -63,12 +63,14 @@ def create_response(
                     return Response(status_code=status.HTTP_204_NO_CONTENT)
                 return response_class(result, status_code=200)
             except HTTPError as http_error:
-                error_response = ErrorResponse(
-                    type="ExternalFetchException",
-                    status=http_error.response.status,
-                    message="Failed to fetch an external resource",
-                    debug=http_error.response,
-                )
+                error_response = ErrorResponse()
+                if http_error.response:
+                    error_response = ErrorResponse(
+                        type="ExternalFetchException",
+                        status=http_error.response.status_code,
+                        message=http_error.response.text,
+                        debug="Failed to fetch an external resource",
+                    )
                 logger.error(error_response)
                 return JSONResponse(error_response.dict(), status_code=error_response.status)
             except ValidationError as e:

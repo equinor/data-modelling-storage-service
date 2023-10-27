@@ -11,7 +11,7 @@ from tests.unit.mocks.mock_document_service import get_mock_document_service
 
 class DocumentServiceTestCase(unittest.TestCase):
     def setUp(self):
-        self.storage = {}
+        self.storage: dict = {}
         self.repository = mock.Mock()
         self.repository.get = lambda document_id: self.storage[document_id]
         self.repository.update = self.mock_update

@@ -10,7 +10,7 @@ from tests.unit.mocks.mock_document_service import get_mock_document_service
 
 class GetDocumentInputTestCase(unittest.TestCase):
     def setUp(self):
-        self.car_rental_company = {
+        self.car_rental_company: dict = {
             "_id": "1",
             "type": "CarRental",
             "name": "myCarRentalCompany",
@@ -34,7 +34,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
                 }
             ],
         }
-        self.customer = {
+        self.customer: dict = {
             "_id": "4",
             "type": "Customer",
             "name": "Jane",
@@ -44,7 +44,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
                 "referenceType": REFERENCE_TYPES.LINK.value,
             },
         }
-        self.engine = {
+        self.engine: dict = {
             "_id": "2",
             "type": "EngineTest",
             "name": "myEngine",
@@ -56,7 +56,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
             },
             "power": 120,
         }
-        self.fuel_pump = {
+        self.fuel_pump:dict = {
             "_id": "3",
             "type": "FuelPumpTest",
             "name": "fuelPump",

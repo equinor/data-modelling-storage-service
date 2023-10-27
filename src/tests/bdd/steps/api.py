@@ -40,7 +40,7 @@ def step_make_file_request(context, method, number_of_files):
 
 
 @when('i make a form-data "{method}" request')
-def step_make_request(context, method):
+def step_make_form_data_request(context, method):
     # These requests may contain files, so we use "multipart/form-data".
     # JSON must then be sent in the 'data' key part of the form
     form_data = {
@@ -56,7 +56,7 @@ def step_make_request(context, method):
 
 
 @when('i make a "{method}" request')
-def step_make_request(context, method):
+def step_make_x_method_request(context, method):
     if method == "PUT":
         context.response = context.test_client.put(context.url, json=json.loads(context.text), headers=context.headers)
     elif method == "POST":
@@ -68,7 +68,7 @@ def step_make_request(context, method):
                 k: json.dumps(v) if isinstance(v, dict) or isinstance(v, list) else str(v) for k, v in json_data.items()
             }
             file_name = Path(context.binary_file.name).name
-            mime_type = ""
+            mime_type: str| None = ""
             guess = mimetypes.guess_type(file_name)
             if guess:
                 mime_type = guess[0]
@@ -85,7 +85,7 @@ def step_make_request(context, method):
 
 
 @given('adding a binary file "{path}" to the request')
-def step_impl(context, path: str):
+def step_add_binary_file(context, path: str):
     try:
         context.binary_file = open(path, "rb")
     except FileNotFoundError:
@@ -102,12 +102,12 @@ def step_set_access_token(context, user_id, roles):
 
 
 @then("the PAT is added to context")
-def step_impl_contain(context):
+def step_add_PAT_to_context(context):
     context.pat = context.response.text.strip('"')
 
 
 @then("the PAT is added to headers")
-def step_impl_contain(context):
+def step_add_PAT_to_header(context):
     context.headers = {"Access-Key": context.pat}
 
 
@@ -121,19 +121,19 @@ def step_user_logout(context):
 
 
 @given("authentication is enabled")
-def step_set_access_token(context):
+def step_auth_enabled(context):
     config.AUTH_ENABLED = True
 
 
 @then("the PAT is expired")
-def step_impl(context):
+def step_PAT_is_expired(context):
     sleep(2)  # Give the PAT some time to expire
     context.response = context.test_client.get("/api/whoami", headers=context.headers)
     assert context.response.status_code == 401
 
 
 @step("the PAT is revoked")
-def step_impl(context):
+def step_PAT_is_revoked(context):
     context.response = context.test_client.delete(
         f"api/token/{context.response.json()[0]['uuid']}", headers=context.headers
     )

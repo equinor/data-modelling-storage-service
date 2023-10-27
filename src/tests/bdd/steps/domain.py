@@ -101,14 +101,14 @@ def step_impl_documents(context, data_source_id: str, collection: str):
 
 
 @given('AccessControlList for document "{document_id}" in data-source "{data_source}" is')
-def step_impl(context, document_id, data_source):
+def step_ACL_for_docs_in_DS_is(context, document_id, data_source):
     document_service = DocumentService(get_data_source, user=context.user)
     acl = AccessControlList(**json.loads(context.text))
     document_service.repository_provider(data_source, context.user).update_access_control(document_id, acl)
 
 
 @then('AccessControlList for document "{document_id}" in data-source "{data_source}" should be')
-def step_impl(context, document_id, data_source):
+def step_ACL_for_docs_in_DS_should_be(context, document_id, data_source):
     acl = AccessControlList(**json.loads(context.text))
     lookup_for_data_source: dict = {}
 
@@ -124,6 +124,6 @@ def step_impl(context, document_id, data_source):
 
 
 @given('AccessControlList for data-source "{data_source}" is')
-def step_impl(context, data_source):
+def step_ACL_for_DS_is(context, data_source):
     acl = AccessControlList(**json.loads(context.text))
     DataSourceRepository(context.user).update_access_control(data_source, acl)

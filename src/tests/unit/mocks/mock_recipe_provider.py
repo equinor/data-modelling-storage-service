@@ -10,7 +10,7 @@ class MockStorageRecipeProvider:
         self.path_to_mock_storage_recipes = path_to_mock_storage_recipes
 
     def provider(self, type: str, context: str) -> list[StorageRecipe]:
-        all_storage_recipes = defaultdict(list)
+        all_storage_recipes: dict = defaultdict(list)
         with open(self.path_to_mock_storage_recipes) as f:
             all_storage_recipes.update(json.load(f))
         return [

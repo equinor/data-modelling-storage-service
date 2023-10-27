@@ -35,7 +35,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
 
     def test_update_complex_array(self):
         # fmt: off
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "complexArraysEntity",

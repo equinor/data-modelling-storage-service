@@ -46,7 +46,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.repository = mock.Mock()
         self.repository.get = mock_get
         self.repository.update = mock_update
-        self.doc_storage = {}
+        self.doc_storage: dict = {}
 
         self.mock_blueprint_provider = MockBlueprintProvider(
             mock_blueprints_and_file_names=mock_blueprints_and_file_names,
@@ -89,7 +89,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         assert len(self.doc_storage) == 1
 
     def test_add_optional(self):
-        entity = {
+        entity: dict = {
             "_id": "1",
             "name": "Parent",
             "type": "ChestWithOptionalBoxInside",
@@ -129,7 +129,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertDictEqual(self.doc_storage["1"]["SomeChild"], {})
 
     def test_add_optional_nested(self):
-        entity = {
+        entity: dict = {
             "_id": "1",
             "name": "Parent",
             "type": "RoomWithOptionalChestInside",

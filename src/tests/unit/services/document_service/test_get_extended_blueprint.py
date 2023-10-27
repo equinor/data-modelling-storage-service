@@ -44,7 +44,7 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
     def test_updated_extended_entity(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "HalloExtendedWorld",
