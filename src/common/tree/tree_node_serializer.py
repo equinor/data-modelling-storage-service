@@ -3,9 +3,7 @@ from copy import deepcopy
 from typing import Any
 
 from common.exceptions import (
-    ApplicationException,
     BadRequestException,
-    NotFoundException,
     ValidationException,
 )
 from common.tree.tree_node import ListNode, Node
@@ -30,8 +28,8 @@ def tree_node_to_dict(node: Node | ListNode) -> list[Any] | dict:
     # Always add 'type'
     try:
         data["type"] = node.entity["type"]
-    except KeyError:
-        raise BadRequestException(f"The node '{node.uid}' is missing the 'type' attributes")
+    except KeyError as ex:
+        raise BadRequestException(f"The node '{node.uid}' is missing the 'type' attributes") from ex
 
     if node.uid and not data["type"] == SIMOS.REFERENCE.value:
         data["_id"] = node.uid
@@ -44,11 +42,11 @@ def tree_node_to_dict(node: Node | ListNode) -> list[Any] | dict:
                 data[attribute.name] = node.entity[attribute.name]
 
     # Complex
-    for node in node.children:
-        if node.is_array():
-            data[node.key] = [tree_node_to_dict(child) for child in node.children]
+    for node_child in node.children:
+        if node_child.is_array():
+            data[node_child.key] = [tree_node_to_dict(child) for child in node_child.children]
         else:
-            data[node.key] = tree_node_to_dict(node)
+            data[node_child.key] = tree_node_to_dict(node_child)
 
     return data
 
@@ -78,8 +76,8 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
     # Always add 'type', regardless of blueprint
     try:
         data["type"] = node.type
-    except KeyError:
-        raise BadRequestException(f"The node '{node.uid}' is missing the 'type' attributes")
+    except KeyError as ex:
+        raise BadRequestException(f"The node '{node.uid}' is missing the 'type' attributes") from ex
 
     if node.attribute.attribute_type == BuiltinDataTypes.BINARY.value:
         # Just return the reference, because binary data is uncontained and should not be resolved.
@@ -159,15 +157,6 @@ def tree_node_from_dict(
 
     if node.attribute.attribute_type == BuiltinDataTypes.BINARY.value:
         return node
-
-    try:
-        if (
-            node.attribute.attribute_type != BuiltinDataTypes.OBJECT.value
-            and node.attribute.attribute_type != BuiltinDataTypes.BINARY.value
-        ):
-            node.blueprint
-    except NotFoundException as e:
-        raise ApplicationException(f"Failed to find blueprint with reference '{node.type}'", debug=str(e))
 
     for child_attribute in node.blueprint.get_none_primitive_types():
         if child_attribute.name == "_meta_":

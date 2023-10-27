@@ -14,7 +14,7 @@ class AddressTestCase(unittest.TestCase):
 
     def test_init_with_other_protocol_than_dmss_throws_NotImplementedError(self):
         with self.assertRaises(NotImplementedError):
-            addr = Address(path="a", data_source="b", protocol="x")
+            Address(path="a", data_source="b", protocol="x")
 
     def test_from_absolute_with_protocol(self):
         path = "dmss://ds/b/$c123.A"
@@ -65,4 +65,4 @@ class AddressTestCase(unittest.TestCase):
         path = "^example/$123.A"
 
         with self.assertRaises(ApplicationException):
-            addr = Address.from_relative(path, None, data_source="ds")
+            Address.from_relative(path, None, data_source="ds")

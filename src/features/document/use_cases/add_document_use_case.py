@@ -1,4 +1,4 @@
-from typing import BinaryIO, Optional
+from typing import BinaryIO
 
 from fastapi import UploadFile
 
@@ -184,7 +184,7 @@ def add_document_use_case(
     document: dict,
     address: Address,
     document_service: DocumentService,
-    files: Optional[list[UploadFile]] = None,
+    files: list[UploadFile] | None = None,
 ) -> dict:
     """Add document to a data source or existing entity. Can also be used to add (complex) items to a list.
 

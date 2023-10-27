@@ -44,7 +44,7 @@ def _get_complete_sys_document(
     reference: dict,
     data_source: DataSource,
     get_data_source,
-    current_id: str = None,
+    current_id: str | None = None,
     depth: int = 1,
     depth_count: int = 0,
 ) -> dict | list:

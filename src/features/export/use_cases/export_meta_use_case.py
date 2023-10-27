@@ -1,5 +1,3 @@
-from typing import Optional
-
 from authentication.models import User
 from common.address import Address
 from common.exceptions import NotFoundException
@@ -25,7 +23,7 @@ def concat_meta_data(meta: dict | None, new_meta: dict | None) -> dict:
     dependencies = {value["alias"]: value for value in meta["dependencies"]}
 
     dependencies.update({value["alias"]: value for value in new_meta["dependencies"]})
-    meta["dependencies"] = [v for v in dependencies.values()]
+    meta["dependencies"] = list(dependencies.values())
     return meta
 
 
@@ -40,7 +38,7 @@ def resolve_references(values: list, data_source: DataSource, user: User) -> lis
 
 
 def _collect_entity_meta_by_path(
-    package: dict, path_elements: list[str], data_source: DataSource, existing_meta: Optional[dict], user: User
+    package: dict, path_elements: list[str], data_source: DataSource, existing_meta: dict | None, user: User
 ) -> dict:
     # TODO: Handle dotted attribute path
     if len(path_elements) == 1:

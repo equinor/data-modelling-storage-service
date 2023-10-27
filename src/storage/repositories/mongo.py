@@ -1,5 +1,4 @@
 from time import sleep
-from typing import Optional
 
 import gridfs
 from pymongo import MongoClient
@@ -44,8 +43,8 @@ class MongoDBClient(RepositoryInterface):
         document["_id"] = uid
         try:
             return self.handler[self.collection].insert_one(document).acknowledged
-        except DuplicateKeyError:
-            raise BadRequestException
+        except DuplicateKeyError as error:
+            raise BadRequestException from error
 
     def update(self, uid: str, document: dict) -> bool:
         return self.handler[self.collection].replace_one({"_id": uid}, document, upsert=True).acknowledged
@@ -53,10 +52,10 @@ class MongoDBClient(RepositoryInterface):
     def delete(self, uid: str) -> bool:
         return self.handler[self.collection].delete_one(filter={"_id": uid}).acknowledged
 
-    def find(self, filters: dict) -> Optional[list[dict]]:
+    def find(self, filters: dict) -> list[dict] | None:
         return self.handler[self.collection].find(filter=filters)
 
-    def find_one(self, filters: dict) -> Optional[dict]:
+    def find_one(self, filters: dict) -> dict | None:
         return self.handler[self.collection].find_one(filter=filters)
 
     def update_blob(self, uid: str, blob: bytearray):
@@ -71,10 +70,10 @@ class MongoDBClient(RepositoryInterface):
                 sleep(2)
                 if attempts > 2:
                     raise error
-            except gridfs.errors.FileExists:
+            except gridfs.errors.FileExists as error:
                 message = f"Blob file with id '{uid}' already exists"
                 logger.warning(message)
-                raise BadRequestException(message=message)
+                raise BadRequestException(message=message) from error
 
     def delete_blob(self, uid: str):
         return self.blob_handler.delete(uid)

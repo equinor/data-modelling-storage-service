@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 from uuid import uuid4
 
 from pydantic import BaseModel
@@ -28,8 +28,8 @@ class AccessLevel(str, Enum):
             return v
         try:
             return cls[v]
-        except KeyError:
-            raise ValueError("invalid AccessLevel enum value ")
+        except KeyError as ex:
+            raise ValueError("invalid AccessLevel enum value ") from ex
 
     @classmethod
     def __modify_schema__(cls, schema: dict[str, Any]):
@@ -47,8 +47,8 @@ class AccessLevel(str, Enum):
 class User(BaseModel):
     user_id: str  # If using azure AD authentication, user_id is the oid field from the access token.
     # If using another oauth provider, user_id will be from the "sub" attribute in the access token.
-    email: Optional[str] = None
-    full_name: Optional[str] = None
+    email: str | None = None
+    full_name: str | None = None
     roles: list[str] = []
     scope: AccessLevel = (
         AccessLevel.WRITE

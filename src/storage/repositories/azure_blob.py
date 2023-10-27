@@ -1,5 +1,4 @@
 import json
-from typing import Optional
 
 from azure.storage.blob import BlobServiceClient
 
@@ -43,7 +42,7 @@ class AzureBlobStorageClient(RepositoryInterface):
         self.delete(uid)
         return True
 
-    def find(self, filters: dict) -> Optional[list[dict]]:
+    def find(self, filters: dict) -> list[dict] | None:
         # TODO: implement efficient filter functionality by using the python azure src
         if self.blob_service_client.exists(self.container):
             # self.blob_service_client.create_container(self.collection)
@@ -52,7 +51,7 @@ class AzureBlobStorageClient(RepositoryInterface):
             return result
         return None
 
-    def find_one(self, filters: dict) -> Optional[dict]:
+    def find_one(self, filters: dict) -> dict | None:
         blobs = self.blob_service_client.list_blobs(self.container)
         result = self._filter(blobs, filters)
         if len(result) > 0:

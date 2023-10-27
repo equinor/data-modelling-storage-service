@@ -15,7 +15,7 @@ router = APIRouter(tags=["default", "search"], prefix="/search")
 @router.post("", operation_id="search", response_model=dict, responses=responses)
 @create_response(JSONResponse)
 def search(
-    data: dict = {},
+    data: dict | None = None,
     data_sources: list[str] = Query([]),
     sort_by_attribute: str = "name",
     user: User = Depends(auth_w_jwt_or_pat),
@@ -40,6 +40,8 @@ def search(
     Returns:
     - dict: The sorted search results.
     """
+    if data is None:
+        data = {}
     return search_use_case(
         user=user, request=SearchRequest(data_sources=data_sources, data=data, dotted_attribute_path=sort_by_attribute)
     )

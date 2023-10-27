@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel
 from requests import HTTPError, Request, Session, post
 
@@ -12,10 +10,10 @@ GRAPH_API_URL = "https://graph.microsoft.com/v1.0"
 class GraphRequest(BaseModel):
     path: str
     method: str = "GET"
-    data: Optional[dict] = {}
-    params: Optional[dict] = {}
-    headers: Optional[dict] = {}
-    payload: Optional[dict] = {}
+    data: dict | None = {}
+    params: dict | None = {}
+    headers: dict | None = {}
+    payload: dict | None = {}
 
 
 class CredentialRequest(BaseModel):
