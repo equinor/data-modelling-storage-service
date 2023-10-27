@@ -1,4 +1,4 @@
-from typing import BinaryIO, List, Optional
+from typing import BinaryIO, Optional
 
 from fastapi import UploadFile
 
@@ -99,9 +99,7 @@ def _add_document_to_entity_or_list(
         )
         parent_node: Node = document_service.get_document(parent_address)
 
-        attribute_to_update: BlueprintAttribute = parent_node.blueprint.get_attribute_by_name(
-            last_attribute_in_address
-        )
+        attribute_to_update: BlueprintAttribute = parent_node.blueprint.get_attribute_by_name(last_attribute_in_address)
         if not attribute_to_update:
             raise NotFoundException(
                 f"Could not find attribute {last_attribute_in_address} in blueprint for {parent_node.blueprint.name}"
@@ -186,7 +184,7 @@ def add_document_use_case(
     document: dict,
     address: Address,
     document_service: DocumentService,
-    files: Optional[List[UploadFile]] = None,
+    files: Optional[list[UploadFile]] = None,
 ) -> dict:
     """Add document to a data source or existing entity. Can also be used to add (complex) items to a list.
 

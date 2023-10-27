@@ -15,7 +15,7 @@ class Config(BaseSettings):
     MAX_ENTITY_RECURSION_DEPTH: int = Field(50, env="MAX_ENTITY_RECURSION_DEPTH")
     CORE_DATA_SOURCE: str = "system"
     CACHE_MAX_SIZE: int = 200
-    APPLICATION_HOME: str = Field(f"{str(Path(__file__).parent)}/home", env="APPLICATION_HOME")
+    APPLICATION_HOME: str = Field(f"{Path(__file__).parent!s}/home", env="APPLICATION_HOME")
     # Access Control
     DMSS_ADMIN: str = Field("dmss-admin", env="DMSS_ADMIN")
     DMSS_ADMIN_ROLE: str = Field("dmss-admin", env="DMSS_ADMIN_ROLE")
@@ -57,7 +57,7 @@ if config.AUTH_ENABLED and not all((config.OAUTH_WELL_KNOWN, config.OAUTH_TOKEN_
 
 if config.AUTH_PROVIDER_FOR_ROLE_CHECK:
     if not all((config.OAUTH_CLIENT_ID, config.OAUTH_CLIENT_SECRET)):
-        raise EnvironmentError(
+        raise OSError(
             "Environment variables 'OAUTH_CLIENT_ID' and 'OAUTH_CLIENT_SECRET' are required if "
             + "live role checks are enabled with 'AUTH_PROVIDER_FOR_ROLE_CHECK'"
         )
@@ -65,4 +65,4 @@ if config.AUTH_PROVIDER_FOR_ROLE_CHECK:
         config.AUTH_PROVIDER_FOR_ROLE_CHECK == AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY
         and not config.AAD_ENTERPRISE_APP_OID
     ):
-        raise EnvironmentError("Missing required environment variable 'AAD_ENTERPRISE_APP_OID'")
+        raise OSError("Missing required environment variable 'AAD_ENTERPRISE_APP_OID'")

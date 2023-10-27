@@ -1,6 +1,6 @@
 import json
+from collections.abc import Callable
 from json import JSONDecodeError
-from typing import Callable
 
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute

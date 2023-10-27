@@ -22,18 +22,13 @@ cryptography = "^41.0.5"
 cffi = "^1.16.0"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^0.991"
 pydevd = "^2.8.0"
 behave = "^1.2.6"
 terminaltables = "^3.1.10"
 deepdiff = "^5.8.1"
-pre-commit = "^3.3.3"
 pygments = "^2.12.0"
-flake8 = "^4.0.1"
-bandit = "^1.7.4"
 pytest = "^7.1.2"
 dictdiffer = "^0.9.0"
-black = "^22.3.0"
 
 [tool.pytest]
 addopts = ["--ignore gen"]
@@ -43,19 +38,32 @@ pythonpath = [
   "./src"
 ]
 
-[tool.isort]
-profile = "black"
+[tool.ruff]
 
-[tool.black]
-line-length = 119
-target-version = ['py310']
-exclude = '''
-/(
-    \.git
-  | \.venv
-  | gen
-)/
-'''
+src = ["src"]
+target-version = "py311"
+line-length = 120
+
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "S",  # Bandit
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+    "UP", # automatically upgrade syntax for newer versions of the language
+    "RUF", # ruff specific rules
+]
+
+ignore = [
+    "W191", # conflict with ruff formatter
+    "E501",  # line too long, handled by black,
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # Code complexity
+    "RUF012", # Pydantic class variables
+    "S101",  # Use of "assert"
+]
 
 [tool.mypy]
 ignore_missing_imports = true

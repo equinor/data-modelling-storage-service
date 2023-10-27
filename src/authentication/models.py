@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 from uuid import uuid4
 
 from pydantic import BaseModel
@@ -32,7 +32,7 @@ class AccessLevel(str, Enum):
             raise ValueError("invalid AccessLevel enum value ")
 
     @classmethod
-    def __modify_schema__(cls, schema: Dict[str, Any]):
+    def __modify_schema__(cls, schema: dict[str, Any]):
         """
         Add a custom field type to the class representing the Enum's field names
         Ref: https://pydantic-docs.helpmanual.io/usage/schema/#modifying-schema-in-custom-fields
@@ -49,7 +49,7 @@ class User(BaseModel):
     # If using another oauth provider, user_id will be from the "sub" attribute in the access token.
     email: Optional[str] = None
     full_name: Optional[str] = None
-    roles: List[str] = []
+    roles: list[str] = []
     scope: AccessLevel = (
         AccessLevel.WRITE
     )  # This is the 'maximum' AccessLevel this user can have, but is not what is actually set as the access level.
@@ -74,8 +74,8 @@ class AccessControlList(BaseModel):
     """
 
     owner: str
-    roles: Dict[str, AccessLevel] = {}
-    users: Dict[str, AccessLevel] = {}
+    roles: dict[str, AccessLevel] = {}
+    users: dict[str, AccessLevel] = {}
     others: AccessLevel = AccessLevel.READ
 
     def dict(self, **kwargs):
@@ -103,7 +103,7 @@ class PATData(BaseModel):
     uuid: str = str(uuid4())
     user_id: str
     # TODO: Roles should be checked on every request, as they mey be updated after the PAT has been created
-    roles: List[str] = []
+    roles: list[str] = []
     scope: AccessLevel
     expire: datetime
 

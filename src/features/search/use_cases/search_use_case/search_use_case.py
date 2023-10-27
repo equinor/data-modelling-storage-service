@@ -1,5 +1,5 @@
+from collections.abc import Callable
 from copy import deepcopy
-from typing import Callable, List
 
 from authentication.models import User
 from common.exceptions import ApplicationException, BadRequestException
@@ -34,8 +34,8 @@ def _search(data_source_id, search_data, dotted_attribute_path, user: User, get_
     except ValueError as error:
         logger.warning(f"Failed to build mongo query; {error}")
         raise BadRequestException("Failed to build mongo query")
-    result: List[dict] = repository.find(process_search_data)
-    result_sorted: List[dict] = sort_dtos_by_attribute(result, dotted_attribute_path)
+    result: list[dict] = repository.find(process_search_data)
+    result_sorted: list[dict] = sort_dtos_by_attribute(result, dotted_attribute_path)
     result_list = {}
     for document in result_sorted:
         result_list[f"{data_source_id}/{document['_id']}"] = document

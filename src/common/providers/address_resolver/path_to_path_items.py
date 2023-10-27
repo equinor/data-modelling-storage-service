@@ -1,5 +1,5 @@
 import re
-from typing import Tuple, Union
+from typing import Union
 
 from common.providers.address_resolver.path_items import (
     AttributeItem,
@@ -8,7 +8,7 @@ from common.providers.address_resolver.path_items import (
 )
 
 
-def _next_path_part(path: str) -> Tuple[str, Union[str, None], str]:
+def _next_path_part(path: str) -> tuple[str, Union[str, None], str]:
     """Utility to get next path part."""
     content = path  # Default to path
     deliminator = None

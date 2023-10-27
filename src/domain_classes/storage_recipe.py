@@ -1,5 +1,3 @@
-from typing import Dict, List
-
 from pydantic import BaseModel, Field
 
 from enums import PRIMITIVES, SIMOS, StorageDataTypes
@@ -19,7 +17,7 @@ class StorageAttribute(BaseModel):
     def __repr__(self):
         return f"name: {self.name}, contained: {self.contained}, affinity: {self.storage_affinity.value}"
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "name": self.name,
             "contained": self.contained,
@@ -51,12 +49,12 @@ class StorageRecipe(BaseModel):
 
         return DEFAULT_COMPLEX_CONTAINED
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "name": self.name,
             "storageAffinity": self.storage_affinity.value,
             "attributes": [attribute.to_dict() for attribute in self.attributes.values()],
         }
 
-    def none_contained_attributes(self) -> List[str]:
+    def none_contained_attributes(self) -> list[str]:
         return [attr.name for attr in self.attributes.values() if not attr.contained]

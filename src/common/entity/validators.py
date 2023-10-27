@@ -1,4 +1,5 @@
-from typing import Any, Callable, Literal
+from collections.abc import Callable
+from typing import Any, Literal
 
 from common.exceptions import ValidationException
 from domain_classes.blueprint import Blueprint
@@ -35,9 +36,7 @@ def is_blueprint_instance_of(
 
 def _validate_primitive_attribute(attribute: BlueprintAttribute, value: bool | int | float | str, key: str):
     python_type = BuiltinDataTypes(attribute.attribute_type).to_py_type()
-    if attribute.attribute_type == "number" and isinstance(
-        value, int
-    ):  # float is considered a superset containing int
+    if attribute.attribute_type == "number" and isinstance(value, int):  # float is considered a superset containing int
         return
     if not python_type or not isinstance(value, python_type):
         raise ValidationException(

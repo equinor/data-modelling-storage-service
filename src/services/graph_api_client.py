@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 from requests import HTTPError, Request, Session, post
@@ -31,7 +31,7 @@ class AppRole(BaseModel):
 
 
 class AppRolesResponse(BaseModel):
-    value: List[AppRole]
+    value: list[AppRole]
 
 
 class AppRoleAssignment(BaseModel):
@@ -42,7 +42,7 @@ class AppRoleAssignment(BaseModel):
 
 
 class AppRolesAssignedResponse(BaseModel):
-    value: List[AppRoleAssignment]
+    value: list[AppRoleAssignment]
 
 
 def get_graph_api_access_token(credentials: CredentialRequest):
@@ -100,7 +100,7 @@ def graph_request(request: GraphRequest):
         raise
 
 
-def get_app_roles() -> List[AppRole]:
+def get_app_roles() -> list[AppRole]:
     """
     https://docs.microsoft.com/en-us/graph/api/resources/approle
     The roles exposed by the application which this service principal represents.
@@ -112,7 +112,7 @@ def get_app_roles() -> List[AppRole]:
     return app_roles_response.value
 
 
-def get_app_roles_assigned_to() -> List[AppRoleAssignment]:
+def get_app_roles_assigned_to() -> list[AppRoleAssignment]:
     """
     https://docs.microsoft.com/en-us/graph/api/serviceprincipal-list-approleassignedto
     Retrieve a list of appRoleAssignment that users, groups, or client service principals

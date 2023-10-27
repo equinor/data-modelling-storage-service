@@ -19,9 +19,7 @@ def create_personal_access_token_use_case(
     if not isinstance(scope, AccessLevel):
         raise ValueError("Scope on a personal access token must be one of (NONE, READ, WRITE)")
     if ttl <= 0 or ttl > MAX_TOKEN_TTL:
-        raise ValueError(
-            f"Validity time of a personal access token must be between '1' and '{MAX_TOKEN_TTL}' seconds."
-        )
+        raise ValueError(f"Validity time of a personal access token must be between '1' and '{MAX_TOKEN_TTL}' seconds.")
     now = datetime.datetime.now()
     expire_datetime = now + datetime.timedelta(seconds=ttl)
     pat = f"DMSS_{generate_key()}"  # Generate a random string, this will be the actual token.

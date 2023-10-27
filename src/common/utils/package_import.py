@@ -1,6 +1,5 @@
 import json
 import os
-from typing import Dict, List
 from uuid import uuid4
 
 from authentication.models import User
@@ -17,7 +16,7 @@ from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 
 
-def _add_documents(path, documents, data_source) -> List[Dict]:
+def _add_documents(path, documents, data_source) -> list[dict]:
     docs = []
     for file in documents:
         logger.debug(f"Working on {file}...")
@@ -56,7 +55,7 @@ def import_package(path: str, user: User, data_source_name: str, is_root: bool =
                     "already exists in data source '{data_source.name}'"
                 )
             )
-    except (NotFoundException, NotFoundException):
+    except NotFoundException:
         pass
 
     files = []

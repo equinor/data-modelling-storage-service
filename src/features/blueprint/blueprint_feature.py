@@ -22,9 +22,7 @@ router = APIRouter(tags=["default", "blueprint"])
     responses=responses,
 )
 @create_response(JSONResponse)
-def get_blueprint(
-    type_ref: TypeConstrainedString, context: str | None = None, user: User = Depends(auth_w_jwt_or_pat)
-):
+def get_blueprint(type_ref: TypeConstrainedString, context: str | None = None, user: User = Depends(auth_w_jwt_or_pat)):
     """Get a Blueprint and all Ui- and StorageRecipes connected to it, given a Blueprint address.
 
     Args:

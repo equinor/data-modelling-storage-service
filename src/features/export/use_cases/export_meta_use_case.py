@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from authentication.models import User
 from common.address import Address
@@ -40,7 +40,7 @@ def resolve_references(values: list, data_source: DataSource, user: User) -> lis
 
 
 def _collect_entity_meta_by_path(
-    package: dict, path_elements: List[str], data_source: DataSource, existing_meta: Optional[dict], user: User
+    package: dict, path_elements: list[str], data_source: DataSource, existing_meta: Optional[dict], user: User
 ) -> dict:
     # TODO: Handle dotted attribute path
     if len(path_elements) == 1:
@@ -97,7 +97,7 @@ def export_meta_use_case(user: User, path_address: str) -> dict:
         lambda data_source_name: get_data_source(data_source_name, user),
     ).entity
 
-    path_without_root_package: List[str] = address_object.path.strip("/").split("/")[1:]
+    path_without_root_package: list[str] = address_object.path.strip("/").split("/")[1:]
 
     if not path_without_root_package:
         return root_package.get("_meta_", {})

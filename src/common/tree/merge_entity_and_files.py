@@ -1,10 +1,10 @@
-from typing import BinaryIO, Dict
+from typing import BinaryIO
 
 from common.tree.tree_node import Node
 from enums import SIMOS
 
 
-def merge_entity_and_files(node: Node, files: Dict[str, BinaryIO]):
+def merge_entity_and_files(node: Node, files: dict[str, BinaryIO]):
     """
     Recursively adds the matching posted files to the system/SIMOS/Blob types in the node
     """

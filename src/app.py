@@ -1,6 +1,6 @@
 import json
 import time
-from typing import Callable
+from collections.abc import Callable
 
 import click
 import gridfs

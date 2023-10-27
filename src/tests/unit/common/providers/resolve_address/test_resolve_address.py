@@ -190,9 +190,7 @@ class ResolveReferenceTestCase(unittest.TestCase):
     def test_invalid_attribute(self):
         with pytest.raises(
             NotFoundException,
-            match=re.escape(
-                f"Invalid attribute 'xxx'. Valid attributes are '{list(self.car_rental_company.keys())}'."
-            ),
+            match=re.escape(f"Invalid attribute 'xxx'. Valid attributes are '{list(self.car_rental_company.keys())}'."),
         ):
             resolve_address(
                 Address.from_absolute("datasource/$car_rental_company_id.xxx"), self.document_service.get_data_source
@@ -211,9 +209,7 @@ class ResolveReferenceTestCase(unittest.TestCase):
     def test_invalid_reference_to_primitive(self):
         with pytest.raises(
             NotFoundException,
-            match=re.escape(
-                "Path ['car_rental_company_id', 'cars', '[0]', 'plateNumber'] leads to a primitive value."
-            ),
+            match=re.escape("Path ['car_rental_company_id', 'cars', '[0]', 'plateNumber'] leads to a primitive value."),
         ):
             resolve_address(
                 Address.from_absolute("datasource/$car_rental_company_id.cars[0].plateNumber"),

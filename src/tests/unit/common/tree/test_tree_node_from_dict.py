@@ -236,9 +236,7 @@ class TreeNodeFromDictTestCase(unittest.TestCase):
             "_id": "1",
             "type": "SignalContainer",
             "name": "signalContainer",
-            "cases": [
-                {"type": "Case", "name": "case1", "signal": {"type": "Signal", "values": [1, 2, 3, 4, 5, 6, 7]}}
-            ],
+            "cases": [{"type": "Case", "name": "case1", "signal": {"type": "Signal", "values": [1, 2, 3, 4, 5, 6, 7]}}],
         }
 
         root = tree_node_from_dict(doc, self.mock_blueprint_provider, uid=doc.get("_id"))
