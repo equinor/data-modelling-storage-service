@@ -15,6 +15,13 @@
       "default": "self"
     },
     {
+      "name": "resolve",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "boolean",
+      "optional": true,
+      "default": "true"
+    },
+    {
       "name": "label",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
