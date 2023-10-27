@@ -1,4 +1,4 @@
-import requests
+import httpx
 from cachetools import TTLCache, cached
 from fastapi import Security
 from fastapi.security import APIKeyHeader, OAuth2AuthorizationCodeBearer
@@ -32,10 +32,10 @@ credentials_exception = HTTPException(
 @cached(cache=TTLCache(maxsize=32, ttl=86400))
 def fetch_openid_configuration() -> dict:
     try:
-        oid_conf_response = requests.get(config.OAUTH_WELL_KNOWN, timeout=5)
+        oid_conf_response = httpx.get(config.OAUTH_WELL_KNOWN, timeout=5)
         oid_conf_response.raise_for_status()
         oid_conf = oid_conf_response.json()
-        json_web_key_set_response = requests.get(oid_conf["jwks_uri"], timeout=5)
+        json_web_key_set_response = httpx.get(oid_conf["jwks_uri"], timeout=5)
         json_web_key_set_response.raise_for_status()
         return {
             "authorization_endpoint": oid_conf["authorization_endpoint"],
