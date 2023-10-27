@@ -1,4 +1,5 @@
-from typing import Callable, List, Union
+from collections.abc import Callable
+from typing import Union
 from uuid import uuid4
 
 from common.exceptions import ValidationException
@@ -171,7 +172,7 @@ class NodeBase:
                     new_node.parent = node
                     node.children[i] = new_node
 
-    def get_by_path(self, keys: List[str]):
+    def get_by_path(self, keys: list[str]):
         """
         Uses a list of keys to find and return the correct child node
 
@@ -187,7 +188,7 @@ class NodeBase:
         next_node = next_node.get_by_path(keys)
         return next_node
 
-    def remove_by_path(self, keys: List) -> None:
+    def remove_by_path(self, keys: list) -> None:
         if len(keys) == 1:
             for index, child in enumerate(self.children):
                 if child.key == keys[0]:

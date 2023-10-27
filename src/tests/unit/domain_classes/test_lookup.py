@@ -13,9 +13,7 @@ class ExtendRecipeLinksTestCase(unittest.TestCase):
                         {"name": "Edit", "type": "dmss://system/SIMOS/UiRecipe"},
                     ],
                     "dmss://system/SIMOS/Entity": [{"name": "DEFAULT_CREATE", "type": "dmss://system/SIMOS/UiRecipe"}],
-                    "dmss://system/SIMOS/blob_types/PDF": [
-                        {"name": "PDFView", "type": "dmss://system/SIMOS/UiRecipe"}
-                    ],
+                    "dmss://system/SIMOS/blob_types/PDF": [{"name": "PDFView", "type": "dmss://system/SIMOS/UiRecipe"}],
                 }
             }
         )
@@ -34,9 +32,7 @@ class ExtendRecipeLinksTestCase(unittest.TestCase):
                         {"name": "Edit", "type": "dmss://system/SIMOS/UiRecipe"},
                     ],
                     "dmss://system/SIMOS/Entity": [{"name": "DEFAULT_CREATE", "type": "dmss://system/SIMOS/UiRecipe"}],
-                    "dmss://system/SIMOS/blob_types/PDF": [
-                        {"name": "PDFView", "type": "dmss://system/SIMOS/UiRecipe"}
-                    ],
+                    "dmss://system/SIMOS/blob_types/PDF": [{"name": "PDFView", "type": "dmss://system/SIMOS/UiRecipe"}],
                 }
             }
         )

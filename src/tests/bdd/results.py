@@ -20,7 +20,7 @@ def colored_status(status, text):
 
 
 def two_decimals(number):
-    return "{0:.2f}".format(number)
+    return f"{number:.2f}"
 
 
 def print_overview_features(features):

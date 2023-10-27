@@ -1,7 +1,8 @@
 import mimetypes
 import pprint
+from collections.abc import Callable
 from functools import lru_cache
-from typing import Callable, Dict, Union
+from typing import Union
 from uuid import uuid4
 
 from authentication.models import User
@@ -114,7 +115,7 @@ class DocumentService:
         path="",
         combined_document_meta: dict | None = None,
         initial: bool = False,
-    ) -> Dict:
+    ) -> dict:
         """
         Saves a Node.
         Converting uncontained child entities to references.

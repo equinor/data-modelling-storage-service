@@ -12,9 +12,7 @@ def scrypt(value: str, salt: str = config.SECRET_KEY) -> str:
 
 def _key_loaded():
     if not config.SECRET_KEY:
-        raise EnvironmentError(
-            "The encryption/decryption was attempted without supplying the 'SECRET_KEY' environment variable"
-        )
+        raise OSError("The encryption/decryption was attempted without supplying the 'SECRET_KEY' environment variable")
 
 
 def generate_key():

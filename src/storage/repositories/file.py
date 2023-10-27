@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Dict, Optional, Union
+from typing import Optional, Union
 
 from storage.repository_interface import RepositoryInterface
 
@@ -8,7 +8,7 @@ from storage.repository_interface import RepositoryInterface
 class LocalFileRepository(RepositoryInterface):
     def __init__(self, location: Optional[Union[str, Path]] = None):
         if location is None:
-            location = f"{str(Path(__file__).parent.parent.parent)}/home/"
+            location = f"{Path(__file__).parent.parent.parent!s}/home/"
         self.path = Path(location)
 
     def get(self, absolute_ref: str) -> dict:
@@ -17,16 +17,14 @@ class LocalFileRepository(RepositoryInterface):
             with open(f"{self.path}/{address}.json") as f:
                 return json.load(f)
         except FileNotFoundError:
-            raise FileNotFoundError(
-                f"'{absolute_ref}' not found. Are DMSS core blueprints available at '{self.path}'?"
-            )
+            raise FileNotFoundError(f"'{absolute_ref}' not found. Are DMSS core blueprints available at '{self.path}'?")
         except ValueError:
             raise ValueError(f"Got invalid path for local repository blueprint path: '{absolute_ref}'")
 
     def find(self, filter: dict, single=None, raw=None) -> dict:
         return self.get(filter["type"])
 
-    def find_one(self, filters: Dict) -> Dict:
+    def find_one(self, filters: dict) -> dict:
         raise NotImplementedError
 
     def add(self, document: dict) -> None:

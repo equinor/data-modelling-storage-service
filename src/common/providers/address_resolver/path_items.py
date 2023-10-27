@@ -1,5 +1,6 @@
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable, Tuple
+from typing import Any
 
 from common.address import Address
 from common.entity.find import find
@@ -16,7 +17,7 @@ class IdItem:
 
     id: str
 
-    def get_entry_point(self, data_source: DataSource) -> Tuple[dict, str]:
+    def get_entry_point(self, data_source: DataSource) -> tuple[dict, str]:
         if data_source.get_lookup(self.id).storage_affinity == "blob":
             # Do not resolve any binary data, just return a reference to it.
             # Getting the binary data needs to be handled by the consumer (e.g frontend).
@@ -55,7 +56,7 @@ class QueryItem:
             else:
                 self.query_as_dict[key] = value
 
-    def get_entry_point(self, data_source: DataSource) -> Tuple[dict, str]:
+    def get_entry_point(self, data_source: DataSource) -> tuple[dict, str]:
         result: list[dict] = data_source.find(self.query_as_dict)
         if not result:
             raise NotFoundException(
@@ -74,7 +75,7 @@ class QueryItem:
         data_source: DataSource,
         get_data_source: Callable,
         resolve_address: Callable,
-    ) -> Tuple[Any, str]:
+    ) -> tuple[Any, str]:
         if isinstance(entity, dict) and is_reference(entity):
             resolved_ref = resolve_address(
                 Address.from_relative(entity["address"], document_id, data_source.name), get_data_source

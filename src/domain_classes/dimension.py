@@ -27,9 +27,7 @@ class Dimension:
         a string value is stored.
         """
         self.dimensions: list[str] = dimensions.split(",")
-        self.type: type[bool] | type[int] | type[float] | type[str] | str = _get_data_type_from_dmt_type(
-            attribute_type
-        )
+        self.type: type[bool] | type[int] | type[float] | type[str] | str = _get_data_type_from_dmt_type(attribute_type)
         self.value = None
 
     def is_array(self) -> bool:

@@ -7,9 +7,7 @@ from pydantic.main import BaseModel, Extra
 NameConstrainedString = constr(min_length=1, max_length=128, regex="^[A-Za-z0-9_-]*$", strip_whitespace=True)
 
 # Regex only allow characters a-9 and '_' + '-' + '/' for paths
-TypeConstrainedString = constr(
-    min_length=3, max_length=128, regex=r"^[A-Z:a-z0-9_\/-]*$", strip_whitespace=True
-)  # noqa
+TypeConstrainedString = constr(min_length=3, max_length=128, regex=r"^[A-Z:a-z0-9_\/-]*$", strip_whitespace=True)
 
 
 class Entity(BaseModel, extra=Extra.allow):

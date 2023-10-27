@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, Depends, Query
 from starlette.responses import JSONResponse
 
@@ -18,7 +16,7 @@ router = APIRouter(tags=["default", "search"], prefix="/search")
 @create_response(JSONResponse)
 def search(
     data: dict = {},
-    data_sources: List[str] = Query([]),
+    data_sources: list[str] = Query([]),
     sort_by_attribute: str = "name",
     user: User = Depends(auth_w_jwt_or_pat),
 ):

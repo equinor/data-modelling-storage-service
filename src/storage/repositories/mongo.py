@@ -1,5 +1,5 @@
 from time import sleep
-from typing import Dict, List, Optional
+from typing import Optional
 
 import gridfs
 from pymongo import MongoClient
@@ -40,23 +40,23 @@ class MongoDBClient(RepositoryInterface):
         result = self.handler[self.collection].find_one(filter={"_id": uid})
         return result
 
-    def add(self, uid: str, document: Dict) -> bool:
+    def add(self, uid: str, document: dict) -> bool:
         document["_id"] = uid
         try:
             return self.handler[self.collection].insert_one(document).acknowledged
         except DuplicateKeyError:
             raise BadRequestException
 
-    def update(self, uid: str, document: Dict) -> bool:
+    def update(self, uid: str, document: dict) -> bool:
         return self.handler[self.collection].replace_one({"_id": uid}, document, upsert=True).acknowledged
 
     def delete(self, uid: str) -> bool:
         return self.handler[self.collection].delete_one(filter={"_id": uid}).acknowledged
 
-    def find(self, filters: Dict) -> Optional[List[Dict]]:
+    def find(self, filters: dict) -> Optional[list[dict]]:
         return self.handler[self.collection].find(filter=filters)
 
-    def find_one(self, filters: Dict) -> Optional[Dict]:
+    def find_one(self, filters: dict) -> Optional[dict]:
         return self.handler[self.collection].find_one(filter=filters)
 
     def update_blob(self, uid: str, blob: bytearray):

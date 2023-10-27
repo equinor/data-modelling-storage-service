@@ -1,18 +1,18 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional
+from typing import Optional
 
 
 class RepositoryInterface(ABC):
     @abstractmethod
-    def add(self, uid: str, document: Dict) -> bool:
+    def add(self, uid: str, document: dict) -> bool:
         """Get method to be implemented"""
 
     @abstractmethod
-    def update(self, uid: str, document: Dict) -> bool:
+    def update(self, uid: str, document: dict) -> bool:
         """Update method to be implemented"""
 
     @abstractmethod
-    def get(self, uid: str) -> Dict:
+    def get(self, uid: str) -> dict:
         """Get method to be implemented"""
 
     @abstractmethod
@@ -20,11 +20,11 @@ class RepositoryInterface(ABC):
         """Delete method to be implemented"""
 
     @abstractmethod
-    def find(self, filters: Dict) -> Optional[List[Dict]]:
+    def find(self, filters: dict) -> Optional[list[dict]]:
         """Find method to be implemented"""
 
     @abstractmethod
-    def find_one(self, filters: Dict) -> Dict:
+    def find_one(self, filters: dict) -> dict:
         """Find one method to be implemented"""
 
     @abstractmethod

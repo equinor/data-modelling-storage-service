@@ -1,8 +1,9 @@
 import functools
 import logging
 import traceback
+from collections.abc import Callable
 from inspect import iscoroutinefunction
-from typing import Callable, Type, TypeVar
+from typing import TypeVar
 
 from pydantic import ValidationError
 from requests import HTTPError
@@ -46,8 +47,8 @@ If the execution fails, it will return a JSONResponse with a standardized error 
 """
 
 
-def create_response(  # noqa: C901
-    response_class: Type[TResponse] | None = None,
+def create_response(
+    response_class: type[TResponse] | None = None,
 ) -> Callable[..., Callable[..., TResponse | JSONResponse]]:
     def func_wrapper(func) -> Callable[..., TResponse | JSONResponse]:
         @functools.wraps(func)

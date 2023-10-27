@@ -1,5 +1,4 @@
 import json
-from typing import Dict, List
 
 from domain_classes.blueprint import Blueprint
 from storage.repositories.file import LocalFileRepository
@@ -11,8 +10,8 @@ class MockBlueprintProvider:
     def __init__(
         self,
         mock_blueprint_folder: str,
-        mock_blueprints_and_file_names: Dict[str, str],
-        simos_blueprints_available_for_test: List[str] = None,
+        mock_blueprints_and_file_names: dict[str, str],
+        simos_blueprints_available_for_test: list[str] = None,
     ):
         if simos_blueprints_available_for_test is None:
             simos_blueprints_available_for_test = []

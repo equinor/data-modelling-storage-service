@@ -1,4 +1,3 @@
-from typing import List
 from uuid import UUID
 
 from authentication.models import User
@@ -12,7 +11,7 @@ from storage.internal.data_source_repository import get_data_source
 
 def find_package_with_document(data_source: str, document_id: str, user) -> dict:
     repository = get_data_source(data_source, user)
-    packages: List[dict] = repository.find(
+    packages: list[dict] = repository.find(
         {"type": SIMOS.PACKAGE.value, "content": {"$elemMatch": {"address": document_id}}}
     )
     if not packages:
@@ -42,11 +41,9 @@ def resolve_blueprint_use_case(user: User, address: str):
     package = find_package_with_document(address_obj.data_source, address_obj.path, user)
     root_package_found = package["isRoot"]
     blueprint_name = next(
-        (
-            c["name"]
-            for c in resolve_references(package["content"], address_obj.data_source, user)
-            if f"${c['_id']}" == address_obj.path
-        )
+        c["name"]
+        for c in resolve_references(package["content"], address_obj.data_source, user)
+        if f"${c['_id']}" == address_obj.path
     )
     path_elements.append(blueprint_name)
     path_elements.append(package["name"])

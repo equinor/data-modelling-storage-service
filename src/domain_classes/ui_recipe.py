@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import List
 
 from pydantic import BaseModel, Field
 
@@ -31,11 +30,11 @@ class RecipeAttribute(BaseModel):
 class Recipe(BaseModel):
     name: str
     type: str = SIMOS.UI_RECIPE.value
-    attributes: List[RecipeAttribute] = []
+    attributes: list[RecipeAttribute] = []
     description: str = ""
     plugin: str = "Default"
     category: str = ""
-    roles: List[str] | None = None
+    roles: list[str] | None = None
     config: dict | None = None
     label: str = ""
     dimensions: str = ""

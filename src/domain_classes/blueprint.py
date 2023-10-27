@@ -1,5 +1,5 @@
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable, Dict, List
 
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from domain_classes.dependency import Dependency
@@ -8,7 +8,7 @@ from enums import PRIMITIVES
 
 @dataclass(frozen=True)
 class Meta:
-    dependencies: List[Dependency]
+    dependencies: list[Dependency]
     type: str = ""
     version: str = "0.0.1"
 
@@ -22,7 +22,7 @@ class Blueprint:
         self.extends = entity.get("extends", [])
         self.type = entity["type"]
         self.entity = entity
-        self.attributes: List[BlueprintAttribute] = [
+        self.attributes: list[BlueprintAttribute] = [
             BlueprintAttribute(**attribute) for attribute in entity.get("attributes", [])
         ]
         self.path = path
@@ -55,16 +55,16 @@ class Blueprint:
             f"{[f'{n}({self.get_attribute_type_by_key(n)})' for n in self.get_attribute_names()]}"
         )
 
-    def get_none_primitive_types(self) -> List[BlueprintAttribute]:
+    def get_none_primitive_types(self) -> list[BlueprintAttribute]:
         blueprints = [attribute for attribute in self.attributes if attribute.attribute_type not in PRIMITIVES]
         return blueprints
 
-    def get_primitive_types(self) -> List[BlueprintAttribute]:
+    def get_primitive_types(self) -> list[BlueprintAttribute]:
         # TODO function does not return the primitive types from the blueprint that self extends from (self.extends)
         blueprints = [attribute for attribute in self.attributes if attribute.attribute_type in PRIMITIVES]
         return blueprints
 
-    def get_attribute_names(self) -> List[str]:
+    def get_attribute_names(self) -> list[str]:
         return [attribute.name for attribute in self.attributes]
 
     def get_attribute_type_by_key(self, key):
@@ -91,7 +91,7 @@ class Blueprint:
         Inherits attributes, storage-, and ui-recipies from "extended" blueprints
         Overrides attributes with similar names from ancestor blueprints, except from DefaultStorageRecipe
         """
-        new_attributes: Dict[str, BlueprintAttribute] = {}
+        new_attributes: dict[str, BlueprintAttribute] = {}
 
         for base in self.extends:
             base_blueprint: Blueprint = blueprint_provider(base)
