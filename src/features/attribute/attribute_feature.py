@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
@@ -10,14 +11,19 @@ from .use_cases.get_attribute_use_case import get_attribute_use_case
 router = APIRouter(tags=["default", "attribute"], prefix="/attribute")
 
 
+class GetAttributeResponse(BaseModel):
+    attribute: dict
+    address: str
+
+
 @router.get(
     "/{address:path}",
     operation_id="attribute_get",
-    response_model=dict,
+    response_model=GetAttributeResponse,
     responses=responses,
 )
 @create_response(JSONResponse)
-def get_attribute(address: str, user: User = Depends(auth_w_jwt_or_pat)):
+def get_attribute(address: str, resolve: bool = True, user: User = Depends(auth_w_jwt_or_pat)):
     """Fetch the BlueprintAttribute which is the container for the addressed object.
 
     This endpoint is used for fetching a BlueprintAttribute in which the addressed entity is contained.
@@ -29,4 +35,4 @@ def get_attribute(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     Returns:
     - dict: The blueprint-attribute object.
     """
-    return get_attribute_use_case(user=user, address=address)
+    return get_attribute_use_case(user=user, address=address, resolve=resolve)
