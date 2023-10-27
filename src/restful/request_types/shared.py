@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import UUID4, Field, constr, root_validator
 from pydantic.main import BaseModel, Extra
 
@@ -19,7 +17,7 @@ class EntityName(BaseModel):
 
 
 class OptionalEntityName(BaseModel):
-    name: Optional[NameConstrainedString]  # type: ignore
+    name: NameConstrainedString | None  # type: ignore
 
 
 class DataSource(BaseModel):

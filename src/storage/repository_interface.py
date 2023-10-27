@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Optional
 
 
 class RepositoryInterface(ABC):
@@ -20,7 +19,7 @@ class RepositoryInterface(ABC):
         """Delete method to be implemented"""
 
     @abstractmethod
-    def find(self, filters: dict) -> Optional[list[dict]]:
+    def find(self, filters: dict) -> list[dict] | None:
         """Find method to be implemented"""
 
     @abstractmethod

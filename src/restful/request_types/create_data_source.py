@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic.main import BaseModel
 
 from common.utils.encryption import encrypt
@@ -8,20 +6,20 @@ from enums import RepositoryType, StorageDataTypes
 
 class Repository(BaseModel, use_enum_values=True):  # type: ignore
     type: RepositoryType
-    data_types: Optional[list[StorageDataTypes]] = None
-    host: Optional[str] = None
-    port: Optional[int] = None
-    username: Optional[str] = None
-    password: Optional[str] = None
-    database: Optional[str] = None
-    collection: Optional[str] = None
-    account_url: Optional[str] = None  # URL to blob storage account, with SAS token included as a query parameter
-    container: Optional[str] = None
-    tls: Optional[bool] = True
+    data_types: list[StorageDataTypes] | None = None
+    host: str | None = None
+    port: int | None = None
+    username: str | None = None
+    password: str | None = None
+    database: str | None = None
+    collection: str | None = None
+    account_url: str | None = None  # URL to blob storage account, with SAS token included as a query parameter
+    container: str | None = None
+    tls: bool | None = True
 
     def dict(self) -> dict:
         return {
-            **{k: v for k, v in self},
+            **dict(self),
             "password": encrypt(self.password) if self.password else None,
             "account_url": encrypt(self.account_url) if self.account_url else None,
         }

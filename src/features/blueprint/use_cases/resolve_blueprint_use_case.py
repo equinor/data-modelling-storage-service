@@ -35,8 +35,8 @@ def resolve_blueprint_use_case(user: User, address: str):
     path_elements = []
     try:
         UUID(address_obj.path.replace("$", ""), version=4)
-    except ValueError:
-        raise ValidationException(f"Id {address_obj.path} is not correct UUIDv4 format.")
+    except ValueError as ex:
+        raise ValidationException(f"Id {address_obj.path} is not correct UUIDv4 format.") from ex
 
     package = find_package_with_document(address_obj.data_source, address_obj.path, user)
     root_package_found = package["isRoot"]

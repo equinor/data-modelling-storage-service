@@ -1,5 +1,4 @@
 import re
-from typing import Union
 
 from common.providers.address_resolver.path_items import (
     AttributeItem,
@@ -8,7 +7,7 @@ from common.providers.address_resolver.path_items import (
 )
 
 
-def _next_path_part(path: str) -> tuple[str, Union[str, None], str]:
+def _next_path_part(path: str) -> tuple[str, str | None, str]:
     """Utility to get next path part."""
     content = path  # Default to path
     deliminator = None
@@ -32,7 +31,7 @@ def path_to_path_items(path: str) -> list[AttributeItem | QueryItem | IdItem]:
     if queries:
         # Split the path into the pieces surrounding the queries and remove trailing [( and )]
         remaining_ref_parts = re.split("|".join([re.escape(q) for q in queries]), path)
-        remaining_ref_parts = list(map(lambda x: re.sub(r"\[?\($|^\)\]?", "", x), remaining_ref_parts))
+        remaining_ref_parts = [re.sub(r"\[?\($|^\)\]?", "", x) for x in remaining_ref_parts]
 
         items = _path_to_path_items(remaining_ref_parts[0], [], None)
         for index, query in enumerate(queries):

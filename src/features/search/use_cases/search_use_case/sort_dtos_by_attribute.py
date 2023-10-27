@@ -9,8 +9,8 @@ def _get_value_from_attribute_spec(document: dict, attribute_path_elements: list
                 if attr_key.isnumeric():
                     attr_key = int(attr_key)
             val = document[attr_key]
-        except KeyError:
-            raise BadRequestException(f"'{attr_key}' is not a valid attribute in the '{document['type']}'")
+        except KeyError as ex:
+            raise BadRequestException(f"'{attr_key}' is not a valid attribute in the '{document['type']}'") from ex
 
         # Return value if its type is comparable
         if type(val) in [str, int, float, bool]:

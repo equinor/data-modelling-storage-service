@@ -139,7 +139,7 @@ def cli():
 def run():
     uvicorn.run(
         "app:create_app",
-        host="0.0.0.0",  # nosec
+        host="0.0.0.0",  # noqa: S104
         port=5000,
         reload=config.ENVIRONMENT == "local",
         log_level=config.LOGGER_LEVEL.lower(),

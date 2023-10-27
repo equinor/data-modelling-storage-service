@@ -42,9 +42,9 @@ def fetch_openid_configuration() -> dict:
             "token_endpoint": oid_conf["token_endpoint"],
             "jwks": json_web_key_set_response.json()["keys"],
         }
-    except Exception as error:
-        logger.error(f"Failed to fetch OpenId Connect configuration for '{config.OAUTH_WELL_KNOWN}': {error}")
-        raise credentials_exception
+    except Exception as ex:
+        logger.error(f"Failed to fetch OpenId Connect configuration for '{config.OAUTH_WELL_KNOWN}': {ex}")
+        raise credentials_exception from ex
 
 
 def auth_with_jwt(jwt_token: str = Security(oauth2_scheme)) -> User:
@@ -63,9 +63,9 @@ def auth_with_jwt(jwt_token: str = Security(oauth2_scheme)) -> User:
             user = User(user_id=payload["oid"], **payload)
         else:
             user = User(user_id=payload["sub"], **payload)
-    except JWTError as error:
-        logger.warning(error)
-        raise credentials_exception
+    except JWTError as ex:
+        logger.warning(ex)
+        raise credentials_exception from ex
 
     if user is None:
         raise credentials_exception

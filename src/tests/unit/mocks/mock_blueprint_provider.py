@@ -11,7 +11,7 @@ class MockBlueprintProvider:
         self,
         mock_blueprint_folder: str,
         mock_blueprints_and_file_names: dict[str, str],
-        simos_blueprints_available_for_test: list[str] = None,
+        simos_blueprints_available_for_test: list[str] | None = None,
     ):
         if simos_blueprints_available_for_test is None:
             simos_blueprints_available_for_test = []
@@ -32,5 +32,6 @@ class MockBlueprintProvider:
             bp.realize_extends(self.get_blueprint)
             return bp
         raise FileNotFoundError(
-            f"Invalid type {type} asked for from the MockBlueprintProvider. No such blueprint were provided as available blueprints as parameters in the initialisation of the MockBlueprintProvider."
+            f"Invalid type {type} asked for from the MockBlueprintProvider. No such blueprint were provided as"
+            + " available blueprints as parameters in the initialisation of the MockBlueprintProvider."
         )

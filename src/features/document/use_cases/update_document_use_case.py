@@ -1,4 +1,4 @@
-from typing import BinaryIO, Optional, Union
+from typing import BinaryIO
 
 from fastapi import UploadFile
 
@@ -15,7 +15,7 @@ from services.document_service.document_service import DocumentService
 
 def _update_document(
     address: Address,
-    data: Union[dict, list],
+    data: dict | list,
     document_service: DocumentService,
     files: dict[str, BinaryIO] | None,
 ):
@@ -31,10 +31,10 @@ def _update_document(
 
     try:
         node: Node = document_service.get_document(address)
-    except NotFoundException:
+    except NotFoundException as ex:
         raise ValidationException(
             f"Can not update document with address {address}, since that document does not exist. If the goal is to add a document, use the document add use instead"
-        )
+        ) from ex
 
     if isinstance(data, dict):
         if node.attribute.attribute_type == SIMOS.REFERENCE.value and data["type"] != SIMOS.REFERENCE.value:
@@ -67,9 +67,9 @@ def _update_document(
 
 def update_document_use_case(
     address: Address,
-    data: Union[dict, list],
+    data: dict | list,
     document_service: DocumentService,
-    files: Optional[list[UploadFile]] = None,
+    files: list[UploadFile] | None = None,
 ):
     """Update document.
 

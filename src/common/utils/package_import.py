@@ -61,7 +61,7 @@ def import_package(path: str, user: User, data_source_name: str, is_root: bool =
     files = []
     directories = []
 
-    for path, directory, file in os.walk(path):
+    for _, directory, file in os.walk(path):
         directories.extend(directory)
         files.extend(file)
         break

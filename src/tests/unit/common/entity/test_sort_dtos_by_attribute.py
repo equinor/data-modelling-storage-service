@@ -20,7 +20,7 @@ class TestSortDTOsByAttribute(unittest.TestCase):
         data = [{"info": {"age": 21}}, {"info": {"age": 40}}, {"info": {"age": 18}}]
         with self.assertRaises(TypeError):
             # Can't compare dict with dict
-            sorted_data = sort_dtos_by_attribute(data, "info")
+            sort_dtos_by_attribute(data, "info")
 
     def test_empty_list(self):
         data: list[dict] = []

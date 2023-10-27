@@ -102,4 +102,4 @@ class Blueprint:
 
         new_attributes.update({attr.name.lower(): attr for attr in self.attributes})
 
-        self.attributes = [attr for attr in new_attributes.values()]
+        self.attributes = list(new_attributes.values())

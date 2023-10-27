@@ -119,12 +119,12 @@ class AttributeItem:
             ).entity
         try:
             result = find(entity, [self.path])
-        except (IndexError, ValueError, KeyError):
+        except (IndexError, ValueError, KeyError) as ex:
             if isinstance(entity, dict):
                 raise NotFoundException(
                     f"Invalid attribute '{self.path}'. Valid attributes are '{list(entity.keys())}'."
-                )
+                ) from ex
             else:
-                raise NotFoundException(f"Invalid index '{self.path}'. Valid indices are < {len(entity)}.")
+                raise NotFoundException(f"Invalid index '{self.path}'. Valid indices are < {len(entity)}.") from ex
 
         return result, self.path

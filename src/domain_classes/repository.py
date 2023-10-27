@@ -1,5 +1,4 @@
 from functools import lru_cache
-from typing import Optional
 
 from config import config
 from enums import RepositoryType, StorageDataTypes
@@ -9,7 +8,7 @@ from storage.repository_interface import RepositoryInterface
 
 
 class Repository(RepositoryInterface):
-    def __init__(self, name, data_types: list[str] = None, **kwargs):
+    def __init__(self, name, data_types: list[str] | None = None, **kwargs):
         self.name = name
         self.data_types = [StorageDataTypes(d) for d in data_types] if data_types else []
         self.client = self._get_client(**kwargs)
@@ -26,7 +25,7 @@ class Repository(RepositoryInterface):
     def delete_blob(self, uid: str) -> bool:
         return self.client.delete_blob(uid)
 
-    def find(self, filters: dict) -> Optional[list[dict]]:
+    def find(self, filters: dict) -> list[dict] | None:
         return self.client.find(filters)
 
     def find_one(self, filters: dict) -> dict:

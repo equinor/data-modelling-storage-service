@@ -16,7 +16,8 @@ def step_impl(context, id, data_source, path):
             if guess:
                 content_type = guess[0]
             data_source.update_blob(id, blob_file.name, content_type, blob_file)
-    except FileNotFoundError:
+    except FileNotFoundError as err:
         raise FileNotFoundError(
-            f"The file {path}, was not found. Make sure the working directory of the test are set to be the source root (./src)"
-        )
+            f"The file {path}, was not found. Make sure the working directory of "
+            + "the test are set to be the source root (./src)"
+        ) from err
