@@ -143,22 +143,8 @@ class DocumentService:
         # If the node is a package, we build the path string to be used by filesystem like repositories.
         # Also, check for duplicate names in the package.
         if node.type == SIMOS.PACKAGE.value:
-            if len(node.children) > 0:
-                contentListNames = []
-                for child in node.children[0].children:
-                    package_item = (
-                        self.get_document(Address(child.entity["address"], repository.name), depth=0).entity
-                        if child.type == SIMOS.REFERENCE.value
-                        else child.entity
-                    )
-                    if item_name := package_item.get("name"):
-                        # Content of a package should not have duplicate name, but name is not required for all document
-                        if item_name in contentListNames:
-                            raise BadRequestException(
-                                f"The document '{data_source_id}/{node.entity['name']}/{child.entity['name']}' already exists"
-                            )
+            self.raise_for_duplicate_name(node, data_source_id)
 
-                        contentListNames.append(item_name)
         for child in node.children:
             if child.is_array():
                 [
@@ -269,3 +255,28 @@ class DocumentService:
             return
 
         delete_document(data_source, resolved_reference.document_id)
+
+    def raise_for_duplicate_name(self, node, data_source_id):
+        if len(node.children) > 0:
+            contentListNames = []
+            for child in node.children[0].children:
+                if child.type == SIMOS.REFERENCE.value:
+                    try:
+                        entity = self.get_document(Address(child.entity["address"], data_source_id), depth=0).entity
+                    except NotFoundException:
+                        """
+                        reference does not point to anything because the document it points to has not been uploaded
+                        yet. dm-cli was probably used
+                        """
+                        logger.debug("A reference that does not point to anything was received.")
+                        continue
+                else:
+                    entity = child.entity
+                if item_name := entity.get("name"):
+                    # Content of a package should not have duplicate name, but name is not required for all document
+                    if item_name in contentListNames:
+                        raise BadRequestException(
+                            f"The document '{data_source_id}/{node.entity['name']}/{child.entity['name']}' already exists"
+                        )
+
+                    contentListNames.append(item_name)
