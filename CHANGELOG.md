@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.5](https://github.com/equinor/data-modelling-storage-service/compare/v1.6.4...v1.6.5) (2023-10-27)
+
+
+### Bug Fixes
+
+* transform entities into references only in case of storage uncontained ([9f919af](https://github.com/equinor/data-modelling-storage-service/commit/9f919afcb40a02ad3efa5c2f8e6fd6eb6cd5a9f5))
+
 ## [1.6.4](https://github.com/equinor/data-modelling-storage-service/compare/v1.6.3...v1.6.4) (2023-10-16)
 
 
