@@ -68,7 +68,7 @@ def step_make_x_method_request(context, method):
                 k: json.dumps(v) if isinstance(v, dict) or isinstance(v, list) else str(v) for k, v in json_data.items()
             }
             file_name = Path(context.binary_file.name).name
-            mime_type: str| None = ""
+            mime_type: str | None = ""
             guess = mimetypes.guess_type(file_name)
             if guess:
                 mime_type = guess[0]
@@ -88,10 +88,11 @@ def step_make_x_method_request(context, method):
 def step_add_binary_file(context, path: str):
     try:
         context.binary_file = open(path, "rb")
-    except FileNotFoundError:
+    except FileNotFoundError as error:
         raise FileNotFoundError(
-            f"The file {path}, was not found. Make sure the working directory of the test are set to be the source root (./src)"
-        )
+            f"The file {path}, was not found. Make sure the working directory"
+            + " of the test are set to be the source root (./src)"
+        ) from error
 
 
 @given('the logged in user is "{user_id}" with roles "{roles}"')

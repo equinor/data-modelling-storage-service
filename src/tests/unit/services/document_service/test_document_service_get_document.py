@@ -56,7 +56,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
             },
             "power": 120,
         }
-        self.fuel_pump:dict = {
+        self.fuel_pump: dict = {
             "_id": "3",
             "type": "FuelPumpTest",
             "name": "fuelPump",

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse
 from pydantic import Json, conint
@@ -55,7 +53,7 @@ def get(
 def update(
     id_address: str,
     data: Json = Form(...),
-    files: Optional[list[UploadFile]] = File(None),
+    files: list[UploadFile] | None = File(None),
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Update an Existing Document in the Database.
@@ -96,7 +94,7 @@ def update(
 def add_document(
     address: str,
     document: Json = Form(...),
-    files: Optional[list[UploadFile]] = File(None),
+    files: list[UploadFile] | None = File(None),
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Add a document to a package or a data source using an address.

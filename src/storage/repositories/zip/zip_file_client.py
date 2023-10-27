@@ -20,7 +20,8 @@ class ZipFileClient(RepositoryInterface):
         """
         Saves entity to zip file.
 
-        By default, absolute references are resolved to aliases using the dependencies from entity["__combined_document_meta__"].
+        By default, absolute references are resolved to aliases using the
+        dependencies from entity["__combined_document_meta__"].
         """
         entity.pop("_id", None)
         entity.pop("uid", None)

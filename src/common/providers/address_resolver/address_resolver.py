@@ -35,7 +35,7 @@ def _resolve_path_items(
             path = [resolved_reference.document_id, *resolved_reference.attribute_path]
         else:
             path.append(attribute)
-        if not isinstance(entity, (list, dict)):
+        if not isinstance(entity, list | dict):
             raise NotFoundException(f"Path {path} leads to a primitive value.")
     return entity, path
 

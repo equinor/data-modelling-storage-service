@@ -2,7 +2,6 @@ import mimetypes
 import pprint
 from collections.abc import Callable
 from functools import lru_cache
-from typing import Union
 from uuid import uuid4
 
 from authentication.models import User
@@ -52,7 +51,7 @@ class DocumentService:
         repository_provider=get_data_source,
         blueprint_provider=None,
         user=User.default(),
-        context: str = None,
+        context: str | None = None,
         recipe_provider=None,
     ):
         self._blueprint_provider = blueprint_provider or get_blueprint_provider(user)
@@ -62,13 +61,13 @@ class DocumentService:
         self.context = context
         self.get_data_source = lambda data_source_id: self.repository_provider(data_source_id, self.user)
 
-    @lru_cache(maxsize=config.CACHE_MAX_SIZE)
+    @lru_cache(maxsize=config.CACHE_MAX_SIZE)  # noqa:B019  TODO
     def get_blueprint(self, type: str) -> Blueprint:
         blueprint: Blueprint = self._blueprint_provider.get_blueprint(type)
         blueprint.realize_extends(self._blueprint_provider.get_blueprint)
         return blueprint
 
-    @lru_cache(maxsize=config.CACHE_MAX_SIZE)
+    @lru_cache(maxsize=config.CACHE_MAX_SIZE)  # noqa:B019  TODO
     def get_storage_recipes(self, type: str, context: str | None = None) -> list[StorageRecipe]:
         if not context:
             return create_default_storage_recipe()
@@ -109,7 +108,7 @@ class DocumentService:
 
     def save(
         self,
-        node: Union[Node, ListNode],
+        node: Node | ListNode,
         data_source_id: str,
         repository=None,
         path="",

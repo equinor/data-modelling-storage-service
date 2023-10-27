@@ -54,7 +54,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         )
 
         nested_1_data = {"name": "Nested1", "description": "", "type": "Garden"}
-        nested_1 = Node(
+        Node(
             key="nested",
             uid="",
             entity=nested_1_data,

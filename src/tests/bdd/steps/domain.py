@@ -70,7 +70,7 @@ def generate_tree(data_source_id: str, table, document_service):
         attribute=BlueprintAttribute(name=data_source_id, attribute_type=SIMOS.DATASOURCE.value),
         uid=data_source_id,
     )
-    root_package = list(filter(lambda row: row["parent_uid"] == "", table.rows))[0]
+    root_package = next(filter(lambda row: row["parent_uid"] == "", table.rows))
     if not root_package:
         raise Exception("Root package is not found, you need to specify root package")
     root_package_data = root_package.as_dict()
@@ -119,7 +119,8 @@ def step_ACL_for_docs_in_DS_should_be(context, document_id, data_source):
 
     if actual_acl_as_json != acl.dict():
         raise Exception(
-            f"expected ACL not equal to actual ACL! \nExpected: {json.dumps(acl.dict())}\n\nActual: {json.dumps(actual_acl_as_json)} "
+            f"expected ACL not equal to actual ACL! \nExpected: {json.dumps(acl.dict())}\n\n"
+            + f"Actual: {json.dumps(actual_acl_as_json)} "
         )
 
 

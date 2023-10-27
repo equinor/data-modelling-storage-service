@@ -33,7 +33,7 @@ class TreeNodeDeleteTest(unittest.TestCase):
         )
 
         nested_1_data = {"name": "Nested1", "type": "Garden"}
-        nested_1 = Node(
+        Node(
             key="nested",
             uid="",
             entity=nested_1_data,
@@ -77,7 +77,7 @@ class TreeNodeDeleteTest(unittest.TestCase):
             attribute=BlueprintAttribute(name="", attribute_type="Garden"),
         )
         nested_2_data = {"name": "Nested2", "type": "Bush"}
-        nested_2 = Node(
+        Node(
             key="nested2",
             uid="",
             entity=nested_2_data,

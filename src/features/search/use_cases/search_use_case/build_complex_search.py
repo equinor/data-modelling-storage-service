@@ -47,8 +47,8 @@ def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: dict, 
 def build_mongo_query(get_blueprint: Callable, search_data: dict) -> dict:
     try:
         type = search_data.pop("type")
-    except KeyError:
-        raise BadRequestException("Search must specify a type")
+    except KeyError as ex:
+        raise BadRequestException("Search must specify a type") from ex
     blueprint: Blueprint = get_blueprint(type)
     # Raise error if posted attribute not in blueprint
     if invalid_type := next((key for key in search_data.keys() if key not in blueprint.get_attribute_names()), None):

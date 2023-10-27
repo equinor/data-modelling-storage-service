@@ -1,11 +1,9 @@
-from typing import Union
-
 from common.entity.find import find
 from enums import REFERENCE_TYPES, SIMOS, StorageDataTypes
 from storage.data_source_class import DataSource
 
 
-def _delete_list_recursive(value: Union[list, dict], data_source: DataSource):
+def _delete_list_recursive(value: list | dict, data_source: DataSource):
     """
     Digs down in any list (simple, matrix, complex), and delete any contained referenced documents
     """

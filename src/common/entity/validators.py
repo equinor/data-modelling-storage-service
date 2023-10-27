@@ -110,7 +110,7 @@ def _validate_entity(
 
     if implementation_mode == "exact":
         if keys_not_in_blueprint := [
-            key for key in entity.keys() if key not in (blueprint.get_attribute_names() + ["_id"])
+            key for key in entity.keys() if key not in ([*blueprint.get_attribute_names(), "_id"])
         ]:
             raise ValidationException(
                 f"Attributes '{keys_not_in_blueprint}' are not specified in the blueprint '{blueprint.path}'",

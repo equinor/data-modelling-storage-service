@@ -10,7 +10,7 @@ def create_default_array(
     create_entity_class: type[
         Any
     ],  # TODO use Type[CreateEntity]. can't use it now due to circular import. Needs refactoring.
-    default_array_value: list[Any] = None,
+    default_array_value: list[Any] | None = None,
 ) -> list:
     """
     Create an array with default values with a given dimension.

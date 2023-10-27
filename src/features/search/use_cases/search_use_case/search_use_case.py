@@ -31,9 +31,9 @@ def _search(data_source_id, search_data, dotted_attribute_path, user: User, get_
     try:
         blueprint_provider = BlueprintProvider(user)
         process_search_data = build_mongo_query(blueprint_provider.get_blueprint_with_extended_attributes, search_data)
-    except ValueError as error:
-        logger.warning(f"Failed to build mongo query; {error}")
-        raise BadRequestException("Failed to build mongo query")
+    except ValueError as ex:
+        logger.warning(f"Failed to build mongo query; {ex}")
+        raise BadRequestException("Failed to build mongo query") from ex
     result: list[dict] = repository.find(process_search_data)
     result_sorted: list[dict] = sort_dtos_by_attribute(result, dotted_attribute_path)
     result_list = {}

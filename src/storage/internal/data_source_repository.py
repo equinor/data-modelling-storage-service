@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel
 from pymongo.errors import DuplicateKeyError, ServerSelectionTimeoutError
 
@@ -22,8 +20,8 @@ RESERVED_MONGO_DATABASES = ("admin", "local", "config", "dmss-internal")
 class DataSourceInformation(BaseModel):
     id: str
     name: str
-    host: Optional[str] = None
-    type: Optional[str] = None
+    host: str | None = None
+    type: str | None = None
 
 
 class DataSourceRepository:
@@ -41,10 +39,8 @@ class DataSourceRepository:
                         raise BadRequestException(
                             f"The database named '{repo['database']}' " "is a system reserved database name."
                         )
-        except KeyError as e:
-            raise KeyError(e)
-        except Exception as error:
-            raise BadRequestException(error)
+        except Exception as ex:
+            raise BadRequestException(ex) from ex
 
     @staticmethod
     def validate_repository(repo: dict):
@@ -56,10 +52,8 @@ class DataSourceRepository:
                     raise BadRequestException(
                         f"The database named '{repo['database']}' " "is a system reserved database name."
                     )
-        except KeyError as e:
-            raise KeyError(e)
         except Exception as error:
-            raise BadRequestException(error)
+            raise BadRequestException(error) from error
 
     def list(self) -> list[dict]:
         all_sources = []
@@ -76,21 +70,21 @@ class DataSourceRepository:
         try:
             self.validate_data_source(document)
             result = data_source_collection.update_one({"_id": id}, {"$set": document}, upsert=True)
-        except BadRequestException:
+        except BadRequestException as ex:
             raise BadRequestException(
                 message=f"Failed to create data source '{id}'. The posted entity is invalid...", data=document
-            )
-        except DuplicateKeyError:
+            ) from ex
+        except DuplicateKeyError as ex:
             logger.warning(f"Tried to create a datasource that already exists ('{id}')")
-            raise BadRequestException(f"Tried to create a datasource that already exists ('{id}')")
+            raise BadRequestException(f"Tried to create a datasource that already exists ('{id}')") from ex
         return str(result.upserted_id)
 
     def get(self, id: str) -> DataSource:
         try:
             data_source = data_source_collection.find_one(filter={"_id": id})
-        except ServerSelectionTimeoutError:
+        except ServerSelectionTimeoutError as ex:
             logger.error("Failed to establish connection to internal database")
-            raise ApplicationException(debug="Internal storage error")
+            raise ApplicationException(debug="Internal storage error") from ex
         if not data_source:
             raise NotFoundException(
                 message=f"The data source, with id '{id}' could not be found",

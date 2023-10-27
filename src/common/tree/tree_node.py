@@ -1,5 +1,4 @@
 from collections.abc import Callable
-from typing import Union
 from uuid import uuid4
 
 from common.exceptions import ValidationException
@@ -29,7 +28,7 @@ class NodeBase:
         self._type = self.attribute.attribute_type
         self.uid = uid
         self.entity = entity if entity else {}
-        self.parent: Union[Node, ListNode] = parent
+        self.parent: Node | ListNode = parent
         if parent:
             parent.add_child(self)
         self.children: list[Node | ListNode] = []
@@ -115,10 +114,7 @@ class NodeBase:
 
         # first, yield everything every one of the child nodes would yield.
         for child in self.children:
-            for item in child.traverse():
-                # the two for loops is because there's multiple children,
-                # and we need to iterate over each one.
-                yield item
+            yield from child.traverse()
 
     def traverse_reverse(self):
         """Iterate up the tree"""
@@ -128,7 +124,7 @@ class NodeBase:
             node = node.parent
 
     def find_parent(self):
-        nodes = [node for node in self.traverse_reverse()]
+        nodes = list(self.traverse_reverse())
         if len(nodes) > 1:
             nodes.pop(0)  # Remove first node since parent of self cannot be self
         for node in nodes:
@@ -139,7 +135,7 @@ class NodeBase:
         return f"Key: '{self.key}', Type: '{self.type}', Node_ID: '{self.node_id}'"
 
     def show_tree(self, level=0):
-        print("%s%s" % ("." * level, self))
+        print("{}{}".format("." * level, self))
         for node in self.children:
             node.show_tree(level + 2)
 

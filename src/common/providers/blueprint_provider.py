@@ -21,13 +21,13 @@ class BlueprintProvider:
         self.get_data_source = get_data_source
         self.resolve_address = resolve_address
 
-    @lru_cache(maxsize=config.CACHE_MAX_SIZE)
+    @lru_cache(maxsize=config.CACHE_MAX_SIZE)  # noqa: B019
     def get_blueprint_with_extended_attributes(self, type: str) -> Blueprint:
         blueprint: Blueprint = self.get_blueprint(type)
         blueprint.realize_extends(self.get_blueprint)
         return blueprint
 
-    @lru_cache(maxsize=config.CACHE_MAX_SIZE)
+    @lru_cache(maxsize=config.CACHE_MAX_SIZE)  # noqa: B019
     def get_blueprint(self, type: str) -> Blueprint:
         logger.debug(f"Cache miss! Fetching blueprint '{type}'")
         resolved_address: ResolvedAddress = self.resolve_address(

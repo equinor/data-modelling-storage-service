@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Union
 from uuid import uuid4
 
 from pydantic import UUID4
@@ -102,7 +101,7 @@ class DataSource:
             filter={"_id": self.name}, update={"$unset": {f"documentLookUp.{lookup_id}": ""}}
         )
 
-    def get(self, uid: Union[str, UUID4]) -> dict:
+    def get(self, uid: str | UUID4) -> dict:
         uid = str(uid)
         lookup = self._lookup(uid)
         assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
