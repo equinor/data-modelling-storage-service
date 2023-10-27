@@ -65,8 +65,7 @@ def step_make_request(context, method):
             # These requests may contain files, so we use "multipart/form-data".
             # JSON must then be sent in the 'data' key part of the form
             form_data = {
-                k: json.dumps(v) if isinstance(v, dict) or isinstance(v, list) else str(v)
-                for k, v in json_data.items()
+                k: json.dumps(v) if isinstance(v, dict) or isinstance(v, list) else str(v) for k, v in json_data.items()
             }
             file_name = Path(context.binary_file.name).name
             mime_type = ""

@@ -1,4 +1,4 @@
-from typing import BinaryIO, List, Optional, Union
+from typing import BinaryIO, Optional, Union
 
 from fastapi import UploadFile
 
@@ -69,7 +69,7 @@ def update_document_use_case(
     address: Address,
     data: Union[dict, list],
     document_service: DocumentService,
-    files: Optional[List[UploadFile]] = None,
+    files: Optional[list[UploadFile]] = None,
 ):
     """Update document.
 

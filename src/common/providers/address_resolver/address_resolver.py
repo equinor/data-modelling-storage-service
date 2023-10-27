@@ -1,5 +1,5 @@
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
 
 from common.address import Address
 from common.entity.is_reference import is_reference

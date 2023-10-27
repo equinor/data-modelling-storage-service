@@ -1,4 +1,5 @@
-from typing import Any, Callable, Type
+from collections.abc import Callable
+from typing import Any
 
 from domain_classes.dimension import Dimension
 
@@ -6,7 +7,7 @@ from domain_classes.dimension import Dimension
 def create_default_array(
     dimension: Dimension,
     blueprint_provider: Callable,
-    create_entity_class: Type[
+    create_entity_class: type[
         Any
     ],  # TODO use Type[CreateEntity]. can't use it now due to circular import. Needs refactoring.
     default_array_value: list[Any] = None,

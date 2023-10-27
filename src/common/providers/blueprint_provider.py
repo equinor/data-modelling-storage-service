@@ -1,5 +1,5 @@
+from collections.abc import Callable
 from functools import lru_cache
-from typing import Callable
 
 from authentication.models import User
 from common.address import Address

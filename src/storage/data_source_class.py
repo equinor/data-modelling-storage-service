@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, List, Union
+from typing import Union
 from uuid import uuid4
 
 from pydantic import UUID4
@@ -38,7 +38,7 @@ class DataSource:
         self.user = user
         # This Access Control List (ACL) is used when there is no parent to inherit ACL from. Controls who can create root-packages.
         self.acl = acl
-        self.repositories: Dict[str, Repository] = repositories
+        self.repositories: dict[str, Repository] = repositories
         self.data_source_collection = data_source_collection
 
     @classmethod
@@ -110,10 +110,10 @@ class DataSource:
         return repo.get(uid)
 
     # TODO: Implement find across repositories
-    def find(self, filter: dict) -> List[dict]:
+    def find(self, filter: dict) -> list[dict]:
         repo = self.get_default_repository()
 
-        documents_with_access: List[dict] = []
+        documents_with_access: list[dict] = []
         for entity in repo.find(filter):
             if lookup := self._lookup(entity.get("_id")):
                 try:

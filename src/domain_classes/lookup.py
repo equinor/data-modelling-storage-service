@@ -1,5 +1,4 @@
 from collections import defaultdict
-from typing import Tuple
 
 from pydantic import BaseModel, Field
 
@@ -9,7 +8,7 @@ from domain_classes.ui_recipe import Recipe
 
 def resolve_extended_recipe_links_recursive(
     blueprint_path: str, lookup: "Lookup", extends: dict[str, list[str]]
-) -> Tuple[list[StorageRecipe], list[Recipe]]:
+) -> tuple[list[StorageRecipe], list[Recipe]]:
     if not extends.get(blueprint_path):  # It does not extend anything, just return its own recipes
         return lookup.storage_recipes[blueprint_path], lookup.ui_recipes[blueprint_path]
 

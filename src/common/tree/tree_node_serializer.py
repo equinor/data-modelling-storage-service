@@ -1,5 +1,6 @@
+from collections.abc import Callable
 from copy import deepcopy
-from typing import Any, Callable
+from typing import Any
 
 from common.exceptions import (
     ApplicationException,
@@ -183,7 +184,7 @@ def tree_node_from_dict(
             if not isinstance(children, list):
                 raise ValueError(
                     f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
-                    + f"should be a list, but was '{str(type(children))}'"
+                    + f"should be a list, but was '{type(children)!s}'"
                 )
 
             list_node = ListNode(
@@ -225,7 +226,7 @@ def tree_node_from_dict(
             if not isinstance(attribute_data, dict):
                 raise ValidationException(
                     f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
-                    + f"should be a dict, but was '{str(type(attribute_data))}'"
+                    + f"should be a dict, but was '{type(attribute_data)!s}'"
                 )
 
             child_node = tree_node_from_dict(

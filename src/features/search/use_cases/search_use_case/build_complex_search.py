@@ -1,4 +1,4 @@
-from typing import Callable, Dict, List
+from collections.abc import Callable
 
 from common.exceptions import BadRequestException
 from domain_classes.blueprint import Blueprint
@@ -8,7 +8,7 @@ from domain_classes.blueprint_attribute import BlueprintAttribute
 def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: dict, key: str, get_blueprint: Callable):
     # Lists
     # TODO: Can only do a "at least one" from the first element in query
-    if isinstance(search_value, List):
+    if isinstance(search_value, list):
         if attribute.is_primitive:
             return attribute_to_mongo_query(attribute, search_value[0], key, get_blueprint)
         else:
@@ -44,7 +44,7 @@ def attribute_to_mongo_query(attribute: BlueprintAttribute, search_value: dict, 
         return get_complex_search_dict(key, search_value, get_blueprint)
 
 
-def build_mongo_query(get_blueprint: Callable, search_data: Dict) -> Dict:
+def build_mongo_query(get_blueprint: Callable, search_data: dict) -> dict:
     try:
         type = search_data.pop("type")
     except KeyError:
@@ -70,7 +70,7 @@ def build_mongo_query(get_blueprint: Callable, search_data: Dict) -> Dict:
     return process_search_data
 
 
-def get_complex_search_dict(nested_key: str, search_value: Dict, get_blueprint) -> Dict:
+def get_complex_search_dict(nested_key: str, search_value: dict, get_blueprint) -> dict:
     processed_query = build_mongo_query(get_blueprint, search_value)
     nested_query = {}
     for key, value in processed_query.items():

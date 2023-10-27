@@ -1,5 +1,5 @@
 import json
-from typing import Dict, List, Optional
+from typing import Optional
 
 from azure.storage.blob import BlobServiceClient
 
@@ -13,13 +13,13 @@ class AzureBlobStorageClient(RepositoryInterface):
         self.blob_service_client = blob_service_client
         self.container = container
 
-    def get(self, uid: str) -> Dict:
+    def get(self, uid: str) -> dict:
         result = self.blob_service_client.get_blob_to_text(self.container, uid)
         document = json.loads(result.content)
         document["_id"] = uid
         return document
 
-    def add(self, uid: str, document: Dict) -> bool:
+    def add(self, uid: str, document: dict) -> bool:
         output = json.dumps(document)
         self.blob_service_client.create_blob_from_text(self.container, uid, output)
         return True
@@ -30,7 +30,7 @@ class AzureBlobStorageClient(RepositoryInterface):
     def get_blob(self, uid: str) -> bytearray:
         return self.blob_service_client.get_blob_to_bytes(self.container, uid).content
 
-    def update(self, uid: str, document: Dict) -> bool:
+    def update(self, uid: str, document: dict) -> bool:
         output = json.dumps(document)
         self.blob_service_client.create_blob_from_text(self.container, uid, output)
         return True
@@ -43,7 +43,7 @@ class AzureBlobStorageClient(RepositoryInterface):
         self.delete(uid)
         return True
 
-    def find(self, filters: Dict) -> Optional[List[Dict]]:
+    def find(self, filters: dict) -> Optional[list[dict]]:
         # TODO: implement efficient filter functionality by using the python azure src
         if self.blob_service_client.exists(self.container):
             # self.blob_service_client.create_container(self.collection)
@@ -52,14 +52,14 @@ class AzureBlobStorageClient(RepositoryInterface):
             return result
         return None
 
-    def find_one(self, filters: Dict) -> Optional[Dict]:
+    def find_one(self, filters: dict) -> Optional[dict]:
         blobs = self.blob_service_client.list_blobs(self.container)
         result = self._filter(blobs, filters)
         if len(result) > 0:
             return result[0]
         return None
 
-    def _filter(self, blobs, filters) -> List[Dict]:
+    def _filter(self, blobs, filters) -> list[dict]:
         result = []
         for blob in blobs:
             document = self.get(str(blob.name))

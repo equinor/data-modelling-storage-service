@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 from pymongo.errors import DuplicateKeyError, ServerSelectionTimeoutError
@@ -61,7 +61,7 @@ class DataSourceRepository:
         except Exception as error:
             raise BadRequestException(error)
 
-    def list(self) -> List[Dict]:
+    def list(self) -> list[dict]:
         all_sources = []
         for data_source in data_source_collection.find(projection={"name"}):
             data_source["id"] = data_source.pop("_id")

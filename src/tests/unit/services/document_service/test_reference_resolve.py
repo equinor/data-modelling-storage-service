@@ -116,7 +116,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     "type": "Customer",
                     "name": "Relative from the destination data source by id",
                     "car": {
-                        "address": f"/$2.cars[0]",
+                        "address": "/$2.cars[0]",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.LINK.value,
                     },
@@ -125,7 +125,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     "type": "Customer",
                     "name": "Relative from the destination data source by path",
                     "car": {
-                        "address": f"/complex/myCarRental.cars[0]",
+                        "address": "/complex/myCarRental.cars[0]",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.LINK.value,
                     },
@@ -134,7 +134,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     "type": "Customer",
                     "name": "Relative from the destination data source by query",
                     "car": {
-                        "address": f"/[(_id=1)].content[(name=myCarRental)].cars[0]",
+                        "address": "/[(_id=1)].content[(name=myCarRental)].cars[0]",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.LINK.value,
                     },
@@ -143,7 +143,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     "type": "Customer",
                     "name": "Relative from the destination data source by query on array",
                     "car": {
-                        "address": f"/[(_id=1)].content[(name=myCarRental)].cars[(name=Volvo 240)]",
+                        "address": "/[(_id=1)].content[(name=myCarRental)].cars[(name=Volvo 240)]",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.LINK.value,
                     },
@@ -152,7 +152,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     "type": "Customer",
                     "name": "Test",
                     "car": {
-                        "address": f"/complex.content[(name=myCarRental)].cars[0]",
+                        "address": "/complex.content[(name=myCarRental)].cars[0]",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.LINK.value,
                     },
@@ -161,7 +161,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     "type": "Customer",
                     "name": "Test2",
                     "car": {
-                        "address": f"/complex.content[0].cars[0]",
+                        "address": "/complex.content[0].cars[0]",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.LINK.value,
                     },
@@ -170,7 +170,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     "type": "Customer",
                     "name": "Relative from the document",
                     "car": {
-                        "address": f"^.cars[0]",
+                        "address": "^.cars[0]",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.LINK.value,
                     },
@@ -179,7 +179,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                     "type": "Customer",
                     "name": "Relative from the document with query on plate number",
                     "car": {
-                        "address": f"^.cars[(plateNumber=456,name=Ferrari)]",
+                        "address": "^.cars[(plateNumber=456,name=Ferrari)]",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.LINK.value,
                     },

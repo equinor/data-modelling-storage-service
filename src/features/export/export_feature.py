@@ -2,7 +2,6 @@ import logging
 import shutil
 import traceback
 from pathlib import Path
-from typing import List
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
@@ -24,7 +23,7 @@ router = APIRouter(tags=["default", "export"], prefix="/export")
 class ExportMetaResponse(BaseModel):
     type: str = "CORE:Meta"
     version: str = "0.0.0"
-    dependencies: List[Dependency] = []
+    dependencies: list[Dependency] = []
 
 
 @router.get(
