@@ -102,10 +102,10 @@ class NodeBase:
         path = []
         parent = self.parent
         while parent:  # Build the path from Node.key until the node has no key (root node)
-            path += [parent.key] if parent.key else [parent.uid]
+            path += [parent.key] if parent.key else [parent.uid]  # type: ignore
             parent = parent.parent
-        # Since we build the path "bottom-up", it need's to be revered.
-        # eg. [parent, grand_parent, grand_grand_parent]
+        # Since we build the path "bottom-up", it needs to be revered.
+        # e.g. [parent, grand_parent, grand_grand_parent]
         path.reverse()
         return path
 

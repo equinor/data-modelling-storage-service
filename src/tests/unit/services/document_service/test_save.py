@@ -41,7 +41,7 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_save_update(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "Johnny",
@@ -92,7 +92,7 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_save_update_attribute(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "John",
@@ -123,7 +123,7 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_save_append(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "John",
@@ -173,7 +173,7 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_save_delete(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "John",
@@ -263,7 +263,7 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_save_nested_uncontained(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "name": "catCage",
@@ -345,7 +345,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "description": "I'm an owner for a cat. Model and storage uncontained from cat.",
         }
 
-        doc_storage = {cat_cage["_id"]: cat_cage, owner["_id"]: owner}
+        doc_storage: dict = {cat_cage["_id"]: cat_cage, owner["_id"]: owner}
 
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
@@ -354,7 +354,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.update = mock_update
 
         self.mock_document_service.repository_provider = lambda x, y: repository
-        new_cage = cat_cage.copy()
+        new_cage: dict = cat_cage.copy()
 
         new_cat_description = "Changed"
 
@@ -376,7 +376,7 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_save_update_children_of_contained_attribute(self):
         repository = mock.Mock()
 
-        doc_storage = {
+        doc_storage: dict = {
             "1": {
                 "_id": "1",
                 "type": "CoupleOfPeople",

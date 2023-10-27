@@ -34,7 +34,7 @@ def create_repositories(context):
 
 
 @given("there are basic data sources with repositories")
-def create_repositories(context):
+def create_basic_repositories(context):
     # First, add data sources
     document = {}
     for row in context.table:

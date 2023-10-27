@@ -125,7 +125,7 @@ class ResolveReferenceTestCase(unittest.TestCase):
         assert ref.data_source_id == "datasource"
         assert ref.document_id == "car_rental_company_id"
         assert ref.attribute_path == ["cars", "[0]", "engine"]
-        assert ref.entity == self.car_rental_company["cars"][0]["engine"]
+        assert ref.entity == self.car_rental_company["cars"][0]["engine"]  # type: ignore
 
     def test_with_attributes_to_uncontained_child(self):
         ref = resolve_address(
@@ -145,7 +145,7 @@ class ResolveReferenceTestCase(unittest.TestCase):
         assert ref.data_source_id == "datasource"
         assert ref.document_id == "car_rental_company_id"
         assert ref.attribute_path == ["cars", "[0]", "engine"]
-        assert ref.entity == self.car_rental_company["cars"][0]["engine"]
+        assert ref.entity == self.car_rental_company["cars"][0]["engine"]  # type: ignore
 
     def test_with_query_to_uncontained(self):
         ref = resolve_address(
