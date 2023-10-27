@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.7.0...v1.7.1) (2023-10-27)
+
+
+### Bug Fixes
+
+* defer checking of duplicate name in empty package references ([0e69b45](https://github.com/equinor/data-modelling-storage-service/commit/0e69b45fc8ab1fec961155fecd2dd823f9a09aad))
+
 ## [1.7.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.6.5...v1.7.0) (2023-10-27)
 
 
