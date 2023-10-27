@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.7.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.6.5...v1.7.0) (2023-10-27)
+
+
+### Features
+
+* get_attribute able to resolve references ([11a1464](https://github.com/equinor/data-modelling-storage-service/commit/11a14640a62004a6d7cf205824aa3893a40d6405))
+
+
+### Bug Fixes
+
+* **export:** add proper error response on export ++ minor issues ([7d32dfe](https://github.com/equinor/data-modelling-storage-service/commit/7d32dfe76cfe3f3c99f4e7acab1f9b57c3e1c3c7))
+
 ## [1.6.5](https://github.com/equinor/data-modelling-storage-service/compare/v1.6.4...v1.6.5) (2023-10-27)
 
 
