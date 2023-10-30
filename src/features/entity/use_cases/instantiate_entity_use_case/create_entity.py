@@ -61,11 +61,13 @@ class CreateEntity:
         return self._entity
 
     @staticmethod
-    def is_json(attr: BlueprintAttribute):
+    def is_json(attr: BlueprintAttribute) -> bool:
         """A blueprint attribute is json if the default value is either a list or a dict."""
-        return attr.attribute_type not in PRIMITIVES or attr.dimensions.dimensions != [
-            ""
-        ]  # type(attr.default) == dict or type(attr.default) == list
+        if attr.attribute_type not in PRIMITIVES:
+            return True
+        if attr.dimensions and attr.dimensions.dimensions != [""]:
+            return True
+        return False
 
     # type is inserted based on the parent attributes type, or the initial type for root entity.
     def _get_entity(self, blueprint: Blueprint, entity: dict):

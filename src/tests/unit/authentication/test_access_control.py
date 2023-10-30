@@ -15,7 +15,7 @@ class TestAccessControl(unittest.TestCase):
             roles={"reader": AccessLevel.READ, "writer": AccessLevel.WRITE, "no-access": AccessLevel.NONE},
             others=AccessLevel.READ,
         )
-        self.original_config = config.copy()
+        self.original_config = config.model_copy()
         config.AUTH_ENABLED = True
         config.DMSS_ADMIN = self.OWNER_ID
         config.DMSS_ADMIN_ROLE = "admin_role"

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from enums import PRIMITIVES, SIMOS, StorageDataTypes
 
@@ -7,6 +7,8 @@ DEFAULT_COMPLEX_CONTAINED = True
 
 
 class StorageAttribute(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     name: str
     type: str = SIMOS.STORAGE_ATTRIBUTE.value
     contained: bool = DEFAULT_PRIMITIVE_CONTAINED
@@ -27,19 +29,15 @@ class StorageAttribute(BaseModel):
             "description": self.description,
         }
 
-    class Config:
-        allow_population_by_field_name = True
-
 
 class StorageRecipe(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     name: str
     type: str = SIMOS.STORAGE_RECIPE.value
     attributes: dict[str, StorageAttribute] = {}
     storage_affinity: StorageDataTypes = Field(StorageDataTypes.DEFAULT, alias="storageAffinity")
     description: str = ""
-
-    class Config:
-        allow_population_by_field_name = True
 
     def is_contained(self, attribute_name, attribute_type=None):
         if attribute_name in self.attributes:

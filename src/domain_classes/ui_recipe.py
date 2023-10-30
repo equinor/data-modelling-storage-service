@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import PRIMITIVES, SIMOS
@@ -12,9 +12,11 @@ class RecipePlugin(Enum):
 
 
 class RecipeAttribute(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     name: str
     type: str = SIMOS.UI_ATTRIBUTE.value
-    attribute_type: str = Field(None, alias="attributeType")
+    attribute_type: str | None = Field(None, alias="attributeType")
     label: str | None = None
     contained: bool = True
     field: str | None = None
@@ -22,9 +24,6 @@ class RecipeAttribute(BaseModel):
     collapsible: bool | None = None
     ui_recipe: str | None = None
     mapping: str | None = None
-
-    class Config:
-        allow_population_by_field_name = True
 
 
 class Recipe(BaseModel):

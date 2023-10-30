@@ -1,11 +1,12 @@
 from pydantic import (
     BaseModel,
+    ConfigDict,
     Field,
     StrictBool,
     StrictFloat,
     StrictInt,
     StrictStr,
-    validator,
+    field_validator,
 )
 
 from domain_classes.dimension import Dimension
@@ -13,6 +14,8 @@ from enums import PRIMITIVES, SIMOS
 
 
 class BlueprintAttribute(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True, populate_by_name=True)
+
     name: str
     attribute_type: str = Field(..., alias="attributeType")
     type: str = SIMOS.BLUEPRINT_ATTRIBUTE.value
@@ -27,13 +30,9 @@ class BlueprintAttribute(BaseModel):
     def to_dict(self, by_alias: bool = True):
         return {**self.dict(by_alias=by_alias), "dimensions": self.dimensions.to_dict() if self.dimensions else None}
 
-    class Config:
-        arbitrary_types_allowed = True
-        allow_population_by_field_name = True
-
-    @validator("dimensions", pre=True, always=True)
+    @field_validator("dimensions", mode="before")
     def deserialize_dimensions(cls, value, values):
-        return Dimension(value or "", values["attribute_type"])
+        return Dimension(value or "", values.data["attribute_type"])
 
     def __repr__(self):
         return (

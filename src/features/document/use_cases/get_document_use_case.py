@@ -1,4 +1,6 @@
-from pydantic import conint
+from typing import Annotated
+
+from pydantic import Field
 
 from authentication.models import User
 from common.address import Address
@@ -11,7 +13,7 @@ from storage.internal.data_source_repository import get_data_source
 def get_document_use_case(
     user: User,
     address: str,
-    depth: conint(gt=-1, lt=1000),  # type: ignore
+    depth: Annotated[int, Field(gt=-1, lt=1000)],  # type: ignore
     repository_provider=get_data_source,
 ):
     """Get document by reference."""

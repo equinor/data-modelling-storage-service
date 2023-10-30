@@ -1,39 +1,40 @@
 from pathlib import Path
 
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings
 
 from enums import AuthProviderForRoleCheck
 
 
 class Config(BaseSettings):
-    MONGO_USERNAME: str = Field("maf", env="MONGO_INITDB_ROOT_USERNAME")
-    MONGO_PASSWORD: str = Field("maf", env="MONGO_INITDB_ROOT_PASSWORD")
-    MONGO_URI: str = Field(None, env="MONGO_URI")
-    ENVIRONMENT: str = Field("local", env="ENVIRONMENT")
-    SECRET_KEY: str = Field(None, env="SECRET_KEY")
-    LOGGER_LEVEL: str = Field("DEBUG", env="LOGGING_LEVEL", to_lower=True)
-    MAX_ENTITY_RECURSION_DEPTH: int = Field(50, env="MAX_ENTITY_RECURSION_DEPTH")
+    """Will automatically populate values from environment variables with the same name as the fields"""
+
+    MONGO_USERNAME: str = Field("maf", alias="MONGO_INITDB_ROOT_USERNAME")
+    MONGO_PASSWORD: str = Field("maf", alias="MONGO_INITDB_ROOT_PASSWORD")
+    MONGO_URI: str | None = Field(None)
+    ENVIRONMENT: str = Field("local")
+    SECRET_KEY: str | None = Field(None)
+    LOGGER_LEVEL: str = Field("DEBUG", to_lower=True)
+    MAX_ENTITY_RECURSION_DEPTH: int = Field(50)
     CORE_DATA_SOURCE: str = "system"
     CACHE_MAX_SIZE: int = 200
-    APPLICATION_HOME: str = Field(f"{Path(__file__).parent!s}/home", env="APPLICATION_HOME")
+    APPLICATION_HOME: str = Field(f"{Path(__file__).parent!s}/home")
     # Access Control
-    DMSS_ADMIN: str = Field("dmss-admin", env="DMSS_ADMIN")
-    DMSS_ADMIN_ROLE: str = Field("dmss-admin", env="DMSS_ADMIN_ROLE")
+    DMSS_ADMIN: str = Field("dmss-admin")
+    DMSS_ADMIN_ROLE: str = Field("dmss-admin")
     # Authentication
-    AUTH_ENABLED: bool = Field(False, env="AUTH_ENABLED")
+    AUTH_ENABLED: bool = Field(False)
     TEST_TOKEN: bool = False  # This value should only be changed at runtime by test setup
-    OAUTH_WELL_KNOWN: str = Field(None, env="OAUTH_WELL_KNOWN")
-    OAUTH_TOKEN_ENDPOINT: str = Field("", env="OAUTH_TOKEN_ENDPOINT")
-    OAUTH_AUTH_ENDPOINT: str = Field("", env="OAUTH_AUTH_ENDPOINT")
-    OAUTH_CLIENT_ID: str = Field("dmss", env="OAUTH_CLIENT_ID")
-    OAUTH_CLIENT_SECRET: str = Field("", env="OAUTH_CLIENT_SECRET")
-    AUTH_AUDIENCE: str = Field("dmss", env="OAUTH_AUDIENCE")
-    OAUTH_AUTH_SCOPE: str = Field("", env="OAUTH_AUTH_SCOPE")
+    OAUTH_WELL_KNOWN: str | None = Field(None)
+    OAUTH_TOKEN_ENDPOINT: str = Field("")
+    OAUTH_AUTH_ENDPOINT: str = Field("")
+    OAUTH_CLIENT_ID: str = Field("dmss")
+    OAUTH_CLIENT_SECRET: str = Field("")
+    AUTH_AUDIENCE: str = Field("dmss", alias="OAUTH_AUDIENCE")
+    OAUTH_AUTH_SCOPE: str = Field("")
     MICROSOFT_AUTH_PROVIDER: str = "login.microsoftonline.com"
-    AUTH_PROVIDER_FOR_ROLE_CHECK: AuthProviderForRoleCheck = Field(None, env="AUTH_PROVIDER_FOR_ROLE_CHECK")
-    AAD_ENTERPRISE_APP_OID: str = Field(
-        "", env="AAD_ENTERPRISE_APP_OID", description="The ObjectId of the Azure AD Enterprise Application"
-    )
+    AUTH_PROVIDER_FOR_ROLE_CHECK: AuthProviderForRoleCheck | None = Field(None)
+    AAD_ENTERPRISE_APP_OID: str = Field("", description="The ObjectId of the Azure AD Enterprise Application")
 
 
 config = Config()

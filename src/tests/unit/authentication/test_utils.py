@@ -10,7 +10,7 @@ from enums import AuthProviderForRoleCheck
 
 class RemovePatRolesNotAssignedByAuthProviderTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        self.original_config = config.copy()
+        self.original_config = config.model_copy()
         config.TEST_TOKEN = False
         config.AUTH_PROVIDER_FOR_ROLE_CHECK = AuthProviderForRoleCheck.AZURE_ACTIVE_DIRECTORY
 

@@ -1,14 +1,22 @@
-from pydantic import UUID4, Field, constr, root_validator
-from pydantic.main import BaseModel, Extra
+from typing import Annotated
+
+from pydantic import UUID4, ConfigDict, Field, StringConstraints, model_validator
+from pydantic.main import BaseModel
 
 # Only allow characters a-9 and '_' + '-'
-NameConstrainedString = constr(min_length=1, max_length=128, regex="^[A-Za-z0-9_-]*$", strip_whitespace=True)
+NameConstrainedString = Annotated[
+    str, StringConstraints(min_length=1, max_length=128, pattern="^[A-Za-z0-9_-]*$", strip_whitespace=True)
+]
 
 # Regex only allow characters a-9 and '_' + '-' + '/' for paths
-TypeConstrainedString = constr(min_length=3, max_length=128, regex=r"^[A-Z:a-z0-9_\/-]*$", strip_whitespace=True)
+TypeConstrainedString = Annotated[
+    str, StringConstraints(min_length=3, max_length=128, pattern=r"^[A-Z:a-z0-9_\/-]*$", strip_whitespace=True)
+]
 
 
-class Entity(BaseModel, extra=Extra.allow):
+class Entity(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
     type: TypeConstrainedString  # type: ignore
 
 
@@ -17,7 +25,7 @@ class EntityName(BaseModel):
 
 
 class OptionalEntityName(BaseModel):
-    name: NameConstrainedString | None  # type: ignore
+    name: NameConstrainedString | None = None  # type: ignore
 
 
 class DataSource(BaseModel):
@@ -38,8 +46,11 @@ class ReferenceEntity(BaseModel):
     referenceType: str
 
 
-class UncontainedEntity(Entity, OptionalEntityName, EntityUUID, extra=Extra.allow):  # type: ignore
-    @root_validator(pre=True)
+class UncontainedEntity(Entity, OptionalEntityName, EntityUUID):  # type: ignore
+    model_config = ConfigDict(extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
     def from_underscore_id_to_uid(cls, values):
         return {**values, "uid": values.get("_id")}
 
@@ -50,8 +61,11 @@ class UncontainedEntity(Entity, OptionalEntityName, EntityUUID, extra=Extra.allo
         return self.dict(exclude={"name"})
 
 
-class BlueprintEntity(Entity, EntityName, EntityUUID, extra=Extra.allow):  # type: ignore
+class BlueprintEntity(Entity, EntityName, EntityUUID):
+    model_config = ConfigDict(extra="allow")
+
     # an entity that have type: system/SIMOS/Blueprint
-    @root_validator(pre=True)
+    @model_validator(mode="before")
+    @classmethod
     def from_underscore_id_to_uid(cls, values):
         return {**values, "uid": values.get("_id")}

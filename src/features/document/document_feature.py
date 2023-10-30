@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Depends, File, Form, UploadFile
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, Form, Query, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse
-from pydantic import Json, conint
+from pydantic import Json
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import User
@@ -8,15 +10,14 @@ from common.address import Address
 from common.providers.blueprint_provider import get_blueprint_provider
 from common.providers.storage_recipe_provider import storage_recipe_provider
 from common.responses import create_response, responses
+from features.document.use_cases.add_document_use_case import add_document_use_case
+from features.document.use_cases.add_raw_use_case import add_raw_use_case
+from features.document.use_cases.check_exsistence_use_case import check_existence_use_case
+from features.document.use_cases.get_document_use_case import get_document_use_case
+from features.document.use_cases.remove_use_case import remove_use_case
+from features.document.use_cases.update_document_use_case import update_document_use_case
 from services.document_service.document_service import DocumentService
 from storage.internal.data_source_repository import get_data_source
-
-from .use_cases.add_document_use_case import add_document_use_case
-from .use_cases.add_raw_use_case import add_raw_use_case
-from .use_cases.check_exsistence_use_case import check_existence_use_case
-from .use_cases.get_document_use_case import get_document_use_case
-from .use_cases.remove_use_case import remove_use_case
-from .use_cases.update_document_use_case import update_document_use_case
 
 router = APIRouter(tags=["default", "document"], prefix="/documents")
 
@@ -25,7 +26,7 @@ router = APIRouter(tags=["default", "document"], prefix="/documents")
 @create_response(JSONResponse)
 def get(
     address: str,
-    depth: conint(gt=-1, lt=1000) = 0,  # type: ignore
+    depth: Annotated[int, Query(gt=-1, lt=1000)] = 0,  # type: ignore
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Get a Document as JSON String
@@ -53,7 +54,7 @@ def get(
 def update(
     id_address: str,
     data: Json = Form(...),
-    files: list[UploadFile] | None = File(None),
+    files: list[UploadFile] | None = None,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Update an Existing Document in the Database.
@@ -74,6 +75,8 @@ def update(
     - dict: The updated document.
     """
 
+    if files is None:
+        files = []
     document_service = DocumentService(
         repository_provider=get_data_source,
         user=user,
@@ -94,7 +97,7 @@ def update(
 def add_document(
     address: str,
     document: Json = Form(...),
-    files: list[UploadFile] | None = File(None),
+    files: list[UploadFile] | None = None,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Add a document to a package or a data source using an address.
@@ -119,6 +122,8 @@ def add_document(
     """
     #     TODO decide if we should support adding an empty list. That is currently not supported.
 
+    if files is None:
+        files = []
     document_service = DocumentService(
         repository_provider=get_data_source,
         user=user,

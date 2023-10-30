@@ -115,8 +115,8 @@ Feature: Data Sources
             "loc": [
               "body"
             ],
-            "msg": "value is not a valid dict",
-            "type": "type_error.dict"
+            "msg": "Input should be a valid dictionary or object to extract fields from",
+            "type": "model_attributes_type"
           }
         ]
       }

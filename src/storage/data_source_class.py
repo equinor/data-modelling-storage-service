@@ -82,7 +82,7 @@ class DataSource:
 
     def _update_lookup(self, lookup: DocumentLookUp):
         return self.data_source_collection.update_one(
-            filter={"_id": self.name}, update={"$set": {f"documentLookUp.{lookup.lookup_id}": lookup.dict()}}
+            filter={"_id": self.name}, update={"$set": {f"documentLookUp.{lookup.lookup_id}": lookup.model_dump()}}
         )
 
     def update_access_control(self, document_id: str, acl: AccessControlList) -> None:
