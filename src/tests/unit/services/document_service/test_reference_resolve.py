@@ -14,7 +14,10 @@ from tests.unit.mocks.mock_document_service import get_mock_document_service
 
 class GetDocumentResolveTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        simos_blueprints = ["dmss://system/SIMOS/Package", "dmss://system/SIMOS/NamedEntity"]
+        simos_blueprints = [
+            "dmss://system/SIMOS/Package",
+            "dmss://system/SIMOS/NamedEntity",
+        ]
         mock_blueprint_folder = "src/tests/unit/services/document_service/mock_blueprints/car_rental_blueprints"
         mock_blueprints_and_file_names = {
             "CarRental": "CarRental.blueprint.json",
@@ -62,7 +65,11 @@ class GetDocumentResolveTestCase(unittest.TestCase):
             return [
                 {
                     "content": [
-                        {"address": "$1", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                        {
+                            "address": "$1",
+                            "type": SIMOS.REFERENCE.value,
+                            "referenceType": REFERENCE_TYPES.LINK.value,
+                        },
                     ]
                 }
             ]
@@ -194,7 +201,11 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                 "isRoot": True,
                 "type": SIMOS.PACKAGE.value,
                 "content": [
-                    {"address": "$2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value},
+                    {
+                        "address": "$2",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.LINK.value,
+                    },
                 ],
             }
         ]
@@ -224,7 +235,11 @@ class GetDocumentResolveTestCase(unittest.TestCase):
             "name": "engines",
             "isRoot": True,
             "content": [
-                {"address": "$3", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.STORAGE.value},
+                {
+                    "address": "$3",
+                    "type": SIMOS.REFERENCE.value,
+                    "referenceType": REFERENCE_TYPES.STORAGE.value,
+                },
             ],
         }
 
@@ -234,7 +249,11 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                 "name": "parts",
                 "isRoot": True,
                 "content": [
-                    {"address": "$2", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.STORAGE.value},
+                    {
+                        "address": "$2",
+                        "type": SIMOS.REFERENCE.value,
+                        "referenceType": REFERENCE_TYPES.STORAGE.value,
+                    },
                 ],
             },
             my_engine,
@@ -291,7 +310,11 @@ class GetDocumentResolveTestCase(unittest.TestCase):
             {**my_car_rental["customers"][7], "car": expected_volvo},
             {**my_car_rental["customers"][8], "car": expected_ferrari},
         ]
-        expected = {**my_car_rental, "cars": [expected_volvo, expected_ferrari], "customers": expected_customers}
+        expected = {
+            **my_car_rental,
+            "cars": [expected_volvo, expected_ferrari],
+            "customers": expected_customers,
+        }
 
         self.assertDictEqual(actual, expected)
         self.assertDictEqual(complex_package["content"][0], expected)

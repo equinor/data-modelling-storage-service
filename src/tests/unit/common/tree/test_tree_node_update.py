@@ -19,7 +19,10 @@ from tests.unit.mocks.mock_recipe_provider import MockStorageRecipeProvider
 
 class DocumentServiceTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
+        simos_blueprints = [
+            "dmss://system/SIMOS/NamedEntity",
+            "dmss://system/SIMOS/Reference",
+        ]
         mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
             "Bush": "Bush.blueprint.json",
@@ -118,7 +121,11 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         with self.assertRaises(ValidationException) as error:
             update_document_use_case(
-                data={"name": "whatever", "type": "SpecialChildNoInherit", "AnExtraValue": "Hallo there!"},
+                data={
+                    "name": "whatever",
+                    "type": "SpecialChildNoInherit",
+                    "AnExtraValue": "Hallo there!",
+                },
                 address=Address("$1.SomeChild", "testing"),
                 document_service=self.mock_document_service,
             )
@@ -178,7 +185,12 @@ class DocumentServiceTestCase(unittest.TestCase):
 
     def test_add_valid_specialized_child_type(self):
         entity = {"_id": "1", "name": "parent", "type": "Parent", "SomeChild": {}}
-        child = {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13}
+        child = {
+            "name": "whatever",
+            "type": "SpecialChild",
+            "AnExtraValue": "Hallo there!",
+            "AValue": 13,
+        }
 
         self.doc_storage = {"1": deepcopy(entity)}
 
@@ -210,9 +222,21 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertDictEqual(self.doc_storage["1"]["SomeChild"], child)
 
     def test_add_valid_second_level_specialized_child_type_to_list_attribute(self):
-        self.doc_storage = {"1": {"_id": "1", "name": "parent", "type": "ParentWithListOfChildren", "SomeChild": []}}
+        self.doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "parent",
+                "type": "ParentWithListOfChildren",
+                "SomeChild": [],
+            }
+        }
         child_list = [
-            {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
+            {
+                "name": "whatever",
+                "type": "SpecialChild",
+                "AnExtraValue": "Hallo there!",
+                "AValue": 13,
+            },
             {
                 "name": "whatever",
                 "type": "ExtraSpecialChild",
@@ -230,9 +254,21 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertListEqual(self.doc_storage["1"]["SomeChild"], child_list)
 
     def test_add_invalid_child_type_to_list_attribute(self):
-        self.doc_storage = {"1": {"_id": "1", "name": "parent", "type": "ParentWithListOfChildren", "SomeChild": []}}
+        self.doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "parent",
+                "type": "ParentWithListOfChildren",
+                "SomeChild": [],
+            }
+        }
         invalid_child_list = [
-            {"name": "whatever", "type": "SpecialChild", "AnExtraValue": "Hallo there!", "AValue": 13},
+            {
+                "name": "whatever",
+                "type": "SpecialChild",
+                "AnExtraValue": "Hallo there!",
+                "AValue": 13,
+            },
             {
                 "name": "whatever",
                 "type": "SpecialChildNoInherit",
@@ -252,21 +288,38 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertListEqual(self.doc_storage["1"]["SomeChild"], [])
 
     def test_add_child_with_empty_list(self):
-        self.doc_storage = {"1": {"_id": "1", "name": "parent", "type": "WrappsParentWithList", "Parent-w-list": {}}}
+        self.doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "parent",
+                "type": "WrappsParentWithList",
+                "Parent-w-list": {},
+            }
+        }
         child = {
             "_id": "1",
             "name": "parent",
             "type": "WrappsParentWithList",
-            "Parent-w-list": {"name": "whatever", "type": "ParentWithListOfChildren", "SomeChild": []},
+            "Parent-w-list": {
+                "name": "whatever",
+                "type": "ParentWithListOfChildren",
+                "SomeChild": [],
+            },
         }
         update_document_use_case(
-            data=child, address=Address("$1", "testing"), document_service=self.mock_document_service
+            data=child,
+            address=Address("$1", "testing"),
+            document_service=self.mock_document_service,
         )
         self.assertEqual(self.doc_storage["1"]["Parent-w-list"]["type"], "ParentWithListOfChildren")
         self.assertListEqual(self.doc_storage["1"]["Parent-w-list"]["SomeChild"], [])
 
     def test_set_update_uncontained_child(self):
         target_node = self.form_node.children[1]
-        new_reference = {"type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value, "address": "$new"}
+        new_reference = {
+            "type": SIMOS.REFERENCE.value,
+            "referenceType": REFERENCE_TYPES.LINK.value,
+            "address": "$new",
+        }
         target_node.update(new_reference)
         assert "_id" not in target_node.entity and target_node.entity["address"] == "$new"

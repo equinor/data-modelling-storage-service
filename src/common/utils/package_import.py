@@ -42,7 +42,11 @@ def _add_documents(path, documents, data_source) -> list[dict]:
 
 def import_package(path: str, user: User, data_source_name: str, is_root: bool = False) -> dict:
     data_source: DataSource = get_data_source(data_source_id=data_source_name, user=user)
-    package = {"name": os.path.basename(path), "type": SIMOS.PACKAGE.value, "isRoot": is_root}
+    package = {
+        "name": os.path.basename(path),
+        "type": SIMOS.PACKAGE.value,
+        "isRoot": is_root,
+    }
     try:
         resolved_address: ResolvedAddress = resolve_address(
             Address(package["name"], data_source.name),

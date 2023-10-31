@@ -32,14 +32,38 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
     def test_get_simple_extended(self):
         full_blueprint: Blueprint = self.document_service.get_blueprint("ExtendedBlueprint")
 
-        assert next((attr for attr in full_blueprint.attributes if attr.name == "description"), None) is not None
+        assert (
+            next(
+                (attr for attr in full_blueprint.attributes if attr.name == "description"),
+                None,
+            )
+            is not None
+        )
 
     def test_get_second_level_extended(self):
         full_blueprint: Blueprint = self.document_service.get_blueprint("SecondLevelExtendedBlueprint")
 
-        assert next((attr for attr in full_blueprint.attributes if attr.name == "description"), None) is not None
-        assert next((attr for attr in full_blueprint.attributes if attr.name == "another_value"), None) is not None
-        assert next((attr for attr in full_blueprint.attributes if attr.name == "a_third_value"), None) is not None
+        assert (
+            next(
+                (attr for attr in full_blueprint.attributes if attr.name == "description"),
+                None,
+            )
+            is not None
+        )
+        assert (
+            next(
+                (attr for attr in full_blueprint.attributes if attr.name == "another_value"),
+                None,
+            )
+            is not None
+        )
+        assert (
+            next(
+                (attr for attr in full_blueprint.attributes if attr.name == "a_third_value"),
+                None,
+            )
+            is not None
+        )
 
     def test_updated_extended_entity(self):
         repository = mock.Mock()

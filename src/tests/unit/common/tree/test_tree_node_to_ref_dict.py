@@ -31,7 +31,9 @@ class TreeNodeToRefDictTestCase(unittest.TestCase):
     def test_tree_node_to_ref_dict(self):
         # Arrange
         engine_package_content_bp_attribute = BlueprintAttribute(
-            name="content", attribute_type="object", type="dmss://system/SIMOS/BlueprintAttribute"
+            name="content",
+            attribute_type="object",
+            type="dmss://system/SIMOS/BlueprintAttribute",
         )
         engine_entity_ref = {
             "address": "$123",

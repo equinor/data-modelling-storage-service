@@ -14,7 +14,10 @@ class TestSortDTOsByAttribute(unittest.TestCase):
     def test_sort_by_nested_attribute(self):
         data = [{"info": {"age": 21}}, {"info": {"age": 40}}, {"info": {"age": 18}}]
         sorted_data = sort_dtos_by_attribute(data, "info.age")
-        self.assertEqual(sorted_data, [{"info": {"age": 18}}, {"info": {"age": 21}}, {"info": {"age": 40}}])
+        self.assertEqual(
+            sorted_data,
+            [{"info": {"age": 18}}, {"info": {"age": 21}}, {"info": {"age": 40}}],
+        )
 
     def test_sort_by_parent_attribute_raises_TypeError(self):
         data = [{"info": {"age": 21}}, {"info": {"age": 40}}, {"info": {"age": 18}}]

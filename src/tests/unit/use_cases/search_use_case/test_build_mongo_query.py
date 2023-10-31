@@ -10,10 +10,26 @@ basic_blueprint = {
     "name": "A box",
     "description": "First blueprint",
     "attributes": [
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
-        {"attributeType": "integer", "type": "system/SIMOS/BlueprintAttribute", "name": "length"},
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "name",
+        },
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "type",
+        },
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "description",
+        },
+        {
+            "attributeType": "integer",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "length",
+        },
     ],
 }
 nested_blueprint = {
@@ -21,11 +37,31 @@ nested_blueprint = {
     "name": "Nested",
     "description": "Second blueprint",
     "attributes": [
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
-        {"attributeType": "integer", "type": "system/SIMOS/BlueprintAttribute", "name": "an_int"},
-        {"attributeType": "test/Nested", "type": "system/SIMOS/BlueprintAttribute", "name": "nested"},
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "name",
+        },
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "type",
+        },
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "description",
+        },
+        {
+            "attributeType": "integer",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "an_int",
+        },
+        {
+            "attributeType": "test/Nested",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "nested",
+        },
     ],
 }
 
@@ -34,10 +70,27 @@ nested_blueprint_w_list = {
     "name": "NestedList",
     "description": "Third blueprint",
     "attributes": [
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "name"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "type"},
-        {"attributeType": "string", "type": "system/SIMOS/BlueprintAttribute", "name": "description"},
-        {"attributeType": "integer", "type": "system/SIMOS/BlueprintAttribute", "name": "length", "dimensions": "3"},
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "name",
+        },
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "type",
+        },
+        {
+            "attributeType": "string",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "description",
+        },
+        {
+            "attributeType": "integer",
+            "type": "system/SIMOS/BlueprintAttribute",
+            "name": "length",
+            "dimensions": "3",
+        },
         {
             "attributeType": "NestedList",
             "type": "system/SIMOS/BlueprintAttribute",
@@ -66,7 +119,10 @@ class CreateSearchQueryTestCase(unittest.TestCase):
         search_data = {"type": "basic_blueprint", "name": "whatever"}
         query = build_mongo_query(blueprint_provider.get_blueprint, search_data)
 
-        assert query == {"type": "basic_blueprint", "name": {"$regex": ".*whatever.*", "$options": "i"}}
+        assert query == {
+            "type": "basic_blueprint",
+            "name": {"$regex": ".*whatever.*", "$options": "i"},
+        }
 
     def test_nested_search_query(self):
         search_data = {
@@ -89,7 +145,12 @@ class CreateSearchQueryTestCase(unittest.TestCase):
         search_data = {
             "type": "NestedList",
             "name": "first_level",
-            "nestedList": [{"name": "second_level", "nestedList": [{"name": "third_level", "length": ["<100"]}]}],
+            "nestedList": [
+                {
+                    "name": "second_level",
+                    "nestedList": [{"name": "third_level", "length": ["<100"]}],
+                }
+            ],
         }
         query = build_mongo_query(blueprint_provider.get_blueprint, search_data)
 

@@ -11,7 +11,10 @@ example_entity: dict = {
     "name": "Car",
     "_blueprintPath_": "dmss://system/SIMOS/Blueprint",
     "type": "dmss://system/SIMOS/Blueprint",
-    "extends": ["dmss://system/SIMOS/NamedEntity", "dmss://DemoApplicationDataSource/models/CarPackage/Vehicle"],
+    "extends": [
+        "dmss://system/SIMOS/NamedEntity",
+        "dmss://DemoApplicationDataSource/models/CarPackage/Vehicle",
+    ],
     "description": "",
     "attributes": [
         {
@@ -63,7 +66,12 @@ entity_with_aliases: dict = {
                 "_blob_id": "04cf2783-6118-4bfd-a427-9485b00fa9da",
             },
         },
-        {"name": "wheels", "type": "CORE:BlueprintAttribute", "attributeType": "CAR_PACKAGE:Wheel", "dimensions": "*"},
+        {
+            "name": "wheels",
+            "type": "CORE:BlueprintAttribute",
+            "attributeType": "CAR_PACKAGE:Wheel",
+            "dimensions": "*",
+        },
         {
             "name": "wheelPressures",
             "type": "CORE:BlueprintAttribute",
@@ -95,7 +103,10 @@ class ReplaceWithAliasTest(unittest.TestCase):
             "version": "0.0.1",
             "protocol": "dmss",
         }
-        dependencies: list[Dependency] = [Dependency(**car_package_dependency), Dependency(**wheel_package_dependency)]
+        dependencies: list[Dependency] = [
+            Dependency(**car_package_dependency),
+            Dependency(**wheel_package_dependency),
+        ]
         reference = "dmss://DemoApplicationDataSource/models/CarPackage/Wheel/SubPackage/Pressure"
         alias = _replace_reference_with_alias_if_possible(reference=reference, dependencies=dependencies)
         assert alias == "WHEEL:SubPackage/Pressure"

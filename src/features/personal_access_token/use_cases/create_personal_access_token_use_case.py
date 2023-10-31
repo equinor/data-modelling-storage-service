@@ -8,7 +8,9 @@ MAX_TOKEN_TTL = datetime.timedelta(days=365).total_seconds()
 
 
 def create_personal_access_token_use_case(
-    user: User, scope: AccessLevel = AccessLevel.WRITE, ttl: int = int(datetime.timedelta(days=30).total_seconds())
+    user: User,
+    scope: AccessLevel = AccessLevel.WRITE,
+    ttl: int = int(datetime.timedelta(days=30).total_seconds()),
 ) -> str:
     """
     Create a time limited personal access token that can be used to impersonate the user requesting the token.
@@ -24,7 +26,11 @@ def create_personal_access_token_use_case(
     expire_datetime = now + datetime.timedelta(seconds=ttl)
     pat = f"DMSS_{generate_key()}"  # Generate a random string, this will be the actual token.
     pat_data = PATData(  # Create a PAT object with parameters, and the hash of the token.
-        pat_hash=scrypt(pat), user_id=user.user_id, roles=user.roles, scope=scope, expire=expire_datetime
+        pat_hash=scrypt(pat),
+        user_id=user.user_id,
+        roles=user.roles,
+        scope=scope,
+        expire=expire_datetime,
     )
     insert_pat(pat_data)  # Save the PAT Object to the database
     return pat  # Return the secret

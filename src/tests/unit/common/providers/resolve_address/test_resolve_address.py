@@ -79,7 +79,8 @@ class ResolveReferenceTestCase(unittest.TestCase):
         self.document_repository.get = self.mock_get
         self.document_repository.find = self.mock_find
         self.document_service = get_mock_document_service(
-            repository_provider=lambda x, y: self.document_repository, blueprint_provider=None
+            repository_provider=lambda x, y: self.document_repository,
+            blueprint_provider=None,
         )
 
     def mock_get(self, document_id: str):
@@ -94,14 +95,20 @@ class ResolveReferenceTestCase(unittest.TestCase):
         return None
 
     def mock_find(self, query: dict) -> list[dict]:
-        documents: list[dict] = [self.car_rental_company, self.engine, self.fuel_pump, self.customer]
+        documents: list[dict] = [
+            self.car_rental_company,
+            self.engine,
+            self.fuel_pump,
+            self.customer,
+        ]
         for key, value in query.items():
             documents = list(filter(lambda x: key in x and x[key] == value, documents))
         return documents
 
     def test_id(self):
         ref = resolve_address(
-            Address.from_absolute("datasource/$car_rental_company_id"), self.document_service.get_data_source
+            Address.from_absolute("datasource/$car_rental_company_id"),
+            self.document_service.get_data_source,
         )
         assert ref.data_source_id == "datasource"
         assert ref.document_id == "car_rental_company_id"
@@ -110,7 +117,8 @@ class ResolveReferenceTestCase(unittest.TestCase):
 
     def test_with_attributes(self):
         ref = resolve_address(
-            Address.from_absolute("datasource/$car_rental_company_id.cars[0]"), self.document_service.get_data_source
+            Address.from_absolute("datasource/$car_rental_company_id.cars[0]"),
+            self.document_service.get_data_source,
         )
         assert ref.data_source_id == "datasource"
         assert ref.document_id == "car_rental_company_id"
@@ -169,16 +177,23 @@ class ResolveReferenceTestCase(unittest.TestCase):
 
     def test_invalid_id(self):
         with pytest.raises(
-            NotFoundException, match=re.escape("No document with id 'x' could be found in data source 'datasource'.")
+            NotFoundException,
+            match=re.escape("No document with id 'x' could be found in data source 'datasource'."),
         ):
-            resolve_address(Address.from_absolute("datasource/$x"), self.document_service.get_data_source)
+            resolve_address(
+                Address.from_absolute("datasource/$x"),
+                self.document_service.get_data_source,
+            )
 
     def test_invalid_query_no_document(self):
         with pytest.raises(
             NotFoundException,
             match=re.escape("No document that match '_id=xxx' could be found in data source 'datasource'."),
         ):
-            resolve_address(Address.from_absolute("datasource/[(_id=xxx)]"), self.document_service.get_data_source)
+            resolve_address(
+                Address.from_absolute("datasource/[(_id=xxx)]"),
+                self.document_service.get_data_source,
+            )
 
     def test_invalid_query_no_attribute(self):
         with pytest.raises(ApplicationException, match=re.escape("No object matches filter 'name=Peter'")):
@@ -193,7 +208,8 @@ class ResolveReferenceTestCase(unittest.TestCase):
             match=re.escape(f"Invalid attribute 'xxx'. Valid attributes are '{list(self.car_rental_company.keys())}'."),
         ):
             resolve_address(
-                Address.from_absolute("datasource/$car_rental_company_id.xxx"), self.document_service.get_data_source
+                Address.from_absolute("datasource/$car_rental_company_id.xxx"),
+                self.document_service.get_data_source,
             )
 
     def test_invalid_index(self):

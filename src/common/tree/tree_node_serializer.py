@@ -173,7 +173,7 @@ def tree_node_from_dict(
             if not isinstance(children, list):
                 raise ValueError(
                     f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
-                    + f"should be a list, but was '{type(children)!s}'"
+                    + f"should be a list, but was '{type(children)}'"
                 )
 
             list_node = ListNode(
@@ -215,7 +215,7 @@ def tree_node_from_dict(
             if not isinstance(attribute_data, dict):
                 raise ValidationException(
                     f"The attribute '{child_attribute.name}' on blueprint '{node.type}' "
-                    + f"should be a dict, but was '{type(attribute_data)!s}'"
+                    + f"should be a dict, but was '{type(attribute_data)}'"
                 )
 
             child_node = tree_node_from_dict(

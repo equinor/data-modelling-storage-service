@@ -26,7 +26,10 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         self.recipe_provider = MockStorageRecipeProvider(
             "src/tests/unit/common/tree/mock_data/mock_storage_recipes.json"
         ).provider
-        simos_blueprints = ["dmss://system/SIMOS/Reference", "dmss://system/SIMOS/NamedEntity"]
+        simos_blueprints = [
+            "dmss://system/SIMOS/Reference",
+            "dmss://system/SIMOS/NamedEntity",
+        ]
         mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
             "all_contained_cases_blueprint": "all_contained_cases_blueprint.blueprint.json",
@@ -44,7 +47,12 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         )
 
     def test_replace(self):
-        root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
+        root_data = {
+            "_id": 1,
+            "name": "root",
+            "description": "",
+            "type": "all_contained_cases_blueprint",
+        }
         root = Node(
             key="",
             uid="1",
@@ -95,7 +103,12 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         assert actual_after_replaced == tree_node_to_dict(root)
 
     def test_depth(self):
-        root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
+        root_data = {
+            "_id": 1,
+            "name": "root",
+            "description": "",
+            "type": "all_contained_cases_blueprint",
+        }
         root = Node(
             key="root",
             uid="1",
@@ -132,7 +145,11 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
                     "name": "My_Best_Bush",
                     "description": "",
                     "type": "Bush",
-                    "reference": {"address": "$3", "type": "dmss://system/SIMOS/Reference", "referenceType": "link"},
+                    "reference": {
+                        "address": "$3",
+                        "type": "dmss://system/SIMOS/Reference",
+                        "referenceType": "link",
+                    },
                 },
             },
         }
@@ -157,7 +174,12 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         assert result == expected
 
     def test_traverse_reverse(self):
-        root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
+        root_data = {
+            "_id": 1,
+            "name": "root",
+            "description": "",
+            "type": "all_contained_cases_blueprint",
+        }
         root = Node(
             key="root",
             uid="1",
@@ -191,7 +213,12 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         assert result == expected
 
     def test_node_id(self):
-        root_data = {"_id": 1, "name": "root", "description": "", "type": "all_contained_cases_blueprint"}
+        root_data = {
+            "_id": 1,
+            "name": "root",
+            "description": "",
+            "type": "all_contained_cases_blueprint",
+        }
         root = Node(
             key="",
             uid="1",
@@ -220,7 +247,12 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
             attribute=BlueprintAttribute(name="", attribute_type="Bush"),
         )
 
-        nested_2_reference_data = {"_id": "2", "name": "Reference", "description": "", "type": "Garden"}
+        nested_2_reference_data = {
+            "_id": "2",
+            "name": "Reference",
+            "description": "",
+            "type": "Garden",
+        }
         reference = Node(
             key="reference",
             uid="2",
@@ -272,7 +304,12 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
                     "name": "Nested",
                     "description": "",
                     "type": "Bush",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
+                    "reference": {
+                        "_id": "2",
+                        "name": "Reference",
+                        "description": "",
+                        "type": "Garden",
+                    },
                 },
                 "reference": {},
                 "references": [],
@@ -307,7 +344,12 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
                     "name": "Nested",
                     "description": "",
                     "type": "Bush",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
+                    "reference": {
+                        "_id": "2",
+                        "name": "Reference",
+                        "description": "",
+                        "type": "Garden",
+                    },
                 },
             },
         }
@@ -340,7 +382,12 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
                     "name": "Nested",
                     "description": "",
                     "type": "Bush",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
+                    "reference": {
+                        "_id": "2",
+                        "name": "Reference",
+                        "description": "",
+                        "type": "Garden",
+                    },
                 },
             },
             "reference": {"_id": "2", "name": "a_reference", "type": "Garden"},
@@ -365,7 +412,12 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
                     "name": "Nested",
                     "description": "",
                     "type": "Bush",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
+                    "reference": {
+                        "_id": "2",
+                        "name": "Reference",
+                        "description": "",
+                        "type": "Garden",
+                    },
                 },
             },
             "reference": {"_id": "2", "name": "a_reference", "type": "Garden"},
@@ -388,7 +440,12 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
                     "name": "New-name",
                     "description": "",
                     "type": "Bush",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
+                    "reference": {
+                        "_id": "2",
+                        "name": "Reference",
+                        "description": "",
+                        "type": "Garden",
+                    },
                 },
             },
             "reference": {"_id": "2", "name": "a_reference", "type": "Garden"},
@@ -411,7 +468,12 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
                     "name": "New-name",
                     "description": "",
                     "type": "Bush",
-                    "reference": {"_id": "2", "name": "New-name", "description": "", "type": "Garden"},
+                    "reference": {
+                        "_id": "2",
+                        "name": "New-name",
+                        "description": "",
+                        "type": "Garden",
+                    },
                 },
             },
             "reference": {"_id": "2", "name": "a_reference", "type": "Garden"},
@@ -435,7 +497,12 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
                     "name": "New-name",
                     "type": "Bush",
                     "description": "",
-                    "reference": {"_id": "2", "name": "New-name", "type": "Garden", "description": ""},
+                    "reference": {
+                        "_id": "2",
+                        "name": "New-name",
+                        "type": "Garden",
+                        "description": "",
+                    },
                 },
             },
             "reference": {"_id": "2", "name": "a_reference", "type": "Garden"},

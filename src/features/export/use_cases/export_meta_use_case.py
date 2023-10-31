@@ -38,7 +38,11 @@ def resolve_references(values: list, data_source: DataSource, user: User) -> lis
 
 
 def _collect_entity_meta_by_path(
-    package: dict, path_elements: list[str], data_source: DataSource, existing_meta: dict | None, user: User
+    package: dict,
+    path_elements: list[str],
+    data_source: DataSource,
+    existing_meta: dict | None,
+    user: User,
 ) -> dict:
     # TODO: Handle dotted attribute path
     if len(path_elements) == 1:
@@ -58,7 +62,8 @@ def _collect_entity_meta_by_path(
         return concat_meta_data(existing_meta, entity.get("_meta_"))
 
     next_package_ref = next(
-        (p for p in resolve_references(package["content"], data_source, user) if p["name"] == path_elements[0]), None
+        (p for p in resolve_references(package["content"], data_source, user) if p["name"] == path_elements[0]),
+        None,
     )
     if not next_package_ref:
         raise NotFoundException(f"The package {path_elements[0]} could not be found in the package {package['name']}")
@@ -101,6 +106,10 @@ def export_meta_use_case(user: User, path_address: str) -> dict:
         return root_package.get("_meta_", {})
 
     meta = _collect_entity_meta_by_path(
-        root_package, path_without_root_package, data_source, root_package.get("_meta_"), user
+        root_package,
+        path_without_root_package,
+        data_source,
+        root_package.get("_meta_"),
+        user,
     )
     return meta

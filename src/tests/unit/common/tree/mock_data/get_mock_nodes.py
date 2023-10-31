@@ -5,7 +5,9 @@ from tests.unit.mocks.mock_blueprint_provider import MockBlueprintProvider
 
 
 def get_engine_package_node(
-    mock_blueprint_folder, mock_blueprints_and_file_names, simos_blueprints_available_for_test
+    mock_blueprint_folder,
+    mock_blueprints_and_file_names,
+    simos_blueprints_available_for_test,
 ) -> Node:
     """return a Node object for engine package that contains a single Blueprint called Engine."""
 
@@ -24,9 +26,15 @@ def get_engine_package_node(
         contained=False,
     )
     engine_package_content_bp_attribute = BlueprintAttribute(
-        name="content", attribute_type="object", type="dmss://system/SIMOS/BlueprintAttribute"
+        name="content",
+        attribute_type="object",
+        type="dmss://system/SIMOS/BlueprintAttribute",
     )
-    engine_entity_ref = {"address": "$123", "type": SIMOS.REFERENCE.value, "referenceType": REFERENCE_TYPES.LINK.value}
+    engine_entity_ref = {
+        "address": "$123",
+        "type": SIMOS.REFERENCE.value,
+        "referenceType": REFERENCE_TYPES.LINK.value,
+    }
 
     engine_package_content: ListNode = ListNode(
         key="content",
@@ -78,7 +86,9 @@ def get_engine_package_node(
 
 
 def get_form_example_node(
-    mock_blueprint_folder, mock_blueprints_and_file_names, simos_blueprints_available_for_test
+    mock_blueprint_folder,
+    mock_blueprints_and_file_names,
+    simos_blueprints_available_for_test,
 ) -> Node:
     mock_blueprint_provider = MockBlueprintProvider(
         mock_blueprints_and_file_names=mock_blueprints_and_file_names,
@@ -90,7 +100,11 @@ def get_form_example_node(
         "referenceType": "link",
         "address": "dmss://DemoDataSource/$product1",
     }
-    a_nested_object = {"type": "system/SIMOS/NamedEntity", "name": "nested obj", "description": "a description"}
+    a_nested_object = {
+        "type": "system/SIMOS/NamedEntity",
+        "name": "nested obj",
+        "description": "a description",
+    }
     form_example_entity = {
         "_id": "formExample",
         "type": "FormBlueprint",

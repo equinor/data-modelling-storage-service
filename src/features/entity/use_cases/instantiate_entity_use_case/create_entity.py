@@ -89,7 +89,10 @@ class CreateEntity:
                 )
                 if attr.is_array:
                     entity[attr.name] = create_default_array(
-                        attr.dimensions, self.blueprint_provider, CreateEntity, attr.default
+                        attr.dimensions,
+                        self.blueprint_provider,
+                        CreateEntity,
+                        attr.default,
                     )
                 else:
                     if CreateEntity.is_json(attr):

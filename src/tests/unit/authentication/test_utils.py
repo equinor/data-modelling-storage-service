@@ -16,7 +16,12 @@ class RemovePatRolesNotAssignedByAuthProviderTestCase(unittest.TestCase):
 
         self.mock_role_provider = mock.Mock()
         self.mock_role_provider.get_assignments.return_value = {"user_id": {"reader", "writer"}}
-        self.pat = PATData(user_id="user_id", roles=["reader", "owner"], scope=AccessLevel.NONE, expire=datetime.now())
+        self.pat = PATData(
+            user_id="user_id",
+            roles=["reader", "owner"],
+            scope=AccessLevel.NONE,
+            expire=datetime.now(),
+        )
 
     def tearDown(self) -> None:
         config.TEST_TOKEN = self.original_config.TEST_TOKEN

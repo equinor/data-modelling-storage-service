@@ -32,7 +32,9 @@ class DefaultArrayTestCase(unittest.TestCase):
             "src/tests/unit/mocks/mock_storage_recipes/mock_storage_recipes.json"
         ).provider
         document_service = DocumentService(
-            recipe_provider=recipe_provider, repository_provider=None, blueprint_provider=mock_blueprint_provider
+            recipe_provider=recipe_provider,
+            repository_provider=None,
+            blueprint_provider=mock_blueprint_provider,
         )
         self.blueprint_provider = document_service.get_blueprint
 
@@ -63,7 +65,16 @@ class DefaultArrayTestCase(unittest.TestCase):
             empty_string_blueprint_attribute,
         )
 
-        assert default_array == [[{"name": "", "type": "dmss://system/SIMOS/Package", "isRoot": False, "content": []}]]
+        assert default_array == [
+            [
+                {
+                    "name": "",
+                    "type": "dmss://system/SIMOS/Package",
+                    "isRoot": False,
+                    "content": [],
+                }
+            ]
+        ]
 
     def test_creation_of_default_array_unfixed_rank2(self):
         default_array = create_default_array(Dimension("*,*", "integer"), self.blueprint_provider, CreateEntity)

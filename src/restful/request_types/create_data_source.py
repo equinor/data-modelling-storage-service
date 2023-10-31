@@ -30,4 +30,7 @@ class DataSourceRequest(BaseModel):
     repositories: dict[str, Repository]
 
     def dict(self) -> dict:
-        return {"name": self.name, "repositories": {k: v.dict() for k, v in self.repositories.items()}}
+        return {
+            "name": self.name,
+            "repositories": {k: v.dict() for k, v in self.repositories.items()},
+        }

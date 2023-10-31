@@ -22,7 +22,11 @@ router = APIRouter(tags=["default", "blueprint"])
     responses=responses,
 )
 @create_response(JSONResponse)
-def get_blueprint(type_ref: TypeConstrainedString, context: str | None = None, user: User = Depends(auth_w_jwt_or_pat)):
+def get_blueprint(
+    type_ref: TypeConstrainedString,
+    context: str | None = None,
+    user: User = Depends(auth_w_jwt_or_pat),
+):
     """Get a Blueprint and all Ui- and StorageRecipes connected to it, given a Blueprint address.
 
     Args:
@@ -37,7 +41,12 @@ def get_blueprint(type_ref: TypeConstrainedString, context: str | None = None, u
     return get_blueprint_use_case(type_ref, context, user)
 
 
-@router.get("/resolve-path/{address:path}", operation_id="blueprint_resolve", response_model=str, responses=responses)
+@router.get(
+    "/resolve-path/{address:path}",
+    operation_id="blueprint_resolve",
+    response_model=str,
+    responses=responses,
+)
 @create_response(PlainTextResponse)
 def resolve_blueprint_id(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     """Resolve path address of a blueprint given id address.

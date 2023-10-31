@@ -43,5 +43,6 @@ def search(
     if data is None:
         data = {}
     return search_use_case(
-        user=user, request=SearchRequest(data_sources=data_sources, data=data, dotted_attribute_path=sort_by_attribute)
+        user=user,
+        request=SearchRequest(data_sources=data_sources, data=data, dotted_attribute_path=sort_by_attribute),
     )

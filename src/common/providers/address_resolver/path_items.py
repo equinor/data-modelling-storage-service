@@ -78,14 +78,18 @@ class QueryItem:
     ) -> tuple[Any, str]:
         if isinstance(entity, dict) and is_reference(entity):
             resolved_ref = resolve_address(
-                Address.from_relative(entity["address"], document_id, data_source.name), get_data_source
+                Address.from_relative(entity["address"], document_id, data_source.name),
+                get_data_source,
             )
             entity = resolved_ref.entity
             document_id = resolved_ref.document_id
 
         # Search inside an existing document (need to resolve any references first before trying to compare against filter)
         elements = [
-            resolve_address(Address.from_relative(f["address"], document_id, data_source.name), get_data_source).entity
+            resolve_address(
+                Address.from_relative(f["address"], document_id, data_source.name),
+                get_data_source,
+            ).entity
             if is_reference(f)
             else f
             for f in entity
@@ -115,7 +119,8 @@ class AttributeItem:
     ) -> tuple[Any, str]:
         if isinstance(entity, dict) and is_reference(entity):
             entity = resolve_address(
-                Address.from_relative(entity["address"], document_id, data_source.name), get_data_source
+                Address.from_relative(entity["address"], document_id, data_source.name),
+                get_data_source,
             ).entity
         try:
             result = find(entity, [self.path])

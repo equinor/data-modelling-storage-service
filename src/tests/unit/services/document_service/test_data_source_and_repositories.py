@@ -109,7 +109,12 @@ class DataSourceTestCase(unittest.TestCase):
         assert blob_doc_storage and default_doc_storage
 
     def test_save_based_on_root_storageRecipe(self):
-        blob_doc = {"name": "some_entity", "description": "", "type": "blob", "someData": "test"}
+        blob_doc = {
+            "name": "some_entity",
+            "description": "",
+            "type": "blob",
+            "someData": "test",
+        }
 
         default_doc_storage: dict = {}
 
@@ -175,7 +180,12 @@ class DataSourceTestCase(unittest.TestCase):
             "name": "some_entity",
             "description": "",
             "type": "blobContainer",
-            "blob": {"name": "test", "type": "blob", "description": "", "someData": "Hallo World!"},
+            "blob": {
+                "name": "test",
+                "type": "blob",
+                "description": "",
+                "someData": "Hallo World!",
+            },
         }
 
         default_doc_storage: dict = {}
@@ -225,7 +235,10 @@ class DataSourceTestCase(unittest.TestCase):
         self.mock_document_service.user = test_user
 
         node: Node = tree_node_from_dict(
-            blob_doc, self.mock_document_service.get_blueprint, uid="1", recipe_provider=self.recipe_provider
+            blob_doc,
+            self.mock_document_service.get_blueprint,
+            uid="1",
+            recipe_provider=self.recipe_provider,
         )
 
         for sub_node in node.traverse():

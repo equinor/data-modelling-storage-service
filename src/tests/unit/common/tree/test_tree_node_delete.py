@@ -53,7 +53,11 @@ class TreeNodeDeleteTest(unittest.TestCase):
 
         root.remove_by_path(["nested"])
 
-        actual_after_delete = {"_id": "1", "name": "root", "type": "all_contained_cases_blueprint"}
+        actual_after_delete = {
+            "_id": "1",
+            "name": "root",
+            "type": "all_contained_cases_blueprint",
+        }
 
         assert actual_after_delete == tree_node_to_dict(root)
 

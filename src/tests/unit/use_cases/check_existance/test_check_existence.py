@@ -30,7 +30,8 @@ class CheckExistenceTestCase(unittest.TestCase):
             simos_blueprints_available_for_test=simos_blueprints,
         )
         self.document_service = get_mock_document_service(
-            repository_provider=lambda x, y: self.repository, blueprint_provider=mock_blueprint_provider
+            repository_provider=lambda x, y: self.repository,
+            blueprint_provider=mock_blueprint_provider,
         )
 
     def mock_get(self, document_id: str):

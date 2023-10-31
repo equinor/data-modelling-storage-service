@@ -81,7 +81,11 @@ def create_app() -> FastAPI:
             "useBasicAuthenticationWithAccessCodeGrant": True,
         },
     )
-    app.include_router(authenticated_routes, prefix=server_root, dependencies=[Security(auth_w_jwt_or_pat)])
+    app.include_router(
+        authenticated_routes,
+        prefix=server_root,
+        dependencies=[Security(auth_w_jwt_or_pat)],
+    )
     app.include_router(jwt_only_routes, prefix=server_root, dependencies=[Security(auth_with_jwt)])
     app.include_router(public_routes, prefix=server_root)
 
@@ -120,7 +124,12 @@ def create_app() -> FastAPI:
         response.headers["X-Process-Time"] = str(process_time)
         return response
 
-    @app.get("/", operation_id="redirect_to_docs", response_class=RedirectResponse, include_in_schema=False)
+    @app.get(
+        "/",
+        operation_id="redirect_to_docs",
+        response_class=RedirectResponse,
+        include_in_schema=False,
+    )
     def redirect_to_docs():
         """
         Redirects any requests to the servers root ('/') to '/docs'
@@ -150,9 +159,18 @@ def run():
 def init_application():
     logger.info("IMPORTING CORE DOCUMENTS")
     # Running commands locally sets the user_context to "DMSS_ADMIN"
-    user = User(**{"user_id": config.DMSS_ADMIN, "full_name": "Local Admin", "email": "admin@example.com"})
+    user = User(
+        **{
+            "user_id": config.DMSS_ADMIN,
+            "full_name": "Local Admin",
+            "email": "admin@example.com",
+        }
+    )
     import_package(
-        f"{config.APPLICATION_HOME}/system/SIMOS", user, data_source_name=config.CORE_DATA_SOURCE, is_root=True
+        f"{config.APPLICATION_HOME}/system/SIMOS",
+        user,
+        data_source_name=config.CORE_DATA_SOURCE,
+        is_root=True,
     )
     create_lookup_table_use_case(["system/SIMOS/recipe_links"], "DMSS", user)
     logger.debug("DONE")
@@ -164,7 +182,13 @@ def import_data_source(file):
     with open(file) as json_file:
         document = json.load(json_file)
         # Running commands locally sets the user_context to "DMSS_ADMIN"
-        user = User(**{"user_id": config.DMSS_ADMIN, "full_name": "Local Admin", "email": "admin@example.com"})
+        user = User(
+            **{
+                "user_id": config.DMSS_ADMIN,
+                "full_name": "Local Admin",
+                "email": "admin@example.com",
+            }
+        )
         DataSourceRepository(user).create(document["name"], DataSourceRequest(**document))
 
 

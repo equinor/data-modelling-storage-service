@@ -32,7 +32,9 @@ class Config(BaseSettings):
     MICROSOFT_AUTH_PROVIDER: str = "login.microsoftonline.com"
     AUTH_PROVIDER_FOR_ROLE_CHECK: AuthProviderForRoleCheck = Field(None, env="AUTH_PROVIDER_FOR_ROLE_CHECK")
     AAD_ENTERPRISE_APP_OID: str = Field(
-        "", env="AAD_ENTERPRISE_APP_OID", description="The ObjectId of the Azure AD Enterprise Application"
+        "",
+        env="AAD_ENTERPRISE_APP_OID",
+        description="The ObjectId of the Azure AD Enterprise Application",
     )
 
 

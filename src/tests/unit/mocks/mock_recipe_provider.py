@@ -19,7 +19,9 @@ class MockStorageRecipeProvider:
                 storage_affinity=StorageDataTypes(sr.get("storageAffinity", "default")),
                 attributes={
                     a["name"]: StorageAttribute(
-                        name=a["name"], contained=a["contained"], storage_affinity=a.get("storageAffinity", "default")
+                        name=a["name"],
+                        contained=a["contained"],
+                        storage_affinity=a.get("storageAffinity", "default"),
                     )
                     for a in sr.get("attributes", [])
                 },

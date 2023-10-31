@@ -20,7 +20,14 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         def mock_find(target: dict):
             # Used when resolving reference using paths.
-            return [{"_id": "2", "name": "", "description": "", "type": "dmss://system/SIMOS/NamedEntity"}]
+            return [
+                {
+                    "_id": "2",
+                    "name": "",
+                    "description": "",
+                    "type": "dmss://system/SIMOS/NamedEntity",
+                }
+            ]
 
         self.repository.find = mock_find
 
@@ -43,7 +50,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         self.mock_document_service = get_mock_document_service(
-            repository_provider=lambda x, y: self.repository, blueprint_provider=self.mock_blueprint_provider
+            repository_provider=lambda x, y: self.repository,
+            blueprint_provider=self.mock_blueprint_provider,
         )
 
     def mock_update(self, entity: dict, *args, **kwargs):
@@ -55,7 +63,11 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_remove_document_removes_document_with_correct_id(self):
         document_repository = mock.Mock()
 
-        document_1 = {"_id": "1", "name": "simple", "type": "dmss://system/SIMOS/NamedEntity"}
+        document_1 = {
+            "_id": "1",
+            "name": "simple",
+            "type": "dmss://system/SIMOS/NamedEntity",
+        }
 
         document_repository.get = lambda id: document_1.copy()
 
@@ -79,9 +91,18 @@ class DocumentServiceTestCase(unittest.TestCase):
             "uid": "1",
             "name": "Parent",
             "type": "Cat",
-            "owner": {"_id": "2", "name": "a_reference", "type": "dmss://system/SIMOS/NamedEntity"},
+            "owner": {
+                "_id": "2",
+                "name": "a_reference",
+                "type": "dmss://system/SIMOS/NamedEntity",
+            },
         }
-        doc_2 = {"uid": "2", "_id": "2", "name": "a_reference", "type": "dmss://system/SIMOS/NamedEntity"}
+        doc_2 = {
+            "uid": "2",
+            "_id": "2",
+            "name": "a_reference",
+            "type": "dmss://system/SIMOS/NamedEntity",
+        }
         self.storage = {"1": doc_1, "2": doc_2}
 
         self.mock_document_service.remove(Address("$1", "testing"))
@@ -99,7 +120,11 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "referenceType": REFERENCE_TYPES.STORAGE.value,
                 },
             },
-            "2": {"name": "Mary", "description": "", "type": "dmss://system/SIMOS/NamedEntity"},
+            "2": {
+                "name": "Mary",
+                "description": "",
+                "type": "dmss://system/SIMOS/NamedEntity",
+            },
         }
 
         self.assertRaises(
@@ -109,7 +134,14 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
     def test_remove_required_primitive_attribute_raises_NotFoundException(self):
-        self.storage = {"1": {"_id": "1", "name": "", "type": "dmss://system/SIMOS/NamedEntity", "description": ""}}
+        self.storage = {
+            "1": {
+                "_id": "1",
+                "name": "",
+                "type": "dmss://system/SIMOS/NamedEntity",
+                "description": "",
+            }
+        }
 
         self.assertRaises(
             common.exceptions.NotFoundException,
@@ -131,7 +163,11 @@ class DocumentServiceTestCase(unittest.TestCase):
                     }
                 ],
             },
-            "2": {"name": "", "description": "", "type": "dmss://system/SIMOS/NamedEntity"},
+            "2": {
+                "name": "",
+                "description": "",
+                "type": "dmss://system/SIMOS/NamedEntity",
+            },
         }
 
         self.assertRaises(

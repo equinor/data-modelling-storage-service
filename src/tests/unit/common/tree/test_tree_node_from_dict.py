@@ -19,7 +19,10 @@ with open(FILE_PATH + "Bush.blueprint.json") as f:
 
 class TreeNodeFromDictTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        simos_blueprints = ["dmss://system/SIMOS/Reference", "dmss://system/SIMOS/NamedEntity"]
+        simos_blueprints = [
+            "dmss://system/SIMOS/Reference",
+            "dmss://system/SIMOS/NamedEntity",
+        ]
         mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
             "SignalContainer": "SignalContainer.blueprint.json",
@@ -113,10 +116,28 @@ class TreeNodeFromDictTestCase(unittest.TestCase):
                     },
                 },
             },
-            "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden", "nested": {}},
+            "reference": {
+                "_id": "2",
+                "name": "Reference",
+                "description": "",
+                "type": "Garden",
+                "nested": {},
+            },
             "references": [
-                {"_id": "3", "name": "Reference-1", "description": "", "type": "Garden", "nested": {}},
-                {"_id": "4", "name": "Reference-2", "description": "", "type": "Garden", "nested": {}},
+                {
+                    "_id": "3",
+                    "name": "Reference-1",
+                    "description": "",
+                    "type": "Garden",
+                    "nested": {},
+                },
+                {
+                    "_id": "4",
+                    "name": "Reference-2",
+                    "description": "",
+                    "type": "Garden",
+                    "nested": {},
+                },
             ],
         }
 
@@ -191,10 +212,28 @@ class TreeNodeFromDictTestCase(unittest.TestCase):
                     },
                 },
             },
-            "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden", "nested": {}},
+            "reference": {
+                "_id": "2",
+                "name": "Reference",
+                "description": "",
+                "type": "Garden",
+                "nested": {},
+            },
             "references": [
-                {"_id": "3", "name": "Reference-1", "description": "", "type": "Garden", "nested": {}},
-                {"_id": "4", "name": "Reference-2", "description": "", "type": "Garden", "nested": {}},
+                {
+                    "_id": "3",
+                    "name": "Reference-1",
+                    "description": "",
+                    "type": "Garden",
+                    "nested": {},
+                },
+                {
+                    "_id": "4",
+                    "name": "Reference-2",
+                    "description": "",
+                    "type": "Garden",
+                    "nested": {},
+                },
             ],
         }
 
@@ -222,7 +261,13 @@ class TreeNodeFromDictTestCase(unittest.TestCase):
         assert "optionalObjectList" not in doc and "optionalObjectList" not in tree_node_to_dict(root)
 
     def test_recursive_from_dict(self):
-        document_1 = {"_id": "1", "name": "Parent", "description": "", "type": "Recursive", "im_me!": {}}
+        document_1 = {
+            "_id": "1",
+            "name": "Parent",
+            "description": "",
+            "type": "Recursive",
+            "im_me!": {},
+        }
 
         with self.assertRaises(RecursionError):
             tree_node_from_dict(
@@ -236,7 +281,13 @@ class TreeNodeFromDictTestCase(unittest.TestCase):
             "_id": "1",
             "type": "SignalContainer",
             "name": "signalContainer",
-            "cases": [{"type": "Case", "name": "case1", "signal": {"type": "Signal", "values": [1, 2, 3, 4, 5, 6, 7]}}],
+            "cases": [
+                {
+                    "type": "Case",
+                    "name": "case1",
+                    "signal": {"type": "Signal", "values": [1, 2, 3, 4, 5, 6, 7]},
+                }
+            ],
         }
 
         root = tree_node_from_dict(doc, self.mock_blueprint_provider, uid=doc.get("_id"))

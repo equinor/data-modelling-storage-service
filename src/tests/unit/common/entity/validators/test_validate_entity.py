@@ -45,7 +45,11 @@ class ValidateEntityTestCase(unittest.TestCase):
             "name": "FuelPumpTest",
             "description": "This describes a fuel pump",
             "attributes": [
-                {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "name"},
+                {
+                    "attributeType": "string",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "name",
+                },
                 {
                     "attributeType": "string",
                     "type": "dmss://system/SIMOS/BlueprintAttribute",
@@ -65,7 +69,11 @@ class ValidateEntityTestCase(unittest.TestCase):
                     "dimensions": "*",
                     "default": [True, False],
                 },
-                {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "type"},
+                {
+                    "attributeType": "string",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "type",
+                },
             ],
         }
         validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)
@@ -116,7 +124,11 @@ class ValidateEntityTestCase(unittest.TestCase):
                     "name": "description",
                     "default": "A standard fuel pump",
                 },
-                {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "type"},
+                {
+                    "attributeType": "string",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "type",
+                },
             ],
         }
         with self.assertRaises(ValidationException) as error:
@@ -131,14 +143,22 @@ class ValidateEntityTestCase(unittest.TestCase):
             "type": "dmss://system/SIMOS/Blueprint",
             "description": "This describes a fuel pump",
             "attributes": [
-                {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "name"},
+                {
+                    "attributeType": "string",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "name",
+                },
                 {
                     "attributeType": "string",
                     "type": "dmss://system/SIMOS/BlueprintAttribute",
                     "name": "description",
                     "default": "A standard fuel pump",
                 },
-                {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "type"},
+                {
+                    "attributeType": "string",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "type",
+                },
             ],
         }
         with self.assertRaises(ValidationException) as error:
@@ -151,14 +171,22 @@ class ValidateEntityTestCase(unittest.TestCase):
             "name": "FuelPump",
             "description": "This describes a fuel pump",
             "attributes": [
-                {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "name"},
+                {
+                    "attributeType": "string",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "name",
+                },
                 {
                     "attributeType": "string",
                     "type": "dmss://system/SIMOS/BlueprintAttribute",
                     "name": True,
                     "default": "A standard fuel pump",
                 },
-                {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "type"},
+                {
+                    "attributeType": "string",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "type",
+                },
             ],
         }
         with self.assertRaises(ValidationException) as error:
@@ -171,14 +199,22 @@ class ValidateEntityTestCase(unittest.TestCase):
             "name": "FuelPump",
             "description": "This describes a fuel pump",
             "attributes": [
-                {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "name"},
+                {
+                    "attributeType": "string",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "name",
+                },
                 {
                     "attributeType": "string",
                     "type": "dmss://system/SIMOS/BlueprintAttribute",
                     "name": ["this", "is", "wrong"],
                     "default": "A standard fuel pump",
                 },
-                {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "type"},
+                {
+                    "attributeType": "string",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "type",
+                },
             ],
         }
         with self.assertRaises(ValidationException) as error:
@@ -332,7 +368,11 @@ class ValidateEntityTestCase(unittest.TestCase):
             "name": "MyBlueprint",
             "description": "A descsription",
             "attributes": [
-                {"attributeType": "string", "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "name"},
+                {
+                    "attributeType": "string",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "name",
+                },
             ],
             "anExtraParameter": {"whatEver": 123, "bla": "bla", "not validated": [[[]]]},
         }
@@ -347,13 +387,22 @@ class ValidateEntityTestCase(unittest.TestCase):
             "name": "MyBlueprint",
             "description": "A descsription",
             "attributes": [
-                {"attributeType": 132, "type": "dmss://system/SIMOS/BlueprintAttribute", "name": "name"},
+                {
+                    "attributeType": 132,
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "name": "name",
+                },
             ],
             "anExtraParameter": {"whatEver": 123, "bla": "bla", "not validated": [[[]]]},
         }
         with self.assertRaises(ValidationException) as error:
             # Validate against the master blueprint
             blueprint = self.mock_document_service.get_blueprint("dmss://system/SIMOS/Blueprint")
-            validate_entity(test_entity, self.mock_document_service.get_blueprint, blueprint, "minimum")
+            validate_entity(
+                test_entity,
+                self.mock_document_service.get_blueprint,
+                blueprint,
+                "minimum",
+            )
         assert error.exception.message == "Attribute 'attributeType' should be type 'str'. Got 'int'. Value: 132"
         assert error.exception.debug == "Location: Entity in key '^.attributes.0.attributeType'"
