@@ -38,7 +38,12 @@ def get_by_id(data_source_id: str, blob_id: str, user: User = Depends(auth_w_jwt
     return get_blob_use_case(user=user, data_source_id=data_source_id, blob_id=blob_id)
 
 
-@router.put("/{data_source_id}/{blob_id}", operation_id="blob_upload", response_model=str, responses=responses)
+@router.put(
+    "/{data_source_id}/{blob_id}",
+    operation_id="blob_upload",
+    response_model=str,
+    responses=responses,
+)
 @create_response(PlainTextResponse)
 def upload(
     data_source_id: str,

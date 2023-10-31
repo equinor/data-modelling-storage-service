@@ -17,7 +17,10 @@ from tests.unit.mocks.mock_recipe_provider import MockStorageRecipeProvider
 
 class DocumentServiceTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
+        simos_blueprints = [
+            "dmss://system/SIMOS/NamedEntity",
+            "dmss://system/SIMOS/Reference",
+        ]
         mock_blueprint_folder = "src/tests/unit/services/document_service/mock_blueprints/people_and_cats"
         mock_blueprints_and_file_names = {
             "Cat": "Cat.blueprint.json",
@@ -35,7 +38,8 @@ class DocumentServiceTestCase(unittest.TestCase):
         ).provider
 
         self.mock_document_service = get_mock_document_service(
-            blueprint_provider=self.mock_blueprint_provider, recipe_provider=recipe_provider
+            blueprint_provider=self.mock_blueprint_provider,
+            recipe_provider=recipe_provider,
         )
 
     def test_save_update(self):
@@ -46,20 +50,40 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "Johnny",
                 "type": "Person",
-                "containedPersonInfo": {"name": "", "type": "dmss://system/SIMOS/NamedEntity"},
+                "containedPersonInfo": {
+                    "name": "",
+                    "type": "dmss://system/SIMOS/NamedEntity",
+                },
                 "storageUncontainedBestFriend": {
                     "_id": "2",
                     "name": "a_reference",
                     "type": "dmss://system/SIMOS/NamedEntity",
                 },
                 "storageUncontainedListOfFriends": [
-                    {"_id": "3", "name": "ref1", "type": "dmss://system/SIMOS/NamedEntity"},
-                    {"_id": "4", "name": "ref2", "type": "dmss://system/SIMOS/NamedEntity"},
+                    {
+                        "_id": "3",
+                        "name": "ref1",
+                        "type": "dmss://system/SIMOS/NamedEntity",
+                    },
+                    {
+                        "_id": "4",
+                        "name": "ref2",
+                        "type": "dmss://system/SIMOS/NamedEntity",
+                    },
                 ],
             },
-            "2": {"_id": "2", "name": "a_reference", "type": "dmss://system/SIMOS/NamedEntity"},
+            "2": {
+                "_id": "2",
+                "name": "a_reference",
+                "type": "dmss://system/SIMOS/NamedEntity",
+            },
             "3": {"_id": "3", "name": "ref1", "type": "dmss://system/SIMOS/NamedEntity"},
-            "4": {"_id": "4", "name": "ref2", "description": "TEST", "type": "dmss://system/SIMOS/NamedEntity"},
+            "4": {
+                "_id": "4",
+                "name": "ref2",
+                "description": "TEST",
+                "type": "dmss://system/SIMOS/NamedEntity",
+            },
         }
 
         def mock_get(document_id: str):
@@ -76,7 +100,12 @@ class DocumentServiceTestCase(unittest.TestCase):
         node: Node = self.mock_document_service.get_document(Address("$1", "testing"))
         contained_node: Node = node.get_by_path("storageUncontainedListOfFriends.1".split("."))
         contained_node.update(
-            {"_id": "4", "name": "ref2", "description": "TEST_MODIFY", "type": "dmss://system/SIMOS/NamedEntity"}
+            {
+                "_id": "4",
+                "name": "ref2",
+                "description": "TEST_MODIFY",
+                "type": "dmss://system/SIMOS/NamedEntity",
+            }
         )
         for sub_node in node.traverse():
             if not sub_node.storage_contained and not sub_node.is_array():
@@ -97,7 +126,10 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "John",
                 "type": "Person",
-                "containedPersonInfo": {"name": "", "type": "dmss://system/SIMOS/NamedEntity"},
+                "containedPersonInfo": {
+                    "name": "",
+                    "type": "dmss://system/SIMOS/NamedEntity",
+                },
             }
         }
 
@@ -114,7 +146,11 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         contained_node: Node = self.mock_document_service.get_document(Address("$1.containedPersonInfo", "testing"))
         contained_node.update(
-            {"name": "RENAMED", "description": "TEST_MODIFY", "type": "dmss://system/SIMOS/NamedEntity"}
+            {
+                "name": "RENAMED",
+                "description": "TEST_MODIFY",
+                "type": "dmss://system/SIMOS/NamedEntity",
+            }
         )
         self.mock_document_service.save(contained_node, "testing", initial=True)
 
@@ -128,8 +164,14 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "John",
                 "type": "Person",
-                "containedPersonInfo": {"name": "JohnInfo", "type": "dmss://system/SIMOS/NamedEntity"},
-                "storageUncontainedBestFriend": {"name": "Peter", "type": "dmss://system/SIMOS/NamedEntity"},
+                "containedPersonInfo": {
+                    "name": "JohnInfo",
+                    "type": "dmss://system/SIMOS/NamedEntity",
+                },
+                "storageUncontainedBestFriend": {
+                    "name": "Peter",
+                    "type": "dmss://system/SIMOS/NamedEntity",
+                },
                 "storageUncontainedListOfFriends": [],
             },
             "2": {"_id": "2", "name": "Mary", "type": "dmss://system/SIMOS/NamedEntity"},
@@ -156,7 +198,8 @@ class DocumentServiceTestCase(unittest.TestCase):
                 entity=doc_storage["2"],
                 blueprint_provider=self.mock_document_service.get_blueprint,
                 attribute=BlueprintAttribute(
-                    name="storageUncontainedListOfFriends", attribute_type="dmss://system/SIMOS/NamedEntity"
+                    name="storageUncontainedListOfFriends",
+                    attribute_type="dmss://system/SIMOS/NamedEntity",
                 ),
             )
         )
@@ -178,7 +221,10 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "1",
                 "name": "John",
                 "type": "Person",
-                "containedPersonInfo": {"name": "Nested", "type": "dmss://system/SIMOS/NamedEntity"},
+                "containedPersonInfo": {
+                    "name": "Nested",
+                    "type": "dmss://system/SIMOS/NamedEntity",
+                },
                 "storageUncontainedBestFriend": {
                     "address": "$5",
                     "type": SIMOS.REFERENCE.value,
@@ -361,7 +407,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         new_cage["cat"]["description"] = new_cat_description
 
         update_document_use_case(
-            data=new_cage, address=Address("$1", "test"), document_service=self.mock_document_service
+            data=new_cage,
+            address=Address("$1", "test"),
+            document_service=self.mock_document_service,
         )
         # Test that the "2" document has not been overwritten
         assert doc_storage["2"].get("description") == owner["description"]
@@ -420,7 +468,9 @@ class DocumentServiceTestCase(unittest.TestCase):
             "storageUncontainedListOfFriends": [],
         }
         update_document_use_case(
-            data=new_data, address=Address("$1.a", "testing"), document_service=self.mock_document_service
+            data=new_data,
+            address=Address("$1.a", "testing"),
+            document_service=self.mock_document_service,
         )
 
         assert doc_storage["1"]["a"]["description"] == "SOME DESCRIPTION"

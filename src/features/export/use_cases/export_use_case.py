@@ -67,6 +67,8 @@ def create_zip_export(document_service: DocumentService, address: Address, user:
 
 def export_use_case(user: User, address: str):
     memory_file = create_zip_export(
-        document_service=DocumentService(user=user), address=Address.from_absolute(address), user=user
+        document_service=DocumentService(user=user),
+        address=Address.from_absolute(address),
+        user=user,
     )
     return memory_file

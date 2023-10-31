@@ -8,7 +8,9 @@ from enums import SIMOS, BuiltinDataTypes
 
 
 def is_blueprint_instance_of(
-    minimum_blueprint_type: str, blueprint_type: str, get_blueprint: Callable[..., Blueprint]
+    minimum_blueprint_type: str,
+    blueprint_type: str,
+    get_blueprint: Callable[..., Blueprint],
 ) -> bool:
     """Takes in a blueprint and checks if it's an instance of a minimum blueprint
 
@@ -110,7 +112,7 @@ def _validate_entity(
 
     if implementation_mode == "exact":
         if keys_not_in_blueprint := [
-            key for key in entity.keys() if key not in ([*blueprint.get_attribute_names(), "_id"])
+            key for key in entity.keys() if key not in [*blueprint.get_attribute_names(), "_id"]
         ]:
             raise ValidationException(
                 f"Attributes '{keys_not_in_blueprint}' are not specified in the blueprint '{blueprint.path}'",
@@ -125,7 +127,8 @@ def _validate_entity(
     for attributeDefinition in blueprint.get_required_attributes():
         if entity.get(attributeDefinition.name, None) is None:
             raise ValidationException(
-                f"Missing required attribute '{attributeDefinition.name}'", debug=_get_debug_message(key)
+                f"Missing required attribute '{attributeDefinition.name}'",
+                debug=_get_debug_message(key),
             )
 
     for attributeDefinition in [blueprint.get_attribute_by_name(key) for key in entity.keys()]:
@@ -142,7 +145,9 @@ def _validate_entity(
             )
         elif attributeDefinition.is_primitive:
             _validate_primitive_attribute(
-                attributeDefinition, entity[attributeDefinition.name], f"{key}.{attributeDefinition.name}"
+                attributeDefinition,
+                entity[attributeDefinition.name],
+                f"{key}.{attributeDefinition.name}",
             )
         elif attributeDefinition.attribute_type == "any" and attributeDefinition.name == "default":
             default_attribute_definition = BlueprintAttribute(
@@ -161,7 +166,9 @@ def _validate_entity(
                 )
             elif default_attribute_definition.is_primitive:
                 _validate_primitive_attribute(
-                    default_attribute_definition, entity["default"], f"{key}.{default_attribute_definition.name}"
+                    default_attribute_definition,
+                    entity["default"],
+                    f"{key}.{default_attribute_definition.name}",
                 )
             else:
                 _validate_complex_attribute(
@@ -190,7 +197,8 @@ def _validate_complex_attribute(
 ):
     if not isinstance(attribute, dict):
         raise ValidationException(
-            f"'{attributeDefinition.name}' should be a dict, got {attribute}", debug=_get_debug_message(key)
+            f"'{attributeDefinition.name}' should be a dict, got {attribute}",
+            debug=_get_debug_message(key),
         )
     if not attribute or attributeDefinition.attribute_type == BuiltinDataTypes.BINARY.value:
         return
@@ -219,11 +227,27 @@ def _validate_list(
     implementation_mode: Literal["exact", "extend", "minimum"],
 ):
     if not isinstance(attribute, list):
-        raise ValidationException(f"'{attributeDefinition.name}' should be a list", debug=_get_debug_message(key))
+        raise ValidationException(
+            f"'{attributeDefinition.name}' should be a list",
+            debug=_get_debug_message(key),
+        )
     for i, item in enumerate(attribute):
         if dimensions > 1:
-            _validate_list(item, attributeDefinition, get_blueprint, f"{key}.{i}", dimensions - 1, implementation_mode)
+            _validate_list(
+                item,
+                attributeDefinition,
+                get_blueprint,
+                f"{key}.{i}",
+                dimensions - 1,
+                implementation_mode,
+            )
         elif attributeDefinition.is_primitive:
             _validate_primitive_attribute(attributeDefinition, item, f"{key}.{i}")
         else:
-            _validate_complex_attribute(attributeDefinition, item, get_blueprint, f"{key}.{i}", implementation_mode)
+            _validate_complex_attribute(
+                attributeDefinition,
+                item,
+                get_blueprint,
+                f"{key}.{i}",
+                implementation_mode,
+            )

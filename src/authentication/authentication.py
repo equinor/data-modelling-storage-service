@@ -19,7 +19,9 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
 )
 
 oauth2_scheme_optional_header = OAuth2AuthorizationCodeBearer(
-    authorizationUrl=config.OAUTH_AUTH_ENDPOINT, tokenUrl=config.OAUTH_TOKEN_ENDPOINT, auto_error=False
+    authorizationUrl=config.OAUTH_AUTH_ENDPOINT,
+    tokenUrl=config.OAUTH_TOKEN_ENDPOINT,
+    auto_error=False,
 )
 
 credentials_exception = HTTPException(

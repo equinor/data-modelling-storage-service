@@ -133,7 +133,14 @@ class DocumentService:
 
         """
         if initial and node.storage_contained:
-            self.save(node.parent, data_source_id, repository, path, combined_document_meta, initial)
+            self.save(
+                node.parent,
+                data_source_id,
+                repository,
+                path,
+                combined_document_meta,
+                initial,
+            )
         if not node.entity:
             return {}
         # If not passed a custom repository to save into, use the DocumentService's storage

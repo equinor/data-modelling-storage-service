@@ -38,7 +38,10 @@ class ExtendRecipeLinksTestCase(unittest.TestCase):
         )
 
         lookup.extends = {
-            "dmss://system/SIMOS/blob_types/PDF": ["dmss://system/SIMOS/Entity", "_default_"],
+            "dmss://system/SIMOS/blob_types/PDF": [
+                "dmss://system/SIMOS/Entity",
+                "_default_",
+            ],
             "dmss://system/SIMOS/Entity": ["some_other_base"],
         }
 
@@ -57,7 +60,10 @@ class ExtendRecipeLinksTestCase(unittest.TestCase):
                         {"name": "Edit", "type": "dmss://system/SIMOS/StorageRecipe"},
                     ],
                     "dmss://system/SIMOS/Entity": [
-                        {"name": "DEFAULT_CREATE", "type": "dmss://system/SIMOS/StorageRecipe"}
+                        {
+                            "name": "DEFAULT_CREATE",
+                            "type": "dmss://system/SIMOS/StorageRecipe",
+                        }
                     ],
                     "dmss://system/SIMOS/blob_types/PDF": [
                         {"name": "PDFView", "type": "dmss://system/SIMOS/StorageRecipe"}
@@ -67,7 +73,10 @@ class ExtendRecipeLinksTestCase(unittest.TestCase):
         )
 
         lookup.extends = {
-            "dmss://system/SIMOS/blob_types/PDF": ["dmss://system/SIMOS/Entity", "_default_"],
+            "dmss://system/SIMOS/blob_types/PDF": [
+                "dmss://system/SIMOS/Entity",
+                "_default_",
+            ],
             "dmss://system/SIMOS/Entity": ["some_other_base"],
         }
 

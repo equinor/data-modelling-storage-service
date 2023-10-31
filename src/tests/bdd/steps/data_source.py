@@ -29,7 +29,8 @@ def create_repositories(context):
         }
         DataSourceRepository(context.user).validate_repository(document)
         data_source_collection.update_one(
-            {"_id": row["data-source"]}, {"$set": {f"repositories.{row['name']}": document}}
+            {"_id": row["data-source"]},
+            {"$set": {f"repositories.{row['name']}": document}},
         )
 
 

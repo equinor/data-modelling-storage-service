@@ -43,8 +43,8 @@ class MongoDBClient(RepositoryInterface):
         document["_id"] = uid
         try:
             return self.handler[self.collection].insert_one(document).acknowledged
-        except DuplicateKeyError as error:
-            raise BadRequestException from error
+        except DuplicateKeyError as ex:
+            raise BadRequestException from ex
 
     def update(self, uid: str, document: dict) -> bool:
         return self.handler[self.collection].replace_one({"_id": uid}, document, upsert=True).acknowledged
@@ -70,10 +70,10 @@ class MongoDBClient(RepositoryInterface):
                 sleep(2)
                 if attempts > 2:
                     raise error
-            except gridfs.errors.FileExists as error:
+            except gridfs.errors.FileExists as ex:
                 message = f"Blob file with id '{uid}' already exists"
                 logger.warning(message)
-                raise BadRequestException(message=message) from error
+                raise BadRequestException(message=message) from ex
 
     def delete_blob(self, uid: str):
         return self.blob_handler.delete(uid)

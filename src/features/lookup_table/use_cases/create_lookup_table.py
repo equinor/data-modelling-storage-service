@@ -11,7 +11,10 @@ from storage.internal.lookup_tables import get_lookup, insert_lookup
 
 
 def create_lookup_table_use_case(
-    recipe_package_paths: list[str], name: str, user: User, repository_provider=get_data_source
+    recipe_package_paths: list[str],
+    name: str,
+    user: User,
+    repository_provider=get_data_source,
 ) -> None:
     """
     Create lookup table. If the lookup table already exist, the lookup table will be updated.

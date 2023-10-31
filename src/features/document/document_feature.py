@@ -21,7 +21,12 @@ from .use_cases.update_document_use_case import update_document_use_case
 router = APIRouter(tags=["default", "document"], prefix="/documents")
 
 
-@router.get("/{address:path}", operation_id="document_get", response_model=dict, responses=responses)
+@router.get(
+    "/{address:path}",
+    operation_id="document_get",
+    response_model=dict,
+    responses=responses,
+)
 @create_response(JSONResponse)
 def get(
     address: str,
@@ -89,7 +94,12 @@ def update(
     )
 
 
-@router.post("/{address:path}", operation_id="document_add", response_model=dict, responses=responses)
+@router.post(
+    "/{address:path}",
+    operation_id="document_add",
+    response_model=dict,
+    responses=responses,
+)
 @create_response(JSONResponse)
 def add_document(
     address: str,
@@ -135,7 +145,12 @@ def add_document(
 
 
 # TODO: Create test for this
-@router.post("-add-raw/{data_source_id}", operation_id="document_add_simple", response_model=str, responses=responses)
+@router.post(
+    "-add-raw/{data_source_id}",
+    operation_id="document_add_simple",
+    response_model=str,
+    responses=responses,
+)
 @create_response(PlainTextResponse)
 def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt_or_pat)):
     """Adding a document 'as-is' to the data source, mainly used for bootstrapping and imports.
@@ -169,7 +184,12 @@ def remove(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     return remove_use_case(user=user, address=address)
 
 
-@router.get("-existence/{address:path}", operation_id="document_check", response_model=bool, responses=responses)
+@router.get(
+    "-existence/{address:path}",
+    operation_id="document_check",
+    response_model=bool,
+    responses=responses,
+)
 @create_response(JSONResponse)
 def check_existence(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     """Checks if an entity exists, given an address.

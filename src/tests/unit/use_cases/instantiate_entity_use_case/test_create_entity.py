@@ -61,28 +61,37 @@ class CreateEntityTestCase(unittest.TestCase):
         self.assertEqual(expected_entity, entity)
 
     def test_is_not_json(self):
-        self.assertEqual(False, CreateEntity.is_json(BlueprintAttribute(name="", attribute_type="string", default="")))
         self.assertEqual(
-            False, CreateEntity.is_json(BlueprintAttribute(name="", attribute_type="string", default=" [] some"))
+            False,
+            CreateEntity.is_json(BlueprintAttribute(name="", attribute_type="string", default="")),
         )
         self.assertEqual(
-            False, CreateEntity.is_json(BlueprintAttribute(name="", attribute_type="boolean", default=False))
+            False,
+            CreateEntity.is_json(BlueprintAttribute(name="", attribute_type="string", default=" [] some")),
         )
         self.assertEqual(
-            False, CreateEntity.is_json(BlueprintAttribute(name="", attribute_type="integer", default=123))
+            False,
+            CreateEntity.is_json(BlueprintAttribute(name="", attribute_type="boolean", default=False)),
         )
         self.assertEqual(
-            False, CreateEntity.is_json(BlueprintAttribute(name="", attribute_type="string", default="{'a': 123}"))
+            False,
+            CreateEntity.is_json(BlueprintAttribute(name="", attribute_type="integer", default=123)),
+        )
+        self.assertEqual(
+            False,
+            CreateEntity.is_json(BlueprintAttribute(name="", attribute_type="string", default="{'a': 123}")),
         )
 
     def test_is_json(self):
         self.assertEqual(
-            True, CreateEntity.is_json(BlueprintAttribute(name="", attributeType="some", default=[], dimensions="*"))
+            True,
+            CreateEntity.is_json(BlueprintAttribute(name="", attributeType="some", default=[], dimensions="*")),
         )
         self.assertEqual(
             True,
             CreateEntity.is_json(BlueprintAttribute(name="", attributeType="some", default=["a", "b"], dimensions="1")),
         )
         self.assertEqual(
-            True, CreateEntity.is_json(BlueprintAttribute(name="", attribute_type="some", default={"foo": "bar"}))
+            True,
+            CreateEntity.is_json(BlueprintAttribute(name="", attribute_type="some", default={"foo": "bar"})),
         )

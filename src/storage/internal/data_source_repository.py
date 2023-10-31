@@ -52,8 +52,8 @@ class DataSourceRepository:
                     raise BadRequestException(
                         f"The database named '{repo['database']}' " "is a system reserved database name."
                     )
-        except Exception as error:
-            raise BadRequestException(error) from error
+        except Exception as ex:
+            raise BadRequestException(ex) from ex
 
     def list(self) -> list[dict]:
         all_sources = []
@@ -72,7 +72,8 @@ class DataSourceRepository:
             result = data_source_collection.update_one({"_id": id}, {"$set": document}, upsert=True)
         except BadRequestException as ex:
             raise BadRequestException(
-                message=f"Failed to create data source '{id}'. The posted entity is invalid...", data=document
+                message=f"Failed to create data source '{id}'. The posted entity is invalid...",
+                data=document,
             ) from ex
         except DuplicateKeyError as ex:
             logger.warning(f"Tried to create a datasource that already exists ('{id}')")

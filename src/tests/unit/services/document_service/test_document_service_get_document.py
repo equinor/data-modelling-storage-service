@@ -67,7 +67,10 @@ class GetDocumentInputTestCase(unittest.TestCase):
         self.document_repository.get = self.mock_get
         self.document_repository.find = self.mock_find
 
-        simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
+        simos_blueprints = [
+            "dmss://system/SIMOS/NamedEntity",
+            "dmss://system/SIMOS/Reference",
+        ]
         mock_blueprint_folder = "src/tests/unit/services/document_service/mock_blueprints/car_rental_blueprints"
         mock_blueprints_and_file_names = {
             "CarRental": "CarRental.blueprint.json",
@@ -82,7 +85,8 @@ class GetDocumentInputTestCase(unittest.TestCase):
             simos_blueprints_available_for_test=simos_blueprints,
         )
         self.document_service = get_mock_document_service(
-            repository_provider=lambda x, y: self.document_repository, blueprint_provider=mock_blueprint_provider
+            repository_provider=lambda x, y: self.document_repository,
+            blueprint_provider=mock_blueprint_provider,
         )
 
     def mock_get(self, document_id: str):
@@ -97,7 +101,12 @@ class GetDocumentInputTestCase(unittest.TestCase):
         return None
 
     def mock_find(self, query: dict) -> list[dict]:
-        documents: list[dict] = [self.car_rental_company, self.engine, self.fuel_pump, self.customer]
+        documents: list[dict] = [
+            self.car_rental_company,
+            self.engine,
+            self.fuel_pump,
+            self.customer,
+        ]
         for key, value in query.items():
             documents = list(filter(lambda x: key in x and x[key] == value, documents))
         return documents

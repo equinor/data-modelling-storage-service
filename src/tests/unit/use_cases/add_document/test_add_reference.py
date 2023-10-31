@@ -16,7 +16,10 @@ from tests.unit.mocks.mock_recipe_provider import MockStorageRecipeProvider
 
 class ReferenceTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        simos_blueprints = ["dmss://system/SIMOS/NamedEntity", "dmss://system/SIMOS/Reference"]
+        simos_blueprints = [
+            "dmss://system/SIMOS/NamedEntity",
+            "dmss://system/SIMOS/Reference",
+        ]
         mock_blueprint_folder = "src/tests/unit/use_cases/add_document/mock_data"
         mock_blueprints_and_file_names = {
             "uncontained_blueprint": "uncontained_blueprint.blueprint.json",
@@ -153,7 +156,10 @@ class ReferenceTestCase(unittest.TestCase):
         repository.update = mock_update
         self.document_service.repository_provider = lambda x, y: repository
 
-        reference_entity_with_missing_attribute = {"address": "$123", "type": SIMOS.REFERENCE.value}
+        reference_entity_with_missing_attribute = {
+            "address": "$123",
+            "type": SIMOS.REFERENCE.value,
+        }
         with self.assertRaises(ValidationException):
             update_document_use_case(
                 data=reference_entity_with_missing_attribute,
@@ -194,7 +200,9 @@ class ReferenceTestCase(unittest.TestCase):
         self.document_service.repository_provider = lambda x, y: repository
 
         self.assertRaises(
-            ValidationException, self.document_service.remove, Address("$1.uncontained_in_every_way", "testing")
+            ValidationException,
+            self.document_service.remove,
+            Address("$1.uncontained_in_every_way", "testing"),
         )
 
     def test_remove_nested_reference(self):

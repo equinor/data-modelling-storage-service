@@ -18,7 +18,12 @@ from .use_cases.set_acl_use_case import set_acl_use_case
 router = APIRouter(tags=["default", "access_control"], prefix="/acl")
 
 
-@router.put("/{data_source_id}/{document_id}", operation_id="set_acl", response_model=str, responses=responses)
+@router.put(
+    "/{data_source_id}/{document_id}",
+    operation_id="set_acl",
+    response_model=str,
+    responses=responses,
+)
 @create_response(PlainTextResponse)
 def set_acl(
     data_source_id: str,
@@ -56,7 +61,10 @@ def set_acl(
 
 
 @router.get(
-    "/{data_source_id}/{document_id}", operation_id="get_acl", response_model=AccessControlList, responses=responses
+    "/{data_source_id}/{document_id}",
+    operation_id="get_acl",
+    response_model=AccessControlList,
+    responses=responses,
 )
 @create_response(JSONResponse)
 def get_acl(data_source_id: str, document_id: str, user: User = Depends(auth_w_jwt_or_pat)):
@@ -73,5 +81,7 @@ def get_acl(data_source_id: str, document_id: str, user: User = Depends(auth_w_j
     - ACL: The access control list requested.
     """
     return get_acl_use_case(
-        data_source_id=data_source_id, document_id=document_id, data_source_repository=DataSourceRepository(user)
+        data_source_id=data_source_id,
+        document_id=document_id,
+        data_source_repository=DataSourceRepository(user),
     ).dict()

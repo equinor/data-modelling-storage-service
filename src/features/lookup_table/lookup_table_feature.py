@@ -21,7 +21,11 @@ router = APIRouter(tags=["default", "lookup-table"])
     responses={**responses},
 )
 @create_response()
-def create_lookup(application: str, recipe_package: list[str] = Query(), user: User = Depends(auth_w_jwt_or_pat)):
+def create_lookup(
+    application: str,
+    recipe_package: list[str] = Query(),
+    user: User = Depends(auth_w_jwt_or_pat),
+):
     """Creates a Recipe Lookup Table for an Application, given a Package Containing RecipeLinks.
 
     This endpoint creates a lookup table for an application. This lookup table is used to find UI- and Storage recipes given a blueprint.

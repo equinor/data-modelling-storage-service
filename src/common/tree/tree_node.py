@@ -135,7 +135,7 @@ class NodeBase:
         return f"Key: '{self.key}', Type: '{self.type}', Node_ID: '{self.node_id}'"
 
     def show_tree(self, level=0):
-        print("{}{}".format("." * level, self))
+        print(f"{'.' * level}{self}")
         for node in self.children:
             node.show_tree(level + 2)
 
@@ -206,7 +206,10 @@ class NodeBase:
                 self.children.pop(i)
 
     def duplicate_attribute(self, attribute: str):
-        if next((child for child in self.children if child.entity.get("name", self.attribute.name) == attribute), None):  # type: ignore
+        if next(
+            (child for child in self.children if child.entity.get("name", self.attribute.name) == attribute),  # type: ignore
+            None,
+        ):
             return True
 
     def should_have_id(self):
@@ -231,7 +234,13 @@ class Node(NodeBase):
         recipe_provider: Callable[..., list[StorageRecipe]] | None = None,
     ):
         super().__init__(
-            key, attribute, uid, parent, blueprint_provider, entity=entity, recipe_provider=recipe_provider
+            key,
+            attribute,
+            uid,
+            parent,
+            blueprint_provider,
+            entity=entity,
+            recipe_provider=recipe_provider,
         )
         self.entity: dict = entity if entity else {}
 
@@ -313,7 +322,9 @@ class Node(NodeBase):
             return storage_attribute
         # If no parent, the node is always contained, and get storageAffinity from the nodes own storageRecipe
         return StorageAttribute(
-            name=self.type, contained=True, storage_affinity=self.storage_recipes[0].storage_affinity
+            name=self.type,
+            contained=True,
+            storage_affinity=self.storage_recipes[0].storage_affinity,
         )
 
     def generate_id(self):

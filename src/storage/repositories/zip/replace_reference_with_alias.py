@@ -38,7 +38,11 @@ def replace_absolute_references_in_entity_with_alias(entity: dict, dependencies:
 
     (for example, replace "dmss://system/SIMOS/Package" with "CORE:Package".)
     """
-    attributes_to_update = ("type", "attributeType", "_blueprintPath_")  # These keys may contain a reference
+    attributes_to_update = (
+        "type",
+        "attributeType",
+        "_blueprintPath_",
+    )  # These keys may contain a reference
     EXTENDS = "extends"  # Extends is a special attribute in an entity that contains a list of references
 
     for attribute, attribute_value in entity.items():

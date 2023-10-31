@@ -67,7 +67,10 @@ class DataSource:
 
     def _lookup(self, document_id) -> DocumentLookUp:
         if res := self.data_source_collection.find_one(
-            filter={"_id": self.name, f"documentLookUp.{document_id}.lookup_id": document_id},
+            filter={
+                "_id": self.name,
+                f"documentLookUp.{document_id}.lookup_id": document_id,
+            },
             projection={f"documentLookUp.{document_id}": True},
         ):
             return DocumentLookUp(**res["documentLookUp"][document_id])
@@ -82,7 +85,8 @@ class DataSource:
 
     def _update_lookup(self, lookup: DocumentLookUp):
         return self.data_source_collection.update_one(
-            filter={"_id": self.name}, update={"$set": {f"documentLookUp.{lookup.lookup_id}": lookup.dict()}}
+            filter={"_id": self.name},
+            update={"$set": {f"documentLookUp.{lookup.lookup_id}": lookup.dict()}},
         )
 
     def update_access_control(self, document_id: str, acl: AccessControlList) -> None:
@@ -98,7 +102,8 @@ class DataSource:
 
     def _remove_lookup(self, lookup_id):
         return self.data_source_collection.update_one(
-            filter={"_id": self.name}, update={"$unset": {f"documentLookUp.{lookup_id}": ""}}
+            filter={"_id": self.name},
+            update={"$unset": {f"documentLookUp.{lookup_id}": ""}},
         )
 
     def get(self, uid: str | UUID4) -> dict:
@@ -122,7 +127,12 @@ class DataSource:
                     pass
         return documents_with_access
 
-    def update(self, document: dict, storage_attribute: StorageAttribute = None, parent_id: str | None = None) -> None:
+    def update(
+        self,
+        document: dict,
+        storage_attribute: StorageAttribute = None,
+        parent_id: str | None = None,
+    ) -> None:
         """
         Create or update a document.
         :param document: A dict of the document to create or update.
@@ -180,7 +190,11 @@ class DataSource:
 
     def update_blob(self, uid: str, filename: str, content_type: str, file) -> None:
         repo = self._get_repo_from_storage_attribute(
-            StorageAttribute(name="generic_blob", contained=False, storage_affinity=StorageDataTypes.BLOB),
+            StorageAttribute(
+                name="generic_blob",
+                contained=False,
+                storage_affinity=StorageDataTypes.BLOB,
+            ),
             strict=True,
         )
         meta = {

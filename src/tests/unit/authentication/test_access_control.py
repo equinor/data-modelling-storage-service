@@ -12,7 +12,11 @@ class TestAccessControl(unittest.TestCase):
         self.user = User(user_id="0", roles=[], scope=AccessLevel.WRITE)
         self.mock_acl = AccessControlList(
             owner=self.OWNER_ID,
-            roles={"reader": AccessLevel.READ, "writer": AccessLevel.WRITE, "no-access": AccessLevel.NONE},
+            roles={
+                "reader": AccessLevel.READ,
+                "writer": AccessLevel.WRITE,
+                "no-access": AccessLevel.NONE,
+            },
             others=AccessLevel.READ,
         )
         self.original_config = config.copy()

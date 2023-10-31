@@ -43,7 +43,10 @@ class ZipFileClient(RepositoryInterface):
             binary_data = json_data.encode()
             self.zip_file.writestr(write_to, binary_data)
         elif "_meta_" in entity:
-            self.zip_file.writestr(f"{Path(write_to).parent}/package.json", json.dumps(entity["_meta_"]).encode())
+            self.zip_file.writestr(
+                f"{Path(write_to).parent}/package.json",
+                json.dumps(entity["_meta_"]).encode(),
+            )
 
     def get(self, uid: str):
         return "Not implemented on ZipFile repository!"

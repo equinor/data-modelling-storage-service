@@ -11,7 +11,12 @@ from .use_cases.add_file_use_case import add_file_use_case
 router = APIRouter(tags=["default", "file"], prefix="/files")
 
 
-@router.post("/{data_source_id}", operation_id="file_upload", response_model=dict, responses=responses)
+@router.post(
+    "/{data_source_id}",
+    operation_id="file_upload",
+    response_model=dict,
+    responses=responses,
+)
 @create_response(JSONResponse)
 async def upload_file(
     data_source_id: str,

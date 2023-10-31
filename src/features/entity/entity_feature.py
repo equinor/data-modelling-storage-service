@@ -39,7 +39,11 @@ def instantiate(entity: Entity, user: User = Depends(auth_w_jwt_or_pat)):
 
 @router.post("/validate", operation_id="validate_entity", responses=responses)
 @create_response(JSONResponse)
-def validate(entity: Entity, as_type: TypeConstrainedString | None = None, user: User = Depends(auth_w_jwt_or_pat)):
+def validate(
+    entity: Entity,
+    as_type: TypeConstrainedString | None = None,
+    user: User = Depends(auth_w_jwt_or_pat),
+):
     """Validate an entity according to its blueprint.
 
     This endpoint compares the entity to the specifications of its blueprint. The entity's blueprint is specified
@@ -57,7 +61,11 @@ def validate(entity: Entity, as_type: TypeConstrainedString | None = None, user:
     return validate_entity_use_case(entity=entity, as_type=as_type, user=user)
 
 
-@router.post("/validate-existing-entity/{address:path}", operation_id="validate_existing_entity", responses=responses)
+@router.post(
+    "/validate-existing-entity/{address:path}",
+    operation_id="validate_existing_entity",
+    responses=responses,
+)
 @create_response(JSONResponse)
 def validate_existing(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     """Validate an entity stored in the database according to its blueprint .

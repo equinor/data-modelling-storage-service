@@ -95,7 +95,9 @@ def _add_document_to_entity_or_list(
         parent_address_as_string, last_attribute_in_address = split_address_path
 
         parent_address: Address = Address(
-            protocol=address.protocol, path=parent_address_as_string, data_source=address.data_source
+            protocol=address.protocol,
+            path=parent_address_as_string,
+            data_source=address.data_source,
         )
         parent_node: Node = document_service.get_document(parent_address)
 

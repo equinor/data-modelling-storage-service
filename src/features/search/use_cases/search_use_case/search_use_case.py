@@ -20,7 +20,13 @@ from storage.internal.data_source_repository import (
 from storage.repositories.mongo import MongoDBClient
 
 
-def _search(data_source_id, search_data, dotted_attribute_path, user: User, get_data_source: Callable):
+def _search(
+    data_source_id,
+    search_data,
+    dotted_attribute_path,
+    user: User,
+    get_data_source: Callable,
+):
     repository: DataSource = get_data_source(data_source_id, user)
 
     if not isinstance(repository.get_default_repository().client, MongoDBClient):

@@ -68,7 +68,12 @@ class TreeNodeToDictTestCase(unittest.TestCase):
             attribute=BlueprintAttribute(name="", attribute_type="Bush"),
         )
 
-        nested_2_reference_data = {"_id": "2", "name": "Reference", "description": "", "type": "Garden"}
+        nested_2_reference_data = {
+            "_id": "2",
+            "name": "Reference",
+            "description": "",
+            "type": "Garden",
+        }
         Node(
             key="reference",
             uid="2",
@@ -111,7 +116,12 @@ class TreeNodeToDictTestCase(unittest.TestCase):
                     "name": "Nested",
                     "description": "",
                     "type": "Bush",
-                    "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
+                    "reference": {
+                        "_id": "2",
+                        "name": "Reference",
+                        "description": "",
+                        "type": "Garden",
+                    },
                 },
             },
             "list": [{"name": "Item1", "description": "", "type": "Garden"}],
@@ -126,7 +136,12 @@ class TreeNodeToDictTestCase(unittest.TestCase):
                 "name": "Nested",
                 "description": "",
                 "type": "Bush",
-                "reference": {"_id": "2", "name": "Reference", "description": "", "type": "Garden"},
+                "reference": {
+                    "_id": "2",
+                    "name": "Reference",
+                    "description": "",
+                    "type": "Garden",
+                },
             },
         }
         item_1_actual = {"name": "Item1", "description": "", "type": "Garden"}

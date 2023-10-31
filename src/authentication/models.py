@@ -88,7 +88,11 @@ class AccessControlList(BaseModel):
 
     @classmethod
     def default(cls):
-        return cls(owner=config.DMSS_ADMIN, roles={config.DMSS_ADMIN_ROLE: AccessLevel.WRITE}, others=AccessLevel.READ)
+        return cls(
+            owner=config.DMSS_ADMIN,
+            roles={config.DMSS_ADMIN_ROLE: AccessLevel.WRITE},
+            others=AccessLevel.READ,
+        )
 
     @classmethod
     def default_with_owner(cls, user: User):

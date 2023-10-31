@@ -32,7 +32,12 @@ def pretty_print_should_contain_diff(expected: dict, actual: dict):
     if changes or missing_in_expected:
         for c in changes:
             location = c[1] if isinstance(c[1], str) else ".".join([str(v) for v in c[1]])
-            print_pygments({"location": location, "difference": {"actual": c[2][0], "expected": c[2][1]}})
+            print_pygments(
+                {
+                    "location": location,
+                    "difference": {"actual": c[2][0], "expected": c[2][1]},
+                }
+            )
         for m in missing_in_expected:
             location = m[1] if isinstance(m[1], str) else ".".join([str(v) for v in m[1]])
             print_pygments({"location": location, "missing value from actual response": m[2]})
@@ -43,9 +48,7 @@ def pretty_print_should_contain_diff(expected: dict, actual: dict):
 def step_response_status(context, status):
     if context.response.status_code != STATUS_CODES[status]:
         pp = pprint.PrettyPrinter(indent=2)
-        pretty_print = "\n Actual: \n {} \n Expected: \n {}".format(
-            pp.pformat(context.response.status_code), pp.pformat(STATUS_CODES[status])
-        )
+        pretty_print = f"\n Actual: \n {pp.pformat(context.response.status_code)} \n Expected: \n {pp.pformat(STATUS_CODES[status])}"
         print(pretty_print)
         print(context.response.json())
     assert context.response.status_code == STATUS_CODES[status]
@@ -61,7 +64,12 @@ def step_impl_equal(context):
         changes = [diff for diff in difference if diff[0] == "change"]
         for change in changes:
             location = change[1] if isinstance(change[1], str) else ".".join([str(v) for v in change[1]])
-            print_pygments({"location": location, "difference": {"actual": change[2][0], "expected": change[2][1]}})
+            print_pygments(
+                {
+                    "location": location,
+                    "difference": {"actual": change[2][0], "expected": change[2][1]},
+                }
+            )
         missing = [diff for diff in difference if diff[0] == "add"]
         for m in missing:
             print_pygments({"missing": m[2]})
