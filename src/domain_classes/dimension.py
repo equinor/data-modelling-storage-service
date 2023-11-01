@@ -1,4 +1,6 @@
 # Convert dmt attribute_types to python types. If complex, return type as string.
+from typing import Any
+
 from enums import BuiltinDataTypes
 
 
@@ -27,7 +29,9 @@ class Dimension:
         a string value is stored.
         """
         self.dimensions: list[str] = dimensions.split(",")
-        self.type: type[bool] | type[int] | type[float] | type[str] | str = _get_data_type_from_dmt_type(attribute_type)
+        self.type: type[bool] | type[int] | type[float] | type[str] | str | Any = _get_data_type_from_dmt_type(
+            attribute_type
+        )
         self.value = None
 
     def is_array(self) -> bool:

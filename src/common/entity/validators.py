@@ -37,6 +37,8 @@ def is_blueprint_instance_of(
 
 
 def _validate_primitive_attribute(attribute: BlueprintAttribute, value: bool | int | float | str, key: str):
+    if attribute.attribute_type == BuiltinDataTypes.ANY.value:
+        return  # If type is "any", no need to validate further
     python_type = BuiltinDataTypes(attribute.attribute_type).to_py_type()
     if attribute.attribute_type == "number" and isinstance(value, int):  # float is considered a superset containing int
         return
@@ -148,12 +150,6 @@ def _validate_entity(
                 len(attributeDefinition.dimensions.dimensions) if attributeDefinition.dimensions else 0,
                 implementation_mode,
             )
-        elif attributeDefinition.is_primitive:
-            _validate_primitive_attribute(
-                attributeDefinition,
-                entity[attributeDefinition.name],
-                f"{key}.{attributeDefinition.name}",
-            )
         elif attributeDefinition.attribute_type == "any" and attributeDefinition.name == "default":
             default_attribute_definition = BlueprintAttribute(
                 name=attributeDefinition.name,
@@ -187,6 +183,12 @@ def _validate_entity(
                     f"{key}.{default_attribute_definition.name}",
                     "extend",
                 )
+        elif attributeDefinition.is_primitive:
+            _validate_primitive_attribute(
+                attributeDefinition,
+                entity[attributeDefinition.name],
+                f"{key}.{attributeDefinition.name}",
+            )
         else:
             _validate_complex_attribute(
                 attributeDefinition,

@@ -36,6 +36,11 @@ Feature: Validate Default Entity
           "address": "$AnimalBlueprint",
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "storage"
+        },
+        {
+          "address": "$SomeBlueprint",
+          "type": "dmss://system/SIMOS/Reference",
+          "referenceType": "storage"
         }
       ]
     }
@@ -189,6 +194,24 @@ Feature: Validate Default Entity
     }
     """
 
+    Given there exist document with id "SomeBlueprint" in data source "data-source-name"
+    """
+    {
+      "name": "SomeBlueprint",
+      "type": "dmss://system/SIMOS/Blueprint",
+      "attributes": [
+        {
+          "name": "pets",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "number",
+          "label": "Number of pets",
+          "optional": false,
+          "default": "five"
+        }
+      ]
+    }
+    """
+
   Scenario: Validate existing simple example
 
     Given i access the resource url "/api/entity/validate-existing-entity/data-source-name/root_package/PersonBlueprint"
@@ -211,5 +234,19 @@ Feature: Validate Default Entity
         "ski": "Fisher",
         "type": "dmss://data-source-name/root_package/NorwegianBlueprint"
         }
+    }
+    """
+
+    Given i access the resource url "/api/entity/validate-existing-entity/data-source-name/root_package/SomeBlueprint"
+    When i make a "POST" request
+    Then the response status should be "Bad Request"
+    And the response should contain
+    """
+    {
+      "status": 400,
+      "type": "ValidationException",
+      "message": "Attribute 'default' should be type 'float'. Got 'str'. Value: five",
+      "debug": "Location: Entity in key '^.attributes.0.default'",
+      "data": null
     }
     """
