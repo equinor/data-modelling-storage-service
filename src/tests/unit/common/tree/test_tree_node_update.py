@@ -6,6 +6,7 @@ from authentication.models import User
 from common.address import Address
 from common.exceptions import BadRequestException, ValidationException
 from common.tree.tree_node import Node
+from common.tree.tree_node_serializer import tree_node_from_dict
 from enums import REFERENCE_TYPES, SIMOS
 from features.document.use_cases.add_document_use_case import add_document_use_case
 from features.document.use_cases.update_document_use_case import (
@@ -22,6 +23,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         simos_blueprints = [
             "dmss://system/SIMOS/NamedEntity",
             "dmss://system/SIMOS/Reference",
+            "dmss://system/SIMOS/Action",
+            "dmss://system/SIMOS/Blueprint",
+            "dmss://system/SIMOS/BlueprintAttribute",
         ]
         mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
@@ -162,6 +166,52 @@ class DocumentServiceTestCase(unittest.TestCase):
         )
 
         self.assertDictEqual(self.doc_storage["1"], entity_after)
+
+    def test_update_blueprint_attribute_default_with_int(self):
+        blueprint = self.mock_blueprint_provider.get_blueprint("dmss://system/SIMOS/Action").to_dict()
+        blueprint_node = tree_node_from_dict(blueprint, self.mock_blueprint_provider.get_blueprint)
+        attribute_node = blueprint_node.get_by_path(["attributes", "7"])
+
+        new_value = {
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "name": "method",
+            "description": "What method to call inside runnable.tsx",
+            "attributeType": "number",
+            "default": 67,
+        }
+        attribute_node.update(new_value)
+        self.assertEqual(attribute_node.entity["default"], 67)
+
+    def test_update_blueprint_attribute_default_with_dict(self):
+        blueprint = self.mock_blueprint_provider.get_blueprint("dmss://system/SIMOS/Action").to_dict()
+        blueprint_node = tree_node_from_dict(blueprint, self.mock_blueprint_provider.get_blueprint)
+        attribute_node = blueprint_node.get_by_path(["attributes", "7"])
+
+        new_value = {
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "name": "method",
+            "description": "What method to call inside runnable.tsx",
+            # There is no check if default value matches 'attributeType' in node.update(). It should happen before...
+            "attributeType": "number",
+            "default": {"type": "test"},
+        }
+        attribute_node.update(new_value)
+        self.assertDictEqual(attribute_node.entity["default"], {"type": "test"})
+
+    def test_update_blueprint_attribute_default_with_bool(self):
+        blueprint = self.mock_blueprint_provider.get_blueprint("dmss://system/SIMOS/Action").to_dict()
+        blueprint_node = tree_node_from_dict(blueprint, self.mock_blueprint_provider.get_blueprint)
+        attribute_node = blueprint_node.get_by_path(["attributes", "7"])
+
+        new_value = {
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "name": "method",
+            "description": "What method to call inside runnable.tsx",
+            "attributeType": "number",
+            "default": True,
+        }
+        attribute_node.update(new_value)
+        self.assertEqual(attribute_node.entity["default"], True)
 
     def test_add_duplicate(self):
         self.doc_storage = {

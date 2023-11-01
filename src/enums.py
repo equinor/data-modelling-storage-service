@@ -1,6 +1,7 @@
 from enum import Enum
+from typing import Any
 
-PRIMITIVES = {"string", "number", "integer", "boolean"}
+PRIMITIVES = {"string", "number", "integer", "boolean", "any"}
 
 
 class Protocols(Enum):
@@ -14,6 +15,7 @@ class BuiltinDataTypes(Enum):
     BOOL = "boolean"
     OBJECT = "object"  # Any complex type (i.e. any blueprint type)
     BINARY = "binary"
+    ANY = "any"
 
     def to_py_type(self):
         if self is BuiltinDataTypes.BOOL:
@@ -26,6 +28,8 @@ class BuiltinDataTypes(Enum):
             return str
         elif self is BuiltinDataTypes.OBJECT:
             return dict
+        elif self is BuiltinDataTypes.ANY:
+            return Any
 
 
 class RepositoryType(Enum):
