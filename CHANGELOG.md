@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.8.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.7.1...v1.8.0) (2023-11-06)
+
+
+### Features
+
+* add optional empty list ([50acd30](https://github.com/equinor/data-modelling-storage-service/commit/50acd306f57b1251f1c92104c615e4641848d7d4))
+
+
+### Bug Fixes
+
+* add entity information in ValidationExceptions ([a919163](https://github.com/equinor/data-modelling-storage-service/commit/a919163992d9e816b6af4ee6a063f5d47286c20f))
+* don't assume same datasouce on resolving next level ([f973686](https://github.com/equinor/data-modelling-storage-service/commit/f97368639d0f3d6f3bddff8aa6774e8447aa9579))
+* don't validate primitive attributes of type any ([763ac1a](https://github.com/equinor/data-modelling-storage-service/commit/763ac1ad653d0a795b145c61cfc18c866d8330d8))
+
+
+### Styles
+
+* run line length formatting ([91718cf](https://github.com/equinor/data-modelling-storage-service/commit/91718cf5d07d6eacf9119688323f5240c64f21c4))
+
+
+### Miscellaneous Chores
+
+* bump FastAPI and gunicorn ([2e52e7a](https://github.com/equinor/data-modelling-storage-service/commit/2e52e7a936239a265322153d18e2eb8e98e535bc))
+* bump python -&gt; 3.12 ([340a4a4](https://github.com/equinor/data-modelling-storage-service/commit/340a4a463db2619287f663961747ab425c4d4fec))
+* fix mypy errors ([71d1305](https://github.com/equinor/data-modelling-storage-service/commit/71d1305cd942e5468e53f85151a7f7fb90c77725))
+* fix ruff linting violations ([0848024](https://github.com/equinor/data-modelling-storage-service/commit/0848024e660793cf928cfff1001db07999f72c98))
+
+
+### Build System
+
+* bump openapi generator ([01e8d38](https://github.com/equinor/data-modelling-storage-service/commit/01e8d38c7c804bdd8850e973ec0e433554d1e82d))
+* replace black, pycln, isort, flake8, bandit, with RUFF ([f8e2759](https://github.com/equinor/data-modelling-storage-service/commit/f8e275975d4c8da104905bdb9318429b61b5b333))
+
 ## [1.7.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.7.0...v1.7.1) (2023-10-27)
 
 
