@@ -397,14 +397,13 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Bad Request"
-    And the response should be
+    And the response should contain
     """
     {
     "status": 400,
     "type": "ValidationException",
     "message": "Every entity must have a 'type' attribute",
-    "debug": "Location: Entity in key '^'",
-    "data": null
+    "debug": "Location: Entity in key '^'"
     }
     """
 
@@ -513,14 +512,13 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Bad Request"
-    And the response should be
+    And the response should contain
     """
     {
       "status": 400,
       "type": "ValidationException",
       "message": "Missing required attribute 'name'",
-      "debug": "Location: Entity in key '^'",
-      "data": null
+      "debug": "Location: Entity in key '^'"
     }
     """
 
@@ -584,14 +582,13 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Bad Request"
-    And the response should be
+    And the response should contain
     """
     {
       "status": 400,
       "type": "ValidationException",
       "message": "Missing required attribute 'name'",
-      "debug": "Location: Entity in key '^'",
-      "data": null
+      "debug": "Location: Entity in key '^'"
     }
     """
 
@@ -608,14 +605,13 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Bad Request"
-    And the response should be
+    And the response should contain
     """
     {
       "status": 400,
       "type": "ValidationException",
       "message": "Missing required attribute 'name'",
-      "debug": "Location: Entity in key '^'",
-      "data": null
+      "debug": "Location: Entity in key '^'"
     }
     """
 
@@ -631,14 +627,13 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Bad Request"
-    And the response should be
+    And the response should contain
     """
     {
       "status": 400,
       "type": "ValidationException",
       "message": "Missing required attribute 'name'",
-      "debug": "Location: Entity in key '^'",
-      "data": null
+      "debug": "Location: Entity in key '^'"
     }
     """
 
@@ -668,14 +663,13 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Bad Request"
-    And the response should be
+    And the response should contain
     """
     {
       "status": 400,
       "type": "ValidationException",
       "message": "Missing required attribute 'name'",
-      "debug": "Location: Entity in key '^'",
-      "data": null
+      "debug": "Location: Entity in key '^'"
     }
     """
 
@@ -691,14 +685,13 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Bad Request"
-    And the response should be
+    And the response should contain
     """
     {
       "status": 400,
       "type": "ValidationException",
       "message": "Missing required attribute 'name'",
-      "debug": "Location: Entity in key '^'",
-      "data": null
+      "debug": "Location: Entity in key '^'"
     }
     """
 

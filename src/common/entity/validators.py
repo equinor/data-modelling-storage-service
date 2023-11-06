@@ -44,6 +44,7 @@ def _validate_primitive_attribute(attribute: BlueprintAttribute, value: bool | i
         raise ValidationException(
             f"Attribute '{attribute.name}' should be type '{python_type.__name__}'. Got '{type(value).__name__}'. Value: {value}",
             debug=_get_debug_message(key),
+            data=attribute.to_dict(),
         )
 
 
@@ -62,7 +63,9 @@ def validate_entity_against_self(entity: dict | list, get_blueprint: Callable[..
             validate_entity_against_self(item, get_blueprint, key=f"{key}.{i}")
         return
     if not entity.get("type"):
-        raise ValidationException("Every entity must have a 'type' attribute", debug=_get_debug_message(key))
+        raise ValidationException(
+            "Every entity must have a 'type' attribute", debug=_get_debug_message(key), data=entity
+        )
     _validate_entity(entity, get_blueprint, get_blueprint(entity["type"]), "exact", key)
 
 
@@ -106,6 +109,7 @@ def _validate_entity(
                 raise ValidationException(
                     f"Entity should be of type '{blueprint.path}' (or extending from it). Got '{entity['type']}'",
                     debug=_get_debug_message(key),
+                    data=entity,
                 )
         implementation_mode = "exact"
         blueprint = get_blueprint(entity["type"])
@@ -117,18 +121,19 @@ def _validate_entity(
             raise ValidationException(
                 f"Attributes '{keys_not_in_blueprint}' are not specified in the blueprint '{blueprint.path}'",
                 debug=_get_debug_message(key),
+                data=entity,
             )
         if not blueprint.path == entity["type"]:
             raise ValidationException(
                 f"Entity should be of type '{blueprint.path}'. Got '{entity['type']}'",
                 debug=_get_debug_message(key),
+                data=entity,
             )
 
     for attributeDefinition in blueprint.get_required_attributes():
         if entity.get(attributeDefinition.name, None) is None:
             raise ValidationException(
-                f"Missing required attribute '{attributeDefinition.name}'",
-                debug=_get_debug_message(key),
+                f"Missing required attribute '{attributeDefinition.name}'", debug=_get_debug_message(key), data=entity
             )
 
     for attributeDefinition in [blueprint.get_attribute_by_name(key) for key in entity.keys()]:
@@ -165,11 +170,15 @@ def _validate_entity(
                     "extend",
                 )
             elif default_attribute_definition.is_primitive:
-                _validate_primitive_attribute(
-                    default_attribute_definition,
-                    entity["default"],
-                    f"{key}.{default_attribute_definition.name}",
-                )
+                try:
+                    _validate_primitive_attribute(
+                        default_attribute_definition,
+                        entity["default"],
+                        f"{key}.{default_attribute_definition.name}",
+                    )
+                except ValidationException as ex:
+                    ex.data = entity
+                    raise ex
             else:
                 _validate_complex_attribute(
                     default_attribute_definition,
@@ -199,6 +208,7 @@ def _validate_complex_attribute(
         raise ValidationException(
             f"'{attributeDefinition.name}' should be a dict, got {attribute}",
             debug=_get_debug_message(key),
+            data=attribute.to_dict(),
         )
     if not attribute or attributeDefinition.attribute_type == BuiltinDataTypes.BINARY.value:
         return
@@ -228,8 +238,7 @@ def _validate_list(
 ):
     if not isinstance(attribute, list):
         raise ValidationException(
-            f"'{attributeDefinition.name}' should be a list",
-            debug=_get_debug_message(key),
+            f"'{attributeDefinition.name}' should be a list", debug=_get_debug_message(key), data=attribute.to_dict()
         )
     for i, item in enumerate(attribute):
         if dimensions > 1:

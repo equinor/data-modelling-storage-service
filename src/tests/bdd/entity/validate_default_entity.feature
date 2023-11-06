@@ -205,6 +205,11 @@ Feature: Validate Default Entity
       "type": "ValidationException",
       "message": "Entity should be of type 'dmss://data-source-name/root_package/AnimalBlueprint' (or extending from it). Got 'dmss://data-source-name/root_package/NorwegianBlueprint'",
       "debug": "Location: Entity in key '^.attributes.0.default'",
-      "data": null
+      "data": {
+        "name": "Jonas",
+        "nationality": "Norwegian",
+        "ski": "Fisher",
+        "type": "dmss://data-source-name/root_package/NorwegianBlueprint"
+        }
     }
     """
