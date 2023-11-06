@@ -95,7 +95,7 @@ def _get_complete_sys_document(
 
     return resolve_references_in_entity(
         resolved_address.entity,
-        data_source,
+        get_data_source(address.data_source),
         get_data_source,
         current_id,
         depth,
