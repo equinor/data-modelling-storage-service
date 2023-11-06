@@ -71,7 +71,6 @@ def _add_document_to_entity_or_list(
     Returns:
        A dict that contains the ID of the added document.
     """
-    entity: Entity = Entity(**document)
 
     try:
         target: Node = document_service.get_document(address)
@@ -107,13 +106,6 @@ def _add_document_to_entity_or_list(
                 f"Could not find attribute {last_attribute_in_address} in blueprint for {parent_node.blueprint.name}"
             )
 
-        new_node = tree_node_from_dict(
-            {**document},
-            blueprint_provider=document_service.get_blueprint,
-            node_attribute=BlueprintAttribute(name=attribute_to_update.name, attribute_type=entity.type),
-            recipe_provider=document_service.get_storage_recipes,
-        )
-
         if attribute_to_update.is_array:
             list_node = ListNode(
                 attribute_to_update.name,
@@ -125,12 +117,29 @@ def _add_document_to_entity_or_list(
                 recipe_provider=document_service.get_storage_recipes,
             )
             parent_node.add_child(list_node)
-            list_node.add_child(new_node)
+            if document:
+                # We only support adding a single item inside an optional list.
+                new_node = tree_node_from_dict(
+                    {**document},
+                    blueprint_provider=document_service.get_blueprint,
+                    node_attribute=BlueprintAttribute(
+                        name=attribute_to_update.name, attribute_type=Entity(**document).type
+                    ),
+                    recipe_provider=document_service.get_storage_recipes,
+                )
+                list_node.add_child(new_node)
             document_service.save(parent_node, address.data_source, initial=True)
             return {"uid": f"{list_node.node_id}"}
         else:
+            new_node = tree_node_from_dict(
+                {**document},
+                blueprint_provider=document_service.get_blueprint,
+                node_attribute=BlueprintAttribute(
+                    name=attribute_to_update.name, attribute_type=Entity(**document).type
+                ),
+                recipe_provider=document_service.get_storage_recipes,
+            )
             parent_node.add_child(new_node)
-
             document_service.save(parent_node, address.data_source, initial=True)
             return {"uid": f"{new_node.node_id}"}
 
@@ -145,7 +154,7 @@ def _add_document_to_entity_or_list(
     new_node = tree_node_from_dict(
         {**document},
         blueprint_provider=document_service.get_blueprint,
-        node_attribute=BlueprintAttribute(name=target.attribute.name, attribute_type=entity.type),
+        node_attribute=BlueprintAttribute(name=target.attribute.name, attribute_type=Entity(**document).type),
         recipe_provider=document_service.get_storage_recipes,
     )
 
