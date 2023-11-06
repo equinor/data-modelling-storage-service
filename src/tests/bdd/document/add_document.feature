@@ -288,7 +288,12 @@ Feature: Add document with document_service
       "status": 400, "type": "ValidationException",
       "message": "Entity should be of type 'dmss://system/SIMOS/Reference' (or extending from it). Got 'dmss://data-source-name/root_package/Operation'",
       "debug": "Location: Entity in key '^'",
-      "data": null
+      "data": {
+        "description": "",
+        "name": "operation3",
+        "phases": [],
+        "type": "dmss://data-source-name/root_package/Operation"
+        }
     }
     """
 
