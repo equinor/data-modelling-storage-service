@@ -16,7 +16,8 @@
     {
       "name": "description",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "string"
+      "attributeType": "string",
+      "optional": true
     },
     {
       "name": "labels",
