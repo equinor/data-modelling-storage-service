@@ -38,6 +38,11 @@ Feature: Add document with optional attributes
                   "address": "$workComputerId",
                   "type": "dmss://system/SIMOS/Reference",
                   "referenceType": "link"
+              },
+              {
+                  "address": "$monitorBlueprint",
+                  "type": "dmss://system/SIMOS/Reference",
+                  "referenceType": "link"
               }
           ]
       }
@@ -90,6 +95,13 @@ Feature: Add document with optional attributes
             "attributeType": "data-source-name/root_package/KeyboardKey",
             "optional": true,
             "dimensions": "*"
+          },
+          {
+            "name": "monitors",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "attributeType": "data-source-name/root_package/Monitor",
+            "optional": true,
+            "dimensions": "*"
           }
         ]
       }
@@ -120,6 +132,24 @@ Feature: Add document with optional attributes
         "name": "workComputer",
         "model": "Dell",
         "letterKeys": []
+      }
+      """
+
+  Given there exist document with id "monitorBlueprint" in data source "data-source-name"
+     """
+      {
+        "name": "Monitor",
+        "type": "dmss://system/SIMOS/Blueprint",
+        "extends": [
+          "dmss://system/SIMOS/NamedEntity"
+        ],
+        "attributes": [
+          {
+            "name": "model",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "attributeType": "string"
+          }
+        ]
       }
       """
 
@@ -233,3 +263,19 @@ Feature: Add document with optional attributes
     """
     Then the response status should be "Not Found"
 
+
+  Scenario: add optional empty list
+    Given i access the resource url "/api/documents/data-source-name/$workComputerId.monitors"
+    When I make a "POST" request with "1" files
+    """
+    {
+      "document": []
+    }
+    """
+    Then the response status should be "OK"
+    And the response should contain
+    """
+      {
+        "uid": "workComputerId.monitors"
+      }
+    """
