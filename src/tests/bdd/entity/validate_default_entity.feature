@@ -246,7 +246,6 @@ Feature: Validate Default Entity
       "status": 400,
       "type": "ValidationException",
       "message": "Attribute 'default' should be type 'float'. Got 'str'. Value: five",
-      "debug": "Location: Entity in key '^.attributes.0.default'",
-      "data": null
+      "debug": "Location: Entity in key '^.attributes.0.default'"
     }
     """
