@@ -3,7 +3,7 @@
   "type": "dmss://system/SIMOS/Blueprint",
   "description": "uncontained_blueprint",
   "extends": [
-    "dmss://system/SIMOS/NamedEntity"
+    "dmss://system/SIMOS/Entity"
   ],
   "attributes": [
     {

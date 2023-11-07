@@ -3,7 +3,7 @@
   "type": "dmss://system/SIMOS/Blueprint",
   "description": "Two People ",
   "extends": [
-    "dmss://system/SIMOS/NamedEntity"
+    "dmss://system/SIMOS/Entity"
   ],
   "attributes": [
     {

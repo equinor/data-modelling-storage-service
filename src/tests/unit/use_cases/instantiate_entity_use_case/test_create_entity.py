@@ -13,6 +13,7 @@ class CreateEntityTestCase(unittest.TestCase):
         simos_blueprints = [
             "dmss://system/SIMOS/AttributeTypes",
             "dmss://system/SIMOS/BlueprintAttribute",
+            "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/NamedEntity",
         ]
         mock_blueprint_folder = "src/tests/unit/use_cases/instantiate_entity_use_case/mock_data/"

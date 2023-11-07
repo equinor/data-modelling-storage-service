@@ -21,6 +21,7 @@ class TreeNodeFromDictTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = [
             "dmss://system/SIMOS/Reference",
+            "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/NamedEntity",
         ]
         mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"

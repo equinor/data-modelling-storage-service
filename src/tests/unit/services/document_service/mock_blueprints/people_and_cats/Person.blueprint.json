@@ -3,23 +3,23 @@
   "type": "dmss://system/SIMOS/Blueprint",
   "description": "This blueprint has attributes for all the possible cases of storage uncontained. This is set in the storage recipe, that ",
   "extends": [
-    "dmss://system/SIMOS/NamedEntity"
+    "dmss://system/SIMOS/Entity"
   ],
   "attributes": [
     {
       "name": "containedPersonInfo",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "dmss://system/SIMOS/NamedEntity"
+      "attributeType": "dmss://system/SIMOS/Entity"
     },
     {
       "name": "storageUncontainedBestFriend",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "dmss://system/SIMOS/NamedEntity"
+      "attributeType": "dmss://system/SIMOS/Entity"
     },
     {
       "name": "storageUncontainedListOfFriends",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "dmss://system/SIMOS/NamedEntity",
+      "attributeType": "dmss://system/SIMOS/Entity",
       "dimensions": "*"
     },
     {

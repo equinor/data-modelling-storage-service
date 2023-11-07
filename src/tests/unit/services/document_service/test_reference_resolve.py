@@ -16,6 +16,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = [
             "dmss://system/SIMOS/Package",
+            "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/NamedEntity",
         ]
         mock_blueprint_folder = "src/tests/unit/services/document_service/mock_blueprints/car_rental_blueprints"

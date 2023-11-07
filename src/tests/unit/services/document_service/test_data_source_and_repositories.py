@@ -17,7 +17,7 @@ test_user = User(**{"user_id": "unit-test", "full_name": "Unit Test", "email": "
 
 class DataSourceTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
+        simos_blueprints = ["dmss://system/SIMOS/Entity", "dmss://system/SIMOS/NamedEntity"]
         mock_blueprint_folder = "src/tests/unit/services/document_service/mock_blueprints/blob_blueprints"
         mock_blueprints_and_file_names = {
             "blobContainer": "blobContainer.blueprint.json",
