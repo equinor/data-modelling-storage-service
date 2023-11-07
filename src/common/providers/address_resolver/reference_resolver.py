@@ -123,39 +123,19 @@ def resolve_references_in_entity(
         return entity
 
     for key, value in entity.items():
-        if isinstance(value, dict) or isinstance(value, list):  # Potentially complex
-            if not value:
-                continue
-            if isinstance(value, list):  # If it's a list, resolve any references
-                entity[key] = _resolve_reference_list(
-                    value,
-                    data_source,
-                    get_data_source,
-                    current_id,
-                    depth,
-                    depth_count + 1,
+        if not value:
+            continue
+        elif isinstance(value, list):  # If it's a list, resolve any references
+            entity[key] = _resolve_reference_list(
+                value, data_source, get_data_source, current_id, depth, depth_count + 1
+            )
+        elif isinstance(value, dict):
+            if is_reference(value):
+                entity[key] = _get_complete_sys_document(
+                    value, data_source, get_data_source, current_id, depth, depth_count + 1
                 )
             else:
-                if is_reference(value):
-                    if depth_count <= depth:
-                        entity[key] = _get_complete_sys_document(
-                            value,
-                            data_source,
-                            get_data_source,
-                            current_id,
-                            depth,
-                            depth_count + 1,
-                        )
-                        continue
-                    entity[key] = value
-                else:
-                    entity[key] = resolve_references_in_entity(
-                        value,
-                        data_source,
-                        get_data_source,
-                        current_id,
-                        depth,
-                        depth_count + 1,
-                    )
-
+                entity[key] = resolve_references_in_entity(
+                    value, data_source, get_data_source, current_id, depth, depth_count + 1
+                )
     return entity
