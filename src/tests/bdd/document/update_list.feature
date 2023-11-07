@@ -139,7 +139,7 @@ Feature: Add document with optional attributes
     And the response should contain
     """
       {
-        "uid": "workComputerId.letterKeys.0"
+        "uid": "workComputerId.letterKeys[0]"
       }
     """
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys"

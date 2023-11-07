@@ -288,7 +288,7 @@ class TreeNodeHelpersTestCase(unittest.TestCase):
         self.assertEqual(nested_2.node_id, "1.nested.nested")
         self.assertEqual(reference.node_id, "1.nested.nested.reference")
         self.assertEqual(list_node.node_id, "1.list")
-        self.assertEqual(item_1.node_id, "1.list.0")
+        self.assertEqual(item_1.node_id, "1.list[0]")
 
     def test_search(self):
         document_1 = {

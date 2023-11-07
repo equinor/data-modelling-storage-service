@@ -89,5 +89,5 @@ Feature: Explorer - Add contained node
     Then the response status should be "OK"
     And the response should contain
     """
-    {"uid": "1.meAgain.1.meAgain.0"}
+    {"uid": "1.meAgain[1].meAgain[0]"}
     """
