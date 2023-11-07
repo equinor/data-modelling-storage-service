@@ -130,6 +130,13 @@ class AttributeItem:
                     f"Invalid attribute '{self.path}'. Valid attributes are '{list(entity.keys())}'."
                 ) from ex
             else:
+                try:
+                    int(self.path)
+                    raise NotFoundException(
+                        "'myList.0' is an invalid syntax for accessing items in a list. Use 'myList[0]' instead"
+                    ) from ex
+                except ValueError:
+                    pass
                 raise NotFoundException(f"Invalid index '{self.path}'. Valid indices are < {len(entity)}.") from ex
 
         return result, self.path

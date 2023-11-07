@@ -95,6 +95,8 @@ class NodeBase:
             return self.uid
         if not self.storage_contained and not self.is_array():
             return self.uid
+        if self.parent.is_array():
+            return f"{self.parent.node_id}[{self.key}]"
         return ".".join((self.parent.node_id, self.key))
 
     def path(self):

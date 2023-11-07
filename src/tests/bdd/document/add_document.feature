@@ -386,6 +386,10 @@ Feature: Add document with document_service
     }
     """
     Then the response status should be "OK"
+    And the response should contain
+    """
+    {"uid": "11.phases[1]"}
+    """
     Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation1?depth=3"
     When I make a "GET" request
     Then the response status should be "OK"
@@ -449,7 +453,7 @@ Feature: Add document with document_service
     And the response should contain
     """
       {
-        "uid": "11.phases.0.containedResults.0"
+        "uid": "11.phases[0].containedResults[0]"
       }
     """
 #     todo update document add use case such that id contains bracket notation for lists: 11.phases[0].containedResults[0]
