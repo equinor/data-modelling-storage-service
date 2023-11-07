@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.8.0...v1.8.1) (2023-11-07)
+
+
+### Bug Fixes
+
+* **node:** Node.node_id() return invalid address to list elements ([4897834](https://github.com/equinor/data-modelling-storage-service/commit/4897834f08dda4829bdb3162d4089c2ce1a16c11))
+
 ## [1.8.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.7.1...v1.8.0) (2023-11-06)
 
 
