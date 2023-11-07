@@ -29,6 +29,7 @@ deepdiff = "^5.8.1"
 pygments = "^2.16.1"
 pytest = "^7.4.3"
 dictdiffer = "^0.9.0"
+setuptools = "^68.2.2"
 
 [tool.pytest]
 addopts = ["--ignore gen"]

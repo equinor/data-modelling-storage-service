@@ -68,6 +68,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
         self.document_repository.find = self.mock_find
 
         simos_blueprints = [
+            "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/NamedEntity",
             "dmss://system/SIMOS/Reference",
         ]

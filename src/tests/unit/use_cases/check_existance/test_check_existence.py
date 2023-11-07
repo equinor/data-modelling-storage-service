@@ -15,7 +15,7 @@ class CheckExistenceTestCase(unittest.TestCase):
         self.storage = {
             "1": {
                 "name": "Test_document",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
                 "_id": "1",
             }
         }
@@ -23,7 +23,7 @@ class CheckExistenceTestCase(unittest.TestCase):
         self.repository.get = self.mock_get
         self.repository.delete = self.mock_delete
 
-        simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
+        simos_blueprints = ["dmss://system/SIMOS/Entity"]
         mock_blueprint_provider = MockBlueprintProvider(
             mock_blueprints_and_file_names={},
             mock_blueprint_folder="",

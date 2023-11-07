@@ -8,7 +8,7 @@ from tests.unit.mocks.mock_blueprint_provider import MockBlueprintProvider
 
 class TreeNodeDeleteTest(unittest.TestCase):
     def setUp(self) -> None:
-        simos_blueprints = ["dmss://system/SIMOS/NamedEntity"]
+        simos_blueprints = ["dmss://system/SIMOS/Entity", "dmss://system/SIMOS/NamedEntity"]
         mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"
         mock_blueprints_and_file_names = {
             "Blueprint4": "Blueprint4.blueprint.json",

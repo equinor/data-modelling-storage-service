@@ -2,7 +2,7 @@
   "type": "dmss://system/SIMOS/RecipeLink",
   "_blueprintPath_": "dmss://system/SIMOS/blob_types/PDF",
   "extends": [
-    "dmss://system/SIMOS/Entity",
+    "dmss://system/SIMOS/NamedEntity",
     "_default_"
   ],
   "uiRecipes": [

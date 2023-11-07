@@ -18,7 +18,7 @@ from tests.unit.mocks.mock_recipe_provider import MockStorageRecipeProvider
 class DocumentServiceTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = [
-            "dmss://system/SIMOS/NamedEntity",
+            "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/Reference",
         ]
         mock_blueprint_folder = "src/tests/unit/services/document_service/mock_blueprints/people_and_cats"
@@ -52,37 +52,37 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "Person",
                 "containedPersonInfo": {
                     "name": "",
-                    "type": "dmss://system/SIMOS/NamedEntity",
+                    "type": "dmss://system/SIMOS/Entity",
                 },
                 "storageUncontainedBestFriend": {
                     "_id": "2",
                     "name": "a_reference",
-                    "type": "dmss://system/SIMOS/NamedEntity",
+                    "type": "dmss://system/SIMOS/Entity",
                 },
                 "storageUncontainedListOfFriends": [
                     {
                         "_id": "3",
                         "name": "ref1",
-                        "type": "dmss://system/SIMOS/NamedEntity",
+                        "type": "dmss://system/SIMOS/Entity",
                     },
                     {
                         "_id": "4",
                         "name": "ref2",
-                        "type": "dmss://system/SIMOS/NamedEntity",
+                        "type": "dmss://system/SIMOS/Entity",
                     },
                 ],
             },
             "2": {
                 "_id": "2",
                 "name": "a_reference",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             },
-            "3": {"_id": "3", "name": "ref1", "type": "dmss://system/SIMOS/NamedEntity"},
+            "3": {"_id": "3", "name": "ref1", "type": "dmss://system/SIMOS/Entity"},
             "4": {
                 "_id": "4",
                 "name": "ref2",
                 "description": "TEST",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             },
         }
 
@@ -104,7 +104,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "4",
                 "name": "ref2",
                 "description": "TEST_MODIFY",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             }
         )
         for sub_node in node.traverse():
@@ -115,7 +115,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "_id": "4",
             "name": "ref2",
             "description": "TEST_MODIFY",
-            "type": "dmss://system/SIMOS/NamedEntity",
+            "type": "dmss://system/SIMOS/Entity",
         }
 
     def test_save_update_attribute(self):
@@ -128,7 +128,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "Person",
                 "containedPersonInfo": {
                     "name": "",
-                    "type": "dmss://system/SIMOS/NamedEntity",
+                    "type": "dmss://system/SIMOS/Entity",
                 },
             }
         }
@@ -149,7 +149,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             {
                 "name": "RENAMED",
                 "description": "TEST_MODIFY",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             }
         )
         self.mock_document_service.save(contained_node, "testing", initial=True)
@@ -166,15 +166,15 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "Person",
                 "containedPersonInfo": {
                     "name": "JohnInfo",
-                    "type": "dmss://system/SIMOS/NamedEntity",
+                    "type": "dmss://system/SIMOS/Entity",
                 },
                 "storageUncontainedBestFriend": {
                     "name": "Peter",
-                    "type": "dmss://system/SIMOS/NamedEntity",
+                    "type": "dmss://system/SIMOS/Entity",
                 },
                 "storageUncontainedListOfFriends": [],
             },
-            "2": {"_id": "2", "name": "Mary", "type": "dmss://system/SIMOS/NamedEntity"},
+            "2": {"_id": "2", "name": "Mary", "type": "dmss://system/SIMOS/Entity"},
         }
 
         def mock_get(document_id: str):
@@ -199,7 +199,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 blueprint_provider=self.mock_document_service.get_blueprint,
                 attribute=BlueprintAttribute(
                     name="storageUncontainedListOfFriends",
-                    attribute_type="dmss://system/SIMOS/NamedEntity",
+                    attribute_type="dmss://system/SIMOS/Entity",
                 ),
             )
         )
@@ -223,7 +223,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "Person",
                 "containedPersonInfo": {
                     "name": "Nested",
-                    "type": "dmss://system/SIMOS/NamedEntity",
+                    "type": "dmss://system/SIMOS/Entity",
                 },
                 "storageUncontainedBestFriend": {
                     "address": "$5",
@@ -252,24 +252,24 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "_id": "2",
                 "name": "Gina",
                 "description": "Index 1",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             },
             "3": {
                 "_id": "3",
                 "name": "Lisa",
                 "description": "Index 2",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             },
             "4": {
                 "_id": "4",
                 "name": "Patricia",
                 "description": "Index 3",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             },
             "5": {
                 "_id": "5",
                 "name": "Mary",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             },
         }
 
@@ -329,13 +329,13 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {
                 "_id": "2",
                 "name": "John",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
                 "description": "I am a cat owner, storage and model uncontained by my cat.",
             },
             "3": {
                 "_id": "3",
                 "name": "Lisa",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
                 "description": "Lisa loves cats, and will take over as owner for John's cat, Garfield",
             },
         }
@@ -387,7 +387,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         owner = {
             "_id": "2",
             "name": "owner",
-            "type": "dmss://system/SIMOS/NamedEntity",
+            "type": "dmss://system/SIMOS/Entity",
             "description": "I'm an owner for a cat. Model and storage uncontained from cat.",
         }
 
@@ -434,12 +434,12 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "storageUncontainedBestFriend": {
                         "_id": "2",
                         "name": "Lisa",
-                        "type": "dmss://system/SIMOS/NamedEntity",
+                        "type": "dmss://system/SIMOS/Entity",
                     },
                 },
                 "b": {},
             },
-            "2": {"_id": "2", "name": "Lisa", "type": "dmss://system/SIMOS/NamedEntity"},
+            "2": {"_id": "2", "name": "Lisa", "type": "dmss://system/SIMOS/Entity"},
             "3": {"_id": "3", "description": " This is malformed, with missing type"},
         }
 
@@ -461,7 +461,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "storageUncontainedBestFriend": {
                 "_id": "2",
                 "name": "a_reference",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
                 "description": "A NEW DESCRIPTION HERE",
             },
             "containedPersonInfo": {},

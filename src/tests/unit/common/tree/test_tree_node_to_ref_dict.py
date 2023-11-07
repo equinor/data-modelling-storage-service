@@ -13,6 +13,7 @@ class TreeNodeToRefDictTestCase(unittest.TestCase):
         simos_blueprints = [
             "dmss://system/SIMOS/Package",
             "dmss://system/SIMOS/Reference",
+            "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/NamedEntity",
         ]
         mock_blueprint_folder = "src/tests/unit/common/tree/mock_data/mock_blueprints"

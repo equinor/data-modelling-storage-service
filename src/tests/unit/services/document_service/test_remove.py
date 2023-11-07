@@ -25,13 +25,14 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "_id": "2",
                     "name": "",
                     "description": "",
-                    "type": "dmss://system/SIMOS/NamedEntity",
+                    "type": "dmss://system/SIMOS/Entity",
                 }
             ]
 
         self.repository.find = mock_find
 
         simos_blueprints = [
+            "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/NamedEntity",
             "dmss://system/SIMOS/Reference",
             "dmss://system/SIMOS/Blob",
@@ -66,7 +67,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document_1 = {
             "_id": "1",
             "name": "simple",
-            "type": "dmss://system/SIMOS/NamedEntity",
+            "type": "dmss://system/SIMOS/Entity",
         }
 
         document_repository.get = lambda id: document_1.copy()
@@ -94,14 +95,14 @@ class DocumentServiceTestCase(unittest.TestCase):
             "owner": {
                 "_id": "2",
                 "name": "a_reference",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             },
         }
         doc_2 = {
             "uid": "2",
             "_id": "2",
             "name": "a_reference",
-            "type": "dmss://system/SIMOS/NamedEntity",
+            "type": "dmss://system/SIMOS/Entity",
         }
         self.storage = {"1": doc_1, "2": doc_2}
 
@@ -123,7 +124,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {
                 "name": "Mary",
                 "description": "",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             },
         }
 
@@ -138,7 +139,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "1": {
                 "_id": "1",
                 "name": "",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
                 "description": "",
             }
         }
@@ -166,7 +167,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {
                 "name": "",
                 "description": "",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             },
         }
 
@@ -233,12 +234,12 @@ class DocumentServiceTestCase(unittest.TestCase):
             "2": {
                 "_id": "2",
                 "name": "Mary",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             },
             "3": {
                 "_id": "3",
                 "name": "Lisa",
-                "type": "dmss://system/SIMOS/NamedEntity",
+                "type": "dmss://system/SIMOS/Entity",
             },
         }
 
@@ -259,7 +260,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                     "referenceType": REFERENCE_TYPES.LINK.value,
                 },
             },
-            "2": {"_id": "2", "name": "Mary", "type": "dmss://system/SIMOS/NamedEntity"},
+            "2": {"_id": "2", "name": "Mary", "type": "dmss://system/SIMOS/Entity"},
         }
 
         self.assertRaises(
@@ -276,7 +277,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "PersonImage",
                 "optionalImageText": {
                     "name": "imageText",
-                    "type": "dmss://system/SIMOS/NamedEntity",
+                    "type": "dmss://system/SIMOS/Entity",
                     "description": "This is my image text",
                 },
             }

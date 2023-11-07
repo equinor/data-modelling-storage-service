@@ -12,6 +12,7 @@ class ValidateEntityTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = [
             "dmss://system/SIMOS/Blueprint",
+            "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/NamedEntity",
             "dmss://system/SIMOS/BlueprintAttribute",
         ]

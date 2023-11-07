@@ -21,6 +21,7 @@ from tests.unit.mocks.mock_recipe_provider import MockStorageRecipeProvider
 class DocumentServiceTestCase(unittest.TestCase):
     def setUp(self) -> None:
         simos_blueprints = [
+            "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/NamedEntity",
             "dmss://system/SIMOS/Reference",
             "dmss://system/SIMOS/Action",
