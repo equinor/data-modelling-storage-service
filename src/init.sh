@@ -20,7 +20,7 @@ if [ "$1" = 'api' ]; then
 
   if [ "${ENVIRONMENT:-'local'}" != "local" ]; then
     cat version.txt || true
-    gunicorn app:create_app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:5000
+    gunicorn app:create_app --workers 4 --disable-redirect-access-to-syslog --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:5000
   else
     python3 /code/src/app.py run
   fi

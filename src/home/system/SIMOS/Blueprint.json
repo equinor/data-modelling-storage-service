@@ -15,13 +15,6 @@
       "optional": true
     },
     {
-      "name": "abstract",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "boolean",
-      "default": false,
-      "optional": true
-    },
-    {
       "name": "name",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string"
@@ -54,15 +47,18 @@
       "default": [
         {
           "name": "name",
-          "type": "string"
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "string"
         },
         {
           "name": "type",
-          "type": "string"
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "string"
         },
         {
           "name": "description",
-          "type": "string"
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "string"
         }
       ],
       "contained": true,

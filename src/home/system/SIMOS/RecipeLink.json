@@ -18,6 +18,14 @@
       "optional": false
     },
     {
+      "name": "extends",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "default": [],
+      "optional": true,
+      "dimensions": "*"
+    },
+    {
       "name": "initialUiRecipe",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "dmss://system/SIMOS/UiRecipe",

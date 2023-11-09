@@ -20,24 +20,7 @@
       "name": "DEFAULT_CREATE",
       "type": "dmss://system/SIMOS/UiRecipe",
       "description": "",
-      "plugin": "@development-framework/dm-core-plugins/form",
-      "attributes": [
-        {
-          "name": "isRoot",
-          "type": "dmss://system/SIMOS/UiAttribute",
-          "contained": false
-        },
-        {
-          "name": "type",
-          "type": "dmss://system/SIMOS/UiAttribute",
-          "contained": false
-        },
-        {
-          "name": "content",
-          "type": "dmss://system/SIMOS/UiAttribute",
-          "contained": false
-        }
-      ]
+      "plugin": "@development-framework/dm-core-plugins/form"
     }
   ]
 }

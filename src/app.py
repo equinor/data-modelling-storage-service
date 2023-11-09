@@ -120,7 +120,7 @@ def create_app() -> FastAPI:
         response = await call_next(request)
         process_time = time.time() - start_time
         milliseconds = int(round(process_time * 1000))
-        logger.debug(f"{request.method} {request.url.path} - {milliseconds}ms - {response.status_code}")
+        logger.info(f"{request.method} {request.url.path} - {milliseconds}ms - {response.status_code}")
         response.headers["X-Process-Time"] = str(process_time)
         return response
 
@@ -150,6 +150,7 @@ def run():
         "app:create_app",
         host="0.0.0.0",  # noqa: S104
         port=5000,
+        access_log=False,
         reload=config.ENVIRONMENT == "local",
         log_level=config.LOGGER_LEVEL.lower(),
     )
