@@ -45,6 +45,14 @@
       "attributeType": "string",
       "default": "",
       "optional": true
+    },
+    {
+      "name": "dimensions",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "description": "dimensions",
+      "attributeType": "string",
+      "default": "",
+      "optional": true
     }
   ]
 }

@@ -6,16 +6,7 @@
       "name": "DEFAULT_CREATE",
       "type": "dmss://system/SIMOS/UiRecipe",
       "description": "",
-      "plugin": "@development-framework/dm-core-plugins/form",
-      "attributes": [
-        {
-          "name": "type",
-          "type": "dmss://system/SIMOS/UiAttribute",
-          "attributeType": "string",
-          "field": "blueprint",
-          "label": "Type"
-        }
-      ]
+      "plugin": "@development-framework/dm-core-plugins/form"
     }
   ]
 }
