@@ -72,7 +72,7 @@ class CreateEntity:
         for attr in blueprint.attributes:
             if attr.attribute_type == BuiltinDataTypes.BINARY.value:
                 continue
-            if attr.is_optional:
+            if attr.is_optional and not attr.default:
                 # skip attribute if it is optional
                 continue
             if attr.attribute_type in PRIMITIVES:

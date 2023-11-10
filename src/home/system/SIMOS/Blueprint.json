@@ -48,7 +48,8 @@
         {
           "name": "name",
           "type": "dmss://system/SIMOS/BlueprintAttribute",
-          "attributeType": "string"
+          "attributeType": "string",
+          "optional": true
         },
         {
           "name": "type",
@@ -58,7 +59,8 @@
         {
           "name": "description",
           "type": "dmss://system/SIMOS/BlueprintAttribute",
-          "attributeType": "string"
+          "attributeType": "string",
+          "optional": true
         }
       ],
       "contained": true,

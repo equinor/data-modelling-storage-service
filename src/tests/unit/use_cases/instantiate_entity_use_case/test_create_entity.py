@@ -15,6 +15,7 @@ class CreateEntityTestCase(unittest.TestCase):
             "dmss://system/SIMOS/BlueprintAttribute",
             "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/NamedEntity",
+            "dmss://system/SIMOS/Blueprint",
         ]
         mock_blueprint_folder = "src/tests/unit/use_cases/instantiate_entity_use_case/mock_data/"
         mock_blueprints_and_file_names = {
@@ -55,9 +56,42 @@ class CreateEntityTestCase(unittest.TestCase):
             "intValues": [1, 5, 4, 2],
             "boolValues": [True, False, True],
             "stringValues": ["one", "two", "three"],
+            "engine3": {
+                "name": "default engine",
+                "type": "EngineTest",
+                "fuelPump": {"name": "fuelPump", "type": "FuelPumpTest", "description": "A standard fuel pump"},
+                "power": 9,
+            },
         }
 
         entity = CreateEntity(blueprint_provider=self.mock_document_service.get_blueprint, type="CarTest").entity
+
+        self.assertDictEqual(expected_entity, entity)
+
+    def test_create_default_blueprint(self):
+        expected_entity = {
+            "type": "dmss://system/SIMOS/Blueprint",
+            "name": "",
+            "attributes": [
+                {
+                    "name": "name",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "attributeType": "string",
+                    "optional": True,
+                },
+                {"name": "type", "type": "dmss://system/SIMOS/BlueprintAttribute", "attributeType": "string"},
+                {
+                    "name": "description",
+                    "type": "dmss://system/SIMOS/BlueprintAttribute",
+                    "attributeType": "string",
+                    "optional": True,
+                },
+            ],
+        }
+
+        entity = CreateEntity(
+            blueprint_provider=self.mock_document_service.get_blueprint, type="dmss://system/SIMOS/Blueprint"
+        ).entity
 
         self.assertEqual(expected_entity, entity)
 
