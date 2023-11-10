@@ -119,6 +119,11 @@ Feature: Instantiate entity
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         }
-      ]
+       ],
+       "bestFriendAtWork": {
+        "type": "dmss://data-source-name/root_package/Employee",
+        "name": "Kari",
+        "isManager": false
+        }
     }
     """
