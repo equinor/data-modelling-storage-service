@@ -4,16 +4,16 @@ Feature: Get a blueprint
     Given the system data source and SIMOS core package are available
 #    Given the DMSS-lookup has been created
     Given there are basic data sources with repositories
-      |   name  |
+      | name    |
       | test-DS |
 
     Given there are repositories in the data sources
-      | data-source | host | port  | username | password | tls   | name  | database  | collection | type     | dataTypes |
-      |  test-DS    | db   | 27017 | maf      | maf      | false | blobs |  bdd-test | blobs      | mongo-db | blob      |
+      | data-source | host | port  | username | password | tls   | name  | database | collection | type     | dataTypes |
+      | test-DS     | db   | 27017 | maf      | maf      | false | blobs | bdd-test | blobs      | mongo-db | blob      |
 
 
 
-   Given there exist document with id "1" in data source "test-DS"
+    Given there exist document with id "1" in data source "test-DS"
     """
     {
         "name": "root_package",
@@ -180,27 +180,42 @@ Feature: Get a blueprint
     And the response should contain
     """
     {
-    "blueprint": {
-      "name": "Entity",
-      "description": "Blueprint for a DMT reference",
-      "type": "dmss://system/SIMOS/Blueprint",
-      "extends": ["dmss://system/SIMOS/NamedEntity"],
-      "attributes": [
-        {
-          "name": "name",
-          "attributeType": "string",
-          "type": "dmss://system/SIMOS/BlueprintAttribute"
-        }, {
-          "name": "type",
-          "attributeType": "string",
-          "type": "dmss://system/SIMOS/BlueprintAttribute"
-        }, {
-          "name": "description",
-          "attributeType": "string",
-          "type": "dmss://system/SIMOS/BlueprintAttribute"
-        }
-      ]
-    }
+      "blueprint": {
+        "name": "Entity",
+        "type": "dmss://system/SIMOS/Blueprint",
+        "description": "Blueprint for an entity.",
+        "attributes": [
+          {
+            "name": "name",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "optional": true,
+            "attributeType": "string",
+            "label": "Name"
+          },
+          {
+            "name": "type",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "attributeType": "string",
+            "label": "Type",
+            "default": "",
+            "optional": false
+          },
+          {
+            "name": "description",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "attributeType": "string",
+            "default": "",
+            "optional": true,
+            "label": "Description"
+          },
+          {
+            "name": "_meta_",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "attributeType": "dmss://system/SIMOS/Meta",
+            "optional": true
+          }
+        ]
+      }
     }
     """
 
@@ -289,28 +304,37 @@ Feature: Get a blueprint
     ],
     "blueprint": {
       "name": "Entity",
-      "description": "Blueprint for a DMT reference",
       "type": "dmss://system/SIMOS/Blueprint",
-      "extends": [ "dmss://system/SIMOS/NamedEntity"],
+      "description": "Blueprint for an entity.",
       "attributes": [
         {
           "name": "name",
-          "attributeType": "string",
           "type": "dmss://system/SIMOS/BlueprintAttribute",
-          "optional": false,
-          "contained": true
-        }, {
+          "optional": true,
+          "attributeType": "string",
+          "label": "Name"
+        },
+        {
           "name": "type",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "attributeType": "string",
-          "type": "dmss://system/SIMOS/BlueprintAttribute"
-        }, {
+          "label": "Type",
+          "default": "",
+          "optional": false
+        },
+        {
           "name": "description",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
           "attributeType": "string",
-          "type": "dmss://system/SIMOS/BlueprintAttribute"
-        }, {
-            "name": "_meta_",
-            "attributeType": "dmss://system/SIMOS/Meta",
-            "type": "dmss://system/SIMOS/BlueprintAttribute"
+          "default": "",
+          "optional": true,
+          "label": "Description"
+        },
+        {
+          "name": "_meta_",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://system/SIMOS/Meta",
+          "optional": true
         }
       ]
     }
