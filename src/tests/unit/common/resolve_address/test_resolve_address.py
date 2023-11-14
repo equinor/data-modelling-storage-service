@@ -23,7 +23,7 @@ class ResolveReferenceTestCase(unittest.TestCase):
                     "name": "Volvo 240",
                     "plateNumber": "123",
                     "engine": {
-                        "address": "$engine_id",
+                        "address": "dmss://datasource2/$engine_id",
                         "type": SIMOS.REFERENCE.value,
                         "referenceType": REFERENCE_TYPES.LINK.value,
                     },
@@ -62,7 +62,7 @@ class ResolveReferenceTestCase(unittest.TestCase):
             "name": "myEngine",
             "description": "",
             "fuelPump": {
-                "address": "$fuel_pump_id",
+                "address": "dmss://datasource2/$fuel_pump_id",
                 "type": SIMOS.REFERENCE.value,
                 "referenceType": REFERENCE_TYPES.LINK.value,
             },
@@ -78,20 +78,31 @@ class ResolveReferenceTestCase(unittest.TestCase):
         self.document_repository.name = "datasource"
         self.document_repository.get = self.mock_get
         self.document_repository.find = self.mock_find
+
+        self.document_repository2 = mock.Mock()
+        self.document_repository2.name = "datasource2"
+        self.document_repository2.get = self.mock_get2
+        # self.document_repository2.find = self.mock_find2
+
         self.document_service = get_mock_document_service(
-            repository_provider=lambda x, y: self.document_repository,
+            repository_provider=lambda x, y: next(
+                dr for dr in (self.document_repository, self.document_repository2) if dr.name == x
+            ),
             blueprint_provider=None,
         )
 
     def mock_get(self, document_id: str):
         if document_id == "car_rental_company_id":
             return {**self.car_rental_company}
+        if document_id == "customer_id":
+            return {**self.customer}
+        return None
+
+    def mock_get2(self, document_id: str):
         if document_id == "engine_id":
             return {**self.engine}
         if document_id == "fuel_pump_id":
             return {**self.fuel_pump}
-        if document_id == "customer_id":
-            return {**self.customer}
         return None
 
     def mock_find(self, query: dict) -> list[dict]:
@@ -140,7 +151,7 @@ class ResolveReferenceTestCase(unittest.TestCase):
             Address.from_absolute("datasource/$car_rental_company_id.cars[0].engine.fuelPump"),
             self.document_service.get_data_source,
         )
-        assert ref.data_source_id == "datasource"
+        assert ref.data_source_id == "datasource2"
         assert ref.document_id == "engine_id"
         assert ref.attribute_path == ["fuelPump"]
         assert ref.entity == self.engine["fuelPump"]
@@ -231,3 +242,13 @@ class ResolveReferenceTestCase(unittest.TestCase):
                 Address.from_absolute("datasource/$car_rental_company_id.cars[0].plateNumber"),
                 self.document_service.get_data_source,
             )
+
+    def test_correct_nested_reference_resolved(self):
+        ref = resolve_address(
+            Address.from_absolute("datasource/$car_rental_company_id.cars[0].engine.fuelPump"),
+            self.document_service.get_data_source,
+        )
+        assert ref.data_source_id == "datasource2"
+        assert ref.document_id == "engine_id"
+        assert ref.attribute_path == ["fuelPump"]
+        assert ref.entity == self.engine["fuelPump"]
