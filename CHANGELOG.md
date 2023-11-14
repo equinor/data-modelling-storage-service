@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.9.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.8.1...v1.9.0) (2023-11-14)
+
+
+### Features
+
+* update entity and namedentity blueprints ([f03059f](https://github.com/equinor/data-modelling-storage-service/commit/f03059f4647b4691d60d4e659a48e1461351fea8))
+
+
+### Bug Fixes
+
+* address_resolver did not use new datasource name ([55d2051](https://github.com/equinor/data-modelling-storage-service/commit/55d205180932d57dc2bc2581590ba82d121002b5))
+* update test to reflect changes in blueprints namedentity ([acb81ae](https://github.com/equinor/data-modelling-storage-service/commit/acb81ae6ede9077a9d0f6f815f469a8d4be8263a))
+
+
+### Code Refactoring
+
+* resolver ([c96bbc9](https://github.com/equinor/data-modelling-storage-service/commit/c96bbc9ed265ed16ff151cf4077453106e1cf2b1))
+
+
+### Tests
+
+* validate core SIMOS package ([8668212](https://github.com/equinor/data-modelling-storage-service/commit/866821281e99bbec354c554d101ed0e9638461e6))
+
 ## [1.8.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.8.0...v1.8.1) (2023-11-07)
 
 
