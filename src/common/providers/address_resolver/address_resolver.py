@@ -17,11 +17,12 @@ def _resolve_path_items(
     data_source: DataSource,
     path_items: list[AttributeItem | QueryItem | IdItem],
     get_data_source: Callable,
-) -> tuple[list | dict, list[str]]:
+) -> tuple[list | dict, list[str], str]:
     if len(path_items) == 0 or isinstance(path_items[0], AttributeItem):
         raise NotFoundException(f"Invalid path_items {path_items}.")
     entity, id = path_items[0].get_entry_point(data_source)
     path = [id]
+    data_source_name = data_source.name
     for index, ref_item in enumerate(path_items[1:]):
         if isinstance(ref_item, IdItem):
             raise NotFoundException(f"Invalid path_items {path_items}.")
@@ -33,11 +34,12 @@ def _resolve_path_items(
             address = Address.from_relative(entity["address"], path[0], data_source.name)
             resolved_reference = resolve_address(address, get_data_source)
             path = [resolved_reference.document_id, *resolved_reference.attribute_path]
+            data_source_name = resolved_reference.data_source_id
         else:
             path.append(attribute)
         if not isinstance(entity, list | dict):
             raise NotFoundException(f"Path {path} leads to a primitive value.")
-    return entity, path
+    return entity, path, data_source_name
 
 
 @dataclass(frozen=True)
@@ -61,11 +63,11 @@ def resolve_address(address: Address, get_data_source: Callable) -> ResolvedAddr
 
     # The first reference item should always be a DataSourceItem
     data_source = get_data_source(address.data_source)
-    document, path = _resolve_path_items(data_source, path_items, get_data_source)
+    document, path, data_source = _resolve_path_items(data_source, path_items, get_data_source)
 
     return ResolvedAddress(
         entity=document,
-        data_source_id=address.data_source,
+        data_source_id=data_source,
         document_id=str(path[0]),
         attribute_path=path[1:],
     )

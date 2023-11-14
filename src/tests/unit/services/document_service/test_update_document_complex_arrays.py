@@ -103,6 +103,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
 
         document_repository = mock.Mock()
         document_repository.get = mock_get
+        document_repository.name = "testing"
         document_repository.update = mock_update
 
         def repository_provider(data_source_id, user: User):
