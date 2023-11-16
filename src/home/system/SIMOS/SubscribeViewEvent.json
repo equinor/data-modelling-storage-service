@@ -1,0 +1,24 @@
+{
+  "name": "SubscribeViewEvent",
+  "type": "CORE:Blueprint",
+  "attributes": [
+    {
+      "name": "type",
+      "type": "CORE:BlueprintAttribute",
+      "attributeType": "string",
+      "optional": false
+    },
+    {
+      "name": "on",
+      "type": "CORE:BlueprintAttribute",
+      "attributeType": "string",
+      "optional": false
+    },
+    {
+      "name": "match",
+      "type": "CORE:BlueprintAttribute",
+      "attributeType": "string",
+      "optional": true
+    }
+  ]
+}

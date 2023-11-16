@@ -22,6 +22,7 @@ class RecipeAttribute(BaseModel):
     collapsible: bool | None = None
     ui_recipe: str | None = None
     mapping: str | None = None
+    events: str | None = None
 
     class Config:
         allow_population_by_field_name = True
@@ -38,6 +39,7 @@ class Recipe(BaseModel):
     config: dict | None = None
     label: str = ""
     dimensions: str = ""
+    events: list[dict] | None = None
 
     def get_attribute_by_name(self, key):
         return next((attr for attr in self.attributes if attr.name == key), None)

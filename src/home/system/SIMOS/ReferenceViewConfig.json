@@ -9,12 +9,6 @@
       "name": "recipe",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string"
-    },
-    {
-      "name": "config",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "object",
-      "optional": true
     }
   ]
 }

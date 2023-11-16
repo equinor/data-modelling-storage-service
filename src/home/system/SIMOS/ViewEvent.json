@@ -1,0 +1,30 @@
+{
+  "name": "ViewEvent",
+  "type": "CORE:Blueprint",
+  "attributes": [
+    {
+      "name": "type",
+      "type": "CORE:BlueprintAttribute",
+      "attributeType": "string",
+      "optional": false
+    },
+    {
+      "name": "name",
+      "type": "CORE:BlueprintAttribute",
+      "attributeType": "string",
+      "optional": true
+    },
+    {
+      "name": "address",
+      "type": "CORE:BlueprintAttribute",
+      "attributeType": "string",
+      "optional": false
+    },
+    {
+      "name": "payload",
+      "type": "CORE:BlueprintAttribute",
+      "attributeType": "any",
+      "optional": true
+    }
+  ]
+}

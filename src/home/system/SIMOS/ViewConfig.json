@@ -39,6 +39,13 @@
       "attributeType": "string",
       "dimensions": "*",
       "optional": true
+    },
+    {
+      "name": "subscribeTo",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/SubscribeViewEvent",
+      "optional": true,
+      "dimensions": "*"
     }
   ]
 }

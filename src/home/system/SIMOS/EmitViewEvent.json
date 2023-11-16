@@ -1,0 +1,28 @@
+{
+  "name": "EmitViewEvent",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "This describes an event",
+  "attributes": [
+    {
+      "name": "name",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "type",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "trigger",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "uid",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "optional": true
+    }
+  ]
+}

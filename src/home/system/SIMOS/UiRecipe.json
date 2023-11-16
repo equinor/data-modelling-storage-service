@@ -39,6 +39,13 @@
       "attributeType": "string",
       "optional": true,
       "default": ""
+    },
+    {
+      "name": "events",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "dmss://system/SIMOS/EmitViewEvent",
+      "optional": true,
+      "dimensions": "*"
     }
   ]
 }
