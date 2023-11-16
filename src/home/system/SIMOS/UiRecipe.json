@@ -13,7 +13,7 @@
       "optional": false
     },
     {
-      "name": "refreshable",
+      "name": "showRefreshButton",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "boolean",
       "optional": true,
