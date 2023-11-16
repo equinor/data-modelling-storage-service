@@ -111,7 +111,6 @@ Feature: Add attribute to document
       """
             {
         "name": "Job",
-        "abstract": true,
         "type": "dmss://system/SIMOS/Blueprint",
         "attributes": [
           {

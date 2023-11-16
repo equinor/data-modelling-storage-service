@@ -41,7 +41,6 @@ class Blueprint:
             "name": self.name,
             "description": self.description,
             "type": self.type,
-            "abstract": self.abstract,
             "extends": self.extends,
             "attributes": [attribute.to_dict() for attribute in self.attributes],
         }
