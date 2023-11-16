@@ -13,6 +13,13 @@
       "optional": false
     },
     {
+      "name": "refreshable",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "boolean",
+      "optional": true,
+      "default": true
+    },
+    {
       "name": "category",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
