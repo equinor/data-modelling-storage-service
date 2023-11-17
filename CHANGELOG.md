@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.10.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.9.0...v1.10.0) (2023-11-17)
+
+
+### Features
+
+* adding refreshable?: bool to uiRecipe ([b121b8a](https://github.com/equinor/data-modelling-storage-service/commit/b121b8aefe4e16ae9da8186c6984ccd87323ecc2))
+* rename to showRefreshButton: bool to uiRecipe ([4de1380](https://github.com/equinor/data-modelling-storage-service/commit/4de1380eb74685040b42725a17f125b658d2ef44))
+
+
+### Bug Fixes
+
+* CreateEntity will now correctly use default, even on optional ([2b0dbe0](https://github.com/equinor/data-modelling-storage-service/commit/2b0dbe07ffd82804fb24f698ad43d267d8de18ea))
+* remove abstract from blueprints ([9c98b6e](https://github.com/equinor/data-modelling-storage-service/commit/9c98b6ef57bd3dab79aa5ae82266a6e35e43d0bf))
+
 ## [1.9.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.8.1...v1.9.0) (2023-11-14)
 
 
