@@ -17,7 +17,7 @@
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "boolean",
       "optional": true,
-      "default": true
+      "default": false
     },
     {
       "name": "category",
