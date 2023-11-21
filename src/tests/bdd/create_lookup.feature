@@ -1,8 +1,9 @@
 Feature: Create a lookup table
-    Background: There are data sources in the system
+
+  Background: There are data sources in the system
     Given the system data source and SIMOS core package are available
     Given there are basic data sources with repositories
-      |   name  |
+      | name    |
       | test-DS |
 
 
@@ -94,7 +95,6 @@ Feature: Create a lookup table
       """
 
 
-
   Scenario: System admins want to create a recipe lookup for the DMSS - SIMOS/recipe_links folder
     Given i access the resource url "/api/application/dmss?recipe_package=system/SIMOS/recipe_links"
     When i make a "POST" request
@@ -130,7 +130,8 @@ Feature: Create a lookup table
             "roles": null,
             "config": null,
             "label": "",
-            "dimensions": ""
+            "dimensions": "",
+            "showRefreshButton": false
           }
         ]
       },
@@ -164,7 +165,8 @@ Feature: Create a lookup table
             "roles": null,
             "config": null,
             "label": "",
-            "dimensions": ""
+            "dimensions": "",
+            "showRefreshButton": false
           }
         ],
         "dmss://system/SIMOS/NamedEntity": [
@@ -178,7 +180,8 @@ Feature: Create a lookup table
             "roles": null,
             "config": null,
             "label": "",
-            "dimensions": ""
+            "dimensions": "",
+            "showRefreshButton": false
           }
         ]
       },
@@ -217,7 +220,8 @@ Feature: Create a lookup table
             "roles": null,
             "config": null,
             "label": "",
-            "dimensions": ""
+            "dimensions": "",
+            "showRefreshButton": false
           }
         ]
       },
@@ -251,7 +255,8 @@ Feature: Create a lookup table
             "roles": null,
             "config": null,
             "label": "",
-            "dimensions": ""
+            "dimensions": "",
+            "showRefreshButton": false
           }
         ]
       },
