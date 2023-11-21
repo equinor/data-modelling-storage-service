@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.11.0...v1.11.1) (2023-11-21)
+
+
+### Bug Fixes
+
+* bdd tests ([3536c75](https://github.com/equinor/data-modelling-storage-service/commit/3536c75dd8f0506ad01bc58271a2fb7696a7b149))
+* refreshbutotnnotserved ([e1073be](https://github.com/equinor/data-modelling-storage-service/commit/e1073becd6b9a2aa04d4c4416b2e84d53e195f6f))
+
 ## [1.11.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.10.0...v1.11.0) (2023-11-21)
 
 
