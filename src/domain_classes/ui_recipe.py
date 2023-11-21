@@ -38,6 +38,7 @@ class Recipe(BaseModel):
     config: dict | None = None
     label: str = ""
     dimensions: str = ""
+    showRefreshButton: bool = False
 
     def get_attribute_by_name(self, key):
         return next((attr for attr in self.attributes if attr.name == key), None)
