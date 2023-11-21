@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.11.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.10.0...v1.11.0) (2023-11-21)
+
+
+### Features
+
+* change to false default ([42d2fdd](https://github.com/equinor/data-modelling-storage-service/commit/42d2fdd358c352963270d9e0ba7a82dd47a85d37))
+
+
+### Build System
+
+* remove publish pypi package ([8099d10](https://github.com/equinor/data-modelling-storage-service/commit/8099d101a3ce046f9c6ed5ebb4fb70b8c9c115ed))
+
 ## [1.10.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.9.0...v1.10.0) (2023-11-17)
 
 
