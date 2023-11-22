@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.11.1...v1.11.2) (2023-11-22)
+
+
+### Bug Fixes
+
+* empty author field if no full name ([e3720f1](https://github.com/equinor/data-modelling-storage-service/commit/e3720f11c60379dbbd8a434af5ade6f0b601095e))
+
 ## [1.11.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.11.0...v1.11.1) (2023-11-21)
 
 
