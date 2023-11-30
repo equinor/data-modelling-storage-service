@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.12.0...v1.13.0) (2023-11-30)
+
+
+### Features
+
+* refreshButton in ViewContif ([beb99a2](https://github.com/equinor/data-modelling-storage-service/commit/beb99a256320492dd73f23578a6f968d617a4765))
+
 ## [1.12.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.11.2...v1.12.0) (2023-11-30)
 
 
