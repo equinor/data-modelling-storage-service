@@ -39,6 +39,12 @@
       "attributeType": "string",
       "dimensions": "*",
       "optional": true
+    },
+    {
+      "name": "showRefreshButton",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "boolean",
+      "optional": true
     }
   ]
 }
