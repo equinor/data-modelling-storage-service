@@ -18,6 +18,7 @@ def _update_document(
     data: dict | list,
     document_service: DocumentService,
     files: dict[str, BinaryIO] | None,
+    partial_update: bool,
 ):
     """
     Update a document.
@@ -25,7 +26,8 @@ def _update_document(
     What to update is referred to with an address.
     It can either be an entire document or just an attribute inside a document.
     """
-    validate_entity_against_self(data, document_service.get_blueprint)
+    if not partial_update:
+        validate_entity_against_self(data, document_service.get_blueprint)
     if not address.path:
         raise Exception(f"Could not find the node on '{address}'")
 
@@ -47,7 +49,7 @@ def _update_document(
                 f"Can not update the document with address {address}, since the address is not pointing to a reference, but the data is a reference."
             )
 
-    if node.attribute.attribute_type != BuiltinDataTypes.OBJECT.value:
+    if node.attribute.attribute_type != BuiltinDataTypes.OBJECT.value and not partial_update:
         validate_entity(
             data,
             document_service.get_blueprint,
@@ -56,7 +58,7 @@ def _update_document(
         )
         # TODO consider validating link reference objects if the data parameter is of type system/SIMOS/Reference.
 
-    node.update(data)
+    node.update(data, partial_update)
     if files:
         merge_entity_and_files(node, files)
 
@@ -69,6 +71,7 @@ def update_document_use_case(
     address: Address,
     data: dict | list,
     document_service: DocumentService,
+    partial_update: bool = False,
     files: list[UploadFile] | None = None,
 ):
     """Update document.
@@ -77,6 +80,7 @@ def update_document_use_case(
         address: Reference to an existing entity
         data: The data to be updated
         document_service: The document service
+        partial_update: If true, only update what is passed in the document, and not delete anything that are missing.
         files: Dict with names and files of the files contained in the document
     Returns:
         A dict that contains the updated document.
@@ -87,6 +91,7 @@ def update_document_use_case(
         data=data,
         document_service=document_service,
         files={f.filename: f.file for f in files} if files else None,
+        partial_update=partial_update,
     )
     # Do not invalidate the blueprint cache if it was not a blueprint that was changed
     if "type" in document["data"] and document["data"]["type"] == SIMOS.BLUEPRINT.value:

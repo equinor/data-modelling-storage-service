@@ -247,7 +247,7 @@ class Node(NodeBase):
         self.entity: dict = entity if entity else {}
 
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
-    def update(self, data: dict):
+    def update(self, data: dict, partial_update: bool = False):
         if data.get("_id"):
             self.set_uid(data.get("_id"))
         # Set self.type from posted type, and validate against parent blueprint
@@ -294,7 +294,7 @@ class Node(NodeBase):
                             self.blueprint_provider,
                             recipe_provider=self.recipe_provider,
                         )
-                child.update(new_data)
+                child.update(new_data, partial_update)
 
         # Remove for every key in blueprint not in data or is a required attribute
         removed_attributes = [attr for attr in self.blueprint.attributes if attr.name not in data]
@@ -304,7 +304,8 @@ class Node(NodeBase):
                 self.entity.pop(attribute.name, None)  # type: ignore
             # Remove complex data
             else:
-                self.remove_by_path([attribute.name])
+                if not partial_update:
+                    self.remove_by_path([attribute.name])
 
     def get_context_storage_attribute(self):
         # TODO: How to decide which storage_recipe?
@@ -374,7 +375,7 @@ class ListNode(NodeBase):
     def blueprint(self):
         return self.blueprint_provider(self.attribute.attribute_type)  # TODO: blueprint_provider is required now...
 
-    def update(self, data: list):
+    def update(self, data: list, partial_update: bool):
         # Replaces the whole list with the new one
         if not isinstance(data, list):
             raise ValidationException(f"Cannot replace a list with a dictionary. Got data: {data}")
@@ -395,4 +396,4 @@ class ListNode(NodeBase):
                 attribute=BlueprintAttribute(name=self.name, attributeType=self.type),
                 parent=self,
             )
-            child.update(item)  # This will handle updating of children recursively
+            child.update(item, partial_update)  # This will handle updating of children recursively
