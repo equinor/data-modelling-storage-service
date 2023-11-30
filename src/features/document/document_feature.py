@@ -60,6 +60,7 @@ def update(
     data: Json = Form(...),
     files: list[UploadFile] | None = File(None),
     user: User = Depends(auth_w_jwt_or_pat),
+    partial_update: bool = False,
 ):
     """Update an Existing Document in the Database.
 
@@ -74,6 +75,7 @@ def update(
     - document (dict): The document to replace the previous version.
     - files: Optional list of files to be stored as part of this document.
     - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
+    - partial_update: If true, only update what is passed in the document, and not delete anything that are missing.
 
     Returns:
     - dict: The updated document.
@@ -91,6 +93,7 @@ def update(
         data=data,
         files=files,
         document_service=document_service,
+        partial_update=partial_update,
     )
 
 
