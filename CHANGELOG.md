@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.11.2...v1.12.0) (2023-11-30)
+
+
+### Features
+
+* partial update ([f0e89fe](https://github.com/equinor/data-modelling-storage-service/commit/f0e89fe294f0b2d6dfeb361a76925c294601c9f2))
+
 ## [1.11.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.11.1...v1.11.2) (2023-11-22)
 
 
