@@ -22,7 +22,7 @@
     {
       "name": "roles",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "./Role",
+      "attributeType": "dmss://system/SIMOS/Role",
       "optional": true,
       "dimensions": "*"
     }
