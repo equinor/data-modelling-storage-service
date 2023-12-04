@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.13.0...v1.14.0) (2023-12-04)
+
+
+### Features
+
+* role blueprint ([6f38459](https://github.com/equinor/data-modelling-storage-service/commit/6f384591c9f43290bb47ebd928be2d4c623a5cf5))
+
 ## [1.13.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.12.0...v1.13.0) (2023-11-30)
 
 
