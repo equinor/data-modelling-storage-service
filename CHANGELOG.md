@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.14.0...v1.14.1) (2023-12-04)
+
+
+### Bug Fixes
+
+* bad type format ([d8ba521](https://github.com/equinor/data-modelling-storage-service/commit/d8ba52124bb239e831b470f279ed89ae5d2ef8f9))
+
 ## [1.14.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.13.0...v1.14.0) (2023-12-04)
 
 
