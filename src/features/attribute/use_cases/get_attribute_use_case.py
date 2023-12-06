@@ -18,5 +18,9 @@ def get_attribute_use_case(
     direct_address = address
     if resolve and node.attribute.attribute_type == SIMOS.REFERENCE.value:
         direct_address = node.entity["address"]
-        node: Node = document_service.get_document(Address.from_absolute(direct_address), 2)  # type: ignore
+        # type: ignore
+        reference_node: Node = document_service.get_document(
+            Address.from_relative(direct_address, None, Address.from_absolute(address).data_source), 2
+        )
+        return {"attribute": reference_node.attribute.to_dict(), "address": direct_address}
     return {"attribute": node.attribute.to_dict(), "address": direct_address}
