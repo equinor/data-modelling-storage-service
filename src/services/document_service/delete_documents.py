@@ -1,4 +1,6 @@
 from common.entity.find import find
+from common.exceptions import NotFoundException
+from common.utils.logging import logger
 from enums import REFERENCE_TYPES, SIMOS, StorageDataTypes
 from storage.data_source_class import DataSource
 
@@ -39,7 +41,11 @@ def _delete_dict_recursive(in_dict: dict, data_source: DataSource):
     if (
         in_dict.get("type") == SIMOS.REFERENCE.value and in_dict.get("referenceType") == REFERENCE_TYPES.STORAGE.value
     ):  # It's a model contained reference
-        delete_document(data_source, in_dict["address"])
+        try:
+            delete_document(data_source, in_dict["address"])
+        except NotFoundException:  # storage address was empty so there is nothing to delete
+            logger.warning(f"STOARGE ADDRESS {in_dict['address']} NOT FOUND: SKIPPING")
+
     elif in_dict.get("type") == SIMOS.BLOB.value:
         data_source.delete_blob(in_dict["_blob_id"])
     else:
