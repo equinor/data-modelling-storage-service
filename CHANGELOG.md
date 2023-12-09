@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.14.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.14.1...v1.14.2) (2023-12-09)
+
+
+### Bug Fixes
+
+* get attributes for address that points to reference ([80f14d8](https://github.com/equinor/data-modelling-storage-service/commit/80f14d8f9a50d22d4b3f80aa0a35de1cfcdcfdaf))
+* skip empty storage references while deleting package ([dfa546e](https://github.com/equinor/data-modelling-storage-service/commit/dfa546e43094bd4dd49d400fdd5b6187ba9a594c))
+
 ## [1.14.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.14.0...v1.14.1) (2023-12-04)
 
 
