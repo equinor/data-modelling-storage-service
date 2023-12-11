@@ -234,6 +234,7 @@ class Node(NodeBase):
         parent=None,
         blueprint_provider=None,
         recipe_provider: Callable[..., list[StorageRecipe]] | None = None,
+        data_source: str | None = None,
     ):
         super().__init__(
             key,
@@ -244,6 +245,7 @@ class Node(NodeBase):
             entity=entity,
             recipe_provider=recipe_provider,
         )
+        self.data_source = data_source
         self.entity: dict = entity if entity else {}
 
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
@@ -343,6 +345,11 @@ class Node(NodeBase):
             self.entity["_id"] = new_id
         else:
             self.entity.pop("_id", None)
+
+    def get_data_source(self) -> str:
+        if self.data_source:
+            return self.data_source
+        return self.find_parent().get_data_source()
 
 
 class ListNode(NodeBase):
