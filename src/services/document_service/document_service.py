@@ -234,6 +234,7 @@ class DocumentService:
                 uid=resolved_address.document_id,
                 blueprint_provider=self.get_blueprint,
                 recipe_provider=self.get_storage_recipes,
+                data_source=resolved_address.data_source_id,
             )
 
             if resolved_address.attribute_path:

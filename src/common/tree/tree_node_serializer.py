@@ -124,6 +124,7 @@ def tree_node_from_dict(
     recipe_provider: Callable[..., list[StorageRecipe]] | None = None,
     uid: str | None = None,
     key: str | None = None,
+    data_source: str | None = None,
 ) -> Node:
     if recursion_depth >= config.MAX_ENTITY_RECURSION_DEPTH:
         message = (
@@ -150,6 +151,7 @@ def tree_node_from_dict(
         key=key,
         uid=uid,
         entity=entity,
+        data_source=data_source,
         blueprint_provider=blueprint_provider,
         attribute=node_attribute,
         recipe_provider=recipe_provider,
