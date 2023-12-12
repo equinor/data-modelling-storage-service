@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.14.2...v1.14.3) (2023-12-12)
+
+
+### Bug Fixes
+
+* attribute resolve ([2eaac78](https://github.com/equinor/data-modelling-storage-service/commit/2eaac782ae8ac0d5f86f54834784e586a70faae9))
+
 ## [1.14.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.14.1...v1.14.2) (2023-12-09)
 
 
