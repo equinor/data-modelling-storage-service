@@ -36,10 +36,24 @@ class Address:
         return cls(path, address, protocol)
 
     @classmethod
-    def from_relative(cls, address: str, document_id: str | None, data_source: str):
+    def from_relative(
+        cls, address: str, document_id: str | None, data_source: str, relative_path: list[str] | None = None
+    ):
         if "://" in address:
             # Already contains protocol and data source
             return cls.from_absolute(address)
+        if address.startswith("~"):
+            if not relative_path:
+                raise ApplicationException(
+                    "Missing the relative path and therefore it is not possible to resolve the ~ inside the address."
+                )
+            go_up = address.count("~")
+            path = relative_path.copy()
+            while go_up != 0:
+                path.pop(0)
+                go_up -= 1
+            new_address = f"${document_id}{".".join(path)}{address.rsplit("~", 1)[1]}"
+            return cls(new_address, data_source)
         elif address.startswith("^"):
             if not document_id:
                 raise ApplicationException(
