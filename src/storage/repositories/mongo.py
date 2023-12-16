@@ -56,13 +56,16 @@ class MongoDBClient(RepositoryInterface):
 
     def update(self, uid: str, document: dict, **kwargs) -> bool:
         attempts = 0
+        max_sleep_time = 30  # Maximum sleep time in seconds
         while attempts < 50:
             attempts += 1
             try:
                 return self.handler[self.collection].replace_one({"_id": uid}, document, upsert=True).acknowledged
             except (WriteError, OperationFailure) as ex:
-                sleep(3)
-                if attempts > 2:
+                sleep_time = min(2**attempts, max_sleep_time)
+                sleep(sleep_time)
+                if attempts >= 6:
+                    logger.debug("Retries exceeded, raising error")
                     raise ex
         raise NotFoundException(uid)
 
@@ -77,6 +80,7 @@ class MongoDBClient(RepositoryInterface):
 
     def update_blob(self, uid: str, blob: bytearray):
         attempts = 0
+        max_sleep_time = 30  # Maximum sleep time in seconds
         while attempts < 50:
             try:
                 attempts += 1
@@ -84,11 +88,13 @@ class MongoDBClient(RepositoryInterface):
                 return response
             except (WriteError, OperationFailure) as error:  # Likely caused by MongoDB rate limiting.
                 logger.warning(f"Failed to upload blob (attempt: {attempts}), will retry:\n\t{error}")
-                sleep(3)
-                if attempts > 2:
+                sleep_time = min(2**attempts, max_sleep_time)
+                sleep(sleep_time)
+                if attempts >= 6:
                     raise error
             except gridfs.errors.FileExists as ex:
                 if attempts > 1:  # The blob was actually added, even if we got 429...
+                    logger.info("Blob was added, even if we got 429")
                     return
                 message = f"Blob file with id '{uid}' already exists"
                 logger.warning(message)
