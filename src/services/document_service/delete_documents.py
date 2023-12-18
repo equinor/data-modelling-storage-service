@@ -16,13 +16,14 @@ def _delete_list_recursive(value: list | dict, data_source: DataSource):
 
 
 def delete_by_attribute_path(document: dict, path: list[str], data_source: DataSource) -> dict:
-    path_elements = [e.strip("[]./") for e in path]
+    path_elements = [e.strip("./") for e in path]
     # Step through all the path items except the last one that should be deleted
     target = find(document, path_elements[:-1])
 
     if isinstance(target, list):
-        obj = target[int(path_elements[-1])]
-        del target[int(path_elements[-1])]
+        index = int(path_elements[-1].strip("[]./"))
+        obj = target[index]
+        del target[index]
     elif isinstance(target, dict):
         obj = target[path_elements[-1]]
         del target[path_elements[-1]]
@@ -44,7 +45,7 @@ def _delete_dict_recursive(in_dict: dict, data_source: DataSource):
         try:
             delete_document(data_source, in_dict["address"])
         except NotFoundException:  # storage address was empty so there is nothing to delete
-            logger.warning(f"STOARGE ADDRESS {in_dict['address']} NOT FOUND: SKIPPING")
+            logger.warning(f"STORAGE ADDRESS {in_dict['address']} NOT FOUND: SKIPPING")
 
     elif in_dict.get("type") == SIMOS.BLOB.value:
         data_source.delete_blob(in_dict["_blob_id"])
