@@ -39,12 +39,19 @@ def _resolve_reference_list(
         ]
 
     if isinstance(value_sample, dict):
-        return [
-            resolve_references_in_entity(
-                value, document_repository, get_data_source, current_id, depth, depth_count, path
-            )
-            for value in values
-        ]
+        if path:
+            return [
+                resolve_references_in_entity(
+                    value,
+                    document_repository,
+                    get_data_source,
+                    current_id,
+                    depth,
+                    depth_count,
+                    path[:-1] + [f"{path[-1]}[{index}]"],
+                )
+                for index, value in enumerate(values)
+            ]
 
     # Values are primitive, return as is.
     return values
