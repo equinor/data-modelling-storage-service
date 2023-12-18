@@ -66,3 +66,32 @@ class AddressTestCase(unittest.TestCase):
 
         with self.assertRaises(ApplicationException):
             Address.from_relative(path, None, data_source="ds")
+
+    def test_one_attribute_up_from_current_document_with_relative_path(self):
+        address = "~.data"
+        relative_path = ["attribute[1]", "attribute_b"]
+        document_id = "doc_id"
+        addr = Address.from_relative(address, document_id, data_source="ds", relative_path=relative_path)
+
+        self.assertEqual(addr.path, "$doc_id.attribute[1].data")
+
+    def test_two_attributes_up_from_current_document_with_relative_path(self):
+        address = "~.~.data"
+        relative_path = ["attribute_a", "attribute_b"]
+        document_id = "doc_id"
+        addr = Address.from_relative(address, document_id, data_source="ds", relative_path=relative_path)
+
+        self.assertEqual(addr.path, "$doc_id.data")
+
+    def test_two_attributes_up_from_current_document_without_relative_path_throws_ApplicationException(self):
+        address = "~.~.data"
+        document_id = "doc_id"
+        with self.assertRaises(ApplicationException):
+            Address.from_relative(address, document_id, data_source="ds")
+
+    def test_go_up_from_current_document_more_than_possible_throws_ApplicationException(self):
+        address = "~.~.~.~.data"
+        relative_path = ["attribute_a", "attribute_b"]
+        document_id = "doc_id"
+        with self.assertRaises(ApplicationException):
+            Address.from_relative(address, document_id, data_source="ds", relative_path=relative_path)

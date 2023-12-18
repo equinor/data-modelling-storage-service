@@ -31,6 +31,19 @@ Feature: Relative references
           "type": "dmss://system/SIMOS/BlueprintAttribute",
           "name": "job",
           "optional": true
+        },
+        {
+          "attributeType": "dmss://test-source-name/TestData/Task",
+          "type": "CORE:BlueprintAttribute",
+          "name": "task",
+          "optional": true
+        },
+        {
+          "attributeType": "dmss://test-source-name/TestData/Task",
+          "type": "CORE:BlueprintAttribute",
+          "name": "tasks",
+          "optional": true,
+          "dimensions": "*"
         }
       ]
     }
@@ -129,7 +142,60 @@ Feature: Relative references
           "type": "dmss://system/SIMOS/Reference",
           "referenceType": "link"
         }
-      }
+      },
+      "task": {
+        "type": "dmss://test-source-name/TestData/Task",
+        "name": "ChildTask",
+        "data": {
+          "type": "dmss://test-source-name/TestData/Data",
+          "aNumber": 200
+        },
+        "job": {
+          "type": "dmss://test-source-name/TestData/Job",
+          "name": "Sub Job",
+          "input": {
+            "address": "~.~.data",
+            "type": "dmss://system/SIMOS/Reference",
+            "referenceType": "link"
+          }
+        }
+      },
+      "tasks": [
+        {
+          "type": "dmss://test-source-name/TestData/Task",
+          "name": "ChildTask1",
+          "data": {
+            "type": "dmss://test-source-name/TestData/Data",
+            "aNumber": 300
+          },
+          "job": {
+            "type": "dmss://test-source-name/TestData/Job",
+            "name": "Task 1",
+            "input": {
+              "address": "~.~.data",
+              "type": "dmss://system/SIMOS/Reference",
+              "referenceType": "link"
+            }
+          }
+        },
+        {
+          "type": "dmss://test-source-name/TestData/Task",
+          "name": "ChildTask2",
+          "data": {
+            "type": "dmss://test-source-name/TestData/Data",
+            "aNumber": 400
+          },
+          "job": {
+            "type": "dmss://test-source-name/TestData/Job",
+            "name": "Task 2",
+            "input": {
+              "address": "~.~.~.data",
+              "type": "dmss://system/SIMOS/Reference",
+              "referenceType": "link"
+            }
+          }
+        }
+      ]
     }
     """
 
@@ -160,6 +226,42 @@ Feature: Relative references
 
   Scenario: Resolve relative references
     Given I access the resource url "/api/documents/test-source-name/$5.job.input?depth=1"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "type": "dmss://test-source-name/TestData/Data",
+      "aNumber": 100
+    }
+    """
+
+  Scenario: Resolve relative references of nested attribute
+    Given I access the resource url "/api/documents/test-source-name/$5.task.job.input?depth=1"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "type": "dmss://test-source-name/TestData/Data",
+      "aNumber": 200
+    }
+    """
+
+  Scenario: Resolve relative references of document in list
+    Given I access the resource url "/api/documents/test-source-name/$5.tasks[0].job.input?depth=1"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+    {
+      "type": "dmss://test-source-name/TestData/Data",
+      "aNumber": 300
+    }
+    """
+
+  Scenario: Resolve relative references of document in list and has an address points outside list
+    Given I access the resource url "/api/documents/test-source-name/$5.tasks[1].job.input?depth=1"
     When I make a "GET" request
     Then the response status should be "OK"
     And the response should contain

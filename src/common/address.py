@@ -50,9 +50,17 @@ class Address:
             go_up = address.count("~")
             path = relative_path.copy()
             while go_up != 0:
-                path.pop(0)
+                if len(path) == 0:
+                    raise ApplicationException(
+                        "Invalid relative reference. Traversing outside a contained document with '~' is not supported"
+                    )
+                path.pop()
                 go_up -= 1
-            new_address = f"${document_id}{".".join(path)}{address.rsplit("~", 1)[1]}"
+            rest = address.rsplit("~", 1)[1]
+            if path:
+                new_address = f"${document_id}.{".".join(path)}{rest}"
+            else:
+                new_address = f"${document_id}{rest}"
             return cls(new_address, data_source)
         elif address.startswith("^"):
             if not document_id:
