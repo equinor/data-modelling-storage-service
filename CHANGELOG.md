@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.15.0...v1.15.1) (2023-12-18)
+
+
+### Bug Fixes
+
+* resolve tilde correct ([0853bdc](https://github.com/equinor/data-modelling-storage-service/commit/0853bdc6c9c8df1dd4e9fd09fb99bed17b26f224))
+
 ## [1.15.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.14.3...v1.15.0) (2023-12-15)
 
 
