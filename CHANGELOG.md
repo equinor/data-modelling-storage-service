@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.15.1...v1.15.2) (2023-12-18)
+
+
+### Bug Fixes
+
+* delete items in list ([01d9fb5](https://github.com/equinor/data-modelling-storage-service/commit/01d9fb578a273657f9e628a146763bfc8be53484))
+
 ## [1.15.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.15.0...v1.15.1) (2023-12-18)
 
 
