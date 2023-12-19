@@ -97,3 +97,7 @@ Creating DMSS lookup with [dm-cli](https://github.com/equinor/dm-cli):
 ```bash
 dm create-lookup dmss system/SIMOS/recipe_links
 ```
+
+<a id="Contributing"></a>
+## :+1: Contributing
+If you would like to contribute, please read our [Contribution guide](https://equinor.github.io/dm-docs/contributing/).
