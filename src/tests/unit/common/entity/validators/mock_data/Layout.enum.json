@@ -1,0 +1,17 @@
+{
+  "name": "Layout",
+  "type": "dmss://system/SIMOS/Enum",
+  "description": "Engine layout enum",
+  "values": [
+    "straight",
+    "V",
+    "wankel",
+    "boxer"
+  ],
+  "labels": [
+    "Straight",
+    "V",
+    "Wankel",
+    "Boxer"
+  ]
+}
