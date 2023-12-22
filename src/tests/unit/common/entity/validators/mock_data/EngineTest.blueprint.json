@@ -13,6 +13,14 @@
       "default": 120
     },
     {
+      "name": "layout",
+      "type": "system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "enumType": "Layout",
+      "optional": true,
+      "default": "straight"
+    },
+    {
       "name": "fuelPump",
       "type": "system/SIMOS/BlueprintAttribute",
       "attributeType": "FuelPumpTest",

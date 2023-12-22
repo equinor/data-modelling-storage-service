@@ -15,6 +15,7 @@ class ValidateEntityTestCase(unittest.TestCase):
             "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/NamedEntity",
             "dmss://system/SIMOS/BlueprintAttribute",
+            "dmss://system/SIMOS/Enum",
         ]
         mock_blueprint_folder = "src/tests/unit/common/entity/validators/mock_data"
         mock_blueprints_and_file_names = {
@@ -27,6 +28,7 @@ class ValidateEntityTestCase(unittest.TestCase):
             "Parent": "Parent.blueprint.json",
             "FuelPumpTest": "FuelPumpTest.blueprint.json",
             "EngineTest": "EngineTest.blueprint.json",
+            "Layout": "Layout.enum.json",
         }
         mock_blueprint_provider = MockBlueprintProvider(
             mock_blueprints_and_file_names=mock_blueprints_and_file_names,
@@ -407,3 +409,39 @@ class ValidateEntityTestCase(unittest.TestCase):
             )
         assert error.exception.message == "Attribute 'attributeType' should be type 'str'. Got 'int'. Value: 132"
         assert error.exception.debug == "Location: Entity in key '^.attributes.0.attributeType'"
+
+    def test_invalid_enum_value(self):
+        test_entity = {
+            "name": "myEngine",
+            "description": "Some description",
+            "layout": "w",
+            "fuelPump": {
+                "name": "fuelPump",
+                "description": "A standard fuel pump",
+                "type": "FuelPumpTest",
+            },
+            "power": 120,
+            "type": "EngineTest",
+        }
+        with self.assertRaises(ValidationException) as error:
+            validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)
+        assert (
+            error.exception.message
+            == "Attribute 'layout' is invalid. 'w' is not a member of the enum 'Layout'. Valid values are ['straight', 'V', 'wankel', 'boxer']"
+        )
+        assert error.exception.debug == "Location: Entity in key '^.layout'"
+
+    def test_valid_enum_value(self):
+        test_entity = {
+            "name": "myEngine",
+            "description": "Some description",
+            "layout": "wankel",
+            "fuelPump": {
+                "name": "fuelPump",
+                "description": "A standard fuel pump",
+                "type": "FuelPumpTest",
+            },
+            "power": 120,
+            "type": "EngineTest",
+        }
+        validate_entity_against_self(test_entity, self.mock_document_service.get_blueprint)

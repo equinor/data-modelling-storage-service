@@ -41,10 +41,20 @@ def is_blueprint_instance_of(
     return False
 
 
-def _validate_primitive_attribute(attribute: BlueprintAttribute, value: bool | int | float | str, key: str):
+def _validate_primitive_attribute(
+    attribute: BlueprintAttribute, value: bool | int | float | str, key: str, get_blueprint: Callable[..., Blueprint]
+):
     if attribute.attribute_type == BuiltinDataTypes.ANY.value:
         return  # If type is "any", no need to validate further
     python_type = BuiltinDataTypes(attribute.attribute_type).to_py_type()
+    if attribute.enum_type:
+        enum_entity = get_blueprint(attribute.enum_type).entity
+        if value not in enum_entity["values"]:
+            raise ValidationException(
+                f"Attribute '{attribute.name}' is invalid. '{value}' is not a member of the enum '{attribute.enum_type}'. Valid values are {enum_entity['values']}",
+                debug=_get_debug_message(key),
+                data=attribute.to_dict(),
+            )
     if attribute.attribute_type == "number" and isinstance(value, int):  # float is considered a superset containing int
         return
     if not python_type or not isinstance(value, python_type):
@@ -182,6 +192,7 @@ def _validate_entity(
                         default_attribute_definition,
                         entity["default"],
                         f"{key}.{default_attribute_definition.name}",
+                        get_blueprint,
                     )
                 except ValidationException as ex:
                     ex.data = entity
@@ -199,6 +210,7 @@ def _validate_entity(
                 attributeDefinition,
                 entity[attributeDefinition.name],
                 f"{key}.{attributeDefinition.name}",
+                get_blueprint,
             )
         else:
             _validate_complex_attribute(
@@ -264,7 +276,7 @@ def _validate_list(
                 implementation_mode,
             )
         elif attributeDefinition.is_primitive:
-            _validate_primitive_attribute(attributeDefinition, item, f"{key}.{i}")
+            _validate_primitive_attribute(attributeDefinition, item, f"{key}.{i}", get_blueprint)
         else:
             _validate_complex_attribute(
                 attributeDefinition,
