@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import AccessControlList, User
+from common.address import Address
 from common.providers.blueprint_provider import get_blueprint_provider
 from common.providers.storage_recipe_provider import storage_recipe_provider
 from common.responses import create_response, responses
@@ -19,15 +20,14 @@ router = APIRouter(tags=["default", "access_control"], prefix="/acl")
 
 
 @router.put(
-    "/{data_source_id}/{document_id}",
+    "/{address:path}",
     operation_id="set_acl",
     response_model=str,
     responses=responses,
 )
 @create_response(PlainTextResponse)
 def set_acl(
-    data_source_id: str,
-    document_id: str,
+    address: str,
     acl: AccessControlList,
     recursively: bool = True,
     user: User = Depends(auth_w_jwt_or_pat),
@@ -43,6 +43,7 @@ def set_acl(
     Returns:
     - str: "OK" (200)
     """
+    address_obj = Address.from_absolute(address)
     document_service = DocumentService(
         repository_provider=get_data_source,
         user=user,
@@ -51,8 +52,8 @@ def set_acl(
     )
 
     return set_acl_use_case(
-        data_source_id=data_source_id,
-        document_id=document_id,
+        data_source_id=address_obj.data_source,
+        document_id=address_obj.path,
         acl=acl,
         recursively=recursively,
         data_source_repository=DataSourceRepository(user),
@@ -61,13 +62,13 @@ def set_acl(
 
 
 @router.get(
-    "/{data_source_id}/{document_id}",
+    "/{address:path}",
     operation_id="get_acl",
     response_model=AccessControlList,
     responses=responses,
 )
 @create_response(JSONResponse)
-def get_acl(data_source_id: str, document_id: str, user: User = Depends(auth_w_jwt_or_pat)):
+def get_acl(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     """GET the access control list (ACL) for a document.
 
     The ACL determines which access a given user has for a document (Read, Write or None).
@@ -80,8 +81,9 @@ def get_acl(data_source_id: str, document_id: str, user: User = Depends(auth_w_j
     Returns:
     - ACL: The access control list requested.
     """
+    address_obj = Address.from_absolute(address)
     return get_acl_use_case(
-        data_source_id=data_source_id,
-        document_id=document_id,
+        data_source_id=address_obj.data_source,
+        document_id=address_obj.path,
         data_source_repository=DataSourceRepository(user),
     ).dict()
