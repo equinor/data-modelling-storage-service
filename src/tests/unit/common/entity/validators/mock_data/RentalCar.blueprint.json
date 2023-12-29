@@ -1,6 +1,6 @@
 {
   "name": "RentalCar",
-  "type": "system/SIMOS/Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "extends": [
     "dmss://system/SIMOS/NamedEntity"
   ],

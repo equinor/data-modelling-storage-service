@@ -8,7 +8,7 @@
   "attributes": [
     {
       "name": "AnotherExtraValue",
-      "type": "dmss://system/SIMOS/AttributeTypes",
+      "type": "dmss://system/SIMOS/enums/AttributeTypes",
       "attributeType": "boolean"
     }
   ]

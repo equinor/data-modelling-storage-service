@@ -1,6 +1,6 @@
 {
   "name": "Bush",
-  "type": "system/SIMOS/Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "Blueprint for a bush",
   "extends": [
     "dmss://system/SIMOS/NamedEntity"

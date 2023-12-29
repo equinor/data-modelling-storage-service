@@ -13,14 +13,14 @@ class ExtendRecipeLinksTestCase(unittest.TestCase):
                         {"name": "Edit", "type": "dmss://system/SIMOS/UiRecipe"},
                     ],
                     "dmss://system/SIMOS/Entity": [{"name": "DEFAULT_CREATE", "type": "dmss://system/SIMOS/UiRecipe"}],
-                    "dmss://system/SIMOS/blob_types/PDF": [{"name": "PDFView", "type": "dmss://system/SIMOS/UiRecipe"}],
+                    "dmss://system/SIMOS/PDF": [{"name": "PDFView", "type": "dmss://system/SIMOS/UiRecipe"}],
                 }
             }
         )
 
         lookup.realize_extends()
 
-        assert len(lookup.ui_recipes["dmss://system/SIMOS/blob_types/PDF"]) == 1
+        assert len(lookup.ui_recipes["dmss://system/SIMOS/PDF"]) == 1
 
     def test_get_recipes_2_levels_extended(self):
         lookup = Lookup(
@@ -32,13 +32,13 @@ class ExtendRecipeLinksTestCase(unittest.TestCase):
                         {"name": "Edit", "type": "dmss://system/SIMOS/UiRecipe"},
                     ],
                     "dmss://system/SIMOS/Entity": [{"name": "DEFAULT_CREATE", "type": "dmss://system/SIMOS/UiRecipe"}],
-                    "dmss://system/SIMOS/blob_types/PDF": [{"name": "PDFView", "type": "dmss://system/SIMOS/UiRecipe"}],
+                    "dmss://system/SIMOS/PDF": [{"name": "PDFView", "type": "dmss://system/SIMOS/UiRecipe"}],
                 }
             }
         )
 
         lookup.extends = {
-            "dmss://system/SIMOS/blob_types/PDF": [
+            "dmss://system/SIMOS/PDF": [
                 "dmss://system/SIMOS/Entity",
                 "_default_",
             ],
@@ -48,7 +48,7 @@ class ExtendRecipeLinksTestCase(unittest.TestCase):
         lookup.realize_extends()
 
         assert len(lookup.ui_recipes["dmss://system/SIMOS/Entity"]) == 2
-        assert len(lookup.ui_recipes["dmss://system/SIMOS/blob_types/PDF"]) == 5
+        assert len(lookup.ui_recipes["dmss://system/SIMOS/PDF"]) == 5
 
     def test_get_storage_recipes_2_levels_extended(self):
         lookup = Lookup(
@@ -65,15 +65,13 @@ class ExtendRecipeLinksTestCase(unittest.TestCase):
                             "type": "dmss://system/SIMOS/StorageRecipe",
                         }
                     ],
-                    "dmss://system/SIMOS/blob_types/PDF": [
-                        {"name": "PDFView", "type": "dmss://system/SIMOS/StorageRecipe"}
-                    ],
+                    "dmss://system/SIMOS/PDF": [{"name": "PDFView", "type": "dmss://system/SIMOS/StorageRecipe"}],
                 }
             }
         )
 
         lookup.extends = {
-            "dmss://system/SIMOS/blob_types/PDF": [
+            "dmss://system/SIMOS/PDF": [
                 "dmss://system/SIMOS/Entity",
                 "_default_",
             ],
@@ -83,4 +81,4 @@ class ExtendRecipeLinksTestCase(unittest.TestCase):
         lookup.realize_extends()
 
         assert len(lookup.storage_recipes["dmss://system/SIMOS/Entity"]) == 2
-        assert len(lookup.storage_recipes["dmss://system/SIMOS/blob_types/PDF"]) == 5
+        assert len(lookup.storage_recipes["dmss://system/SIMOS/PDF"]) == 5

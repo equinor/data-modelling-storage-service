@@ -1,6 +1,6 @@
 {
   "type": "dmss://system/SIMOS/RecipeLink",
-  "_blueprintPath_": "dmss://system/SIMOS/blob_types/PDF",
+  "_blueprintPath_": "dmss://system/SIMOS/PDF",
   "extends": [
     "dmss://system/SIMOS/NamedEntity",
     "_default_"

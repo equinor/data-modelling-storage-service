@@ -1,6 +1,6 @@
 {
   "name": "Signal",
-  "type": "system/SIMOS/Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "attributes": [
     {
       "name": "values",

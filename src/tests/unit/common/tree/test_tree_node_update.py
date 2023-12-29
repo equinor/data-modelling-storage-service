@@ -24,7 +24,6 @@ class DocumentServiceTestCase(unittest.TestCase):
             "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/NamedEntity",
             "dmss://system/SIMOS/Reference",
-            "dmss://system/SIMOS/Action",
             "dmss://system/SIMOS/Blueprint",
             "dmss://system/SIMOS/BlueprintAttribute",
         ]
@@ -169,9 +168,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertDictEqual(self.doc_storage["1"], entity_after)
 
     def test_update_blueprint_attribute_default_with_int(self):
-        blueprint = self.mock_blueprint_provider.get_blueprint("dmss://system/SIMOS/Action").to_dict()
+        blueprint = self.mock_blueprint_provider.get_blueprint("Box").to_dict()
         blueprint_node = tree_node_from_dict(blueprint, self.mock_blueprint_provider.get_blueprint)
-        attribute_node = blueprint_node.get_by_path(["attributes", "7"])
+        attribute_node = blueprint_node.get_by_path(["attributes", "0"])
 
         new_value = {
             "type": "dmss://system/SIMOS/BlueprintAttribute",
@@ -184,9 +183,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertEqual(attribute_node.entity["default"], 67)
 
     def test_update_blueprint_attribute_default_with_dict(self):
-        blueprint = self.mock_blueprint_provider.get_blueprint("dmss://system/SIMOS/Action").to_dict()
+        blueprint = self.mock_blueprint_provider.get_blueprint("Box").to_dict()
         blueprint_node = tree_node_from_dict(blueprint, self.mock_blueprint_provider.get_blueprint)
-        attribute_node = blueprint_node.get_by_path(["attributes", "7"])
+        attribute_node = blueprint_node.get_by_path(["attributes", "0"])
 
         new_value = {
             "type": "dmss://system/SIMOS/BlueprintAttribute",
@@ -200,9 +199,9 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertDictEqual(attribute_node.entity["default"], {"type": "test"})
 
     def test_update_blueprint_attribute_default_with_bool(self):
-        blueprint = self.mock_blueprint_provider.get_blueprint("dmss://system/SIMOS/Action").to_dict()
+        blueprint = self.mock_blueprint_provider.get_blueprint("Box").to_dict()
         blueprint_node = tree_node_from_dict(blueprint, self.mock_blueprint_provider.get_blueprint)
-        attribute_node = blueprint_node.get_by_path(["attributes", "7"])
+        attribute_node = blueprint_node.get_by_path(["attributes", "0"])
 
         new_value = {
             "type": "dmss://system/SIMOS/BlueprintAttribute",

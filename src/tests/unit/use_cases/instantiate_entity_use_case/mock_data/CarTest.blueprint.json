@@ -1,6 +1,6 @@
 {
   "name": "CarTest",
-  "type": "system/SIMOS/Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "attributes": [
     {
       "name": "name",

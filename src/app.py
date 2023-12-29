@@ -168,13 +168,12 @@ def init_application():
         }
     )
     import_package(
-        f"{config.APPLICATION_HOME}/system/SIMOS",
+        "/code/src/SIMOS",
         user,
         data_source_name=config.CORE_DATA_SOURCE,
         is_root=True,
     )
     create_lookup_table_use_case(["system/SIMOS/recipe_links"], "DMSS", user)
-    logger.debug("DONE")
 
 
 @cli.command()
@@ -207,7 +206,6 @@ def nuke_db():
             mongo_client[db_name][collection].delete_many({})
         blob_handler = gridfs.GridFS(mongo_client[db_name])
         for filename in blob_handler.list():
-            print(filename)
             blob_handler.delete(filename)
     logger.debug("DONE")
 
@@ -217,7 +215,7 @@ def nuke_db():
 def reset_app(context):
     context.invoke(nuke_db)
     logger.info("CREATING SYSTEM DATA SOURCE")
-    context.invoke(import_data_source, file="/code/src/home/system/data_sources/system.json")
+    context.invoke(import_data_source, file="/code/src/system_DS.json")
     logger.debug("DONE")
     context.invoke(init_application)
 

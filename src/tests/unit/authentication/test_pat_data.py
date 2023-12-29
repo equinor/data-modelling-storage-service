@@ -1,5 +1,5 @@
 import unittest
-from datetime import datetime
+from datetime import UTC, datetime
 from uuid import UUID
 
 from authentication.models import AccessLevel, PATData
@@ -29,7 +29,7 @@ class PatDataTestCase(unittest.TestCase):
             user_id="user1",
             roles=["role1", "role2"],
             scope=AccessLevel.READ,
-            expire=datetime.utcnow(),
+            expire=datetime.now(UTC),
         )
         as_dict = pat_data.dict()
         self.assertEqual(as_dict["_id"], "hash123")
@@ -38,7 +38,7 @@ class PatDataTestCase(unittest.TestCase):
         self.assertEqual(as_dict["scope"], AccessLevel.READ)
 
     def test_uuid_default(self):
-        pat_data = PATData(user_id="user1", scope=AccessLevel.WRITE, expire=datetime.utcnow())
+        pat_data = PATData(user_id="user1", scope=AccessLevel.WRITE, expire=datetime.now(UTC))
 
         self.assertIsInstance(pat_data.uuid, str)
         try:

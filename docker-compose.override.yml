@@ -8,6 +8,7 @@ services:
     volumes:
       - ./src:/code/src
     environment:
+      SECRET_KEY: sg9aeUM5i1JO4gNN8fQadokJa3_gXQMLBjSGGYcfscs= # Don't reuse this in production...
       ENVIRONMENT: local
       LOGGING_LEVEL: debug
       # MONGO_URI: ${MONGO_URI}

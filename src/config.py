@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from pydantic import BaseSettings, Field
 
 from enums import AuthProviderForRoleCheck
@@ -15,7 +13,6 @@ class Config(BaseSettings):
     MAX_ENTITY_RECURSION_DEPTH: int = Field(50, env="MAX_ENTITY_RECURSION_DEPTH")
     CORE_DATA_SOURCE: str = "system"
     CACHE_MAX_SIZE: int = 200
-    APPLICATION_HOME: str = Field(f"{Path(__file__).parent!s}/home", env="APPLICATION_HOME")
     # Access Control
     DMSS_ADMIN: str = Field("dmss-admin", env="DMSS_ADMIN")
     DMSS_ADMIN_ROLE: str = Field("dmss-admin", env="DMSS_ADMIN_ROLE")
