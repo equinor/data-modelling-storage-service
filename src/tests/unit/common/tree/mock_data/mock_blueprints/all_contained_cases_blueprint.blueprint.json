@@ -1,6 +1,6 @@
 {
   "name": "all_contained_cases_blueprint",
-  "type": "system/SIMOS/Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "First blueprint",
   "extends": [
     "dmss://system/SIMOS/NamedEntity"

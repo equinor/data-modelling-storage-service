@@ -1,6 +1,6 @@
 {
   "name": "Garden",
-  "type": "system/SIMOS/Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "Blueprint for a nice garden.",
   "extends": [
     "dmss://system/SIMOS/NamedEntity"

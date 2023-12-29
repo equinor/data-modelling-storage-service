@@ -7,13 +7,13 @@ from storage.repository_interface import RepositoryInterface
 class LocalFileRepository(RepositoryInterface):
     def __init__(self, location: str | Path | None = None):
         if location is None:
-            location = f"{Path(__file__).parent.parent.parent!s}/home/"
+            location = f"{Path(__file__).parent.parent.parent}/SIMOS"
         self.path = Path(location)
 
     def get(self, absolute_ref: str) -> dict:
         try:
-            protocol, address = absolute_ref.split("://", 1)
-            with open(f"{self.path}/{address}.json") as f:
+            path_to_json = absolute_ref.replace("dmss://system/SIMOS/", "")
+            with open(f"{self.path}/{path_to_json}.json") as f:
                 return json.load(f)
         except FileNotFoundError as ex:
             raise FileNotFoundError(

@@ -11,7 +11,7 @@ echo -e "########### VERSION ##########\n"
 
 if [ "$1" = 'api' ]; then
   if [ "${DATA_SOURCE_FILES:-""}" != "" ]; then
-    echo "$DATA_SOURCE_FILES" > /code/src/home/system/data_sources/system.json
+    echo "$DATA_SOURCE_FILES" > /code/src/system_DS.json
   fi
 
   if [ "${RESET_DATA_SOURCE:-"on"}" == "on" ]; then

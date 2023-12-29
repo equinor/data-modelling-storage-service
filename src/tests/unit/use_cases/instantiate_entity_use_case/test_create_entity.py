@@ -11,7 +11,7 @@ from tests.unit.mocks.mock_document_service import get_mock_document_service
 class CreateEntityTestCase(unittest.TestCase):
     def setUp(self):
         simos_blueprints = [
-            "dmss://system/SIMOS/AttributeTypes",
+            "dmss://system/SIMOS/enums/AttributeTypes",
             "dmss://system/SIMOS/BlueprintAttribute",
             "dmss://system/SIMOS/Entity",
             "dmss://system/SIMOS/NamedEntity",

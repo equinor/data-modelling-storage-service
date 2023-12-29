@@ -50,7 +50,7 @@ def step_impl(context):
     logger_level_before = logger.level
     logger.setLevel("ERROR")
     import_package(
-        f"{config.APPLICATION_HOME}/system/SIMOS",
+        "SIMOS",
         context.user,
         is_root=True,
         data_source_name="system",

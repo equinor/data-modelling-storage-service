@@ -61,7 +61,7 @@ class SIMOS(Enum):
     NAMED_ENTITY = "dmss://system/SIMOS/NamedEntity"
     PACKAGE = "dmss://system/SIMOS/Package"
     BLUEPRINT_ATTRIBUTE = "dmss://system/SIMOS/BlueprintAttribute"
-    ATTRIBUTE_TYPES = "dmss://system/SIMOS/AttributeTypes"
+    ATTRIBUTE_TYPES = "dmss://system/SIMOS/enums/AttributeTypes"
     BLOB = "dmss://system/SIMOS/Blob"
     RECIPE_LINK = "dmss://system/SIMOS/RecipeLink"
     DATASOURCE = "datasource"

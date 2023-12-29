@@ -1,6 +1,6 @@
 {
   "name": "EngineTest",
-  "type": "system/SIMOS/Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "This describes an engine",
   "extends": [
     "dmss://system/SIMOS/NamedEntity"

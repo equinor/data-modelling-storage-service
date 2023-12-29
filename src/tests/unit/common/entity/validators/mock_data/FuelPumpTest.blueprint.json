@@ -1,6 +1,6 @@
 {
   "name": "FuelPumpTest",
-  "type": "system/SIMOS/Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "This describes a fuel pump",
   "extends": [
     "dmss://system/SIMOS/NamedEntity"

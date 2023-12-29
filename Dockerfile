@@ -19,11 +19,11 @@ FROM base as development
 RUN poetry install
 COPY /src/.behaverc ./src/.behaverc
 COPY src ./src
-RUN chown -R 1000:1000 /code/src/home/system/data_sources/system.json
+RUN chown -R 1000:1000 /code/src/system_DS.json
 USER 1000
 
 FROM base as prod
 RUN poetry install --no-dev
 COPY src ./src
-RUN chown -R 1000:1000 /code/src/home/system/data_sources/system.json
+RUN chown -R 1000:1000 /code/src/system_DS.json
 USER 1000

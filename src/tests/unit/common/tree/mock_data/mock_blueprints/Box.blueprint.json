@@ -1,6 +1,6 @@
 {
   "name": "Box",
-  "type": "system/SIMOS/Blueprint",
+  "type": "dmss://system/SIMOS/Blueprint",
   "description": "Blueprint for a normal box. There is nothing interesting about this box.",
   "extends": [
     "dmss://system/SIMOS/NamedEntity"

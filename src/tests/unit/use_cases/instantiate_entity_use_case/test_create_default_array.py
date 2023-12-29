@@ -19,7 +19,7 @@ class DefaultArrayTestCase(unittest.TestCase):
         simos_blueprints = [
             "dmss://system/SIMOS/NamedEntity",
             "dmss://system/SIMOS/Entity",
-            "dmss://system/SIMOS/AttributeTypes",
+            "dmss://system/SIMOS/enums/AttributeTypes",
             "dmss://system/SIMOS/Package",
             "dmss://system/SIMOS/BlueprintAttribute",
         ]

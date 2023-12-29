@@ -6,7 +6,7 @@ from features.search.use_cases.search_use_case.build_complex_search import (
 )
 
 basic_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": "dmss://system/SIMOS/Blueprint",
     "name": "A box",
     "description": "First blueprint",
     "attributes": [
@@ -33,7 +33,7 @@ basic_blueprint = {
     ],
 }
 nested_blueprint = {
-    "type": "system/SIMOS/Blueprint",
+    "type": "dmss://system/SIMOS/Blueprint",
     "name": "Nested",
     "description": "Second blueprint",
     "attributes": [
@@ -66,7 +66,7 @@ nested_blueprint = {
 }
 
 nested_blueprint_w_list = {
-    "type": "system/SIMOS/Blueprint",
+    "type": "dmss://system/SIMOS/Blueprint",
     "name": "NestedList",
     "description": "Third blueprint",
     "attributes": [

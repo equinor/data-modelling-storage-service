@@ -83,12 +83,12 @@ Feature: Explorer - Add file
         },
         {
           "name": "a_pdf",
-          "attributeType": "dmss://system/SIMOS/blob_types/PDF",
+          "attributeType": "dmss://system/SIMOS/PDF",
           "type": "dmss://system/SIMOS/BlueprintAttribute"
         },
         {
           "name": "another_pdf",
-          "attributeType": "dmss://system/SIMOS/blob_types/PDF",
+          "attributeType": "dmss://system/SIMOS/PDF",
           "type": "dmss://system/SIMOS/BlueprintAttribute"
         },
         {
@@ -707,7 +707,7 @@ Feature: Explorer - Add file
         "a_pdf": {
           "name": "MyPDF1",
           "description": "",
-          "type": "dmss://system/SIMOS/blob_types/PDF",
+          "type": "dmss://system/SIMOS/PDF",
           "blob": {
             "name": "file1",
             "type": "dmss://system/SIMOS/Blob"
@@ -717,7 +717,7 @@ Feature: Explorer - Add file
         "another_pdf": {
           "name": "MyPDF2",
           "description": "",
-          "type": "dmss://system/SIMOS/blob_types/PDF",
+          "type": "dmss://system/SIMOS/PDF",
           "blob": {
             "name": "file2",
             "type": "dmss://system/SIMOS/Blob"
@@ -731,7 +731,7 @@ Feature: Explorer - Add file
           "a_pdf": {
             "name": "MyPDF3",
             "description": "",
-            "type": "dmss://system/SIMOS/blob_types/PDF",
+            "type": "dmss://system/SIMOS/PDF",
             "blob": {
               "name": "file3",
               "type": "dmss://system/SIMOS/Blob"
@@ -741,7 +741,7 @@ Feature: Explorer - Add file
           "another_pdf": {
             "name": "MyPDF4",
             "description": "",
-            "type": "dmss://system/SIMOS/blob_types/PDF",
+            "type": "dmss://system/SIMOS/PDF",
             "blob": {
               "name": "file4",
               "type": "dmss://system/SIMOS/Blob",
