@@ -27,6 +27,14 @@
       "label": "Description"
     },
     {
+      "name": "label",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "default": "",
+      "optional": true,
+      "label": "Label"
+    },
+    {
       "name": "_meta_",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "dmss://system/SIMOS/Meta",

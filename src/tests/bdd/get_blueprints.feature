@@ -209,6 +209,14 @@ Feature: Get a blueprint
             "label": "Description"
           },
           {
+            "name": "label",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "attributeType": "string",
+            "default": "",
+            "optional": true,
+            "label": "Label"
+          },
+          {
             "name": "_meta_",
             "type": "dmss://system/SIMOS/BlueprintAttribute",
             "attributeType": "dmss://system/SIMOS/Meta",
@@ -250,6 +258,14 @@ Feature: Get a blueprint
             "name": "description",
             "attributeType": "string",
             "type": "dmss://system/SIMOS/BlueprintAttribute"
+          },
+          {
+            "name": "label",
+            "type": "dmss://system/SIMOS/BlueprintAttribute",
+            "attributeType": "string",
+            "default": "",
+            "optional": true,
+            "label": "Label"
           },
           {
             "name": "_meta_",
@@ -329,6 +345,14 @@ Feature: Get a blueprint
           "default": "",
           "optional": true,
           "label": "Description"
+        },
+        {
+          "name": "label",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "string",
+          "default": "",
+          "optional": true,
+          "label": "Label"
         },
         {
           "name": "_meta_",
