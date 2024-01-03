@@ -18,14 +18,16 @@ async def add_file_use_case(data_source_id: str, file_id: str, file: UploadFile,
     # The reference to the binary data needs to be of type pointer
     # to avoid it to be resolved in get_resolved_document_by_id.
     # TODO: Create a File and Reference class and use that
+
+    filename_parts = file.filename.split(".")
     document = {
         "_id": file_id,
         "type": SIMOS.FILE.value,
-        "name": file.filename.split(".")[0],
+        "name": filename_parts[0],
         "author": user.full_name if user.full_name else "",
         "date": f"{datetime.now()}",
         "size": file_size,
-        "filetype": file.content_type,
+        "filetype": filename_parts[1] if len(filename_parts) > 1 else "",
         "content": {
             "type": SIMOS.REFERENCE.value,
             "address": f"${blob_id}",
