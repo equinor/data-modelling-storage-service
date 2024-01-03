@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.15.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.15.2...v1.15.3) (2024-01-03)
+
+
+### Bug Fixes
+
+* don't explicitly set admin role for service principal ([a129a93](https://github.com/equinor/data-modelling-storage-service/commit/a129a93f32b08154451fbb6501331b786fe7d3fe))
+* set filetype and not mime type ([97b96d1](https://github.com/equinor/data-modelling-storage-service/commit/97b96d1836b9f8efaebc64968fdbc9f042c2563b))
+
 ## [1.15.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.15.1...v1.15.2) (2023-12-18)
 
 
