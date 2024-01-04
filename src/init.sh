@@ -1,5 +1,5 @@
 #! /bin/bash
-set -eu
+set -euo pipefail
 
 echo "########### VERSION ##########"
 if [[ -e "/code/src/version.txt" ]]; then
@@ -9,11 +9,10 @@ else
 fi
 echo -e "########### VERSION ##########\n"
 
-if [ "$1" = 'api' ]; then
-  if [ "${DATA_SOURCE_FILES:-""}" != "" ]; then
-    echo "$DATA_SOURCE_FILES" > /code/src/system_DS.json
-  fi
 
+envsubst < /code/src/system_DS_template.json > /tmp/DMSS_systemDS.json
+
+if [ "$1" = 'api' ]; then
   if [ "${RESET_DATA_SOURCE:-"on"}" == "on" ]; then
     python3 /code/src/app.py reset-app
   fi

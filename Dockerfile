@@ -8,6 +8,10 @@ ENV PATH="/code/.venv/bin:$PATH"
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/code/src
 
+
+# gettext package is needed for envsubst command used in init.sh
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y gettext
+
 RUN pip install --upgrade pip && \
     pip install poetry && \
     poetry config virtualenvs.in-project true
@@ -19,11 +23,9 @@ FROM base as development
 RUN poetry install
 COPY /src/.behaverc ./src/.behaverc
 COPY src ./src
-RUN chown -R 1000:1000 /code/src/system_DS.json
 USER 1000
 
 FROM base as prod
 RUN poetry install --no-dev
 COPY src ./src
-RUN chown -R 1000:1000 /code/src/system_DS.json
 USER 1000

@@ -27,7 +27,6 @@ services:
       - "5000:5000"
 
   db:
-    image: mongo:3.4
     volumes:
       - ./data/db:/data/db
 

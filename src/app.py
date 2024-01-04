@@ -215,7 +215,7 @@ def nuke_db():
 def reset_app(context):
     context.invoke(nuke_db)
     logger.info("CREATING SYSTEM DATA SOURCE")
-    context.invoke(import_data_source, file="/code/src/system_DS.json")
+    context.invoke(import_data_source, file="/tmp/DMSS_systemDS.json")  # noqa: S108
     logger.debug("DONE")
     context.invoke(init_application)
 
