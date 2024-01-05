@@ -4,8 +4,8 @@ from enums import AuthProviderForRoleCheck
 
 
 class Config(BaseSettings):
-    MONGO_USERNAME: str = Field("maf", env="MONGO_INITDB_ROOT_USERNAME")
-    MONGO_PASSWORD: str = Field("maf", env="MONGO_INITDB_ROOT_PASSWORD")
+    MONGO_USERNAME: str = Field("maf", env="MONGO_USERNAME")
+    MONGO_PASSWORD: str = Field("maf", env="MONGO_PASSWORD")
     MONGO_URI: str = Field(None, env="MONGO_URI")
     ENVIRONMENT: str = Field("local", env="ENVIRONMENT")
     SECRET_KEY: str = Field(None, env="SECRET_KEY")
