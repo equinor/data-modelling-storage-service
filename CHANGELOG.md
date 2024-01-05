@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.16.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.15.3...v1.16.0) (2024-01-05)
+
+
+### Features
+
+* validate enums ([ab74bc8](https://github.com/equinor/data-modelling-storage-service/commit/ab74bc82474f9576673a337ec21171c0ef0bb497))
+
+
+### Code Refactoring
+
+* merge DS and docID in ACL endpoints ([7ba4edf](https://github.com/equinor/data-modelling-storage-service/commit/7ba4edfe43689ade41665cce04fa018f922a5ed4))
+* restructure and cleanup core blueprints ([60741af](https://github.com/equinor/data-modelling-storage-service/commit/60741afe86952c8bc10c17b9d7dbc055c026fc9e))
+
+
+### Build System
+
+* use a data source template and subst envvars ([4094ac4](https://github.com/equinor/data-modelling-storage-service/commit/4094ac4f1eeaa83ffea3389c23d72e231add2ec8))
+
 ## [1.15.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.15.2...v1.15.3) (2024-01-03)
 
 
