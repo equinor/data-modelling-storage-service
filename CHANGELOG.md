@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.16.0...v1.16.1) (2024-01-05)
+
+
+### Bug Fixes
+
+* consistent envvar name ([8cd71ed](https://github.com/equinor/data-modelling-storage-service/commit/8cd71eda15e15503611d9b1be402bb9dfc9c9f2b))
+
 ## [1.16.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.15.3...v1.16.0) (2024-01-05)
 
 
