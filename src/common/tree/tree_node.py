@@ -252,22 +252,20 @@ class Node(NodeBase):
     def update(self, data: dict, partial_update: bool = False):
         if data.get("_id"):
             self.set_uid(data.get("_id"))
+
         # Set self.type from posted type, and validate against parent blueprint
         self.type = data.get("type", self.attribute.attribute_type)
-
         # Modify and add for each key in posted data
         for key in data.keys():
-            if key == "_id":
-                continue
             new_data = data[key]
+            if key == "_id":
+                self.entity["_id"] = new_data
+                continue
             attribute = self.blueprint.get_attribute_by_name(key)
 
             if key == "type":
                 # Should always be able to specify type
                 self.entity[key] = new_data
-
-            if not attribute:  # This skips adding any attribute that is not specified in the blueprint
-                continue
 
             # Add/Modify primitive data
             if attribute.is_primitive:
@@ -297,6 +295,12 @@ class Node(NodeBase):
                             recipe_provider=self.recipe_provider,
                         )
                 child.update(new_data, partial_update)
+
+        # Remove any child that is not specified in blueprint
+        # (Can happen if we change the type, and the old node had some children)
+        for child in self.children:
+            if child.attribute.name not in self.blueprint.get_attribute_names():
+                self.remove_by_path([child.key])
 
         # Remove for every key in blueprint not in data or is a required attribute
         removed_attributes = [attr for attr in self.blueprint.attributes if attr.name not in data]

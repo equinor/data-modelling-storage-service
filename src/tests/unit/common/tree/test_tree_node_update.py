@@ -255,6 +255,42 @@ class DocumentServiceTestCase(unittest.TestCase):
             child,
         )
 
+    def test_update_with_different_child_type_where_old_has_complex(self):
+        entity = {
+            "_id": "1",
+            "name": "parent",
+            "type": "Parent",
+            "SomeChild": {
+                "name": "whatever",
+                "type": "ExtraSpecialChild",
+                "AnExtraValue": "Hallo there!",
+                "AValue": 13,
+                "AnotherChild": {
+                    "name": "minimi",
+                    "type": "BaseChild",
+                    "AValue": 999,
+                },
+            },
+        }
+        new_child = {
+            "name": "whatever",
+            "type": "BaseChild",
+            "AValue": 13,
+        }
+
+        self.doc_storage = {"1": deepcopy(entity)}
+
+        update_document_use_case(
+            data=deepcopy({**entity, "SomeChild": new_child}),
+            address=Address("$1", "testing"),
+            document_service=self.mock_document_service,
+        )
+
+        self.assertDictEqual(
+            self.doc_storage["1"]["SomeChild"],
+            new_child,
+        )
+
     def test_add_valid_second_level_specialized_child_type(self):
         self.doc_storage = {"1": {"_id": "1", "name": "Parent", "type": "Parent", "SomeChild": {}}}
         child = {

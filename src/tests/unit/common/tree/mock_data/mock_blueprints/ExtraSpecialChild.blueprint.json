@@ -10,6 +10,12 @@
       "name": "AnotherExtraValue",
       "type": "dmss://system/SIMOS/enums/AttributeTypes",
       "attributeType": "boolean"
+    },
+    {
+      "name": "AnotherChild",
+      "type": "dmss://system/SIMOS/enums/AttributeTypes",
+      "attributeType": "BasicChild",
+      "optional": true
     }
   ]
 }
