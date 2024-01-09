@@ -123,7 +123,7 @@ Feature: Get an attribute
     Given there exist document with id "3" in data source "test-DS"
     """
     {
-      "type":"dmss://DemoDataSource/plugins/form/uncontained_object/blueprints/Company",
+      "type":"dmss://test-DS/root_package/Company",
       "_id":"UncontainedObject",
       "name":"UncontainedObject",
       "numberOfEmployees":10,
@@ -131,12 +131,12 @@ Feature: Get an attribute
       "description":"It's a super nice place to work. The people are happy and they love to create great applications for use in the moorling line simulations.",
       "employees":[
         {
-          "type":"dmss://DemoDataSource/plugins/form/uncontained_object/blueprints/Person",
+          "type":"dmss://test-DS/root_package/Person",
           "name":"Miranda",
           "phoneNumber":1337
         },
         {
-          "type":"dmss://DemoDataSource/plugins/form/uncontained_object/blueprints/Person",
+          "type":"dmss://test-DS/root_package/Person",
           "name":"John","phoneNumber":1234
       }],
       "ceo":{
@@ -152,7 +152,7 @@ Feature: Get an attribute
       "assistant":{
         "type":"dmss://system/SIMOS/Reference",
         "referenceType":"link",
-        "address":"dmss://DemoDataSource/$UncontainedObject.accountant"
+        "address":"dmss://test-DS/$3.accountant"
       }
     }
     """
@@ -185,7 +185,91 @@ Feature: Get an attribute
       ]
     }
     """
-  Scenario: Get uncontained attribute
-    Given I access the resource url "/api/attribute_get/test-DS/$3.ceo"
+  Scenario: Get contained attribute with resolve
+    Given I access the resource url "/api/attribute/test-DS/$3.employees?resolve=true"
     When I make a "GET" request
     Then the response status should be "OK"
+    And the response should contain
+    """
+      {
+        "attribute": {
+          "name": "employees",
+          "attributeType": "dmss://test-DS/root_package/Person",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "description": "",
+          "label": "Employees",
+          "default": null,
+          "dimensions": "*",
+          "optional": false,
+          "contained": true,
+          "enumType": ""
+        },
+        "address": "test-DS/$3.employees"
+      }
+    """
+  Scenario: Get contained attribute without resolve
+    Given I access the resource url "/api/attribute/test-DS/$3.employees?resolve=false"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+      {
+        "attribute": {
+          "name": "employees",
+          "attributeType": "dmss://test-DS/root_package/Person",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "description": "",
+          "label": "Employees",
+          "default": null,
+          "dimensions": "*",
+          "optional": false,
+          "contained": true,
+          "enumType": ""
+        },
+        "address": "test-DS/$3.employees"
+      }
+    """
+  Scenario: Get uncontained attribute with resolve
+    Given I access the resource url "/api/attribute/test-DS/$3.ceo?resolve=true"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+      {
+        "attribute":{
+          "name": "employees",
+          "attributeType": "dmss://test-DS/root_package/Person",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "description": "",
+          "label": "Employees",
+          "default": null,
+          "dimensions": "",
+          "optional": false,
+          "contained": true,
+          "enumType": ""
+        },
+        "address": "dmss://test-DS/$3.employees[0]"
+      }
+    """
+  Scenario: Get uncontained attribute without resolve
+    Given I access the resource url "/api/attribute/test-DS/$3.ceo?resolve=false"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+      {
+        "attribute": {
+          "name": "ceo",
+          "attributeType": "dmss://system/SIMOS/Reference",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "description": "",
+          "label": "CEO",
+          "default": null,
+          "dimensions": "",
+          "optional": false,
+          "contained": false,
+          "enumType": ""
+        },
+        "address": "test-DS/$3.ceo"
+      }
+    """

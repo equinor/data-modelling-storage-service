@@ -14,9 +14,12 @@ def get_attribute_use_case(
 ):
     """Get attribute by reference."""
     document_service = DocumentService(repository_provider=repository_provider, user=user)
-    node: Node = document_service.get_document(Address.from_absolute(address))
+    address_from_abs = Address.from_absolute(address)
+    node: Node = document_service.get_document(address_from_abs)
     if resolve and node.attribute.attribute_type == SIMOS.REFERENCE.value:
-        reference_address = Address.from_relative(node.entity["address"], None, node.get_data_source())
+        reference_address = Address.from_relative(
+            node.entity["address"], address_from_abs.path.split(".").pop(0).strip("$"), node.get_data_source()
+        )
         # Resolve the reference
         reference_node: Node = document_service.get_document(reference_address, 1)
         return {"attribute": reference_node.attribute.to_dict(), "address": str(reference_address)}
