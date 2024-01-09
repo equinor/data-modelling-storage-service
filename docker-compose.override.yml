@@ -4,7 +4,7 @@ services:
   dmss:
     build:
       target: development
-    image: datamodelingtool.azurecr.io/dmss:dev
+    image: datamodelingtool.azurecr.io/dmss:latest
     volumes:
       - ./src:/code/src
     environment:
