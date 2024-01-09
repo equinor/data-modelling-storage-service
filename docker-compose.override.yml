@@ -4,7 +4,7 @@ services:
   dmss:
     build:
       target: development
-    image: datamodelingtool.azurecr.io/dmss:latest
+    image: datamodelingtool.azurecr.io/dmss:dev
     volumes:
       - ./src:/code/src
     environment:
@@ -27,6 +27,10 @@ services:
       - "5000:5000"
 
   db:
+    image: mongo:3.4
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: maf
+      MONGO_INITDB_ROOT_PASSWORD: maf
     volumes:
       - ./data/db:/data/db
 
