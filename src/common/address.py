@@ -58,7 +58,7 @@ class Address:
                 go_up -= 1
             rest = address.rsplit("~", 1)[1]
             if path:
-                new_address = f"${document_id}.{".".join(path)}{rest}"
+                new_address = f"${document_id}.{'.'.join(path)}{rest}"
             else:
                 new_address = f"${document_id}{rest}"
             return cls(new_address, data_source)
