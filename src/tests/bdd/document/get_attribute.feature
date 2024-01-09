@@ -35,6 +35,11 @@ Feature: Get an attribute
                 "address": "$4",
                 "type": "dmss://system/SIMOS/Reference",
                 "referenceType": "link"
+            },
+            {
+                "address": "$5",
+                "type": "dmss://system/SIMOS/Reference",
+                "referenceType": "link"
             }
         ]
     }
@@ -114,10 +119,16 @@ Feature: Get an attribute
           "attributeType": "string",
           "contained": true,
           "optional": true
+        },
+        {
+          "name": "middleManager",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-DS/root_package/Manager",
+          "contained": true,
+          "optional": true
         }
       ]
-      }
-
+    }
     """
 
     Given there exist document with id "3" in data source "test-DS"
@@ -153,6 +164,16 @@ Feature: Get an attribute
         "type":"dmss://system/SIMOS/Reference",
         "referenceType":"link",
         "address":"dmss://test-DS/$3.accountant"
+      },
+      "middleManager": {
+        "type":"dmss://test-DS/root_package/Manager",
+        "name":"Karen",
+        "phoneNumber":1337,
+        "worker": {
+          "type":"dmss://system/SIMOS/Reference",
+          "referenceType":"link",
+          "address":"^.employees[1]"
+        }
       }
     }
     """
@@ -181,6 +202,43 @@ Feature: Get an attribute
           "attributeType": "number",
           "label": "Phone Number",
           "optional": true
+        }
+      ]
+    }
+    """
+  Given there exist document with id "5" in data source "test-DS"
+    """
+    {
+      "name": "Manager",
+      "type": "dmss://system/SIMOS/Blueprint",
+      "attributes": [
+        {
+          "name": "type",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "string",
+          "optional": false
+        },
+        {
+          "name": "name",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "string",
+          "label": "Name",
+          "optional": false
+        },
+        {
+          "name": "phoneNumber",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "number",
+          "label": "Phone Number",
+          "optional": true
+        },
+        {
+          "name": "worker",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "attributeType": "dmss://test-DS/root_package/Person",
+          "label": "Worker",
+          "optional": true,
+          "contained": false
         }
       ]
     }
@@ -271,5 +329,27 @@ Feature: Get an attribute
           "enumType": ""
         },
         "address": "test-DS/$3.ceo"
+      }
+    """
+  Scenario: Get nested uncontained attribute without resolve
+    Given I access the resource url "/api/attribute/test-DS/$3.middleManager.worker?resolve=true"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain
+    """
+      {
+        "attribute": {
+          "name": "employees",
+          "attributeType": "dmss://test-DS/root_package/Person",
+          "type": "dmss://system/SIMOS/BlueprintAttribute",
+          "description": "",
+          "label": "Employees",
+          "default": null,
+          "dimensions": "",
+          "optional": false,
+          "contained": true,
+          "enumType": ""
+        },
+        "address": "dmss://test-DS/$3.employees[1]"
       }
     """

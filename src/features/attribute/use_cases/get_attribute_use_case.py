@@ -18,7 +18,7 @@ def get_attribute_use_case(
     node: Node = document_service.get_document(address_from_abs)
     if resolve and node.attribute.attribute_type == SIMOS.REFERENCE.value:
         reference_address = Address.from_relative(
-            node.entity["address"], address_from_abs.path.split(".").pop(0).strip("$"), node.get_data_source()
+            node.entity["address"], node.find_parent().node_id, node.get_data_source()
         )
         # Resolve the reference
         reference_node: Node = document_service.get_document(reference_address, 1)
