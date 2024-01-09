@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.16.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.16.1...v1.16.2) (2024-01-09)
+
+
+### Bug Fixes
+
+* remove lingering complex children when changing node type ([3bc7808](https://github.com/equinor/data-modelling-storage-service/commit/3bc780821f29de5443f6af234be9819e06b1fefe))
+* tyo in f string ([54e41d8](https://github.com/equinor/data-modelling-storage-service/commit/54e41d81f29d62c378a0188e2ba6f28959461c58))
+
 ## [1.16.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.16.0...v1.16.1) (2024-01-05)
 
 
