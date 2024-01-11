@@ -12,8 +12,6 @@ def _get_data_type_from_dmt_type(
         return type_enum.to_py_type()
     except ValueError:
         return attribute_type
-    except Exception as ex:
-        raise Exception(f"Something went wrong trying to fetch data type: {ex}") from ex
 
 
 class Dimension:
