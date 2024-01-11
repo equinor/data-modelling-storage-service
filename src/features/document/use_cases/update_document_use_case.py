@@ -3,13 +3,13 @@ from typing import BinaryIO
 from fastapi import UploadFile
 
 from common.address import Address
-from common.entity.validators import validate_entity, validate_entity_against_self
+from common.entity.validators import validate_entity_against_self
 from common.exceptions import NotFoundException, ValidationException
 from common.tree.merge_entity_and_files import merge_entity_and_files
 from common.tree.tree_node import Node
 from common.tree.tree_node_serializer import tree_node_to_dict
 from common.utils.logging import logger
-from enums import SIMOS, BuiltinDataTypes
+from enums import SIMOS
 from services.document_service.document_service import DocumentService
 
 
@@ -48,15 +48,6 @@ def _update_document(
             raise ValidationException(
                 f"Can not update the document with address {address}, since the address is not pointing to a reference, but the data is a reference."
             )
-
-    if node.attribute.attribute_type != BuiltinDataTypes.OBJECT.value and not partial_update:
-        validate_entity(
-            data,
-            document_service.get_blueprint,
-            document_service.get_blueprint(node.attribute.attribute_type),
-            "extend",
-        )
-        # TODO consider validating link reference objects if the data parameter is of type system/SIMOS/Reference.
 
     node.update(data, partial_update)
     if files:

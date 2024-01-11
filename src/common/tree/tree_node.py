@@ -253,8 +253,12 @@ class Node(NodeBase):
         if data.get("_id"):
             self.set_uid(data.get("_id"))
 
+        if self.type != data["type"]:  # Type has changed. Remove all old data
+            self.entity = {}
+            self.children = []
+
         # Set self.type from posted type, and validate against parent blueprint
-        self.type = data.get("type", self.attribute.attribute_type)
+        self.type = data["type"]
         # Modify and add for each key in posted data
         for key in data.keys():
             new_data = data[key]
