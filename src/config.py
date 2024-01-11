@@ -10,7 +10,7 @@ class Config(BaseSettings):
     ENVIRONMENT: str = Field("local", env="ENVIRONMENT")
     SECRET_KEY: str = Field(None, env="SECRET_KEY")
     LOGGER_LEVEL: str = Field("DEBUG", env="LOGGING_LEVEL", to_lower=True)
-    MAX_ENTITY_RECURSION_DEPTH: int = Field(50, env="MAX_ENTITY_RECURSION_DEPTH")
+    MAX_ENTITY_RECURSION_DEPTH: int = Field(5000, env="MAX_ENTITY_RECURSION_DEPTH")
     CORE_DATA_SOURCE: str = "system"
     CACHE_MAX_SIZE: int = 200
     # Access Control
