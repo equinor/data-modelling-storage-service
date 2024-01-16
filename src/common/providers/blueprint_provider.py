@@ -3,6 +3,7 @@ from functools import lru_cache
 
 from authentication.models import User
 from common.address import Address
+from common.exceptions import NotFoundException
 from common.providers.address_resolver.address_resolver import (
     ResolvedAddress,
     resolve_address,
@@ -33,10 +34,16 @@ class BlueprintProvider:
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)  # noqa: B019
     def get_blueprint(self, type: str) -> Blueprint:
         logger.debug(f"Cache miss! Fetching blueprint '{type}'")
-        resolved_address: ResolvedAddress = self.resolve_address(
-            Address.from_absolute(type),
-            lambda data_source_name: self.get_data_source(data_source_name, self.user),
-        )
+        try:
+            resolved_address: ResolvedAddress = self.resolve_address(
+                Address.from_absolute(type),
+                lambda data_source_name: self.get_data_source(data_source_name, self.user),
+            )
+        except NotFoundException as ex:
+            raise NotFoundException(
+                f"Blueprint referenced with '{type}' could not be found. Make sure the reference is correct.",
+                data=ex.dict(),
+            ) from ex
         resolved_address = self.resolve_address(
             Address.from_relative(
                 resolved_address.entity["address"],

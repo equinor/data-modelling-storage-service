@@ -65,11 +65,10 @@ Feature: Access Control
     Given I access the resource url "/api/documents/test-DS/$1"
     When I make a "GET" request
     Then the response status should be "Forbidden"
-    And the response should be
+    And the response should contain
     """
     {
-      "data": null,
-      "debug": "The requested operation requires 'READ' privileges. Action denied because of insufficient permissions",
+      "debug": "The requested operation requires 'READ' privileges",
       "message": "Failed to get document referenced with 'dmss://test-DS/$1'",
       "status": 403,
       "type": "MissingPrivilegeException"

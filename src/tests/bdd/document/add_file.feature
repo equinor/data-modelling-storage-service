@@ -419,11 +419,10 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "Not Found"
-    And the response should be
+    And the response should contain
     """
     {
-    "data": null,
-    "debug": "Document with id '-1' was not found in the 'test-DS' data-source. The requested resource could not be found",
+    "debug": "Document with id '-1' was not found in the 'test-DS' data-source",
     "message": "Failed to get document referenced with 'dmss://test-DS/$-1'",
     "status": 404,
     "type": "NotFoundException"

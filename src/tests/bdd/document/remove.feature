@@ -26,11 +26,10 @@ Feature: Explorer - Remove
     Given I access the resource url "/api/documents/data-source-name/$1"
     When I make a "GET" request
     Then the response status should be "Not Found"
-    And the response should be
+    And the response should contain
   """
   {
-  "data": null,
-  "debug": "Document with id '1' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+  "debug": "Document with id '1' was not found in the 'data-source-name' data-source",
   "message": "Failed to get document referenced with 'dmss://data-source-name/$1'",
   "status": 404,
   "type": "NotFoundException"
@@ -39,11 +38,10 @@ Feature: Explorer - Remove
     Given I access the resource url "/api/documents/data-source-name/$2"
     When I make a "GET" request
     Then the response status should be "Not Found"
-    And the response should be
+    And the response should contain
   """
   {
-  "data": null,
-  "debug": "Document with id '2' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+  "debug": "Document with id '2' was not found in the 'data-source-name' data-source",
   "message": "Failed to get document referenced with 'dmss://data-source-name/$2'",
   "status": 404,
   "type": "NotFoundException"
@@ -52,11 +50,10 @@ Feature: Explorer - Remove
     Given I access the resource url "/api/documents/data-source-name/$3"
     When I make a "GET" request
     Then the response status should be "Not Found"
-    And the response should be
+    And the response should contain
   """
   {
-  "data": null,
-  "debug": "Document with id '3' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+  "debug": "Document with id '3' was not found in the 'data-source-name' data-source",
   "message": "Failed to get document referenced with 'dmss://data-source-name/$3'",
   "status": 404,
   "type": "NotFoundException"
@@ -74,11 +71,10 @@ Feature: Explorer - Remove
     Given I access the resource url "/api/documents/data-source-name/$2"
     When I make a "GET" request
     Then the response status should be "Not Found"
-    And the response should be
+    And the response should contain
     """
     {
-    "data": null,
-    "debug": "Document with id '2' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+    "debug": "Document with id '2' was not found in the 'data-source-name' data-source",
     "message": "Failed to get document referenced with 'dmss://data-source-name/$2'",
     "status": 404,
     "type": "NotFoundException"
@@ -92,11 +88,10 @@ Feature: Explorer - Remove
     Given I access the resource url "/api/documents/data-source-name/$3"
     When I make a "GET" request
     Then the response status should be "Not Found"
-    And the response should be
+    And the response should contain
     """
     {
-    "data": null,
-    "debug": "Document with id '3' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+    "debug": "Document with id '3' was not found in the 'data-source-name' data-source",
     "message": "Failed to get document referenced with 'dmss://data-source-name/$3'",
     "status": 404,
     "type": "NotFoundException"
@@ -110,11 +105,10 @@ Feature: Explorer - Remove
     Given I access the resource url "/api/documents/data-source-name/$2"
     When I make a "GET" request
     Then the response status should be "Not Found"
-    And the response should be
+    And the response should contain
   """
   {
-  "data": null,
-  "debug": "Document with id '2' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+  "debug": "Document with id '2' was not found in the 'data-source-name' data-source",
   "message": "Failed to get document referenced with 'dmss://data-source-name/$2'",
   "status": 404,
   "type": "NotFoundException"
@@ -123,11 +117,10 @@ Feature: Explorer - Remove
     Given I access the resource url "/api/documents/data-source-name/$3"
     When I make a "GET" request
     Then the response status should be "Not Found"
-    And the response should be
+    And the response should contain
   """
   {
-  "data": null,
-  "debug": "Document with id '3' was not found in the 'data-source-name' data-source. The requested resource could not be found",
+  "debug": "Document with id '3' was not found in the 'data-source-name' data-source",
   "message": "Failed to get document referenced with 'dmss://data-source-name/$3'",
   "status": 404,
   "type": "NotFoundException"

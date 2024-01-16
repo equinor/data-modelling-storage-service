@@ -244,7 +244,8 @@ class DocumentService:
                 return child
             return node
         except (NotFoundException, ApplicationException) as e:
-            e.debug = f"{e.message}. {e.debug}"
+            e.data = e.dict()
+            e.debug = e.message
             e.message = f"Failed to get document referenced with '{address}'"
             raise e
 
