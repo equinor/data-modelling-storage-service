@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.16.2...v1.16.3) (2024-01-17)
+
+
+### Bug Fixes
+
+* fallback recursive limit should be bigger than common used depth ([a51fa06](https://github.com/equinor/data-modelling-storage-service/commit/a51fa062bedbf2d7e492cf9ae99763f36c4a01bd))
+
 ## [1.16.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.16.1...v1.16.2) (2024-01-09)
 
 
