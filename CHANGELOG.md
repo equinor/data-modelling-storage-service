@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.4](https://github.com/equinor/data-modelling-storage-service/compare/v1.16.3...v1.16.4) (2024-01-22)
+
+
+### Bug Fixes
+
+* better error on not found blueprint ([7a61560](https://github.com/equinor/data-modelling-storage-service/commit/7a615606f46fcd1eda214da926b625fff5b6f7ba))
+
 ## [1.16.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.16.2...v1.16.3) (2024-01-17)
 
 
