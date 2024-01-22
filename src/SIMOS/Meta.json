@@ -19,6 +19,30 @@
       "name": "type",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string"
+    },
+    {
+      "name": "createdBy",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "optional": true
+    },
+    {
+      "name": "createdTimestamp",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "optional": true
+    },
+    {
+      "name": "lastModifiedBy",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "optional": true
+    },
+    {
+      "name": "lastModifiedTimestamp",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "optional": true
     }
   ]
 }
