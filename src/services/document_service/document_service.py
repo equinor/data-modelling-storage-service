@@ -189,7 +189,7 @@ class DocumentService:
             return result
         return ref_dict
 
-    def get_document(self, address: Address, depth: int = 0) -> Node | ListNode:
+    def resolve_document(self, address: Address, depth: int = 0) -> tuple[dict, ResolvedAddress]:
         """
         Get document by address.
 
@@ -228,26 +228,30 @@ class DocumentService:
                 depth=depth + len(list(filter(lambda x: x[0] != "[", resolved_address.attribute_path))),
                 depth_count=1,
             )
-
-            node: Node = tree_node_from_dict(
-                resolved_document,
-                uid=resolved_address.document_id,
-                blueprint_provider=self.get_blueprint,
-                recipe_provider=self.get_storage_recipes,
-                data_source=resolved_address.data_source_id,
-            )
-
-            if resolved_address.attribute_path:
-                child = node.get_by_path(resolved_address.attribute_path)
-                if not child:
-                    raise NotFoundException(f"Invalid path {resolved_address.attribute_path}")
-                return child
-            return node
         except (NotFoundException, ApplicationException) as e:
             e.data = e.dict()
             e.debug = e.message
             e.message = f"Failed to get document referenced with '{address}'"
             raise e
+        return resolved_document, resolved_address
+
+    def get_document(self, address: Address, depth: int = 0) -> Node | ListNode:
+        resolved_document, resolved_address = self.resolve_document(address, depth)
+
+        node: Node = tree_node_from_dict(
+            resolved_document,
+            uid=resolved_address.document_id,
+            blueprint_provider=self.get_blueprint,
+            recipe_provider=self.get_storage_recipes,
+            data_source=resolved_address.data_source_id,
+        )
+
+        if resolved_address.attribute_path:
+            child = node.get_by_path(resolved_address.attribute_path)
+            if not child:
+                raise NotFoundException(f"Invalid path {resolved_address.attribute_path}")
+            return child
+        return node
 
     def remove(self, address: Address) -> None:
         node = self.get_document(address)
