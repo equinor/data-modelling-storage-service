@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.18.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.17.0...v1.18.0) (2024-01-23)
+
+
+### Features
+
+* more attributes in SIMOS/Meta ([ad39fa8](https://github.com/equinor/data-modelling-storage-service/commit/ad39fa8a6fa312506701ff850d4d007e14af8e3c))
+
+
+### Bug Fixes
+
+* move to correct folder ([7e455f7](https://github.com/equinor/data-modelling-storage-service/commit/7e455f79d1f17623af600291878db03034d6b823))
+
 ## [1.17.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.16.4...v1.17.0) (2024-01-23)
 
 
