@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.18.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.18.0...v1.18.1) (2024-01-23)
+
+
+### Code Refactoring
+
+* just return document if depth is zero ([1b7dc20](https://github.com/equinor/data-modelling-storage-service/commit/1b7dc20c19adb7c424315e1e448f54f660f2b045))
+* skip create node tree when getting documents ([df39484](https://github.com/equinor/data-modelling-storage-service/commit/df39484f8b9baaa5e25cd72c12b151baf38a9bcf))
+
 ## [1.18.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.17.0...v1.18.0) (2024-01-23)
 
 
