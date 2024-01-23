@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.16.4...v1.17.0) (2024-01-23)
+
+
+### Features
+
+* url blueprint in core ([32aa750](https://github.com/equinor/data-modelling-storage-service/commit/32aa750d989505eab8e55b92b7975610de1b1c04))
+
 ## [1.16.4](https://github.com/equinor/data-modelling-storage-service/compare/v1.16.3...v1.16.4) (2024-01-22)
 
 
