@@ -219,13 +219,16 @@ class DocumentService:
 
             data_source: DataSource = self.get_data_source(resolved_address.data_source_id)
             document: dict = data_source.get(resolved_address.document_id)
+            if depth == 0:
+                return document, resolved_address
 
+            attribute_depth = len(list(filter(lambda x: x[0] != "[", resolved_address.attribute_path)))
             resolved_document: dict = resolve_references_in_entity(
                 document,
                 data_source,
                 self.get_data_source,
                 resolved_address.document_id,
-                depth=depth + len(list(filter(lambda x: x[0] != "[", resolved_address.attribute_path))),
+                depth=depth + attribute_depth,
                 depth_count=1,
             )
         except (NotFoundException, ApplicationException) as e:
