@@ -54,6 +54,9 @@ class Address:
                     raise ApplicationException(
                         "Invalid relative reference. Traversing outside a contained document with '~' is not supported"
                     )
+                if path[-1].endswith("]"):
+                    # This is a list element, so we remove both the index and attribute
+                    path.pop()
                 path.pop()
                 go_up -= 1
             rest = address.rsplit("~", 1)[1]

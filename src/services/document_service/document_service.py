@@ -6,6 +6,7 @@ from uuid import uuid4
 
 from authentication.models import User
 from common.address import Address
+from common.entity.is_reference import is_reference
 from common.entity.validators import validate_entity_against_self
 from common.exceptions import (
     ApplicationException,
@@ -30,6 +31,7 @@ from common.tree.tree_node_serializer import (
     tree_node_to_ref_dict,
 )
 from common.utils.logging import logger
+from common.utils.update_nested_dict import update_nested_dict
 from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.storage_recipe import StorageRecipe
@@ -218,25 +220,44 @@ class DocumentService:
                 )
 
             data_source: DataSource = self.get_data_source(resolved_address.data_source_id)
-            document: dict = data_source.get(resolved_address.document_id)
             if depth == 0:
-                return document, resolved_address
+                # return without any resolving
+                return data_source.get(resolved_address.document_id), resolved_address
 
-            attribute_depth = len(list(filter(lambda x: x[0] != "[", resolved_address.attribute_path)))
+            while is_reference(resolved_address.entity):
+                # if the address is pointing to a reference(s) it will be resolved before returned
+                resolved_address = resolve_address(
+                    Address.from_relative(
+                        resolved_address.entity["address"],
+                        resolved_address.document_id,
+                        resolved_address.data_source_id,
+                        resolved_address.attribute_path,
+                    ),
+                    self.get_data_source,
+                )
             resolved_document: dict = resolve_references_in_entity(
-                document,
+                resolved_address.entity,
                 data_source,
                 self.get_data_source,
                 resolved_address.document_id,
-                depth=depth + attribute_depth,
+                depth=depth,
                 depth_count=1,
+                path=resolved_address.attribute_path,
             )
+
+            if len(resolved_address.attribute_path) == 0:
+                # The resolved document is already the root document
+                return resolved_document, resolved_address
+            else:
+                document: dict = data_source.get(resolved_address.document_id)
+                path_to_update: list[str] = [x.strip("[]") for x in resolved_address.attribute_path]
+                update_nested_dict(document, path_to_update, resolved_document)
+                return document, resolved_address
         except (NotFoundException, ApplicationException) as e:
             e.data = e.dict()
             e.debug = e.message
             e.message = f"Failed to get document referenced with '{address}'"
             raise e
-        return resolved_document, resolved_address
 
     def get_document(self, address: Address, depth: int = 0) -> Node | ListNode:
         resolved_document, resolved_address = self.resolve_document(address, depth)
