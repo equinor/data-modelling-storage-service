@@ -48,7 +48,7 @@ def _resolve_reference_list(
                     current_id,
                     depth,
                     depth_count,
-                    path[:-1] + [f"{path[-1]}[{index}]"],
+                    path[:-1] + [f"{path[-1]}", f"[{index}]"],
                 )
                 for index, value in enumerate(values)
             ]
@@ -97,14 +97,14 @@ def _get_complete_sys_document(
 
 
 def resolve_references_in_entity(
-    entity: dict,
+    entity: dict | list,
     data_source: DataSource,
     get_data_source: Callable,
     current_id: str | None,
     depth: int,
     depth_count: int,
     path: list[str] | None = None,
-) -> dict:
+) -> dict | list:
     """
     Resolve references inside an entity.
 
@@ -119,21 +119,24 @@ def resolve_references_in_entity(
             raise RecursionError("Reached max-nested-depth (999). Most likely some recursive entities")
         return entity
 
-    for key, value in entity.items():
-        if not value:
-            continue
+    if isinstance(entity, list):
+        entity = _resolve_reference_list(entity, data_source, get_data_source, current_id, depth, depth_count + 1, path)
+    else:
+        for key, value in entity.items():
+            if not value:
+                continue
 
-        if isinstance(value, list):  # If it's a list, resolve any references
-            entity[key] = _resolve_reference_list(
-                value, data_source, get_data_source, current_id, depth, depth_count + 1, [*path, key]
-            )
-        elif isinstance(value, dict):
-            if is_reference(value):
-                entity[key] = _get_complete_sys_document(
+            if isinstance(value, list):  # If it's a list, resolve any references
+                entity[key] = _resolve_reference_list(
                     value, data_source, get_data_source, current_id, depth, depth_count + 1, [*path, key]
                 )
-            else:
-                entity[key] = resolve_references_in_entity(
-                    value, data_source, get_data_source, current_id, depth, depth_count + 1, [*path, key]
-                )
+            elif isinstance(value, dict):
+                if is_reference(value):
+                    entity[key] = _get_complete_sys_document(
+                        value, data_source, get_data_source, current_id, depth, depth_count + 1, [*path, key]
+                    )
+                else:
+                    entity[key] = resolve_references_in_entity(
+                        value, data_source, get_data_source, current_id, depth, depth_count + 1, [*path, key]
+                    )
     return entity
