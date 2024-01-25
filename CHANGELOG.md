@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.18.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.18.1...v1.18.2) (2024-01-25)
+
+
+### Code Refactoring
+
+* make resolve document method only return what it is pointing to ([312a744](https://github.com/equinor/data-modelling-storage-service/commit/312a7444d2a23cc5780708ac5903a98f89d2fe93))
+* only resolve relevant references ([0fd3f04](https://github.com/equinor/data-modelling-storage-service/commit/0fd3f0454aa8766e0e35faef210f2eb4c775aeba))
+
 ## [1.18.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.18.0...v1.18.1) (2024-01-23)
 
 
