@@ -16,8 +16,8 @@ services:
     depends_on:
       - db
   db:
-    image: bitnami/mongodb:6.0.9
+    image: mongo:5.0.9
+    command: mongod --quiet
     environment:
-      MONGODB_ROOT_PASSWORD: maf
-      MONGODB_ROOT_USER: maf
-      MONGODB_EXTRA_FLAGS: "--quiet"
+      MONGO_INITDB_ROOT_USERNAME: maf
+      MONGO_INITDB_ROOT_PASSWORD: maf

@@ -219,13 +219,12 @@ class DocumentService:
                     self.get_data_source,
                 )
 
-            data_source: DataSource = self.get_data_source(resolved_address.data_source_id)
             if depth == 0:
                 # return without any resolving
-                return data_source.get(resolved_address.document_id), resolved_address
+                return resolved_address.entity, resolved_address
 
             while is_reference(resolved_address.entity):
-                # if the address is pointing to a reference(s) it will be resolved before returned
+                # if the address is pointing to a reference (or chain of references) resolve those
                 resolved_address = resolve_address(
                     Address.from_relative(
                         resolved_address.entity["address"],
@@ -235,24 +234,18 @@ class DocumentService:
                     ),
                     self.get_data_source,
                 )
+
+            # start resolving any references if depth > 1
             resolved_document: dict = resolve_references_in_entity(
                 resolved_address.entity,
-                data_source,
+                self.get_data_source(resolved_address.data_source_id),
                 self.get_data_source,
                 resolved_address.document_id,
                 depth=depth,
                 depth_count=1,
                 path=resolved_address.attribute_path,
             )
-
-            if len(resolved_address.attribute_path) == 0:
-                # The resolved document is already the root document
-                return resolved_document, resolved_address
-            else:
-                document: dict = data_source.get(resolved_address.document_id)
-                path_to_update: list[str] = [x.strip("[]") for x in resolved_address.attribute_path]
-                update_nested_dict(document, path_to_update, resolved_document)
-                return document, resolved_address
+            return resolved_document, resolved_address
         except (NotFoundException, ApplicationException) as e:
             e.data = e.dict()
             e.debug = e.message
@@ -261,6 +254,16 @@ class DocumentService:
 
     def get_document(self, address: Address, depth: int = 0) -> Node | ListNode:
         resolved_document, resolved_address = self.resolve_document(address, depth)
+
+        if len(resolved_address.attribute_path) > 0:
+            # We need to get the whole (root) document before continue,
+            # this is because the returned node is used when saving,
+            # and it assumes that the node contains the whole document.
+            data_source: DataSource = self.get_data_source(resolved_address.data_source_id)
+            document: dict = data_source.get(resolved_address.document_id)
+            nested_path_to_update: list[str] = [x.strip("[]") for x in resolved_address.attribute_path]
+            update_nested_dict(document, nested_path_to_update, resolved_document)
+            resolved_document = document
 
         node: Node = tree_node_from_dict(
             resolved_document,
