@@ -93,7 +93,4 @@ def update_document_use_case(
         files={f.filename: f.file for f in files} if files else None,
         partial_update=partial_update,
     )
-    # Do not invalidate the blueprint cache if it was not a blueprint that was changed
-    if "type" in document["data"] and document["data"]["type"] == SIMOS.BLUEPRINT.value:
-        document_service.invalidate_cache()
     return document
