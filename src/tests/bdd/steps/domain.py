@@ -108,7 +108,7 @@ def step_impl_documents(context, data_source_id: str, collection: str):
 def step_ACL_for_docs_in_DS_is(context, document_id, data_source):
     document_service = DocumentService(get_data_source, user=context.user)
     acl = AccessControlList(**json.loads(context.text))
-    document_service.repository_provider(data_source, context.user).update_access_control(document_id, acl)
+    document_service.data_source(data_source, context.user).update_access_control(document_id, acl)
 
 
 @then('AccessControlList for document "{document_id}" in data-source "{data_source}" should be')

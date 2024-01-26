@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from pydantic import BaseModel
 from pymongo.errors import DuplicateKeyError, ServerSelectionTimeoutError
 
@@ -9,6 +11,7 @@ from common.exceptions import (
     NotFoundException,
 )
 from common.utils.logging import logger
+from config import config
 from enums import RepositoryType
 from restful.request_types.create_data_source import DataSourceRequest
 from services.database import data_source_collection
@@ -80,7 +83,8 @@ class DataSourceRepository:
             raise BadRequestException(f"Tried to create a datasource that already exists ('{id}')") from ex
         return str(result.upserted_id)
 
-    def get(self, id: str) -> DataSource:
+    @staticmethod
+    def get(id: str) -> DataSource:
         try:
             data_source = data_source_collection.find_one(filter={"_id": id})
         except ServerSelectionTimeoutError as ex:
@@ -91,7 +95,7 @@ class DataSourceRepository:
                 message=f"The data source, with id '{id}' could not be found",
                 debug=f"No data source with id '{id}' could be found in the internal DS repository",
             )
-        return DataSource.from_dict(data_source, user=self.user)
+        return DataSource.from_dict(data_source)
 
     def update_access_control(self, data_source_id: str, acl: AccessControlList) -> None:
         data_source: DataSource = self.get(data_source_id)
@@ -101,3 +105,7 @@ class DataSourceRepository:
 
 def get_data_source(data_source_id: str, user: User) -> DataSource:
     return DataSourceRepository(user).get(data_source_id)
+
+@lru_cache(maxsize=config.CACHE_MAX_SIZE)
+def get_data_source_cached(data_source_id: str) -> DataSource:
+    return DataSourceRepository.get(data_source_id)

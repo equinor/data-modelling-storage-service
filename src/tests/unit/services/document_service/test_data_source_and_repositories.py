@@ -91,7 +91,7 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        self.mock_document_service.repository_provider = lambda x, y: data_source
+        self.mock_document_service.data_source = lambda x, y: data_source
         self.mock_document_service.user = test_user
 
         node: Node = tree_node_from_dict(
@@ -160,7 +160,7 @@ class DataSourceTestCase(unittest.TestCase):
             data_source_collection=data_source_collection,
         )
 
-        self.mock_document_service.repository_provider = lambda x, y: data_source
+        self.mock_document_service.data_source = lambda x, y: data_source
         self.mock_document_service.user = test_user
 
         node: Node = tree_node_from_dict(
@@ -231,7 +231,7 @@ class DataSourceTestCase(unittest.TestCase):
             repositories={"default": default_repo, "blob": blob_repo},
             data_source_collection=data_source_collection,
         )
-        self.mock_document_service.repository_provider = lambda x, y: data_source
+        self.mock_document_service.data_source = lambda x, y: data_source
         self.mock_document_service.user = test_user
 
         node: Node = tree_node_from_dict(

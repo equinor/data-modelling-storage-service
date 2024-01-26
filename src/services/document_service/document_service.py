@@ -40,6 +40,7 @@ from services.document_service.delete_documents import (
     delete_by_attribute_path,
     delete_document,
 )
+from storage.auth_data_source_wrapper import prod_storage_wrapper, WrapperWrapper
 from storage.data_source_class import DataSource
 from storage.internal.data_source_repository import get_data_source
 from storage.repositories.zip.zip_file_client import ZipFileClient
@@ -47,10 +48,12 @@ from storage.repositories.zip.zip_file_client import ZipFileClient
 pretty_printer = pprint.PrettyPrinter()
 
 
+
+
 class DocumentService:
     def __init__(
         self,
-        repository_provider=get_data_source,
+        storage=None,
         blueprint_provider=None,
         user=User.default(),
         context: str | None = None,
@@ -58,10 +61,9 @@ class DocumentService:
     ):
         self._blueprint_provider = blueprint_provider or get_blueprint_provider(user)
         self._recipe_provider: Callable[..., list[StorageRecipe]] = recipe_provider or storage_recipe_provider
-        self.repository_provider = repository_provider
-        self.user = user
+        self.data_source = storage or WrapperWrapper(user)
+        # self.user = user
         self.context = context
-        self.get_data_source = lambda data_source_id: self.repository_provider(data_source_id, self.user)
 
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)  # noqa:B019  TODO
     def get_blueprint(self, type: str) -> Blueprint:
@@ -147,7 +149,7 @@ class DocumentService:
             return {}
         # If not passed a custom repository to save into, use the DocumentService's storage
         if not repository:
-            repository: DataSource = self.repository_provider(data_source_id, self.user)  # type: ignore
+            repository: DataSource = self.data_source(data_source_id, self.user)  # type: ignore
 
         # If the node is a package, we build the path string to be used by filesystem like repositories.
         # Also, check for duplicate names in the package.
@@ -203,7 +205,7 @@ class DocumentService:
               depth=2 means that the entity's direct child references will be returned as well.
         """
         try:
-            resolved_address: ResolvedAddress = resolve_address(address, self.get_data_source)
+            resolved_address: ResolvedAddress = resolve_address(address, self.data_source)
 
             if address.is_by_package():
                 # If the address is by package (package/sub-package/entity),
@@ -285,7 +287,7 @@ class DocumentService:
         if node.parent and not node.is_optional:
             raise ValidationException("Tried to remove a required attribute")
 
-        data_source = self.repository_provider(address.data_source, self.user)
+        data_source = self.data_source(address.data_source, self.user)
         resolved_reference: ResolvedAddress = resolve_address(address, self.get_data_source)
         # If the reference goes through a parent, get the parent document
         if resolved_reference.attribute_path:

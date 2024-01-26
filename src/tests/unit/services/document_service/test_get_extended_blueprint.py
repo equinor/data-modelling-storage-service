@@ -94,7 +94,7 @@ class GetExtendedBlueprintTestCase(unittest.TestCase):
         repository.get = lambda doc_id: doc_storage[doc_id]
         repository.update = mock_update
 
-        self.document_service.repository_provider = lambda x, y: repository
+        self.document_service.data_source = lambda x, y: repository
 
         node: Node = self.document_service.get_document(Address.from_absolute("testing/$1"))
         node.update(doc_1_after)

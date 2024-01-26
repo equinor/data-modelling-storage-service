@@ -72,7 +72,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         document_repository.get = lambda id: document_1.copy()
 
-        self.mock_document_service.repository_provider = lambda id, user: document_repository
+        self.mock_document_service.data_source = lambda id, user: document_repository
         self.mock_document_service.remove(Address("$1", "testing"))
         document_repository.delete.assert_called_with("1")
 
@@ -84,7 +84,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "dmss://testing/this_blueprint_does_not_exist",
             }
         }
-        self.mock_document_service.repository_provider = lambda x, y: self.repository
+        self.mock_document_service.data_source = lambda x, y: self.repository
         self.assertRaises(FileNotFoundError, self.mock_document_service.remove, Address("$1", "testing"))
 
     def test_remove_document_with_model_and_storage_uncontained_children(self):
