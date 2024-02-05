@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.18.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.18.2...v1.18.3) (2024-02-05)
+
+
+### Bug Fixes
+
+* increase default cache size ([980c149](https://github.com/equinor/data-modelling-storage-service/commit/980c14966cd7017ca6875f505beecd04bfe870db))
+
 ## [1.18.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.18.1...v1.18.2) (2024-01-25)
 
 
