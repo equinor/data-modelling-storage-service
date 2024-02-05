@@ -12,7 +12,7 @@ class Config(BaseSettings):
     LOGGER_LEVEL: str = Field("DEBUG", env="LOGGING_LEVEL", to_lower=True)
     MAX_ENTITY_RECURSION_DEPTH: int = Field(5000, env="MAX_ENTITY_RECURSION_DEPTH")
     CORE_DATA_SOURCE: str = "system"
-    CACHE_MAX_SIZE: int = 200
+    CACHE_MAX_SIZE: int = 2000
     # Access Control
     DMSS_ADMIN: str = Field("dmss-admin", env="DMSS_ADMIN")
     DMSS_ADMIN_ROLE: str = Field("dmss-admin", env="DMSS_ADMIN_ROLE")
