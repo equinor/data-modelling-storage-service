@@ -1,7 +1,6 @@
 import mimetypes
 import pprint
 from collections.abc import Callable
-from functools import lru_cache
 from uuid import uuid4
 
 from authentication.models import User
@@ -32,7 +31,6 @@ from common.tree.tree_node_serializer import (
 )
 from common.utils.logging import logger
 from common.utils.update_nested_dict import update_nested_dict
-from config import config
 from domain_classes.blueprint import Blueprint
 from domain_classes.storage_recipe import StorageRecipe
 from enums import REFERENCE_TYPES, SIMOS
@@ -56,20 +54,16 @@ class DocumentService:
         context: str | None = None,
         recipe_provider=None,
     ):
-        self._blueprint_provider = blueprint_provider or get_blueprint_provider(user)
+        self._blueprint_provider = blueprint_provider or get_blueprint_provider()
         self._recipe_provider: Callable[..., list[StorageRecipe]] = recipe_provider or storage_recipe_provider
         self.repository_provider = repository_provider
         self.user = user
         self.context = context
         self.get_data_source = lambda data_source_id: self.repository_provider(data_source_id, self.user)
 
-    @lru_cache(maxsize=config.CACHE_MAX_SIZE)  # noqa:B019  TODO
     def get_blueprint(self, type: str) -> Blueprint:
-        blueprint: Blueprint = self._blueprint_provider.get_blueprint(type)
-        blueprint.realize_extends(self._blueprint_provider.get_blueprint)
-        return blueprint
+        return self._blueprint_provider.get_blueprint_with_extended_attributes(type)
 
-    @lru_cache(maxsize=config.CACHE_MAX_SIZE)  # noqa:B019  TODO
     def get_storage_recipes(self, type: str, context: str | None = None) -> list[StorageRecipe]:
         if not context:
             return create_default_storage_recipe()
@@ -82,9 +76,7 @@ class DocumentService:
         return create_default_storage_recipe()
 
     def invalidate_cache(self):
-        logger.warning("Clearing blueprint cache")
-        self._blueprint_provider.invalidate_cache()
-        self.get_blueprint.cache_clear()
+        pass
 
     def save_blob_data(self, node: Node, repository: DataSource) -> dict:
         """

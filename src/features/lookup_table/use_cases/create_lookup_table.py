@@ -69,5 +69,4 @@ def create_lookup_table_use_case(
 
     insert_lookup(name, combined_lookup)
 
-    document_service.get_storage_recipes.cache_clear()
     get_lookup.cache_clear()
