@@ -47,7 +47,7 @@ def set_acl(
     document_service = DocumentService(
         repository_provider=get_data_source,
         user=user,
-        blueprint_provider=get_blueprint_provider(user),
+        blueprint_provider=get_blueprint_provider(),
         recipe_provider=storage_recipe_provider,
     )
 

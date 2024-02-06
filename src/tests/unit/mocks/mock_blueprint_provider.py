@@ -35,3 +35,6 @@ class MockBlueprintProvider:
             f"Invalid type {type} asked for from the MockBlueprintProvider. No such blueprint were provided as"
             + " available blueprints as parameters in the initialisation of the MockBlueprintProvider."
         )
+
+    def get_blueprint_with_extended_attributes(self, type: str):
+        return self.get_blueprint(type)
