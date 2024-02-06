@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.18.4](https://github.com/equinor/data-modelling-storage-service/compare/v1.18.3...v1.18.4) (2024-02-06)
+
+
+### Performance Improvements
+
+* blueprint cache shared between users ([1748422](https://github.com/equinor/data-modelling-storage-service/commit/174842224bfd9dc82a6759908be71c09008bd11f))
+
+
+### Build System
+
+* **deps:** bump cryptography from 41.0.5 to 42.0.0 ([9d9d542](https://github.com/equinor/data-modelling-storage-service/commit/9d9d542def860501f214fda648ae1caa0eef0198))
+* **deps:** bump fastapi from 0.104.0 to 0.109.1 ([7f17b85](https://github.com/equinor/data-modelling-storage-service/commit/7f17b852a5735845c584ce0d55b01a44fe1dec6e))
+
 ## [1.18.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.18.2...v1.18.3) (2024-02-05)
 
 
