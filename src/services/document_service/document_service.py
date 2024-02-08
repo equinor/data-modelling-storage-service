@@ -54,9 +54,7 @@ class DocumentService:
         context: str | None = None,
         recipe_provider=None,
     ):
-        logger.debug("New document service")
         self._blueprint_provider = blueprint_provider or default_blueprint_provider
-        logger.debug(f"Got blueprint provider: {hash(self._blueprint_provider)}")
         self._recipe_provider: Callable[..., list[StorageRecipe]] = recipe_provider or storage_recipe_provider
         self.repository_provider = repository_provider
         self.user = user
@@ -64,7 +62,6 @@ class DocumentService:
         self.get_data_source = lambda data_source_id: self.repository_provider(data_source_id, self.user)
 
     def get_blueprint(self, type: str) -> Blueprint:
-        logger.debug(f"Getting blueprint from document service: {type}")
         return self._blueprint_provider.get_blueprint_with_extended_attributes(type)
 
     def get_storage_recipes(self, type: str, context: str | None = None) -> list[StorageRecipe]:
