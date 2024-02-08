@@ -65,12 +65,15 @@ class BlueprintProvider:
             logger.warning("function is not instance of lru cache.", error)
 
 
-@lru_cache(maxsize=config.CACHE_MAX_SIZE)
 def get_blueprint_provider():
     # TODO: Hard coding the admin user here is a short term performance hack.
     # This hack leads to any authenticated user can read any document if it's accessed as a blueprint
     # The proper fix would be to either "compile" all blueprint at startup, or implement a repository/access control
     # system that lends itself to cache better than what we have now (6.2.2024)
+    logger.debug("Cache miss! Creating new blueprint provider!")
     return BlueprintProvider(
         User(**{"user_id": config.DMSS_ADMIN, "email": "mock_dmss_admin@example.com", "full_name": "Mock admin user"})
     )
+
+
+default_blueprint_provider = get_blueprint_provider()
