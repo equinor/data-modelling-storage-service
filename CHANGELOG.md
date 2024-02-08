@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.18.5](https://github.com/equinor/data-modelling-storage-service/compare/v1.18.4...v1.18.5) (2024-02-08)
+
+
+### Bug Fixes
+
+* instantiate one blueprint provider only ([be6e128](https://github.com/equinor/data-modelling-storage-service/commit/be6e128183155771e59795f70c724a6e655f079f))
+* remove debug ([a152691](https://github.com/equinor/data-modelling-storage-service/commit/a152691a42ca2e5337a8f332880cd0cf5415c21f))
+* tests ([ec7cfbb](https://github.com/equinor/data-modelling-storage-service/commit/ec7cfbb78c8db9f78a2033ca657f96cf1e528f1f))
+* trying singleton blueprint_provider ([11f4bf9](https://github.com/equinor/data-modelling-storage-service/commit/11f4bf94734a2725134573fe704d100bf7e079f1))
+
 ## [1.18.4](https://github.com/equinor/data-modelling-storage-service/compare/v1.18.3...v1.18.4) (2024-02-06)
 
 
