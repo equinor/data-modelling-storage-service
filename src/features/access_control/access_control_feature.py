@@ -4,7 +4,6 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 from authentication.authentication import auth_w_jwt_or_pat
 from authentication.models import AccessControlList, User
 from common.address import Address
-from common.providers.blueprint_provider import get_blueprint_provider
 from common.providers.storage_recipe_provider import storage_recipe_provider
 from common.responses import create_response, responses
 from services.document_service.document_service import DocumentService
@@ -47,7 +46,6 @@ def set_acl(
     document_service = DocumentService(
         repository_provider=get_data_source,
         user=user,
-        blueprint_provider=get_blueprint_provider(),
         recipe_provider=storage_recipe_provider,
     )
 
