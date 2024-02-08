@@ -1,3 +1,4 @@
+import uuid
 from collections.abc import Callable
 from functools import lru_cache
 
@@ -24,12 +25,13 @@ class BlueprintProvider:
         self.user = user
         self.get_data_source = get_data_source
         self.resolve_address = resolve_address
+        self.id = uuid.uuid4()
 
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)  # noqa: B019
     def get_blueprint_with_extended_attributes(self, type: str) -> Blueprint:
         blueprint: Blueprint = self.get_blueprint(type)
         blueprint.realize_extends(self.get_blueprint)
-        logger.debug(f"Cache miss! Fetching extended blueprint '{type}' '{hash(self)}'")
+        logger.debug(f"Cache miss! Fetching extended blueprint '{type}' '{hash(self)} id: {self.id}'")
         logger.debug(self.get_blueprint_with_extended_attributes.cache_info())
         return blueprint
 
