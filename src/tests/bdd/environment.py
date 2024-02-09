@@ -1,5 +1,5 @@
 from authentication.models import User
-from common.providers.blueprint_provider import default_blueprint_provider
+from common.providers.blueprint_provider import get_blueprint_provider
 from config import config
 from tests.bdd.results import print_overview_errors, print_overview_features
 from tests.test_helpers.wipe_db import wipe_db
@@ -29,8 +29,8 @@ def after_feature(context, feature):
     if "skip" in feature.tags:
         feature.skip("Marked with @skip")
     context.features.append(feature)
-    default_blueprint_provider.get_blueprint.cache_clear()
-    default_blueprint_provider.get_blueprint_with_extended_attributes.cache_clear()
+    bp = get_blueprint_provider()
+    bp.invalidate_cache()
 
 
 def before_scenario(context, scenario):

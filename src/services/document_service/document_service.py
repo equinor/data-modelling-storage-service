@@ -18,7 +18,7 @@ from common.providers.address_resolver.address_resolver import (
     resolve_address,
 )
 from common.providers.address_resolver.reference_resolver import resolve_references_in_entity
-from common.providers.blueprint_provider import default_blueprint_provider
+from common.providers.blueprint_provider import get_blueprint_provider
 from common.providers.storage_recipe_provider import (
     create_default_storage_recipe,
     storage_recipe_provider,
@@ -54,15 +54,15 @@ class DocumentService:
         context: str | None = None,
         recipe_provider=None,
     ):
-        self._blueprint_provider = blueprint_provider or default_blueprint_provider
         self._recipe_provider: Callable[..., list[StorageRecipe]] = recipe_provider or storage_recipe_provider
         self.repository_provider = repository_provider
+        self.blueprint_provider = blueprint_provider or get_blueprint_provider()
         self.user = user
         self.context = context
         self.get_data_source = lambda data_source_id: self.repository_provider(data_source_id, self.user)
 
     def get_blueprint(self, type: str) -> Blueprint:
-        return self._blueprint_provider.get_blueprint_with_extended_attributes(type)
+        return self.blueprint_provider.get_blueprint_with_extended_attributes(type)
 
     def get_storage_recipes(self, type: str, context: str | None = None) -> list[StorageRecipe]:
         if not context:
