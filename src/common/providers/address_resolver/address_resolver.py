@@ -14,24 +14,24 @@ from storage.data_source_class import DataSource
 
 
 def _resolve_path_items(
-    data_source: DataSource,
+    storage: DataSource,
+    current_data_source: str,
     path_items: list[AttributeItem | QueryItem | IdItem],
-    get_data_source: Callable,
 ) -> tuple[list | dict, list[str], str]:
     if len(path_items) == 0 or isinstance(path_items[0], AttributeItem):
         raise NotFoundException(f"Invalid path_items {path_items}.")
-    entity, id = path_items[0].get_entry_point(data_source)
+    entity, id = path_items[0].get_entry_point(storage, current_data_source)
     path = [id]
-    data_source_name = data_source.name
+    data_source_name = current_data_source
     for index, ref_item in enumerate(path_items[1:]):
         if isinstance(ref_item, IdItem):
             raise NotFoundException(f"Invalid path_items {path_items}.")
         entity, attribute = ref_item.get_child(
-            entity, path[0], data_source, get_data_source, resolve_address=resolve_address
+            entity, path[0], storage, get_data_source, resolve_address=resolve_address
         )
         if is_reference(entity) and index < len(path_items) - 2:
             # Found a new document, use that as new starting point for the attribute path
-            address = Address.from_relative(entity["address"], path[0], data_source.name)
+            address = Address.from_relative(entity["address"], path[0], storage.name)
             resolved_reference = resolve_address(address, get_data_source)
             path = [resolved_reference.document_id, *resolved_reference.attribute_path]
             data_source_name = resolved_reference.data_source_id
@@ -50,7 +50,7 @@ class ResolvedAddress:
     entity: dict | list
 
 
-def resolve_address(address: Address, get_data_source: Callable) -> ResolvedAddress:
+def resolve_address(address: Address, storage: DataSource) -> ResolvedAddress:
     """Resolve the address into a document.
 
     We extract data_source, document_id, attribute_path from the address and also find the document the
@@ -62,8 +62,7 @@ def resolve_address(address: Address, get_data_source: Callable) -> ResolvedAddr
     path_items = path_to_path_items(address.path)
 
     # The first reference item should always be a DataSourceItem
-    data_source = get_data_source(address.data_source)
-    document, path, data_source = _resolve_path_items(data_source, path_items, get_data_source)
+    document, path, data_source = _resolve_path_items(storage, address.data_source, path_items)
 
     return ResolvedAddress(
         entity=document,

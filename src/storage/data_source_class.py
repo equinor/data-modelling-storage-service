@@ -28,23 +28,23 @@ class DataSource:
     def __init__(
         self,
         name: str,
-        user: User,
+        # user: User,
         acl: AccessControlList = AccessControlList.default(),
         repositories=None,
         data_source_collection=data_source_collection,
     ):
         self.name = name
-        self.user = user
+        # self.user = user
         # This Access Control List (ACL) is used when there is no parent to inherit ACL from. Controls who can create root-packages.
         self.acl = acl
         self.repositories: dict[str, Repository] = repositories
         self.data_source_collection = data_source_collection
 
     @classmethod
-    def from_dict(cls, a_dict, user: User):
+    def from_dict(cls, a_dict):
         return cls(
             a_dict["name"],
-            user,
+            # user,
             AccessControlList(**a_dict.get("acl", AccessControlList.default().dict())),
             {key: Repository(name=key, **value) for key, value in a_dict["repositories"].items()},
         )
@@ -65,6 +65,7 @@ class DataSource:
         # Now just returns the first repo in the ordered_dict
         return next(iter(self.repositories.values()))
 
+   # TODO: Move lookups to redis?
     def _lookup(self, document_id) -> DocumentLookUp:
         if res := self.data_source_collection.find_one(
             filter={
@@ -91,13 +92,13 @@ class DataSource:
 
     def update_access_control(self, document_id: str, acl: AccessControlList) -> None:
         old_lookup = self._lookup(document_id)
-        assert_user_has_access(old_lookup.acl, AccessLevel.WRITE, self.user)
+        # assert_user_has_access(old_lookup.acl, AccessLevel.WRITE, self.user)
         old_lookup.acl = acl
         self._update_lookup(old_lookup)
 
     def get_lookup(self, document_id: str) -> DocumentLookUp:
         lookup = self._lookup(document_id)
-        assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
+        # assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
         return lookup
 
     def _remove_lookup(self, lookup_id):
@@ -106,12 +107,12 @@ class DataSource:
             update={"$unset": {f"documentLookUp.{lookup_id}": ""}},
         )
 
-    def get(self, uid: str | UUID4) -> dict:
+    def get(self, uid: str | UUID4) -> (dict, DocumentLookUp):
         uid = str(uid)
         lookup = self._lookup(uid)
-        assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
+        # assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
         repo = self.repositories[lookup.repository]
-        return repo.get(uid)
+        return repo.get(uid), lookup
 
     # TODO: Implement find across repositories
     def find(self, filter: dict) -> list[dict]:
@@ -121,7 +122,7 @@ class DataSource:
         for entity in repo.find(filter):
             if lookup := self._lookup(entity.get("_id")):
                 try:
-                    assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
+                    # assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
                     documents_with_access.append(entity)
                 except MissingPrivilegeException:
                     pass
@@ -162,11 +163,11 @@ class DataSource:
 
             parent_acl = parent_lookup.acl if parent_lookup else self.acl  # If no parentLookup, use DataSource default
             # Before inserting a new lookUp, check permissions on parent resource
-            assert_user_has_access(parent_acl, AccessLevel.WRITE, self.user)
+            # assert_user_has_access(parent_acl, AccessLevel.WRITE, self.user)
             repo = self._get_repo_from_storage_attribute(storage_attribute)
-            document_owner = self.user
+            # document_owner = self.user
             acl: AccessControlList = AccessControlList(
-                owner=document_owner.user_id,
+                # owner=document_owner.user_id,
                 roles=parent_acl.roles,
                 users=parent_acl.users,
                 others=parent_acl.others,
@@ -185,7 +186,7 @@ class DataSource:
             self._update_lookup(lookup)
 
         repo = self.repositories[lookup.repository]
-        assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
+        # assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
         repo.update(document["_id"], document)
 
     def update_blob(self, uid: str, filename: str, content_type: str, file) -> None:
@@ -206,24 +207,24 @@ class DataSource:
             lookup_id=uid,
             repository=repo.name,
             database_id=uid,
-            acl=AccessControlList.default_with_owner(self.user),
+            # acl=AccessControlList.default_with_owner(self.user),
             storage_affinity=StorageDataTypes.BLOB.value,
             meta=meta,
         )
-        assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
+        # assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
         self._update_lookup(lookup)
         repo.update_blob(uid, file.read())
 
     def get_blob(self, uid: str) -> bytes:
         lookup = self._lookup(uid)
-        assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
+        # assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
         return self.repositories[lookup.repository].get_blob(lookup.database_id)
 
     def delete_blob(self, uid: str) -> None:
         # If lookup not found, assume it's deleted
         try:
             lookup = self._lookup(uid)
-            assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
+            # assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
             self._remove_lookup(uid)
             self.repositories[lookup.repository].delete_blob(uid)
         except NotFoundException:
@@ -233,7 +234,7 @@ class DataSource:
         # If lookup not found, assume it's deleted
         try:
             lookup = self._lookup(uid)
-            assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
+            # assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
             self._remove_lookup(uid)
             self.repositories[lookup.repository].delete(uid)
         except NotFoundException:

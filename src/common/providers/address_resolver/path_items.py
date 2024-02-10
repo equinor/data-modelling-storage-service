@@ -56,7 +56,7 @@ class QueryItem:
             else:
                 self.query_as_dict[key] = value
 
-    def get_entry_point(self, data_source: DataSource) -> tuple[dict, str]:
+    def get_entry_point(self, data_source: DataSource, current_data_source: str) -> tuple[dict, str]:
         result: list[dict] = data_source.find(self.query_as_dict)
         if not result:
             raise NotFoundException(

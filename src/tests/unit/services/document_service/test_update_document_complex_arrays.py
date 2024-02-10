@@ -110,7 +110,7 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
             if data_source_id == "testing":
                 return document_repository
 
-        self.mock_document_service.repository_provider = repository_provider
+        self.mock_document_service.data_source = repository_provider
 
         # fmt: off
         data = {
