@@ -35,6 +35,11 @@
       "attributeType": "string"
     },
     {
+      "name": "contentType",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
       "name": "content",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "binary",
