@@ -33,6 +33,7 @@ class Config(BaseSettings):
         env="AAD_ENTERPRISE_APP_OID",
         description="The ObjectId of the Azure AD Enterprise Application",
     )
+    APPINSIGHTS_BE_CONNECTION_STRING: str = Field("", env="APPINSIGHTS_BE_CONNECTION_STRING")
 
 
 config = Config()

@@ -1,9 +1,11 @@
 import functools
 import logging
+import sys
 import traceback
 from collections.abc import Callable
 from inspect import iscoroutinefunction
 from typing import TypeVar
+from uuid import uuid4
 
 from pydantic import ValidationError
 from requests import HTTPError
@@ -98,18 +100,18 @@ def create_response(
             except ValidationException as e:
                 if logger.level <= logging.DEBUG:
                     traceback.print_exc()
-                logger.error(e)
+                logger.debug(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_400_BAD_REQUEST)
             except NotFoundException as e:
                 if logger.level <= logging.DEBUG:
                     traceback.print_exc()
-                logger.error(e)
+                logger.debug(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_404_NOT_FOUND)
             except BadRequestException as e:
                 if logger.level <= logging.DEBUG:
                     traceback.print_exc()
-                logger.error(e)
-                logger.error(e.dict())
+                logger.debug(e, extra={"Traceback": get_traceback()})
+                logger.debug(e.dict())
                 return JSONResponse(e.dict(), status_code=status.HTTP_400_BAD_REQUEST)
             except MissingPrivilegeException as e:
                 if logger.level <= logging.DEBUG:
@@ -117,13 +119,17 @@ def create_response(
                 logger.warning(e)
                 return JSONResponse(e.dict(), status_code=status.HTTP_403_FORBIDDEN)
             except ApplicationException as e:
+                error_id = uuid4()
                 if logger.level <= logging.DEBUG:
                     traceback.print_exc()
-                logger.error(e)
+                logger.error(e, extra={"UUID": str(error_id), "Traceback": get_traceback()})
                 return JSONResponse(e.dict(), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
             except Exception as e:
+                error_id = uuid4()
                 traceback.print_exc()
-                logger.error(f"Unexpected unhandled exception: {e}")
+                logger.error(
+                    f"Unexpected unhandled exception: {e}", extra={"UUID": str(error_id), "Traceback": get_traceback()}
+                )
                 return JSONResponse(
                     ErrorResponse().dict(),
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -132,3 +138,13 @@ def create_response(
         return wrapper_decorator
 
     return func_wrapper
+
+
+def get_traceback() -> str:
+    """Get traceback as a log-friendly format."""
+    exc_info = sys.exc_info()
+    stack = traceback.extract_stack()
+    tb = traceback.extract_tb(exc_info[2])
+    full_tb = stack[:-1] + tb
+    exc_line = traceback.format_exception_only(*exc_info[:2])
+    return "Traceback (most recent call last):\n" + "".join(traceback.format_list(full_tb)) + "".join(exc_line)
