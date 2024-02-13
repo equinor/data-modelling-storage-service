@@ -5,10 +5,12 @@ from collections.abc import Callable
 import click
 import gridfs
 import uvicorn
+from azure.monitor.opentelemetry import configure_azure_monitor
 from fastapi import APIRouter, FastAPI, Security
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from starlette import status
 from starlette.requests import Request
 from starlette.responses import JSONResponse, RedirectResponse, Response
@@ -99,6 +101,10 @@ def create_app() -> FastAPI:
             allow_methods=["*"],
             allow_headers=["*"],
         )
+
+    if config.APPINSIGHTS_BE_CONNECTION_STRING:
+        configure_azure_monitor(connection_string=config.APPINSIGHTS_BE_CONNECTION_STRING, logger_name="API")
+        FastAPIInstrumentor.instrument_app(app)
 
     # Intercept FastAPI builtin validation errors, so they can be returned on our standardized format.
     @app.exception_handler(RequestValidationError)

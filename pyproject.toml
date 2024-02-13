@@ -20,6 +20,9 @@ gunicorn = "^21.2.0"
 cryptography = "^42.0.0"
 cffi = "^1.16.0"
 httpx = "^0.25.0"
+pydantic = "1.10.14"
+azure-monitor-opentelemetry = "^1.2.0"
+opentelemetry-instrumentation-fastapi = "^0.43b0"
 
 [tool.poetry.group.dev.dependencies]
 pydevd = "^2.10.0"
