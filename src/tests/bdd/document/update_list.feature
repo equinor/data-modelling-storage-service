@@ -82,6 +82,7 @@ Feature: Add document with optional attributes
             "type": "dmss://system/SIMOS/BlueprintAttribute",
             "attributeType": "data-source-name/root_package/KeyboardKey",
             "optional": true,
+            "ensureUID": true,
             "dimensions": "*"
           },
           {
@@ -139,7 +140,7 @@ Feature: Add document with optional attributes
     And the response should contain
     """
       {
-        "uid": "workComputerId.letterKeys[0]"
+        "uid": "workComputerId.letterKeys(_id=123-abc)"
       }
     """
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys"
