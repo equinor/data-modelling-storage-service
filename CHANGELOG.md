@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.19.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.18.5...v1.19.0) (2024-02-14)
+
+
+### Features
+
+* add azure app insight ([9d7a77c](https://github.com/equinor/data-modelling-storage-service/commit/9d7a77ca4e3fe9cabebbbf3e0942679fb64e1df5))
+
+
+### Build System
+
+* **deps:** bump python-multipart from 0.0.5 to 0.0.7 ([099c680](https://github.com/equinor/data-modelling-storage-service/commit/099c68017ef11a462a68e66ba78d558ffa5a569e))
+
 ## [1.18.5](https://github.com/equinor/data-modelling-storage-service/compare/v1.18.4...v1.18.5) (2024-02-08)
 
 
