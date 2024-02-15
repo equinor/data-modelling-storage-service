@@ -135,8 +135,7 @@ class DocumentService:
                 combined_document_meta,
                 initial,
             )
-        if not node.entity:
-            return {}
+
         # If not passed a custom repository to save into, use the DocumentService's storage
         if not repository:
             repository: DataSource = self.repository_provider(data_source_id, self.user)  # type: ignore
@@ -160,6 +159,7 @@ class DocumentService:
 
         if isinstance(node, Node) and node.should_have_id():
             node.set_uid(node.generate_id())  # Ensure the node has a _id
+
         ref_dict = tree_node_to_ref_dict(node)
 
         # If the node is not contained, and has data, save it!
@@ -197,7 +197,10 @@ class DocumentService:
         try:
             resolved_address: ResolvedAddress = resolve_address(address, self.get_data_source)
 
+
             if address.is_by_package():
+                if not resolved_address.entity.get("address"):
+                    raise ValueError(f"Invalid reference '{resolved_address.entity}' at address '{address}'")
                 # If the address is by package (package/sub-package/entity),
                 # then the entity in the resolved address will be a reference to the entity.
                 # This reference needs to be resolved before continue, since by package means (by definition),

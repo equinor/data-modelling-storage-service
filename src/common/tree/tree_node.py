@@ -70,6 +70,10 @@ class NodeBase:
 
     @property
     def storage_contained(self):
+        if self.is_array():
+            return True
+        if self.type == SIMOS.REFERENCE.value:  # References are special. Always considered contained.
+            return True
         if not self.parent or self.parent.type == SIMOS.DATASOURCE.value:
             return False
         if self.parent.is_array():
@@ -96,6 +100,9 @@ class NodeBase:
         if not self.storage_contained and not self.is_array():
             return self.uid
         if self.parent.is_array():
+            if self.attribute.ensure_uid:
+                return f"{self.parent.node_id}(_id=\"{self.uid}\")"
+
             return f"{self.parent.node_id}[{self.key}]"
         return ".".join((self.parent.node_id, self.key))
 
@@ -215,6 +222,8 @@ class NodeBase:
             return True
 
     def should_have_id(self):
+        if self.attribute.ensure_uid:
+            return True
         if isinstance(self, ListNode):
             return False
         if self.type == SIMOS.REFERENCE.value:

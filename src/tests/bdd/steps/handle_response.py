@@ -8,7 +8,7 @@ from dictdiffer import diff
 
 from common.entity.find import find
 from tests.test_helpers.print_pygments import print_pygments
-
+import difflib
 STATUS_CODES = {
     "OK": 200,
     "Created": 201,
@@ -94,6 +94,16 @@ def step_impl_contain(context):
     actual = context.response.json()
     data = context.text or context.data
     expected = json.loads(data)
+    pretty_print_should_contain_diff(expected, actual)
+
+@then("the response should contain and have an id")
+def step_impl_contain(context):
+    actual = context.response.json()
+    data = context.text or context.data
+    expected = json.loads(data)
+    if not "_id" in actual.keys():
+        raise ValueError("The response does not have a '_id' key")
+    del actual["_id"]
     pretty_print_should_contain_diff(expected, actual)
 
 

@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import BinaryIO
 
 from fastapi import UploadFile
@@ -13,7 +14,7 @@ from common.tree.merge_entity_and_files import merge_entity_and_files
 from common.tree.tree_node import ListNode, Node
 from common.tree.tree_node_serializer import tree_node_from_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from enums import SIMOS
+from enums import SIMOS, REFERENCE_TYPES
 from restful.request_types.shared import Entity
 from services.document_service.document_service import DocumentService
 
@@ -151,10 +152,12 @@ def _add_document_to_entity_or_list(
             "extend",
         )
 
+    new_attribute = deepcopy(target.attribute)
+    new_attribute.type = document["type"]
     new_node = tree_node_from_dict(
         {**document},
         blueprint_provider=document_service.get_blueprint,
-        node_attribute=BlueprintAttribute(name=target.attribute.name, attribute_type=Entity(**document).type),
+        node_attribute=new_attribute,
         recipe_provider=document_service.get_storage_recipes,
     )
 
@@ -174,19 +177,25 @@ def _add_document_to_entity_or_list(
     if target.type == SIMOS.PACKAGE.value:
         target = target.children[0]  # Set target to be the packages content
 
+        # We're adding a document to a package. Save the storage uncontained document, and create reference in package
+        new_node.set_uid(new_node.generate_id())
+        document_service.save(new_node,address.data_source, initial=True)
+        new_node.entity = {"type": SIMOS.REFERENCE.value, "address": f"${new_node.node_id}", "referenceType": REFERENCE_TYPES.STORAGE.value }
+
+
     if isinstance(target, ListNode) or target.parent.type == SIMOS.PACKAGE.value:
         new_node.parent = target
         new_node.key = str(len(target.children))
         if new_node.should_have_id():
             new_node.set_uid(new_node.generate_id())
         target.add_child(new_node)
-        document_service.save(target.find_parent(), address.data_source)
+        # document_service.save(target.find_parent(), address.data_source)
     else:
         new_node.parent = target.parent
         target.parent.replace(new_node.node_id, new_node)
-        document_service.save(target.find_parent(), address.data_source)
+        # document_service.save(target.find_parent(), address.data_source)
 
-    document_service.save(new_node, address.data_source)
+    document_service.save(target, address.data_source, initial=True)
 
     return {"uid": new_node.node_id}
 
@@ -208,7 +217,6 @@ def add_document_use_case(
     Returns:
         A dict that contains the ID of the added document.
     """
-    validate_entity_against_self(document, document_service.get_blueprint)
 
     if not address.path:
         return _add_document_to_data_source(address.data_source, document, document_service)

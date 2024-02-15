@@ -6,7 +6,7 @@ from authentication.models import AccessControlList
 from common.providers.storage_recipe_provider import storage_recipe_provider
 from common.tree.tree_node import ListNode, Node
 from domain_classes.blueprint_attribute import BlueprintAttribute
-from enums import SIMOS, BuiltinDataTypes
+from enums import SIMOS, BuiltinDataTypes, REFERENCE_TYPES
 from features.entity.use_cases.instantiate_entity_use_case.create_entity import (
     CreateEntity,
 )
@@ -99,9 +99,18 @@ def step_impl_documents(context, data_source_id: str, collection: str):
     document_service = DocumentService(get_data_source, user=context.user)
     tree: Node = generate_tree(data_source_id, context.table, document_service)
     tree.show_tree()
+
+    document_repository = get_data_source(data_source_id, context.user)
     for node in tree.traverse():
-        if not node.storage_contained and not node.is_array():
-            document_service.save(node=node, data_source_id=data_source_id)
+        if node.is_array():
+            continue
+        if node.type == SIMOS.PACKAGE.value:
+            node.entity["_id"] = node.node_id
+            node.entity["content"] = [{"type": SIMOS.REFERENCE.value, "address": f"${c.node_id}", "referenceType": REFERENCE_TYPES.STORAGE.value } for c in node.children[0].children]
+            document_repository.update(node.entity)
+            continue
+        node.entity["_id"] = node.node_id
+        document_repository.update(node.entity)
 
 
 @given('AccessControlList for document "{document_id}" in data-source "{data_source}" is')

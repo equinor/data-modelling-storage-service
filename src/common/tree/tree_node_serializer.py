@@ -51,24 +51,13 @@ def tree_node_to_dict(node: Node | ListNode) -> list[Any] | dict:
     return data
 
 
-def _create_storage_reference_to_node(node: Node):
-    if not node.uid:
-        node.uid = node.generate_id()
-    return {
-        "type": SIMOS.REFERENCE.value,
-        "address": f"${node.uid}",
-        "referenceType": REFERENCE_TYPES.STORAGE.value,
-    }
-
-
 # flake8: noqa: C901
 def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
     """
     Rebuilds the entity as it should be stored based on the passed child entities that can be either contained
     documents, or references.
     """
-    if not node.entity:
-        return {}
+
     data = {}
     if node.uid and node.type != SIMOS.REFERENCE.value:
         data = {"_id": node.uid}
@@ -85,7 +74,7 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
 
     # Primitive
     # if complex attribute name is renamed in blueprint, then the blueprint is None in the entity.
-    if node.attribute.attribute_type != BuiltinDataTypes.BINARY.value and node.blueprint is not None:
+    if node.attribute.attribute_type not in (BuiltinDataTypes.BINARY.value, 'object') and node.blueprint is not None:
         for attribute in node.blueprint.get_primitive_types():
             if attribute.name in node.entity:
                 data[attribute.name] = node.entity[attribute.name]
@@ -97,22 +86,22 @@ def tree_node_to_ref_dict(node: Node | ListNode) -> dict:
     # Complex
     for child in node.children:
         if child.is_array():
-            # If the content of the list is not contained, i.e. references.
-            if not child.storage_contained:
-                data[child.key] = []
-                for item in child.children:
-                    data[child.key].append(
-                        _create_storage_reference_to_node(item) if item.type != SIMOS.REFERENCE.value else item.entity
-                    )
-            else:
-                data[child.key] = [tree_node_to_ref_dict(list_child) for list_child in child.children]
+        #     # If the content of the list is not contained, i.e. references.
+        #     if not child.storage_contained:
+        #         data[child.key] = []
+        #         for item in child.children:
+        #             data[child.key].append(
+        #                 _create_storage_reference_to_node(item) if item.type != SIMOS.REFERENCE.value else item.entity
+        #             )
+        #     else:
+            data[child.key] = [tree_node_to_ref_dict(list_child) for list_child in child.children]
+        # else:
+        #     if not child.storage_contained:
+        #         data[child.key] = (
+        #             _create_storage_reference_to_node(child) if child.type != SIMOS.REFERENCE.value else child.entity
+        #         )
         else:
-            if not child.storage_contained:
-                data[child.key] = (
-                    _create_storage_reference_to_node(child) if child.type != SIMOS.REFERENCE.value else child.entity
-                )
-            else:
-                data[child.key] = tree_node_to_ref_dict(child)
+            data[child.key] = tree_node_to_ref_dict(child)
     return data
 
 
