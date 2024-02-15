@@ -241,7 +241,7 @@ Feature: Add document with document_service
 
   Scenario: Add document to EntityPackage using path as reference
     Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -269,7 +269,7 @@ Feature: Add document with document_service
 
   Scenario: Add document to EntityPackage using id as reference
     Given i access the resource url "/api/documents/data-source-name/root_package.content[6]"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -300,7 +300,7 @@ Feature: Add document with document_service
 
   Scenario: Add document to root package using path as reference
     Given i access the resource url "/api/documents/data-source-name/root_package"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -329,7 +329,7 @@ Feature: Add document with document_service
 
   Scenario: Add document to root package using id as reference
     Given i access the resource url "/api/documents/data-source-name/$100"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":

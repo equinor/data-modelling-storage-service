@@ -90,7 +90,7 @@ def validate_entity(
     entity: dict | list,
     get_blueprint: Callable[..., Blueprint],
     blueprint: Blueprint,
-    implementation_mode: Literal["extend", "minimum"],
+    implementation_mode: Literal["extend", "minimum", "exact"],
     key: str = "^",
 ) -> None:
     """Takes a complex entity (dict) or a list of entities and validates them against an arbitrary blueprint.
@@ -126,6 +126,7 @@ def _validate_entity(
             debug=_get_debug_message(key),
             data=entity,
         )
+
     if implementation_mode == "extend":
         if entity["type"] != SIMOS.REFERENCE.value:
             if not is_blueprint_instance_of(blueprint.path, entity["type"], get_blueprint):
@@ -240,6 +241,14 @@ def _validate_complex_attribute(
     if attributeDefinition.attribute_type == BuiltinDataTypes.OBJECT.value:
         validate_entity_against_self(entity=attribute, get_blueprint=get_blueprint, key=key)
         return
+
+    if attributeDefinition.ensure_uid and not attribute.get("_id"):
+        raise ValidationException(
+            f"The attribute '{attributeDefinition.name}', requires "
+            + "the entity to have a UUID. Make sure the entity has a valid UUIDv4 at the key '_id'",
+            debug=_get_debug_message(key),
+            data=attribute,
+        )
     _validate_entity(
         attribute,
         get_blueprint,

@@ -461,9 +461,9 @@ Feature: Explorer - Add file
     }
     """
 
-  Scenario: Add file with duplicate name
+  Scenario: Add document with duplicate name
     Given i access the resource url "/api/documents/test-DS/root_package"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
       {
         "document": {
@@ -501,7 +501,7 @@ Feature: Explorer - Add file
 
   Scenario: Add Parent entity without a name attribute with -by-path endpoint
     Given i access the resource url "/api/documents/test-DS/root_package"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document": {
@@ -521,9 +521,9 @@ Feature: Explorer - Add file
     }
     """
 
-  Scenario: Adding file with id set to empty string should generate new uid
+  Scenario: Adding document with id set to empty string should generate new uid
     Given I access the resource url "/api/documents/test-DS/root_package"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document": {
@@ -537,9 +537,9 @@ Feature: Explorer - Add file
     Then the response status should be "OK"
     And the response should have valid uid
 
-  Scenario: Adding file with id
+  Scenario: Adding document with id
     Given I access the resource url "/api/documents/test-DS/root_package"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document": {
@@ -555,7 +555,7 @@ Feature: Explorer - Add file
 
   Scenario: Add Comment entity without a name attribute with -by-path endpoint
     Given i access the resource url "/api/documents/test-DS/root_package"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -570,7 +570,7 @@ Feature: Explorer - Add file
 
   Scenario: Add blueprint without a name attribute with -by-path endpoint should fail
     Given i access the resource url "/api/documents/test-DS/root_package"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -593,7 +593,7 @@ Feature: Explorer - Add file
 
   Scenario: Add package without a name attribute with -by-path endpoint should fail
     Given i access the resource url "/api/documents/test-DS/root_package"
-    When i make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":

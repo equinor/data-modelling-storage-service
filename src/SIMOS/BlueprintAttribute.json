@@ -29,6 +29,14 @@
       "default": ""
     },
     {
+      "name": "ensureUID",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "description": "If true, DMSS will ensure every complex child governed by this attribute, has a UUID",
+      "attributeType": "boolean",
+      "optional": true,
+      "default": false
+    },
+    {
       "name": "label",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
