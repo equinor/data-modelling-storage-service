@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.19.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.19.0...v1.19.1) (2024-02-15)
+
+
+### Miscellaneous Chores
+
+* change to resolve document for better performance ([95a267f](https://github.com/equinor/data-modelling-storage-service/commit/95a267f1fb09046e7fd988cc3a7c51b5cd0ca379))
+
 ## [1.19.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.18.5...v1.19.0) (2024-02-14)
 
 
