@@ -20,6 +20,7 @@ class BlueprintAttribute(BaseModel):
     label: str = ""
     default: StrictStr | StrictInt | StrictFloat | StrictBool | list | dict | None = None
     dimensions: Dimension | None = None
+    ensure_uid: bool = Field(False, alias="ensureUID")
     optional: bool = False
     contained: bool = True
     enum_type: str = Field("", alias="enumType")

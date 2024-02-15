@@ -293,6 +293,83 @@ class ValidateEntityTestCase(unittest.TestCase):
         assert error.exception.message == "Missing required attribute 'name'"
         assert error.exception.debug == "Location: Entity in key '^.engine.fuelPump'"
 
+    def test_array_with_missing_required_uid(self):
+        test_entity = {
+            "_id": "2",
+            "type": "CarRental",
+            "name": "myCarRental",
+            "cars": [
+                {
+                    "type": "RentalCar",
+                    "name": "Volvo 240",
+                    "plateNumber": "123",
+                    "engine": {
+                        "name": "myEngine",
+                        "description": "Some description",
+                        "fuelPump": {
+                            "name": "fuelPump",
+                            "description": "A standard fuel pump",
+                            "type": "FuelPumpTest",
+                        },
+                        "power": 120,
+                        "type": "EngineTest",
+                    },
+                },
+            ],
+            "customers": [],
+        }
+
+        blueprint = self.mock_document_service.get_blueprint("CarRental")
+
+        with self.assertRaises(ValidationException) as error:
+            validate_entity(
+                test_entity,
+                self.mock_document_service.get_blueprint,
+                blueprint,
+                implementation_mode="exact",
+            )
+        assert (
+            error.exception.message
+            == "The attribute 'cars', requires the entity to have a UUID. Make sure the entity has a valid UUIDv4 at the key '_id'"
+        )
+        assert error.exception.debug == "Location: Entity in key '^.cars.0'"
+
+    def test_array_with_required_uid(self):
+        test_entity = {
+            "_id": "2",
+            "type": "CarRental",
+            "name": "myCarRental",
+            "cars": [
+                {
+                    "_id": "7eaf3777-7c79-4a94-9dc3-1430d2e4625e",
+                    "type": "RentalCar",
+                    "name": "Volvo 240",
+                    "plateNumber": "123",
+                    "engine": {
+                        "name": "myEngine",
+                        "description": "Some description",
+                        "fuelPump": {
+                            "name": "fuelPump",
+                            "description": "A standard fuel pump",
+                            "type": "FuelPumpTest",
+                        },
+                        "power": 120,
+                        "type": "EngineTest",
+                    },
+                },
+            ],
+            "customers": [],
+        }
+
+        blueprint = self.mock_document_service.get_blueprint("CarRental")
+
+        validate_entity(
+            test_entity,
+            self.mock_document_service.get_blueprint,
+            blueprint,
+            implementation_mode="exact",
+        )
+
     def test_array_with_complex_child_getting_array_type_from_parent_node(self):
         test_entity = {
             "_id": "2",

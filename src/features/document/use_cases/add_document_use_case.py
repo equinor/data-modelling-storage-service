@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import BinaryIO
 
 from fastapi import UploadFile
@@ -151,10 +152,12 @@ def _add_document_to_entity_or_list(
             "extend",
         )
 
+    new_attribute = deepcopy(target.attribute)
+    new_attribute.type = document["type"]
     new_node = tree_node_from_dict(
         {**document},
         blueprint_provider=document_service.get_blueprint,
-        node_attribute=BlueprintAttribute(name=target.attribute.name, attribute_type=Entity(**document).type),
+        node_attribute=new_attribute,
         recipe_provider=document_service.get_storage_recipes,
     )
 

@@ -9,7 +9,8 @@
       "name": "cars",
       "type": "system/SIMOS/BlueprintAttribute",
       "dimensions": "*",
-      "attributeType": "RentalCar"
+      "attributeType": "RentalCar",
+      "ensureUID": true
     },
     {
       "name": "customers",

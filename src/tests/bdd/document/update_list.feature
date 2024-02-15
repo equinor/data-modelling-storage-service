@@ -82,6 +82,7 @@ Feature: Add document with optional attributes
             "type": "dmss://system/SIMOS/BlueprintAttribute",
             "attributeType": "data-source-name/root_package/KeyboardKey",
             "optional": true,
+            "ensureUID": true,
             "dimensions": "*"
           },
           {
@@ -125,37 +126,7 @@ Feature: Add document with optional attributes
 
   Scenario: add to list that exist
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys"
-    When I make a "POST" request with "1" files
-    """
-    {
-      "document":
-       {
-        "name": "T",
-        "type": "data-source-name/root_package/KeyboardKey"
-      }
-    }
-    """
-    Then the response status should be "OK"
-    And the response should contain
-    """
-      {
-        "uid": "workComputerId.letterKeys[0]"
-      }
-    """
-    Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys"
-    When I make a "GET" request
-    Then the response status should be "OK"
-    And the response should contain
-    """
-    [
-     {
-       "name": "T",
-       "type": "data-source-name/root_package/KeyboardKey"
-     }
-    ]
-    """
-    Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys"
-    When I make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -166,6 +137,66 @@ Feature: Add document with optional attributes
     }
     """
     Then the response status should be "OK"
+    Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys[0]"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should contain and have an id
+    """
+     {
+       "name": "X",
+       "type": "data-source-name/root_package/KeyboardKey"
+     }
+    """
+
+    Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys"
+    When i make a form-data "POST" request
+    """
+    {
+      "document":
+       {
+        "name": "T",
+        "type": "data-source-name/root_package/KeyboardKey",
+        "_id": "a2039c8d-54ca-4b5c-bd86-b7918410a4c5"
+      }
+    }
+    """
+    Then the response status should be "OK"
+
+    Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys[1]"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should be
+    """
+     {
+       "name": "T",
+       "type": "data-source-name/root_package/KeyboardKey",
+       "_id": "a2039c8d-54ca-4b5c-bd86-b7918410a4c5"
+     }
+    """
+    Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys(_id=a2039c8d-54ca-4b5c-bd86-b7918410a4c5)"
+    When I make a "GET" request
+    Then the response status should be "OK"
+    And the response should be
+    """
+     {
+       "name": "T",
+       "type": "data-source-name/root_package/KeyboardKey",
+       "_id": "a2039c8d-54ca-4b5c-bd86-b7918410a4c5"
+     }
+    """
+
+    Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys"
+    When i make a form-data "POST" request
+    """
+    {
+      "document":
+       {
+        "name": "C",
+        "type": "data-source-name/root_package/KeyboardKey"
+      }
+    }
+    """
+    Then the response status should be "OK"
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys"
     When I make a "GET" request
     Then the response status should be "OK"
@@ -173,11 +204,15 @@ Feature: Add document with optional attributes
     """
     [
      {
+       "name": "X",
+       "type": "data-source-name/root_package/KeyboardKey"
+     },
+     {
        "name": "T",
        "type": "data-source-name/root_package/KeyboardKey"
      },
      {
-       "name": "X",
+       "name": "C",
        "type": "data-source-name/root_package/KeyboardKey"
      }
     ]
@@ -186,7 +221,7 @@ Feature: Add document with optional attributes
 
   Scenario: change list that exist
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys"
-    When I make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -230,7 +265,7 @@ Feature: Add document with optional attributes
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys"
     When i make a "GET" request
     Then the response status should be "OK"
-    And the response should be
+    And the response should contain
     """
        [{
         "name": "XXX",

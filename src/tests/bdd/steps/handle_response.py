@@ -97,6 +97,17 @@ def step_impl_contain(context):
     pretty_print_should_contain_diff(expected, actual)
 
 
+@then("the response should contain and have an id")
+def step_impl_contain_id(context):
+    actual = context.response.json()
+    data = context.text or context.data
+    expected = json.loads(data)
+    if "_id" not in actual.keys():
+        raise ValueError("The response does not have a '_id' key")
+    del actual["_id"]
+    pretty_print_should_contain_diff(expected, actual)
+
+
 @then("the response should have valid uid")
 def step_impl_valid_uid(context):
     response = context.response.json()
