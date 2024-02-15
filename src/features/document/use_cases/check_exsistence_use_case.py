@@ -5,7 +5,7 @@ from services.document_service.document_service import DocumentService
 
 def check_existence_use_case(address: Address, document_service: DocumentService) -> bool:
     try:
-        document_service.get_document(address)
+        document_service.resolve_document(address)
         return True
     except NotFoundException:
         return False
