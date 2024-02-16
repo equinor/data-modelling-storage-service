@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.20.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.19.1...v1.20.0) (2024-02-16)
+
+
+### Features
+
+* option to enforce uid on all complex children ([46fb91a](https://github.com/equinor/data-modelling-storage-service/commit/46fb91a3d540761b8d936fb44dbe96598692a9fa))
+
 ## [1.19.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.19.0...v1.19.1) (2024-02-15)
 
 
