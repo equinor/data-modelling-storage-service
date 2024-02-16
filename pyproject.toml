@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "Data Modeling Storage Service"
-version = "1.19.1" # x-release-please-version
+version = "1.20.0" # x-release-please-version
 description = "A model based storage service"
 authors = ["Stig Ofstad <stoo@equinor.com>","Christoffer","Eirik"]
 license = "MIT"
