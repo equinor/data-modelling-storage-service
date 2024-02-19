@@ -3,7 +3,7 @@ from copy import deepcopy
 
 from authentication.models import User
 from common.exceptions import ApplicationException, BadRequestException
-from common.providers.blueprint_provider import BlueprintProvider
+from common.providers.blueprint_provider import default_blueprint_provider
 from common.utils.logging import logger
 from features.search.use_cases.search_use_case.build_complex_search import (
     build_mongo_query,
@@ -35,8 +35,9 @@ def _search(
         )
 
     try:
-        blueprint_provider = BlueprintProvider(user)
-        process_search_data = build_mongo_query(blueprint_provider.get_blueprint_with_extended_attributes, search_data)
+        process_search_data = build_mongo_query(
+            default_blueprint_provider.get_blueprint_with_extended_attributes, search_data
+        )
     except ValueError as ex:
         logger.warning(f"Failed to build mongo query; {ex}")
         raise BadRequestException("Failed to build mongo query") from ex
