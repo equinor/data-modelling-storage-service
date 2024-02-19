@@ -130,6 +130,40 @@ def create_app() -> FastAPI:
         response.headers["X-Process-Time"] = str(process_time)
         return response
 
+    if config.PROFILING_ENABLED:
+        from pathlib import Path
+
+        from pyinstrument import Profiler
+        from pyinstrument.renderers.html import HTMLRenderer
+        from pyinstrument.renderers.speedscope import SpeedscopeRenderer
+
+        @app.middleware("http")
+        async def profile_request(request: Request, call_next):
+            """Profile the current request.
+
+            Profile and store to disk a JSON report compatible with Speedscope
+            (an online interactive flamegraph visualizer) or simple HTML report.
+
+            Query params:
+            - profile (bool): profile the request, default is false
+            - profile_format (string): specify profile format (html or speedscope), default is speedscope
+            """
+            profile_type_to_ext = {"html": "html", "speedscope": "speedscope.json"}
+            profile_type_to_renderer = {
+                "html": HTMLRenderer,
+                "speedscope": SpeedscopeRenderer,
+            }
+            if request.query_params.get("profile", False):
+                profile_type = request.query_params.get("profile_format", "speedscope")
+                with Profiler(interval=0.001, async_mode="enabled") as profiler:
+                    response = await call_next(request)
+                extension = profile_type_to_ext[profile_type]
+                renderer = profile_type_to_renderer[profile_type]()
+                with open(Path(__file__).parent / f"profiles/profile.{extension}", "w") as out:
+                    out.write(profiler.output(renderer=renderer))
+                return response
+            return await call_next(request)
+
     @app.get(
         "/",
         operation_id="redirect_to_docs",

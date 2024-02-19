@@ -34,6 +34,7 @@ class Config(BaseSettings):
         description="The ObjectId of the Azure AD Enterprise Application",
     )
     APPINSIGHTS_BE_CONNECTION_STRING: str = Field("", env="APPINSIGHTS_BE_CONNECTION_STRING")
+    PROFILING_ENABLED: bool = Field(False, env="PROFILING_ENABLED")
 
 
 config = Config()
