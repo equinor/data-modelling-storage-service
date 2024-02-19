@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.20.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.20.0...v1.20.1) (2024-02-19)
+
+
+### Bug Fixes
+
+* gunicorn times out on some slow requests ([49029e8](https://github.com/equinor/data-modelling-storage-service/commit/49029e8ee8cf48fc8a9c5aa538b0e7cf60daba35))
+
 ## [1.20.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.19.1...v1.20.0) (2024-02-16)
 
 
