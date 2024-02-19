@@ -146,15 +146,6 @@ class DocumentService:
         if node.type == SIMOS.PACKAGE.value:
             self.raise_for_duplicate_name(node, data_source_id)
 
-        for child in node.children:
-            if child.is_array():
-                [
-                    self.save(x, data_source_id, repository, path, combined_document_meta)
-                    for x in child.children
-                    if x.type != SIMOS.REFERENCE.value
-                ]
-            elif child.type != SIMOS.REFERENCE.value:
-                self.save(child, data_source_id, repository, path, combined_document_meta)
         if node.type == SIMOS.BLOB.value:
             node.entity = self.save_blob_data(node, repository)
 
