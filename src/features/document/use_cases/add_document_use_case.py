@@ -129,7 +129,7 @@ def _add_document_to_entity_or_list(
                     recipe_provider=document_service.get_storage_recipes,
                 )
                 list_node.add_child(new_node)
-            document_service.save(parent_node, address.data_source, initial=True)
+            document_service.save(parent_node.find_parent(), address.data_source)
             return {"uid": f"{list_node.node_id}"}
         else:
             new_node = tree_node_from_dict(
@@ -141,7 +141,7 @@ def _add_document_to_entity_or_list(
                 recipe_provider=document_service.get_storage_recipes,
             )
             parent_node.add_child(new_node)
-            document_service.save(parent_node, address.data_source, initial=True)
+            document_service.save(parent_node.find_parent(), address.data_source)
             return {"uid": f"{new_node.node_id}"}
 
     if target.type != SIMOS.PACKAGE.value and target.type != "object":

@@ -107,7 +107,6 @@ class DocumentService:
         repository=None,
         path="",
         combined_document_meta: dict | None = None,
-        initial: bool = False,
     ) -> dict:
         """
         Saves a Node.
@@ -122,19 +121,8 @@ class DocumentService:
                         nodeC
             Here, combined_document_meta is the combined _meta_ information of node A, B and C.
             (this meta info can be found with _collect_entity_meta_by_path() util function).-
-        initial:  When true, the function will move up the tree until it finds a storage non-contained node, and start saving from there.
-            This allows us to call "save()" on any node, without having to find the "root node" (storage non-contained)
-
         """
-        if initial and node.storage_contained:
-            self.save(
-                node.parent,
-                data_source_id,
-                repository,
-                path,
-                combined_document_meta,
-                initial,
-            )
+
         if not node.entity:
             return {}
         # If not passed a custom repository to save into, use the DocumentService's storage
