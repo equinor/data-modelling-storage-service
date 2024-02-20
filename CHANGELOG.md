@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.20.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.20.1...v1.20.2) (2024-02-20)
+
+
+### Continuous Integration
+
+* disable cors in CI ([8bee9da](https://github.com/equinor/data-modelling-storage-service/commit/8bee9da52f94aee5b31775dd84f1fa6484266434))
+
 ## [1.20.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.20.0...v1.20.1) (2024-02-19)
 
 
