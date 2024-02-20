@@ -152,7 +152,7 @@ class DocumentServiceTestCase(unittest.TestCase):
                 "type": "dmss://system/SIMOS/Entity",
             }
         )
-        self.mock_document_service.save(contained_node.find_parent(), "testing")
+        self.mock_document_service.save(contained_node, "testing")
 
         assert doc_storage["1"]["containedPersonInfo"]["description"] == "TEST_MODIFY"
 

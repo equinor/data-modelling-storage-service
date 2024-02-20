@@ -123,6 +123,12 @@ class DocumentService:
             (this meta info can be found with _collect_entity_meta_by_path() util function).-
         """
 
+        # Move up the tree until it finds a storage non-contained node, and start saving from there.
+        # This allows us to call "save()" on storage contained node,
+        # without having to find the "root node" (storage non-contained).
+        if node.storage_contained:
+            node = node.find_parent()
+
         if not node.entity:
             return {}
         # If not passed a custom repository to save into, use the DocumentService's storage
