@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.21.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.20.2...v1.21.0) (2024-02-20)
+
+
+### Features
+
+* profile requests ([c5c340a](https://github.com/equinor/data-modelling-storage-service/commit/c5c340a7504f3b2a1b2890aed62c1f49e80a71d8))
+* store profiles in Azure blob storage ([322c2ed](https://github.com/equinor/data-modelling-storage-service/commit/322c2ed00f836a3ef7a1871fd8a77323bd0534c9))
+
+
+### Code Refactoring
+
+* do not save non references recursively ([f143aa5](https://github.com/equinor/data-modelling-storage-service/commit/f143aa52e41d0a265544909ff2d6923f52773959))
+* remove intial flag from save method ([460658d](https://github.com/equinor/data-modelling-storage-service/commit/460658d917eb49e268138ffdf2af94adc7da96b6))
+* save should find parent for contained nodes ([3a2c9ea](https://github.com/equinor/data-modelling-storage-service/commit/3a2c9eaed33b40ffab4fe936bd303f59630c2858))
+
 ## [1.20.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.20.1...v1.20.2) (2024-02-20)
 
 
