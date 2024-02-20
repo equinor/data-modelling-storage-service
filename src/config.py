@@ -35,6 +35,9 @@ class Config(BaseSettings):
     )
     APPINSIGHTS_BE_CONNECTION_STRING: str = Field("", env="APPINSIGHTS_BE_CONNECTION_STRING")
     PROFILING_ENABLED: bool = Field(False, env="PROFILING_ENABLED")
+    PROFILING_STORAGE_ACCOUNT: str = Field(
+        None, env="PROFILING_STORAGE_ACCOUNT"
+    )  # Store profiles in Azure blob storage
 
 
 config = Config()

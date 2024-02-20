@@ -1,11 +1,13 @@
 import json
 import time
 from collections.abc import Callable
+from uuid import uuid4
 
 import click
 import gridfs
 import uvicorn
 from azure.monitor.opentelemetry import configure_azure_monitor
+from azure.storage.blob import BlobServiceClient
 from fastapi import APIRouter, FastAPI, Security
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
@@ -141,8 +143,10 @@ def create_app() -> FastAPI:
         async def profile_request(request: Request, call_next):
             """Profile the current request.
 
-            Profile and store to disk a JSON report compatible with Speedscope
-            (an online interactive flamegraph visualizer) or simple HTML report.
+            Profile requests and store (to disk or Azure blob storage) a JSON report compatible with Speedscope
+            or simple HTML report. See https://github.com/jlfwong/speedscope for how to install and use Speedscope.
+
+            If used with docker image, mount the "/code/src/profiles" to the host for direct access to the performance profiles.
 
             Query params:
             - profile (bool): profile the request, default is false
@@ -159,8 +163,18 @@ def create_app() -> FastAPI:
                     response = await call_next(request)
                 extension = profile_type_to_ext[profile_type]
                 renderer = profile_type_to_renderer[profile_type]()
-                with open(Path(__file__).parent / f"profiles/profile.{extension}", "w") as out:
-                    out.write(profiler.output(renderer=renderer))
+                name = f"{config.ENVIRONMENT}-{uuid4()}.{extension}"
+                if config.PROFILING_STORAGE_ACCOUNT:
+                    # Store profiles in Azure blob storage
+                    blob_service = BlobServiceClient.from_connection_string(config.PROFILING_STORAGE_ACCOUNT)
+                    container_client = blob_service.get_container_client(container="profiles")
+                    container_client.upload_blob(name=name, data=profiler.output(renderer=renderer))
+                    logger.info(f"A request profile is uploaded to Azure blob storage: {name}")
+                else:
+                    # Store profiles on disk
+                    with open(Path(__file__).parent / f"profiles/{name}", "w") as out:
+                        out.write(profiler.output(renderer=renderer))
+                    logger.info(f"A request profile is stored on disk: {name}")
                 return response
             return await call_next(request)
 
