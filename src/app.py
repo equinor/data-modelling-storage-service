@@ -91,7 +91,7 @@ def create_app() -> FastAPI:
     app.include_router(jwt_only_routes, prefix=server_root, dependencies=[Security(auth_with_jwt)])
     app.include_router(public_routes, prefix=server_root)
 
-    if config.ENVIRONMENT == "local":
+    if config.ENVIRONMENT in ("local", "CI"):
         logger.warning("CORS has been turned off. This should only occur in in development.")
         # Turn off CORS when running locally. allow_origins argument can be replaced with a list of URLs.
         app.add_middleware(
