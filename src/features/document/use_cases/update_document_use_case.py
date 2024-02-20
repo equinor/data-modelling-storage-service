@@ -62,7 +62,7 @@ def _update_document(
     if files:
         merge_entity_and_files(node, files)
 
-    document_service.save(node.find_parent(), address.data_source)
+    document_service.save(node, address.data_source)
     logger.info(f"Updated entity '{address}'")
     return {"data": tree_node_to_dict(node)}
 
