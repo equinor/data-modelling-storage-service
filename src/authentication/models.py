@@ -1,6 +1,5 @@
 from datetime import datetime
 from enum import Enum
-from typing import Any
 from uuid import uuid4
 
 from pydantic import BaseModel
@@ -17,31 +16,6 @@ class AccessLevel(str, Enum):
         if self.value >= required_level.value:
             return True
         return False
-
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if isinstance(v, cls):
-            return v
-        try:
-            return cls[v]
-        except KeyError as ex:
-            raise ValueError("invalid AccessLevel enum value ") from ex
-
-    @classmethod
-    def __modify_schema__(cls, schema: dict[str, Any]):
-        """
-        Add a custom field type to the class representing the Enum's field names
-        Ref: https://pydantic-docs.helpmanual.io/usage/schema/#modifying-schema-in-custom-fields
-
-        The specific key 'x-enum-varnames' is interpreted by the openapi-generator-cli
-        to provide names for the Enum values.
-        Ref: https://openapi-generator.tech/docs/templating/#enum
-        """
-        schema["x-enum-varnames"] = [choice.name for choice in cls]
 
 
 class User(BaseModel):
@@ -78,7 +52,7 @@ class AccessControlList(BaseModel):
     users: dict[str, AccessLevel] = {}
     others: AccessLevel = AccessLevel.READ
 
-    def dict(self, **kwargs):
+    def to_dict(self, **kwargs):
         return {
             "owner": self.owner,
             "roles": {k: v.name for k, v in self.roles.items()},

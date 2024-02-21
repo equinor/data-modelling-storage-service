@@ -45,7 +45,7 @@ class DataSource:
         return cls(
             a_dict["name"],
             user,
-            AccessControlList(**a_dict.get("acl", AccessControlList.default().dict())),
+            AccessControlList(**a_dict.get("acl", AccessControlList.default().to_dict())),
             {key: Repository(name=key, **value) for key, value in a_dict["repositories"].items()},
         )
 

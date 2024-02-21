@@ -1,11 +1,12 @@
 from pydantic import (
     BaseModel,
+    ConfigDict,
     Field,
     StrictBool,
     StrictFloat,
     StrictInt,
     StrictStr,
-    validator,
+    model_validator,
 )
 
 from domain_classes.dimension import Dimension
@@ -31,13 +32,14 @@ class BlueprintAttribute(BaseModel):
             "dimensions": self.dimensions.to_dict() if self.dimensions else None,
         }
 
-    class Config:
-        arbitrary_types_allowed = True
-        allow_population_by_field_name = True
+    model_config = ConfigDict(arbitrary_types_allowed=True, populate_by_name=True)
 
-    @validator("dimensions", pre=True, always=True)
-    def deserialize_dimensions(cls, value, values):
-        return Dimension(value or "", values["attribute_type"])
+    @model_validator(mode="before")
+    def deserialize_dimensions(self):
+        self["dimensions"] = Dimension(
+            self.get("dimensions") or "", self.get("attributeType", self.get("attribute_type"))
+        )
+        return self
 
     def __repr__(self):
         return (

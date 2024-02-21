@@ -7,7 +7,7 @@ from authentication.models import AccessLevel, PATData
 
 class PatDataTestCase(unittest.TestCase):
     def test_init(self):
-        expire = datetime.utcnow()
+        expire = datetime.now(UTC)
 
         pat_data = PATData(
             pat_hash="hash123",

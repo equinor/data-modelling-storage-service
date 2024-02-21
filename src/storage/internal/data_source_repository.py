@@ -96,7 +96,7 @@ class DataSourceRepository:
     def update_access_control(self, data_source_id: str, acl: AccessControlList) -> None:
         data_source: DataSource = self.get(data_source_id)
         assert_user_has_access(data_source.acl, AccessLevel.WRITE, self.user)
-        data_source_collection.update_one(filter={"_id": data_source.name}, update={"$set": {"acl": acl.dict()}})
+        data_source_collection.update_one(filter={"_id": data_source.name}, update={"$set": {"acl": acl.to_dict()}})
 
 
 def get_data_source(data_source_id: str, user: User) -> DataSource:

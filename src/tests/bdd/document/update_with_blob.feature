@@ -38,7 +38,7 @@ Feature: Update document that has blob data
     """
     {
       "type": "dmss://system/SIMOS/Blueprint",
-      "name": "MultiplePdfContainer",
+      "name": "AnotherMultiplePdfContainer",
       "extends": ["dmss://system/SIMOS/NamedEntity"],
       "description": "A recursive blueprint with multiple PDFs",
       "attributes": [
@@ -56,7 +56,7 @@ Feature: Update document that has blob data
         },
         {
           "name": "pdf_container",
-          "attributeType": "dmss://test-DS/root_package/MultiplePdfContainer",
+          "attributeType": "dmss://test-DS/root_package/AnotherMultiplePdfContainer",
           "type": "dmss://system/SIMOS/BlueprintAttribute",
           "optional": true
         }
@@ -67,7 +67,7 @@ Feature: Update document that has blob data
     """
     {
         "name": "new_pdf_container",
-        "type": "dmss://test-DS/root_package/MultiplePdfContainer",
+        "type": "dmss://test-DS/root_package/AnotherMultiplePdfContainer",
         "a_pdf": {},
         "another_pdf": {},
         "pdf_container": {}
@@ -80,7 +80,7 @@ Feature: Update document that has blob data
     """
     {"data":{
         "name": "new_pdf_container",
-        "type": "dmss://test-DS/root_package/MultiplePdfContainer",
+        "type": "dmss://test-DS/root_package/AnotherMultiplePdfContainer",
         "a_pdf": {
           "name": "MyPDF1",
           "description": "",
@@ -105,7 +105,7 @@ Feature: Update document that has blob data
         },
         "pdf_container": {
           "name": "second_pdf_container",
-          "type": "dmss://test-DS/root_package/MultiplePdfContainer",
+          "type": "dmss://test-DS/root_package/AnotherMultiplePdfContainer",
           "description": "",
           "a_pdf": {
             "name": "MyPDF3",
