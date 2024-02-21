@@ -29,7 +29,7 @@ def get_blueprint_use_case(type: TypeConstrainedString, context: str | None, use
     if not context:
         return {
             "blueprint": blueprint.to_dict(),
-            "uiRecipes": [ur.dict(by_alias=True) for ur in default_ui_recipes],
+            "uiRecipes": [ur.model_dump(by_alias=True) for ur in default_ui_recipes],
             # TODO: Generate default storage recipe
             "storageRecipes": [],
         }
@@ -54,7 +54,7 @@ def get_blueprint_use_case(type: TypeConstrainedString, context: str | None, use
         "blueprint": blueprint.to_dict(),
         "initialUiRecipe": lookup.initial_ui_recipes[type].dict()
         if lookup.initial_ui_recipes.get(type)
-        else default_initial_ui_recipe.dict(by_alias=True),
-        "uiRecipes": [ur.dict(by_alias=True) for ur in ui_recipes],
-        "storageRecipes": [sr.dict(by_alias=True) for sr in storage_recipes],
+        else default_initial_ui_recipe.model_dump(by_alias=True),
+        "uiRecipes": [ur.model_dump(by_alias=True) for ur in ui_recipes],
+        "storageRecipes": [sr.model_dump(by_alias=True) for sr in storage_recipes],
     }

@@ -15,7 +15,7 @@ Feature: Files
   Scenario: Add file
     Given i access the resource url "/api/files/test-DS"
     And adding a binary file "tests/bdd/steps/test_pdf.pdf" to the request
-    When i make a "POST" request
+    When i make a form-data "POST" request
     """
     {
       "data": {

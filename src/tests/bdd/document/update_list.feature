@@ -59,7 +59,7 @@ Feature: Add document with optional attributes
     Given there exist document with id "101" in data source "data-source-name"
       """
       {
-      "name": "Computer",
+      "name": "AnotherComputer",
       "type": "dmss://system/SIMOS/Blueprint",
       "extends": [
         "dmss://system/SIMOS/NamedEntity"
@@ -117,7 +117,7 @@ Feature: Add document with optional attributes
     Given there exist document with id "workComputerId" in data source "data-source-name"
       """
       {
-        "type": "data-source-name/root_package/Computer",
+        "type": "data-source-name/root_package/AnotherComputer",
         "name": "workComputer",
         "model": "Dell",
         "letterKeys": []
@@ -239,7 +239,7 @@ Feature: Add document with optional attributes
     """
     {
       "_id": "workComputerId",
-      "type": "data-source-name/root_package/Computer",
+      "type": "data-source-name/root_package/AnotherComputer",
       "name": "workComputer",
       "model": "Dell",
       "letterKeys": [

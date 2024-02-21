@@ -159,7 +159,7 @@ Feature: Document 2
 
   Scenario: Update complex list attribute
     Given i access the resource url "/api/documents/data-source-name/$7.complexList"
-    When I make a "POST" request with "1" files
+    When i make a form-data "POST" request
       """
       {
         "document":
@@ -243,7 +243,7 @@ Feature: Document 2
 
   Scenario: Update complex attribute
     Given i access the resource url "/api/documents/data-source-name/$7.complexList"
-    When I make a "POST" request with "1" files
+    When i make a form-data "POST" request
       """
       {
         "document":
@@ -300,7 +300,7 @@ Feature: Document 2
     }
     """
 
-    Scenario: Validation errors if the address pointing to something that does not match the data type
+  Scenario: Validation errors if the address pointing to something that does not match the data type
     Given there exist document with id "10" in data source "test-source-name"
     """
     {

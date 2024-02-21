@@ -75,7 +75,7 @@ Feature: Document partial update
     """
     {
       "type": "dmss://system/SIMOS/Blueprint",
-      "name": "TestContainer",
+      "name": "AnotherTestContainer",
       "description": "",
       "extends": ["dmss://system/SIMOS/NamedEntity"],
       "attributes": [
@@ -150,14 +150,14 @@ Feature: Document partial update
       | 3   | 1          | sub_package_2 |             | dmss://system/SIMOS/Package                    |
       | 4   | 2          | document_1    |             | dmss://system/SIMOS/Package                    |
       | 5   | 2          | document_2    |             | dmss://system/SIMOS/Blueprint                  |
-      | 6   | 3          | container_1   |             | dmss://test-source-name/TestData/TestContainer |
+      | 6   | 3          | container_1   |             | dmss://test-source-name/TestData/AnotherTestContainer |
 
 
     Given there exist document with id "7" in data source "data-source-name"
     """
     {
-        "type": "dmss://test-source-name/TestData/TestContainer",
-        "name" : "TestContainer",
+        "type": "dmss://test-source-name/TestData/AnotherTestContainer",
+        "name" : "AnotherTestContainer",
         "extra": "Extra",
         "itemContained": {
             "name": "contained_1",
@@ -179,8 +179,8 @@ Feature: Document partial update
       """
       {
         "data": {
-          "type": "dmss://test-source-name/TestData/TestContainer",
-          "name" : "TestContainer",
+          "type": "dmss://test-source-name/TestData/AnotherTestContainer",
+          "name" : "AnotherTestContainer",
           "extra": "Extra",
           "itemContained": {
             "type": "dmss://test-source-name/TestData/ItemType",
@@ -197,7 +197,7 @@ Feature: Document partial update
     And the response should contain
     """
     {
-      "type": "dmss://test-source-name/TestData/TestContainer",
+      "type": "dmss://test-source-name/TestData/AnotherTestContainer",
       "extra": "Extra",
       "itemContained": {
           "type": "dmss://test-source-name/TestData/ItemType",
@@ -220,8 +220,8 @@ Feature: Document partial update
       """
       {
         "data": {
-          "type": "dmss://test-source-name/TestData/TestContainer",
-          "name" : "TestContainer",
+          "type": "dmss://test-source-name/TestData/AnotherTestContainer",
+          "name" : "AnotherTestContainer",
           "extra": "Extra",
           "itemsContained": [
             {
@@ -245,8 +245,8 @@ Feature: Document partial update
     And the response should contain
     """
     {
-        "type": "dmss://test-source-name/TestData/TestContainer",
-        "name" : "TestContainer",
+        "type": "dmss://test-source-name/TestData/AnotherTestContainer",
+        "name" : "AnotherTestContainer",
         "extra": "Extra",
         "itemContained": {
             "name": "contained_1",

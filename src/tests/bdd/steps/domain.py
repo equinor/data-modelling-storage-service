@@ -121,9 +121,9 @@ def step_ACL_for_docs_in_DS_should_be(context, document_id, data_source):
         lookup_for_data_source = {"documentLookUp": document["documentLookUp"]}
     actual_acl_as_json: dict = lookup_for_data_source["documentLookUp"][document_id]["acl"]
 
-    if actual_acl_as_json != acl.dict():
+    if actual_acl_as_json != acl.to_dict():
         raise Exception(
-            f"expected ACL not equal to actual ACL! \nExpected: {json.dumps(acl.dict())}\n\n"
+            f"expected ACL not equal to actual ACL! \nExpected: {json.dumps(acl.to_dict())}\n\n"
             + f"Actual: {json.dumps(actual_acl_as_json)} "
         )
 

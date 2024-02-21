@@ -50,6 +50,17 @@ def step_make_form_data_request(context, method):
     if method == "PUT":
         context.response = context.test_client.put(context.url, data=form_data, headers=context.headers)
     elif method == "POST":
+        if "binary_file" in context:
+            file_name = Path(context.binary_file).name
+            mime_type: str | None = ""
+            guess = mimetypes.guess_type(file_name)
+            if guess:
+                mime_type = guess[0]
+            files = {"file": (file_name, open(context.binary_file, "rb"), mime_type)}
+            context.response = context.test_client.post(
+                context.url, data=form_data, files=files, headers=context.headers
+            )
+            return
         context.response = context.test_client.post(context.url, data=form_data, headers=context.headers)
     else:
         raise Exception("A 'form-data' request must be either 'PUT' or 'POST'")
@@ -61,23 +72,7 @@ def step_make_x_method_request(context, method):
         context.response = context.test_client.put(context.url, json=json.loads(context.text), headers=context.headers)
     elif method == "POST":
         json_data = json.loads(context.text) if context.text else None
-        if "binary_file" in context:
-            # These requests may contain files, so we use "multipart/form-data".
-            # JSON must then be sent in the 'data' key part of the form
-            form_data = {
-                k: json.dumps(v) if isinstance(v, dict) or isinstance(v, list) else str(v) for k, v in json_data.items()
-            }
-            file_name = Path(context.binary_file.name).name
-            mime_type: str | None = ""
-            guess = mimetypes.guess_type(file_name)
-            if guess:
-                mime_type = guess[0]
-            files = {"file": (file_name, context.binary_file, mime_type)}
-            context.response = context.test_client.post(
-                context.url, data=form_data, files=files, headers=context.headers
-            )
-        else:
-            context.response = context.test_client.post(context.url, json=json_data, headers=context.headers)
+        context.response = context.test_client.post(context.url, json=json_data, headers=context.headers)
     elif method == "GET":
         context.response = context.test_client.get(context.url, headers=context.headers)
     elif method == "DELETE":
@@ -86,13 +81,7 @@ def step_make_x_method_request(context, method):
 
 @given('adding a binary file "{path}" to the request')
 def step_add_binary_file(context, path: str):
-    try:
-        context.binary_file = open(path, "rb")
-    except FileNotFoundError as error:
-        raise FileNotFoundError(
-            f"The file {path}, was not found. Make sure the working directory"
-            + " of the test are set to be the source root (./src)"
-        ) from error
+    context.binary_file = path
 
 
 @given('the logged in user is "{user_id}" with roles "{roles}"')

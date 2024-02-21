@@ -153,10 +153,9 @@ Feature: Add document with optional attributes
       }
       """
 
-
   Scenario: add optional attribute that does not exist
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.keyboard"
-    When I make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -188,7 +187,7 @@ Feature: Add document with optional attributes
 
   Scenario: add to list that exist
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys"
-    When I make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -218,10 +217,9 @@ Feature: Add document with optional attributes
     ]
     """
 
-
   Scenario: add to list that does not exist
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.numberKeys"
-    When I make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -251,7 +249,7 @@ Feature: Add document with optional attributes
 
   Scenario: add to a package that does not exist should fail
     Given i access the resource url "/api/documents/data-source-name/non-existing-package"
-    When I make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -263,10 +261,9 @@ Feature: Add document with optional attributes
     """
     Then the response status should be "Not Found"
 
-
   Scenario: add optional empty list
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.monitors"
-    When I make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document": []

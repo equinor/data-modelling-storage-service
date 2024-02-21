@@ -374,7 +374,7 @@ Feature: Add document with document_service
 
   Scenario: add document to list using path
     Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage/operation1.phases"
-    When I make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -430,7 +430,7 @@ Feature: Add document with document_service
 
   Scenario: add document to list using id
     Given i access the resource url "/api/documents/data-source-name/$11.phases[0].containedResults"
-    When I make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
       "document":
@@ -481,7 +481,7 @@ Feature: Add document with document_service
 
   Scenario: object
     Given i access the resource url "/api/documents/data-source-name/root_package/EntityPackage"
-    When I make a "POST" request with "1" files
+    When i make a form-data "POST" request
     """
     {
     	"document": {

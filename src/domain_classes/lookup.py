@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from domain_classes.storage_recipe import StorageRecipe
 from domain_classes.ui_recipe import Recipe
@@ -45,5 +45,4 @@ class Lookup(BaseModel):
         self.ui_recipes.update(new_ui_recipes)
         self.storage_recipes.update(new_storage_recipes)
 
-    class Config:
-        allow_population_by_field_name = True
+    model_config = ConfigDict(populate_by_name=True)

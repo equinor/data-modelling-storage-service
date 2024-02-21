@@ -29,7 +29,7 @@ class AccessControlListTestCase(unittest.TestCase):
             "users": {},
             "others": "READ",
         }
-        acl_dict = self.acl.dict()
+        acl_dict = self.acl.to_dict()
         self.assertEqual(acl_dict, expected_dict)
 
     def test_default(self):

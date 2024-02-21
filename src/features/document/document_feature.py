@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse
 from pydantic import Json, conint
@@ -56,8 +58,8 @@ def get(
 @create_response(JSONResponse)
 def update(
     id_address: str,
-    data: Json = Form(...),
-    files: list[UploadFile] | None = File(None),
+    data: Annotated[Json, Form()],
+    files: list[UploadFile] = File(None),
     user: User = Depends(auth_w_jwt_or_pat),
     partial_update: bool = False,
 ):
@@ -104,8 +106,8 @@ def update(
 @create_response(JSONResponse)
 def add_document(
     address: str,
-    document: Json = Form(...),
-    files: list[UploadFile] | None = File(None),
+    document: Annotated[Json, Form()],
+    files: list[UploadFile] = File(None),
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Add a document to a package or a data source using an address.

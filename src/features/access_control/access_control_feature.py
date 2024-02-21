@@ -84,4 +84,4 @@ def get_acl(address: str, user: User = Depends(auth_w_jwt_or_pat)):
         data_source_id=address_obj.data_source,
         document_id=address_obj.path,
         data_source_repository=DataSourceRepository(user),
-    ).dict()
+    ).to_dict()

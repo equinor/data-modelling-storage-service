@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import PRIMITIVES, SIMOS
@@ -23,8 +23,7 @@ class RecipeAttribute(BaseModel):
     ui_recipe: str | None = None
     mapping: str | None = None
 
-    class Config:
-        allow_population_by_field_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class Recipe(BaseModel):

@@ -1,31 +1,44 @@
-from pydantic import UUID4, Field, constr, root_validator
-from pydantic.main import BaseModel, Extra
+from typing import Annotated
+
+from pydantic import UUID4, Field, StringConstraints
+from pydantic.main import BaseModel, ConfigDict
 
 # Only allow characters a-9 and '_' + '-'
-NameConstrainedString = constr(min_length=1, max_length=128, regex="^[A-Za-z0-9_-]*$", strip_whitespace=True)
+NameConstrainedString = Annotated[
+    str, StringConstraints(min_length=1, max_length=128, pattern="^[A-Za-z0-9_-]*$", strip_whitespace=True)
+]
 
-# Regex only allow characters a-9 and '_' + '-' + '/' for paths
-TypeConstrainedString = constr(min_length=3, max_length=128, regex=r"^[A-Z:a-z0-9_\/-]*$", strip_whitespace=True)
+# Regex only allow characters a-9 and '_' + '-' + '/' + ':' for paths
+TypeConstrainedString = Annotated[
+    str, StringConstraints(min_length=3, max_length=128, pattern=r"^[A-Z:a-z0-9_\/-]*$", strip_whitespace=True)
+]
 
 
-class Entity(BaseModel, extra=Extra.allow):
-    type: TypeConstrainedString  # type: ignore
+def pop_additional_props(s):
+    s.pop("additionalProperties")
+
+
+class Entity(BaseModel):
+    type: TypeConstrainedString
+    # Our openapi python generator (v7.3.0) does not support OpenApi v3.1, and fails unless we remove
+    # the field "additionalProperties"
+    model_config = ConfigDict(extra="allow", json_schema_extra=pop_additional_props)
 
 
 class EntityName(BaseModel):
-    name: NameConstrainedString  # type: ignore
+    name: NameConstrainedString
 
 
 class OptionalEntityName(BaseModel):
-    name: NameConstrainedString | None  # type: ignore
+    name: NameConstrainedString | None
 
 
 class DataSource(BaseModel):
-    data_source_id: NameConstrainedString  # type: ignore
+    data_source_id: NameConstrainedString
 
 
 class DataSourceList(BaseModel):
-    data_sources: list[NameConstrainedString]  # type: ignore
+    data_sources: list[NameConstrainedString]
 
 
 class EntityUUID(BaseModel):
@@ -34,24 +47,15 @@ class EntityUUID(BaseModel):
 
 class ReferenceEntity(BaseModel):
     address: str
-    type: TypeConstrainedString  # type: ignore
+    type: TypeConstrainedString
     referenceType: str
 
 
-class UncontainedEntity(Entity, OptionalEntityName, EntityUUID, extra=Extra.allow):  # type: ignore
-    @root_validator(pre=True)
-    def from_underscore_id_to_uid(cls, values):
-        return {**values, "uid": values.get("_id")}
+class UncontainedEntity(Entity, OptionalEntityName, EntityUUID):
+    model_config = ConfigDict(extra="allow")
 
     def to_dict(self):
         if self.name is not None:
             return self.dict(by_alias=True)
 
         return self.dict(exclude={"name"})
-
-
-class BlueprintEntity(Entity, EntityName, EntityUUID, extra=Extra.allow):  # type: ignore
-    # an entity that have type: system/SIMOS/Blueprint
-    @root_validator(pre=True)
-    def from_underscore_id_to_uid(cls, values):
-        return {**values, "uid": values.get("_id")}
