@@ -1,6 +1,7 @@
 import json
 import time
 from collections.abc import Callable
+from datetime import datetime
 from uuid import uuid4
 
 import click
@@ -130,11 +131,13 @@ def create_app() -> FastAPI:
         milliseconds = int(round(process_time * 1000))
         logger.info(f"{request.method} {request.url.path} - {milliseconds}ms - {response.status_code}")
         response.headers["X-Process-Time"] = str(process_time)
+        request.state.request_time = process_time  # Make request_time available for subsequently middlewares
         return response
 
     if config.PROFILING_ENABLED:
         from pathlib import Path
 
+        from fastapi import BackgroundTasks
         from pyinstrument import Profiler
         from pyinstrument.renderers.html import HTMLRenderer
         from pyinstrument.renderers.speedscope import SpeedscopeRenderer
@@ -151,30 +154,44 @@ def create_app() -> FastAPI:
             Query params:
             - profile (bool): profile the request, default is false
             - profile_format (string): specify profile format (html or speedscope), default is speedscope
+            - profile_time_limit (number): only store profiles if above given time limit (defined in seconds), default is to store everyhing
             """
-            profile_type_to_ext = {"html": "html", "speedscope": "speedscope.json"}
-            profile_type_to_renderer = {
-                "html": HTMLRenderer,
-                "speedscope": SpeedscopeRenderer,
-            }
             if request.query_params.get("profile", False):
-                profile_type = request.query_params.get("profile_format", "speedscope")
                 with Profiler(interval=0.001, async_mode="enabled") as profiler:
                     response = await call_next(request)
+
+                profile_type_to_ext = {"html": "html", "speedscope": "speedscope.json"}
+                profile_type_to_renderer = {
+                    "html": HTMLRenderer,
+                    "speedscope": SpeedscopeRenderer,
+                }
+                profile_type = request.query_params.get("profile_format", "speedscope")
                 extension = profile_type_to_ext[profile_type]
                 renderer = profile_type_to_renderer[profile_type]()
-                name = f"{config.ENVIRONMENT}-{uuid4()}.{extension}"
-                if config.PROFILING_STORAGE_ACCOUNT:
-                    # Store profiles in Azure blob storage
-                    blob_service = BlobServiceClient.from_connection_string(config.PROFILING_STORAGE_ACCOUNT)
-                    container_client = blob_service.get_container_client(container="profiles")
-                    container_client.upload_blob(name=name, data=profiler.output(renderer=renderer))
-                    logger.info(f"A request profile is uploaded to Azure blob storage: {name}")
-                else:
-                    # Store profiles on disk
-                    with open(Path(__file__).parent / f"profiles/{name}", "w") as out:
-                        out.write(profiler.output(renderer=renderer))
-                    logger.info(f"A request profile is stored on disk: {name}")
+                request_time: float = getattr(request.state, "request_time", 0.0)
+                file_name = f"{datetime.now().strftime("%Y-%m-%d")}-{config.ENVIRONMENT}-{round(request_time, 2)}s-{request.method}-{request.url.path.replace("/", "_")}-{uuid4()}.{extension}"
+                # If time limit is specified, only profiles that are over the given limit are stored.
+                time_limit: float = request.query_params.get("profile_time_limit", 0.0)
+                should_store_profile: bool = request_time > float(time_limit)
+                if should_store_profile:
+                    if config.PROFILING_STORAGE_ACCOUNT:
+                        # Store profiles in Azure blob storage
+                        def send_profile_request_to_azure(data):
+                            blob_service = BlobServiceClient.from_connection_string(config.PROFILING_STORAGE_ACCOUNT)
+                            container_client = blob_service.get_container_client(container="profiles")
+                            container_client.upload_blob(name=file_name, data=data)
+                            logger.info(f"A request profile is uploaded to Azure blob storage: {file_name}")
+
+                        background_tasks = BackgroundTasks()
+                        background_tasks.add_task(
+                            send_profile_request_to_azure, data=profiler.output(renderer=renderer)
+                        )
+                        response.background = background_tasks
+                    else:
+                        # Store profiles on disk
+                        with open(Path(__file__).parent / f"profiles/{file_name}", "w") as out:
+                            out.write(profiler.output(renderer=renderer))
+                        logger.info(f"A request profile is stored on disk: {file_name}")
                 return response
             return await call_next(request)
 
