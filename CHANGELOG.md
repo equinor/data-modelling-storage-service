@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.21.0...v1.22.0) (2024-02-22)
+
+
+### Features
+
+* automatically keep profiles for requests that are over time limit ([48f5a0c](https://github.com/equinor/data-modelling-storage-service/commit/48f5a0c6f1180d35e726a389da1e1d425ed0713e))
+
 ## [1.21.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.20.2...v1.21.0) (2024-02-20)
 
 
