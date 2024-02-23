@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.22.0...v1.22.1) (2024-02-23)
+
+
+### Miscellaneous Chores
+
+* upgrade to pydantic v2 ([2803551](https://github.com/equinor/data-modelling-storage-service/commit/28035510ee70ab107531f5dc5caafff1a54d938e))
+
 ## [1.22.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.21.0...v1.22.0) (2024-02-22)
 
 
