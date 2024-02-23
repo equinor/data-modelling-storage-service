@@ -32,6 +32,7 @@ Feature: Files
        "name": "test_pdf",
        "size": 531540,
        "filetype": "pdf",
+       "contentType": "application/pdf",
        "content": {
            "type": "dmss://system/SIMOS/Reference",
            "referenceType": "storage"
