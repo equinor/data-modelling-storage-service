@@ -97,7 +97,7 @@ class NodeBase:
             return self.uid
         if self.parent.is_array():
             if self.attribute.ensure_uid:
-                return f'{self.parent.node_id}(_id="{self.uid}")'
+                return f"{self.parent.node_id}(_id={self.uid})"
 
             return f"{self.parent.node_id}[{self.key}]"
         return ".".join((self.parent.node_id, self.key))
@@ -218,10 +218,10 @@ class NodeBase:
             return True
 
     def should_have_id(self):
-        if self.attribute.ensure_uid:
-            return True
         if isinstance(self, ListNode):
             return False
+        if self.attribute.ensure_uid:
+            return True
         if self.type == SIMOS.REFERENCE.value:
             return False
         if self.storage_contained and self.contained:

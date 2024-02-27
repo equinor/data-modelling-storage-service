@@ -6,7 +6,6 @@ from uuid import uuid4
 from authentication.models import User
 from common.address import Address
 from common.entity.is_reference import is_reference
-from common.entity.validators import validate_entity_against_self
 from common.exceptions import (
     ApplicationException,
     BadRequestException,
@@ -26,7 +25,6 @@ from common.providers.storage_recipe_provider import (
 from common.tree.tree_node import ListNode, Node
 from common.tree.tree_node_serializer import (
     tree_node_from_dict,
-    tree_node_to_dict,
     tree_node_to_ref_dict,
 )
 from common.utils.logging import logger
@@ -154,7 +152,6 @@ class DocumentService:
                 ref_dict["__path__"] = path
                 ref_dict["__combined_document_meta__"] = combined_document_meta
             parent_uid = node.parent.node_id if node.parent else None
-            validate_entity_against_self(tree_node_to_dict(node), self.get_blueprint)
             repository.update(
                 ref_dict,
                 node.get_context_storage_attribute(),
