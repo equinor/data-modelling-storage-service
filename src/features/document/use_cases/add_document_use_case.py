@@ -15,7 +15,6 @@ from common.tree.tree_node import ListNode, Node
 from common.tree.tree_node_serializer import tree_node_from_dict
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import SIMOS
-from restful.request_types.shared import Entity
 from services.document_service.document_service import DocumentService
 
 
@@ -80,8 +79,8 @@ def _add_document_to_entity_or_list(
 
     if not target:
         # If target does not exist, there are 2 cases to consider:
-        #   1) the target is an optional attribute that does not exist yet. In that case, we set the target to be
-        #      the parent of entity referenced by 'address'.
+        #   1) the target is an optional attribute that does not exist yet. In that case,
+        #      we set the target to be the parent of entity referenced by 'address'.
         #   2) the address is wrong. In that case, raise Exception.
 
         # It is assumed that address.path is to an attribute, e.g. dataSource/package/document.attribute
@@ -117,32 +116,39 @@ def _add_document_to_entity_or_list(
                 document_service.get_blueprint,
                 recipe_provider=document_service.get_storage_recipes,
             )
+
             parent_node.add_child(list_node)
             if document:
                 # We only support adding a single item inside an optional list.
                 new_node = tree_node_from_dict(
                     {**document},
                     blueprint_provider=document_service.get_blueprint,
-                    node_attribute=BlueprintAttribute(
-                        name=attribute_to_update.name, attribute_type=Entity(**document).type
-                    ),
+                    node_attribute=attribute_to_update,
                     recipe_provider=document_service.get_storage_recipes,
+                    key=str(len(parent_node.children)),
                 )
+                if new_node.should_have_id():
+                    new_node.set_uid(new_node.generate_id())  # Ensure the node has a _id
                 list_node.add_child(new_node)
+                document_service.save(parent_node, address.data_source)
+                return {"uid": f"dmss://{parent_node.data_source}/${new_node.node_id}"}
+
             document_service.save(parent_node, address.data_source)
-            return {"uid": f"{list_node.node_id}"}
+            return {"uid": f"dmss://{address.data_source}/${list_node.node_id}"}
         else:
             new_node = tree_node_from_dict(
                 {**document},
                 blueprint_provider=document_service.get_blueprint,
-                node_attribute=BlueprintAttribute(
-                    name=attribute_to_update.name, attribute_type=Entity(**document).type
-                ),
+                node_attribute=attribute_to_update,
                 recipe_provider=document_service.get_storage_recipes,
             )
+
             parent_node.add_child(new_node)
+            if new_node.should_have_id():
+                new_node.set_uid(new_node.generate_id())  # Ensure the node has a _id
+
             document_service.save(parent_node, address.data_source)
-            return {"uid": f"{new_node.node_id}"}
+            return {"uid": f"dmss://{address.data_source}/${new_node.node_id}"}
 
     if target.type != SIMOS.PACKAGE.value and target.type != "object":
         validate_entity(
@@ -160,6 +166,9 @@ def _add_document_to_entity_or_list(
         node_attribute=new_attribute,
         recipe_provider=document_service.get_storage_recipes,
     )
+
+    if new_node.should_have_id():
+        new_node.set_uid(new_node.generate_id())
 
     if not target.is_array() and target.type != SIMOS.PACKAGE.value:
         required_attribute_names = [attribute.name for attribute in new_node.blueprint.get_required_attributes()]
@@ -180,8 +189,6 @@ def _add_document_to_entity_or_list(
     if isinstance(target, ListNode) or target.parent.type == SIMOS.PACKAGE.value:
         new_node.parent = target
         new_node.key = str(len(target.children))
-        if new_node.should_have_id():
-            new_node.set_uid(new_node.generate_id())
         target.add_child(new_node)
         document_service.save(target.find_parent(), address.data_source)
     else:
@@ -189,9 +196,9 @@ def _add_document_to_entity_or_list(
         target.parent.replace(new_node.node_id, new_node)
         document_service.save(target.find_parent(), address.data_source)
 
+    # TODO: Skip this if new_node is contained on parent
     document_service.save(new_node, address.data_source)
-
-    return {"uid": new_node.node_id}
+    return {"uid": f"dmss://{address.data_source}/${new_node.node_id}"}
 
 
 def add_document_use_case(

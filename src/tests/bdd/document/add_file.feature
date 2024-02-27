@@ -535,7 +535,6 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-    And the response should have valid uid
 
   Scenario: Adding document with id
     Given I access the resource url "/api/documents/test-DS/root_package"
@@ -551,7 +550,10 @@ Feature: Explorer - Add file
     }
     """
     Then the response status should be "OK"
-    And the response should have valid uid
+    And the response should be
+    """
+    {"uid": "dmss://test-DS/$2283c9b0-d509-46c9-a153-94c79f4d7b7b"}
+    """
 
   Scenario: Add Comment entity without a name attribute with -by-path endpoint
     Given i access the resource url "/api/documents/test-DS/root_package"

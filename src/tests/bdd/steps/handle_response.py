@@ -1,6 +1,5 @@
 import json
 import pprint
-import uuid
 
 from behave import then
 from deepdiff import DeepDiff
@@ -106,12 +105,6 @@ def step_impl_contain_id(context):
         raise ValueError("The response does not have a '_id' key")
     del actual["_id"]
     pretty_print_should_contain_diff(expected, actual)
-
-
-@then("the response should have valid uid")
-def step_impl_valid_uid(context):
-    response = context.response.json()
-    uuid.UUID(str(response["uid"]))
 
 
 @then("the array at {dot_path} should be of length {length}")

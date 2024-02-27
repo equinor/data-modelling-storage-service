@@ -170,7 +170,7 @@ Feature: Add document with optional attributes
     And the response should contain
     """
       {
-        "uid": "workComputerId.keyboard"
+        "uid": "dmss://data-source-name/$workComputerId.keyboard"
       }
     """
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.keyboard"
@@ -201,7 +201,7 @@ Feature: Add document with optional attributes
     And the response should contain
     """
       {
-        "uid": "workComputerId.letterKeys[0]"
+        "uid": "dmss://data-source-name/$workComputerId.letterKeys[0]"
       }
     """
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.letterKeys"
@@ -233,7 +233,7 @@ Feature: Add document with optional attributes
     And the response should contain
     """
       {
-        "uid": "workComputerId.numberKeys"
+        "uid": "dmss://data-source-name/$workComputerId.numberKeys[3]"
       }
     """
     Given i access the resource url "/api/documents/data-source-name/$workComputerId.numberKeys[0]"
@@ -273,6 +273,6 @@ Feature: Add document with optional attributes
     And the response should contain
     """
       {
-        "uid": "workComputerId.monitors"
+        "uid": "dmss://data-source-name/$workComputerId.monitors"
       }
     """
