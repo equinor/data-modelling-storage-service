@@ -31,8 +31,6 @@ class BlueprintProvider:
     def get_blueprint_with_extended_attributes(self, type: str) -> Blueprint:
         blueprint: Blueprint = self.get_blueprint(type)
         blueprint.realize_extends(self.get_blueprint)
-        logger.debug(f"Cache miss! Fetching extended blueprint '{type}' '{hash(self)} id: {self.id}'")
-        logger.debug(self.get_blueprint_with_extended_attributes.cache_info())
         return blueprint
 
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)  # noqa: B019
