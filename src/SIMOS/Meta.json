@@ -16,6 +16,12 @@
       "attributeType": "string"
     },
     {
+      "name": "versionNote",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "optional": true
+    },
+    {
       "name": "type",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string"
