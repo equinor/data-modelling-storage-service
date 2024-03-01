@@ -6,6 +6,9 @@
 
 ![PyPI](https://github.com/equinor/data-modelling-storage-service/workflows/Publish%20DMSS%20API%20to%20PyPI/badge.svg)
 
+ [![SCM Compliance](https://scm-compliance-api.radix.equinor.com/repos/equinor/data-modelling-storage-service/badge)](https://scm-compliance-api.radix.equinor.com/repos/equinor/data-modelling-storage-service/badge)
+
+
 ## Prerequisites
 
 In order to run the commands described below, you need:
