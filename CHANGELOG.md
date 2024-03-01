@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.23.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.22.1...v1.23.0) (2024-03-01)
+
+
+### Features
+
+* add versionNote to Meta. Reduce BP provider logging ([77ce14b](https://github.com/equinor/data-modelling-storage-service/commit/77ce14b653a5189411c84299d27b0380ab11a049))
+* addDocument() return full address to the new entity ([b8701c1](https://github.com/equinor/data-modelling-storage-service/commit/b8701c12a99cec2a6ff372af6b48935b8de20f1a))
+
+
+### Build System
+
+* **deps:** bump cryptography from 42.0.3 to 42.0.4 ([f7e4e7c](https://github.com/equinor/data-modelling-storage-service/commit/f7e4e7c989574e5406731e8bd200d2fbb971c061))
+
 ## [1.22.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.22.0...v1.22.1) (2024-02-23)
 
 
