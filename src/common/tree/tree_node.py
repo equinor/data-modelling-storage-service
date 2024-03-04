@@ -255,68 +255,45 @@ class Node(NodeBase):
 
     # Replace the entire data of the node with the input dict. If it matches the blueprint...
     def update(self, data: dict, partial_update: bool = False):
+        if partial_update:
+            self.entity.update(data)
+        else:
+            self.entity = data
+
         if data.get("_id"):
             self.set_uid(data.get("_id"))
 
-        # Set self.type from posted type, and validate against parent blueprint
+        # Set self.type from posted type
         self.type = data.get("type", self.attribute.attribute_type)
-        # Modify and add for each key in posted data
-        for key in data.keys():
-            new_data = data[key]
-            if key == "_id":
-                self.entity["_id"] = new_data
+
+        self.children = []
+        complex_attributes = self.blueprint.get_none_primitive_types()
+        for attribute in complex_attributes:
+            if attribute.name not in self.entity:
                 continue
-            attribute = self.blueprint.get_attribute_by_name(key)
-
-            if key == "type":
-                # Should always be able to specify type
-                self.entity[key] = new_data
-
-            # Add/Modify primitive data
-            if attribute.is_primitive:
-                self.entity[key] = new_data
-            # Add/Modify complex data
+            child: ListNode | Node
+            if attribute.is_array:
+                child = ListNode(
+                    attribute.name,
+                    attribute,
+                    None,
+                    self.entity[attribute.name],
+                    self,
+                    self.blueprint_provider,
+                    recipe_provider=self.recipe_provider,
+                )
             else:
-                child = self.get_by_path([key])
-                if not child:  # A new child has been added
-                    if attribute.is_array:
-                        child = ListNode(
-                            attribute.name,
-                            attribute,
-                            None,
-                            new_data,
-                            self,
-                            self.blueprint_provider,
-                            recipe_provider=self.recipe_provider,
-                        )
-                    else:
-                        child = Node(
-                            attribute.name,
-                            attribute,
-                            None,
-                            new_data,
-                            self,
-                            self.blueprint_provider,
-                            recipe_provider=self.recipe_provider,
-                        )
-                child.update(new_data, partial_update)
-
-        # Remove any child that is not specified in blueprint
-        # (Can happen if we change the type, and the old node had some children)
-        for child in self.children:
-            if child.attribute.name not in self.blueprint.get_attribute_names():
-                self.remove_by_path([child.key])
-
-        # Remove for every key in blueprint not in data or is a required attribute
-        removed_attributes = [attr for attr in self.blueprint.attributes if attr.name not in data]
-        for attribute in removed_attributes:
-            # Pop primitive data
-            if attribute.is_primitive:
-                self.entity.pop(attribute.name, None)  # type: ignore
-            # Remove complex data
-            else:
-                if not partial_update:
-                    self.remove_by_path([attribute.name])
+                child = Node(
+                    attribute.name,
+                    attribute,
+                    None,
+                    self.entity[attribute.name],
+                    self,
+                    self.blueprint_provider,
+                    recipe_provider=self.recipe_provider,
+                )
+            child.update(self.entity[attribute.name], partial_update)
+            self.children.append(child)
 
     def get_context_storage_attribute(self):
         # TODO: How to decide which storage_recipe?
