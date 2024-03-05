@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.23.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.23.0...v1.23.1) (2024-03-05)
+
+
+### Bug Fixes
+
+* partial update only worked with complex ([0943483](https://github.com/equinor/data-modelling-storage-service/commit/094348342e65d960d4afcc61f89eb1af5598754d))
+
+
+### Miscellaneous Chores
+
+* add compliant badge ([0ce36a9](https://github.com/equinor/data-modelling-storage-service/commit/0ce36a99e1500230423b64f46fe365a816273c89))
+
 ## [1.23.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.22.1...v1.23.0) (2024-03-01)
 
 
