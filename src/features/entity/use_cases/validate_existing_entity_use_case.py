@@ -11,6 +11,6 @@ def validate_existing_entity_use_case(address: str, user: User) -> str:
     try:
         document_as_node: Node = document_service.get_document(Address.from_absolute(address), depth=500)
     except NotFoundException as ex:
-        raise ValidationException(message=ex.message, debug=ex.debug) from ex
+        raise ValidationException(message=ex.message, debug=ex.debug, data=ex.data) from ex
     validate_entity_against_self(document_as_node.entity, document_service.get_blueprint)
     return "OK"
