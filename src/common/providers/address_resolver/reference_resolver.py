@@ -1,8 +1,9 @@
+import json
 from collections.abc import Callable
 
 from common.address import Address
 from common.entity.is_reference import is_reference
-from common.exceptions import ApplicationException
+from common.exceptions import ApplicationException, NotFoundException
 from common.providers.address_resolver.address_resolver import (
     ResolvedAddress,
     resolve_address,
@@ -71,7 +72,15 @@ def _get_complete_sys_document(
 
     address = Address.from_relative(reference["address"], current_id, data_source.name, path)
 
-    resolved_address: ResolvedAddress = resolve_address(address, get_data_source)
+    try:
+        resolved_address: ResolvedAddress = resolve_address(address, get_data_source)
+    except NotFoundException as ex:
+        raise NotFoundException(
+            message=f"Could not resolve address '{reference['address']}'",
+            debug=f"Reference: {json.dumps(reference)}, DocumentId: {current_id}",
+            data=ex.dict(),
+        ) from ex
+
     if is_reference(resolved_address.entity):
         resolved_address = resolve_address(
             Address.from_relative(
