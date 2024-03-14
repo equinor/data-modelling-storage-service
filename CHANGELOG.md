@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.23.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.23.1...v1.23.2) (2024-03-14)
+
+
+### Bug Fixes
+
+* more info on 'failed to resolve reference' ([6f95b0a](https://github.com/equinor/data-modelling-storage-service/commit/6f95b0a3f696338233cb6e6a143f534293a55af8))
+
 ## [1.23.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.23.0...v1.23.1) (2024-03-05)
 
 
