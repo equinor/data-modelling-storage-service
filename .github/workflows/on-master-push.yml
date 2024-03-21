@@ -1,3 +1,4 @@
+name: Master checks
 on:
   workflow_dispatch:
   push:
@@ -31,12 +32,3 @@ jobs:
       image-tags: production,${{ needs.release-please.outputs.tag_name }}
     secrets:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
-#  publish-new-pypi-package:
-#    needs: release-please
-#    if: ${{ needs.release-please.outputs.release_created }}
-#    uses: ./.github/workflows/publish-to-pypi.yml
-#    with:
-#      version: ${{ needs.release-please.outputs.tag_name }}
-#    secrets:
-#      PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
