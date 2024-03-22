@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.23.4](https://github.com/equinor/data-modelling-storage-service/compare/v1.23.3...v1.23.4) (2024-03-22)
+
+
+### Bug Fixes
+
+* no longer use gunicorn to scale workers ([7d71cbf](https://github.com/equinor/data-modelling-storage-service/commit/7d71cbf8963e229b84639160aef5787cbb657e68))
+
+
+### Documentation
+
+* README to be up-to-date ([e4c015f](https://github.com/equinor/data-modelling-storage-service/commit/e4c015f37afbb7995bd80075d93475434496263f))
+
 ## [1.23.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.23.2...v1.23.3) (2024-03-22)
 
 
