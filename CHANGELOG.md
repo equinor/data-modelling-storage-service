@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.23.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.23.2...v1.23.3) (2024-03-22)
+
+
+### Bug Fixes
+
+* increase gunicorn timeout to 180s ([86b96ce](https://github.com/equinor/data-modelling-storage-service/commit/86b96ce95b23a8ddf39f8abf13492095ae3e0f10))
+
 ## [1.23.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.23.1...v1.23.2) (2024-03-14)
 
 
