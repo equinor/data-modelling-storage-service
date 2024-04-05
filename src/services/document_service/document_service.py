@@ -57,7 +57,9 @@ class DocumentService:
         self.repository_provider = repository_provider
         self.user = user
         self.context = context
-        self.get_data_source = lambda data_source_id: self.repository_provider(data_source_id, self.user)
+        self.get_data_source = lambda data_source_id: self.repository_provider(
+            data_source_id, self.user, self.get_blueprint
+        )
 
     def get_blueprint(self, type: str) -> Blueprint:
         return self._blueprint_provider.get_blueprint_with_extended_attributes(type)

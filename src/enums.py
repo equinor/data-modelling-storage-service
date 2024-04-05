@@ -32,17 +32,6 @@ class BuiltinDataTypes(Enum):
             return Any
 
 
-class RepositoryType(Enum):
-    MONGO = "mongo-db"
-    AZURE_BLOB_STORAGE = "azure-blob-storage"
-    LOCAL = "localStorage"
-
-    @staticmethod
-    def has_value(value):
-        if next((item for item in RepositoryType if item.value == value), None):
-            return True
-
-
 class StorageDataTypes(str, Enum):
     DEFAULT = "default"
     LARGE = "large"

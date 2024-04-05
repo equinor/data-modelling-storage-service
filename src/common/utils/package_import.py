@@ -12,7 +12,7 @@ from common.providers.address_resolver.address_resolver import (
 from common.utils.logging import logger
 from common.utils.string_helpers import url_safe_name
 from enums import REFERENCE_TYPES, SIMOS
-from storage.data_source_class import DataSource
+from storage.data_source_interface import DataSource
 from storage.internal.data_source_repository import get_data_source
 
 
@@ -41,7 +41,7 @@ def _add_documents(path, documents, data_source) -> list[dict]:
 
 
 def import_package(path: str, user: User, data_source_name: str, is_root: bool = False) -> dict:
-    data_source: DataSource = get_data_source(data_source_id=data_source_name, user=user)
+    data_source: DataSource = get_data_source(data_source_id=data_source_name, user=user, get_blueprint=lambda: None)
     package = {
         "name": os.path.basename(path),
         "type": SIMOS.PACKAGE.value,
@@ -50,7 +50,7 @@ def import_package(path: str, user: User, data_source_name: str, is_root: bool =
     try:
         resolved_address: ResolvedAddress = resolve_address(
             Address(package["name"], data_source.name),
-            lambda data_source_name: get_data_source(data_source_name, user),
+            lambda data_source_name: get_data_source(data_source_name, user, get_blueprint=lambda: None),
         )
         if resolved_address.entity:
             raise BadRequestException(

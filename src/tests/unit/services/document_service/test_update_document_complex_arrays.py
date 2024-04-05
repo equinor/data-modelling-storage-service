@@ -2,7 +2,6 @@ import unittest
 from copy import deepcopy
 from unittest import mock
 
-from authentication.models import User
 from common.address import Address
 from features.document.use_cases.update_document_use_case import (
     update_document_use_case,
@@ -101,16 +100,12 @@ class ArraysDocumentServiceTestCase(unittest.TestCase):
         def mock_update(entity: dict, *args, **kwargs):
             doc_storage[entity["_id"]] = entity
 
-        document_repository = mock.Mock()
-        document_repository.get = mock_get
-        document_repository.name = "testing"
-        document_repository.update = mock_update
+        repository = mock.Mock()
+        repository.get = mock_get
+        repository.name = "testing"
+        repository.update = mock_update
 
-        def repository_provider(data_source_id, user: User):
-            if data_source_id == "testing":
-                return document_repository
-
-        self.mock_document_service.repository_provider = repository_provider
+        self.mock_document_service.repository_provider = lambda *args: repository
 
         # fmt: off
         data = {

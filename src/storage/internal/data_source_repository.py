@@ -9,7 +9,6 @@ from common.exceptions import (
     NotFoundException,
 )
 from common.utils.logging import logger
-from enums import RepositoryType
 from restful.request_types.create_data_source import DataSourceRequest
 from services.database import data_source_collection
 from storage.data_source_class import DataSource
@@ -25,8 +24,9 @@ class DataSourceInformation(BaseModel):
 
 
 class DataSourceRepository:
-    def __init__(self, user: User):
+    def __init__(self, user: User, get_blueprint=None):
         self.user = user
+        self.get_blueprint = get_blueprint
 
     @staticmethod
     def validate_data_source(document: dict):
@@ -34,7 +34,7 @@ class DataSourceRepository:
             for repo in document["repositories"].values():
                 if repo.get("name"):
                     raise BadRequestException("A repository specification may not have the 'name' key.")
-                if repo["type"] == RepositoryType.MONGO.value:
+                if repo["type"] == "mongo-db":
                     if repo["database"] in RESERVED_MONGO_DATABASES:
                         raise BadRequestException(
                             f"The database named '{repo['database']}' " "is a system reserved database name."
@@ -47,7 +47,7 @@ class DataSourceRepository:
         try:
             if repo.get("name"):
                 raise BadRequestException("A repository specification may not have the 'name' key.")
-            if repo["type"] == RepositoryType.MONGO.value:
+            if repo["type"] == "mongo-db":
                 if repo["database"] in RESERVED_MONGO_DATABASES:
                     raise BadRequestException(
                         f"The database named '{repo['database']}' " "is a system reserved database name."
@@ -91,7 +91,7 @@ class DataSourceRepository:
                 message=f"The data source, with id '{id}' could not be found",
                 debug=f"No data source with id '{id}' could be found in the internal DS repository",
             )
-        return DataSource.from_dict(data_source, user=self.user)
+        return DataSource.from_dict(data_source, user=self.user, get_blueprint=self.get_blueprint)
 
     def update_access_control(self, data_source_id: str, acl: AccessControlList) -> None:
         data_source: DataSource = self.get(data_source_id)
@@ -99,5 +99,5 @@ class DataSourceRepository:
         data_source_collection.update_one(filter={"_id": data_source.name}, update={"$set": {"acl": acl.to_dict()}})
 
 
-def get_data_source(data_source_id: str, user: User) -> DataSource:
-    return DataSourceRepository(user).get(data_source_id)
+def get_data_source(data_source_id: str, user: User, get_blueprint=None) -> DataSource:
+    return DataSourceRepository(user, get_blueprint).get(data_source_id)

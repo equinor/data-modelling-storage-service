@@ -10,7 +10,7 @@ from common.providers.address_resolver.path_items import (
     QueryItem,
 )
 from common.providers.address_resolver.path_to_path_items import path_to_path_items
-from storage.data_source_class import DataSource
+from storage.data_source_interface import DataSource
 
 
 def _resolve_path_items(

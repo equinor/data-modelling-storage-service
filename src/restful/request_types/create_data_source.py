@@ -1,11 +1,11 @@
 from pydantic.main import BaseModel
 
 from common.utils.encryption import encrypt
-from enums import RepositoryType, StorageDataTypes
+from enums import StorageDataTypes
 
 
 class Repository(BaseModel, use_enum_values=True):  # type: ignore
-    type: RepositoryType
+    type: str
     data_types: list[StorageDataTypes] | None = None
     host: str | None = None
     port: int | None = None

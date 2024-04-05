@@ -86,7 +86,7 @@ class GetDocumentInputTestCase(unittest.TestCase):
             simos_blueprints_available_for_test=simos_blueprints,
         )
         self.document_service = get_mock_document_service(
-            repository_provider=lambda x, y: self.document_repository,
+            repository_provider=lambda *args: self.document_repository,
             blueprint_provider=mock_blueprint_provider,
         )
 

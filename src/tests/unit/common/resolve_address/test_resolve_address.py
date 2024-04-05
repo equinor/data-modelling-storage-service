@@ -82,10 +82,9 @@ class ResolveReferenceTestCase(unittest.TestCase):
         self.document_repository2 = mock.Mock()
         self.document_repository2.name = "datasource2"
         self.document_repository2.get = self.mock_get2
-        # self.document_repository2.find = self.mock_find2
 
         self.document_service = get_mock_document_service(
-            repository_provider=lambda x, y: next(
+            repository_provider=lambda x, *args: next(
                 dr for dr in (self.document_repository, self.document_repository2) if dr.name == x
             ),
             blueprint_provider=None,

@@ -67,7 +67,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        self.document_service.repository_provider = lambda x, y: repository
+        self.document_service.repository_provider = lambda *args: repository
         reference = {
             "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
             "type": SIMOS.REFERENCE.value,
@@ -112,7 +112,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        self.document_service.repository_provider = lambda x, y: repository
+        self.document_service.repository_provider = lambda *args: repository
 
         reference_entity = {
             "address": "$2d7c3249-985d-43d2-83cf-a887e440825a",
@@ -155,7 +155,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        self.document_service.repository_provider = lambda x, y: repository
+        self.document_service.repository_provider = lambda *args: repository
 
         reference_entity_with_missing_attribute = {
             "address": "$123",
@@ -198,7 +198,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
-        self.document_service.repository_provider = lambda x, y: repository
+        self.document_service.repository_provider = lambda *args: repository
 
         self.assertRaises(
             ValidationException,
@@ -241,7 +241,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
-        self.document_service.repository_provider = lambda x, y: repository
+        self.document_service.repository_provider = lambda *args: repository
 
         self.assertRaises(
             ValidationException,
@@ -288,7 +288,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        self.document_service.repository_provider = lambda x, y: repository
+        self.document_service.repository_provider = lambda *args: repository
 
     def test_add_reference_in_list(self):
         repository = mock.Mock()
@@ -324,7 +324,7 @@ class ReferenceTestCase(unittest.TestCase):
 
         repository.get = lambda x: doc_storage[str(x)]
         repository.update = mock_update
-        self.document_service.repository_provider = lambda x, y: repository
+        self.document_service.repository_provider = lambda *args: repository
         reference = {
             "address": "$42dbe4a5-0eb0-4ee2-826c-695172c3c35a",
             "type": SIMOS.REFERENCE.value,

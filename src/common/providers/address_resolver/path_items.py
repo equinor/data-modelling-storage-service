@@ -8,7 +8,7 @@ from common.entity.has_key_value_pairs import has_key_value_pairs
 from common.entity.is_reference import is_reference
 from common.exceptions import ApplicationException, NotFoundException
 from enums import REFERENCE_TYPES, SIMOS
-from storage.data_source_class import DataSource
+from storage.data_source_interface import DataSource
 
 
 @dataclass
