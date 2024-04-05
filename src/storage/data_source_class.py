@@ -41,12 +41,15 @@ class DataSource:
         self.data_source_collection = data_source_collection
 
     @classmethod
-    def from_dict(cls, a_dict, user: User):
+    def from_dict(cls, a_dict, user: User, get_blueprint):
         return cls(
             a_dict["name"],
             user,
             AccessControlList(**a_dict.get("acl", AccessControlList.default().to_dict())),
-            {key: Repository(name=key, **value) for key, value in a_dict["repositories"].items()},
+            {
+                key: Repository(name=key, get_blueprint=get_blueprint, **value)
+                for key, value in a_dict["repositories"].items()
+            },
         )
 
     def _get_repo_from_storage_attribute(self, storage_attribute: StorageAttribute = None, strict=False) -> Repository:

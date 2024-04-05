@@ -9,6 +9,18 @@ else
 fi
 echo -e "########### VERSION ##########\n"
 
+if [ -d /code/src/storage/repository_plugins ]; then
+  echo "Checking for plugin requirements..."
+  cd /code/src/storage/repository_plugins
+  PLUGINS=$(ls)
+  for plugin in $PLUGINS ; do
+      echo "Installing requirements for plugin $plugin"
+      pip install -r "$plugin/requirements.txt"
+  done
+
+  cd -
+fi
+
 
 envsubst < /code/src/system_DS_template.json > /tmp/DMSS_systemDS.json
 

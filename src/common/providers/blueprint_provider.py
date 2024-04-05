@@ -15,6 +15,10 @@ from domain_classes.blueprint import Blueprint
 from storage.internal.data_source_repository import get_data_source
 
 
+def substitute_get_blueprint(*args, **kwargs):
+    raise ValueError("'get_blueprint' should not be called when fetching blueprints")
+
+
 class BlueprintProvider:
     def __init__(
         self,
@@ -39,7 +43,7 @@ class BlueprintProvider:
         try:
             resolved_address: ResolvedAddress = self.resolve_address(
                 Address.from_absolute(type),
-                lambda data_source_name: self.get_data_source(data_source_name, self.user),
+                lambda data_source_name: self.get_data_source(data_source_name, self.user, substitute_get_blueprint),
             )
         except NotFoundException as ex:
             raise NotFoundException(
@@ -52,7 +56,7 @@ class BlueprintProvider:
                 resolved_address.document_id,
                 resolved_address.data_source_id,
             ),
-            lambda data_source_name: self.get_data_source(data_source_name, self.user),
+            lambda data_source_name: self.get_data_source(data_source_name, self.user, substitute_get_blueprint),
         )
         return Blueprint(resolved_address.entity, type)
 

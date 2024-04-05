@@ -63,7 +63,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
 
-        self.mock_document_service.repository_provider = lambda x, y: repository
+        self.mock_document_service.repository_provider = lambda *args: repository
         node: Node = self.mock_document_service.get_document(Address("$1", "testing"))
         node.update(
             {

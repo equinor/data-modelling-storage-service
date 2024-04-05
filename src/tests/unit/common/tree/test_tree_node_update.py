@@ -2,7 +2,6 @@ import unittest
 from copy import deepcopy
 from unittest import mock
 
-from authentication.models import User
 from common.address import Address
 from common.exceptions import BadRequestException, ValidationException
 from common.tree.tree_node import Node
@@ -61,14 +60,11 @@ class DocumentServiceTestCase(unittest.TestCase):
             simos_blueprints_available_for_test=simos_blueprints,
         )
 
-        def repository_provider(data_source_id, user: User):
-            return self.repository
-
         mock_recipe_folder = "src/tests/unit/common/tree/mock_data/mock_storage_recipes.json"
         recipe_provider = MockStorageRecipeProvider(mock_recipe_folder).provider
         self.mock_document_service = get_mock_document_service(
             blueprint_provider=self.mock_blueprint_provider,
-            repository_provider=repository_provider,
+            repository_provider=lambda *args: self.repository,
             recipe_provider=recipe_provider,
         )
 

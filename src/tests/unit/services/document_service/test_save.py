@@ -2,7 +2,6 @@ import unittest
 from copy import deepcopy
 from unittest import mock
 
-from authentication.models import User
 from common.address import Address
 from common.tree.tree_node import Node
 from domain_classes.blueprint_attribute import BlueprintAttribute
@@ -96,7 +95,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
 
-        self.mock_document_service.repository_provider = lambda x, y: repository
+        self.mock_document_service.repository_provider = lambda *args: repository
         node: Node = self.mock_document_service.get_document(Address("$1", "testing"))
         contained_node: Node = node.get_by_path("storageUncontainedListOfFriends.1".split("."))
         contained_node.update(
@@ -142,7 +141,7 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         repository.get = mock_get
         repository.update = mock_update
-        self.mock_document_service.repository_provider = lambda x, y: repository
+        self.mock_document_service.repository_provider = lambda *args: repository
 
         contained_node: Node = self.mock_document_service.get_document(Address("$1.containedPersonInfo", "testing"))
         contained_node.update(
@@ -187,7 +186,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
 
-        self.mock_document_service.repository_provider = lambda x, y: repository
+        self.mock_document_service.repository_provider = lambda *args: repository
 
         node: Node = self.mock_document_service.get_document(Address("$1", "testing"))
         contained_node: Node = node.search("1.storageUncontainedListOfFriends")
@@ -291,12 +290,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
 
-        def repository_provider(data_source_id, user: User):
-            repository.name = data_source_id
-            if data_source_id == "testing":
-                return repository
-
-        self.mock_document_service.repository_provider = repository_provider
+        self.mock_document_service.repository_provider = lambda *args: repository
 
         node: Node = self.mock_document_service.get_document(Address("$1", "testing"))
         contained_node: Node = node.search("1.storageUncontainedListOfFriends")
@@ -346,7 +340,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda id: doc_storage[id]
         repository.update = mock_update
 
-        self.mock_document_service.repository_provider = lambda x, y: repository
+        self.mock_document_service.repository_provider = lambda *args: repository
 
         # Testing updating the reference
         node: Node = self.mock_document_service.get_document(Address("$1", "testing"))
@@ -399,7 +393,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = lambda id: deepcopy(doc_storage[id])
         repository.update = mock_update
 
-        self.mock_document_service.repository_provider = lambda x, y: repository
+        self.mock_document_service.repository_provider = lambda *args: repository
         new_cage: dict = cat_cage.copy()
 
         new_cat_description = "Changed"
@@ -453,7 +447,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         repository.get = mock_get
         repository.update = mock_update
 
-        self.mock_document_service.repository_provider = lambda x, y: repository
+        self.mock_document_service.repository_provider = lambda *args: repository
         new_data = {
             "name": "A-contained_attribute",
             "type": "Person",

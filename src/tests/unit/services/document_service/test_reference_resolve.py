@@ -79,7 +79,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
         document_repository.get = mock_get
         document_repository.find = mock_find
 
-        self.mock_document_service.repository_provider = lambda x, y: document_repository
+        self.mock_document_service.repository_provider = lambda *args: document_repository
         with pytest.raises(Exception, match=r"The protocol 'wrong' is not supported"):
             tree_node_to_dict(self.mock_document_service.get_document(Address.from_absolute("datasource/$1"), depth=9))
 
@@ -276,7 +276,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
                 return [deepcopy(hit)]
             return []
 
-        def mock_data_source(data_source_id: str, user: dict):
+        def mock_data_source(data_source_id: str, *args):
             document_repository = mock.Mock()
             document_repository.name = data_source_id
             if data_source_id == "test_data":

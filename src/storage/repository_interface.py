@@ -1,7 +1,14 @@
 from abc import ABC, abstractmethod
+from collections.abc import Callable
+
+from domain_classes.blueprint import Blueprint
 
 
 class RepositoryInterface(ABC):
+    @abstractmethod
+    def __init__(self, get_blueprint: Callable[[str], Blueprint], **kwargs):
+        """Init method to be implemented. Any client specific parameters will be passed via kwargs"""
+
     @abstractmethod
     def add(self, uid: str, document: dict) -> bool:
         """Get method to be implemented"""
