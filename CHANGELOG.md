@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.24.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.23.4...v1.24.0) (2024-04-08)
+
+
+### Features
+
+* plugable repositories ([85ae3d2](https://github.com/equinor/data-modelling-storage-service/commit/85ae3d25bb610a7c726403d3536927e920ac0618))
+
 ## [1.23.4](https://github.com/equinor/data-modelling-storage-service/compare/v1.23.3...v1.23.4) (2024-03-22)
 
 
