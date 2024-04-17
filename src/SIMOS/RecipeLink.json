@@ -11,6 +11,20 @@
       "optional": false
     },
     {
+      "name": "name",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "contained": true,
+      "optional": true
+    },
+    {
+      "name": "description",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string",
+      "contained": true,
+      "optional": true
+    },
+    {
       "name": "_blueprintPath_",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "string",
