@@ -6,21 +6,17 @@ from authentication.models import User
 from common.utils.logging import logger
 from common.utils.package_import import import_package
 from config import config
-from features.lookup_table.use_cases.create_lookup_table import (
-    create_lookup_table_use_case,
-)
+from features.lookup_table.use_cases.create_lookup_table import create_lookup_table_use_case
 from restful.request_types.create_data_source import DataSourceRequest
-from storage.internal.data_source_repository import (
-    DataSourceRepository,
-    get_data_source,
-)
+from storage.internal.data_source_repository import DataSourceRepository
+from storage.internal.get_data_source_cached import get_data_source_cached
 
 
 @given('there exist document with id "{uid}" in data source "{data_source_id}"')
 def step_impl_2(context, uid: str, data_source_id: str):
     document: dict = json.loads(context.text)
     document["_id"] = uid
-    document_repository = get_data_source(data_source_id, context.user)
+    document_repository = get_data_source_cached(data_source_id, context.user)
     document_repository.update(document)
 
 

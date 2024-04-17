@@ -3,12 +3,12 @@ import mimetypes
 from behave import given
 
 from storage.data_source_class import DataSource
-from storage.internal.data_source_repository import get_data_source
+from storage.internal.get_data_source_cached import get_data_source_cached
 
 
 @given('there exists a blob with id "{id}" in data source "{data_source}" loaded from "{path}"')
 def step_impl(context, id, data_source, path):
-    data_source: DataSource = get_data_source(data_source_id=data_source, user=context.user)
+    data_source: DataSource = get_data_source_cached(data_source_id=data_source, user=context.user)
     try:
         with open(path, "rb") as blob_file:
             guess = mimetypes.guess_type(blob_file.name)

@@ -7,10 +7,7 @@ from common.address import Address
 from common.providers.storage_recipe_provider import storage_recipe_provider
 from common.responses import create_response, responses
 from services.document_service.document_service import DocumentService
-from storage.internal.data_source_repository import (
-    DataSourceRepository,
-    get_data_source,
-)
+from storage.internal.data_source_repository import DataSourceRepository
 
 from .use_cases.get_acl_use_case import get_acl_use_case
 from .use_cases.set_acl_use_case import set_acl_use_case
@@ -44,7 +41,6 @@ def set_acl(
     """
     address_obj = Address.from_absolute(address)
     document_service = DocumentService(
-        repository_provider=get_data_source,
         user=user,
         recipe_provider=storage_recipe_provider,
     )

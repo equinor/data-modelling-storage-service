@@ -6,11 +6,11 @@ from common.exceptions import NotFoundException, ValidationException
 from common.providers.address_resolver.address_resolver import resolve_address
 from enums import SIMOS
 from storage.data_source_class import DataSource
-from storage.internal.data_source_repository import get_data_source
+from storage.internal.get_data_source_cached import get_data_source_cached
 
 
 def find_package_with_document(data_source: str, document_id: str, user) -> dict:
-    repository = get_data_source(data_source, user)
+    repository = get_data_source_cached(data_source, user)
     packages: list[dict] = repository.find(
         {"type": SIMOS.PACKAGE.value, "content": {"$elemMatch": {"address": document_id}}}
     )
@@ -20,11 +20,11 @@ def find_package_with_document(data_source: str, document_id: str, user) -> dict
 
 
 def resolve_references(values: list, data_source_id: str, user: User) -> list:
-    data_source: DataSource = get_data_source(data_source_id, user)
+    data_source: DataSource = get_data_source_cached(data_source_id, user)
     return [
         resolve_address(
             Address.from_relative(value["address"], None, data_source.name),
-            lambda data_source_name: get_data_source(data_source_name, user),
+            lambda data_source_name: get_data_source_cached(data_source_name, user),
         ).entity
         for value in values
     ]

@@ -5,12 +5,12 @@ from fastapi import UploadFile
 
 from authentication.models import User
 from enums import REFERENCE_TYPES, SIMOS
-from storage.internal.data_source_repository import get_data_source
+from storage.internal.get_data_source_cached import get_data_source_cached
 
 
 async def add_file_use_case(data_source_id: str, file_id: str, file: UploadFile, user: User):
     blob_id = str(uuid4())
-    data_source = get_data_source(data_source_id, user)
+    data_source = get_data_source_cached(data_source_id, user)
     data_source.update_blob(blob_id, file.filename, file.content_type, file.file)
     await file.seek(0)
     content = await file.read()

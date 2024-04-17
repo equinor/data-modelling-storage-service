@@ -10,7 +10,6 @@ from common.address import Address
 from common.providers.storage_recipe_provider import storage_recipe_provider
 from common.responses import create_response, responses
 from services.document_service.document_service import DocumentService
-from storage.internal.data_source_repository import get_data_source
 
 from .use_cases.add_document_use_case import add_document_use_case
 from .use_cases.add_raw_use_case import add_raw_use_case
@@ -83,7 +82,6 @@ def update(
     """
 
     document_service = DocumentService(
-        repository_provider=get_data_source,
         user=user,
         recipe_provider=storage_recipe_provider,
     )
@@ -133,7 +131,6 @@ def add_document(
     #     TODO decide if we should support adding an empty list. That is currently not supported.
 
     document_service = DocumentService(
-        repository_provider=get_data_source,
         user=user,
         recipe_provider=storage_recipe_provider,
     )
@@ -202,5 +199,5 @@ def check_existence(address: str, user: User = Depends(auth_w_jwt_or_pat)):
     Returns:
     - bool: 'true' if the address points to an existing document, else 'false'.
     """
-    document_service = DocumentService(repository_provider=get_data_source, user=user)
+    document_service = DocumentService(user=user)
     return check_existence_use_case(address=Address.from_absolute(address), document_service=document_service)

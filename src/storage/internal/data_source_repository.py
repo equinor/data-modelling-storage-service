@@ -99,5 +99,5 @@ class DataSourceRepository:
         data_source_collection.update_one(filter={"_id": data_source.name}, update={"$set": {"acl": acl.to_dict()}})
 
 
-def get_data_source(data_source_id: str, user: User, get_blueprint=None) -> DataSource:
+def get_data_source(data_source_id: str, user: User, get_blueprint) -> DataSource:
     return DataSourceRepository(user, get_blueprint).get(data_source_id)
