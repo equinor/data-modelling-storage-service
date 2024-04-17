@@ -37,7 +37,7 @@ from services.document_service.delete_documents import (
     delete_document,
 )
 from storage.data_source_class import DataSource
-from storage.internal.data_source_repository import get_data_source
+from storage.internal.get_data_source_cached import get_data_source_cached
 from storage.repositories.zip.zip_file_client import ZipFileClient
 
 pretty_printer = pprint.PrettyPrinter()
@@ -46,7 +46,7 @@ pretty_printer = pprint.PrettyPrinter()
 class DocumentService:
     def __init__(
         self,
-        repository_provider=get_data_source,
+        repository_provider=get_data_source_cached,
         blueprint_provider=None,
         user=User.default(),
         context: str | None = None,
@@ -57,9 +57,7 @@ class DocumentService:
         self.repository_provider = repository_provider
         self.user = user
         self.context = context
-        self.get_data_source = lambda data_source_id: self.repository_provider(
-            data_source_id, self.user, self.get_blueprint
-        )
+        self.get_data_source = lambda data_source_id: self.repository_provider(data_source_id, self.user)
 
     def get_blueprint(self, type: str) -> Blueprint:
         return self._blueprint_provider.get_blueprint_with_extended_attributes(type)

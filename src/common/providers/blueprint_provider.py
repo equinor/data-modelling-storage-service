@@ -12,6 +12,7 @@ from common.providers.address_resolver.address_resolver import (
 from common.utils.logging import logger
 from config import config
 from domain_classes.blueprint import Blueprint
+from storage.data_source_interface import DataSource
 from storage.internal.data_source_repository import get_data_source
 
 
@@ -31,6 +32,11 @@ class BlueprintProvider:
         self.resolve_address = resolve_address
         self.id = uuid.uuid4()
 
+    @lru_cache(maxsize=128)  # noqa B019
+    def get_data_source_cached(self, data_source_id: str, user: User) -> DataSource:
+        # BlueprintProvider needs its own  'get_data_source' function to avoid circular imports
+        return self.get_data_source(data_source_id, self.user, substitute_get_blueprint)
+
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)  # noqa: B019
     def get_blueprint_with_extended_attributes(self, type: str) -> Blueprint:
         blueprint: Blueprint = self.get_blueprint(type)
@@ -43,7 +49,7 @@ class BlueprintProvider:
         try:
             resolved_address: ResolvedAddress = self.resolve_address(
                 Address.from_absolute(type),
-                lambda data_source_name: self.get_data_source(data_source_name, self.user, substitute_get_blueprint),
+                lambda data_source_name: self.get_data_source_cached(data_source_name, self.user),
             )
         except NotFoundException as ex:
             raise NotFoundException(
@@ -56,7 +62,7 @@ class BlueprintProvider:
                 resolved_address.document_id,
                 resolved_address.data_source_id,
             ),
-            lambda data_source_name: self.get_data_source(data_source_name, self.user, substitute_get_blueprint),
+            lambda data_source_name: self.get_data_source_cached(data_source_name, self.user),
         )
         return Blueprint(resolved_address.entity, type)
 

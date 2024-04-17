@@ -6,7 +6,6 @@ from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from domain_classes.ui_recipe import Recipe
 from enums import SIMOS, StorageDataTypes
 from services.document_service.document_service import DocumentService
-from storage.internal.data_source_repository import get_data_source
 from storage.internal.lookup_tables import get_lookup, insert_lookup
 
 
@@ -14,14 +13,13 @@ def create_lookup_table_use_case(
     recipe_package_paths: list[str],
     name: str,
     user: User,
-    repository_provider=get_data_source,
 ) -> None:
     """
     Create lookup table. If the lookup table already exist, the lookup table will be updated.
     """
     assert_user_has_access(AccessControlList.default(), AccessLevel.WRITE, user)
 
-    document_service = DocumentService(repository_provider=repository_provider, user=user)
+    document_service = DocumentService(user=user)
     lookup_class_attributes = list(Lookup.__annotations__.keys())
     combined_lookup = Lookup().dict()
     for path in recipe_package_paths:

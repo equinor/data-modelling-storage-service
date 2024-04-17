@@ -7,15 +7,10 @@ from common.providers.storage_recipe_provider import storage_recipe_provider
 from common.tree.tree_node import ListNode, Node
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import SIMOS, BuiltinDataTypes
-from features.entity.use_cases.instantiate_entity_use_case.create_entity import (
-    CreateEntity,
-)
+from features.entity.use_cases.instantiate_entity_use_case.create_entity import CreateEntity
 from services.database import data_source_collection
 from services.document_service.document_service import DocumentService
-from storage.internal.data_source_repository import (
-    DataSourceRepository,
-    get_data_source,
-)
+from storage.internal.data_source_repository import DataSourceRepository
 
 
 def generate_tree_from_rows(node: Node, rows, document_service):
@@ -96,7 +91,7 @@ def generate_tree(data_source_id: str, table, document_service):
 @given('there are documents for the data source "{data_source_id}" in collection "{collection}"')
 def step_impl_documents(context, data_source_id: str, collection: str):
     context.documents = {}
-    document_service = DocumentService(get_data_source, user=context.user)
+    document_service = DocumentService(user=context.user)
     tree: Node = generate_tree(data_source_id, context.table, document_service)
     tree.show_tree()
     for node in tree.traverse():
@@ -106,7 +101,7 @@ def step_impl_documents(context, data_source_id: str, collection: str):
 
 @given('AccessControlList for document "{document_id}" in data-source "{data_source}" is')
 def step_ACL_for_docs_in_DS_is(context, document_id, data_source):
-    document_service = DocumentService(get_data_source, user=context.user)
+    document_service = DocumentService(user=context.user)
     acl = AccessControlList(**json.loads(context.text))
     document_service.repository_provider(data_source, context.user).update_access_control(document_id, acl)
 

@@ -7,7 +7,7 @@ from common.providers.address_resolver.address_resolver import (
     resolve_address,
 )
 from storage.data_source_class import DataSource
-from storage.internal.data_source_repository import get_data_source
+from storage.internal.get_data_source_cached import get_data_source_cached
 
 
 def concat_meta_data(meta: dict | None, new_meta: dict | None) -> dict:
@@ -31,7 +31,7 @@ def resolve_references(values: list, data_source: DataSource, user: User) -> lis
     return [
         resolve_address(
             Address.from_relative(value["address"], None, data_source.name),
-            lambda data_source_name: get_data_source(data_source_name, user),
+            lambda data_source_name: get_data_source_cached(data_source_name, user),
         ).entity
         for value in values
     ]
@@ -86,7 +86,7 @@ def export_meta_use_case(user: User, path_address: str) -> dict:
     """
     address_object = Address.from_absolute(path_address)
 
-    data_source = get_data_source(address_object.data_source, user)
+    data_source = get_data_source_cached(address_object.data_source, user)
     if not address_object.path:
         raise NotFoundException(f"Could not find a root package from reference '{path_address}'")
     path_items = path_to_path_items(address_object.path)
@@ -97,7 +97,7 @@ def export_meta_use_case(user: User, path_address: str) -> dict:
 
     root_package: dict = resolve_address(
         Address(root_package_name, address_object.data_source),
-        lambda data_source_name: get_data_source(data_source_name, user),
+        lambda data_source_name: get_data_source_cached(data_source_name, user),
     ).entity
 
     path_without_root_package: list[str] = address_object.path.strip("/").split("/")[1:]

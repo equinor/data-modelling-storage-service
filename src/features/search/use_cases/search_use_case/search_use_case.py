@@ -13,10 +13,8 @@ from features.search.use_cases.search_use_case.sort_dtos_by_attribute import (
 )
 from restful.request_types.shared import DataSourceList
 from storage.data_source_class import DataSource
-from storage.internal.data_source_repository import (
-    DataSourceRepository,
-    get_data_source,
-)
+from storage.internal.data_source_repository import DataSourceRepository
+from storage.internal.get_data_source_cached import get_data_source_cached
 from storage.repositories.mongo import MongoDBClient
 
 
@@ -55,7 +53,7 @@ class SearchRequest(DataSourceList):
     dotted_attribute_path: str
 
 
-def search_use_case(user: User, request: SearchRequest, get_data_source=get_data_source) -> dict:
+def search_use_case(user: User, request: SearchRequest) -> dict:
     all_data_source_ids = [ds["id"] for ds in DataSourceRepository(user).list()]
     search_data_sources = all_data_source_ids
 
@@ -73,7 +71,7 @@ def search_use_case(user: User, request: SearchRequest, get_data_source=get_data
             search_data=deepcopy(request.data),
             dotted_attribute_path=request.dotted_attribute_path,
             user=user,
-            get_data_source=get_data_source,
+            get_data_source=get_data_source_cached,
         )
         search_results.update(results)
     return search_results
