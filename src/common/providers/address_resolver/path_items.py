@@ -85,19 +85,19 @@ class QueryItem:
             document_id = resolved_ref.document_id
 
         # Search inside an existing document (need to resolve any references first before trying to compare against filter)
-        elements = [
-            resolve_address(
-                Address.from_relative(f["address"], document_id, data_source.name),
-                get_data_source,
-            ).entity
-            if is_reference(f)
-            else f
-            for f in entity
-        ]  # Resolve any references
-        for index, element in enumerate(elements):
-            if isinstance(element, dict) and has_key_value_pairs(element, self.query_as_dict):
+        for index, f in enumerate(entity):
+            resolved_entity = (
+                resolve_address(
+                    Address.from_relative(f["address"], document_id, data_source.name),
+                    get_data_source,
+                ).entity
+                if is_reference(f)
+                else f
+            )
+            if isinstance(resolved_entity, dict) and has_key_value_pairs(resolved_entity, self.query_as_dict):
                 return entity[index], f"[{index}]"
-        raise NotFoundException(f"No object matches filter '{self.query_as_str}'", data={"elements": elements})
+
+        raise NotFoundException(f"No object matches filter '{self.query_as_str}'", data={"entity": entity})
 
 
 @dataclass
