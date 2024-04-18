@@ -1,3 +1,4 @@
+import json
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
@@ -57,7 +58,7 @@ class QueryItem:
                 self.query_as_dict[key] = value
 
     def get_entry_point(self, data_source: DataSource) -> tuple[dict, str]:
-        result: list[dict] = data_source.find(self.query_as_dict)
+        result: list[dict] = data_source.find(json.dumps(self.query_as_dict))
         if not result:
             raise NotFoundException(
                 f"No document that match '{self.query_as_str}' could be found in data source '{data_source.name}'."

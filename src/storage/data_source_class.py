@@ -1,4 +1,6 @@
+import json
 from datetime import datetime
+from functools import lru_cache
 from uuid import uuid4
 
 from pydantic import UUID4
@@ -39,6 +41,15 @@ class DataSource:
         self.acl = acl
         self.repositories: dict[str, Repository] = repositories
         self.data_source_collection = data_source_collection
+        print("¤"*50)
+        print(f"DATASOURCE INIT: {self.name}, USER: {self.user.user_id}-{self.user.__hash__()}")
+        print("¤"*50)
+
+    def clear_cache(self):
+        self.get_lookup.cache_clear()
+        self.get.cache_clear()
+        self.find.cache_clear()
+        # self.get_blob.cache_clear()
 
     @classmethod
     def from_dict(cls, a_dict, user: User, get_blueprint):
@@ -87,10 +98,12 @@ class DataSource:
         return StorageDataTypes(lookup.storage_affinity)
 
     def _update_lookup(self, lookup: DocumentLookUp):
-        return self.data_source_collection.update_one(
+
+        self.data_source_collection.update_one(
             filter={"_id": self.name},
             update={"$set": {f"documentLookUp.{lookup.lookup_id}": lookup.dict()}},
         )
+        return
 
     def update_access_control(self, document_id: str, acl: AccessControlList) -> None:
         old_lookup = self._lookup(document_id)
@@ -98,18 +111,22 @@ class DataSource:
         old_lookup.acl = acl
         self._update_lookup(old_lookup)
 
+    @lru_cache(maxsize=128)
     def get_lookup(self, document_id: str) -> DocumentLookUp:
         lookup = self._lookup(document_id)
         assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
         return lookup
 
     def _remove_lookup(self, lookup_id):
-        return self.data_source_collection.update_one(
+        self.data_source_collection.update_one(
             filter={"_id": self.name},
             update={"$unset": {f"documentLookUp.{lookup_id}": ""}},
         )
+        return
 
+    @lru_cache(maxsize=128)
     def get(self, uid: str | UUID4) -> dict:
+        print(f"DATASOURCE GET: {uid}")
         uid = str(uid)
         lookup = self._lookup(uid)
         assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
@@ -117,7 +134,9 @@ class DataSource:
         return repo.get(uid)
 
     # TODO: Implement find across repositories
-    def find(self, filter: dict) -> list[dict]:
+    @lru_cache(maxsize=128)
+    def find(self, filter: str) -> list[dict]:
+        filter = json.loads(filter)
         repo = self.get_default_repository()
 
         documents_with_access: list[dict] = []
@@ -191,6 +210,8 @@ class DataSource:
         assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
         repo.update(document["_id"], document)
 
+        self.clear_cache()
+
     def update_blob(self, uid: str, filename: str, content_type: str, file) -> None:
         repo = self._get_repo_from_storage_attribute(
             StorageAttribute(
@@ -217,6 +238,9 @@ class DataSource:
         self._update_lookup(lookup)
         repo.update_blob(uid, file.read())
 
+        self.clear_cache()
+
+    # @lru_cache(128)
     def get_blob(self, uid: str) -> bytes:
         lookup = self._lookup(uid)
         assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
@@ -229,8 +253,10 @@ class DataSource:
             assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
             self._remove_lookup(uid)
             self.repositories[lookup.repository].delete_blob(uid)
+            self.clear_cache()
         except NotFoundException:
             logger.warning(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
+
 
     def delete(self, uid: str) -> None:
         # If lookup not found, assume it's deleted
@@ -239,5 +265,6 @@ class DataSource:
             assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
             self._remove_lookup(uid)
             self.repositories[lookup.repository].delete(uid)
+            self.clear_cache()
         except NotFoundException:
             logger.warning(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")
