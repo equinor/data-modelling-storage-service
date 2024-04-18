@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.25.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.24.0...v1.25.0) (2024-04-18)
+
+
+### Features
+
+* optional name and description to RecipeLink ([d46e871](https://github.com/equinor/data-modelling-storage-service/commit/d46e871fbe32fd476de8b78717f732dde4a36668))
+
+
+### Performance Improvements
+
+* **address_resolver:** return early when finding a filter match ([a4b91c2](https://github.com/equinor/data-modelling-storage-service/commit/a4b91c2d45a615cc55505c3d36bb398f6289fba3))
+* cache on get_data_source ([58ac840](https://github.com/equinor/data-modelling-storage-service/commit/58ac84037538a3d8e4006b26c0471989f50d92cd))
+
 ## [1.24.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.23.4...v1.24.0) (2024-04-08)
 
 
