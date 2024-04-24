@@ -4,20 +4,50 @@ from functools import lru_cache
 
 from authentication.models import User
 from common.address import Address
-from common.exceptions import NotFoundException
+from common.exceptions import ApplicationException, NotFoundException
 from common.providers.address_resolver.address_resolver import (
-    ResolvedAddress,
     resolve_address,
 )
 from common.utils.logging import logger
 from config import config
 from domain_classes.blueprint import Blueprint
+from enums import SIMOS
 from storage.data_source_interface import DataSource
 from storage.internal.data_source_repository import get_data_source
 
 
 def substitute_get_blueprint(*args, **kwargs):
     raise ValueError("'get_blueprint' should not be called when fetching blueprints")
+
+
+def find_entity_by_name_in_package(
+    package: dict,
+    path_elements: list[str],
+    data_source: str,
+    get_data_source: Callable,
+    cache: dict,
+    concated_path: str,
+) -> dict:
+    for reference in package.get("content", []):
+        resolved_reference = resolve_address(Address(reference["address"], data_source), get_data_source).entity
+
+        # Add resolved reference to cache if they are blueprints
+        if resolved_reference["type"] in (SIMOS.BLUEPRINT.value, SIMOS.ENUM.value):
+            cache[f"{concated_path}/{resolved_reference['name']}"] = resolved_reference
+            if len(path_elements) == 1 and resolved_reference.get("name") == path_elements[0]:
+                return resolved_reference
+
+        if resolved_reference.get("name") == path_elements[0] and len(path_elements) > 1:
+            return find_entity_by_name_in_package(
+                resolved_reference,
+                path_elements[1:],
+                data_source,
+                get_data_source,
+                cache,
+                f"{concated_path}/{resolved_reference['name']}",
+            )
+
+    raise NotFoundException(f"Could not find entity with name '{path_elements[0]}' in package '{package['name']}'")
 
 
 class BlueprintProvider:
@@ -31,9 +61,11 @@ class BlueprintProvider:
         self.get_data_source = get_data_source
         self.resolve_address = resolve_address
         self.id = uuid.uuid4()
+        # Fetched blueprint documents are cached in this object, even before they are requested
+        self.prefetched_blueprints: dict[str, dict] = {}
 
     @lru_cache(maxsize=128)  # noqa B019
-    def get_data_source_cached(self, data_source_id: str, user: User) -> DataSource:
+    def get_data_source_cached(self, data_source_id: str) -> DataSource:
         # BlueprintProvider needs its own  'get_data_source' function to avoid circular imports
         return self.get_data_source(data_source_id, self.user, substitute_get_blueprint)
 
@@ -45,26 +77,41 @@ class BlueprintProvider:
 
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)  # noqa: B019
     def get_blueprint(self, type: str) -> Blueprint:
-        logger.debug(f"Cache miss! Fetching blueprint '{type}' '{hash(self)}'")
+        """Custom 'get_document' function that caches the fetched blueprints,
+        even if they were not the requested blueprint.
+        This is done for performance optimization, as often, all blueprints are requested at one point.
+        Only supports references on the "path" format.
+        """
+        if type in self.prefetched_blueprints:
+            logger.debug(f"Cache hit! Returning pre-fetched blueprint '{type}'")
+            return Blueprint(self.prefetched_blueprints[type], type)
         try:
-            resolved_address: ResolvedAddress = self.resolve_address(
-                Address.from_absolute(type),
-                lambda data_source_name: self.get_data_source_cached(data_source_name, self.user),
+            logger.debug(f"Cache miss! Fetching blueprint '{type}' '{hash(self)}'")
+            address = Address.from_absolute(type)
+            data_source = self.get_data_source_cached(address.data_source)
+            path_elements = address.path.split("/")
+            root_package = data_source.find({"name": path_elements[0], "type": SIMOS.PACKAGE.value, "isRoot": True})
+            if not root_package:
+                raise NotFoundException(f"Could not find root package '{path_elements[0]}'")
+            if len(root_package) > 1:
+                raise ApplicationException(f"Multiple root packages found with name '{path_elements[0]}'")
+            return Blueprint(
+                find_entity_by_name_in_package(
+                    root_package[0],
+                    path_elements[1:],
+                    address.data_source,
+                    get_data_source=lambda data_source_name: self.get_data_source_cached(data_source_name),
+                    cache=self.prefetched_blueprints,
+                    concated_path=f"dmss://{address.data_source}/{path_elements[0]}",
+                ),
+                type,
             )
+
         except NotFoundException as ex:
             raise NotFoundException(
                 f"Blueprint referenced with '{type}' could not be found. Make sure the reference is correct.",
                 data=ex.dict(),
             ) from ex
-        resolved_address = self.resolve_address(
-            Address.from_relative(
-                resolved_address.entity["address"],
-                resolved_address.document_id,
-                resolved_address.data_source_id,
-            ),
-            lambda data_source_name: self.get_data_source_cached(data_source_name, self.user),
-        )
-        return Blueprint(resolved_address.entity, type)
 
     def invalidate_cache(self):
         try:
