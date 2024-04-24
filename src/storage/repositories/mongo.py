@@ -2,7 +2,7 @@ from time import sleep
 
 import gridfs
 from pymongo import MongoClient
-from pymongo.errors import DuplicateKeyError, WriteError
+from pymongo.errors import DuplicateKeyError, OperationFailure, WriteError
 
 from common.exceptions import BadRequestException, NotFoundException
 from common.utils.encryption import decrypt
@@ -65,7 +65,7 @@ class MongoDBClient(RepositoryInterface):
                 attempts += 1
                 response = self.blob_handler.put(blob, _id=uid)
                 return response
-            except WriteError as error:  # Likely caused by MongoDB rate limiting.
+            except (WriteError, OperationFailure) as error:  # Likely caused by MongoDB rate limiting.
                 logger.warning(f"Failed to upload blob (attempt: {attempts}), will retry:\n\t{error}")
                 sleep(2)
                 if attempts > 2:

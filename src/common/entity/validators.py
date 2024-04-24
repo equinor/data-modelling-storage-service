@@ -1,8 +1,7 @@
 from collections.abc import Callable
 from typing import Any, Literal
 
-from common.exceptions import ApplicationException, ValidationException
-from common.utils.logging import logger
+from common.exceptions import ValidationException
 from domain_classes.blueprint import Blueprint
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import SIMOS, BuiltinDataTypes
@@ -27,17 +26,13 @@ def is_blueprint_instance_of(
                 the blueprint extends a blueprint that fulfills one of these three rules
             Otherwise it returns false.
     """
-    try:
-        if minimum_blueprint_type == BuiltinDataTypes.OBJECT.value:
+    if minimum_blueprint_type == BuiltinDataTypes.OBJECT.value:
+        return True
+    if minimum_blueprint_type == blueprint_type:
+        return True
+    for inherited_type in get_blueprint(blueprint_type).extends:
+        if is_blueprint_instance_of(minimum_blueprint_type, inherited_type, get_blueprint):
             return True
-        if minimum_blueprint_type == blueprint_type:
-            return True
-        for inherited_type in get_blueprint(blueprint_type).extends:
-            if is_blueprint_instance_of(minimum_blueprint_type, inherited_type, get_blueprint):
-                return True
-    except ApplicationException as ex:
-        logger.warn(ex)
-        return False
     return False
 
 

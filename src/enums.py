@@ -41,6 +41,7 @@ class StorageDataTypes(str, Enum):
 
 
 class SIMOS(Enum):
+    ENUM = "dmss://system/SIMOS/Enum"
     BLUEPRINT = "dmss://system/SIMOS/Blueprint"
     STORAGE_RECIPE = "dmss://system/SIMOS/StorageRecipe"
     STORAGE_ATTRIBUTE = "dmss://system/SIMOS/StorageAttribute"

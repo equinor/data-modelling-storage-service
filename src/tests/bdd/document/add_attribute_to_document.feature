@@ -188,7 +188,7 @@ Feature: Add attribute to document
       """
       {
         "name": "SignalGeneratorJob",
-        "type": "CORE:Blueprint",
+        "type": "dmss://system/SIMOS/Blueprint",
         "description": "",
         "extends": [
           "dmss://data-source-name/root_package/JobHandler"
