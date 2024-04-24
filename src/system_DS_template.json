@@ -2,14 +2,12 @@
   "name": "system",
   "repositories": {
     "a": {
-      "type": "mongo-db",
-      "host": "db",
-      "port": 27017,
+      "type": "postgres_nosql",
+      "host": "postgres",
       "username": "maf",
-      "password": "$MONGO_PASSWORD",
+      "password": "$POSTGRES_PASSWORD",
       "tls": false,
-      "database": "DMSS-core",
-      "collection": "DMSS-core"
+      "database": "maf"
     }
   }
 }

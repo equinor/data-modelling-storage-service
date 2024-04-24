@@ -13,6 +13,7 @@ services:
       LOGGING_LEVEL: debug
       MONGO_URI: ${MONGO_URI}
       AUTH_ENABLED: "False"
+      POSTGRES_PASSWORD: mysecretpassword
       #AUTH_ENABLED: "True"
       OAUTH_TOKEN_ENDPOINT: https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0/oauth2/v2.0/token #http://localhost:8080/auth/realms/dmss/protocol/openid-connect/token
       OAUTH_AUTH_ENDPOINT: https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0/oauth2/v2.0/authorize # http://localhost:8080/auth/realms/dmss/protocol/openid-connect/auth
@@ -31,6 +32,15 @@ services:
     volumes:
       - ./data/db:/data/db
 
+  postgres:
+    image: postgres:16-alpine
+    volumes:
+      - "./data/postgres:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: maf
+    ports:
+      - "5432:5432"
 
   db-ui:
     image: mongo-express:1.0.0-alpha

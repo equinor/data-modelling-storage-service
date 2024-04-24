@@ -15,7 +15,12 @@ if [ -d /code/src/storage/repository_plugins ]; then
   PLUGINS=$(ls)
   for plugin in $PLUGINS ; do
       echo "Installing requirements for plugin $plugin"
-      pip install -r "$plugin/requirements.txt"
+      if [ -f "$plugin/requirements.txt" ]; then
+        pip install -r "$plugin/requirements.txt"
+      else
+        echo "No requirements file found"
+        continue
+      fi
   done
 
   cd -
