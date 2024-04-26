@@ -1,5 +1,14 @@
-from common.utils.logging import logger
-from services.database import mongo_client
+from pymongo import MongoClient
+
+from services.database import acl_lookup_db, data_source_db, lookup_table_db, personal_access_token_db
+
+mongo_client = MongoClient(
+    "db",
+    username="maf",
+    password="maf",  # noqa S105
+    connectTimeoutMS=5000,
+    serverSelectionTimeoutMS=5000,
+)
 
 
 # Should only be called on local test databases.
@@ -9,7 +18,10 @@ def wipe_db():
     databases = [
         databasename for databasename in databases if databasename not in ("admin", "local", "config")
     ]  # Don't delete the mongo admin or local database
-    logger.warning(f"Dropping all databases {tuple(databases)}")
     for db_name in databases:
-        logger.debug(f"Dropping database '{db_name}' from the DMSS system MongoDB server")
         mongo_client.drop_database(db_name)
+
+    data_source_db.client.flushdb()
+    personal_access_token_db.client.flushdb()
+    lookup_table_db.client.flushdb()
+    acl_lookup_db.client.flushdb()

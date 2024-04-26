@@ -5,9 +5,12 @@ from enums import AuthProviderForRoleCheck
 
 
 class Config(BaseSettings):
-    MONGO_USERNAME: str = Field("maf")
-    MONGO_PASSWORD: str = Field("maf")
-    MONGO_URI: str | None = Field(None)
+    # Internal database
+    REDIS_HOST: str = Field("redis")
+    REDIS_PASSWORD: str = Field("maf")
+    REDIS_SSL_ENABLED: bool = Field(False)
+    REDIS_PORT: int = Field(6379)
+
     ENVIRONMENT: str = Field("local")
     SECRET_KEY: str | None = Field(None)
     LOGGER_LEVEL: str = Field("DEBUG")
