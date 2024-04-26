@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.25.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.25.0...v1.25.1) (2024-04-26)
+
+
+### Performance Improvements
+
+* keep fetched blueprints. Custom blueprint 'get_document' ([c47d71a](https://github.com/equinor/data-modelling-storage-service/commit/c47d71a60fcf0416b9890a422fb103ededa1eb14))
+* move internal db to memory-DB ([07c1b71](https://github.com/equinor/data-modelling-storage-service/commit/07c1b7176573948bfe58cba75e43697a685b73f4))
+
 ## [1.25.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.24.0...v1.25.0) (2024-04-18)
 
 
