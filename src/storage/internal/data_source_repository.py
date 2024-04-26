@@ -64,9 +64,6 @@ class DataSourceRepository:
 
     def create(self, id: str, document: DataSourceRequest):
         assert_user_has_access(AccessControlList.default(), AccessLevel.WRITE, self.user)
-        if data_source_db.get(id):
-            logger.warning(f"Tried to create a datasource that already exists ('{id}')")
-            raise BadRequestException(f"Tried to create a datasource that already exists ('{id}')")
         document = document.dict()
         document["_id"] = id
         self.validate_data_source(document)
