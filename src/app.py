@@ -5,7 +5,6 @@ from datetime import datetime
 from uuid import uuid4
 
 import click
-import gridfs
 import uvicorn
 from azure.storage.blob import BlobServiceClient
 from fastapi import APIRouter, FastAPI, Security
@@ -27,8 +26,8 @@ from features.lookup_table.use_cases.create_lookup_table import (
     create_lookup_table_use_case,
 )
 from restful.request_types.create_data_source import DataSourceRequest
-from services.database import mongo_client
 from storage.internal.data_source_repository import DataSourceRepository
+from tests.test_helpers.wipe_db import wipe_db
 
 server_root = "/api"
 
@@ -267,29 +266,18 @@ def import_data_source(file):
 
 @cli.command()
 def nuke_db():
-    logger.info("EMPTYING DATABASES")
-    databases = mongo_client.list_database_names()
-    # Don't touch the mongo admin or local database
-    databases = [databasename for databasename in databases if databasename not in ("admin", "local", "config")]
-    logger.warning(f"Emptying databases {databases}")
-    for db_name in databases:
-        print(db_name)
-        logger.debug(f"Deleting all documents from database '{db_name}' from the DMSS system MongoDB server")
-        for collection in mongo_client[db_name].list_collection_names():
-            mongo_client[db_name][collection].delete_many({})
-        blob_handler = gridfs.GridFS(mongo_client[db_name])
-        for filename in blob_handler.list():
-            blob_handler.delete(filename)
-    logger.debug("DONE")
+    logger.info("--------------------------------------")
+    logger.info("Flushing all internal databases")
+    logger.info("--------------------------------------")
+    wipe_db()
 
 
 @cli.command()
 @click.pass_context
 def reset_app(context):
     context.invoke(nuke_db)
-    logger.info("CREATING SYSTEM DATA SOURCE")
+    logger.info("Creating SYSTEM data source")
     context.invoke(import_data_source, file="/tmp/DMSS_systemDS.json")  # noqa: S108
-    logger.debug("DONE")
     context.invoke(init_application)
 
 

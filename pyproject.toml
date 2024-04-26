@@ -24,6 +24,7 @@ azure-monitor-opentelemetry = "^1.2.0"
 opentelemetry-instrumentation-fastapi = "^0.43b0"
 pyinstrument = "4.6.2"
 pydantic-settings = "^2.2.1"
+redis = {extras = ["hiredis"], version = "^5.0.4"}
 
 [tool.poetry.group.dev.dependencies]
 pydevd = "^2.10.0"

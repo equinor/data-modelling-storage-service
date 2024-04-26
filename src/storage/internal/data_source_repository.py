@@ -1,5 +1,7 @@
+import json
+
 from pydantic import BaseModel
-from pymongo.errors import DuplicateKeyError, ServerSelectionTimeoutError
+from pymongo.errors import ServerSelectionTimeoutError
 
 from authentication.access_control import assert_user_has_access
 from authentication.models import AccessControlList, AccessLevel, User
@@ -10,7 +12,7 @@ from common.exceptions import (
 )
 from common.utils.logging import logger
 from restful.request_types.create_data_source import DataSourceRequest
-from services.database import data_source_collection
+from services.database import data_source_db
 from storage.data_source_class import DataSource
 
 RESERVED_MONGO_DATABASES = ("admin", "local", "config", "dmss-internal")
@@ -30,17 +32,14 @@ class DataSourceRepository:
 
     @staticmethod
     def validate_data_source(document: dict):
-        try:
-            for repo in document["repositories"].values():
-                if repo.get("name"):
-                    raise BadRequestException("A repository specification may not have the 'name' key.")
-                if repo["type"] == "mongo-db":
-                    if repo["database"] in RESERVED_MONGO_DATABASES:
-                        raise BadRequestException(
-                            f"The database named '{repo['database']}' " "is a system reserved database name."
-                        )
-        except Exception as ex:
-            raise BadRequestException(ex) from ex
+        for repo in document["repositories"].values():
+            if repo.get("name"):
+                raise BadRequestException("A repository specification may not have the 'name' key.")
+            if repo["type"] == "mongo-db":
+                if repo["database"] in RESERVED_MONGO_DATABASES:
+                    raise BadRequestException(
+                        f"The database named '{repo['database']}' " "is a system reserved database name."
+                    )
 
     @staticmethod
     def validate_repository(repo: dict):
@@ -57,32 +56,27 @@ class DataSourceRepository:
 
     def list(self) -> list[dict]:
         all_sources = []
-        for data_source in data_source_collection.find(projection={"name"}):
-            data_source["id"] = data_source.pop("_id")
-            all_sources.append({"id": data_source["id"], "name": data_source["name"]})
+        for data_source_id in data_source_db.list_keys():
+            all_sources.append({"id": data_source_id, "name": data_source_id})
 
+        all_sources.sort(key=lambda x: x["name"])
         return all_sources
 
     def create(self, id: str, document: DataSourceRequest):
         assert_user_has_access(AccessControlList.default(), AccessLevel.WRITE, self.user)
+        if data_source_db.get(id):
+            logger.warning(f"Tried to create a datasource that already exists ('{id}')")
+            raise BadRequestException(f"Tried to create a datasource that already exists ('{id}')")
         document = document.dict()
         document["_id"] = id
-        try:
-            self.validate_data_source(document)
-            result = data_source_collection.update_one({"_id": id}, {"$set": document}, upsert=True)
-        except BadRequestException as ex:
-            raise BadRequestException(
-                message=f"Failed to create data source '{id}'. The posted entity is invalid...",
-                data=document,
-            ) from ex
-        except DuplicateKeyError as ex:
-            logger.warning(f"Tried to create a datasource that already exists ('{id}')")
-            raise BadRequestException(f"Tried to create a datasource that already exists ('{id}')") from ex
-        return str(result.upserted_id)
+        self.validate_data_source(document)
+        data_source_db.set(id, document)
+
+        return id
 
     def get(self, id: str) -> DataSource:
         try:
-            data_source = data_source_collection.find_one(filter={"_id": id})
+            data_source = data_source_db.get(id)
         except ServerSelectionTimeoutError as ex:
             logger.error("Failed to establish connection to internal database")
             raise ApplicationException(debug="Internal storage error") from ex
@@ -96,7 +90,9 @@ class DataSourceRepository:
     def update_access_control(self, data_source_id: str, acl: AccessControlList) -> None:
         data_source: DataSource = self.get(data_source_id)
         assert_user_has_access(data_source.acl, AccessLevel.WRITE, self.user)
-        data_source_collection.update_one(filter={"_id": data_source.name}, update={"$set": {"acl": acl.to_dict()}})
+        data_source_dict = json.loads(data_source_db.get(data_source_id))
+        data_source_dict["acl"] = acl.to_dict()
+        data_source_db.set(data_source_id, data_source)
 
 
 def get_data_source(data_source_id: str, user: User, get_blueprint) -> DataSource:

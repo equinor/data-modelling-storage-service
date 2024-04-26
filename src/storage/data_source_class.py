@@ -16,7 +16,7 @@ from domain_classes.document_look_up import DocumentLookUp
 from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
-from services.database import data_source_collection
+from services.database import acl_lookup_db
 
 
 class DataSource:
@@ -31,14 +31,14 @@ class DataSource:
         user: User,
         acl: AccessControlList = AccessControlList.default(),
         repositories=None,
-        data_source_collection=data_source_collection,
+        acl_lookup_db=acl_lookup_db,
     ):
         self.name = name
         self.user = user
         # This Access Control List (ACL) is used when there is no parent to inherit ACL from. Controls who can create root-packages.
         self.acl = acl
         self.repositories: dict[str, Repository] = repositories
-        self.data_source_collection = data_source_collection
+        self.acl_lookup_db = acl_lookup_db
 
     @classmethod
     def from_dict(cls, a_dict, user: User, get_blueprint):
@@ -69,14 +69,8 @@ class DataSource:
         return next(iter(self.repositories.values()))
 
     def _lookup(self, document_id) -> DocumentLookUp:
-        if res := self.data_source_collection.find_one(
-            filter={
-                "_id": self.name,
-                f"documentLookUp.{document_id}.lookup_id": document_id,
-            },
-            projection={f"documentLookUp.{document_id}": True},
-        ):
-            return DocumentLookUp(**res["documentLookUp"][document_id])
+        if res := self.acl_lookup_db.get(f"{self.name}:{document_id}"):
+            return DocumentLookUp(**res)
 
         raise NotFoundException(
             message=f"Document with id '{document_id}' was not found in the '{self.name}' data-source"
@@ -87,10 +81,7 @@ class DataSource:
         return StorageDataTypes(lookup.storage_affinity)
 
     def _update_lookup(self, lookup: DocumentLookUp):
-        return self.data_source_collection.update_one(
-            filter={"_id": self.name},
-            update={"$set": {f"documentLookUp.{lookup.lookup_id}": lookup.dict()}},
-        )
+        return self.acl_lookup_db.set(f"{self.name}:{lookup.database_id}", lookup.dict())
 
     def update_access_control(self, document_id: str, acl: AccessControlList) -> None:
         old_lookup = self._lookup(document_id)
@@ -104,10 +95,7 @@ class DataSource:
         return lookup
 
     def _remove_lookup(self, lookup_id):
-        return self.data_source_collection.update_one(
-            filter={"_id": self.name},
-            update={"$unset": {f"documentLookUp.{lookup_id}": ""}},
-        )
+        return self.acl_lookup_db.delete(f"{self.name}:{lookup_id}")
 
     def get(self, uid: str | UUID4) -> dict:
         uid = str(uid)
@@ -158,7 +146,7 @@ class DataSource:
             parent_lookup = None
 
             if parent_root_uid := parent_id.split(".")[0] if parent_id else None:
-                try:  # If parent_id passed, try to get it's lookup
+                try:  # If parent_id passed, try to get its lookup
                     parent_lookup = self._lookup(parent_root_uid)
                 except NotFoundException:  # The parent has not yet been created.
                     pass

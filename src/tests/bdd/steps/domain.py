@@ -8,7 +8,7 @@ from common.tree.tree_node import ListNode, Node
 from domain_classes.blueprint_attribute import BlueprintAttribute
 from enums import SIMOS, BuiltinDataTypes
 from features.entity.use_cases.instantiate_entity_use_case.create_entity import CreateEntity
-from services.database import data_source_collection
+from services.database import acl_lookup_db
 from services.document_service.document_service import DocumentService
 from storage.internal.data_source_repository import DataSourceRepository
 
@@ -109,12 +109,7 @@ def step_ACL_for_docs_in_DS_is(context, document_id, data_source):
 @then('AccessControlList for document "{document_id}" in data-source "{data_source}" should be')
 def step_ACL_for_docs_in_DS_should_be(context, document_id, data_source):
     acl = AccessControlList(**json.loads(context.text))
-    lookup_for_data_source: dict = {}
-
-    mongodb_cursor = data_source_collection.find({"_id": data_source})
-    for document in mongodb_cursor:
-        lookup_for_data_source = {"documentLookUp": document["documentLookUp"]}
-    actual_acl_as_json: dict = lookup_for_data_source["documentLookUp"][document_id]["acl"]
+    actual_acl_as_json: dict = acl_lookup_db.get(f"{data_source}:{document_id}")["acl"]
 
     if actual_acl_as_json != acl.to_dict():
         raise Exception(

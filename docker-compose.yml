@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   dmss:
     build:
@@ -8,16 +6,25 @@ services:
     restart: unless-stopped
     environment:
       ENVIRONMENT: azure
-      MONGO_USERNAME: maf
-      MONGO_PASSWORD: maf
+      REDIS_PASSWORD: maf
       AUTH_ENABLED: "True"
       SECRET_KEY: ${SECRET_KEY}
       AUTH_PROVIDER_FOR_ROLE_CHECK: AAD
     depends_on:
       - db
+      - redis
   db:
     image: mongo:5.0.9
     command: mongod --quiet
     environment:
       MONGO_INITDB_ROOT_USERNAME: maf
       MONGO_INITDB_ROOT_PASSWORD: maf
+
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      REDIS_PASSWORD: maf
+
+# Redis will need write permission on this folder to be able to start (UID 1001)
+#    volumes:
+#     - ./data/redis:/bitnami

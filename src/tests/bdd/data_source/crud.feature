@@ -31,12 +31,14 @@ Feature: Data Sources
     And the response should contain
     """
     [
-      {},
+      {
+        "name": "demo-DS"
+      },
       {
         "name": "entities"
       },
       {
-        "name": "demo-DS"
+       "name": "system"
       }
     ]
     """

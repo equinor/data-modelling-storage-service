@@ -77,18 +77,18 @@ class DataSourceTestCase(unittest.TestCase):
         blob_repo.get = blob_get
         blob_repo.update = blob_update
 
-        data_source_collection = mock.Mock()
+        acl_lookup_db_mock = mock.Mock()
 
-        def mock_find_one(**kwargs):
+        def mock_find_one(*args, **kwargs):
             return None
 
-        data_source_collection.find_one = mock_find_one
+        acl_lookup_db_mock.get = mock_find_one
 
         data_source = DataSource(
             name="testing",
             user=test_user,
             repositories={"default": default_repo, "blob": blob_repo},
-            data_source_collection=data_source_collection,
+            acl_lookup_db=acl_lookup_db_mock,
         )
 
         self.mock_document_service.repository_provider = lambda *args: data_source
@@ -146,18 +146,18 @@ class DataSourceTestCase(unittest.TestCase):
         blob_repo.get = blob_get
         blob_repo.update = blob_update
 
-        data_source_collection = mock.Mock()
+        acl_lookup_db_mock = mock.Mock()
 
-        def mock_find_one(**kwargs):
+        def mock_find_one(*args, **kwargs):
             return None
 
-        data_source_collection.find_one = mock_find_one
+        acl_lookup_db_mock.get = mock_find_one
 
         data_source = DataSource(
             name="testing",
             user=test_user,
             repositories={"default": default_repo, "blob": blob_repo},
-            data_source_collection=data_source_collection,
+            acl_lookup_db=acl_lookup_db_mock,
         )
 
         self.mock_document_service.repository_provider = lambda *args: data_source
@@ -218,18 +218,18 @@ class DataSourceTestCase(unittest.TestCase):
         blob_repo.get = blob_get
         blob_repo.update = blob_update
 
-        data_source_collection = mock.Mock()
+        acl_lookup_db_mock = mock.Mock()
 
-        def mock_find_one(**kwargs):
+        def mock_find_one(*args, **kwargs):
             return None
 
-        data_source_collection.find_one = mock_find_one
+        acl_lookup_db_mock.get = mock_find_one
 
         data_source = DataSource(
             name="testing",
             user=test_user,
             repositories={"default": default_repo, "blob": blob_repo},
-            data_source_collection=data_source_collection,
+            acl_lookup_db=acl_lookup_db_mock,
         )
         self.mock_document_service.repository_provider = lambda *args: data_source
         self.mock_document_service.user = test_user
