@@ -19,6 +19,7 @@ def _resolve_reference_list(
     depth: int = 1,
     depth_count: int = 0,
     path: list[str] | None = None,
+    cache: dict | None = None,
 ) -> list:
     if not values:  # Return an empty list
         return values
@@ -27,14 +28,16 @@ def _resolve_reference_list(
 
     if isinstance(value_sample, list):  # Call recursively for nested lists
         return [
-            _resolve_reference_list(value, document_repository, get_data_source, current_id, depth, depth_count, path)
+            _resolve_reference_list(
+                value, document_repository, get_data_source, current_id, depth, depth_count, path, cache
+            )
             for value in values
         ]
 
     if is_reference(value_sample):
         return [
             _get_complete_sys_document(
-                value, document_repository, get_data_source, current_id, depth, depth_count, path
+                value, document_repository, get_data_source, current_id, depth, depth_count, path, cache
             )
             for value in values
         ]
@@ -50,6 +53,7 @@ def _resolve_reference_list(
                     depth,
                     depth_count,
                     path[:-1] + [f"{path[-1]}", f"[{index}]"],
+                    cache,
                 )
                 for index, value in enumerate(values)
             ]
@@ -66,14 +70,18 @@ def _get_complete_sys_document(
     depth: int = 1,
     depth_count: int = 0,
     path: list[str] | None = None,
+    cache: dict | None = None,
 ) -> dict | list:
     if not reference["address"]:
         raise ApplicationException("Invalid link. Missing 'address'", data=reference)
 
+    if cache is not None and f"{data_source.name}::{reference["address"]}" in cache:
+        return cache[f"{data_source.name}::{reference["address"]}"]
+
     address = Address.from_relative(reference["address"], current_id, data_source.name, path)
 
     try:
-        resolved_address: ResolvedAddress = resolve_address(address, get_data_source)
+        resolved_address: ResolvedAddress = resolve_address(address, get_data_source, cache)
     except NotFoundException as ex:
         raise NotFoundException(
             message=f"Could not resolve address '{reference['address']}'",
@@ -94,7 +102,7 @@ def _get_complete_sys_document(
         current_id = resolved_address.entity["_id"]
         path = []
 
-    return resolve_references_in_entity(
+    resolved_entity = resolve_references_in_entity(
         resolved_address.entity,
         get_data_source(address.data_source),
         get_data_source,
@@ -102,7 +110,11 @@ def _get_complete_sys_document(
         depth,
         depth_count,
         path,
+        cache,
     )
+    if cache is not None:
+        cache[f"{address.data_source}::{address.path}"] = resolved_entity
+    return resolved_entity
 
 
 def resolve_references_in_entity(
@@ -113,6 +125,7 @@ def resolve_references_in_entity(
     depth: int,
     depth_count: int,
     path: list[str] | None = None,
+    cache: dict | None = None,
 ) -> dict | list:
     """
     Resolve references inside an entity.
@@ -137,15 +150,15 @@ def resolve_references_in_entity(
 
             if isinstance(value, list):  # If it's a list, resolve any references
                 entity[key] = _resolve_reference_list(
-                    value, data_source, get_data_source, current_id, depth, depth_count + 1, [*path, key]
+                    value, data_source, get_data_source, current_id, depth, depth_count + 1, [*path, key], cache
                 )
             elif isinstance(value, dict):
                 if is_reference(value):
                     entity[key] = _get_complete_sys_document(
-                        value, data_source, get_data_source, current_id, depth, depth_count + 1, [*path, key]
+                        value, data_source, get_data_source, current_id, depth, depth_count + 1, [*path, key], cache
                     )
                 else:
                     entity[key] = resolve_references_in_entity(
-                        value, data_source, get_data_source, current_id, depth, depth_count + 1, [*path, key]
+                        value, data_source, get_data_source, current_id, depth, depth_count + 1, [*path, key], cache
                     )
     return entity

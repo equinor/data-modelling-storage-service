@@ -209,6 +209,8 @@ class DocumentService:
                     self.get_data_source,
                 )
 
+            document_cache: dict[str, dict] = {}
+
             # start resolving any references if depth > 1
             resolved_document: dict = resolve_references_in_entity(
                 resolved_address.entity,
@@ -218,6 +220,7 @@ class DocumentService:
                 depth=depth,
                 depth_count=1,
                 path=resolved_address.attribute_path,
+                cache=document_cache,
             )
             return resolved_document, resolved_address
         except (NotFoundException, ApplicationException) as e:
@@ -260,7 +263,8 @@ class DocumentService:
             raise ValidationException("Tried to remove a required attribute")
 
         data_source = self.repository_provider(address.data_source, self.user)
-        resolved_reference: ResolvedAddress = resolve_address(address, self.get_data_source)
+        document_cache: dict[str, dict] = {}
+        resolved_reference: ResolvedAddress = resolve_address(address, self.get_data_source, document_cache)
         # If the reference goes through a parent, get the parent document
         if resolved_reference.attribute_path:
             document = data_source.get(resolved_reference.document_id)
