@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.25.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.25.1...v1.25.2) (2024-04-29)
+
+
+### Bug Fixes
+
+* create datasource should be replace existing ([0461b13](https://github.com/equinor/data-modelling-storage-service/commit/0461b13868a1ffbbca31201bb5ebc8e39b5f98d2))
+
+
+### Performance Improvements
+
+* cache documents in 'resolve_document' ([dc74f5c](https://github.com/equinor/data-modelling-storage-service/commit/dc74f5c79a6579839edb953708d57b7a929347ea))
+
+
+### Build System
+
+* **deps:** bump idna from 3.6 to 3.7 ([19cf419](https://github.com/equinor/data-modelling-storage-service/commit/19cf41961eece151c4c4d40dffb337fef1c89585))
+* **deps:** bump pymongo from 4.6.1 to 4.6.3 ([0552b25](https://github.com/equinor/data-modelling-storage-service/commit/0552b2567498d20ae7d83f7a170d99de33512214))
+
 ## [1.25.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.25.0...v1.25.1) (2024-04-26)
 
 
