@@ -17,7 +17,7 @@ class IdItem:
 
     id: str
 
-    def get_entry_point(self, data_source: DataSource) -> tuple[dict, str]:
+    def get_entry_point(self, data_source: DataSource, cache: dict | None = None) -> tuple[dict, str]:
         if data_source.get_lookup(self.id).storage_affinity == "blob":
             # Do not resolve any binary data, just return a reference to it.
             # Getting the binary data needs to be handled by the consumer (e.g frontend).
@@ -26,12 +26,16 @@ class IdItem:
                 "address": f"${self.id}",
                 "referenceType": REFERENCE_TYPES.STORAGE.value,
             }, self.id
+        if cache is not None and f"{data_source.name}::{self.id}" in cache:
+            return cache[f"{data_source.name}::{self.id}"], self.id
         # Get the document from the data source
         result = data_source.get(self.id)
         if not result:
             raise NotFoundException(
                 f"No document with id '{self.id}' could be found in data source '{data_source.name}'."
             )
+        if cache is not None:
+            cache[f"{data_source.name}::{self.id}"] = result
         return result, self.id
 
     def __repr__(self):
@@ -56,7 +60,7 @@ class QueryItem:
             else:
                 self.query_as_dict[key] = value
 
-    def get_entry_point(self, data_source: DataSource) -> tuple[dict, str]:
+    def get_entry_point(self, data_source: DataSource, cache: dict | None = None) -> tuple[dict, str]:
         result: list[dict] = data_source.find(self.query_as_dict)
         if not result:
             raise NotFoundException(
@@ -75,6 +79,7 @@ class QueryItem:
         data_source: DataSource,
         get_data_source: Callable,
         resolve_address: Callable,
+        cache: dict | None = None,
     ) -> tuple[Any, str]:
         if isinstance(entity, dict) and is_reference(entity):
             resolved_ref = resolve_address(
@@ -88,8 +93,7 @@ class QueryItem:
         for index, f in enumerate(entity):
             resolved_entity = (
                 resolve_address(
-                    Address.from_relative(f["address"], document_id, data_source.name),
-                    get_data_source,
+                    Address.from_relative(f["address"], document_id, data_source.name), get_data_source, cache
                 ).entity
                 if is_reference(f)
                 else f
@@ -116,11 +120,11 @@ class AttributeItem:
         data_source: DataSource,
         get_data_source: Callable,
         resolve_address: Callable,
+        cache: dict | None = None,
     ) -> tuple[Any, str]:
         if isinstance(entity, dict) and is_reference(entity):
             entity = resolve_address(
-                Address.from_relative(entity["address"], document_id, data_source.name),
-                get_data_source,
+                Address.from_relative(entity["address"], document_id, data_source.name), get_data_source, cache
             ).entity
         try:
             result = find(entity, [self.path])
