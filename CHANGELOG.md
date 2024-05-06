@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.25.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.25.2...v1.25.3) (2024-05-06)
+
+
+### Bug Fixes
+
+* **mongo:** retry failed requests ([54f0bc1](https://github.com/equinor/data-modelling-storage-service/commit/54f0bc1a4aa504a8c957177878c7e84a9540825e))
+
 ## [1.25.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.25.1...v1.25.2) (2024-04-29)
 
 
