@@ -36,8 +36,16 @@ class MongoDBClient(RepositoryInterface):
         self.collection = collection
 
     def get(self, uid: str) -> dict:
-        result = self.handler[self.collection].find_one(filter={"_id": uid})
-        return result
+        attempts = 0
+        while attempts < 50:
+            attempts += 1
+            try:
+                return self.handler[self.collection].find_one(filter={"_id": uid})
+            except (WriteError, OperationFailure) as ex:
+                sleep(3)
+                if attempts > 2:
+                    raise ex
+        raise NotFoundException(uid)
 
     def add(self, uid: str, document: dict) -> bool:
         document["_id"] = uid
@@ -47,7 +55,16 @@ class MongoDBClient(RepositoryInterface):
             raise BadRequestException from ex
 
     def update(self, uid: str, document: dict) -> bool:
-        return self.handler[self.collection].replace_one({"_id": uid}, document, upsert=True).acknowledged
+        attempts = 0
+        while attempts < 50:
+            attempts += 1
+            try:
+                return self.handler[self.collection].replace_one({"_id": uid}, document, upsert=True).acknowledged
+            except (WriteError, OperationFailure) as ex:
+                sleep(3)
+                if attempts > 2:
+                    raise ex
+        raise NotFoundException(uid)
 
     def delete(self, uid: str) -> bool:
         return self.handler[self.collection].delete_one(filter={"_id": uid}).acknowledged
@@ -60,17 +77,19 @@ class MongoDBClient(RepositoryInterface):
 
     def update_blob(self, uid: str, blob: bytearray):
         attempts = 0
-        while True:
+        while attempts < 50:
             try:
                 attempts += 1
                 response = self.blob_handler.put(blob, _id=uid)
                 return response
             except (WriteError, OperationFailure) as error:  # Likely caused by MongoDB rate limiting.
                 logger.warning(f"Failed to upload blob (attempt: {attempts}), will retry:\n\t{error}")
-                sleep(2)
+                sleep(3)
                 if attempts > 2:
                     raise error
             except gridfs.errors.FileExists as ex:
+                if attempts > 1:  # The blob was actually added, even if we got 429...
+                    return
                 message = f"Blob file with id '{uid}' already exists"
                 logger.warning(message)
                 raise BadRequestException(message=message) from ex
