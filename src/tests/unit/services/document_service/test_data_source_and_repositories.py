@@ -89,6 +89,7 @@ class DataSourceTestCase(unittest.TestCase):
             user=test_user,
             repositories={"default": default_repo, "blob": blob_repo},
             acl_lookup_db=acl_lookup_db_mock,
+            document_cache=mock.Mock(),
         )
 
         self.mock_document_service.repository_provider = lambda *args: data_source
@@ -158,6 +159,7 @@ class DataSourceTestCase(unittest.TestCase):
             user=test_user,
             repositories={"default": default_repo, "blob": blob_repo},
             acl_lookup_db=acl_lookup_db_mock,
+            document_cache=mock.Mock(),
         )
 
         self.mock_document_service.repository_provider = lambda *args: data_source
@@ -230,6 +232,7 @@ class DataSourceTestCase(unittest.TestCase):
             user=test_user,
             repositories={"default": default_repo, "blob": blob_repo},
             acl_lookup_db=acl_lookup_db_mock,
+            document_cache=mock.Mock(),
         )
         self.mock_document_service.repository_provider = lambda *args: data_source
         self.mock_document_service.user = test_user
