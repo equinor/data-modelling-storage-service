@@ -16,7 +16,9 @@ from domain_classes.document_look_up import DocumentLookUp
 from domain_classes.repository import Repository
 from domain_classes.storage_recipe import StorageAttribute
 from enums import StorageDataTypes
-from services.database import acl_lookup_db
+from services.database import acl_lookup_db, document_cache
+
+DOCUMENT_CACHE_TTL = 60 * 60 * 24  # 24 hours
 
 
 class DataSource:
@@ -32,6 +34,7 @@ class DataSource:
         acl: AccessControlList = AccessControlList.default(),
         repositories=None,
         acl_lookup_db=acl_lookup_db,
+        document_cache=document_cache,
     ):
         self.name = name
         self.user = user
@@ -39,6 +42,7 @@ class DataSource:
         self.acl = acl
         self.repositories: dict[str, Repository] = repositories
         self.acl_lookup_db = acl_lookup_db
+        self.document_cache = document_cache
 
     @classmethod
     def from_dict(cls, a_dict, user: User, get_blueprint):
@@ -101,8 +105,12 @@ class DataSource:
         uid = str(uid)
         lookup = self._lookup(uid)
         assert_user_has_access(lookup.acl, AccessLevel.READ, self.user)
+        if cached_document := self.document_cache.get(f"{self.name}:{uid}"):
+            return cached_document
         repo = self.repositories[lookup.repository]
-        return repo.get(uid)
+        document = repo.get(uid)
+        self.document_cache.set(f"{self.name}:{uid}", document, DOCUMENT_CACHE_TTL)
+        return document
 
     # TODO: Implement find across repositories
     def find(self, filter: dict) -> list[dict]:
@@ -178,6 +186,7 @@ class DataSource:
         repo = self.repositories[lookup.repository]
         assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
         repo.update(document["_id"], document)
+        self.document_cache.set(f"{self.name}:{document['_id']}", document, DOCUMENT_CACHE_TTL)
 
     def update_blob(self, uid: str, filename: str, content_type: str, file) -> None:
         repo = self._get_repo_from_storage_attribute(
@@ -227,5 +236,6 @@ class DataSource:
             assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
             self._remove_lookup(uid)
             self.repositories[lookup.repository].delete(uid)
+            self.document_cache.delete(f"{self.name}:{uid}")
         except NotFoundException:
             logger.warning(f"Failed trying to delete entity with uid '{uid}'. Could not be found in lookup table")

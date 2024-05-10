@@ -28,9 +28,9 @@ class RedisClient:
             return json.loads(value)
         return None
 
-    def set(self, key: str, value: dict) -> None:
+    def set(self, key: str, value: dict, ttl: int | None = None) -> None:
         try:
-            self.client.set(key, json.dumps(value))
+            self.client.set(key, json.dumps(value), ex=ttl)
         except DataError as e:
             raise ValueError(f"Failed to set key '{key}' with value '{value}'") from e
 
