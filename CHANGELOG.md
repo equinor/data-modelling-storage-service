@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.26.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.25.3...v1.26.0) (2024-05-13)
+
+
+### Features
+
+* cache documents in redis ([09f520e](https://github.com/equinor/data-modelling-storage-service/commit/09f520ef6d557b37608eaf41a6e4a4e3ca31cf17))
+
 ## [1.25.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.25.2...v1.25.3) (2024-05-06)
 
 
