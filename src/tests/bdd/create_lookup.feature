@@ -141,7 +141,8 @@ Feature: Create a lookup table
       "initial_ui_recipes": {
         "_default_": null
       },
-      "extends": {}
+      "extends": {},
+      "paths": ["test-DS/root_package/recipe_links"]
     }
     """
     Given i access the resource url "/api/application/test-DS?recipe_package=test-DS/root_package/recipe_links&recipe_package=test-DS/root_package/more_recipe_links"
@@ -193,10 +194,10 @@ Feature: Create a lookup table
         "_default_": null,
         "dmss://system/SIMOS/NamedEntity": null
       },
-      "extends": {}
+      "extends": {},
+      "paths": ["test-DS/root_package/recipe_links", "test-DS/root_package/more_recipe_links"]
     }
     """
-
 
   Scenario: System admins want to replace an existing recipe lookup (test-DS/root_package/recipe_links) with a new one (test-DS/root_package/more_recipe_links)
     Given i access the resource url "/api/application/test-DS?recipe_package=test-DS/root_package/recipe_links"
@@ -231,7 +232,8 @@ Feature: Create a lookup table
       "initial_ui_recipes": {
         "_default_": null
       },
-      "extends": {}
+      "extends": {},
+      "paths": ["test-DS/root_package/recipe_links"]
     }
     """
     Given i access the resource url "/api/application/test-DS?recipe_package=test-DS/root_package/more_recipe_links"
@@ -266,7 +268,99 @@ Feature: Create a lookup table
       "initial_ui_recipes": {
         "dmss://system/SIMOS/NamedEntity": null
       },
-      "extends": {}
+      "extends": {},
+      "paths": ["test-DS/root_package/more_recipe_links"]
+    }
+    """
+
+  Scenario: System admins want to recreate an existing recipe lookup after updating the default ui_recipe
+    Given i access the resource url "/api/application/test-DS?recipe_package=test-DS/root_package/recipe_links"
+    When i make a "POST" request
+    Then the response status should be "No Content"
+    Given i access the resource url "/api/application/test-DS"
+    When i make a "GET" request
+    Then the response status should be "OK"
+    And the response should be
+    """
+    {
+      "ui_recipes": {
+        "_default_": [
+          {
+            "name": "Edit",
+            "type": "dmss://system/SIMOS/UiRecipe",
+            "attributes": [],
+            "description": "",
+            "plugin": "@development-framework/dm-core-plugins/form",
+            "category": "edit",
+            "roles": null,
+            "config": null,
+            "label": "",
+            "dimensions": "",
+            "showRefreshButton": false
+          }
+        ]
+      },
+      "storage_recipes": {
+        "_default_": []
+      },
+      "initial_ui_recipes": {
+        "_default_": null
+      },
+      "extends": {},
+      "paths": ["test-DS/root_package/recipe_links"]
+    }
+    """
+    Given i access the resource url "/api/documents/test-DS/$102"
+    When i make a form-data "PUT" request
+      """
+      {"data":       {
+        "type": "dmss://system/SIMOS/RecipeLink",
+        "_blueprintPath_": "_default_",
+        "uiRecipes": [
+          {
+            "name": "THIS CHANGED",
+            "type": "dmss://system/SIMOS/UiRecipe",
+            "plugin": "SOME OTHER PLUGIN",
+            "category": "edit"
+          }
+        ]
+      }}
+      """
+    Then the response status should be "OK"
+    Given i access the resource url "/api/application/test-DS/refresh"
+    When i make a "POST" request
+    Then the response status should be "OK"
+    Given i access the resource url "/api/application/test-DS"
+    When i make a "GET" request
+    Then the response status should be "OK"
+    And the response should be
+    """
+    {
+      "ui_recipes": {
+        "_default_": [
+          {
+            "name": "THIS CHANGED",
+            "type": "dmss://system/SIMOS/UiRecipe",
+            "attributes": [],
+            "description": "",
+            "plugin": "SOME OTHER PLUGIN",
+            "category": "edit",
+            "roles": null,
+            "config": null,
+            "label": "",
+            "dimensions": "",
+            "showRefreshButton": false
+          }
+        ]
+      },
+      "storage_recipes": {
+        "_default_": []
+      },
+      "initial_ui_recipes": {
+        "_default_": null
+      },
+      "extends": {},
+      "paths": ["test-DS/root_package/recipe_links"]
     }
     """
 

@@ -9,6 +9,7 @@ from features.lookup_table.use_cases.create_lookup_table import (
     create_lookup_table_use_case,
 )
 from features.lookup_table.use_cases.get_lookup_table import get_lookup_table_use_case
+from features.lookup_table.use_cases.refresh_lookup_table import refresh_lookup_table_use_case
 
 router = APIRouter(tags=["default", "lookup-table"])
 
@@ -46,7 +47,7 @@ def create_lookup(
 @router.get(
     "/application/{application}",
     operation_id="get_lookup",
-    response_model=Lookup,
+    response_model=None,
     responses={**responses},
 )
 @create_response(JSONResponse)
@@ -64,3 +65,23 @@ def get_lookup(application: str, user: User = Depends(auth_w_jwt_or_pat)):
     - dict: The recipe lookup table for the provided application.
     """
     return get_lookup_table_use_case(application, user)
+
+
+@router.post(
+    "/application/{application}/refresh",
+    operation_id="refresh_lookup",
+    response_model=Lookup,
+    responses={**responses},
+)
+@create_response(JSONResponse)
+def refresh_lookup(application: str, user: User = Depends(auth_w_jwt_or_pat)):
+    """Recreate an existing Recipe Lookup Table for an Application. For example, after updating the recipe links.
+
+    Args:
+    - application (str): The name of the application to recreate.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
+
+    Returns:
+    - void
+    """
+    return refresh_lookup_table_use_case(application, user)

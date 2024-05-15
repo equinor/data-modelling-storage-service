@@ -20,7 +20,6 @@ def create_lookup_table_use_case(
     assert_user_has_access(AccessControlList.default(), AccessLevel.WRITE, user)
 
     document_service = DocumentService(user=user)
-    lookup_class_attributes = list(Lookup.__annotations__.keys())
     combined_lookup = Lookup().dict()
     for path in recipe_package_paths:
         recipe_package = document_service.get_document(Address(*path.split("/", 1)[::-1]), depth=999)
@@ -62,9 +61,10 @@ def create_lookup_table_use_case(
         lookup.realize_extends()
 
         lookup_as_dict = lookup.dict()
-        for attribute in lookup_class_attributes:
+        for attribute in ["ui_recipes", "storage_recipes", "initial_ui_recipes", "extends"]:
             combined_lookup[attribute].update(lookup_as_dict[attribute])
 
+    combined_lookup["paths"] = recipe_package_paths
     insert_lookup(name, combined_lookup)
 
     get_lookup.cache_clear()
