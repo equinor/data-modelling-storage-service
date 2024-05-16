@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.27.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.26.0...v1.27.0) (2024-05-16)
+
+
+### Features
+
+* refresh existing application lookup ([c91de2d](https://github.com/equinor/data-modelling-storage-service/commit/c91de2d32ef903698f640c6b047f880bbffe0a45))
+
 ## [1.26.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.25.3...v1.26.0) (2024-05-13)
 
 
