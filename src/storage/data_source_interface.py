@@ -57,10 +57,7 @@ class DataSource(ABC):
 
     @abstractmethod
     def update(
-        self,
-        document: dict,
-        storage_attribute: StorageAttribute = None,
-        parent_id: str | None = None,
+        self, document: dict, storage_attribute: StorageAttribute = None, parent_id: str | None = None, **kwargs
     ) -> None:
         ...
 

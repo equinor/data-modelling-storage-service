@@ -25,11 +25,10 @@ def save_node_to_zipfile(
     with zipfile.ZipFile(archive_path, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=5) as zip_file:
         if document_meta:
             document_node.entity["_meta_"] = document_meta
-        storage_client = ZipFileClient(zip_file)
-        path = ""  # Path here is used to get the proper file structure in the zip file
+        storage_client = ZipFileClient(zip_file, document_service.get_data_source(data_source_id))
         for node in document_node.traverse():
-            if not node.storage_contained and not node.is_array():
-                path = f"{path}/{node.entity.get('name', 'noname')}/" if path else node.entity.get("name", "noname")
+            if not node.storage_contained and not node.is_array() and not node.type == SIMOS.PACKAGE.value:
+                path = node.fs_path()
                 document_service.save(
                     node=node,
                     data_source_id=data_source_id,

@@ -54,7 +54,7 @@ class MongoDBClient(RepositoryInterface):
         except DuplicateKeyError as ex:
             raise BadRequestException from ex
 
-    def update(self, uid: str, document: dict) -> bool:
+    def update(self, uid: str, document: dict, **kwargs) -> bool:
         attempts = 0
         while attempts < 50:
             attempts += 1
