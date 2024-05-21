@@ -6,6 +6,7 @@ from zipfile import ZipFile
 from common.utils.logging import logger
 from domain_classes.dependency import Dependency
 from enums import SIMOS
+from storage.data_source_interface import DataSource
 from storage.repositories.zip.replace_reference_with_alias import (
     replace_absolute_references_in_entity_with_alias,
 )
@@ -13,8 +14,9 @@ from storage.repository_interface import RepositoryInterface
 
 
 class ZipFileClient(RepositoryInterface):
-    def __init__(self, zip_file: ZipFile):
+    def __init__(self, zip_file: ZipFile, datasource: DataSource):
         self.zip_file = zip_file
+        self.datasource = datasource
 
     def update(self, entity: dict, storage_recipe=None, **kwargs):
         """
@@ -23,13 +25,22 @@ class ZipFileClient(RepositoryInterface):
         By default, absolute references are resolved to aliases using the
         dependencies from entity["__combined_document_meta__"].
         """
-        entity.pop("_id", None)
-        entity.pop("uid", None)
+
+        if entity["type"] == SIMOS.FILE.value:
+            write_to = f"{entity['__path__']}/{entity['name']}.{entity["filetype"]}"
+            blob_id = entity["content"]["address"]
+            if blob_id.startswith("$"):
+                blob_id = blob_id[1:]
+            blob = self.datasource.get_blob(blob_id)
+            self.zip_file.writestr(write_to, blob)
+            return
+
         entity["__path__"] = entity["__path__"].rstrip("/")
         if "name" not in entity:
-            write_to = f"{entity['__path__']}/unnamed_document_{str(uuid4())[:8]}.json"
+            write_to = f"{entity['__path__']}/{str(uuid4())[:8]}.json"
         else:
             write_to = f"{entity['__path__']}/{entity['name']}.json"
+
         entity.pop("__path__")
         combined_document_meta = entity.pop("__combined_document_meta__")
         logger.debug(f"Writing: {entity['type']} to {write_to}")

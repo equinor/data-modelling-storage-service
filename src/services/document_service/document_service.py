@@ -156,6 +156,7 @@ class DocumentService:
                 ref_dict,
                 node.get_context_storage_attribute(),
                 parent_id=parent_uid,
+                datasource=self.get_data_source(data_source_id),
             )
             result = {
                 "type": SIMOS.REFERENCE.value,

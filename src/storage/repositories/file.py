@@ -34,7 +34,7 @@ class LocalFileRepository(RepositoryInterface):
     def delete(self, document: dict) -> None:
         raise NotImplementedError
 
-    def update(self, document: dict) -> None:
+    def update(self, document: dict, **kwargs) -> None:
         raise NotImplementedError
 
     def get_blob(self, uid):

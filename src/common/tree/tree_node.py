@@ -113,6 +113,23 @@ class NodeBase:
         path.reverse()
         return path
 
+    def fs_path(self):
+        """Path as it would look on a filesystem. Folders named by parent packages"""
+        path = []
+        parent = self.parent
+        while parent:  # Build the path from Node.key until the node has no key (root node)
+            if not parent.type == SIMOS.PACKAGE.value or parent.is_array():
+                parent = parent.parent
+                continue
+            path += [parent.entity["name"]]  # type: ignore
+            parent = parent.parent
+        if not path:
+            return ""
+        # Since we build the path "bottom-up", it needs to be revered.
+        # e.g. [parent, grand_parent, grand_grand_parent]
+        path.reverse()
+        return "/".join(path) + "/"
+
     def traverse(self):
         """Iterate in pre-order depth-first search order (DFS)"""
         yield self

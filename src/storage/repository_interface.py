@@ -14,7 +14,7 @@ class RepositoryInterface(ABC):
         """Get method to be implemented"""
 
     @abstractmethod
-    def update(self, uid: str, document: dict) -> bool:
+    def update(self, uid: str, document: dict, **kwargs) -> bool:
         """Update method to be implemented"""
 
     @abstractmethod

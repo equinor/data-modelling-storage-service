@@ -127,10 +127,7 @@ class DataSource:
         return documents_with_access
 
     def update(
-        self,
-        document: dict,
-        storage_attribute: StorageAttribute = None,
-        parent_id: str | None = None,
+        self, document: dict, storage_attribute: StorageAttribute = None, parent_id: str | None = None, **kwargs
     ) -> None:
         """
         Create or update a document.
