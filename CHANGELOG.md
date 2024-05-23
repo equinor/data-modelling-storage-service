@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.27.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.27.0...v1.27.1) (2024-05-23)
+
+
+### Bug Fixes
+
+* export entities and folders ([7c52e18](https://github.com/equinor/data-modelling-storage-service/commit/7c52e182feb8afe41dc9aa53738eb8bd0a9bf040))
+
 ## [1.27.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.26.0...v1.27.0) (2024-05-16)
 
 
