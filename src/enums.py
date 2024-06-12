@@ -56,6 +56,7 @@ class SIMOS(Enum):
     RECIPE_LINK = "dmss://system/SIMOS/RecipeLink"
     DATASOURCE = "datasource"
     REFERENCE = "dmss://system/SIMOS/Reference"
+    SECRET = "dmss://system/SIMOS/Secret"
     FILE = "dmss://system/SIMOS/File"
 
 
