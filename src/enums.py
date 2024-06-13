@@ -38,6 +38,7 @@ class StorageDataTypes(str, Enum):
     VERY_LARGE = "veryLarge"
     VIDEO = "video"
     BLOB = "blob"
+    SECRET = "secret"
 
 
 class SIMOS(Enum):
@@ -57,6 +58,7 @@ class SIMOS(Enum):
     DATASOURCE = "datasource"
     REFERENCE = "dmss://system/SIMOS/Reference"
     SECRET = "dmss://system/SIMOS/Secret"
+    SECRET_CONTENT = "dmss://system/SIMOS/SecretContent"
     FILE = "dmss://system/SIMOS/File"
 
 

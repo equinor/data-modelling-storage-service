@@ -4,6 +4,7 @@ from collections.abc import Callable
 from functools import lru_cache
 from pathlib import Path
 
+from authentication.models import AccessControlList
 from common.exceptions import ApplicationException
 from config import config
 from domain_classes.blueprint import Blueprint
@@ -17,6 +18,10 @@ class Repository(RepositoryInterface):
     def __init__(self, name, get_blueprint: Callable[[str], Blueprint], data_types: list[str] | None = None, **kwargs):
         self.name = name
         self.data_types = [StorageDataTypes(d) for d in data_types] if data_types else []
+        self.default_acl: AccessControlList | None = (
+            AccessControlList(**kwargs["defaultACL"]) if "defaultACL" in kwargs else None
+        )
+        kwargs.pop("defaultACL", None)
         self.client = self._get_client(get_blueprint, **kwargs)
 
     def update(self, uid: str, document: dict) -> bool:
@@ -36,9 +41,6 @@ class Repository(RepositoryInterface):
 
     def find_one(self, filters: dict) -> dict:
         return self.client.find_one(filters)
-
-    def add(self, uid: str, document: dict) -> bool:
-        return self.client.add(uid, document)
 
     def update_blob(self, uid: str, blob: bytes) -> bool:
         return self.client.update_blob(uid, blob)

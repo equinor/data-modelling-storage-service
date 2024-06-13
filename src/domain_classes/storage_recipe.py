@@ -13,6 +13,7 @@ class StorageAttribute(BaseModel):
     storage_affinity: StorageDataTypes = Field(StorageDataTypes.DEFAULT, alias="storageAffinity")
     label: str = ""
     description: str = ""
+    strict: bool = False
 
     def __repr__(self):
         return f"name: {self.name}, contained: {self.contained}, affinity: {self.storage_affinity.value}"
@@ -25,6 +26,7 @@ class StorageAttribute(BaseModel):
             "storageAffinity": self.storage_affinity.value,
             "label": self.label,
             "description": self.description,
+            "strict": self.strict,
         }
 
     model_config = ConfigDict(populate_by_name=True)

@@ -1,3 +1,4 @@
+from pydantic import ConfigDict
 from pydantic.main import BaseModel
 
 from common.utils.encryption import encrypt
@@ -5,6 +6,8 @@ from enums import StorageDataTypes
 
 
 class Repository(BaseModel, use_enum_values=True):  # type: ignore
+    model_config = ConfigDict(extra="allow")
+
     type: str
     data_types: list[StorageDataTypes] | None = None
     host: str | None = None

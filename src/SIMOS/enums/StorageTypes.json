@@ -7,13 +7,15 @@
     "blob",
     "video",
     "large",
-    "veryLarge"
+    "veryLarge",
+    "secret"
   ],
   "labels": [
     "Default",
     "Blob data",
     "Video",
     "Large",
-    "Very Large"
+    "Very Large",
+    "Secret"
   ]
 }

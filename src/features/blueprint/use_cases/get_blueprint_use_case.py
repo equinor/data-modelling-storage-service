@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 from authentication.models import User
 from common.providers.storage_recipe_provider import (
+    create_default_storage_recipe,
     default_form_edit,
     default_initial_ui_recipe,
     default_list_recipe,
@@ -30,8 +31,7 @@ def get_blueprint_use_case(type: TypeConstrainedString, context: str | None, use
         return {
             "blueprint": blueprint.to_dict(),
             "uiRecipes": [ur.model_dump(by_alias=True) for ur in default_ui_recipes],
-            # TODO: Generate default storage recipe
-            "storageRecipes": [],
+            "storageRecipes": [sr.model_dump(by_alias=True) for sr in create_default_storage_recipe(type)],
         }
 
     lookup: Lookup = get_lookup(context)
@@ -46,9 +46,7 @@ def get_blueprint_use_case(type: TypeConstrainedString, context: str | None, use
     if not next((ur for ur in ui_recipes if ur.dimensions == "*"), None):
         ui_recipes.append(default_list_recipe)
 
-    storage_recipes = lookup.storage_recipes.get(type, [])
-    if not storage_recipes:
-        storage_recipes = lookup.storage_recipes.get("_default_", [])
+    storage_recipes = lookup.storage_recipes.get(type, create_default_storage_recipe(type))
 
     return {
         "blueprint": blueprint.to_dict(),

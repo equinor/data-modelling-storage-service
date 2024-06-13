@@ -1,6 +1,7 @@
 from authentication.access_control import assert_user_has_access
 from authentication.models import AccessControlList, AccessLevel, User
 from common.address import Address
+from common.providers.storage_recipe_provider import create_default_storage_recipe
 from domain_classes.lookup import Lookup
 from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from domain_classes.ui_recipe import Recipe
@@ -47,7 +48,9 @@ def create_lookup_table_use_case(
                         storage_affinity=r.get("storageAffinity", StorageDataTypes.DEFAULT),
                         attributes={attribute["name"]: StorageAttribute(**attribute) for attribute in r["attributes"]},
                     )
-                    for r in node.entity.get("storageRecipes", [])
+                    for r in node.entity.get(
+                        "storageRecipes", [create_default_storage_recipe(node.type)[0].model_dump(by_alias=True)]
+                    )
                 ]
 
                 if extends := node.entity.get("extends"):

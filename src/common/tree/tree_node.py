@@ -65,7 +65,7 @@ class NodeBase:
     def storage_recipes(self, context: str | None = "DMSS") -> list[StorageRecipe]:
         # TODO: support other contexts than "DMSS"
         if not self.recipe_provider or not (context_recipes := self.recipe_provider(self.type, context)):
-            return create_default_storage_recipe()
+            return create_default_storage_recipe(self.type)
         return context_recipes
 
     @property

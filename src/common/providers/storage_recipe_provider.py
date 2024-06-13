@@ -1,6 +1,6 @@
 from common.exceptions import NotFoundException
 from domain_classes.lookup import Lookup
-from domain_classes.storage_recipe import StorageRecipe
+from domain_classes.storage_recipe import StorageAttribute, StorageRecipe
 from domain_classes.ui_recipe import Recipe
 from enums import SIMOS, StorageDataTypes
 from storage.internal.lookup_tables import get_lookup
@@ -74,16 +74,16 @@ default_initial_ui_recipe = Recipe(
 
 def storage_recipe_provider(type: str, context: str | None = None) -> list[StorageRecipe]:
     if not context:
-        return []
+        return create_default_storage_recipe(type)
 
     try:
         lookup: Lookup = get_lookup(context)
     except NotFoundException as error:
         if context == "DMSS":
-            return []
+            return create_default_storage_recipe(type)
         raise error
     # Get type specific recipes
-    storage_recipes = lookup.storage_recipes.get(type, [])
+    storage_recipes = lookup.storage_recipes.get(type, create_default_storage_recipe(type))
     # If no recipe link exists for the type, use the contexts default
     if not storage_recipes:
         storage_recipes = lookup.storage_recipes.get("_default_", [])
@@ -91,7 +91,19 @@ def storage_recipe_provider(type: str, context: str | None = None) -> list[Stora
     return storage_recipes
 
 
-def create_default_storage_recipe() -> list[StorageRecipe]:
+def create_default_storage_recipe(type: str) -> list[StorageRecipe]:
+    if type == SIMOS.SECRET.value:
+        return [
+            StorageRecipe(
+                name="",
+                storage_affinity=StorageDataTypes.DEFAULT,
+                attributes={
+                    "content": StorageAttribute(
+                        name="content", contained=False, storage_affinity=StorageDataTypes.SECRET, strict=True
+                    )
+                },
+            )
+        ]
     return [
         StorageRecipe(
             name="Default",

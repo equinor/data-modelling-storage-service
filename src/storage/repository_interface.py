@@ -10,10 +10,6 @@ class RepositoryInterface(ABC):
         """Init method to be implemented. Any client specific parameters will be passed via kwargs"""
 
     @abstractmethod
-    def add(self, uid: str, document: dict) -> bool:
-        """Get method to be implemented"""
-
-    @abstractmethod
     def update(self, uid: str, document: dict, **kwargs) -> bool:
         """Update method to be implemented"""
 

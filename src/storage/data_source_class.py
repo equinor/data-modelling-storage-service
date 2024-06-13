@@ -6,6 +6,7 @@ from pydantic import UUID4
 from authentication.access_control import assert_user_has_access
 from authentication.models import AccessControlList, AccessLevel, User
 from common.exceptions import (
+    ApplicationException,
     BadRequestException,
     MissingPrivilegeException,
     NotFoundException,
@@ -63,8 +64,12 @@ class DataSource:
             for r in self.repositories.values():
                 if storage_attribute.storage_affinity in r.data_types:
                     return r
+            if storage_attribute.strict:
+                raise ApplicationException(
+                    f"StorageAttribute '{storage_attribute}' requires a repository with a matching data types {storage_attribute.storage_affinity}, but none was found"
+                )
         if strict:
-            raise ValueError(f"No repository for '{storage_attribute.storage_affinity}' data configured")
+            raise ValueError("No storage attribute provided and strict=True. Cannot determine repository")
         return self.get_default_repository()
 
     # TODO: Read default attribute from DataSource spec
@@ -156,13 +161,13 @@ class DataSource:
                 except NotFoundException:  # The parent has not yet been created.
                     pass
 
-            parent_acl = parent_lookup.acl if parent_lookup else self.acl  # If no parentLookup, use DataSource default
+            repo = self._get_repo_from_storage_attribute(storage_attribute)
+            # If no parentLookup, use repos default ACL, fallback to DataSource default
+            parent_acl = parent_lookup.acl if parent_lookup else repo.default_acl if repo.default_acl else self.acl
             # Before inserting a new lookUp, check permissions on parent resource
             assert_user_has_access(parent_acl, AccessLevel.WRITE, self.user)
-            repo = self._get_repo_from_storage_attribute(storage_attribute)
-            document_owner = self.user
             acl: AccessControlList = AccessControlList(
-                owner=document_owner.user_id,
+                owner=self.user.user_id,
                 roles=parent_acl.roles,
                 users=parent_acl.users,
                 others=parent_acl.others,

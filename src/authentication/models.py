@@ -47,7 +47,7 @@ class AccessControlList(BaseModel):
       others: READ
     """
 
-    owner: str
+    owner: str | None = None
     roles: dict[str, AccessLevel] = {}
     users: dict[str, AccessLevel] = {}
     others: AccessLevel = AccessLevel.READ

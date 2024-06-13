@@ -10,6 +10,25 @@
       "tls": false,
       "database": "DMSS-core",
       "collection": "DMSS-core"
+    },
+    "secretVault": {
+      "type": "mongo-db",
+      "data_types": [
+        "secret"
+      ],
+      "host": "db",
+      "port": 27017,
+      "username": "maf",
+      "password": "$MONGO_PASSWORD",
+      "tls": false,
+      "database": "secrets",
+      "collection": "secrets",
+      "encryptAtRest": true,
+      "defaultACL": {
+        "others": "NONE",
+        "roles": {},
+        "users": {}
+      }
     }
   }
 }
