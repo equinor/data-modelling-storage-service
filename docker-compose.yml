@@ -24,6 +24,10 @@ services:
     image: bitnami/redis:latest
     environment:
       REDIS_PASSWORD: maf
+    ports:
+      - '6379:6379'
+      - '8001:8001'
+
 
 # Redis will need write permission on this folder to be able to start (UID 1001)
 #    volumes:

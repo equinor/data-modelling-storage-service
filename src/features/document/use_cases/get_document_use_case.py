@@ -3,7 +3,7 @@ from pydantic import conint
 from authentication.models import User
 from common.address import Address
 from services.document_service.document_service import DocumentService
-from storage.internal.get_data_source_cached import get_data_source_cached
+from src.storage.internal.get_data_source_cached import get_data_source_cached
 
 
 def get_document_use_case(
