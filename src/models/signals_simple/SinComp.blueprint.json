@@ -1,0 +1,37 @@
+{
+  "name": "SinComp",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "",
+  "attributes": [
+    {
+      "name": "type",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "A",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "number",
+      "default": 0,
+      "optional": false
+    },
+    {
+      "name": "T",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "number",
+      "default": 0,
+      "optional": false
+    },
+    {
+      "name": "phase",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "number",
+      "optional": false
+    },
+    {
+      "name": "signal",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "../containers/EquallySpacedSignal"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "name": "Case",
+  "type": "dmss://system/SIMOS/Blueprint",
+  "description": "",
+  "extends": [
+     "dmss://system/SIMOS/NamedEntity"
+  ],
+  "attributes": [
+    {
+      "name": "name",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "type",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "description",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "string"
+    },
+    {
+      "name": "duration",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "number"
+    },
+        {
+      "name": "newAttribute",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "number"
+    },
+    {
+      "name": "timeStep",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "number"
+    },
+    {
+      "name": "components",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "./SinComp",
+      "dimensions": "*"
+    },
+    {
+      "name": "signal",
+      "type": "dmss://system/SIMOS/BlueprintAttribute",
+      "attributeType": "../containers/EquallySpacedSignal",
+      "dimensions": "*"
+    }
+  ]
+}
