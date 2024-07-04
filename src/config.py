@@ -6,13 +6,13 @@ from enums import AuthProviderForRoleCheck
 
 class Config(BaseSettings):
     # Internal database
-    REDIS_HOST: str = Field("redis")
+    REDIS_HOST: str = Field("localhost")
     REDIS_PASSWORD: str = Field("maf")
     REDIS_SSL_ENABLED: bool = Field(False)
     REDIS_PORT: int = Field(6379)
 
     ENVIRONMENT: str = Field("local")
-    SECRET_KEY: str | None = Field(None)
+    SECRET_KEY: str = Field("sg9aeUM5i1JO4gNN8fQadokJa3_gXQMLBjSGGYcfscs=")
     LOGGER_LEVEL: str = Field("DEBUG")
     MAX_ENTITY_RECURSION_DEPTH: int = Field(5000)
     CORE_DATA_SOURCE: str = "system"
@@ -39,6 +39,7 @@ class Config(BaseSettings):
 
 
 config = Config()
+config.SECRET_KEY="sg9aeUM5i1JO4gNN8fQadokJa3_gXQMLBjSGGYcfscs="
 if not config.AUTH_ENABLED:
     print("################ WARNING ################")
     print("#       Authentication is disabled      #")

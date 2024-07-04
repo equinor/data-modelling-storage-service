@@ -1,9 +1,11 @@
 import os
 import os.path
-from plugin.models import Blueprint, Blueprints
+from .blueprint_handling import SQLBlueprint, Blueprints
 
 
 def initialize_database(base_folder: str = None, api: str = None, run_migration=True):
+
+
     blueprints = Blueprints()
     if base_folder:
         for dirpath, dirnames, filenames in os.walk(base_folder):

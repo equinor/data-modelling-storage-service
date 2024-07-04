@@ -5,6 +5,9 @@ services:
     image: datamodelingtool.azurecr.io/dmss:dev
     volumes:
       - ./src:/code/src
+      - ./packages:/additional-packages
+
+
     environment:
       SECRET_KEY: sg9aeUM5i1JO4gNN8fQadokJa3_gXQMLBjSGGYcfscs= # Don't reuse this in production...
       ENVIRONMENT: local
@@ -28,6 +31,7 @@ services:
   db:
     volumes:
       - ./data/db:/data/db
+
 
 #  db-ui:
 #    image: mongo-express:1.0.0-alpha
