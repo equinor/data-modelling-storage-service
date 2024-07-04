@@ -1,6 +1,7 @@
 import json
 from storage.repositories.plugin.sql import SQLClient
-#docker-compose exec db_postgres psql -U postgres -d simpos
+#NEED TO RUN THESE in terminal !
+#docker-compose exec db_postgres psql -U postgres -d dmss"
 #CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 study="""{
     "type": "models/signals_simple/Study",

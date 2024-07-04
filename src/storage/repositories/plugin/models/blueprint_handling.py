@@ -6,16 +6,19 @@ from alembic import command
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Table
 from sqlalchemy.ext.orderinglist import ordering_list
 import os
+from common.providers.blueprint_provider import default_blueprint_provider
 from datetime import datetime
+from authentication.models import User
 from sqlalchemy.sql import text
-
+from features.blueprint.use_cases.get_blueprint_use_case import get_blueprint_use_case
+from domain_classes.blueprint import Blueprint
 from .base import Base
 
 """
 Provides the declarative base for all the custom models
 """
 
-alembic_cfg = Config('alembic.ini')  # Provide the path to your alembic.ini file
+alembic_cfg = Config(r'C:\Users\jta\OneDrive - SevanSSP AS\Desktop\equinor_fork\data-modelling-storage-service\src\alembic.ini')  # Provide the path to your alembic.ini file
 
 type_mapping = {
     "string": String,
@@ -25,7 +28,8 @@ type_mapping = {
     "boolean": Boolean,
     "foreign_key": ForeignKey,
     'type': String,
-    'core:blueprintattribute': String
+    'core:blueprintattribute': String,
+    '_meta_':String
 }
 
 
@@ -39,13 +43,14 @@ class Attribute(BaseModel):
     optional: Optional[bool] = True
 
 
-class Blueprint(BaseModel):
+class SQLBlueprint(BaseModel):
     name: str
     type: str
     description: str
     attributes: Optional[List[Attribute]] = None
     path: str = None
     contained: bool = False
+    paths:List=None
     @classmethod
     def from_json(cls, file):
         relative_path = f'{file}.blueprint.json'
@@ -55,18 +60,26 @@ class Blueprint(BaseModel):
         except FileNotFoundError:
             return None
 
-        blueprint = Blueprint.model_validate_json(json_data)
+        blueprint = SQLBlueprint.model_validate_json(json_data)
         blueprint.path = relative_path
         return blueprint
+
+    @classmethod
+    def from_dict(cls, adict):
+        instance = cls(**adict)
+        return instance
 
     def generate_models_m2m_rel(self, parent: str = None, parent_contained: bool = False):
         class_attributes = {}
         children = []
         data_tables = []
+
         for attr in self.attributes:
             attr_name = attr.name
             if attr_name == 'type':  # no need to store the blueprint type in the database
                 continue
+
+
             attr_type = attr.attributeType.lower()  # Convert type to lowercase for mapping
 
             if type_mapping.get(attr_type) and hasattr(attr, 'dimensions') and attr.dimensions == '*':
@@ -98,8 +111,19 @@ class Blueprint(BaseModel):
                 sqlalchemy_column_type = type_mapping.get(attr_type)
                 class_attributes[attr_name] = Column(sqlalchemy_column_type, nullable=attr.optional)
             else:  # add paths to json-blueprints for children
-                file = os.path.normpath(os.path.join(os.path.dirname(self.path), attr_type))
-                child_blueprint = self.from_json(file)
+
+                address=os.path.normpath(os.path.join(os.path.dirname(self.path), attr.attributeType))
+                address=address.replace("\\", "/")
+                address = address.replace(":/", "://")
+
+
+                bp = default_blueprint_provider.get_blueprint(address).to_dict()
+                child_blueprint = SQLBlueprint.from_dict(bp)
+
+
+                child_blueprint.path = address
+
+
                 if attr.contained:
                     child_blueprint.contained = True
                 children.append(child_blueprint)
@@ -141,9 +165,118 @@ class Blueprint(BaseModel):
         for child_blueprint in children:
             child_blueprint.generate_models_m2m_rel(parent=self.name, parent_contained=child_blueprint.contained)
 
+    def generate_models_m2m_rel_with_paths(self, parent: str = None, parent_contained: bool = False,bp_root=None):
+        class_attributes = {}
+        children = []
+        data_tables = []
+        if not bp_root:
+            bp_root=self
+        for attr in self.attributes:
+            attr_name = attr.name
+            if attr_name == 'type':  # no need to store the blueprint type in the database
+                continue
+
+
+            attr_type = attr.attributeType.lower()  # Convert type to lowercase for mapping
+
+            if type_mapping.get(attr_type) and hasattr(attr, 'dimensions') and attr.dimensions == '*':
+                # treat this as one-to-many exclusively
+                sqlalchemy_data_tale_column_type = type_mapping.get(attr_type)
+
+                if attr.contained:
+                    on_delete = 'cascade'
+                else:
+                    on_delete = None
+
+                data_tables.append({
+                    'name': f'{self.name}_{attr_name}',
+                    'columns': {
+                        f'{self.name}_id': Column(f'{self.name}_id',
+                                                  ForeignKey(f'{self.name}.id', ondelete=on_delete),
+                                                  primary_key=True, nullable=False, info={"skip_pk": True}),
+                        'index': Column(Integer, nullable=False, primary_key=True, info={"skip_pk": True}),
+                        'data': Column(sqlalchemy_data_tale_column_type, nullable=False),
+                        'id': None
+                    }
+                })
+                class_attributes[attr_name] = relationship(f'{self.name}_{attr_name}',
+                                                           order_by=f'{self.name}_{attr_name}.index',
+                                                           collection_class=ordering_list('index'),
+                                                           cascade="all, delete" if (attr.contained or parent_contained) else "save-update")
+
+            elif type_mapping.get(attr_type):  # Should be made to catch any type that is not a blueprint
+                sqlalchemy_column_type = type_mapping.get(attr_type)
+                class_attributes[attr_name] = Column(sqlalchemy_column_type, nullable=attr.optional)
+            else:  # add paths to json-blueprints for children
+
+                address=os.path.normpath(os.path.join(os.path.dirname(self.path), attr.attributeType))
+                address=address.replace("\\", "/")
+                address = address.replace(":/", "://")
+
+
+                bp = default_blueprint_provider.get_blueprint(address).to_dict()
+                child_blueprint = SQLBlueprint.from_dict(bp)
+                child_blueprint.paths=[]
+
+                child_blueprint.path = address
+
+
+                if attr.contained:
+                    child_blueprint.contained = True
+                children.append(child_blueprint)
+                child_name = child_blueprint.name
+                class_attributes[f'{attr_name}'] = relationship(child_name,
+                                                                   secondary=f'{self.name}_{child_name}_map',
+                                                                   cascade="all, delete" if (attr.contained or parent_contained) else "save-update")
+        if parent:
+            table_name = f"{parent}_{self.name}_map"
+            if table_name in globals():
+                existing_cols = [c.name for c in globals()[table_name].columns]
+                if f"{parent}_id" not in existing_cols or f"{self.name}_id" not in existing_cols:
+                    raise ValueError(f'Association table "{table_name}" already exists, but does not correspond to '
+                                     f'existing version of "{self.name}"')
+            else:
+                globals()[table_name] = Table(
+                    table_name,
+                    Base.metadata,
+                    Column(f"{parent}_id",
+                           ForeignKey(f"{parent}.id")),
+                    Column(f"{self.name}_id",
+                           ForeignKey(f"{self.name}.id")),
+                )
+
+        if self.name in globals():
+            for attr in self.attributes:
+                attr_name = attr.name
+                if attr_name == 'type':
+                    continue
+                attr_type = attr.attributeType.lower()
+                if type_mapping.get(attr_type):
+                    if not getattr(globals()[self.name], attr_name):
+                        raise ValueError(f'Attribute "{attr_name}" not found in existing version of "{self.name}"')
+        else:
+            globals()[self.name] = type(self.name, (Base,), class_attributes)
+            for data_table in data_tables:
+                globals()[data_table['name']] = type(data_table['name'], (Base,), data_table['columns'])
+
+        for child_blueprint in children:
+            child_blueprint.generate_models_m2m_rel_with_paths(parent=self.name, parent_contained=child_blueprint.contained,bp_root=bp_root)
+            bp_root.paths.append(child_blueprint.path)
+
     def migrate_and_upgrade(self):
         command.revision(alembic_cfg, autogenerate=True, message=f'table_{self.name}')
         command.upgrade(alembic_cfg, revision='head')
+
+
+    @staticmethod
+    def generate_migration_script(message: str = f'models: {datetime.now().strftime("%Y-%m-%d")}'):
+        revision = command.revision(alembic_cfg, autogenerate=True, message=message)
+        return revision.revision
+
+    @staticmethod
+    def upgrade(revision='head'):
+        command.upgrade(alembic_cfg, revision=revision)
+
 
     def return_model(self):
         if self.name in globals():
@@ -159,9 +292,9 @@ class Blueprint(BaseModel):
 
 
 class Blueprints(BaseModel):
-    bps: List[Blueprint] = []
+    bps: List[SQLBlueprint] = []
 
-    def append(self, bp: Blueprint):
+    def append(self, bp: SQLBlueprint):
         self.bps.append(bp)
 
     def __len__(self):
@@ -190,13 +323,13 @@ class Blueprints(BaseModel):
 ModelType = TypeVar("ModelType", bound=Base)
 
 
-def resolve_blueprint(entity_type: str) -> Blueprint:
+def resolve_blueprint(entity_type: str) -> SQLBlueprint:
     blueprint_path = entity_type.split(':')[1]
     base_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..', 'models'))
-    return Blueprint.from_json(os.path.join(base_path, blueprint_path))
+    return SQLBlueprint.from_json(os.path.join(base_path, blueprint_path))
 
 
-def resolve_model(blueprint: Blueprint, data_table_name: str = None) -> Type[ModelType]:
+def resolve_model(blueprint: SQLBlueprint, data_table_name: str = None) -> Type[ModelType]:
     if not data_table_name:
         if not blueprint.return_model():
             blueprint.generate_models_m2m_rel()
