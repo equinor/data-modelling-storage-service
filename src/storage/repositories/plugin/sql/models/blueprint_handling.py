@@ -17,8 +17,8 @@ from .base import Base
 """
 Provides the declarative base for all the custom models
 """
-
-alembic_cfg = Config(r'C:\Users\jta\OneDrive - SevanSSP AS\Desktop\equinor_fork\data-modelling-storage-service\src\alembic.ini')  # Provide the path to your alembic.ini file
+conf_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'alembic.ini')
+alembic_cfg = Config(conf_path)  # Provide the path to your alembic2.ini file
 
 type_mapping = {
     "string": String,
@@ -213,7 +213,6 @@ class SQLBlueprint(BaseModel):
                 address=address.replace("\\", "/")
                 address = address.replace(":/", "://")
 
-
                 bp = default_blueprint_provider.get_blueprint(address).to_dict()
                 child_blueprint = SQLBlueprint.from_dict(bp)
                 child_blueprint.paths=[]
@@ -269,12 +268,12 @@ class SQLBlueprint(BaseModel):
 
 
     @staticmethod
-    def generate_migration_script(message: str = f'models: {datetime.now().strftime("%Y-%m-%d")}'):
+    def generate_migration_script(alembic_cfg=alembic_cfg,message: str = f'models: {datetime.now().strftime("%Y-%m-%d")}'):
         revision = command.revision(alembic_cfg, autogenerate=True, message=message)
         return revision.revision
 
     @staticmethod
-    def upgrade(revision='head'):
+    def upgrade(alembic_cfg=alembic_cfg,revision='head'):
         command.upgrade(alembic_cfg, revision=revision)
 
 

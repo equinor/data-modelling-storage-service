@@ -1,40 +1,39 @@
-from common.utils.logging import logger
-from storage.repository_interface import RepositoryInterface
 import uuid
-import os
-from authentication.models import User
 from fastapi.encoders import jsonable_encoder
-from storage.repositories.plugin.models.blueprint_handling import SQLBlueprint, resolve_blueprint, resolve_model
-from sqlalchemy import create_engine, Column, String, Table, MetaData, text,insert, delete
+from storage.repositories.plugin.sql.models.blueprint_handling import SQLBlueprint, resolve_model
+from sqlalchemy import create_engine, Column, String, Table, MetaData, text
 from sqlalchemy.orm import sessionmaker,  aliased, selectinload
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-from time import sleep
-from features.blueprint.use_cases.get_blueprint_use_case import get_blueprint_use_case
-from domain_classes.blueprint import Blueprint
 from common.providers.blueprint_provider import default_blueprint_provider
-import subprocess
 from storage.repository_interface import RepositoryInterface
-from common.exceptions import BadRequestException, NotFoundException
-
+from common.exceptions import NotFoundException
+from alembic.config import Config
 class SQLClient(RepositoryInterface):
     def __init__(
-        self,
-        username: str= "postgres",
-        password: str="postgres",
-        host: str = "localhost",
-        database: str = "dmss",
-        table: str = "BP_Addresses",
-        port: int = 5432,
-        **kwargs,
+            self,
+            username: str = "postgres",
+            password: str = "postgres",
+            host: str = "localhost",
+            database: str = "dmss",
+            table: str = "BP_Addresses",
+            port: int = 5432,
+            engine=None,
+            alembic_cfg:Config = Config(
+                r'C:\Users\jta\OneDrive - SevanSSP AS\Desktop\equinor_fork\data-modelling-storage-service\src\storage\repositories\plugin\sql\alembic.ini'),
+            **kwargs,
     ):
-        self.engine = create_engine(
-            f"postgresql://{username}:{password}@{host}:{port}/{database}",
-            connect_args={"options": "-c statement_timeout=5000"}
-        )
+        if engine is None:
+            # Default to PostgreSQL if engine is not provided
+            self.engine = create_engine(
+                f"postgresql://{username}:{password}@{host}:{port}/{database}",
+                connect_args={"options": "-c statement_timeout=5000"}
+            )
+        else:
+            # Use the provided engine (assuming it's already configured)
+            self.engine = engine
+
         self.Session = sessionmaker(bind=self.engine)()
         self.table = table
         self.metadata = MetaData()
-        #How should the reference table be initialized in the db?
         self.table_ref = Table(
             self.table,
             self.metadata,
@@ -42,6 +41,7 @@ class SQLClient(RepositoryInterface):
             Column('Address',String),
         )
         self.metadata.create_all(self.engine)
+        self.alembic_cfg=alembic_cfg
 
     def get(self, id: str,all_data=bool,levels:int=1) -> dict:
         session = self.Session
@@ -95,10 +95,13 @@ class SQLClient(RepositoryInterface):
         return jsonable_encoder(f"Could not find id:{id} in database")
                             # Resolve model from table
 
-    def add(self,entity):
+    def add(self,entity, id:str):
         a=self._verify_blueprint(entity)
         if a:
-            self.add_insert(entity)
+            try:
+                self.add_insert(entity,id=id)
+            except Exception as e:
+                print(f"An error occurred: {e}")
         else:
             return jsonable_encoder(f"Entity not in database")
 
@@ -106,25 +109,31 @@ class SQLClient(RepositoryInterface):
         session = self.Session
         metadata_obj = MetaData()
         metadata_obj.reflect(bind=self.engine)
+        query = f'SELECT * FROM public."BP_Addresses" WHERE "Address" = \'{blueprint_address}\';'
+        result = session.execute(query).first()[0]
+        if result:
+            return jsonable_encoder(f"Blueprint already added to database")
         try:
             bp = default_blueprint_provider.get_blueprint(blueprint_address).to_dict()
             bp = SQLBlueprint.from_dict(bp)
             bp.path = blueprint_address
             bp.paths = [blueprint_address]
             bp.generate_models_m2m_rel_with_paths()
-            bp.generate_migration_script()
-            bp.upgrade()
+            bp.generate_migration_script(alembic_cfg=self.alembic_cfg)
+            bp.upgrade(alembic_cfg=self.alembic_cfg)
             for path in bp.paths:
                 name = path.split('/')[-1]
                 query = f'INSERT INTO public."BP_Addresses"("Name", "Address") VALUES (\'{name}\', \'{path}\');'
                 session.execute(query)
             session.commit()
+            return jsonable_encoder(f"Blueprints:{bp.paths} succesfully added to database")
         except Exception as e:
             print(f"An error occurred: {e}")
+        return jsonable_encoder(f"Could not add blueprints to database")
 
 
 
-    def add_insert(self, entity: dict, commit=True) -> dict:
+    def add_insert(self, entity: dict, commit=True, id=None) -> dict:
         session=self.Session
         table=entity['type'].split('/')[-1]
         query = f'SELECT "Address" FROM public."BP_Addresses" WHERE "Name" = \'{table}\';'
@@ -157,6 +166,7 @@ class SQLClient(RepositoryInterface):
         obj_in_data = jsonable_encoder(data)
         db_obj = model(**obj_in_data)
 
+
         for child, rel_name in zip(children, children_rel_names):
             child_obj = self.add_insert(child, commit=True)
             getattr(db_obj, rel_name).append(child_obj)
@@ -167,13 +177,24 @@ class SQLClient(RepositoryInterface):
             data_table_objects = [data_table_model(data=item) for item in value]
             getattr(db_obj, key).extend(data_table_objects)
 
+        if id:
+            db_obj.id=id
         session.add(db_obj)
         if commit:
             session.commit()
             session.refresh(db_obj)
         return db_obj
+    def update(self,id:str,entity:dict):
+        try:
+            self.delete(id=id)
+            self.add_insert(entity,id=id)
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
-    def update(self, id:str,document:dict):
+
+
+
+    def update_table(self, id:str,document:dict):
         session = self.Session
         metadata_obj = MetaData()
         metadata_obj.reflect(bind=self.engine)
