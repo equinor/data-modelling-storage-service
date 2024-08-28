@@ -30,3 +30,4 @@ COPY src ./src
 FROM base as prod
 RUN poetry install --no-dev
 COPY src ./src
+

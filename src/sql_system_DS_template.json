@@ -1,0 +1,15 @@
+{
+  "name": "sql",
+  "repositories": {
+  "b": {
+      "type": "sql",
+      "host": "db_postgres",
+      "port": 5432,
+      "username": "postgres",
+      "password": "postgres",
+      "tls": false,
+      "database": "dmss"
+    }
+    }
+  }
+

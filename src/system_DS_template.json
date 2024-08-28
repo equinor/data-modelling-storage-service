@@ -8,7 +8,7 @@
       "username": "maf",
       "password": "$MONGO_PASSWORD",
       "tls": false,
-      "database": "DMSS-core",
+      "database": "dmss",
       "collection": "DMSS-core"
     }
   }

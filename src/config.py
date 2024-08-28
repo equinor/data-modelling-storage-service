@@ -6,7 +6,7 @@ from enums import AuthProviderForRoleCheck
 
 class Config(BaseSettings):
     # Internal database
-    REDIS_HOST: str = Field("localhost")
+    REDIS_HOST: str = Field("redis")
     REDIS_PASSWORD: str = Field("maf")
     REDIS_SSL_ENABLED: bool = Field(False)
     REDIS_PORT: int = Field(6379)

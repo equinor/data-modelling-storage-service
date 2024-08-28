@@ -1,5 +1,5 @@
 {
-  "name": "Case",
+  "name": "Case1",
   "type": "dmss://system/SIMOS/Blueprint",
   "description": "",
   "extends": [
@@ -39,13 +39,13 @@
     {
       "name": "components",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "./SinComp",
+      "attributeType": "dmss://system/models/signals_simple/SinComp",
       "dimensions": "*"
     },
     {
       "name": "signal",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "../containers/EquallySpacedSignal",
+      "attributeType": "dmss://system/models/containers/EquallySpacedSignal",
       "dimensions": "*"
     }
   ]

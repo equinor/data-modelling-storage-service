@@ -95,7 +95,7 @@
       "attributeType": "string",
       "default": " ",
       "contained": true,
-      "optional": false
+      "optional": true
     },
     {
       "name": "legend",

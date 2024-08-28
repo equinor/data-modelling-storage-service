@@ -12,7 +12,7 @@
       "name": "cases",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "label": "Cases",
-      "attributeType": "./Case",
+      "attributeType": "dmss://system/models/signals_simple/Case1",
       "dimensions": "*",
       "contained": false
     }

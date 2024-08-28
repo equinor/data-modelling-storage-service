@@ -27,11 +27,7 @@
       "type": "dmss://system/SIMOS/BlueprintAttribute",
       "attributeType": "number",
       "optional": false
-    },
-    {
-      "name": "signal",
-      "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "../containers/EquallySpacedSignal"
     }
+
   ]
 }

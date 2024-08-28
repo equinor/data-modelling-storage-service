@@ -291,6 +291,7 @@ def reset_app(context):
     context.invoke(nuke_db)
     logger.info("Creating SYSTEM data source")
     context.invoke(import_data_source, file="/tmp/DMSS_systemDS.json")  # noqa: S108
+    context.invoke(import_data_source, file="/tmp/SQL_systemDS.json")  # noqa: S108
     context.invoke(init_application)
 
 

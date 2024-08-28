@@ -25,6 +25,9 @@ services:
       AAD_ENTERPRISE_APP_OID: b9041025-05f0-44d4-89a7-3b5f955c0de5
       AUTH_PROVIDER_FOR_ROLE_CHECK:
       OTEL_SERVICE_NAME: "DMSS - local"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "dmss"
     ports:
       - "5000:5000"
 

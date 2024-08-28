@@ -1,0 +1,35 @@
+{
+    "type": "dmss://system/models/signals_simple/Study",
+    "cases": [
+       {
+          "name": "case1",
+          "type": "dmss://system/models/signals_simple/Case1",
+          "description": "",
+          "newAttribute": 32,
+          "duration": 100,
+          "timeStep": 0.1,
+          "components": [
+             {
+                "type": "dmss://system/models/signals_simple/SinComp",
+                "A": 10,
+                "T": 10,
+                "phase": 0.1
+            }
+          ],
+          "signal": [{
+             "name": "signal",
+             "type": "dmss://system/models/containers/EquallySpacedSignal",
+             "value": [10, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 1, 2 ,3, 4, 9],
+             "xname": "time",
+             "xunit": "s",
+             "xdelta": 0.1,
+             "xstart": 0,
+             "xlabel": "Time",
+             "label": " ",
+             "legend": " ",
+             "unit": "m"
+          }]
+       }
+    ]
+}
+
