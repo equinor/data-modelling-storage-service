@@ -6,7 +6,6 @@ from sqlalchemy.ext.orderinglist import ordering_list
 from .base import Base
 import hashlib
 
-
 """
 Provides the declarative base for all the custom models
 """
@@ -86,8 +85,8 @@ class SQLBlueprint(BaseModel):
 
         for attr in self.attributes:
             attr_name = attr.name
-
-
+            if attr.attributeType=='object':
+                attr.attributeType='dmss://system/SIMOS/SQLReference'
             attr_type = attr.attributeType.lower()  # Convert type to lowercase for mapping
 
             if type_mapping.get(attr_type) and hasattr(attr, 'dimensions') and attr.dimensions == '*':
@@ -118,16 +117,13 @@ class SQLBlueprint(BaseModel):
             elif type_mapping.get(attr_type):  # Should be made to catch any type that is not a blueprint
                 sqlalchemy_column_type = type_mapping.get(attr_type)
                 class_attributes[attr_name] = Column(sqlalchemy_column_type, nullable=attr.optional)
-            else:  # add paths to json-blueprints for children
+            else:
 
                 address=attr.attributeType
                 bp = get_blueprint.get_blueprint(address).to_dict()
-
                 child_blueprint = SQLBlueprint.from_dict(bp)
-
                 child_blueprint.path = address
                 child_blueprint.name=child_blueprint.hash
-
 
                 if attr.contained:
                     child_blueprint.contained = True
@@ -178,6 +174,8 @@ class SQLBlueprint(BaseModel):
             bp_root=self
         for attr in self.attributes:
             attr_name = attr.name
+            if attr.attributeType=='object':
+                attr.attributeType='dmss://system/SIMOS/SQLReference'
             attr_type = attr.attributeType.lower()  # Convert type to lowercase for mapping
             if type_mapping.get(attr_type) and hasattr(attr, 'dimensions') and attr.dimensions == '*':
                 # treat this as one-to-many exclusively
@@ -270,7 +268,6 @@ class SQLBlueprint(BaseModel):
             return None
 
 ModelType = TypeVar("ModelType", bound=Base)
-
 
 def resolve_model(blueprint: SQLBlueprint,get_blueprint=None, data_table_name: str = None) -> Type[ModelType]:
     if not data_table_name:

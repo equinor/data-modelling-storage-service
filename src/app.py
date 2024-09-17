@@ -255,7 +255,7 @@ def init_application():
         data_source_name=config.CORE_DATA_SOURCE,
         is_root=True,
     )
-    #create_lookup_table_use_case(["system/SIMOS/recipe_links"], "DMSS", user)
+    create_lookup_table_use_case(["system/SIMOS/recipe_links"], "DMSS", user)
 
 
 
@@ -283,6 +283,7 @@ def nuke_db():
     logger.info("Flushing all internal databases")
     logger.info("--------------------------------------")
     wipe_db()
+
 
 
 @cli.command()
