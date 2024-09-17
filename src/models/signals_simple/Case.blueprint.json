@@ -39,7 +39,7 @@
     {
       "name": "components",
       "type": "dmss://system/SIMOS/BlueprintAttribute",
-      "attributeType": "dmss://system/models/signals_simple/SinComp",
+      "attributeType": "object",
       "dimensions": "*"
     },
     {
