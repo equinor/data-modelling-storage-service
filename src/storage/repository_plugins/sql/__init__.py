@@ -37,14 +37,14 @@ class Repository(RepositoryInterface):
         )
         self.metadata.create_all(self.engine)
 
-    def get(self,id,depth:int=0):
+    def get(self,id:str,depth:int=0):
         entity = self.get_entity_by_query(id)
         return entity
     def generate_hash(self, path: str, length: int = 8) -> str:
         full_hash = hashlib.sha256(path.encode()).hexdigest()
         return '_'+full_hash[:length]
-    def sql_query(self,blueprint, id):
-        def build_sql_query_from_blueprint(blueprint, columns):
+    def sql_query(self,blueprint: str, id: str):
+        def build_sql_query_from_blueprint(blueprint:str , columns: str):
             bp = self.get_blueprint.get_blueprint(blueprint).to_dict()
             hash = self.generate_hash(blueprint)
             for (i, attr) in enumerate(bp['attributes']):
@@ -85,7 +85,7 @@ class Repository(RepositoryInterface):
         for table in allowed_tables:
             query = text(f'SELECT * FROM public."{table}" WHERE id = \'{id}\';')
             result = self.Session.execute(query).first()
-            def replace_references(d):
+            def replace_references(d: dict):
                 if isinstance(d, dict):
                     if d.get('type') == 'dmss://system/SIMOS/SQLReference' and d.get("referenceType")=='_object':
                         d = self.get_entity_by_query(d.get("address"))
@@ -103,7 +103,7 @@ class Repository(RepositoryInterface):
                 object=replace_references(object)
                 return jsonable_encoder(object)
 
-    def add(self,entity, id:str):
+    def add(self,entity: dict, id:str):
         a = self._verify_blueprint(entity)
         if not a:
             self.add_table(entity['type'])
