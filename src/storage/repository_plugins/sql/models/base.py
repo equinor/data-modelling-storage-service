@@ -1,16 +1,16 @@
 from uuid import uuid4
-from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import declarative_base
+
 from sqlalchemy import Column, text
-import re
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.orm import declarative_base
 
 """
 SQLAlchemy base model
 """
 
 
-class ExtendedBaseModel(object):
+class ExtendedBaseModel:
     """
     Base for all database models.
     """
@@ -20,10 +20,11 @@ class ExtendedBaseModel(object):
         """
         Sets the SQL table name equal to the class name
         """
-        return cls.__name__
+        return cls.__name__  # type: ignore
 
-    id = Column(UUID(as_uuid=True), default=uuid4, primary_key=True, nullable=False,
-                server_default=text("uuid_generate_v4()"))
+    id = Column(
+        UUID(as_uuid=True), default=uuid4, primary_key=True, nullable=False, server_default=text("uuid_generate_v4()")
+    )
 
 
 # The common source for all future SQLAlchemy classes
