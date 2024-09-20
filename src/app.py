@@ -25,10 +25,6 @@ from config import config
 from features.lookup_table.use_cases.create_lookup_table import (
     create_lookup_table_use_case,
 )
-from features.blueprint.use_cases.get_blueprint_use_case import (get_blueprint_use_case,
-)
-
-
 from restful.request_types.create_data_source import DataSourceRequest
 from storage.internal.data_source_repository import DataSourceRepository
 from tests.test_helpers.wipe_db import wipe_db
@@ -249,16 +245,7 @@ def init_application():
         data_source_name=config.CORE_DATA_SOURCE,
         is_root=True,
     )
-    import_package(
-        "/code/src/models",
-        user,
-        data_source_name=config.CORE_DATA_SOURCE,
-        is_root=True,
-    )
     create_lookup_table_use_case(["system/SIMOS/recipe_links"], "DMSS", user)
-
-
-
 
 
 @cli.command()
@@ -285,14 +272,12 @@ def nuke_db():
     wipe_db()
 
 
-
 @cli.command()
 @click.pass_context
 def reset_app(context):
     context.invoke(nuke_db)
     logger.info("Creating SYSTEM data source")
     context.invoke(import_data_source, file="/tmp/DMSS_systemDS.json")  # noqa: S108
-    context.invoke(import_data_source, file="/tmp/SQL_systemDS.json")  # noqa: S108
     context.invoke(init_application)
 
 
