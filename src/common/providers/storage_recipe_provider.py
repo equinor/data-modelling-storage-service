@@ -9,21 +9,21 @@ default_yaml_view = Recipe(
     **{
         "name": "Yaml",
         "type": SIMOS.UI_RECIPE.value,
-        "repository_plugins": "@development-framework/dm-core-plugins/yaml",
+        "plugin": "@development-framework/dm-core-plugins/yaml",
     }
 )
 default_form_edit = Recipe(
     **{
         "name": "Edit",
         "type": SIMOS.UI_RECIPE.value,
-        "repository_plugins": "@development-framework/dm-core-plugins/form",
+        "plugin": "@development-framework/dm-core-plugins/form",
     }
 )
 default_list_recipe = Recipe(
     **{
         "name": "List",
         "type": SIMOS.UI_RECIPE.value,
-        "repository_plugins": "@development-framework/dm-core-plugins/list",
+        "plugin": "@development-framework/dm-core-plugins/list",
         "dimensions": "*",
     }
 )
@@ -32,7 +32,7 @@ default_initial_ui_recipe = Recipe(
     **{
         "name": "RecipeSelect",
         "type": SIMOS.UI_RECIPE.value,
-        "repository_plugins": "@development-framework/dm-core-plugins/view_selector/tabs",
+        "plugin": "@development-framework/dm-core-plugins/view_selector/tabs",
         "config": {
             "type": "dmss://system/Plugins/dm-core-plugins/view_selector/ViewSelectorConfig",
             "items": [
@@ -45,7 +45,7 @@ default_initial_ui_recipe = Recipe(
                             "type": "dmss://system/SIMOS/UiRecipe",
                             "name": "YAML",
                             "description": "YAML representation",
-                            "repository_plugins": "@development-framework/dm-core-plugins/yaml",
+                            "plugin": "@development-framework/dm-core-plugins/yaml",
                         },
                         "scope": "self",
                         "eds_icon": "code",
@@ -60,7 +60,7 @@ default_initial_ui_recipe = Recipe(
                             "type": "dmss://system/SIMOS/UiRecipe",
                             "name": "Edit",
                             "description": "Default edit",
-                            "repository_plugins": "@development-framework/dm-core-plugins/form",
+                            "plugin": "@development-framework/dm-core-plugins/form",
                         },
                         "scope": "self",
                         "eds_icon": "edit",
