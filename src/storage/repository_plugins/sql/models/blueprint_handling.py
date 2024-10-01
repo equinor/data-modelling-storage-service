@@ -25,6 +25,7 @@ type_mapping = {
     "object": String,
     "core:blueprintattribute": String,
     "_meta_": String,
+    "any":String
 }
 
 
@@ -89,6 +90,7 @@ class SQLBlueprint(BaseModel):
                 attr_type = attr.attributeType.lower()  # Convert type to lowercase for mapping
 
                 if type_mapping.get(attr_type) and hasattr(attr, "dimensions") and attr.dimensions == "*":
+
                     # treat this as one-to-many exclusively
                     sqlalchemy_data_tale_column_type = type_mapping.get(attr_type)
 
@@ -126,7 +128,8 @@ class SQLBlueprint(BaseModel):
                     class_attributes[attr_name] = Column(sqlalchemy_column_type, nullable=attr.optional)
                 else:
                     address = attr.attributeType
-                    bp = get_blueprint.get_blueprint(address).to_dict()
+                    # bp = get_blueprint.get_blueprint(address).to_dict()
+                    bp = get_blueprint.get_blueprint_with_extended_attributes(address).to_dict()
                     child_blueprint = SQLBlueprint.from_dict(bp)
                     child_blueprint.path = address
                     child_blueprint.name = child_blueprint.hash
@@ -239,7 +242,9 @@ class SQLBlueprint(BaseModel):
                     class_attributes[attr_name] = Column(sqlalchemy_column_type, nullable=attr.optional)
                 else:  # add paths to json-blueprints for children
                     address = attr.attributeType
-                    bp = get_blueprint.get_blueprint(address).to_dict()
+                    #bp = get_blueprint.get_blueprint(address).to_dict()
+                    bp = get_blueprint.get_blueprint_with_extended_attributes(address).to_dict()
+
                     child_blueprint = SQLBlueprint.from_dict(bp)
                     child_blueprint.paths = []
                     child_blueprint.path = address

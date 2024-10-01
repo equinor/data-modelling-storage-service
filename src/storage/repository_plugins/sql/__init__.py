@@ -48,30 +48,30 @@ class Repository(RepositoryInterface):
         def build_sql_query_from_blueprint(blueprint: str, columns: str):
             bp = self.get_blueprint.get_blueprint(blueprint).to_dict()
             hash = generate_hash(blueprint)
-            for _i, attr in enumerate(bp["attributes"]):
+            for i, attr in enumerate(bp["attributes"]):
+                if attr["attributeType"] == "object":
+                    attr["attributeType"] = "dmss://system/SIMOS/SQLReference"
                 attr_name = attr["name"]
                 if not attr.get("dimensions") == "*" and attr["attributeType"] in type_mapping:
                     columns += f"'{attr_name}', {hash}.\"{attr_name}\", "
             columns = columns[:-2]
             for attr in bp["attributes"]:
                 attr_name = attr["name"]
-                if attr["attributeType"] == "object":
-                    attr["attributeType"] = "dmss://system/SIMOS/SQLReference"
                 if "dimensions" in attr and attr.get("dimensions") == "*" and attr["attributeType"] not in type_mapping:
                     child_hash = generate_hash(attr["attributeType"])
                     columns += f",'{attr_name}',  COALESCE((SELECT jsonb_agg(jsonb_build_object("
                     columns = build_sql_query_from_blueprint(attr["attributeType"], columns)
-                    columns += f")) FROM {child_hash} JOIN {hash}_{child_hash}_map ON {child_hash}.id = {hash}_{child_hash}_map.{child_hash}_id WHERE {hash}.id = {hash}_{child_hash}_map.{hash}_id), '[]') "
+                    columns += f")) FROM {child_hash} JOIN {hash}_{child_hash}_map ON {child_hash}.id = {hash}_{child_hash}_map.{child_hash}_id WHERE {hash}.id = {hash}_{child_hash}_map.{hash}_id LIMIT 1 ), '[]') "
 
                 if (attr["attributeType"] not in type_mapping) and attr.get("dimensions") == "":
                     child_hash = generate_hash(attr["attributeType"])
                     columns += f",'{attr_name}', COALESCE((SELECT (jsonb_build_object("
                     columns = build_sql_query_from_blueprint(attr["attributeType"], columns)
-                    columns += f")) FROM {child_hash} JOIN {hash}_{child_hash}_map ON {child_hash}.id = {hash}_{child_hash}_map.{child_hash}_id WHERE {hash}.id = {hash}_{child_hash}_map.{hash}_id), '[]') "
+                    columns += f")) FROM {child_hash} JOIN {hash}_{child_hash}_map ON {child_hash}.id = {hash}_{child_hash}_map.{child_hash}_id WHERE {hash}.id = {hash}_{child_hash}_map.{hash}_id LIMIT 1 ), '{{}}'::jsonb) "
                 if "dimensions" in attr and attr["attributeType"] in type_mapping:
                     if attr["dimensions"] == "*" and attr["attributeType"] in type_mapping:
                         attr_name = attr["name"]
-                        columns += f",'{attr_name}',COALESCE((SELECT jsonb_agg({hash}_{attr_name}.data) FROM {hash}_{attr_name} WHERE {hash}_{attr_name}.{hash}_id = {hash}.id ),  '{{}}'::jsonb)"  # noqa
+                        columns += f",'{attr_name}',COALESCE((SELECT jsonb_agg({hash}_{attr_name}.data) FROM {hash}_{attr_name} WHERE {hash}_{attr_name}.{hash}_id = {hash}.id LIMIT 1),  '[]')"  # noqa
             return columns
 
         s = build_sql_query_from_blueprint(blueprint, "")
@@ -96,6 +96,7 @@ class Repository(RepositoryInterface):
                         address_result = session.execute(query, {"table_name": table}).first()
                         if address_result:
                             address = address_result[0]
+
                             query = text(self.sql_query(address, id))
                             object = session.execute(query).first()
                             if object:
@@ -125,10 +126,8 @@ class Repository(RepositoryInterface):
         if result:
             print("Blueprint already added to database")
             return jsonable_encoder("Blueprint already added to database")
-
-        bp = self.get_blueprint.get_blueprint(blueprint_address).to_dict()
-        for i in bp["attributes"]:
-            print(i)
+        bp = self.get_blueprint.get_blueprint_with_extended_attributes(blueprint_address).to_dict()
+        #bp = self.get_blueprint.get_blueprint(blueprint_address).to_dict()
         bp = SQLBlueprint.from_dict(bp)
         bp.path = blueprint_address
         bp.paths = [[blueprint_address, bp.hash]]
@@ -173,17 +172,47 @@ class Repository(RepositoryInterface):
 
                     entity[attr.name] = references
                 else:
-                    if entity[attr.name]["type"] != "dmss://system/SIMOS/SQLReference":
-                        uid = str(uuid.uuid4())
-                        reference = {
-                            "referenceType": "_object",
-                            "type": "dmss://system/SIMOS/SQLReference",
-                            "address": uid,
-                        }
-                        self.add_table(entity[attr.name]["type"])
-                        self.delete(uid)
-                        self.add_insert(entity[attr.name], id=uid)
-                        entity[attr.name] = reference
+                    if "optional" in attr and attr["optional"]:
+                        if attr.name in entity:
+                            if entity[attr.name]["type"] != "dmss://system/SIMOS/SQLReference":
+                                uid = str(uuid.uuid4())
+                                reference = {
+                                    "referenceType": "_object",
+                                    "type": "dmss://system/SIMOS/SQLReference",
+                                    "address": uid,
+                                }
+                                self.add_table(entity[attr.name]["type"])
+                                self.delete(uid)
+                                self.add_insert(entity[attr.name], id=uid)
+                                entity[attr.name] = reference
+                        else:
+                            uid = str(uuid.uuid4())
+                            reference = {
+                                "referenceType": "_object",
+                                "type": "dmss://system/SIMOS/SQLReference",
+                                "address": uid,
+                            }
+                            self.add_table(entity[attr.name]["type"])
+                            self.delete(uid)
+                            self.add_insert(entity[attr.name], id=uid)
+                            entity[attr.name] = reference
+
+        # for attr in bp.attributes:
+        #     if attr.name == 'storageAffinity':
+        #         entity[attr.name] = 'default'
+        #     if attr.name not in entity:
+        #         if attr.name == 'storageAffinity':
+        #             entity[attr.name] = 'default'
+        #         if attr.name=='default' and attr.attributeType=='any':
+        #             entity[attr.name]=''
+        #         if attr.attributeType=='string':
+        #             #In the blueprints a default value is assigned to the attribute, however the blueprint provider do not
+        #             #retrieve the default value.
+        #             entity[attr.name]=''
+        #         if attr.attributeType=='boolean':
+        #             entity[attr.name]=False
+
+
 
         for key, value in entity.items():
             if key == "_id":
@@ -199,10 +228,14 @@ class Repository(RepositoryInterface):
                 "foreign_key",
                 "type",
                 "core:blueprintattribute",
+                "any"
             ]:
                 if hasattr(attr, "dimensions") and attr.dimensions == "*":
                     data_table[key] = value
                 else:
+                    if attr.attributeType.lower()=='any':
+                        value=str(value)
+
                     data[key] = value
 
             else:
@@ -220,6 +253,8 @@ class Repository(RepositoryInterface):
         db_obj = model(**obj_in_data)
 
         for child, rel_name in zip(children, children_rel_names, strict=True):
+            if child=={}:
+                continue
             child_obj = self.add_insert(child, commit=True, id=None)
             getattr(db_obj, rel_name).append(child_obj)
 
@@ -243,41 +278,51 @@ class Repository(RepositoryInterface):
         self.add_table(entity["type"])
         self.delete(id)
         self.add_insert(entity)
+        print('succesfully inserted')
 
     def delete(self, id: str, table: str | None = None):
         session = self.Session
         metadata_obj = MetaData()
         metadata_obj.reflect(bind=self.engine)
         allowed_tables = [
-            i for i in metadata_obj.tables if not (i.endswith("_map") or i.endswith("_value") or i == "BP_Addresses")
+            i for i in metadata_obj.tables if not (i.endswith("_map") or i.endswith("_bkit6edxc") or i == "BP_Addresses")
         ]
         try:
             for table in allowed_tables:
-                query = text(f"SELECT * FROM public.\"{table}\" WHERE id = '{id}';")  # noqa
-                result = self.Session.execute(query).first()
-                if result:
-                    query = text('SELECT "Address" FROM public."BP_Addresses" WHERE "Name" = :table').bindparams(
-                        table=table
-                    )
-                    address = session.execute(query).first()[0]
-                    if address:
-                        model, bp = self._resolve_blueprint(address)
-                        obj = self.Session.query(model).get(id)
-                        parent_mapping_tables = [i for i in metadata_obj.tables if (i.endswith(f"{table}_map"))]
-                        for j in parent_mapping_tables:
-                            query = text(f'delete FROM public."{j}" WHERE "{table}_id" = \'{id}\';')  # noqa
-                            self.Session.execute(query)
+                column_check_query = text(f"""
+                        SELECT column_name 
+                        FROM information_schema.columns 
+                        WHERE table_name = '{table}' AND column_name = 'id';
+                    """)
+
+                column_exists = self.Session.execute(column_check_query).first()
+
+                if column_exists:
+                    query = text(f"SELECT * FROM public.\"{table}\" WHERE id = '{id}';")  # noqa
+                    result = self.Session.execute(query).first()
+                    if result:
+                        query = text('SELECT "Address" FROM public."BP_Addresses" WHERE "Name" = :table').bindparams(
+                            table=table
+                        )
+                        address = session.execute(query).first()[0]
+                        if address:
+                            model, bp = self._resolve_blueprint(address)
+                            obj = self.Session.query(model).get(id)
+                            parent_mapping_tables = [i for i in metadata_obj.tables if (i.endswith(f"{table}_map"))]
+                            for j in parent_mapping_tables:
+                                query = text(f'delete FROM public."{j}" WHERE "{table}_id" = \'{id}\';')  # noqa
+                                self.Session.execute(query)
+                                self.Session.commit()
+                            self.Session.delete(obj)
+                            self.Session.flush()
                             self.Session.commit()
-                        self.Session.delete(obj)
-                        self.Session.flush()
-                        self.Session.commit()
-                        print(f"Successfully deleted {model.__name__}'{id}'")
+                            print(f"Successfully deleted {model.__name__}'{id}'")
         except Exception as e:
             print(f"An error occurred: {e}")
         return jsonable_encoder(f"Could not find id:{id} in database")
 
     def _resolve_blueprint(self, address):
-        bp = self.get_blueprint.get_blueprint(address).to_dict()
+        bp = self.get_blueprint.get_blueprint_with_extended_attributes(address).to_dict()
         bp = SQLBlueprint.from_dict(bp)
         bp.path = address
         model = resolve_model(blueprint=bp, data_table_name=None, get_blueprint=self.get_blueprint)
@@ -296,18 +341,22 @@ class Repository(RepositoryInterface):
 
     def sql_find_query(self, blueprint, search_data=None):
         def build_sql_query_from_blueprint(blueprint, search_data, columns, conditions=None, parent=None):
+            hash = generate_hash(blueprint)
+            if not parent:
+                columns += f"'_id', {hash}.id, "
             if parent is None:
                 parent = []
             if conditions is None:
                 conditions = []
             parent = parent
             bp = self.get_blueprint.get_blueprint(blueprint).to_dict()
-            hash = generate_hash(blueprint)
+
             conds = ""
             parent.append(hash)
             for attr in bp["attributes"]:
                 attr_name = attr["name"]
                 if not attr.get("dimensions") == "*" and attr["attributeType"] in type_mapping:
+
                     columns += f"'{attr_name}', {hash}.\"{attr_name}\", "
                     if search_data:
                         if attr_name in search_data:
@@ -372,12 +421,12 @@ class Repository(RepositoryInterface):
                         attr["attributeType"], new_search_data2, columns, conditions=conditions, parent=parent
                     )
                     parent.pop()
-                    columns += f")) FROM {child_hash} JOIN {hash}_{child_hash}_map ON {child_hash}.id = {hash}_{child_hash}_map.{child_hash}_id WHERE {hash}.id = {hash}_{child_hash}_map.{hash}_id), '[]') "
+                    columns += f")) FROM {child_hash} JOIN {hash}_{child_hash}_map ON {child_hash}.id = {hash}_{child_hash}_map.{child_hash}_id WHERE {hash}.id = {hash}_{child_hash}_map.{hash}_id), '{{}}'::jsonb) "
 
                 if "dimensions" in attr and attr["attributeType"] in type_mapping:
                     if attr["dimensions"] == "*" and attr["attributeType"] in type_mapping:
                         attr_name = attr["name"]
-                        columns += f",'{attr_name}',COALESCE((SELECT jsonb_agg({hash}_{attr_name}.data) FROM {hash}_{attr_name} WHERE {hash}_{attr_name}.{hash}_id = {hash}.id ),  '{{}}'::jsonb))"  # noqa: S608
+                        columns += f",'{attr_name}',COALESCE((SELECT jsonb_agg({hash}_{attr_name}.data) FROM {hash}_{attr_name} WHERE {hash}_{attr_name}.{hash}_id = {hash}.id ),  '[]'))"  # noqa: S608
             return columns, conditions
 
         s, conditions = build_sql_query_from_blueprint(blueprint, search_data=search_data, columns="")
@@ -399,9 +448,14 @@ class Repository(RepositoryInterface):
                     raise ValueError("Address cannot be None")  # or handle it as appropriate
                 d = self.get_entity_by_query(address)
                 return d
-            return {key: self.replace_references(value) for key, value in d.items()}
+
+            # Exclude keys where value is None or the key is 'default'
+            return {key: self.replace_references(value) for key, value in d.items() if
+                    value is not None and key != 'default'}
+
         elif isinstance(d, list):
             return [self.replace_references(item) for item in d]
+
         else:
             return d
 
@@ -425,8 +479,10 @@ class Repository(RepositoryInterface):
             return []
         try:
             query = text(self.sql_find_query(filter["type"], search_data=filter))
+            print(query)
             object = session.execute(query).first()[0]
             object = self.replace_references(object)
+            print(object)
             return object
         except Exception as e:
             raise Exception(f"An error occurred: {e!s}") from None
