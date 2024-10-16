@@ -127,7 +127,6 @@ class Repository(RepositoryInterface):
             print("Blueprint already added to database")
             return jsonable_encoder("Blueprint already added to database")
         bp = self.get_blueprint.get_blueprint_with_extended_attributes(blueprint_address).to_dict()
-        #bp = self.get_blueprint.get_blueprint(blueprint_address).to_dict()
         bp = SQLBlueprint.from_dict(bp)
         bp.path = blueprint_address
         bp.paths = [[blueprint_address, bp.hash]]
@@ -196,22 +195,6 @@ class Repository(RepositoryInterface):
                             self.delete(uid)
                             self.add_insert(entity[attr.name], id=uid)
                             entity[attr.name] = reference
-
-        # for attr in bp.attributes:
-        #     if attr.name == 'storageAffinity':
-        #         entity[attr.name] = 'default'
-        #     if attr.name not in entity:
-        #         if attr.name == 'storageAffinity':
-        #             entity[attr.name] = 'default'
-        #         if attr.name=='default' and attr.attributeType=='any':
-        #             entity[attr.name]=''
-        #         if attr.attributeType=='string':
-        #             #In the blueprints a default value is assigned to the attribute, however the blueprint provider do not
-        #             #retrieve the default value.
-        #             entity[attr.name]=''
-        #         if attr.attributeType=='boolean':
-        #             entity[attr.name]=False
-
 
 
         for key, value in entity.items():
@@ -285,7 +268,7 @@ class Repository(RepositoryInterface):
         metadata_obj = MetaData()
         metadata_obj.reflect(bind=self.engine)
         allowed_tables = [
-            i for i in metadata_obj.tables if not (i.endswith("_map") or i.endswith("_bkit6edxc") or i == "BP_Addresses")
+            i for i in metadata_obj.tables if not (i.endswith("_map") or i == "BP_Addresses")
         ]
         try:
             for table in allowed_tables:
@@ -344,8 +327,8 @@ class Repository(RepositoryInterface):
             hash = generate_hash(blueprint)
             if not parent:
                 columns += f"'_id', {hash}.id, "
-            if parent is None:
                 parent = []
+
             if conditions is None:
                 conditions = []
             parent = parent
@@ -449,7 +432,8 @@ class Repository(RepositoryInterface):
                 d = self.get_entity_by_query(address)
                 return d
 
-            # Exclude keys where value is None or the key is 'default'
+            # Exclude keys where value is None or the key is 'default'.
+            # This lets the plugin pass the tests "dm entities import src/SIMOS/recipe_links sql/" and "dm entities import src/SIMOS sql/"
             return {key: self.replace_references(value) for key, value in d.items() if
                     value is not None and key != 'default'}
 
@@ -479,10 +463,8 @@ class Repository(RepositoryInterface):
             return []
         try:
             query = text(self.sql_find_query(filter["type"], search_data=filter))
-            print(query)
             object = session.execute(query).first()[0]
             object = self.replace_references(object)
-            print(object)
             return object
         except Exception as e:
             raise Exception(f"An error occurred: {e!s}") from None
