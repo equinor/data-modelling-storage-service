@@ -5,6 +5,9 @@ services:
     image: datamodelingtool.azurecr.io/dmss:dev
     volumes:
       - ./src:/code/src
+      - ./packages:/additional-packages
+
+
     environment:
       SECRET_KEY: sg9aeUM5i1JO4gNN8fQadokJa3_gXQMLBjSGGYcfscs= # Don't reuse this in production...
       ENVIRONMENT: local
@@ -22,12 +25,16 @@ services:
       AAD_ENTERPRISE_APP_OID: b9041025-05f0-44d4-89a7-3b5f955c0de5
       AUTH_PROVIDER_FOR_ROLE_CHECK:
       OTEL_SERVICE_NAME: "DMSS - local"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "dmss"
     ports:
       - "5000:5000"
 
   db:
     volumes:
       - ./data/db:/data/db
+
 
 #  db-ui:
 #    image: mongo-express:1.0.0-alpha
