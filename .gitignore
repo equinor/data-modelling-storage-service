@@ -154,3 +154,4 @@ home/first-run-false
 
 DMTRootCA.pem
 .tool-versions
+/.python-version
