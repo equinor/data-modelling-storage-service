@@ -10,6 +10,7 @@ from domain_classes.blueprint import Blueprint
 from enums import StorageDataTypes
 from storage.repositories.azure_blob import AzureBlobStorageClient
 from storage.repositories.mongo import MongoDBClient
+from storage.repositories.sql import SQLRepository
 from storage.repository_interface import RepositoryInterface
 
 
@@ -50,10 +51,13 @@ class Repository(RepositoryInterface):
     @lru_cache(maxsize=config.CACHE_MAX_SIZE)
     def _get_client(get_blueprint, **kwargs):
         if kwargs["type"] == "mongo-db":
-            return MongoDBClient(**kwargs)
+            return MongoDBClient(**kwargs, get_blueprint=get_blueprint)
+
+        if kwargs["type"] == "sql":
+            return SQLRepository(**kwargs, get_blueprint=get_blueprint)
 
         if kwargs["type"] == "azure_blob":
-            return AzureBlobStorageClient(**kwargs)
+            return AzureBlobStorageClient(**kwargs, get_blueprint=get_blueprint)
 
         else:
             """Get the repository client from a plugin.
