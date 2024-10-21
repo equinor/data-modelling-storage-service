@@ -5,6 +5,7 @@ from common.providers.address_resolver.path_items import (
     IdItem,
     QueryItem,
 )
+from enums import SIMOS
 
 
 def _next_path_part(path: str) -> tuple[str, str | None, str]:
@@ -57,7 +58,7 @@ def _path_to_path_items(path: str, items, prev_deliminator) -> list[AttributeIte
     if "$" in content:  # By id
         items.append(IdItem(content[1:]))
     elif len(items) == 0:  # By root package
-        items.append(QueryItem(query=f"name={content},isRoot=True"))
+        items.append(QueryItem(query=f"name={content},isRoot=True,type={SIMOS.PACKAGE.value}"))
     elif prev_deliminator == "/":  # By package
         items.append(AttributeItem("content"))
         items.append(QueryItem(query=f"name={content}"))

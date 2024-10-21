@@ -12,6 +12,7 @@ services:
       AUTH_PROVIDER_FOR_ROLE_CHECK: AAD
     depends_on:
       - db
+      - db_postgres
       - redis
   db:
     image: mongo:5.0.9
@@ -19,6 +20,13 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: maf
       MONGO_INITDB_ROOT_PASSWORD: maf
+
+  db_postgres:
+    image: postgres:17-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=dmss
 
   redis:
     image: bitnami/redis:latest

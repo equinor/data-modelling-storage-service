@@ -1,4 +1,4 @@
-FROM python:3.12-slim as base
+FROM python:3.12-slim AS base
 WORKDIR /code
 ENTRYPOINT ["/code/src/init.sh"]
 CMD ["api"]
@@ -22,11 +22,11 @@ RUN chown -R 1000:1000 /code
 USER 1000
 RUN poetry config virtualenvs.in-project true
 
-FROM base as development
+FROM base AS development
 RUN poetry install
 COPY /src/.behaverc ./src/.behaverc
 COPY src ./src
 
-FROM base as prod
+FROM base AS prod
 RUN poetry install --no-dev
 COPY src ./src
