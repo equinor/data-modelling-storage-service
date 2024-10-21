@@ -47,7 +47,7 @@ repos:
           - --unsafe-fixes
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.6.1
+    rev: v1.12.1
     hooks:
       - id: mypy
         name: Type checking
@@ -62,4 +62,5 @@ repos:
       - id: pytest
         name: Unit Tests
         entry: sh -c "export PYTHONPATH=./src && .venv/bin/python -m pytest src/tests"
+        pass_filenames: false
         language: system

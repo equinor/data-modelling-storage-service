@@ -248,6 +248,7 @@ class GetDocumentResolveTestCase(unittest.TestCase):
             {
                 "_id": "1",
                 "name": "parts",
+                "type": SIMOS.PACKAGE.value,
                 "isRoot": True,
                 "content": [
                     {
