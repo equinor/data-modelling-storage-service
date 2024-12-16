@@ -74,7 +74,7 @@ class DocumentService:
         return create_default_storage_recipe()
 
     def invalidate_cache(self):
-        pass
+        self._blueprint_provider.invalidate_cache()
 
     def save_blob_data(self, node: Node, repository: DataSource) -> dict:
         """
