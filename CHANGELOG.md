@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.28.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.27.1...v1.28.0) (2024-12-16)
+
+
+### Features
+
+* Sevan SQL repository ([61fd855](https://github.com/equinor/data-modelling-storage-service/commit/61fd85584a2436b34ab1248865fb6a68bc21ce15))
+
+
+### Bug Fixes
+
+* invalidate BP cache on blueprint updates ([c62564a](https://github.com/equinor/data-modelling-storage-service/commit/c62564a1d4b2eafe8820df3b574f6c544af4fc17))
+
 ## [1.27.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.27.0...v1.27.1) (2024-05-23)
 
 
