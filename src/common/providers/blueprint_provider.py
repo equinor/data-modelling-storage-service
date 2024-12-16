@@ -116,6 +116,7 @@ class BlueprintProvider:
     def invalidate_cache(self):
         try:
             logger.debug("invalidate cache")
+            self.prefetched_blueprints = {}
             self.get_blueprint.cache_clear()
             self.get_blueprint_with_extended_attributes.cache_clear()
         except Exception as error:
