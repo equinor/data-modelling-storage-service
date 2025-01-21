@@ -23,10 +23,10 @@ USER 1000
 RUN poetry config virtualenvs.in-project true
 
 FROM base AS development
-RUN poetry install
+RUN poetry install --no-root
 COPY /src/.behaverc ./src/.behaverc
 COPY src ./src
 
 FROM base AS prod
-RUN poetry install --no-dev
+RUN poetry install --no-root --without dev
 COPY src ./src

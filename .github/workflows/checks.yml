@@ -33,7 +33,7 @@ jobs:
         run: |
           pip install poetry
           poetry config virtualenvs.in-project true
-          poetry install
+          poetry install --no-root
           pre-commit install --install-hooks
 
       - name: Run pre-commit
