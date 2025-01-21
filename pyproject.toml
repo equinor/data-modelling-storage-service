@@ -1,6 +1,6 @@
 [project]
 name = "data-modeling-storage-service"
-version = "1.28.0" # x-release-please-version
+version = "1.28.1" # x-release-please-version
 description = "A model based storage service"
 authors = [ { name = "Stig Ofstad", email = "stoo@equinor.com" }, { name = "Christopher Collin Løkken", email = "chcl@equinor.com" }, { name = "Eirik Ola Aksnes", email = "eaks@equinor.com" }]
 license = { text = "MIT" }

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.28.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.28.0...v1.28.1) (2025-01-21)
+
+
+### Code Refactoring
+
+* use poetry v2 ([6a156f1](https://github.com/equinor/data-modelling-storage-service/commit/6a156f1fcf36e727afa26a4a57fba88999e8547c))
+
 ## [1.28.0](https://github.com/equinor/data-modelling-storage-service/compare/v1.27.1...v1.28.0) (2024-12-16)
 
 
