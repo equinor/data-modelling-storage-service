@@ -2,10 +2,35 @@ from datetime import datetime
 from uuid import uuid4
 
 from fastapi import UploadFile
+from pydantic import BaseModel
 
 from authentication.models import User
 from enums import REFERENCE_TYPES, SIMOS
 from storage.internal.get_data_source_cached import get_data_source_cached
+
+
+class AddFileResponseModel(BaseModel):
+    _id: str
+    name: str
+    type: str
+    author: str
+    date: str
+    size: int
+    filetype: str
+    content: dict
+
+    @classmethod
+    def from_dict(cls, document: dict) -> "AddFileResponseModel":
+        return cls(
+            _id=document["_id"],
+            name=document["name"],
+            type=document["type"],
+            author=document["author"],
+            date=document["date"],
+            size=document["size"],
+            filetype=document["filetype"],
+            content=document["content"],
+        )
 
 
 async def add_file_use_case(data_source_id: str, file_id: str, file: UploadFile, user: User):
