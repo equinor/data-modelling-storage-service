@@ -11,7 +11,6 @@ from common.providers.storage_recipe_provider import storage_recipe_provider
 from common.responses import create_response, responses
 from services.document_service.document_service import DocumentService
 
-from .use_cases import add_raw_multiple_use_case
 from .use_cases.add_document_use_case import add_document_use_case
 from .use_cases.add_raw_multiple_use_case import add_raw_multiple_use_case
 from .use_cases.add_raw_use_case import add_raw_use_case
@@ -173,23 +172,23 @@ def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt
 @router.post(
     "-add-raw-multiple/{data_source_id}",
     operation_id="document_add_raw_multiple",
-    response_model=list[dict],
+    response_model=list[str],
     responses=responses,
 )
 @create_response(JSONResponse)
 def add_raw_multiple(data_source_id: str, documents: list[dict], user: User = Depends(auth_w_jwt_or_pat)):
-    """Adding a document 'as-is' to the data source, mainly used for bootstrapping and imports.
+    """Adding list of documents 'as-is' to the data source, mainly used for bootstrapping and imports.
 
-    This endpoint adds a document to the data source, without any validation or splitting up of entities.
+    This endpoint adds the documents to the data source, without any validation or splitting up of entities.
     A blueprint for the entity need not exist. Posted document must be a valid Entity, with a "type" defined.
 
     Args:
     - data_source_id (str): The ID of the data source where the document should be added.
-    - document (dict): The document to add to the data source.
+    - documents (list[dict]): The documents to be added to the data source.
     - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:
-    - str: ID of the document that was uploaded.
+    - list[str]: IDs of the documents that was uploaded.
     """
     return add_raw_multiple_use_case(user=user, documents=documents, data_source_id=data_source_id)
 
