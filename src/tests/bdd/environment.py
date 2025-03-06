@@ -1,7 +1,8 @@
+from results import print_overview_errors, print_overview_features
+
 from authentication.models import User
+from common.wipe_db import wipe_db
 from config import config
-from tests.bdd.results import print_overview_errors, print_overview_features
-from tests.test_helpers.wipe_db import wipe_db
 
 test_user = User(
     **{

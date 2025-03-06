@@ -4,9 +4,9 @@ import pprint
 from behave import then
 from deepdiff import DeepDiff
 from dictdiffer import diff
+from test_helpers.print_pygments import print_pygments
 
 from common.entity.find import find
-from tests.test_helpers.print_pygments import print_pygments
 
 STATUS_CODES = {
     "OK": 200,

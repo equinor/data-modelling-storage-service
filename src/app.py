@@ -21,13 +21,13 @@ from common.exceptions import ErrorResponse
 from common.utils.encryption import generate_key
 from common.utils.logging import logger
 from common.utils.package_import import import_package
+from common.wipe_db import wipe_db
 from config import config
 from features.lookup_table.use_cases.create_lookup_table import (
     create_lookup_table_use_case,
 )
 from restful.request_types.create_data_source import DataSourceRequest
 from storage.internal.data_source_repository import DataSourceRepository
-from tests.test_helpers.wipe_db import wipe_db
 
 server_root = "/api"
 
