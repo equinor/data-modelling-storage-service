@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/code/src
 
 # gettext package is needed for envsubst command used in init.sh
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y gettext
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y gettext gcc python3-dev
 
 RUN pip install --upgrade pip && \
     pip install poetry
