@@ -37,7 +37,7 @@ behave = "^1.2.6"
 terminaltables = "^3.1.10"
 deepdiff = "^5.8.1"
 pygments = "^2.16.1"
-pytest = "^7.4.3"
+pytest = "^8.3.5"
 dictdiffer = "^0.9.0"
 setuptools = "^68.2.2"
 icecream = "^2.1.3"
@@ -46,8 +46,17 @@ icecream = "^2.1.3"
 addopts = ["--ignore gen"]
 
 [tool.pytest.ini_options]
+# Makes pytest CLI discover markers and conftest settings:
+markers = [
+    "unit: mark a test as unit test.",
+    "integration: mark a test as integration test."
+]
+testpaths = [
+    "tests/unit",
+    "tests/integration"
+]
 pythonpath = [
-  "./src"
+    "src"
 ]
 
 [tool.ruff]
@@ -90,3 +99,4 @@ allow_redefinition = true
 [build-system]
 requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
+
