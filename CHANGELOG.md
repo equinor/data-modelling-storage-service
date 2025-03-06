@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.28.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.28.1...v1.28.2) (2025-03-06)
+
+
+### Bug Fixes
+
+* make behave run again ([978e21c](https://github.com/equinor/data-modelling-storage-service/commit/978e21cf27a12a25830aaa743148487068912a43))
+* make unit tests work again ([3d61cf8](https://github.com/equinor/data-modelling-storage-service/commit/3d61cf8fd53835b7a3342fe14dedc9944b91592d))
+
+
+### Code Refactoring
+
+* increase attempts caused by cosmos db rate limiting ([7992cd1](https://github.com/equinor/data-modelling-storage-service/commit/7992cd141c06d804adda3c756857d51698c4ebc6))
+
 ## [1.28.1](https://github.com/equinor/data-modelling-storage-service/compare/v1.28.0...v1.28.1) (2025-01-21)
 
 
