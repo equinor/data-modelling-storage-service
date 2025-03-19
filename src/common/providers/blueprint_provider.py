@@ -90,7 +90,12 @@ class BlueprintProvider:
             address = Address.from_absolute(type)
             data_source = self.get_data_source_cached(address.data_source)
             path_elements = address.path.split("/")
-            root_package = data_source.find({"name": path_elements[0], "type": SIMOS.PACKAGE.value, "isRoot": True})
+            query = {"name": path_elements[0], "type": SIMOS.PACKAGE.value, "isRoot": True}
+            root_package = data_source.find(query)
+            if not root_package:
+                # Sometimes the find query returns an empty list,
+                # even if the package exists, so need to call find query twice.
+                root_package = data_source.find(query)
             if not root_package:
                 raise NotFoundException(f"Could not find root package '{path_elements[0]}'")
             if len(root_package) > 1:
