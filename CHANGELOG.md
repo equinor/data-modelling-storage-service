@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.28.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.28.2...v1.28.3) (2025-03-28)
+
+
+### Bug Fixes
+
+* missing blueprint ([cc7633b](https://github.com/equinor/data-modelling-storage-service/commit/cc7633bb3fb0fcb71e9d060ef23b51784cc36ad6))
+
 ## [1.28.2](https://github.com/equinor/data-modelling-storage-service/compare/v1.28.1...v1.28.2) (2025-03-06)
 
 
