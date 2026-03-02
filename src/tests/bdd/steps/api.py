@@ -3,15 +3,17 @@ import mimetypes
 from pathlib import Path
 from time import sleep
 
-from behave import given, step, then, when
+from behave import given, step, then, use_step_matcher, when
 from fastapi.testclient import TestClient
 
 from authentication.mock_token_generator import generate_mock_token
 from authentication.models import User
 from config import config
 
+use_step_matcher("re")
 
-@step('i access the resource url "{url}"')
+
+@step('[iI] access the resource url "(?P<url>[^"]*)"')
 def step_access_url(context, url):
     from app import create_app
 
@@ -21,7 +23,7 @@ def step_access_url(context, url):
         context.headers = None
 
 
-@when('i make a "{method}" request with "{number_of_files}" files')
+@when('[iI] make a "(?P<method>[^"]*)" request with "(?P<number_of_files>[^"]*)" files')
 def step_make_file_request(context, method, number_of_files):
     # Parses the posted form-data. Converting everything to Dict[str, str]
     form_data = {k: json.dumps(v) if isinstance(v, dict) else str(v) for k, v in json.loads(context.text).items()}
@@ -39,7 +41,7 @@ def step_make_file_request(context, method, number_of_files):
             )
 
 
-@when('i make a form-data "{method}" request')
+@when('[iI] make a form-data "(?P<method>[^"]*)" request')
 def step_make_form_data_request(context, method):
     # These requests may contain files, so we use "multipart/form-data".
     # JSON must then be sent in the 'data' key part of the form
@@ -66,7 +68,7 @@ def step_make_form_data_request(context, method):
         raise Exception("A 'form-data' request must be either 'PUT' or 'POST'")
 
 
-@when('i make a "{method}" request')
+@when('[iI] make a "(?P<method>[^"]*)" request')
 def step_make_x_method_request(context, method):
     if method == "PUT":
         context.response = context.test_client.put(context.url, json=json.loads(context.text), headers=context.headers)
@@ -77,6 +79,9 @@ def step_make_x_method_request(context, method):
         context.response = context.test_client.get(context.url, headers=context.headers)
     elif method == "DELETE":
         context.response = context.test_client.delete(context.url, headers=context.headers)
+
+
+use_step_matcher("parse")
 
 
 @given('adding a binary file "{path}" to the request')

@@ -7,6 +7,7 @@ license = { text = "MIT" }
 
 [tool.poetry]
 requires-poetry = ">=2.0"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -42,10 +43,8 @@ dictdiffer = "^0.9.0"
 setuptools = "^82.0.0"
 icecream = "^2.1.3"
 
-[tool.pytest]
-addopts = ["--ignore gen"]
-
 [tool.pytest.ini_options]
+addopts = "--ignore gen"
 # Makes pytest CLI discover markers and conftest settings:
 markers = [
     "unit: mark a test as unit test.",
