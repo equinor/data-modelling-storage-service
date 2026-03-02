@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-python@v6
         with:
-          python-version: 3.7
+          python-version: 3.12
       - name: Install wheel and twine
         run: python -m pip install wheel twine --user
       - name: Set version env var
