@@ -32,7 +32,7 @@ sqlalchemy = "^2.0.35"
 psycopg2-binary = "^2.9.9"
 
 [tool.poetry.group.dev.dependencies]
-pydevd = "^2.10.0"
+pydevd = "^3.4.1"
 behave = "^1.2.6"
 terminaltables = "^3.1.10"
 deepdiff = "^8.6.1"
