@@ -123,49 +123,69 @@ azure-core = ">=1.24.0"
 opentelemetry-api = ">=1.12.0"
 
 [[package]]
+name = "azure-identity"
+version = "1.25.2"
+description = "Microsoft Azure Identity Library for Python"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "azure_identity-1.25.2-py3-none-any.whl", hash = "sha256:1b40060553d01a72ba0d708b9a46d0f61f56312e215d8896d836653ffdc6753d"},
+    {file = "azure_identity-1.25.2.tar.gz", hash = "sha256:030dbaa720266c796221c6cdbd1999b408c079032c919fef725fcc348a540fe9"},
+]
+
+[package.dependencies]
+azure-core = ">=1.31.0"
+cryptography = ">=2.5"
+msal = ">=1.31.0"
+msal-extensions = ">=1.2.0"
+typing-extensions = ">=4.0.0"
+
+[[package]]
 name = "azure-monitor-opentelemetry"
-version = "1.5.0"
+version = "1.8.2"
 description = "Microsoft Azure Monitor Opentelemetry Distro Client Library for Python"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "azure-monitor-opentelemetry-1.5.0.tar.gz", hash = "sha256:1a6cec5dbd031e5f4d5174b69a666107d2716fbe06696d62560e68dfd181b951"},
-    {file = "azure_monitor_opentelemetry-1.5.0-py3-none-any.whl", hash = "sha256:ab01528ff7ef92a40bdd4b970ffd2edd31d2d49ce7141d33210ab6ceefa98dbb"},
+    {file = "azure_monitor_opentelemetry-1.8.2-py3-none-any.whl", hash = "sha256:f7da4de1320486ce69a9e804fc5e5a5431643888afb1b7ded55d1fb80c89c9c0"},
+    {file = "azure_monitor_opentelemetry-1.8.2.tar.gz", hash = "sha256:efd9ac523a1bba06770a02ea2f98a383efd7035ff1d47c28e31e6cc73c99aa6a"},
 ]
 
 [package.dependencies]
 azure-core = ">=1.28.0,<2.0.0"
 azure-core-tracing-opentelemetry = ">=1.0.0b11,<1.1.0"
-azure-monitor-opentelemetry-exporter = ">=1.0.0b26,<1.1.0"
-opentelemetry-instrumentation-django = ">=0.42b0,<1.0"
-opentelemetry-instrumentation-fastapi = ">=0.42b0,<1.0"
-opentelemetry-instrumentation-flask = ">=0.42b0,<1.0"
-opentelemetry-instrumentation-psycopg2 = ">=0.42b0,<1.0"
-opentelemetry-instrumentation-requests = ">=0.42b0,<1.0"
-opentelemetry-instrumentation-urllib = ">=0.42b0,<1.0"
-opentelemetry-instrumentation-urllib3 = ">=0.42b0,<1.0"
-opentelemetry-resource-detector-azure = ">=0.1.4,<0.2.0"
+azure-monitor-opentelemetry-exporter = ">=1.0.0b43,<1.1.0"
+opentelemetry-instrumentation-django = ">=0.57b0,<1.0"
+opentelemetry-instrumentation-fastapi = ">=0.57b0,<1.0"
+opentelemetry-instrumentation-flask = ">=0.57b0,<1.0"
+opentelemetry-instrumentation-psycopg2 = ">=0.57b0,<1.0"
+opentelemetry-instrumentation-requests = ">=0.57b0,<1.0"
+opentelemetry-instrumentation-urllib = ">=0.57b0,<1.0"
+opentelemetry-instrumentation-urllib3 = ">=0.57b0,<1.0"
+opentelemetry-resource-detector-azure = ">=0.1.5,<1.0.0"
+opentelemetry-sdk = ">=1.36,<2.0"
 
 [[package]]
 name = "azure-monitor-opentelemetry-exporter"
-version = "1.0.0b27"
+version = "1.0.0b45"
 description = "Microsoft Azure Monitor Opentelemetry Exporter Client Library for Python"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "azure-monitor-opentelemetry-exporter-1.0.0b27.tar.gz", hash = "sha256:ee5eb0bb37c29da800cc479084f42181a98d7ad192a27a9b2fdd9cb9957320ad"},
-    {file = "azure_monitor_opentelemetry_exporter-1.0.0b27-py2.py3-none-any.whl", hash = "sha256:92f222e11415c6606588be0166b02ba4970159c6bf016160a2023b3713db9f31"},
+    {file = "azure_monitor_opentelemetry_exporter-1.0.0b45-py2.py3-none-any.whl", hash = "sha256:10d6363ac971fb4530511df464898fe69c0499e85841febad800572d1e8e8ec6"},
+    {file = "azure_monitor_opentelemetry_exporter-1.0.0b45.tar.gz", hash = "sha256:b2d495b318710c521d6611cfb9cb4b36d990e3d613cf10ebdaa957099ddbe351"},
 ]
 
 [package.dependencies]
 azure-core = ">=1.28.0,<2.0.0"
-fixedint = "0.1.6"
+azure-identity = ">=1.17,<2.0"
 msrest = ">=0.6.10"
-opentelemetry-api = ">=1.21,<2.0"
-opentelemetry-sdk = ">=1.21,<2.0"
-psutil = ">=5.9,<6.0"
+opentelemetry-api = ">=1.35,<2.0"
+opentelemetry-sdk = ">=1.35,<2.0"
+psutil = ">=5.9,<8"
 
 [[package]]
 name = "azure-storage-blob"
@@ -692,19 +712,6 @@ standard = ["email-validator (>=2.0.0)", "fastapi-cli[standard] (>=0.0.8)", "htt
 standard-no-fastapi-cloud-cli = ["email-validator (>=2.0.0)", "fastapi-cli[standard-no-fastapi-cloud-cli] (>=0.0.8)", "httpx (>=0.23.0,<1.0.0)", "jinja2 (>=3.1.5)", "pydantic-extra-types (>=2.0.0)", "pydantic-settings (>=2.0.0)", "python-multipart (>=0.0.18)", "uvicorn[standard] (>=0.12.0)"]
 
 [[package]]
-name = "fixedint"
-version = "0.1.6"
-description = "simple fixed-width integers"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "fixedint-0.1.6-py2-none-any.whl", hash = "sha256:41953193f08cbe984f584d8513c38fe5eea5fbd392257433b2210391c8a21ead"},
-    {file = "fixedint-0.1.6-py3-none-any.whl", hash = "sha256:b8cf9f913735d2904deadda7a6daa9f57100599da1de57a7448ea1be75ae8c9c"},
-    {file = "fixedint-0.1.6.tar.gz", hash = "sha256:703005d090499d41ce7ce2ee7eae8f7a5589a81acdc6b79f1728a56495f2c799"},
-]
-
-[[package]]
 name = "greenlet"
 version = "3.3.2"
 description = "Lightweight in-process concurrent programming"
@@ -1022,6 +1029,44 @@ files = [
     {file = "isodate-0.7.2-py3-none-any.whl", hash = "sha256:28009937d8031054830160fce6d409ed342816b543597cece116d966c6d99e15"},
     {file = "isodate-0.7.2.tar.gz", hash = "sha256:4cd1aa0f43ca76f4a6c6c0292a85f40b35ec2e43e315b59f06e6d32171a953e6"},
 ]
+
+[[package]]
+name = "msal"
+version = "1.35.0"
+description = "The Microsoft Authentication Library (MSAL) for Python library enables your app to access the Microsoft Cloud by supporting authentication of users with Microsoft Azure Active Directory accounts (AAD) and Microsoft Accounts (MSA) using industry standard OAuth2 and OpenID Connect."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "msal-1.35.0-py3-none-any.whl", hash = "sha256:baf268172d2b736e5d409689424d2f321b4142cab231b4b96594c86762e7e01d"},
+    {file = "msal-1.35.0.tar.gz", hash = "sha256:76ab7513dbdac88d76abdc6a50110f082b7ed3ff1080aca938c53fc88bc75b51"},
+]
+
+[package.dependencies]
+cryptography = ">=2.5,<49"
+PyJWT = {version = ">=1.0.0,<3", extras = ["crypto"]}
+requests = ">=2.0.0,<3"
+
+[package.extras]
+broker = ["pymsalruntime (>=0.14,<0.21) ; python_version >= \"3.8\" and platform_system == \"Windows\"", "pymsalruntime (>=0.17,<0.21) ; python_version >= \"3.8\" and platform_system == \"Darwin\"", "pymsalruntime (>=0.18,<0.21) ; python_version >= \"3.8\" and platform_system == \"Linux\""]
+
+[[package]]
+name = "msal-extensions"
+version = "1.3.1"
+description = "Microsoft Authentication Library extensions (MSAL EX) provides a persistence API that can save your data on disk, encrypted on Windows, macOS and Linux. Concurrent data access will be coordinated by a file lock mechanism."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "msal_extensions-1.3.1-py3-none-any.whl", hash = "sha256:96d3de4d034504e969ac5e85bae8106c8373b5c6568e4c8fa7af2eca9dbe6bca"},
+    {file = "msal_extensions-1.3.1.tar.gz", hash = "sha256:c5b0fd10f65ef62b5f1d62f4251d51cbcaf003fcedae8c91b040a488614be1a4"},
+]
+
+[package.dependencies]
+msal = ">=1.29,<2"
+
+[package.extras]
+portalocker = ["portalocker (>=1.4,<4)"]
 
 [[package]]
 name = "msrest"
@@ -1899,6 +1944,27 @@ test = ["cffi (>=1.17.0)", "flaky", "greenlet (>=3)", "ipython", "pytest", "pyte
 types = ["typing_extensions"]
 
 [[package]]
+name = "pyjwt"
+version = "2.11.0"
+description = "JSON Web Token implementation in Python"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "pyjwt-2.11.0-py3-none-any.whl", hash = "sha256:94a6bde30eb5c8e04fee991062b534071fd1439ef58d2adc9ccb823e7bcd0469"},
+    {file = "pyjwt-2.11.0.tar.gz", hash = "sha256:35f95c1f0fbe5d5ba6e43f00271c275f7a1a4db1dab27bf708073b75318ea623"},
+]
+
+[package.dependencies]
+cryptography = {version = ">=3.4.0", optional = true, markers = "extra == \"crypto\""}
+
+[package.extras]
+crypto = ["cryptography (>=3.4.0)"]
+dev = ["coverage[toml] (==7.10.7)", "cryptography (>=3.4.0)", "pre-commit", "pytest (>=8.4.2,<9.0.0)", "sphinx", "sphinx-rtd-theme", "zope.interface"]
+docs = ["sphinx", "sphinx-rtd-theme", "zope.interface"]
+tests = ["coverage[toml] (==7.10.7)", "pytest (>=8.4.2,<9.0.0)"]
+
+[[package]]
 name = "pymongo"
 version = "4.16.0"
 description = "PyMongo - the Official MongoDB Python driver"
@@ -2487,4 +2553,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "6ee4b9f36ec707245c04842cbc61eca3f1d2918d233bb6baba256db1083ec1b7"
+content-hash = "f08402836467bcd8f45f92d6ae6bc744446c6ebef04865be6e8b692f387665cd"
