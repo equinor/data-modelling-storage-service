@@ -27,7 +27,7 @@ azure-monitor-opentelemetry = "^1.2.0"
 opentelemetry-instrumentation-fastapi = "^0.43b0"
 pyinstrument = "4.6.2"
 pydantic-settings = "^2.2.1"
-redis = {extras = ["hiredis"], version = "^5.0.4"}
+redis = {extras = ["hiredis"], version = "^7.2.1"}
 sqlalchemy = "^2.0.35"
 psycopg2-binary = "^2.9.9"
 
