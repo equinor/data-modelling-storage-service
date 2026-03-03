@@ -11,6 +11,11 @@ on:
         description: "The release tag. Ex v1.4.0"
         value: ${{ jobs.release-please.outputs.tag_name }}
 
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
 jobs:
   release-please:
     runs-on: ubuntu-latest

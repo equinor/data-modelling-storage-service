@@ -5,6 +5,11 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
 jobs:
   checks:
     uses: ./.github/workflows/checks.yml

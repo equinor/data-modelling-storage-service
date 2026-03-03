@@ -10,6 +10,9 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: read
+
 jobs:
   build-n-publish:
     name: Publish DMSS API package to PyPI

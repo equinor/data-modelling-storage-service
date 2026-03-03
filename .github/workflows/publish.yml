@@ -11,6 +11,9 @@ on:
       DOCKER_PASSWORD:
         required: true
 
+permissions:
+  contents: read
+
 env:
   DOCKER_IMAGE: datamodelingtool.azurecr.io/dmss
   IMAGE_REGISTRY: datamodelingtool.azurecr.io
