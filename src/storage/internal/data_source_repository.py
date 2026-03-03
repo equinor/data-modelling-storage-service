@@ -64,7 +64,7 @@ class DataSourceRepository:
 
     def create(self, id: str, document: DataSourceRequest):
         assert_user_has_access(AccessControlList.default(), AccessLevel.WRITE, self.user)
-        document = document.dict()
+        document = document.to_dict()
         document["_id"] = id
         self.validate_data_source(document)
         data_source_db.set(id, document)
