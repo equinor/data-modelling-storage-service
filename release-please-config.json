@@ -68,7 +68,8 @@
   ],
   "packages": {
     ".": {
-      "package-name": "@development-framework/data-modelling-storage-service"
+      "package-name": "@development-framework/data-modelling-storage-service",
+      "include-component-in-tag": false
     }
   }
 }
