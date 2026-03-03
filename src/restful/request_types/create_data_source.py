@@ -17,9 +17,9 @@ class Repository(BaseModel, use_enum_values=True):  # type: ignore
     container: str | None = None
     tls: bool | None = True
 
-    def dict(self) -> dict:
+    def to_dict(self) -> dict:
         return {
-            **dict(self),
+            **super().model_dump(),
             "password": encrypt(self.password) if self.password else None,
             "account_url": encrypt(self.account_url) if self.account_url else None,
         }
@@ -29,8 +29,8 @@ class DataSourceRequest(BaseModel):
     name: str
     repositories: dict[str, Repository]
 
-    def dict(self) -> dict:
+    def to_dict(self) -> dict:
         return {
             "name": self.name,
-            "repositories": {k: v.dict() for k, v in self.repositories.items()},
+            "repositories": {k: v.to_dict() for k, v in self.repositories.items()},
         }
