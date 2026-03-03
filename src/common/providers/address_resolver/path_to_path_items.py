@@ -28,7 +28,7 @@ def path_to_path_items(path: str) -> list[AttributeItem | QueryItem | IdItem]:
     """Split up the path into path items.
     The path used as input to this function should not include protocol or data source.
     """
-    queries = re.findall(r"\(([^\)]+)\)", path)
+    queries = re.findall(r"\(([^()]+)\)", path)
     if queries:
         # Split the path into the pieces surrounding the queries and remove trailing [( and )]
         remaining_ref_parts = re.split("|".join([re.escape(q) for q in queries]), path)
