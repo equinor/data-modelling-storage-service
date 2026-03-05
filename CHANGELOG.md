@@ -1,5 +1,64 @@
 # Changelog
 
+## [1.28.4](https://github.com/equinor/data-modelling-storage-service/compare/v1.28.3...v1.28.4) (2026-03-05)
+
+
+### Bug Fixes
+
+* dont add package-name in release version ([db56ae9](https://github.com/equinor/data-modelling-storage-service/commit/db56ae911045e39a59931575bceffc58b85aaf38))
+* regex pattern to prevent DOS attack ([a272754](https://github.com/equinor/data-modelling-storage-service/commit/a2727549697e7430c94634af4d30b575efea3460))
+
+
+### Miscellaneous Chores
+
+* merge pytest init options ([bddb4ae](https://github.com/equinor/data-modelling-storage-service/commit/bddb4ae6f3faf6ecac9a8594ca88fe71e684e877))
+* use non-deprecated release please action ([3e2e9f9](https://github.com/equinor/data-modelling-storage-service/commit/3e2e9f92dff679759109480f3307c4e2fa256bcb))
+
+
+### Code Refactoring
+
+* rename dict method to to_dict in Repository and DataSourceRequest classes ([2c76059](https://github.com/equinor/data-modelling-storage-service/commit/2c76059b27de1ae452bf306cb1da3d93acf9db20))
+
+
+### Build System
+
+* add pre-commit to poetry dev group ([65fa3a0](https://github.com/equinor/data-modelling-storage-service/commit/65fa3a00061a62190316ab1d7db4197ecc918dcc))
+* **deps-dev:** bump deepdiff from 5.8.1 to 8.6.1 ([6791ecb](https://github.com/equinor/data-modelling-storage-service/commit/6791ecb7ede60597d4bf6414d1862a7190b39ebd))
+* **deps-dev:** bump pydevd from 2.10.0 to 3.4.1 ([1ec4f77](https://github.com/equinor/data-modelling-storage-service/commit/1ec4f774c90849355f3fef408f350d66813d540d))
+* **deps-dev:** bump pytest from 8.3.5 to 9.0.2 ([afe1a60](https://github.com/equinor/data-modelling-storage-service/commit/afe1a600fab16e6d9f168478bd1ae498743ae746))
+* **deps-dev:** bump setuptools from 68.2.2 to 82.0.0 ([6838fe0](https://github.com/equinor/data-modelling-storage-service/commit/6838fe076bcb7cb06d68af5711e708099ba3c06a))
+* **deps:** bump actions/cache from 3 to 5 ([f3aee94](https://github.com/equinor/data-modelling-storage-service/commit/f3aee9414028c993365c18378b90a4d5027cdcd7))
+* **deps:** bump actions/setup-python from 1 to 6 ([85aeff2](https://github.com/equinor/data-modelling-storage-service/commit/85aeff27f66b708bca5a95ca2e7a3f8dd4502eb9))
+* **deps:** bump actions/stale from 1 to 10 ([1638876](https://github.com/equinor/data-modelling-storage-service/commit/1638876c1a269bd8634c669eca9aeb82b86da3c7))
+* **deps:** bump aiofiles from 0.7.0 to 25.1.0 ([1c2ffd8](https://github.com/equinor/data-modelling-storage-service/commit/1c2ffd81925d739cf48bdf7aa7d99e1e6d8ba0d1))
+* **deps:** bump azure-core from 1.32.0 to 1.38.0 ([ed6f627](https://github.com/equinor/data-modelling-storage-service/commit/ed6f627ae4d21f6624f7b240b961d0536fa020a4))
+* **deps:** bump azure-monitor-opentelemetry in the api group ([e25293c](https://github.com/equinor/data-modelling-storage-service/commit/e25293cff92eef31981a9f3e9d7487aff8690415))
+* **deps:** bump cachetools from 5.5.2 to 7.0.1 ([7cb6a38](https://github.com/equinor/data-modelling-storage-service/commit/7cb6a38230eb68f73ac7689f60f14990accbb0e0))
+* **deps:** bump cffi from 1.17.1 to 2.0.0 ([f44ae8c](https://github.com/equinor/data-modelling-storage-service/commit/f44ae8c113a31c1520609e689af39f5f63f9fa0b))
+* **deps:** bump cryptography from 42.0.8 to 45.0.7 ([e6b33ce](https://github.com/equinor/data-modelling-storage-service/commit/e6b33ce5139f30d2ddc4ec75ef702f6f2f1df1f5))
+* **deps:** bump cryptography from 45.0.7 to 46.0.5 ([4907c3f](https://github.com/equinor/data-modelling-storage-service/commit/4907c3f7bd82fa163f9583dca7fdec3cbbffc79d))
+* **deps:** bump ecdsa from 0.19.0 to 0.19.1 ([d25beab](https://github.com/equinor/data-modelling-storage-service/commit/d25beab575fbb4647095c8ae930bb24be6eeb0d3))
+* **deps:** bump google-github-actions/release-please-action ([60a0383](https://github.com/equinor/data-modelling-storage-service/commit/60a0383d75d0fce2eb422fc4e4f9029a3fa2096c))
+* **deps:** bump h11 from 0.14.0 to 0.16.0 ([a076505](https://github.com/equinor/data-modelling-storage-service/commit/a0765058ca13650e4f552d05b925302448dad97a))
+* **deps:** bump pyinstrument from 4.6.2 to 5.1.2 ([8f6796b](https://github.com/equinor/data-modelling-storage-service/commit/8f6796bd51d38bcab399779f449cc864afb40f32))
+* **deps:** bump python from 3.12-slim to 3.14-slim in the docker group ([9bb0c64](https://github.com/equinor/data-modelling-storage-service/commit/9bb0c6432b2b98c4cda9114b77a4c07f8a3087e8))
+* **deps:** bump python-multipart from 0.0.9 to 0.0.22 ([8f1ecfd](https://github.com/equinor/data-modelling-storage-service/commit/8f1ecfd06f448bdc96ebe93ddfd342bd4f9f6272))
+* **deps:** bump redis from 5.2.1 to 7.2.1 ([1474aed](https://github.com/equinor/data-modelling-storage-service/commit/1474aed0b17db95cabaf4c5686d3718b94eda1fd))
+* **deps:** bump requests from 2.32.3 to 2.32.4 ([fc147a8](https://github.com/equinor/data-modelling-storage-service/commit/fc147a8686f94aa1057a7476cd68b74bb8418f85))
+* **deps:** bump the api group across 1 directory with 5 updates ([78e992f](https://github.com/equinor/data-modelling-storage-service/commit/78e992f7034da4532c15bf0d5a591952092a4149))
+* **deps:** bump the api group with 2 updates ([0c6377c](https://github.com/equinor/data-modelling-storage-service/commit/0c6377ce9940adad3bd213db32e63d41b454bb5a))
+* **deps:** bump urllib3 from 2.3.0 to 2.6.3 ([ec93b1a](https://github.com/equinor/data-modelling-storage-service/commit/ec93b1a612868f93c6d3414adf14b88ea2937ff1))
+
+
+### Continuous Integration
+
+* add api group to dependabot config ([3c5e206](https://github.com/equinor/data-modelling-storage-service/commit/3c5e206765957cc11373b3b9eefc2694a0773690))
+* add dependabot config ([1c32c43](https://github.com/equinor/data-modelling-storage-service/commit/1c32c4394eb1d3552175a4d18071f9f3df1ed0ec))
+* add docker and gh actions ecosystems + pr limit ([76e1f5d](https://github.com/equinor/data-modelling-storage-service/commit/76e1f5d83e2312fc373077b2e03c5a582a0760ac))
+* added permissions for all GH workflows ([d28690c](https://github.com/equinor/data-modelling-storage-service/commit/d28690c1c54cfd101c139d1f4c3988bb3883b3c4))
+* update to python3.12 in publish-to-pypi gh wf ([711757f](https://github.com/equinor/data-modelling-storage-service/commit/711757fbd5697b438ffe70f49187404baf93e688))
+* use new release-please style for config ([d670a64](https://github.com/equinor/data-modelling-storage-service/commit/d670a64b9d7458b02330970df3c4175c5e331c6b))
+
 ## [1.28.3](https://github.com/equinor/data-modelling-storage-service/compare/v1.28.2...v1.28.3) (2025-03-28)
 
 
