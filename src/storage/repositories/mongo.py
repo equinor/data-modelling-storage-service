@@ -1,7 +1,7 @@
 from time import sleep
 
 import gridfs
-from pymongo import MongoClient
+from pymongo import MongoClient, ReplaceOne
 from pymongo.errors import DuplicateKeyError, OperationFailure, WriteError
 
 from common.exceptions import BadRequestException, NotFoundException
@@ -76,6 +76,25 @@ class MongoDBClient(RepositoryInterface):
 
     def find_one(self, filters: dict) -> dict | None:
         return self.handler[self.collection].find_one(filter=filters)
+
+    def bulk_update(self, documents: list[dict]) -> bool:
+        """Replace (upsert) many documents in a single round trip to the database."""
+        if not documents:
+            return True
+        operations = [ReplaceOne({"_id": document["_id"]}, document, upsert=True) for document in documents]
+        attempts = 0
+        max_sleep_time = 30  # Maximum sleep time in seconds
+        while attempts < 50:
+            attempts += 1
+            try:
+                return self.handler[self.collection].bulk_write(operations, ordered=False).acknowledged
+            except (WriteError, OperationFailure) as ex:
+                sleep_time = min(2**attempts, max_sleep_time)
+                sleep(sleep_time)
+                if attempts >= 6:
+                    logger.debug("Retries exceeded, raising error")
+                    raise ex
+        raise NotFoundException(", ".join(document["_id"] for document in documents))
 
     def update_blob(self, uid: str, blob: bytearray):
         attempts = 0

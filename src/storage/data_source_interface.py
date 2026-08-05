@@ -12,7 +12,7 @@ from enums import StorageDataTypes
 class DataSource(ABC):
     @classmethod
     @abstractmethod
-    def from_dict(cls, a_dict, user: User):
+    def from_dict(cls, a_dict, user: User, get_blueprint):
         ...
 
     @abstractmethod
@@ -58,6 +58,12 @@ class DataSource(ABC):
     @abstractmethod
     def update(
         self, document: dict, storage_attribute: StorageAttribute = None, parent_id: str | None = None, **kwargs
+    ) -> None:
+        ...
+
+    @abstractmethod
+    def update_many(
+        self, documents: list[dict], storage_attribute: StorageAttribute = None, parent_id: str | None = None
     ) -> None:
         ...
 

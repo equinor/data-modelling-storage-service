@@ -12,6 +12,7 @@ from common.responses import create_response, responses
 from services.document_service.document_service import DocumentService
 
 from .use_cases.add_document_use_case import add_document_use_case
+from .use_cases.add_raw_bulk_use_case import add_raw_bulk_use_case
 from .use_cases.add_raw_use_case import add_raw_use_case
 from .use_cases.check_exsistence_use_case import check_existence_use_case
 from .use_cases.get_document_use_case import get_document_use_case
@@ -166,6 +167,30 @@ def add_raw(data_source_id: str, document: dict, user: User = Depends(auth_w_jwt
     - str: ID of the document that was uploaded.
     """
     return add_raw_use_case(user=user, document=document, data_source_id=data_source_id)
+
+
+@router.post(
+    "-add-raw-bulk/{data_source_id}",
+    operation_id="document_add_simple_bulk",
+    response_model=list[str],
+    responses=responses,
+)
+@create_response(JSONResponse)
+def add_raw_bulk(data_source_id: str, documents: list[dict], user: User = Depends(auth_w_jwt_or_pat)):
+    """Add many documents 'as-is' to the data source, mainly used for bootstrapping and imports.
+
+    This is the batched equivalent of 'documents-add-raw'. Sending many documents in one request avoids
+    paying the per-request overhead for every single document, which makes large imports considerably faster.
+
+    Args:
+    - data_source_id (str): The ID of the data source where the documents should be added.
+    - documents (list[dict]): The documents to add to the data source.
+    - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
+
+    Returns:
+    - list[str]: IDs of the documents that were uploaded, in the same order as they were posted.
+    """
+    return add_raw_bulk_use_case(user=user, documents=documents, data_source_id=data_source_id)
 
 
 @router.delete("/{address:path}", operation_id="document_remove", responses=responses)

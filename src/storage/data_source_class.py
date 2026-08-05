@@ -126,6 +126,64 @@ class DataSource:
                     pass
         return documents_with_access
 
+    @staticmethod
+    def _assert_valid_name(document: dict) -> None:
+        if (name := document.get("name")) and not url_safe_name(name):
+            raise BadRequestException(
+                f"'{name}' is a invalid document name. Only alphanumeric,"
+                + " underscore, and dash are allowed characters"
+            )
+
+    def _parent_acl(self, parent_id: str | None) -> AccessControlList:
+        """The access control list a new document inherits, the data source's own if it has no parent."""
+        if parent_root_uid := parent_id.split(".")[0] if parent_id else None:
+            try:  # If parent_id passed, try to get its lookup
+                return self._lookup(parent_root_uid).acl
+            except NotFoundException:  # The parent has not yet been created.
+                pass
+        return self.acl
+
+    def _new_lookup(
+        self, document_id: str, parent_acl: AccessControlList, storage_attribute: StorageAttribute = None
+    ) -> DocumentLookUp:
+        """Build the lookup a document that does not yet exist will be read and access checked by."""
+        # Before inserting a new lookUp, check permissions on parent resource
+        assert_user_has_access(parent_acl, AccessLevel.WRITE, self.user)
+        repo = self._get_repo_from_storage_attribute(storage_attribute)
+        return DocumentLookUp(
+            lookup_id=document_id,
+            repository=repo.name,
+            database_id=document_id,
+            acl=AccessControlList(
+                owner=self.user.user_id,
+                roles=parent_acl.roles,
+                users=parent_acl.users,
+                others=parent_acl.others,
+            ),
+            storage_affinity=StorageDataTypes.DEFAULT.value,
+            meta={"created": f"{datetime.now()}"},
+        )
+
+    def _lookup_for_update(
+        self, document: dict, storage_attribute: StorageAttribute = None, parent_id: str | None = None
+    ) -> DocumentLookUp:
+        """Find the lookup a document is written through, creating one if the document is new.
+
+        Shared by 'update' and 'update_many' so that a document is named, given an id, and given an
+        inherited access control list in one place, however many documents are being written.
+        """
+        self._assert_valid_name(document)
+        document["_id"] = document.get("_id", str(uuid4()))  # Create _id if not yet created
+
+        try:  # Get the documents lookup
+            lookup = self._lookup(document["_id"])
+        except NotFoundException:  # No lookup found --> Create a new document
+            lookup = self._new_lookup(document["_id"], self._parent_acl(parent_id), storage_attribute)
+            self._update_lookup(lookup)
+
+        assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
+        return lookup
+
     def update(
         self, document: dict, storage_attribute: StorageAttribute = None, parent_id: str | None = None, **kwargs
     ) -> None:
@@ -136,54 +194,74 @@ class DataSource:
         :param parent_id: Needed when adding a new child document that should inherit ACL.
         :return: None
         """
-        if name := document.get("name"):
-            if not url_safe_name(name):
-                raise BadRequestException(
-                    f"'{name}' is a invalid document name. Only alphanumeric,"
-                    + " underscore, and dash are allowed characters"
-                )
-
-        document["_id"] = document.get("_id", str(uuid4()))  # Create _id if not yet created
-
-        try:  # Get the documents lookup
-            lookup = self._lookup(document["_id"])
-        except NotFoundException:  # No lookup found --> Create a new document
-            parent_lookup = None
-
-            if parent_root_uid := parent_id.split(".")[0] if parent_id else None:
-                try:  # If parent_id passed, try to get its lookup
-                    parent_lookup = self._lookup(parent_root_uid)
-                except NotFoundException:  # The parent has not yet been created.
-                    pass
-
-            parent_acl = parent_lookup.acl if parent_lookup else self.acl  # If no parentLookup, use DataSource default
-            # Before inserting a new lookUp, check permissions on parent resource
-            assert_user_has_access(parent_acl, AccessLevel.WRITE, self.user)
-            repo = self._get_repo_from_storage_attribute(storage_attribute)
-            document_owner = self.user
-            acl: AccessControlList = AccessControlList(
-                owner=document_owner.user_id,
-                roles=parent_acl.roles,
-                users=parent_acl.users,
-                others=parent_acl.others,
-            )
-            meta = {
-                "created": f"{datetime.now()}",
-            }
-            lookup = DocumentLookUp(
-                lookup_id=document["_id"],
-                repository=repo.name,
-                database_id=document["_id"],
-                acl=acl,
-                storage_affinity=StorageDataTypes.DEFAULT.value,
-                meta=meta,
-            )
-            self._update_lookup(lookup)
-
-        repo = self.repositories[lookup.repository]
-        assert_user_has_access(lookup.acl, AccessLevel.WRITE, self.user)
-        repo.update(document["_id"], document)
+        lookup = self._lookup_for_update(document, storage_attribute, parent_id)
+        self.repositories[lookup.repository].update(document["_id"], document)
         self.document_cache.set(f"{self.name}:{document['_id']}", document, DOCUMENT_CACHE_TTL)
+
+    def _lookups(self, document_ids: list[str]) -> dict[str, DocumentLookUp]:
+        """Read the lookups of many documents in one round trip. Documents that have none are left out."""
+        values = self.acl_lookup_db.get_many([f"{self.name}:{document_id}" for document_id in document_ids])
+        return {
+            document_id: DocumentLookUp(**value)
+            for document_id, value in zip(document_ids, values, strict=False)
+            if value
+        }
+
+    def update_many(
+        self, documents: list[dict], storage_attribute: StorageAttribute = None, parent_id: str | None = None
+    ) -> None:
+        """Create or update many documents, in a fixed number of round trips rather than one per document.
+
+        See 'update' for a single document. Writing a document one at a time costs four round trips
+        each: reading its lookup, writing its lookup, writing the document, and caching it. Eighty
+        documents, the size of one package of an application import, therefore cost three hundred and
+        twenty. Here every lookup is read at once, the new ones are written at once, the documents are
+        written once per repository, and they are cached at once, which is four round trips whether
+        there are eighty documents or eight hundred.
+        """
+        if not documents:
+            return
+
+        for document in documents:
+            self._assert_valid_name(document)
+            document["_id"] = document.get("_id", str(uuid4()))  # Create _id if not yet created
+
+        document_ids = [document["_id"] for document in documents]
+        lookups = self._lookups(document_ids)
+
+        parent_acl: AccessControlList | None = None
+        new_lookups: dict[str, dict] = {}
+        for document_id in document_ids:
+            if document_id in lookups:
+                continue
+            if parent_acl is None:  # Every document in a call shares a parent, so it is resolved once
+                parent_acl = self._parent_acl(parent_id)
+            lookups[document_id] = self._new_lookup(document_id, parent_acl, storage_attribute)
+            new_lookups[f"{self.name}:{document_id}"] = lookups[document_id].dict()
+
+        for document_id in document_ids:
+            assert_user_has_access(lookups[document_id].acl, AccessLevel.WRITE, self.user)
+
+        # Written before the documents, as the single document path does, so that a write which fails
+        # part way cannot leave documents behind that have no lookup to read them by.
+        self.acl_lookup_db.set_many(new_lookups)
+
+        documents_per_repository: dict[str, list[dict]] = {}
+        for document in documents:
+            documents_per_repository.setdefault(lookups[document["_id"]].repository, []).append(document)
+
+        for repository_name, repository_documents in documents_per_repository.items():
+            self.repositories[repository_name].bulk_update(repository_documents)
+
+        # Follows the repository write, as the single document path does, so that a reader which
+        # missed just before the write cannot leave the body it read behind in the cache. Caching
+        # what was written costs one round trip rather than one per document now, and the caller
+        # that writes a package goes on to validate it, reading every document straight back; a
+        # reader that misses pays a repository read and a cache write, so filling the cache here
+        # costs less than leaving it empty for all but the largest package of an application.
+        self.document_cache.set_many(
+            {f"{self.name}:{document['_id']}": document for document in documents}, DOCUMENT_CACHE_TTL
+        )
 
     def update_blob(self, uid: str, filename: str, content_type: str, file) -> None:
         repo = self._get_repo_from_storage_attribute(
