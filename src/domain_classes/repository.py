@@ -23,6 +23,9 @@ class Repository(RepositoryInterface):
     def update(self, uid: str, document: dict) -> bool:
         return self.client.update(uid, document)
 
+    def bulk_update(self, documents: list[dict]) -> bool:
+        return self.client.bulk_update(documents)
+
     def get(self, uid: str) -> dict:
         return self.client.get(uid)
 

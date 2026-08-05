@@ -17,6 +17,10 @@ class RepositoryInterface(ABC):
     def update(self, uid: str, document: dict, **kwargs) -> bool:
         """Update method to be implemented"""
 
+    def bulk_update(self, documents: list[dict]) -> bool:
+        """Update many documents. Override this where the backend can do it in one round trip."""
+        return all(self.update(document["_id"], document) for document in documents)
+
     @abstractmethod
     def get(self, uid: str) -> dict:
         """Get method to be implemented"""
