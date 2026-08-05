@@ -2,7 +2,7 @@ from time import sleep
 
 import gridfs
 from pymongo import MongoClient, ReplaceOne
-from pymongo.errors import DuplicateKeyError, OperationFailure, WriteError
+from pymongo.errors import ConnectionFailure, DuplicateKeyError, OperationFailure, WriteError
 
 from common.exceptions import BadRequestException, NotFoundException
 from common.utils.encryption import decrypt
@@ -78,23 +78,32 @@ class MongoDBClient(RepositoryInterface):
         return self.handler[self.collection].find_one(filter=filters)
 
     def bulk_update(self, documents: list[dict]) -> bool:
-        """Replace (upsert) many documents in a single round trip to the database."""
+        """Replace (upsert) many documents in a single round trip to the database.
+
+        'ConnectionFailure' covers the network faults ('AutoReconnect', 'NetworkTimeout',
+        'ServerSelectionTimeoutError') that the driver will not retry for us, because the client is
+        built with 'retryWrites=False'. 'OperationFailure' already covers 'BulkWriteError', which is
+        what a partially applied batch raises. Replaying is safe either way: every operation is an
+        upsert by '_id', so re-sending one that already succeeded writes the same document again.
+
+        The last attempt raises the fault it met instead of sleeping first, so a batch that is going
+        to fail is not held for a backoff that buys no further attempt. Re-raising bare keeps the
+        traceback pointing at the driver call that failed rather than at this loop.
+        """
         if not documents:
             return True
         operations = [ReplaceOne({"_id": document["_id"]}, document, upsert=True) for document in documents]
-        attempts = 0
+        max_attempts = 6
         max_sleep_time = 30  # Maximum sleep time in seconds
-        while attempts < 50:
-            attempts += 1
+        for attempt in range(1, max_attempts + 1):
             try:
                 return self.handler[self.collection].bulk_write(operations, ordered=False).acknowledged
-            except (WriteError, OperationFailure) as ex:
-                sleep_time = min(2**attempts, max_sleep_time)
-                sleep(sleep_time)
-                if attempts >= 6:
-                    logger.debug("Retries exceeded, raising error")
-                    raise ex
-        raise NotFoundException(", ".join(document["_id"] for document in documents))
+            except (WriteError, OperationFailure, ConnectionFailure):
+                if attempt == max_attempts:
+                    logger.debug(f"Bulk write of {len(documents)} documents failed {attempt} times, raising error")
+                    raise
+                sleep(min(2**attempt, max_sleep_time))
+        raise AssertionError("Unreachable: the final attempt either returns or raises")
 
     def update_blob(self, uid: str, blob: bytearray):
         attempts = 0
