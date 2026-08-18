@@ -60,6 +60,7 @@ def _add_document_to_entity_or_list(
     document: dict,
     files: dict[str, BinaryIO] | None,
     document_service: DocumentService,
+    index: int | None = None,
 ) -> dict:
     """Add the document to an existing entity.
 
@@ -67,6 +68,10 @@ def _add_document_to_entity_or_list(
        address: Reference to an existing entity or to an attribute (complex or list attribute) inside an entity.
        document: The entity to be added
        files: Dict with names and files of the files contained in the document
+       index: Optional insertion position when the target is a list attribute.
+           None (default) appends; an int inserts at that position (Python list
+           semantics, negative indices allowed). Ignored when the target is not
+           a list.
 
     Returns:
        A dict that contains the ID of the added document.
@@ -188,8 +193,17 @@ def _add_document_to_entity_or_list(
 
     if isinstance(target, ListNode) or target.parent.type == SIMOS.PACKAGE.value:
         new_node.parent = target
-        new_node.key = str(len(target.children))
-        target.add_child(new_node)
+        if index is None:
+            new_node.key = str(len(target.children))
+            target.add_child(new_node)
+        else:
+            # Clamp/normalize index the same way list.insert does, so key
+            # reflects the actual position the child ended up at.
+            list_len = len(target.children)
+            resolved = index if index >= 0 else max(0, list_len + index)
+            resolved = min(resolved, list_len)
+            new_node.key = str(resolved)
+            target.add_child(new_node, index=index)
         document_service.save(target.find_parent(), address.data_source)
     else:
         new_node.parent = target.parent
@@ -206,6 +220,7 @@ def add_document_use_case(
     address: Address,
     document_service: DocumentService,
     files: list[UploadFile] | None = None,
+    index: int | None = None,
 ) -> dict:
     """Add document to a data source or existing entity. Can also be used to add (complex) items to a list.
 
@@ -214,6 +229,10 @@ def add_document_use_case(
         address: Reference to a package, attribute inside an entity (either a list or a complex attribute) or a data source
         document_service: The document service
         files: Dict with names and files of the files contained in the document
+        index: Optional insertion position for list attributes. None appends
+            (unchanged behaviour). An int inserts at that position; negative
+            values count from the end. Rejected when the address already pins
+            a position (e.g. ``.list[3]``) or when it points at a data source.
 
     Returns:
         A dict that contains the ID of the added document.
@@ -221,11 +240,24 @@ def add_document_use_case(
     validate_entity_against_self(document, document_service.get_blueprint)
 
     if not address.path:
+        if index is not None:
+            raise BadRequestException(
+                "'index' is only meaningful when adding to a list attribute of an existing document."
+            )
         return _add_document_to_data_source(address.data_source, document, document_service)
+
+    if index is not None and address.path.rstrip().endswith("]"):
+        # e.g. '.../myList[2]' - the address already selects a slot; combining
+        # it with 'index' is ambiguous. Pick one.
+        raise BadRequestException(
+            "'index' cannot be combined with an indexed address ('list[i]'); "
+            "address the list itself and pass 'index' as a query parameter."
+        )
 
     return _add_document_to_entity_or_list(
         address=address,
         document=document,
         files={f.filename: f.file for f in files} if files else None,
         document_service=document_service,
+        index=index,
     )
