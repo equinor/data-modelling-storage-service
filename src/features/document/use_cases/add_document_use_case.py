@@ -1,3 +1,4 @@
+import re
 from copy import deepcopy
 from typing import BinaryIO
 
@@ -60,6 +61,7 @@ def _add_document_to_entity_or_list(
     document: dict,
     files: dict[str, BinaryIO] | None,
     document_service: DocumentService,
+    index: int | None = None,
 ) -> dict:
     """Add the document to an existing entity.
 
@@ -67,6 +69,10 @@ def _add_document_to_entity_or_list(
        address: Reference to an existing entity or to an attribute (complex or list attribute) inside an entity.
        document: The entity to be added
        files: Dict with names and files of the files contained in the document
+       index: Optional insertion position when the target is a list attribute.
+           None (default) appends; an int inserts at that position (Python list
+           semantics, negative indices allowed). Ignored when the target is not
+           a list.
 
     Returns:
        A dict that contains the ID of the added document.
@@ -188,8 +194,17 @@ def _add_document_to_entity_or_list(
 
     if isinstance(target, ListNode) or target.parent.type == SIMOS.PACKAGE.value:
         new_node.parent = target
-        new_node.key = str(len(target.children))
-        target.add_child(new_node)
+        if index is None:
+            new_node.key = str(len(target.children))
+            target.add_child(new_node)
+        else:
+            # Clamp/normalize index the same way list.insert does, so key
+            # reflects the actual position the child ended up at.
+            list_len = len(target.children)
+            resolved = index if index >= 0 else max(0, list_len + index)
+            resolved = min(resolved, list_len)
+            new_node.key = str(resolved)
+            target.add_child(new_node, index=index)
         document_service.save(target.find_parent(), address.data_source)
     else:
         new_node.parent = target.parent
@@ -206,6 +221,7 @@ def add_document_use_case(
     address: Address,
     document_service: DocumentService,
     files: list[UploadFile] | None = None,
+    index: int | None = None,
 ) -> dict:
     """Add document to a data source or existing entity. Can also be used to add (complex) items to a list.
 
@@ -214,18 +230,70 @@ def add_document_use_case(
         address: Reference to a package, attribute inside an entity (either a list or a complex attribute) or a data source
         document_service: The document service
         files: Dict with names and files of the files contained in the document
+        index: Optional insertion position for list attributes. None appends
+            (unchanged behaviour). An int inserts at that position; negative
+            values count from the end.
 
     Returns:
         A dict that contains the ID of the added document.
+
+    Indexing is consistent whether given via the address or the 'index' query
+    parameter:
+        - '.../myList[3]' or index=3           -> insert at position 3, shifting
+                                                   the rest of the list down.
+        - '.../myList[]', '.../myList', or no
+          index at all                         -> append.
+    Combining both an indexed address and the 'index' parameter is ambiguous
+    and rejected.
     """
     validate_entity_against_self(document, document_service.get_blueprint)
 
-    if not address.path:
-        return _add_document_to_data_source(address.data_source, document, document_service)
+    if address.path:
+        path_match = re.match(r"^(?P<base>.*)\[(?P<idx>-?\d*)\]$", address.path)
+        if path_match:
+            idx_str = path_match.group("idx")
 
+            if idx_str and index is not None:
+                raise BadRequestException(
+                    "'index' cannot be combined with an indexed address ('list[i]'); "
+                    "use either the address or the 'index' parameter, not both."
+                )
+
+            # An indexed address ('list[i]') that already resolves to an existing
+            # item (i.e. 'i' is within the current bounds of the list) keeps its
+            # long-standing meaning: target that existing item (e.g. to validate
+            # a replacement against it). Only treat the bracket as an insertion
+            # position when there is no existing item there yet (out of bounds,
+            # or the explicit append form 'list[]').
+            existing_target = False
+            if idx_str:
+                try:
+                    document_service.get_document(address)
+                    existing_target = True
+                except NotFoundException:
+                    existing_target = False
+
+            if not existing_target:
+                if idx_str:
+                    index = int(idx_str)
+                # Whether '[]' (explicit append) or '[i]' (insert at i), the target
+                # is the list attribute itself; strip the brackets and resolve that.
+                address = Address(
+                    protocol=address.protocol,
+                    path=path_match.group("base"),
+                    data_source=address.data_source,
+                )
+
+    if not address.path:
+        if index is not None:
+            raise BadRequestException(
+                "'index' is only meaningful when adding to a list attribute of an existing document."
+            )
+        return _add_document_to_data_source(address.data_source, document, document_service)
     return _add_document_to_entity_or_list(
         address=address,
         document=document,
         files={f.filename: f.file for f in files} if files else None,
         document_service=document_service,
+        index=index,
     )

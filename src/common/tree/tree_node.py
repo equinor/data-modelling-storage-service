@@ -164,9 +164,21 @@ class NodeBase:
     def is_array(self):
         return isinstance(self, ListNode)
 
-    def add_child(self, child_node):
+    def add_child(self, child_node, index: int | None = None):
+        """Attach *child_node* to this node.
+
+        When *index* is None (default) the child is appended, preserving the
+        historical behaviour. When *index* is an int the child is inserted at
+        that position (Python list semantics: negative indices count from the
+        end; out-of-range values are clamped by list.insert). Only meaningful
+        on a ListNode; on non-list parents the two branches are equivalent
+        because non-list parents hold at most one child per attribute.
+        """
         child_node.parent = self
-        self.children.append(child_node)
+        if index is None:
+            self.children.append(child_node)
+        else:
+            self.children.insert(index, child_node)
 
     def depth(self):
         """Depth of current node"""

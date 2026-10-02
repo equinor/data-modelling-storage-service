@@ -107,6 +107,7 @@ def add_document(
     address: str,
     document: Annotated[Json, Form()],
     files: list[UploadFile] = File(None),
+    index: int | None = None,
     user: User = Depends(auth_w_jwt_or_pat),
 ):
     """Add a document to a package or a data source using an address.
@@ -124,6 +125,12 @@ def add_document(
       - The PROTOCOL is optional, and the default is dmss.
     - document (dict): The document that is to be stored.
     - files: Optional list of files to be stored as part of this document.
+    - index: Optional insertion position when the address points at a list
+      attribute. Omit (or address with ``list[]``/no brackets) to append -
+      the default. Pass an int (or address with ``list[i]``) to insert at
+      that position, shifting later items down; negative values count from
+      the end. Specifying both an indexed address and 'index' is rejected
+      as ambiguous.
     - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:
@@ -141,6 +148,7 @@ def add_document(
         document=document,
         files=files,
         document_service=document_service,
+        index=index,
     )
 
 
