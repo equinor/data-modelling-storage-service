@@ -291,6 +291,27 @@ class DocumentServiceTestCase(unittest.TestCase):
             "type": "PersonImage",
         } == self.storage["1"]
 
+    def test_remove_by_index_shifts_remaining_items_down(self):
+        self.storage = {
+            "1": {
+                "_id": "1",
+                "name": "Parent",
+                "type": "Person",
+                "storageUncontainedListOfFriends": [
+                    {"name": "a", "type": "dmss://system/SIMOS/Entity"},
+                    {"name": "b", "type": "dmss://system/SIMOS/Entity"},
+                    {"name": "c", "type": "dmss://system/SIMOS/Entity"},
+                ],
+            }
+        }
+
+        self.mock_document_service.remove(Address("$1.storageUncontainedListOfFriends[1]", "testing"))
+
+        self.assertListEqual(
+            [item["name"] for item in self.storage["1"]["storageUncontainedListOfFriends"]],
+            ["a", "c"],
+        )
+
     def test_remove_document_with_blob_removes_referenced_blob_object_as_well(self):
         self.storage = {
             "1": {

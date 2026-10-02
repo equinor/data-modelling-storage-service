@@ -1,3 +1,4 @@
+import re
 from copy import deepcopy
 from typing import BinaryIO
 
@@ -231,13 +232,40 @@ def add_document_use_case(
         files: Dict with names and files of the files contained in the document
         index: Optional insertion position for list attributes. None appends
             (unchanged behaviour). An int inserts at that position; negative
-            values count from the end. Rejected when the address already pins
-            a position (e.g. ``.list[3]``) or when it points at a data source.
+            values count from the end.
 
     Returns:
         A dict that contains the ID of the added document.
+
+    Indexing is consistent whether given via the address or the 'index' query
+    parameter:
+        - '.../myList[3]' or index=3           -> insert at position 3, shifting
+                                                   the rest of the list down.
+        - '.../myList[]', '.../myList', or no
+          index at all                         -> append.
+    Combining both an indexed address and the 'index' parameter is ambiguous
+    and rejected.
     """
     validate_entity_against_self(document, document_service.get_blueprint)
+
+    if address.path:
+        path_match = re.match(r"^(?P<base>.*)\[(?P<idx>-?\d*)\]$", address.path)
+        if path_match:
+            idx_str = path_match.group("idx")
+            if idx_str:
+                if index is not None:
+                    raise BadRequestException(
+                        "'index' cannot be combined with an indexed address ('list[i]'); "
+                        "use either the address or the 'index' parameter, not both."
+                    )
+                index = int(idx_str)
+            # Whether '[]' (explicit append) or '[i]' (insert at i), the target
+            # is the list attribute itself; strip the brackets and resolve that.
+            address = Address(
+                protocol=address.protocol,
+                path=path_match.group("base"),
+                data_source=address.data_source,
+            )
 
     if not address.path:
         if index is not None:
@@ -245,15 +273,6 @@ def add_document_use_case(
                 "'index' is only meaningful when adding to a list attribute of an existing document."
             )
         return _add_document_to_data_source(address.data_source, document, document_service)
-
-    if index is not None and address.path.rstrip().endswith("]"):
-        # e.g. '.../myList[2]' - the address already selects a slot; combining
-        # it with 'index' is ambiguous. Pick one.
-        raise BadRequestException(
-            "'index' cannot be combined with an indexed address ('list[i]'); "
-            "address the list itself and pass 'index' as a query parameter."
-        )
-
     return _add_document_to_entity_or_list(
         address=address,
         document=document,

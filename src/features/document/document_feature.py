@@ -126,9 +126,11 @@ def add_document(
     - document (dict): The document that is to be stored.
     - files: Optional list of files to be stored as part of this document.
     - index: Optional insertion position when the address points at a list
-      attribute. Omit to append (default). Use 0 to insert at the top,
-      negative values to count from the end. Rejected when the address is a
-      data source or already ends in ``[i]``.
+      attribute. Omit (or address with ``list[]``/no brackets) to append -
+      the default. Pass an int (or address with ``list[i]``) to insert at
+      that position, shifting later items down; negative values count from
+      the end. Specifying both an indexed address and 'index' is rejected
+      as ambiguous.
     - user (User): The authenticated user accessing the endpoint, automatically generated from provided bearer token or Access-Key.
 
     Returns:

@@ -396,6 +396,103 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertEqual(self.doc_storage["1"]["Parent-w-list"]["type"], "ParentWithListOfChildren")
         self.assertListEqual(self.doc_storage["1"]["Parent-w-list"]["SomeChild"], [])
 
+    def _child(self, name: str) -> dict:
+        return {"name": name, "type": "SpecialChild", "AnExtraValue": name, "AValue": 1}
+
+    def test_add_to_list_appends_by_default(self):
+        self.doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "parent",
+                "type": "ParentWithListOfChildren",
+                "SomeChild": [self._child("a"), self._child("b")],
+            }
+        }
+        add_document_use_case(
+            address=Address("$1.SomeChild", "testing"),
+            document=self._child("c"),
+            document_service=self.mock_document_service,
+        )
+        self.assertListEqual(
+            [c["name"] for c in self.doc_storage["1"]["SomeChild"]],
+            ["a", "b", "c"],
+        )
+
+    def test_add_to_list_with_empty_brackets_appends(self):
+        self.doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "parent",
+                "type": "ParentWithListOfChildren",
+                "SomeChild": [self._child("a"), self._child("b")],
+            }
+        }
+        add_document_use_case(
+            address=Address("$1.SomeChild[]", "testing"),
+            document=self._child("c"),
+            document_service=self.mock_document_service,
+        )
+        self.assertListEqual(
+            [c["name"] for c in self.doc_storage["1"]["SomeChild"]],
+            ["a", "b", "c"],
+        )
+
+    def test_add_to_list_with_indexed_address_inserts_and_shifts(self):
+        self.doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "parent",
+                "type": "ParentWithListOfChildren",
+                "SomeChild": [self._child("a"), self._child("b")],
+            }
+        }
+        add_document_use_case(
+            address=Address("$1.SomeChild[0]", "testing"),
+            document=self._child("new"),
+            document_service=self.mock_document_service,
+        )
+        self.assertListEqual(
+            [c["name"] for c in self.doc_storage["1"]["SomeChild"]],
+            ["new", "a", "b"],
+        )
+
+    def test_add_to_list_with_index_param_inserts_and_shifts(self):
+        self.doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "parent",
+                "type": "ParentWithListOfChildren",
+                "SomeChild": [self._child("a"), self._child("b")],
+            }
+        }
+        add_document_use_case(
+            address=Address("$1.SomeChild", "testing"),
+            document=self._child("new"),
+            document_service=self.mock_document_service,
+            index=1,
+        )
+        self.assertListEqual(
+            [c["name"] for c in self.doc_storage["1"]["SomeChild"]],
+            ["a", "new", "b"],
+        )
+
+    def test_add_to_list_rejects_both_indexed_address_and_index_param(self):
+        self.doc_storage = {
+            "1": {
+                "_id": "1",
+                "name": "parent",
+                "type": "ParentWithListOfChildren",
+                "SomeChild": [self._child("a"), self._child("b")],
+            }
+        }
+        with self.assertRaises(BadRequestException):
+            add_document_use_case(
+                address=Address("$1.SomeChild[0]", "testing"),
+                document=self._child("new"),
+                document_service=self.mock_document_service,
+                index=1,
+            )
+
     def test_set_update_uncontained_child(self):
         target_node = self.form_node.children[1]
         new_reference = {
