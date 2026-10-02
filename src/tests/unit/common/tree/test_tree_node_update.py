@@ -437,7 +437,7 @@ class DocumentServiceTestCase(unittest.TestCase):
             ["a", "b", "c"],
         )
 
-    def test_add_to_list_with_indexed_address_inserts_and_shifts(self):
+    def test_add_to_list_with_indexed_address_out_of_bounds_inserts(self):
         self.doc_storage = {
             "1": {
                 "_id": "1",
@@ -447,13 +447,13 @@ class DocumentServiceTestCase(unittest.TestCase):
             }
         }
         add_document_use_case(
-            address=Address("$1.SomeChild[0]", "testing"),
+            address=Address("$1.SomeChild[5]", "testing"),
             document=self._child("new"),
             document_service=self.mock_document_service,
         )
         self.assertListEqual(
             [c["name"] for c in self.doc_storage["1"]["SomeChild"]],
-            ["new", "a", "b"],
+            ["a", "b", "new"],
         )
 
     def test_add_to_list_with_index_param_inserts_and_shifts(self):

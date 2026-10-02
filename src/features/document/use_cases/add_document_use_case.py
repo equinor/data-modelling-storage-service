@@ -252,20 +252,37 @@ def add_document_use_case(
         path_match = re.match(r"^(?P<base>.*)\[(?P<idx>-?\d*)\]$", address.path)
         if path_match:
             idx_str = path_match.group("idx")
+
+            if idx_str and index is not None:
+                raise BadRequestException(
+                    "'index' cannot be combined with an indexed address ('list[i]'); "
+                    "use either the address or the 'index' parameter, not both."
+                )
+
+            # An indexed address ('list[i]') that already resolves to an existing
+            # item (i.e. 'i' is within the current bounds of the list) keeps its
+            # long-standing meaning: target that existing item (e.g. to validate
+            # a replacement against it). Only treat the bracket as an insertion
+            # position when there is no existing item there yet (out of bounds,
+            # or the explicit append form 'list[]').
+            existing_target = False
             if idx_str:
-                if index is not None:
-                    raise BadRequestException(
-                        "'index' cannot be combined with an indexed address ('list[i]'); "
-                        "use either the address or the 'index' parameter, not both."
-                    )
-                index = int(idx_str)
-            # Whether '[]' (explicit append) or '[i]' (insert at i), the target
-            # is the list attribute itself; strip the brackets and resolve that.
-            address = Address(
-                protocol=address.protocol,
-                path=path_match.group("base"),
-                data_source=address.data_source,
-            )
+                try:
+                    document_service.get_document(address)
+                    existing_target = True
+                except NotFoundException:
+                    existing_target = False
+
+            if not existing_target:
+                if idx_str:
+                    index = int(idx_str)
+                # Whether '[]' (explicit append) or '[i]' (insert at i), the target
+                # is the list attribute itself; strip the brackets and resolve that.
+                address = Address(
+                    protocol=address.protocol,
+                    path=path_match.group("base"),
+                    data_source=address.data_source,
+                )
 
     if not address.path:
         if index is not None:
